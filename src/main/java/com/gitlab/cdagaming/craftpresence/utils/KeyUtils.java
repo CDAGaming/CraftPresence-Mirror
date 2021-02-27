@@ -162,10 +162,11 @@ public class KeyUtils {
      */
     void onTick() {
         if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
+            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0)).getSecond();
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
                     final KeyBinding keyBind = KEY_MAPPINGS.get(keyName).getFirst();
-                    if (Keyboard.isKeyDown(keyBind.getKeyCode()) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                    if (!getKeyName(keyBind.getKeyCode()).equals(unknownKeyName) && Keyboard.isKeyDown(keyBind.getKeyCode()) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
                         final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                         try {
                             keyData.getSecond().run();
@@ -214,7 +215,7 @@ public class KeyUtils {
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
             if (ModUtils.IS_VERBOSE) {
-                ModUtils.LOG.debugError("Unsupported function"); // TODO: Localization
+                ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
             }
         }
     }

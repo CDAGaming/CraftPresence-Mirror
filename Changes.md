@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v1.7.8 (01/30/2021)
+## v1.7.8 (03/15/2021)
 
 _A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.7.6...release%2Fv1.7.8)_
 
@@ -17,6 +17,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 *   Fixes `Strip Extra Gui Elements` only having partial functionality in the lists (Offsets are now properly tuned)
 *   Fixes Texture Config Defaults for MC 1.6.4
 *   Fixes possible `ConcurrentModificationException` when loading Guis (More prevalent on MC 1.6.4 and below)
+*   Fixes Issue [104](https://gitlab.com/CDAGaming/CraftPresence/-/issues/104) where None keys were not properly being interpreted
 
 ___
 
