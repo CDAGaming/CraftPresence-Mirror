@@ -621,17 +621,12 @@ public class StringUtils {
         int indexNumber = -1;
         boolean replacing = false;
         String[] formatted = original;
-        String searchKey = searchTerm;
-
-        if (searchKey.contains(" ")) {
-            searchKey = searchKey.replaceAll("\\s+", "");
-        }
 
         if (!isNullOrEmpty(Arrays.toString(formatted))) {
             for (String part : formatted) {
                 indexNumber++;
                 String[] splitPart = part.split(splitCharacter);
-                if (splitPart[searchIndex].equalsIgnoreCase(searchKey)) {
+                if (splitPart[searchIndex].equalsIgnoreCase(searchTerm)) {
                     replacing = true;
                     if (elementExists(splitPart, resultIndex)) {
                         final String formattedText = part.replace(splitPart[resultIndex], newMessage);
@@ -643,7 +638,7 @@ public class StringUtils {
                 }
             }
             if (!replacing) {
-                formatted = addToArray(original, indexNumber + 1, searchKey + splitCharacter + newMessage);
+                formatted = addToArray(original, indexNumber + 1, searchTerm + splitCharacter + newMessage);
             }
         }
         return formatted;
