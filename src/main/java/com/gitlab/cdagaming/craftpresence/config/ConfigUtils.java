@@ -84,7 +84,7 @@ public class ConfigUtils {
     // ACCESSIBILITY
     public String NAME_tooltipBackgroundColor, NAME_tooltipBorderColor, NAME_guiBackgroundColor, NAME_buttonBackgroundColor, NAME_showBackgroundAsDark, NAME_languageId, NAME_stripTranslationColors, NAME_showLoggingInChat, NAME_stripExtraGuiElements, NAME_configKeyCode;
     // DISPLAY MESSAGES
-    public String NAME_gameStateMessage, NAME_detailsMessage, NAME_largeImageMessage, NAME_smallImageMessage, NAME_largeImageKey, NAME_smallImageKey;
+    public String NAME_gameStateMessage_FORMAT, NAME_detailsMessage_FORMAT, NAME_largeImageMessage_FORMAT, NAME_smallImageMessage_FORMAT, NAME_largeImageKey_FORMAT, NAME_smallImageKey_FORMAT;
     // Config Variables
     // GLOBAL (NON-USER-ADJUSTABLE)
     public String schemaVersion, lastMcVersionId;
@@ -120,6 +120,7 @@ public class ConfigUtils {
     // CLASS-SPECIFIC - PUBLIC
     public boolean hasChanged = false, hasClientPropertiesChanged = false;
     public Map<String, Integer> keySyncQueue = Maps.newHashMap();
+    public List<String> avoidanceFilter = Lists.newArrayList();
 
     // CLASS-SPECIFIC - PRIVATE
     public String queuedSplitCharacter;
@@ -281,12 +282,12 @@ public class ConfigUtils {
         stripExtraGuiElements = ModUtils.IS_LEGACY;
         configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
         // DISPLAY MESSAGES
-        NAME_gameStateMessage = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.game_state_message").replaceAll(" ", "_");
-        NAME_detailsMessage = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.details_message").replaceAll(" ", "_");
-        NAME_largeImageMessage = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.large_image_message").replaceAll(" ", "_");
-        NAME_smallImageMessage = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.small_image_message").replaceAll(" ", "_");
-        NAME_largeImageKey = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.large_image_key").replaceAll(" ", "_");
-        NAME_smallImageKey = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.small_image_key").replaceAll(" ", "_");
+        NAME_gameStateMessage_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.game_state_message").replaceAll(" ", "_");
+        NAME_detailsMessage_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.details_message").replaceAll(" ", "_");
+        NAME_largeImageMessage_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.large_image_message").replaceAll(" ", "_");
+        NAME_smallImageMessage_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.small_image_message").replaceAll(" ", "_");
+        NAME_largeImageKey_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.large_image_key").replaceAll(" ", "_");
+        NAME_smallImageKey_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.small_image_key").replaceAll(" ", "_");
         gameStateMessage = "&SERVER& &PACK&";
         detailsMessage = "&MAINMENU&&DIMENSION&";
         largeImageMessage = "&MAINMENU&&DIMENSION&";
@@ -305,18 +306,25 @@ public class ConfigUtils {
         // Ensure Data is Cleared
         configDataMappings.clear();
         configPropertyMappings.clear();
+        avoidanceFilter.clear();
 
         // Add Data to Mappings (Order-Reliant; Ensure Global Variables are first)
         for (Field field : getClass().getDeclaredFields()) {
-            if (field.getName().startsWith("NAME_")) {
+            final boolean isName = field.getName().startsWith("NAME_");
+            final boolean shouldAvoid = field.getName().endsWith("_FORMAT");
+            if (isName) {
                 try {
-                    final Field valueField = getClass().getField(field.getName().replaceFirst("NAME_", ""));
+                    final Field valueField = getClass().getField(field.getName().replaceFirst("NAME_", "").replaceFirst("_FORMAT", ""));
 
                     field.setAccessible(true);
                     valueField.setAccessible(true);
 
                     configDataMappings.add(new Pair<>(field.get(this).toString(), valueField.get(this)));
                     configPropertyMappings.add(new Pair<>(field.getName(), valueField.getName()));
+
+                    if (shouldAvoid) {
+                        avoidanceFilter.add(field.get(this).toString());
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -437,7 +445,7 @@ public class ConfigUtils {
                                 if (fieldObject == null) {
                                     fieldObject = boolData.getSecond();
                                 }
-                            } else {
+                            } else if (!avoidanceFilter.contains(propertyName)) {
                                 // If not a valid Integer, Revert Value to prior Data
                                 if (!skipLogging) {
                                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.empty", propertyName));
@@ -460,7 +468,7 @@ public class ConfigUtils {
                                     fieldObject = new String[]{preArrayString};
                                 }
                             }
-                        } else {
+                        } else if (!avoidanceFilter.contains(propertyName)) {
                             // If not a Convertible Type, Revert Value to prior Data
                             if (!skipLogging) {
                                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.empty", propertyName));
@@ -473,7 +481,7 @@ public class ConfigUtils {
                             StringUtils.updateField(getClass(), CraftPresence.CONFIG, new Tuple<>(configProperty.getSecond(), fieldObject, null));
                         }
                     }
-                } else {
+                } else if (!avoidanceFilter.contains(propertyName)) {
                     // If a Config Variable is not present in the Properties File, queue a Config Update
                     if (!skipLogging) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.prop.empty", propertyName));
