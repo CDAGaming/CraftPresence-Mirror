@@ -1,8 +1,8 @@
 # CraftPresence Changes
 
-## v1.7.8 (04/19/2021)
+## v1.8.0 (04/19/2021)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.7.6...release%2Fv1.7.8)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.7.6...release%2Fv1.8.0)_
 
 ### Changes
 

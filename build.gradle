@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:4.+"
         classpath "com.github.CDAGaming:CurseGradle:master-SNAPSHOT"
-        classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.0"
+        classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.1"
     }
 }
 

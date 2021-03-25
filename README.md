@@ -66,8 +66,8 @@ CraftPresence currently contains the following KeyBinds:
 
 Notes: 
 
-*   In v1.5.5 up to v1.7.8, KeyBinds are now customized in the Accessibility Settings in the Config Gui, and not the normal controls menu
-*   In v1.7.8 and above, KeyBinds can now be customized in either the dedicated menu in the Config Gui or the normal control menu on applicable versions
+*   In v1.5.5 up to v1.8.0, KeyBinds are now customized in the Accessibility Settings in the Config Gui, and not the normal controls menu
+*   In v1.8.0 and above, KeyBinds can now be customized in either the dedicated menu in the Config Gui or the normal control menu on applicable versions
 
 ___
 
