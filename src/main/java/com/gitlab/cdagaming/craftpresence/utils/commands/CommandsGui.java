@@ -232,7 +232,7 @@ public class CommandsGui extends ExtendedScreen {
                                             hasError = true;
                                         }
                                         // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
-                                        outputData = new FileOutputStream(new File(filePath + "downloads.txt"));
+                                        outputData = new FileOutputStream(dataDir);
                                         outputStream = new OutputStreamWriter(outputData, CraftPresence.CLIENT.ipcInstance.getEncoding());
                                         bw = new BufferedWriter(outputStream);
 
@@ -374,7 +374,7 @@ public class CommandsGui extends ExtendedScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (commandInput.isFocused() && commandInput.getText().startsWith("/") && commandArgs != null &&
+        if (commandInput.isFocused() && commandInput.getText().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                 (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(ModUtils.MOD_ID))) {
             if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
                 if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 || filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?"))) {

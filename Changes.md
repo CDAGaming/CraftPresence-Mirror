@@ -17,6 +17,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 *   Fixes `Strip Extra Gui Elements` only having partial functionality in the lists (Offsets are now properly tuned)
 *   Fixes Texture Config Defaults for MC 1.6.4
 *   Fixes possible `ConcurrentModificationException` when loading Guis (More prevalent on MC 1.6.4 and below)
+*   Fixes possible `IndexOutOfBounds` exceptions within `CommandsGui#keyTyped` with multiple-whitespace inputs
 *   Fixes Issue [104](https://gitlab.com/CDAGaming/CraftPresence/-/issues/104) where None keys were not properly being interpreted
 *   (Backend) Added an avoidance filter to allow some config fields to pass through the non-null sanity checks
 *   Fixes Issue [108](https://gitlab.com/CDAGaming/CraftPresence/-/issues/108) in which config array keys were being unnecesarily trimmed
