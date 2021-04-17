@@ -1,42 +1,25 @@
 # CraftPresence Changes
 
-## v1.8.0 (04/19/2021)
+## v1.8.1 (04/19/2021)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.7.6...release%2Fv1.8.0)_
-
-### Changes
-
-*   All KeyBindings are now re-recognized into MC's control menu, with the ability to synchronize and update on both ends, on applicable versions
-*   The Controls Menu in the Config Gui has now been expanded into its own gui, on account of KeyUtils' expanded abilities
-*   (Backend) Added IPC adjustments from [this fork](https://github.com/Hexmory/DiscordIPC) (Thanks for the optimizations!)
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.0...release%2Fv1.8.1)_
 
 ### Fixes
 
-*   `Strip Extra Gui Elements` is now on by default for MC 1.6.4 and below due to incompatibilities with the list previews
-*   Fixes visible and hovered states on several gui controls to now report correctly in MC 1.6.4 and below (Silent Fix from v1.7.6 Experimental Release)
-*   Fixes `Strip Extra Gui Elements` only having partial functionality in the lists (Offsets are now properly tuned)
-*   Fixes Texture Config Defaults for MC 1.6.4
-*   Fixes possible `ConcurrentModificationException` when loading Guis (More prevalent on MC 1.6.4 and below)
-*   Fixes possible `IndexOutOfBounds` exceptions within `CommandsGui#keyTyped` with multiple-whitespace inputs
-*   Fixes Issue [104](https://gitlab.com/CDAGaming/CraftPresence/-/issues/104) where None keys were not properly being interpreted
-*   (Backend) Added an avoidance filter to allow some config fields to pass through the non-null sanity checks
-*   Fixes Issue [108](https://gitlab.com/CDAGaming/CraftPresence/-/issues/108) in which config array keys were being unnecesarily trimmed
+*   Fixes regressions in Join Request Systems, preventing general usage and subsequent clearing of ascociated data
 
 ___
 
 ### More Information
 
-#### v1.7.0 Upgrade Info
+#### v1.8.0 Upgrade Info
 
-v1.7.0 of CraftPresence is the next major feature and technical update after v1.6.0.
-It is celebrating the recent milestones of over **five million downloads** as well as hitting the number one spot in Twitch Integration.
+v1.8.0 of CraftPresence is the next major feature and technical update after the v1.7.x pipeline.
+It is a culmination of long-standing requests and fixes that have been sent in over the last few months.
 
-This release holds numerous improvements over the existing configuration system, as well as adding numerous long-standing user requests and planned features that have been queued over time since v1.4.0s release,
-that are outlined in the changelog above.
+While no config migrations are necessary at this time for updating to v1.8.x, this can change as time goes on in the v1.8.x Pipeline, and will be noted here as such when and if these types of changes occur.
 
-While no config migrations are necessary at this time for updating to v1.7.0, this can change as time goes on in the v1.7.x Pipeline, and will be noted here as such when and if these types of changes occur.
-
-More features will additionally be planned and added for later in the v1.7.x Pipeline as further releases arrive.
+More features will additionally be planned and added for later in the v1.8.x Pipeline as further releases arrive (and as they are requested).
 
 #### 1.13.x Build Info
 
