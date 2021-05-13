@@ -43,6 +43,7 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.RichPresenc
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.User;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.pipe.PipeStatus;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
 
 import java.util.List;
 
@@ -149,6 +150,10 @@ public class DiscordUtils {
      * The Current Spectate Secret Key tied to the RPC, if any
      */
     public String SPECTATE_SECRET;
+    /**
+     * The current button array tied to the RPC, if any
+     */
+    public JsonArray BUTTONS = new JsonArray();
     /**
      * The Instance Code attached to the RPC, if any
      */
@@ -505,6 +510,7 @@ public class DiscordUtils {
                 .setMatchSecret(MATCH_SECRET)
                 .setJoinSecret(JOIN_SECRET)
                 .setSpectateSecret(SPECTATE_SECRET)
+                .setButtons(BUTTONS)
                 .build();
 
         // Format Data to UTF_8 after Sent to RPC (RPC has it's own Encoding)

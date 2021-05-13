@@ -51,12 +51,13 @@ public class RichPresence {
     private final String matchSecret;
     private final String joinSecret;
     private final String spectateSecret;
+    private final JsonArray buttons;
     private final boolean instance;
 
     public RichPresence(String state, String details, long startTimestamp, long endTimestamp,
                         String largeImageKey, String largeImageText, String smallImageKey, String smallImageText,
                         String partyId, int partySize, int partyMax, int partyPrivacy, String matchSecret, String joinSecret,
-                        String spectateSecret, boolean instance) {
+                        String spectateSecret, JsonArray buttons, boolean instance) {
         this.state = state;
         this.details = details;
         this.startTimestamp = startTimestamp;
@@ -72,6 +73,7 @@ public class RichPresence {
         this.matchSecret = matchSecret;
         this.joinSecret = joinSecret;
         this.spectateSecret = spectateSecret;
+        this.buttons = buttons;
         this.instance = instance;
     }
 
@@ -165,6 +167,9 @@ public class RichPresence {
         if (secrets.has("join") || secrets.has("spectate") || secrets.has("match")) {
             finalObject.add("secrets", secrets);
         }
+        if (!buttons.isJsonNull() && buttons.size() > 0 && buttons.size() < 3) {
+            finalObject.add("buttons", buttons);
+        }
         finalObject.addProperty("instance", instance);
 
         return finalObject;
@@ -200,6 +205,7 @@ public class RichPresence {
         private String matchSecret;
         private String joinSecret;
         private String spectateSecret;
+        private JsonArray buttons;
         private boolean instance;
 
         /**
@@ -211,7 +217,7 @@ public class RichPresence {
             return new RichPresence(state, details, startTimestamp, endTimestamp,
                     largeImageKey, largeImageText, smallImageKey, smallImageText,
                     partyId, partySize, partyMax, partyPrivacy, matchSecret, joinSecret,
-                    spectateSecret, instance);
+                    spectateSecret, buttons, instance);
         }
 
         /**
@@ -369,6 +375,18 @@ public class RichPresence {
          */
         public Builder setSpectateSecret(String spectateSecret) {
             this.spectateSecret = spectateSecret;
+            return this;
+        }
+
+        /**
+         * Sets the button array to be used within the RichPresence
+         * <p>Must be a format of {'label': "...", 'url': "..."} with a max length of 2</p>
+         *
+         * @param buttons The new array of button objects to use
+         * @return This Builder.
+         */
+        public Builder setButtons(JsonArray buttons) {
+            this.buttons = buttons;
             return this;
         }
 
