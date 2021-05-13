@@ -24,9 +24,11 @@ version = "${versionId}"
 group = "com.gitlab.cdagaming"
 archivesBaseName = "${archive_name}-${mc_version}-${versionType}"
 
+JavaVersion targetVersion = JavaVersion.VERSION_1_8
+
 allprojects {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = targetVersion
+    targetCompatibility = targetVersion
 }
 
 license {
@@ -107,8 +109,19 @@ jar {
     from sourceSets.main.output
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+tasks.withType(JavaCompile).configureEach {
+    // ensure that the encoding is set to UTF-8, no matter what the system default is
+    // this fixes some edge cases with special characters not displaying correctly
+    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+    // If Javadoc is generated, this must be specified in that task too.
+    it.options.encoding = 'UTF-8'
+
+    // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
+    // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
+    // We'll use that if it's available, but otherwise we'll use the older option.
+    if (targetVersion.isJava9Compatible()) {
+        it.options.release = Integer.parseInt(targetVersion.getMajorVersion())
+    }
 }
 
 processResources {
@@ -117,16 +130,9 @@ processResources {
     inputs.property "mcversion", "${mc_version}"
 
     // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
+    filesMatching("mcmod.info") {
         // replace version and mcversion
         expand 'version': project.version, 'mcversion': "${mc_version}"
-    }
-
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
     }
 }
 
