@@ -475,6 +475,12 @@ public class StringUtils {
             if (formattedKey.contains(".")) {
                 formattedKey = formattedKey.replaceAll("\\.", "_");
             }
+            if (formattedKey.contains("(")) {
+                formattedKey = formattedKey.replaceAll("\\(", "_");
+            }
+            if (formattedKey.contains(")")) {
+                formattedKey = formattedKey.replaceAll("\\)", "_");
+            }
             if (BRACKET_PATTERN.matcher(formattedKey).find()) {
                 formattedKey = BRACKET_PATTERN.matcher(formattedKey).replaceAll("");
             }
