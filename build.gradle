@@ -7,9 +7,9 @@ buildscript {
         maven { url = "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:4.+"
+        classpath "net.minecraftforge.gradle:ForgeGradle:5.+"
         classpath "com.github.CDAGaming:CurseGradle:master-SNAPSHOT"
-        classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.1"
+        classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.1"
     }
 }
 
@@ -17,7 +17,7 @@ apply plugin: "net.minecraftforge.gradle"
 apply plugin: "com.matthewprenger.cursegradle"
 apply plugin: "org.cadixdev.licenser"
 
-import net.minecraftforge.gradle.common.task.SignJar
+import net.minecraftforge.gradle.common.tasks.SignJar
 import org.apache.tools.ant.filters.ReplaceTokens
 
 version = "${versionId}"
