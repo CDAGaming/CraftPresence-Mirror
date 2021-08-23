@@ -56,7 +56,7 @@ public class KeyUtils {
      * LWJGL 2: ESC = 0x01
      * LWJGL 3: ESC = 256
      */
-    private final List<Integer> invalidKeys = Lists.newArrayList(1, 256);
+    private final List<Integer> invalidKeys = Lists.newArrayList();
 
     /**
      * Key Mappings for Vanilla MC KeyBind Schema
@@ -66,10 +66,18 @@ public class KeyUtils {
     private final Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
 
     /**
-     * Registers KeyBindings to MC's KeyCode systems
+     * Registers KeyBindings and critical KeyCode information to MC's KeyCode systems
      * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
      */
     void register() {
+        // Register Invalid Keys, dependent on protocol version
+        // - These keys will identify as NONE within the game
+        if (ModUtils.MCProtocolID > 340) {
+            invalidKeys.add(256); // ESC
+        } else {
+            invalidKeys.add(1); // ESC
+        }
+
         KEY_MAPPINGS.put(
                 "configKeyCode",
                 new Tuple<>(
@@ -162,29 +170,32 @@ public class KeyUtils {
      */
     void onTick() {
         if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
-            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0)).getSecond();
+            final Pair<Integer, String> unknownKeyData = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0));
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
                     final KeyBinding keyBind = KEY_MAPPINGS.get(keyName).getFirst();
-                    if (!getKeyName(keyBind.getKeyCode()).equals(unknownKeyName) && Keyboard.isKeyDown(keyBind.getKeyCode()) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
-                        final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
-                        try {
-                            keyData.getSecond().run();
-                        } catch (Exception | Error ex) {
-                            if (keyData.getThird() != null) {
-                                keyData.getThird().accept(ex);
-                            } else {
-                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
-                                syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
+                    if (keyBind.getKeyCode() != unknownKeyData.getFirst() && isValidKeyCode(keyBind.getKeyCode())) {
+                        // Only process the key if it is not an unknown or invalid key
+                        if (Keyboard.isKeyDown(keyBind.getKeyCode()) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                            final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
+                            try {
+                                keyData.getSecond().run();
+                            } catch (Exception | Error ex) {
+                                if (keyData.getThird() != null) {
+                                    keyData.getThird().accept(ex);
+                                } else {
+                                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
+                                    syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
+                                }
                             }
-                        }
-                    } else if (!CraftPresence.CONFIG.hasChanged) {
-                        // Key Update Events
-                        if (CraftPresence.CONFIG.keySyncQueue.containsKey(keyName)) {
-                            syncKeyData(keyName, ImportMode.Config, CraftPresence.CONFIG.keySyncQueue.get(keyName));
-                            CraftPresence.CONFIG.keySyncQueue.remove(keyName);
-                        } else if (keyBind.getKeyCode() != StringUtils.getValidInteger(StringUtils.lookupObject(ConfigUtils.class, CraftPresence.CONFIG, keyName)).getSecond()) {
-                            syncKeyData(keyName, ImportMode.Vanilla, keyBind.getKeyCode());
+                        } else if (!CraftPresence.CONFIG.hasChanged) {
+                            // Key Update Events
+                            if (CraftPresence.CONFIG.keySyncQueue.containsKey(keyName)) {
+                                syncKeyData(keyName, ImportMode.Config, CraftPresence.CONFIG.keySyncQueue.get(keyName));
+                                CraftPresence.CONFIG.keySyncQueue.remove(keyName);
+                            } else if (keyBind.getKeyCode() != StringUtils.getValidInteger(StringUtils.lookupObject(ConfigUtils.class, CraftPresence.CONFIG, keyName)).getSecond()) {
+                                syncKeyData(keyName, ImportMode.Vanilla, keyBind.getKeyCode());
+                            }
                         }
                     }
                 }
