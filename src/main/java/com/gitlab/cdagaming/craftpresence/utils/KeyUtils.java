@@ -170,12 +170,12 @@ public class KeyUtils {
      */
     void onTick() {
         if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
-            final Pair<Integer, String> unknownKeyData = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0));
+            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0)).getSecond();
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
                     boolean hasBeenRun = false;
                     final KeyBinding keyBind = KEY_MAPPINGS.get(keyName).getFirst();
-                    if (keyBind.getKeyCode() != unknownKeyData.getFirst() && isValidKeyCode(keyBind.getKeyCode())) {
+                    if (!getKeyName(keyBind.getKeyCode()).equals(unknownKeyName)) {
                         // Only process the key if it is not an unknown or invalid key
                         if (Keyboard.isKeyDown(keyBind.getKeyCode()) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
                             final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
