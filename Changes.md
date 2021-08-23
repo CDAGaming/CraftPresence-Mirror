@@ -12,6 +12,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 
 *   Hopefully fix instances of [GL error spam while no keybinding is set](https://gitlab.com/CDAGaming/CraftPresence/-/issues/123)
 *   Adjusted Icon formatting logic, so that parentheses are now converted to `_` for icons
+*   Micro-patch to ensure Java 11+ compatibility with WinRegistry calls (Fixes `autoRegister` support for Java 11+)
 
 ___
 
