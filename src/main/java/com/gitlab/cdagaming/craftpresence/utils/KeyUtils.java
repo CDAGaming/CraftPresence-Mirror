@@ -173,6 +173,7 @@ public class KeyUtils {
             final Pair<Integer, String> unknownKeyData = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0));
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
+                    boolean hasBeenRun = false;
                     final KeyBinding keyBind = KEY_MAPPINGS.get(keyName).getFirst();
                     if (keyBind.getKeyCode() != unknownKeyData.getFirst() && isValidKeyCode(keyBind.getKeyCode())) {
                         // Only process the key if it is not an unknown or invalid key
@@ -187,15 +188,19 @@ public class KeyUtils {
                                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
                                     syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
                                 }
+                            } finally {
+                                hasBeenRun = true;
                             }
-                        } else if (!CraftPresence.CONFIG.hasChanged) {
-                            // Key Update Events
-                            if (CraftPresence.CONFIG.keySyncQueue.containsKey(keyName)) {
-                                syncKeyData(keyName, ImportMode.Config, CraftPresence.CONFIG.keySyncQueue.get(keyName));
-                                CraftPresence.CONFIG.keySyncQueue.remove(keyName);
-                            } else if (keyBind.getKeyCode() != StringUtils.getValidInteger(StringUtils.lookupObject(ConfigUtils.class, CraftPresence.CONFIG, keyName)).getSecond()) {
-                                syncKeyData(keyName, ImportMode.Vanilla, keyBind.getKeyCode());
-                            }
+                        }
+                    }
+
+                    // Only check for Keyboard updates if the key is not active but is in queue for a sync
+                    if (!hasBeenRun && !CraftPresence.CONFIG.hasChanged) {
+                        if (CraftPresence.CONFIG.keySyncQueue.containsKey(keyName)) {
+                            syncKeyData(keyName, ImportMode.Config, CraftPresence.CONFIG.keySyncQueue.get(keyName));
+                            CraftPresence.CONFIG.keySyncQueue.remove(keyName);
+                        } else if (keyBind.getKeyCode() != StringUtils.getValidInteger(StringUtils.lookupObject(ConfigUtils.class, CraftPresence.CONFIG, keyName)).getSecond()) {
+                            syncKeyData(keyName, ImportMode.Vanilla, keyBind.getKeyCode());
                         }
                     }
                 }
