@@ -1,13 +1,17 @@
 # CraftPresence Changes
 
-## v1.8.2 (05/14/2021)
+## v1.8.4 (08/23/2021)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.1...release%2Fv1.8.2)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.2...release%2Fv1.8.4)_
 
 ### Changes
 
-*   Added backend support for Discord's RPC `buttons` array (Not configurable frontend yet, but the api now supports it)
-*   Build System Upgrades to be more compatible with JDK 16+ and Gradle 7+
+*   Build System Upgrades to be more compatible with JDK 16+ and Gradle 7+ (Continued)
+
+### Fixes
+
+*   Hopefully fix instances of [GL error spam while no keybinding is set](https://gitlab.com/CDAGaming/CraftPresence/-/issues/123)
+*   Adjusted Icon formatting logic, so that parentheses are now converted to `_` for icons
 
 ___
 
