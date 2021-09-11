@@ -47,6 +47,11 @@ public class UrlUtils {
      * The User Agent to Identify As when Accessing other URLs
      */
     private static final String USER_AGENT = ModUtils.MOD_ID + "/" + ModUtils.MCVersion;
+    
+    /**
+     * The Java Specification Version
+     */
+    private static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
 
     /**
      * The GSON Json Builder to Use while Parsing Json
@@ -119,6 +124,12 @@ public class UrlUtils {
      * @throws Exception If a connection is unable to be established
      */
     public static InputStream getURLStream(final URL url) throws Exception {
+    	if (JAVA_SPEC < 1.8) {
+    		// Java Versions below 1.8 do not supply a modern protocol_version
+    		// which can break certain URL requests.
+    		// To avoid this, TLSv1.2 is used as the protocol, which is equivalent to 1.8s default
+    		System.setProperty("https.protocols", "TLSv1.2");
+    	}
         final URLConnection connection = url.openConnection();
         connection.addRequestProperty("User-Agent", USER_AGENT);
         return (connection.getInputStream());
