@@ -5,7 +5,7 @@
     "description": "Completely Customize the way others see you play in Discord!",
     "version": "${version}",
     "mcversion": "${mcversion}",
-    "url": "https://minecraft.curseforge.com/projects/craftpresence",
+    "url": "https://www.curseforge.com/minecraft/mc-mods/craftpresence",
     "updateJSON": "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json",
     "authorList": [
       "CDA_Gaming"
