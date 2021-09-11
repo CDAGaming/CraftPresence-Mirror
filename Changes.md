@@ -1,18 +1,17 @@
 # CraftPresence Changes
 
-## v1.8.4 (08/23/2021)
+## v1.8.6 (09/21/2021)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.2...release%2Fv1.8.4)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.4...release%2Fv1.8.6)_
 
 ### Changes
 
-*   Build System Upgrades to be more compatible with JDK 16+ and Gradle 7+ (Continued)
+* Added an advanced option to allow specifying the player skin endpoint (Used in some icon previews, option only visible in local file)
+* (Backend) Updated the translation handler to have a sanity case for when parameters are null
 
 ### Fixes
 
-*   Hopefully fix instances of [GL error spam while no keybinding is set](https://gitlab.com/CDAGaming/CraftPresence/-/issues/123)
-*   Adjusted Icon formatting logic, so that parentheses are now converted to `_` for icons
-*   Micro-patch to ensure Java 11+ compatibility with WinRegistry calls (Fixes `autoRegister` support for Java 11+)
+* Fixes for MC 1.5.2 and below compatibility (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
 
 ___
 

@@ -153,7 +153,9 @@ public class ScrollableListControl extends GuiSlot {
         int xOffset = xPos;
         String displayName = getSelectedItem(slotIndex);
         if (!CraftPresence.CONFIG.stripExtraGuiElements &&
-                (renderType == RenderType.DiscordAsset || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) || (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) || (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
+                (renderType == RenderType.DiscordAsset || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
+                        (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
+                        (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
             ResourceLocation texture = new ResourceLocation("");
             String assetUrl;
 
@@ -169,9 +171,9 @@ public class ScrollableListControl extends GuiSlot {
                 texture = ImageUtils.getTextureFromUrl(displayName, assetUrl);
             } else if (renderType == RenderType.EntityData) {
                 if (StringUtils.isValidUuid(displayName)) {
-                    // If the entity is classified as a Uuid, assume it is a player's and get their altFace texture
+                    // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
                     displayName = displayName.replaceAll("-", "");
-                    texture = ImageUtils.getTextureFromUrl(displayName, "https://crafatar.com/avatars/" + displayName);
+                    texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.playerSkinEndpoint, displayName));
                 }
             } else if (renderType == RenderType.ItemData) {
                 texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(displayName, texture);

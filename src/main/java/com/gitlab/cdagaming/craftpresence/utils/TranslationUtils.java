@@ -129,7 +129,7 @@ public class TranslationUtils {
      * <p>
      * Note: If None is Used on a Valid Value, this function can be used as verification, if any
      *
-     * @param originalId The original Key to Convert (5 Character Limit)
+     * @param originalId The original Key to Convert (5-Character Limit)
      * @param mode       The Conversion Mode to convert the keycode to
      * @return The resulting converted Language Identifier, or the mode's unknown key
      */
@@ -270,7 +270,7 @@ public class TranslationUtils {
 
                 in.close();
             } catch (Exception ex) {
-                ModUtils.LOG.error("An Exception has Occurred while Loading Translation Mappings, Things may not work well...");
+                ModUtils.LOG.error("An Exception has occurred while Loading Translation Mappings, things may not work well...");
                 ex.printStackTrace();
             }
         } else {
@@ -293,18 +293,19 @@ public class TranslationUtils {
         String translatedString = translationKey;
         try {
             if (translationMap.containsKey(translationKey)) {
-                translatedString = String.format(translationMap.get(translationKey), parameters);
+                String rawString = translationMap.get(translationKey);
+                translatedString = parameters != null ? String.format(rawString, parameters) : rawString;
             } else {
                 hasError = true;
             }
         } catch (Exception ex) {
-            ModUtils.LOG.error("Exception Parsing " + translationKey);
+            ModUtils.LOG.error("Exception parsing " + translationKey);
             ex.printStackTrace();
             hasError = true;
         }
 
         if (hasError) {
-            ModUtils.LOG.error("Unable to retrieve a Translation for " + translationKey);
+            ModUtils.LOG.error("Unable to retrieve a translation for " + translationKey);
         }
         return stripColors ? StringUtils.stripColors(translatedString) : translatedString;
     }

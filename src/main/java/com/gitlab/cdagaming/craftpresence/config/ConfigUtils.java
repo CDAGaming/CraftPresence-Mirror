@@ -80,7 +80,7 @@ public class ConfigUtils {
             NAME_playerAmountPlaceholderMessage, NAME_playerItemsPlaceholderMessage, NAME_worldPlaceholderMessage, NAME_modsPlaceholderMessage, NAME_vivecraftMessage, NAME_fallbackPackPlaceholderMessage;
     // ADVANCED
     public String NAME_enableCommands, NAME_enablePerGui, NAME_enablePerItem, NAME_enablePerEntity, NAME_renderTooltips, NAME_formatWords, NAME_debugMode, NAME_verboseMode,
-            NAME_splitCharacter, NAME_refreshRate, NAME_roundSize, NAME_includeExtraGuiClasses, NAME_guiMessages, NAME_itemMessages, NAME_entityTargetMessages, NAME_entityAttackingMessages, NAME_entityRidingMessages;
+            NAME_splitCharacter, NAME_refreshRate, NAME_roundSize, NAME_includeExtraGuiClasses, NAME_guiMessages, NAME_itemMessages, NAME_entityTargetMessages, NAME_entityAttackingMessages, NAME_entityRidingMessages, NAME_playerSkinEndpoint;
     // ACCESSIBILITY
     public String NAME_tooltipBackgroundColor, NAME_tooltipBorderColor, NAME_guiBackgroundColor, NAME_buttonBackgroundColor, NAME_showBackgroundAsDark, NAME_languageId, NAME_stripTranslationColors, NAME_showLoggingInChat, NAME_stripExtraGuiElements, NAME_configKeyCode;
     // DISPLAY MESSAGES
@@ -108,7 +108,7 @@ public class ConfigUtils {
             playerAmountPlaceholderMessage, playerItemsPlaceholderMessage, worldPlaceholderMessage, modsPlaceholderMessage, vivecraftMessage, fallbackPackPlaceholderMessage;
     // ADVANCED
     public boolean enableCommands, enablePerGui, enablePerItem, enablePerEntity, renderTooltips, formatWords, debugMode, verboseMode, includeExtraGuiClasses;
-    public String splitCharacter;
+    public String splitCharacter, playerSkinEndpoint;
     public int refreshRate, roundSize;
     public String[] guiMessages, itemMessages, entityTargetMessages, entityAttackingMessages, entityRidingMessages;
     // ACCESSIBILITY
@@ -140,6 +140,7 @@ public class ConfigUtils {
     /**
      * Setup of Initial Values and Names of Config Data
      */
+    @SuppressWarnings("ConstantConditions")
     public void setupInitialValues() {
         // GLOBAL (NON-USER-ADJUSTABLE)
         NAME_schemaVersion = ModUtils.TRANSLATOR.translate(true, "gui.config.name.global.schema_version").replaceAll(" ", "_");
@@ -243,6 +244,7 @@ public class ConfigUtils {
         NAME_entityTargetMessages = ModUtils.TRANSLATOR.translate(true, "gui.config.name.advanced.entity_target_messages").replaceAll(" ", "_");
         NAME_entityAttackingMessages = ModUtils.TRANSLATOR.translate(true, "gui.config.name.advanced.entity_attacking_messages").replaceAll(" ", "_");
         NAME_entityRidingMessages = ModUtils.TRANSLATOR.translate(true, "gui.config.name.advanced.entity_riding_messages").replaceAll(" ", "_");
+        NAME_playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "gui.config.name.advanced.player_skin_endpoint").replaceAll(" ", "_");
         enableCommands = true;
         enablePerGui = false;
         enablePerItem = false;
@@ -260,6 +262,7 @@ public class ConfigUtils {
         entityTargetMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Targeting &entity&"};
         entityAttackingMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Attacking &entity&"};
         entityRidingMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Riding &entity&"};
+        playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
         // ACCESSIBILITY
         NAME_tooltipBackgroundColor = ModUtils.TRANSLATOR.translate(true, "gui.config.name.accessibility.tooltip_background_color").replaceAll(" ", "_");
         NAME_tooltipBorderColor = ModUtils.TRANSLATOR.translate(true, "gui.config.name.accessibility.tooltip_border_color").replaceAll(" ", "_");
@@ -273,13 +276,13 @@ public class ConfigUtils {
         NAME_configKeyCode = ModUtils.TRANSLATOR.translate(true, "key.craftpresence.config_keycode.name").replaceAll(" ", "_");
         tooltipBackgroundColor = "0xF0100010";
         tooltipBorderColor = "0x505000FF";
-        guiBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY ? "/gui/background.png" : "textures/gui/options_background.png");
-        buttonBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY ? "/gui/gui.png" : "textures/gui/widgets.png");
+        guiBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? "/gui/background.png" : "textures/gui/options_background.png");
+        buttonBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? "/gui/gui.png" : "textures/gui/widgets.png");
         languageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
         showBackgroundAsDark = true;
         stripTranslationColors = false;
         showLoggingInChat = false;
-        stripExtraGuiElements = ModUtils.IS_LEGACY;
+        stripExtraGuiElements = ModUtils.IS_LEGACY_HARD;
         configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
         // DISPLAY MESSAGES
         NAME_gameStateMessage_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.game_state_message").replaceAll(" ", "_");
