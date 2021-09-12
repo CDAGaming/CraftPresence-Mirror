@@ -294,7 +294,7 @@ public class TranslationUtils {
         try {
             if (translationMap.containsKey(translationKey)) {
                 String rawString = translationMap.get(translationKey);
-                translatedString = parameters != null ? String.format(rawString, parameters) : rawString;
+                translatedString = parameters.length > 0 ? String.format(rawString, parameters) : rawString;
             } else {
                 hasError = true;
             }

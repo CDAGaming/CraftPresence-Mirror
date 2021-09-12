@@ -34,6 +34,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -43,7 +44,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -308,13 +308,13 @@ public class ImageUtils {
      *
      * @param input             The string to parse data
      * @param encoding          The encoding to parse data in
-     * @param useDecodingMethod Whether or not we're using the alternative decoding method
-     * @param repeatCycle       Whether or not this is a repeat run with the same input, should be false except for internal usage
+     * @param useDecodingMethod Whether we're using the alternative decoding method
+     * @param repeatCycle       Whether this is a repeat run with the same input, should be false except for internal usage
      * @return Valid Base64 data, if possible to convert string data
      */
     public static byte[] decodeBase64(final String input, final String encoding, final boolean useDecodingMethod, final boolean repeatCycle) {
         try {
-            return Base64.getDecoder().decode(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
+            return Base64.decodeBase64(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
         } catch (Exception ex) {
             if (ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
