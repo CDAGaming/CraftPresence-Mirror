@@ -299,7 +299,6 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
         proceedButton = addControl(
                 new ExtendedButtonControl(
                         10, (height - 30),
@@ -345,6 +344,9 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         renderString(subTitle, (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
         renderString(languageIdTitle, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF);
+
+        //noinspection ConstantConditions
+        stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_SOFT);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getText()));
     }

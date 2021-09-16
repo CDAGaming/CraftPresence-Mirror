@@ -40,7 +40,7 @@ import org.lwjgl.input.Keyboard;
 import java.util.List;
 
 public class MainGui extends ExtendedScreen {
-    private ExtendedButtonControl biomeSet, dimensionSet, serverSet, proceedButton, commandGUIButton;
+    private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, commandGUIButton;
 
     public MainGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -251,7 +251,7 @@ public class MainGui extends ExtendedScreen {
                 )
         );
         // Adding Controls Button
-        addControl(
+        controlsButton = addControl(
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 55),
                         180, 20,
@@ -392,6 +392,9 @@ public class MainGui extends ExtendedScreen {
         dimensionSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectDimensionData : dimensionSet.isControlEnabled());
         serverSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectWorldData : serverSet.isControlEnabled());
         commandGUIButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enableCommands : commandGUIButton.isControlEnabled());
+
+        //noinspection ConstantConditions
+        controlsButton.setControlEnabled(!ModUtils.IS_LEGACY_SOFT);
 
         proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? ModUtils.TRANSLATOR.translate("gui.config.message.button.save") : ModUtils.TRANSLATOR.translate("gui.config.message.button.back"));
     }
