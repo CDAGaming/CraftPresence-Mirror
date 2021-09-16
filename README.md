@@ -9,7 +9,7 @@ Completely customize the way others see you play Minecraft via Discord's Rich Pr
 [![CurseForge-Availability](http://cf.way2muchnoise.eu/versions/craftpresence.svg)](https://www.curseforge.com/minecraft/mc-mods/craftpresence)
 
 ## Port Notes
-*   Some versions of CraftPresence for Minecraft 1.14.x - 1.17.x require the [FabricMC ModLoader](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+*   Some versions of CraftPresence for Minecraft 1.14.x and above require the [FabricMC ModLoader](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 *   Some versions of CraftPresence for Minecraft 1.13.x require the [Rift ModLoader](https://www.curseforge.com/minecraft/mc-mods/rift)
 
 ## Features
@@ -26,13 +26,13 @@ CraftPresence will detect whether your Launch Directory contains:
 *   A MCUpdater Instance (instance.json)
 *   A Technic installedPacks File (installedPacks)
 
-If using any of these launchers, it'll put the packs name in your display as well as show it's icon (when not in a server).
+If using any of these launchers, it'll put the packs name in your display as well as show its icon (when not in a server).
 
 Note: In v1.6.0 and above, it'll instead parse the Pack's name into the `&PACK&` placeholder, that you can configure for usage in the RPC
 
 As an example, this is how the mod will convert a pack's name to an iconKey:
 
-Example: `All the Mods 3` would parse as `allthemods3`
+Example: `All the Mods 7` would parse as `allthemods7`
 
 Note: MultiMC natively has an Icon Key Property that is used instead of converting from the Pack's Display Name
 
@@ -202,7 +202,7 @@ Beginning in v1.5.2, CraftPresence is now split into different editions, based o
     *   Server Support is unavailable in 1.2.5 and Below (Only SinglePlayer will work with showGameStatus enabled)
     *   Minecraft 1.1.0 and below may not work on Forge, and may require a Modified Minecraft Jar with Risugami's ModLoader + ModLoaderMP
 
-**Support for issues related to Vanilla code, Forge, or Risugami's ModLoader is extremely limited**
+**Support for issues related to Vanilla code, Forge, or older/deprecated ModLoaders is extremely limited**
 
 ## Disclaimers & Additional Info
 

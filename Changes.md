@@ -12,7 +12,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 
 ### Fixes
 
-*   Fixes for MC 1.5.2 and below compatibility (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
+*   Compatibility fixes for MC 1.6.4 and below (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
 
 ___
 
