@@ -299,6 +299,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         )
                 )
         );
+        stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
         proceedButton = addControl(
                 new ExtendedButtonControl(
                         10, (height - 30),
