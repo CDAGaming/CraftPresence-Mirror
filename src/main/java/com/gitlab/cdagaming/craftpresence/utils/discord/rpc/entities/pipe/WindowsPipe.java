@@ -41,6 +41,10 @@ import java.util.HashMap;
 public class WindowsPipe extends Pipe {
     public RandomAccessFile file;
 
+    private static final Float javaSpec = Float.parseFloat(System.getProperty("java.specification.version"));
+    private final int targetKey = WinRegistry.HKEY_CURRENT_USER;
+    private final long targetLongKey = targetKey;
+
     WindowsPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, String location) {
         super(ipcClient, callbacks);
         try {
@@ -92,6 +96,7 @@ public class WindowsPipe extends Pipe {
         file.close();
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void registerApp(String applicationId, String command) {
         String javaLibraryPath = System.getProperty("java.home");
@@ -116,16 +121,28 @@ public class WindowsPipe extends Pipe {
         String commandKeyName = keyName + "\\DefaultIcon";
 
         try {
-            WinRegistry.createKey(WinRegistry.HKEY_CURRENT_USER, keyName);
-            WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, keyName, "", protocolDescription);
-            WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, keyName, "URL Protocol", "\0");
+            if (javaSpec >= 11) {
+                WinRegistry.createKey(targetLongKey, keyName);
+                WinRegistry.writeStringValue(targetLongKey, keyName, "", protocolDescription);
+                WinRegistry.writeStringValue(targetLongKey, keyName, "URL Protocol", "\0");
 
-            WinRegistry.createKey(WinRegistry.HKEY_CURRENT_USER, iconKeyName);
-            WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, iconKeyName, "", javaExePath);
+                WinRegistry.createKey(targetLongKey, iconKeyName);
+                WinRegistry.writeStringValue(targetLongKey, iconKeyName, "", javaExePath);
 
-            WinRegistry.createKey(WinRegistry.HKEY_CURRENT_USER, commandKeyName);
-            WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, commandKeyName, "", openCommand);
-        } catch (Exception ex) {
+                WinRegistry.createKey(targetLongKey, commandKeyName);
+                WinRegistry.writeStringValue(targetLongKey, commandKeyName, "", openCommand);
+            } else {
+                WinRegistry.createKey(targetKey, keyName);
+                WinRegistry.writeStringValue(targetKey, keyName, "", protocolDescription);
+                WinRegistry.writeStringValue(targetKey, keyName, "URL Protocol", "\0");
+
+                WinRegistry.createKey(targetKey, iconKeyName);
+                WinRegistry.writeStringValue(targetKey, iconKeyName, "", javaExePath);
+
+                WinRegistry.createKey(targetKey, commandKeyName);
+                WinRegistry.writeStringValue(targetKey, commandKeyName, "", openCommand);
+            }
+        } catch (Exception | Error ex) {
             throw new RuntimeException("Unable to modify Discord registry keys", ex);
         }
     }
@@ -133,7 +150,12 @@ public class WindowsPipe extends Pipe {
     @Override
     public void registerSteamGame(String applicationId, String steamId) {
         try {
-            String steamPath = WinRegistry.readString(WinRegistry.HKEY_CURRENT_USER, "Software\\\\Valve\\\\Steam", "SteamExe");
+            String steamPath;
+            if (javaSpec >= 11) {
+                steamPath = WinRegistry.readString(targetLongKey, "Software\\\\Valve\\\\Steam", "SteamExe");
+            } else {
+                steamPath = WinRegistry.readString(targetKey, "Software\\\\Valve\\\\Steam", "SteamExe");
+            }
             if (steamPath == null)
                 throw new RuntimeException("Steam exe path not found");
 

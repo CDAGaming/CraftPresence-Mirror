@@ -8,6 +8,7 @@
 
 package com.gitlab.cdagaming.craftpresence.impl;
 
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -78,6 +79,10 @@ public class WinRegistry {
                     "WindowsRegDeleteKey", (javaSpec >= 11 ? long.class : int.class),
                     byte[].class);
             regDeleteKey.setAccessible(true);
+        } catch (InaccessibleObjectException iex) {
+            System.out.println("Unable to access methods. If using JVM 11+, try adding the following JVM args:");
+            System.out.println("=> --add-opens  java.prefs/java.util.prefs=ALL-UNNAMED");
+            throw new RuntimeException(iex);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -98,6 +103,29 @@ public class WinRegistry {
      * @throws InvocationTargetException if underlying method(s) throw(s) an exception
      */
     public static String readString(int hkey, String key, String valueName)
+            throws IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
+        if (hkey == HKEY_LOCAL_MACHINE) {
+            return readString(systemRoot, hkey, key, valueName);
+        } else if (hkey == HKEY_CURRENT_USER) {
+            return readString(userRoot, hkey, key, valueName);
+        } else {
+            throw new IllegalArgumentException("hkey=" + hkey);
+        }
+    }
+
+    /**
+     * Read a value from key and value name
+     *
+     * @param hkey      HKEY_CURRENT_USER/HKEY_LOCAL_MACHINE
+     * @param key       The target key
+     * @param valueName The target value name
+     * @return the value
+     * @throws IllegalArgumentException  if hkey is invalid
+     * @throws IllegalAccessException    if permissions insufficient
+     * @throws InvocationTargetException if underlying method(s) throw(s) an exception
+     */
+    public static String readString(long hkey, String key, String valueName)
             throws IllegalArgumentException, IllegalAccessException,
             InvocationTargetException {
         if (hkey == HKEY_LOCAL_MACHINE) {
@@ -232,6 +260,30 @@ public class WinRegistry {
     }
 
     /**
+     * Write a value in a given key/value name
+     *
+     * @param hkey      HKEY_CURRENT_USER/HKEY_LOCAL_MACHINE
+     * @param key       The target key
+     * @param valueName The target value name
+     * @param value     The target value
+     * @throws IllegalArgumentException  if hkey is invalid
+     * @throws IllegalAccessException    if permissions insufficient
+     * @throws InvocationTargetException if underlying method(s) throw an exception
+     */
+    public static void writeStringValue
+    (long hkey, String key, String valueName, String value)
+            throws IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
+        if (hkey == HKEY_LOCAL_MACHINE) {
+            writeStringValue(systemRoot, hkey, key, valueName, value);
+        } else if (hkey == HKEY_CURRENT_USER) {
+            writeStringValue(userRoot, hkey, key, valueName, value);
+        } else {
+            throw new IllegalArgumentException("hkey=" + hkey);
+        }
+    }
+
+    /**
      * Delete a given key
      *
      * @param hkey HKEY_CURRENT_USER/HKEY_LOCAL_MACHINE
@@ -308,6 +360,20 @@ public class WinRegistry {
             throws IllegalArgumentException, IllegalAccessException,
             InvocationTargetException {
         int[] handles = (int[]) regOpenKey.invoke(root, new Object[]{
+                hkey, toCstr(key), KEY_READ});
+        if (handles[1] != REG_SUCCESS) {
+            return null;
+        }
+        byte[] valb = (byte[]) regQueryValueEx.invoke(root, new Object[]{
+                handles[0], toCstr(value)});
+        regCloseKey.invoke(root, handles[0]);
+        return (valb != null ? new String(valb).trim() : null);
+    }
+
+    private static String readString(Preferences root, long hkey, String key, String value)
+            throws IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
+        long[] handles = (long[]) regOpenKey.invoke(root, new Object[]{
                 hkey, toCstr(key), KEY_READ});
         if (handles[1] != REG_SUCCESS) {
             return null;

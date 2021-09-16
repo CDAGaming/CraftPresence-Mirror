@@ -320,10 +320,18 @@ public final class IPCClient implements Closeable {
         pipe = Pipe.openPipe(this, clientId, callbacks, preferredOrder);
 
         if (isAutoRegister()) {
-            if (optionalSteamId != null && !optionalSteamId.isEmpty())
-                this.registerSteamGame(getApplicationId(), optionalSteamId);
-            else
-                this.registerApp(getApplicationId(), null);
+            try {
+                if (optionalSteamId != null && !optionalSteamId.isEmpty())
+                    this.registerSteamGame(getApplicationId(), optionalSteamId);
+                else
+                    this.registerApp(getApplicationId(), null);
+            } catch (Exception | Error ex) {
+                if (debugMode) {
+                    ex.printStackTrace();
+                } else {
+                    ModUtils.LOG.error("Unable to register application, enable debug mode for trace...");
+                }
+            }
         }
 
         if (debugMode) {
@@ -402,7 +410,7 @@ public final class IPCClient implements Closeable {
     }
 
     /**
-     * Manually register a application
+     * Manually register an application
      *
      * @param applicationId Application ID
      * @param command       Command to run the application
