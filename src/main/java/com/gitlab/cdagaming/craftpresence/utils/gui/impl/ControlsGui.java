@@ -144,7 +144,7 @@ public class ControlsGui extends PaginatedScreen {
      * Setup Rendering Queues for different parts of the Screen
      */
     private void setupScreenData() {
-        // Clear any Prior Data before hand'
+        // Clear any Prior Data before-hand
         preRenderQueue.clear();
         postRenderQueue.clear();
 
@@ -225,7 +225,7 @@ public class ControlsGui extends PaginatedScreen {
         int keyToSubmit = keyCode;
 
         // Ensure a Valid KeyCode is entered
-        if (!CraftPresence.KEYBINDINGS.isValidKeyCode(keyToSubmit)) {
+        if (!CraftPresence.KEYBINDINGS.isValidKeyCode(keyToSubmit) || CraftPresence.KEYBINDINGS.isValidClearCode(keyToSubmit)) {
             keyToSubmit = Keyboard.KEY_NONE;
         }
 

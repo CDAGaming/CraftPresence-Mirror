@@ -49,12 +49,17 @@ import java.util.Map;
  */
 public class KeyUtils {
     /**
-     * Allowed KeyCode Start Limit and Individual Filters
+     * KeyCodes that when pressed will be interpreted as NONE/UNKNOWN
      * After ESC and Including any KeyCodes under 0x00
      * <p>
      * Notes:
      * LWJGL 2: ESC = 0x01
      * LWJGL 3: ESC = 256
+     */
+    private final List<Integer> clearKeys = Lists.newArrayList();
+
+    /**
+     * Allowed KeyCode Start Limit and Individual Filters
      */
     private final List<Integer> invalidKeys = Lists.newArrayList();
 
@@ -72,11 +77,7 @@ public class KeyUtils {
     void register() {
         // Register Invalid Keys, dependent on protocol version
         // - These keys will identify as NONE within the game
-        if (ModUtils.MCProtocolID > 340) {
-            invalidKeys.add(256); // ESC
-        } else {
-            invalidKeys.add(1); // ESC
-        }
+        clearKeys.add(ModUtils.MCProtocolID > 340 ? 256 : 1); // ESC
 
         KEY_MAPPINGS.put(
                 "configKeyCode",
@@ -105,6 +106,18 @@ public class KeyUtils {
      */
     public boolean isValidKeyCode(int sourceKeyCode) {
         return !invalidKeys.contains(sourceKeyCode);
+    }
+
+    /**
+     * Determine if the Source KeyCode fulfills the following conditions
+     * <p>
+     * 1) Is Not Contained or Listed within {@link KeyUtils#clearKeys}
+     *
+     * @param sourceKeyCode The Source KeyCode to Check
+     * @return {@code true} if and only if a Valid KeyCode
+     */
+    public boolean isValidClearCode(int sourceKeyCode) {
+        return clearKeys.contains(sourceKeyCode);
     }
 
     /**
@@ -137,7 +150,8 @@ public class KeyUtils {
      * @return Either an LWJGL KeyCode Name or the KeyCode if none can be found
      */
     public String getKeyName(final int original) {
-        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0)).getSecond();
+        final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
+        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
         if (isValidKeyCode(original)) {
             // If Input is a valid Integer and Valid KeyCode,
             // Parse depending on Protocol
@@ -148,13 +162,19 @@ public class KeyUtils {
             } else {
                 // If no other Mapping Layer contains the KeyCode Name,
                 // Fallback to LWJGL Methods to retrieve the KeyCode Name
-                final String keyName = Keyboard.getKeyName(original);
+                final String altKeyName = Integer.toString(original);
+                String keyName;
+                if (original != unknownKeyCode) {
+                    keyName = Keyboard.getKeyName(original);
+                } else {
+                    keyName = unknownKeyName;
+                }
 
                 // If Key Name is not Empty or Null, use that, otherwise use original
                 if (!StringUtils.isNullOrEmpty(keyName)) {
                     return keyName;
                 } else {
-                    return Integer.toString(original);
+                    return altKeyName;
                 }
             }
         } else {
@@ -170,14 +190,16 @@ public class KeyUtils {
      */
     void onTick() {
         if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
-            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0)).getSecond();
+            final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
+            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
-                    boolean hasBeenRun = false;
                     final KeyBinding keyBind = KEY_MAPPINGS.get(keyName).getFirst();
-                    if (!getKeyName(keyBind.getKeyCode()).equals(unknownKeyName)) {
+                    final int currentBind = keyBind.getKeyCode();
+                    boolean hasBeenRun = currentBind == unknownKeyCode;
+                    if (!hasBeenRun && !getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(keyBind.getKeyCode()) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
                             final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                             try {
                                 keyData.getSecond().run();
@@ -199,8 +221,8 @@ public class KeyUtils {
                         if (CraftPresence.CONFIG.keySyncQueue.containsKey(keyName)) {
                             syncKeyData(keyName, ImportMode.Config, CraftPresence.CONFIG.keySyncQueue.get(keyName));
                             CraftPresence.CONFIG.keySyncQueue.remove(keyName);
-                        } else if (keyBind.getKeyCode() != StringUtils.getValidInteger(StringUtils.lookupObject(ConfigUtils.class, CraftPresence.CONFIG, keyName)).getSecond()) {
-                            syncKeyData(keyName, ImportMode.Vanilla, keyBind.getKeyCode());
+                        } else if (currentBind != StringUtils.getValidInteger(StringUtils.lookupObject(ConfigUtils.class, CraftPresence.CONFIG, keyName)).getSecond()) {
+                            syncKeyData(keyName, ImportMode.Vanilla, currentBind);
                         }
                     }
                 }

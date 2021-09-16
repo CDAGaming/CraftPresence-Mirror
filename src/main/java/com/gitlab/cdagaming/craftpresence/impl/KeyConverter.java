@@ -335,7 +335,7 @@ public class KeyConverter {
             }
         }
 
-        if (resultKey == unknownKeyData.getFirst() || (resultKey == originalKey && mode != ConversionMode.None)) {
+        if (resultKey == originalKey && mode != ConversionMode.None) {
             ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", Integer.toString(resultKey), mode.name()));
         }
 
