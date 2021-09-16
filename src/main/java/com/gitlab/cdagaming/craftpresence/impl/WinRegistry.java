@@ -8,7 +8,6 @@
 
 package com.gitlab.cdagaming.craftpresence.impl;
 
-import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -79,11 +78,11 @@ public class WinRegistry {
                     "WindowsRegDeleteKey", (javaSpec >= 11 ? long.class : int.class),
                     byte[].class);
             regDeleteKey.setAccessible(true);
-        } catch (InaccessibleObjectException iex) {
-            System.out.println("Unable to access methods. If using JVM 11+, try adding the following JVM args:");
-            System.out.println("=> --add-opens  java.prefs/java.util.prefs=ALL-UNNAMED");
-            throw new RuntimeException(iex);
         } catch (Exception e) {
+            if (e.getClass().getSimpleName().equalsIgnoreCase("InaccessibleObjectException")) {
+                System.out.println("Unable to access methods. If using JVM 11+, try adding the following JVM args:");
+                System.out.println("=> --add-opens  java.prefs/java.util.prefs=ALL-UNNAMED");
+            }
             throw new RuntimeException(e);
         }
     }
