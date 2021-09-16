@@ -6,12 +6,13 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 
 ### Changes
 
-* Added an advanced option to allow specifying the player skin endpoint (Used in some icon previews, option only visible in local file)
-* (Backend) Updated the translation handler to have a sanity case for when parameters are null
+*   Added an advanced option to allow specifying the player skin endpoint (Used in some icon previews, option only visible in local file)
+*   (Backend) Updated the translation handler to have a sanity case for when parameters are null
+*   (Backend) Workspace Updates for Java 17 Support (On supported versions)
 
 ### Fixes
 
-* Fixes for MC 1.5.2 and below compatibility (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
+*   Fixes for MC 1.5.2 and below compatibility (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
 
 ___
 
