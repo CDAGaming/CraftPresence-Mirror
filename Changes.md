@@ -12,6 +12,8 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 
 ### Fixes
 
+*   Fixes for `&worldname&` placeholder issues (NPEs and missing sanity checks)
+*   Mitigate further issues relating to GL error spam with `NONE` keycodes
 *   Compatibility fixes for MC 1.6.4 and below (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
 *   Fixes for various issues preventing `autoRegister` from functioning on Java 11 and above (Requires JVM Flag: `--add-opens  java.prefs/java.util.prefs=ALL-UNNAMED` in 11+)
 
