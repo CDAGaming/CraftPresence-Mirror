@@ -34,7 +34,8 @@ allprojects {
 license {
     // Exclude JUnixSocket Files
     exclude "**/newsclub/**"
-    exclude "**/maven/com.kohlschutter.junixsocket/**"
+    exclude "**/kohlschutter/**"
+    exclude "**/maven/com.kohlschutter**"
     exclude "**/jni/**"
     // Exclude Non-Parsable Files
     exclude "**/*.lang"

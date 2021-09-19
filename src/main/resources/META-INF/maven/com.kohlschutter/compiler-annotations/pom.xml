@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>compiler-annotations</artifactId>
+  <packaging>jar</packaging>
+  <parent>
+    <groupId>com.kohlschutter</groupId>
+    <artifactId>kohlschutter-parent-multirelease</artifactId>
+    <version>1.4.2</version>
+    <relativePath>../kohlschutter-parent-multirelease/pom.xml</relativePath>
+  </parent>
+  <name>compiler-annotations</name>
+  <description>Annotations that are only needed at compile-time</description>
+  <properties>
+    <kohlschutter.project.base.directory>${project.basedir}</kohlschutter.project.base.directory>
+    <kohlschutter.project.notice.file>${kohlschutter.parent.directory}/NOTICE</kohlschutter.project.notice.file>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.annotation</artifactId>
+    </dependency>
+  </dependencies>
+</project>
