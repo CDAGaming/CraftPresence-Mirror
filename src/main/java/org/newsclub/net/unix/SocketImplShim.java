@@ -17,13 +17,10 @@
  */
 package org.newsclub.net.unix;
 
-import java.io.IOException;
 import java.net.SocketImpl;
-import java.net.SocketOption;
-import java.util.Set;
 
 /**
- * A shim that is filled with Java version-specific overrides. This variant is for Java 9 and above.
+ * A shim that is filled with Java version-specific overrides. This variant is for Java 7 and 8.
  * 
  * @author Christian Kohlschütter
  */
@@ -33,29 +30,13 @@ abstract class SocketImplShim extends SocketImpl {
     super();
   }
 
+  @SuppressWarnings("all")
   @Override
-  protected <T> void setOption(SocketOption<T> name, T value) throws IOException {
-    Integer optionId = SocketOptionsMapper.resolve(name);
-    if (optionId == null) {
-      super.setOption(name, value);
-    } else {
-      setOption(optionId, value);
+  protected final void finalize() {
+    try {
+      close();
+    } catch (Exception e) {
+      // nothing that can be done here
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected <T> T getOption(SocketOption<T> name) throws IOException {
-    Integer optionId = SocketOptionsMapper.resolve(name);
-    if (optionId == null) {
-      return super.getOption(name);
-    } else {
-      return (T) getOption(optionId);
-    }
-  }
-
-  @Override
-  protected Set<SocketOption<?>> supportedOptions() {
-    return SocketOptionsMapper.SUPPORTED_SOCKET_OPTIONS;
   }
 }

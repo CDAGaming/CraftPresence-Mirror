@@ -19,57 +19,29 @@ package org.newsclub.net.unix;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.ref.Cleaner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * This wrapper (along with the Java 8-specific counterpart in src/main/java8) allows us to
- * implement cleanup logic for objects that are garbage-collectable/no longer reachable.
- * 
- * <p>
- * Usage:
- * <ol>
- * <li>Create a subclass of CleanableState and attach it as a private field to the object you want
- * to be cleaned up. You may call that field {@code cleanableState}.</li>
- * <li>Define all resources that need to be cleaned up in this subclass (instead of the observed
- * object itself).</li>
- * <li>Make sure to not refer the observed object instance itself, as that will create a reference
- * cycle and prevent proper cleanup.</li>
- * <li>Implement the {@link #doClean()} method to perform all the necessary cleanup steps.</li>
- * <li>If the observed class implements {@code close()}, it's a good practice to have it just call
- * {@code cleanableState.runCleaner()}.</li>
- * </ol>
- * </p>
- * <p>
- * Implementation details:
- * <ul>
- * <li>In Java 9 or later, {@link Cleaner} is used under the hood.</li>
- * <li>In Java 8 or earlier, {@link #finalize()} calls {@link #doClean()} directly.</li>
- * </ul>
- * </p>
- * 
- * @author Christian Kohlschütter
- */
 abstract class CleanableState implements Closeable {
-  private static final Cleaner CLEANER = Cleaner.create();
-  private final Cleaner.Cleanable cleanable;
+  private final AtomicBoolean clean = new AtomicBoolean(false);
 
-  /**
-   * Creates a state object to be used as an implementation detail of the specified observed
-   * instance.
-   * 
-   * @param observed The observed instance (the outer class referencing this
-   *          {@link CleanableState}).
-   */
+  @SuppressWarnings("PMD.UnusedFormalParameter")
   protected CleanableState(Object observed) {
-    this.cleanable = CLEANER.register(observed, () -> doClean());
   }
 
-  /**
-   * Explicitly the cleanup code defined in {@link #doClean()}. This is best be called from a
-   * {@code close()} method in the observed class.
-   */
   public final void runCleaner() {
-    cleanable.clean();
+    if (clean.compareAndSet(false, true)) {
+      doClean();
+    }
+  }
+
+  @SuppressWarnings("all")
+  @Override
+  protected final void finalize() {
+    try {
+      runCleaner();
+    } catch (Exception e) {
+      // nothing that can be done here
+    }
   }
 
   /**
