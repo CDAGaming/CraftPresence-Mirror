@@ -1,25 +1,34 @@
 # CraftPresence Changes
 
-## v1.9.0 (??/??/????)
+## v1.8.6 (09/21/2021)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.6...release%2Fv1.9.0)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.4...release%2Fv1.8.6)_
 
 ### Changes
 
-*   Updated JUnixSocket from v2.2.1 to v2.4.0
-    *   This change carries numerous improvements, among which are support for more Unix systems in addition to hopefully better performance for existing architectures
+*   Added an advanced option to allow specifying the player skin endpoint (Used in some icon previews, option only visible in local file)
+*   (Backend) Updated the translation handler to have a sanity case for when parameters are null
+*   (Backend) Workspace Updates for Java 17 Support (On supported versions)
 
 ### Fixes
 
-*   TBD
+*   Fixes for `&worldname&` placeholder issues (NPEs and missing sanity checks)
+*   Mitigate further issues relating to GL error spam with `NONE` keycodes
+*   Compatibility fixes for MC 1.6.4 and below (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
+*   Fixes for various issues preventing `autoRegister` from functioning on Java 11 and above (Requires JVM Flag: `--add-opens  java.prefs/java.util.prefs=ALL-UNNAMED` in 11+)
 
 ___
 
 ### More Information
 
-#### v1.9.0 Upgrade Info
+#### v1.8.0 Upgrade Info
 
-TBD
+v1.8.0 of CraftPresence is the next major feature and technical update after the v1.7.x pipeline.
+It is a culmination of long-standing requests and fixes that have been sent in over the last few months.
+
+While no config migrations are necessary at this time for updating to v1.8.x, this can change as time goes on in the v1.8.x Pipeline, and will be noted here as such when and if these types of changes occur.
+
+More features will additionally be planned and added for later in the v1.8.x Pipeline as further releases arrive (and as they are requested).
 
 #### 1.13.x Build Info
 
