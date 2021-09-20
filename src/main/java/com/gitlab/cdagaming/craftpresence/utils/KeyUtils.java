@@ -196,8 +196,9 @@ public class KeyUtils {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
                     final KeyBinding keyBind = KEY_MAPPINGS.get(keyName).getFirst();
                     final int currentBind = keyBind.getKeyCode();
-                    boolean hasBeenRun = currentBind == unknownKeyCode;
-                    if (!hasBeenRun && !getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
+                    boolean hasBeenRun = false;
+
+                    if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
                         if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
                             final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
