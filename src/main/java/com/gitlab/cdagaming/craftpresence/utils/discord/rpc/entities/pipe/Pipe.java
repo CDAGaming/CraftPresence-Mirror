@@ -101,7 +101,7 @@ public abstract class Pipe {
                     );
 
                     if (ipcClient.isDebugMode()) {
-                        ModUtils.LOG.debugInfo(String.format("Found a valid client (%s) with packet: %s", pipe.build.name(), p.toString()));
+                        ModUtils.LOG.debugInfo(String.format("Found a valid client (%s) with packet: %s", pipe.build.name(), p));
                         ModUtils.LOG.debugInfo(String.format("Found a valid user (%s) with id: %s", pipe.currentUser.getName(), pipe.currentUser.getId()));
                     }
 
@@ -274,7 +274,7 @@ public abstract class Pipe {
         Packet p = new Packet(op, packetData, ipcClient.getEncoding());
 
         if (ipcClient.isDebugMode()) {
-            ModUtils.LOG.debugInfo(String.format("Received packet: %s", p.toString()));
+            ModUtils.LOG.debugInfo(String.format("Received packet: %s", p));
         }
 
         if (listener != null)

@@ -52,11 +52,11 @@ public class ControlsGui extends PaginatedScreen {
     private final Map<String, List<String>> categorizedNames = Maps.newHashMap();
     // Format: pageNumber:[elementText:[xPos:yPos]:color]
     private final Map<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> preRenderQueue = Maps.newHashMap(), postRenderQueue = Maps.newHashMap();
+    private final int maxElementsPerPage = 7, startRow = 1;
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
     private Pair<ExtendedButtonControl, String> entryData = null;
-    private final int maxElementsPerPage = 7, startRow = 1;
     private int currentAllocatedRow = startRow, currentAllocatedPage = startPage;
 
     public ControlsGui(GuiScreen parentScreen) {

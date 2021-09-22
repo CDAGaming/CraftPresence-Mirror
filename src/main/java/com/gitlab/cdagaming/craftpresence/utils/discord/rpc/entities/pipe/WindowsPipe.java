@@ -39,11 +39,10 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 
 public class WindowsPipe extends Pipe {
-    public RandomAccessFile file;
-
     private static final Float javaSpec = Float.parseFloat(System.getProperty("java.specification.version"));
     private final int targetKey = WinRegistry.HKEY_CURRENT_USER;
     private final long targetLongKey = targetKey;
+    public RandomAccessFile file;
 
     WindowsPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, String location) {
         super(ipcClient, callbacks);
