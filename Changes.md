@@ -14,6 +14,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 * Fixed Issues related to Icon Previews failing to display in MC 1.6.4 (`Strip Extra Gui Elements` now unlocked for 1.6.4 users)
 * (Backend) `ServerUtils#getServerAddresses` -> Silenced an NPE that can occur when the server list is empty on MC 1.5.2 or below (Only will output for Verbose users)
 * Mitigate Issues regarding custom gui screens with textboxes crashing on MC 1.2.5 and below
+* Fixed Issues related to the custom Controls Gui incorrectly operating in MC 1.6.4 and below (`Controls` menu is now re-enabled for effected users)
 
 ___
 

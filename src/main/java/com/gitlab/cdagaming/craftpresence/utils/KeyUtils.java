@@ -121,6 +121,17 @@ public class KeyUtils {
     }
 
     /**
+     * Retrieves the unfiltered Key Mappings for Vanilla MC KeyBind Schema
+     * <p>
+     * Format: rawKeyField:[keyBindInstance:runEvent:errorCallback]
+     *
+     * @return The unfiltered key mappings
+     */
+    public Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> getRawKeyMappings() {
+        return KEY_MAPPINGS;
+    }
+
+    /**
      * Determine the LWJGL KeyCode Name for the inputted KeyCode
      *
      * @param original A KeyCode, converted to String

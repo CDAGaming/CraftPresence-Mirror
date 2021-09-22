@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.craftpresence.utils.commands.CommandsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
+import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
@@ -251,12 +252,27 @@ public class MainGui extends ExtendedScreen {
                 )
         );
         // Adding Controls Button
+        final List<String> controlInfo = Lists.newArrayList("key.craftpresence.category");
+        KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
+        if (ModUtils.IS_LEGACY_SOFT) {
+            controlInfo.clear();
+            controlInfo.addAll(CraftPresence.KEYBINDINGS.getRawKeyMappings().keySet());
+
+            controlMode = KeyUtils.FilterMode.Name;
+        }
+
+        KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = addControl(
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 55),
                         180, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.message.button.controls"),
-                        () -> CraftPresence.GUIS.openScreen(new ControlsGui(currentScreen, KeyUtils.FilterMode.Category, "key.craftpresence.category"))
+                        () -> CraftPresence.GUIS.openScreen(
+                                new ControlsGui(
+                                        currentScreen, finalControlMode,
+                                        controlInfo
+                                )
+                        )
                 )
         );
         proceedButton = addControl(
@@ -394,7 +410,7 @@ public class MainGui extends ExtendedScreen {
         commandGUIButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enableCommands : commandGUIButton.isControlEnabled());
 
         //noinspection ConstantConditions
-        controlsButton.setControlEnabled(!ModUtils.IS_LEGACY_SOFT);
+        controlsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
 
         proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? ModUtils.TRANSLATOR.translate("gui.config.message.button.save") : ModUtils.TRANSLATOR.translate("gui.config.message.button.back"));
     }

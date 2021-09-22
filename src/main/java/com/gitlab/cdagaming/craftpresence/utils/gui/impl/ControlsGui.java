@@ -66,11 +66,15 @@ public class ControlsGui extends PaginatedScreen {
         sortMappings();
     }
 
-    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
+    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, List<String> filterData) {
         super(parentScreen);
-        this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings(filterMode, Arrays.asList(filterData));
+        this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings(filterMode, filterData);
 
         sortMappings();
+    }
+
+    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
+        this(parentScreen, filterMode, Arrays.asList(filterData));
     }
 
     @Override
@@ -153,8 +157,9 @@ public class ControlsGui extends PaginatedScreen {
             syncPageData();
             final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((width / 2f) - (StringUtils.getStringWidth(categoryName) / 2f), (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
             if (!preRenderQueue.containsKey(currentAllocatedPage)) {
-                preRenderQueue.put(currentAllocatedPage, Lists.newArrayList(categoryData));
-            } else {
+                preRenderQueue.put(currentAllocatedPage, Lists.newArrayList());
+            }
+            if (!ModUtils.IS_LEGACY_SOFT) {
                 preRenderQueue.get(currentAllocatedPage).add(categoryData);
             }
 
