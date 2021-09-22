@@ -346,7 +346,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         renderString(languageIdTitle, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF);
 
         //noinspection ConstantConditions
-        stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_SOFT);
+        stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getText()));
     }

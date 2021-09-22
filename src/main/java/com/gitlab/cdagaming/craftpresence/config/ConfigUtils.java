@@ -282,7 +282,7 @@ public class ConfigUtils {
         showBackgroundAsDark = true;
         stripTranslationColors = false;
         showLoggingInChat = false;
-        stripExtraGuiElements = ModUtils.IS_LEGACY_SOFT;
+        stripExtraGuiElements = ModUtils.IS_LEGACY_HARD;
         configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
         // DISPLAY MESSAGES
         NAME_gameStateMessage_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.game_state_message").replaceAll(" ", "_");

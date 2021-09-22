@@ -1,23 +1,19 @@
 # CraftPresence Changes
 
-## v1.8.7 (09/21/2021)
+## v1.8.8 (09/28/2021)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.4...release%2Fv1.8.7)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.7...release%2Fv1.8.8)_
 
 ### Changes
 
-*   Added an advanced option to allow specifying the player skin endpoint (Used in some icon previews, option only visible in local file)
-*   (Backend) Updated JUnixSocket from v2.2.1 to v2.4.0
-    *   This change carries numerous improvements, among which are support for more Unix systems in addition to hopefully better performance for existing architectures
-*   (Backend) Updated the translation handler to have a sanity case for when parameters are null
-*   (Backend) Workspace Updates for Java 17 Support (On supported versions)
+*   TBD
 
 ### Fixes
 
-*   Fixes for `&worldname&` placeholder issues (NPEs and missing sanity checks)
-*   Mitigate further issues relating to GL error spam with `NONE` keycodes
-*   Compatibility fixes for MC 1.6.4 and below (Splits the `IS_LEGACY` flag into a soft floor and a hard floor)
-*   Fixes for various issues preventing `autoRegister` from functioning on Java 11 and above (Requires JVM Flag: `--add-opens  java.prefs/java.util.prefs=ALL-UNNAMED` in 11+)
+* Fixed JUnixSocket Implementation in MC 1.5.2 and below (Linux and MacOS support; Java 7 required)
+* Fixed Issues related to Icon Previews failing to display in MC 1.6.4 (`Strip Extra Gui Elements` now unlocked for 1.6.4 users)
+* (Backend) `ServerUtils#getServerAddresses` -> Silenced an NPE that can occur when the server list is empty on MC 1.5.2 or below (Only will output for Verbose users)
+* Mitigate Issues regarding custom gui screens with textboxes crashing on MC 1.2.5 and below
 
 ___
 

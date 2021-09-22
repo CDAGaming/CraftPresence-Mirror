@@ -573,18 +573,24 @@ public class ServerUtils {
      * Retrieves and Synchronizes detected Server Addresses from the Server List
      */
     public void getServerAddresses() {
-        final ServerList serverList = new ServerList(CraftPresence.instance);
-        serverList.loadServerList();
-        serverIndex = serverList.countServers();
+        try {
+            final ServerList serverList = new ServerList(CraftPresence.instance);
+            serverList.loadServerList();
+            serverIndex = serverList.countServers();
 
-        for (int currentIndex = 0; currentIndex < serverIndex; currentIndex++) {
-            final ServerData data = serverList.getServerData(currentIndex);
-            if (!StringUtils.isNullOrEmpty(data.serverIP) && !knownAddresses.contains(data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP)) {
-                knownAddresses.add(data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP);
+            for (int currentIndex = 0; currentIndex < serverIndex; currentIndex++) {
+                final ServerData data = serverList.getServerData(currentIndex);
+                if (!StringUtils.isNullOrEmpty(data.serverIP) && !knownAddresses.contains(data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP)) {
+                    knownAddresses.add(data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP);
+                }
+
+                if (!StringUtils.isNullOrEmpty(data.serverIP) && !knownServerData.containsKey(data.serverIP)) {
+                    knownServerData.put(data.serverIP, data);
+                }
             }
-
-            if (!StringUtils.isNullOrEmpty(data.serverIP) && !knownServerData.containsKey(data.serverIP)) {
-                knownServerData.put(data.serverIP, data);
+        } catch (Exception ex) {
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
             }
         }
 
