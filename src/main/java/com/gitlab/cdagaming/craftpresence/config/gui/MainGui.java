@@ -261,7 +261,7 @@ public class MainGui extends ExtendedScreen {
             controlMode = KeyUtils.FilterMode.Name;
         }
 
-        KeyUtils.FilterMode finalControlMode = controlMode;
+        final KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = addControl(
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 55),
