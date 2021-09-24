@@ -6,7 +6,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 
 ### Changes
 
-*   TBD
+*   Added build support for MC 1.0.0 (Decisions on lower ports will be subject to Java compile requirements)
 
 ### Fixes
 
