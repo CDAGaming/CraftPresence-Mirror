@@ -106,7 +106,7 @@ public class DiscordUtils {
      */
     public String LARGE_IMAGE_TEXT;
     /**
-     * The 18-character Client ID Number, tied to the game profile data attached to the RPC
+     * The unique-character Client ID Number, tied to the game profile data attached to the RPC
      */
     public String CLIENT_ID;
     /**

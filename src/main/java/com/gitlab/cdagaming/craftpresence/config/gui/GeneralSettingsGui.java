@@ -62,7 +62,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 )
         );
         clientId.setText(CraftPresence.CONFIG.clientId);
-        clientId.setMaxStringLength(18);
+        clientId.setMaxStringLength(32);
 
         final int buttonCalc1 = (width / 2) - 183;
         final int buttonCalc2 = (width / 2) + 3;
@@ -422,7 +422,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         renderString(clientIdText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         partyPrivacyLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).getDisplayName());
-        proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(clientId.getText()) && clientId.getText().length() == 18 && StringUtils.getValidLong(clientId.getText()).getFirst());
+        proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(clientId.getText()) && clientId.getText().length() >= 18 && StringUtils.getValidLong(clientId.getText()).getFirst());
     }
 
     @Override

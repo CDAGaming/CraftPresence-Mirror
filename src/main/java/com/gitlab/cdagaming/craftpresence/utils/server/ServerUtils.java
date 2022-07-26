@@ -421,7 +421,7 @@ public class ServerUtils {
     public void verifyAndJoin(final String secret) {
         String[] boolParts = secret.split(";");
         String[] stringParts = boolParts[0].split("-");
-        boolean containsValidClientID = StringUtils.elementExists(stringParts, 0) && (stringParts[0].length() == 18 && StringUtils.getValidLong(stringParts[0]).getFirst());
+        boolean containsValidClientID = StringUtils.elementExists(stringParts, 0) && (stringParts[0].length() >= 18 && StringUtils.getValidLong(stringParts[0]).getFirst());
         boolean containsServerName = StringUtils.elementExists(boolParts, 1) && StringUtils.elementExists(stringParts, 1) && Boolean.parseBoolean(boolParts[1]);
         boolean containsServerIP = StringUtils.elementExists(boolParts, 2) && StringUtils.elementExists(stringParts, 2) && Boolean.parseBoolean(boolParts[2]);
         String serverName = containsServerName ? stringParts[1] : CraftPresence.CONFIG.defaultServerName;
