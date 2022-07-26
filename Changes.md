@@ -1,20 +1,13 @@
 # CraftPresence Changes
 
-## v1.8.8 (09/28/2021)
+## v1.8.9 (07/26/2022)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.7...release%2Fv1.8.8)_
-
-### Changes
-
-*   Added build support for MC 1.0.0 (Decisions on lower ports will be subject to Java compile requirements)
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.8...release%2Fv1.8.9)_
 
 ### Fixes
 
-* Fixed JUnixSocket Implementation in MC 1.5.2 and below (Linux and MacOS support; Java 7 required)
-* Fixed Issues related to Icon Previews failing to display in MC 1.6.4 (`Strip Extra Gui Elements` now unlocked for 1.6.4 users)
-* (Backend) `ServerUtils#getServerAddresses` -> Silenced an NPE that can occur when the server list is empty on MC 1.5.2 or below (Only will output for Verbose users)
-* Mitigate Issues regarding custom gui screens with textboxes crashing on MC 1.2.5 and below
-* Fixed Issues related to the custom Controls Gui incorrectly operating in MC 1.6.4 and below (`Controls` menu is now re-enabled for effected users)
+*   Fixed issues with Client IDs above 18 characters not working (Thanks Discord :/)
+*   Misc. Cleanups and Optimizations
 
 ___
 
