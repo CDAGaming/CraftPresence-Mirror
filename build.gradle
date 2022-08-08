@@ -8,20 +8,24 @@ buildscript {
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:5.+"
         classpath "com.github.CDAGaming:CurseGradle:master-SNAPSHOT"
+        classpath "com.modrinth.minotaur:Minotaur:2.+"
         classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.1"
     }
 }
 
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "com.matthewprenger.cursegradle"
+apply plugin: "com.modrinth.minotaur"
 apply plugin: "org.cadixdev.licenser"
 
 import net.minecraftforge.gradle.common.tasks.SignJar
 import org.apache.tools.ant.filters.ReplaceTokens
 
+def archive_name = "${mod_name}-${loader_name}"
+
 version = "${versionId}"
 group = "com.gitlab.cdagaming"
-archivesBaseName = "${archive_name}-${mc_version}-${versionType}"
+archivesBaseName = "${archive_name}-${mc_version}-${deploymentType}"
 
 JavaVersion targetVersion = JavaVersion.VERSION_1_8
 
@@ -52,14 +56,32 @@ curseforge {
         id = "297038"
         changelog = file("Changes.md")
         changelogType = "markdown"
-        releaseType = "${versionType}".toLowerCase()
+        releaseType = "${deploymentType}".toLowerCase()
         addGameVersion "${mc_version}"
-        addGameVersion "Forge"
+        addGameVersion "${loader_name}"
 
         mainArtifact(jar) {
             displayName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
         }
     }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "${mod_name}".toLowerCase()
+    versionNumber = "v${version}_${mc_version}-${loader_name}_${versionLabel}".replaceAll("\\s","").toLowerCase()
+    versionName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
+    changelog = file("Changes.md").text
+    versionType = "${deploymentType}".toLowerCase()
+    uploadFile = jar
+    gameVersions = ["${mc_version}"]
+    loaders = ["${loader_name}".toLowerCase()]
+    dependencies = []
+}
+
+task publishToModSites {
+    publishToModSites.dependsOn modrinth
+    publishToModSites.dependsOn curseforge
 }
 
 minecraft {
@@ -156,7 +178,7 @@ task processSource(type: Sync) {
     inputs.property "modName", "${mod_name}"
     inputs.property "versionId", "${versionId}"
     inputs.property "fingerprint", "${certFingerprint}"
-    inputs.property "versionType", "${versionType}"
+    inputs.property "versionType", "${deploymentType}"
     inputs.property "versionLabel", "${versionLabel}"
 
     from sourceSets.main.java
@@ -164,7 +186,7 @@ task processSource(type: Sync) {
             MOD_NAME     : mod_name,
             VERSION_ID   : versionId,
             FINGERPRINT  : certFingerprint,
-            VERSION_TYPE : versionType,
+            VERSION_TYPE : deploymentType,
             VERSION_LABEL: versionLabel
     ])
     into copyDir
@@ -175,4 +197,4 @@ compileJava {
 }
 
 tasks.build.dependsOn signJar
-tasks.curseforge.dependsOn build
+tasks.publishToModSites.dependsOn build

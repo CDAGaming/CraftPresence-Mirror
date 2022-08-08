@@ -8,9 +8,29 @@ build:
       - build/libs/*.jar
     expire_in: 1 month
 
-deploy:
+deploy_all:
   script:
+    - ./gradlew publishToModSites
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 month
+  when: manual
+
+deploy_curseforge:
+  script:
+    - ./gradlew build
     - ./gradlew curseforge
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 month
+  when: manual
+
+deploy_modrinth:
+  script:
+    - ./gradlew build
+    - ./gradlew modrinth
   artifacts:
     paths:
       - build/libs/*.jar
