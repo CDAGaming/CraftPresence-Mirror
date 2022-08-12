@@ -27,6 +27,13 @@ import java.nio.channels.SocketChannel;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
+
+/**
+ * A selectable channel for stream-oriented connecting sockets.
+ *
+ * @author Christian Kohlschütter
+ */
 public final class AFUNIXSocketChannel extends SocketChannel implements AFUNIXSomeSocket,
     AFUNIXSocketExtensions {
   private final AFUNIXSocket afSocket;
@@ -37,10 +44,23 @@ public final class AFUNIXSocketChannel extends SocketChannel implements AFUNIXSo
     this.afSocket = socket;
   }
 
+  /**
+   * Opens a socket channel.
+   *
+   * @return The new channel
+   * @throws IOException on error.
+   */
   public static AFUNIXSocketChannel open() throws IOException {
     return AFUNIXSelectorProvider.provider().openSocketChannel();
   }
 
+  /**
+   * Opens a socket channel, connecting to the given socket address.
+   *
+   * @param remote The socket address to connect to.
+   * @return The new channel
+   * @throws IOException on error.
+   */
   public static AFUNIXSocketChannel open(SocketAddress remote) throws IOException {
     @SuppressWarnings("resource")
     AFUNIXSocketChannel sc = open();
@@ -104,6 +124,7 @@ public final class AFUNIXSocketChannel extends SocketChannel implements AFUNIXSo
   }
 
   @Override
+  @SuppressFBWarnings("EI_EXPOSE_REP")
   public AFUNIXSocket socket() {
     return afSocket;
   }

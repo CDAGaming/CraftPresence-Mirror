@@ -69,7 +69,7 @@ public class AFUNIXServerSocket extends ServerSocket implements FileDescriptorAc
     return new AFUNIXServerSocket(null);
   }
 
-  public static AFUNIXServerSocket newInstance(FileDescriptor fdObj, int localPort, int remotePort)
+  static AFUNIXServerSocket newInstance(FileDescriptor fdObj, int localPort, int remotePort)
       throws IOException {
     if (fdObj == null) {
       return newInstance();
@@ -217,11 +217,13 @@ public class AFUNIXServerSocket extends ServerSocket implements FileDescriptorAc
   @Override
   public AFUNIXSocket accept() throws IOException {
     AFUNIXSocket as = newSocketInstance();
-    boolean success = implementation.accept0(as.getAFImpl());
+
+    boolean success = implementation.accept0(as.getAFImpl(false));
     if (isClosed()) {
       // We may have connected to the socket to unblock it
       throw new SocketException("Socket is closed");
     }
+    as.getAFImpl(true); // trigger create
 
     if (!success) {
       // non-blocking socket, nothing to accept
@@ -233,6 +235,12 @@ public class AFUNIXServerSocket extends ServerSocket implements FileDescriptorAc
     return as;
   }
 
+  /**
+   * Returns a new {@link AFUNIXSocket} instance.
+   *
+   * @return The new instance.
+   * @throws IOException on error.
+   */
   protected AFUNIXSocket newSocketInstance() throws IOException {
     return AFUNIXSocket.newInstance();
   }
@@ -312,6 +320,7 @@ public class AFUNIXServerSocket extends ServerSocket implements FileDescriptorAc
   }
 
   @Override
+  @SuppressFBWarnings("EI_EXPOSE_REP")
   public AFUNIXSocketAddress getLocalSocketAddress() {
     return boundEndpoint;
   }
