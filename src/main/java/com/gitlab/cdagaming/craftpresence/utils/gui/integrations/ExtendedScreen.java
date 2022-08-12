@@ -320,6 +320,7 @@ public class ExtendedScreen extends GuiScreen {
         if (initialized) {
             if (keyCode == Keyboard.KEY_ESCAPE) {
                 CraftPresence.GUIS.openScreen(parentScreen);
+                return;
             }
 
             for (Gui extendedControl : extendedControls) {
