@@ -80,8 +80,8 @@ modrinth {
 }
 
 task publishToModSites {
-    publishToModSites.dependsOn modrinth
-    publishToModSites.dependsOn curseforge
+    publishToModSites.dependsOn 'modrinth'
+    publishToModSites.dependsOn 'curseforge'
 }
 
 minecraft {
