@@ -1,13 +1,14 @@
 # CraftPresence Changes
 
-## v1.8.9 (07/26/2022)
+## v1.8.10 (08/12/2022)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.8...release%2Fv1.8.9)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.9...release%2Fv1.8.10)_
 
 ### Fixes
 
-*   Fixed issues with Client IDs above 18 characters not working (Thanks Discord :/)
-*   Misc. Cleanups and Optimizations
+*   Fixed rare cases of GUI Issues caused by multiple key's being pressed at the same time ([#144](https://gitlab.com/CDAGaming/CraftPresence/-/issues/144))
+*   Build Script Tweaks to properly support Modrinth Uploads for 1.12.2+
+*   Miscellaneous Tweaks for Linux/MacOS Dependencies (JUnixSocket)
 
 ___
 
