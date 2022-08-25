@@ -71,6 +71,11 @@ public class KeyUtils {
     private final Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
 
     /**
+     * Determines whether KeyBindings have been fully registered and attached to needed systems.
+     */
+    private boolean keysRegistered = false;
+
+    /**
      * Registers KeyBindings and critical KeyCode information to MC's KeyCode systems
      * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
      */
@@ -90,10 +95,14 @@ public class KeyUtils {
                         }, null
                 )
         );
+    }
 
-        for (String keyName : KEY_MAPPINGS.keySet()) {
-            CraftPresence.instance.gameSettings.keyBindings = ArrayUtils.add(CraftPresence.instance.gameSettings.keyBindings, KEY_MAPPINGS.get(keyName).getFirst());
-        }
+    /**
+     * Retrieve if the keybindings are successfully registered to necessary systems
+     * @return {@code true} if and only if the keybindings are successfully registered
+     */
+    public boolean areKeysRegistered() {
+        return keysRegistered;
     }
 
     /**
@@ -200,6 +209,17 @@ public class KeyUtils {
      * Implemented @ {@link CommandUtils#reloadData}
      */
     void onTick() {
+        if (!keysRegistered) {
+            if (CraftPresence.instance.gameSettings != null) {
+                for (String keyName : KEY_MAPPINGS.keySet()) {
+                    CraftPresence.instance.gameSettings.keyBindings = ArrayUtils.add(CraftPresence.instance.gameSettings.keyBindings, KEY_MAPPINGS.get(keyName).getFirst());
+                }
+                keysRegistered = true;
+            } else {
+                return;
+            }
+        }
+
         if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
             final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();

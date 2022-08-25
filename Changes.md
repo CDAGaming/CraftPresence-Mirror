@@ -1,14 +1,14 @@
 # CraftPresence Changes
 
-## v1.8.10 (08/12/2022)
+## v1.8.11 (08/25/2022)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.9...release%2Fv1.8.10)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.10...release%2Fv1.8.11)_
 
 ### Fixes
 
-*   Fixed rare cases of GUI Issues caused by multiple key's being pressed at the same time ([#144](https://gitlab.com/CDAGaming/CraftPresence/-/issues/144))
-*   Build Script Tweaks to properly support Modrinth Uploads for 1.12.2+
-*   Miscellaneous Tweaks for Linux/MacOS Dependencies (JUnixSocket)
+*   1.14.x - 1.19.x and onwards are now Universal Jars, capable of supporting multiple loaders in a single file
+*   Adjusted KeyBind Registration to work on modern Java Versions
+*   Tweaked the Initialization of the mod to ensure `CraftPresence.instance` is available more often
 
 ___
 
