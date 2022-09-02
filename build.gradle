@@ -4,7 +4,7 @@ buildscript {
         maven { url = "https://jitpack.io" }
     }
     dependencies {
-        classpath "com.github.wagyourtail:unimined:0546c3a84d"
+        classpath "com.github.wagyourtail:unimined:1c93bedfb9"
     }
 }
 
@@ -84,8 +84,8 @@ task publishToModSites {
 
 unimined {
     // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
-    // I reccomend you leave this on until unimined is stable
-    useGlobalCache = false
+    // I recommend you leave this off until unimined is stable
+    useGlobalCache = true
 }
 
 minecraft {
@@ -119,6 +119,10 @@ mappings {
 sourceSets {
     // enable the client configuration when not using combined (or mc <= 1.2.5)
     client
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
