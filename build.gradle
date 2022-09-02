@@ -1,24 +1,22 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url = "https://files.minecraftforge.net/maven" }
-        maven { url = "https://gitlab.com/EMC-Framework/maven/raw/master/" }
-        maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url = "https://jitpack.io" }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:5.+"
-        classpath "com.github.CDAGaming:CurseGradle:master-SNAPSHOT"
-        classpath "com.modrinth.minotaur:Minotaur:2.+"
-        classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.1"
+        classpath "com.github.wagyourtail:unimined:0546c3a84d"
     }
 }
 
-apply plugin: "net.minecraftforge.gradle"
-apply plugin: "com.matthewprenger.cursegradle"
-apply plugin: "com.modrinth.minotaur"
-apply plugin: "org.cadixdev.licenser"
+plugins {
+    id 'java'
+    id "com.modrinth.minotaur" version "2.4.3"
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "org.cadixdev.licenser" version "0.6.1"
+}
 
-import net.minecraftforge.gradle.common.tasks.SignJar
+apply plugin: "xyz.wagyourtail.unimined"
+
 import org.apache.tools.ant.filters.ReplaceTokens
 
 def archive_name = "${mod_name}-${loader_name}"
@@ -84,46 +82,49 @@ task publishToModSites {
     publishToModSites.dependsOn 'curseforge'
 }
 
+unimined {
+    // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
+    // I reccomend you leave this on until unimined is stable
+    useGlobalCache = false
+}
+
 minecraft {
-    mappings channel: 'snapshot', version: "${mc_mappings}"
+    // current available options are: forge, jarMod, fabric
+    // if you don't include this, it will default to no mod loader transforms
+    forge {
+        // required for 1.7+
+        it.mcpVersion = "${mc_mappings}"
+        it.mcpChannel = 'stable'
+    }
+    // required when using mcp mappings
+    mcRemapper.fallbackTarget = "searge"
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                craftpresence {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                craftpresence {
-                    source sourceSets.main
-                }
-            }
-        }
+    mcRemapper.tinyRemapperConf = {
+        // most mcp mappings (except older format) dont include field desc
+        it.ignoreFieldDesc(true)
+        // this also fixes some issues with them, as it tells tiny remapper to try harder to resolve conflicts
+        it.ignoreConflicts(true)
     }
 }
 
+mappings {
+    // ability to add custom mappings
+    // available targets are "CLIENT", "SERVER", "COMBINED"
+    getStub("CLIENT").withMappings(["searge", "named"]) {
+      c("ModLoader", "ModLoader", "modloader/ModLoader")
+      c("BaseMod", "BaseMod", "modloader/BaseMod")
+    }
+}
+
+sourceSets {
+    // enable the client configuration when not using combined (or mc <= 1.2.5)
+    client
+}
+
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    minecraft "net.minecraft:minecraft:${mc_version}"
+
+    forge "net.minecraftforge:forge:${mc_version}-${forge_version}"
     implementation "com.google.code.findbugs:jsr305:3.0.2"
 }
 
@@ -141,7 +142,7 @@ tasks.withType(JavaCompile).configureEach {
     // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
     // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
     // We'll use that if it's available, but otherwise we'll use the older option.
-    if (targetVersion.isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         it.options.release = Integer.parseInt(targetVersion.getMajorVersion())
     }
 }
