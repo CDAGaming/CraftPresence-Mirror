@@ -158,26 +158,11 @@ processResources {
     }
 }
 
-task signJar(type: SignJar, dependsOn: jar) {
-    onlyIf {
-        System.getenv("key_MAINPASS") != null
-    }
-
-    keyStore = "keystore.jks"
-    alias = System.getenv("key_Alias")
-    storePass = System.getenv("key_MAINPASS")
-    keyPass = System.getenv("keyPass")
-
-    inputFile = jar.archiveFile
-    outputFile = jar.archiveFile
-}
-
 def copyDir = "$compileJava.temporaryDir/replaced"
 task processSource(type: Sync) {
     // This will ensure that this task is redone when the properties change.
     inputs.property "modName", "${mod_name}"
     inputs.property "versionId", "${versionId}"
-    inputs.property "fingerprint", "${certFingerprint}"
     inputs.property "versionType", "${deploymentType}"
     inputs.property "versionLabel", "${versionLabel}"
 
@@ -185,7 +170,6 @@ task processSource(type: Sync) {
     filter(ReplaceTokens, tokens: [
             MOD_NAME     : mod_name,
             VERSION_ID   : versionId,
-            FINGERPRINT  : certFingerprint,
             VERSION_TYPE : deploymentType,
             VERSION_LABEL: versionLabel
     ])
@@ -195,6 +179,3 @@ task processSource(type: Sync) {
 compileJava {
     source = processSource.outputs
 }
-
-tasks.build.dependsOn signJar
-tasks.publishToModSites.dependsOn build

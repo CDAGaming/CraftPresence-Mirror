@@ -10,6 +10,7 @@ build:
 
 deploy_all:
   script:
+    - ./gradlew build
     - ./gradlew publishToModSites
   artifacts:
     paths:

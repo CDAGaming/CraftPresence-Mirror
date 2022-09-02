@@ -117,11 +117,6 @@ public class ModUtils {
     public static final String UPDATE_JSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json";
 
     /**
-     * The Certificate Fingerprint, assigned in CI, to check against for violations
-     */
-    public static final String FINGERPRINT = "@FINGERPRINT@";
-
-    /**
      * The Application's Instance of {@link ModLogger} for Logging Information
      */
     public static final ModLogger LOG = new ModLogger(MOD_ID);
