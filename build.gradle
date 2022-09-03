@@ -1,21 +1,10 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url = "https://jitpack.io" }
-    }
-    dependencies {
-        classpath "com.github.wagyourtail:unimined:297fd57a8c"
-    }
-}
-
 plugins {
     id 'java'
+    id 'xyz.wagyourtail.unimined' version '0.1.2-SNAPSHOT'
     id "com.modrinth.minotaur" version "2.4.3"
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "org.cadixdev.licenser" version "0.6.1"
 }
-
-apply plugin: "xyz.wagyourtail.unimined"
 
 import org.apache.tools.ant.filters.ReplaceTokens
 

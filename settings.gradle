@@ -12,6 +12,10 @@ pluginManagement {
             name = 'Forge'
             url "https://files.minecraftforge.net/maven/"
         }
+        maven {
+            name = 'WagYourTail'
+            url "https://maven.wagyourtail.xyz/snapshots"
+        }
         gradlePluginPortal()
     }
 }
