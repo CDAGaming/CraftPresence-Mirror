@@ -160,13 +160,23 @@ dependencies {
         default:
             jarMod "local_mod:ModLoader:${loader_version}@zip"
             mappings "local_mod:mcp:${mc_mappings}@zip"
-            // Legacy Dependencies
+            break
+    }
+
+    // Legacy Dependencies, based on Protocol Version
+    if ("${isLegacy}".toBoolean()) {
+        int protocol = "${mc_protocol}".toInteger()
+        if (prococol <= 78) { // MC 1.6.4 and below
             shadow(implementation('commons-codec:commons-codec:1.15'))
+        }
+        if (protocol <= 61) { // MC 1.5.2 and below
             shadow(implementation('org.apache.commons:commons-lang3:3.8.1'))
             shadow(implementation('commons-io:commons-io:2.5'))
             shadow(implementation('com.google.code.gson:gson:2.8.0'))
+        }
+        if (protocol <= 51) { // MC 1.4.7 and below
             shadow(implementation('com.google.guava:guava:14.0-rc3'))
-            break
+        }
     }
 
     implementation "com.google.code.findbugs:jsr305:3.0.2"
