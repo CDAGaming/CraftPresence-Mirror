@@ -4,7 +4,7 @@ buildscript {
         maven { url = "https://jitpack.io" }
     }
     dependencies {
-        classpath "com.github.wagyourtail:unimined:1c93bedfb9"
+        classpath "com.github.wagyourtail:unimined:297fd57a8c"
     }
 }
 
@@ -67,7 +67,7 @@ curseforge {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "${mod_name}".toLowerCase()
-    versionNumber = "v${version}_${mc_version}-${loader_name}_${versionLabel}".replaceAll("\\s","").toLowerCase()
+    versionNumber = "v${version}_${mc_version}-${loader_name}_${versionLabel}".replaceAll("\\s", "").toLowerCase()
     versionName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
     changelog = file("Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
@@ -91,10 +91,19 @@ unimined {
 minecraft {
     // current available options are: forge, jarMod, fabric
     // if you don't include this, it will default to no mod loader transforms
-    forge {
-        // required for 1.7+
-        it.mcpVersion = "${mc_mappings}"
-        it.mcpChannel = 'stable'
+    switch ("${loader_name}".toLowerCase()) {
+        case "forge":
+            forge {
+                // required for 1.7+
+                it.mcpVersion = "${mc_mappings}"
+                it.mcpChannel = 'stable'
+            }
+            break
+        case "fabric":
+            break
+        default:
+            jarMod()
+            break
     }
     // required when using mcp mappings
     mcRemapper.fallbackTarget = "searge"
@@ -110,9 +119,15 @@ minecraft {
 mappings {
     // ability to add custom mappings
     // available targets are "CLIENT", "SERVER", "COMBINED"
+    getStub("COMBINED").withMappings(["searge", "named"]) {
+        c("ModLoader", "ModLoader", "net/minecraft/src/ModLoader")
+        c("BaseMod", "BaseMod", "net/minecraft/src/BaseMod")
+        c("mod_${mod_name}", "mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
+    }
     getStub("CLIENT").withMappings(["searge", "named"]) {
-      c("ModLoader", "ModLoader", "modloader/ModLoader")
-      c("BaseMod", "BaseMod", "modloader/BaseMod")
+        c("ModLoader", "ModLoader", "net/minecraft/src/ModLoader")
+        c("BaseMod", "BaseMod", "net/minecraft/src/BaseMod")
+        c("mod_${mod_name}", "mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
     }
 }
 
@@ -121,19 +136,52 @@ sourceSets {
     client
 }
 
+
+configurations {
+    shadow
+}
+
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     minecraft "net.minecraft:minecraft:${mc_version}"
 
-    forge "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    switch ("${loader_name}".toLowerCase()) {
+        case "forge":
+            forge "net.minecraftforge:forge:${mc_version}-${loader_version}"
+            break
+        case "fabric":
+            break
+        default:
+            jarMod "local_mod:ModLoader:${loader_version}@zip"
+            mappings "local_mod:mcp:${mc_mappings}@zip"
+            // Legacy Dependencies
+            shadow(implementation('commons-codec:commons-codec:1.15'))
+            shadow(implementation('org.apache.commons:commons-lang3:3.8.1'))
+            shadow(implementation('commons-io:commons-io:2.5'))
+            shadow(implementation('com.google.code.gson:gson:2.8.0'))
+            shadow(implementation('com.google.guava:guava:14.0-rc3'))
+            break
+    }
+
     implementation "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 jar {
     from sourceSets.main.output
+}
+
+remapJar {
+    targetNamespace = "official"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -160,6 +208,12 @@ processResources {
     filesMatching("mcmod.info") {
         // replace version and mcversion
         expand 'version': project.version, 'mcversion': "${mc_version}"
+    }
+
+    // replace stuff in mod_modId.info, nothing else
+    filesMatching("mod_${mod_name}.info") {
+        // replace version
+        expand 'version': project.version
     }
 }
 
