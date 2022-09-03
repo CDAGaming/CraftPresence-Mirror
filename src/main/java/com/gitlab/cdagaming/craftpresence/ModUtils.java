@@ -32,7 +32,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.realms.RealmsSharedConstants;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -84,12 +83,12 @@ public class ModUtils {
     /**
      * The Detected Minecraft Version
      */
-    public static final String MCVersion = RealmsSharedConstants.VERSION_STRING;
+    public static final String MCVersion;
 
     /**
      * The Detected Minecraft Protocol Version
      */
-    public static final int MCProtocolID = RealmsSharedConstants.NETWORK_PROTOCOL_VERSION;
+    public static final int MCProtocolID;
 
     /**
      * The Detected Brand Information within Minecraft
@@ -164,6 +163,8 @@ public class ModUtils {
         VERSION_ID = "v@VERSION_ID@";
         VERSION_TYPE = "@VERSION_TYPE@";
         VERSION_LABEL = "@VERSION_LABEL@";
+        MCVersion = "@MC_VERSION@";
+        MCProtocolID = Integer.parseInt("@MC_PROTOCOL@");
         UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
     }
 
