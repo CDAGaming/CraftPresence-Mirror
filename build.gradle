@@ -166,7 +166,7 @@ dependencies {
     // Legacy Dependencies, based on Protocol Version
     if ("${isLegacy}".toBoolean()) {
         int protocol = "${mc_protocol}".toInteger()
-        if (prococol <= 78) { // MC 1.6.4 and below
+        if (protocol <= 78) { // MC 1.6.4 and below
             shadow(implementation('commons-codec:commons-codec:1.15'))
         }
         if (protocol <= 61) { // MC 1.5.2 and below
