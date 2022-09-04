@@ -135,10 +135,15 @@ public class ModUtils {
      */
     public static final ModUpdaterUtils UPDATER;
     /**
+     * If this Application is in the Alpha Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
+     */
+    public final static boolean IS_LEGACY_ALPHA = false;
+    /**
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
      */
-    public final static boolean IS_LEGACY_HARD = false;
+    public final static boolean IS_LEGACY_HARD = IS_LEGACY_ALPHA || false;
     /**
      * If this Application is within the Soft Floor of Legacy Mode
      * <p>This variable becomes true only on versions before 13w41a (When the protocol number was reset)

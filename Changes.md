@@ -16,6 +16,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 *   Fixed an issue in MC b1.3_01 and below where Scroll Lists could render incorrectly
 *   Fixed an issue in MC 1.2.5 and below that could prevent Mod Metadata from being seen in Forge's Mod Menu
 *   Fixed a rare issue where initialization can occur while the minecraft session is null
+*   Fixed an issue where the starting page in Paginated Screens was incorrect, causing various issues
 
 ___
 

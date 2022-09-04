@@ -276,7 +276,7 @@ public class ConfigUtils {
         NAME_configKeyCode = ModUtils.TRANSLATOR.translate(true, "key.craftpresence.config_keycode.name").replaceAll(" ", "_");
         tooltipBackgroundColor = "0xF0100010";
         tooltipBorderColor = "0x505000FF";
-        guiBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? "/gui/background.png" : "textures/gui/options_background.png");
+        guiBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
         buttonBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? "/gui/gui.png" : "textures/gui/widgets.png");
         languageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
         showBackgroundAsDark = true;
