@@ -270,7 +270,7 @@ public class CraftPresence {
                         }
                     }
                 }
-            } else {
+            } else if (instance != null && instance.getSession() != null) {
                 init();
             }
 
