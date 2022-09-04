@@ -101,6 +101,11 @@ public class ServerUtils {
     private String timeString;
 
     /**
+     * The Current Formatted World Days, as a String
+     */
+    private String dayString;
+
+    /**
      * The Current World's Difficulty
      */
     private String currentDifficulty;
@@ -191,6 +196,7 @@ public class ServerUtils {
         currentDifficulty = null;
         currentWorldName = null;
         timeString = null;
+        dayString = null;
         currentPlayers = 0;
         maxPlayers = 0;
 
@@ -332,6 +338,15 @@ public class ServerUtils {
                         final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.world.getWorldTime()) : null;
                         if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString)) {
                             timeString = newGameTime;
+                            queuedForUpdate = true;
+                        }
+                    }
+
+                    // &worldday& Argument = Current Amount of Days in World
+                    if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldday&")) {
+                        final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.world.getWorldTime() / 24000L) : null;
+                        if (!StringUtils.isNullOrEmpty(newGameDay) && !newGameDay.equals(dayString)) {
+                            dayString = newGameDay;
                             queuedForUpdate = true;
                         }
                     }
@@ -482,6 +497,7 @@ public class ServerUtils {
         worldDataArgs.add(new Pair<>("&DIFFICULTY&", !StringUtils.isNullOrEmpty(currentDifficulty) ? currentDifficulty : ""));
         worldDataArgs.add(new Pair<>("&WORLDNAME&", !StringUtils.isNullOrEmpty(currentWorldName) ? currentWorldName : ""));
         worldDataArgs.add(new Pair<>("&WORLDTIME&", !StringUtils.isNullOrEmpty(timeString) ? timeString : ""));
+        worldDataArgs.add(new Pair<>("&WORLDDAY&", !StringUtils.isNullOrEmpty(dayString) ? dayString : ""));
 
         if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
             String CURRENT_SERVER_ICON;
