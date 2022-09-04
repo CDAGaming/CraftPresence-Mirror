@@ -47,7 +47,7 @@ curseforge {
         addGameVersion "${mc_version}"
         addGameVersion "${loader_name}"
 
-        mainArtifact(jar) {
+        mainArtifact(remapJar) {
             displayName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
         }
     }
@@ -60,7 +60,7 @@ modrinth {
     versionName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
     changelog = file("Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
-    uploadFile = jar
+    uploadFile = remapJar
     gameVersions = ["${mc_version}"]
     loaders = ["${loader_name}".toLowerCase()]
     dependencies = []
