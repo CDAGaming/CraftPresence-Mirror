@@ -1,14 +1,21 @@
 # CraftPresence Changes
 
-## v1.8.11 (08/25/2022)
+## v1.8.12 (09/12/2022)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.10...release%2Fv1.8.11)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.11...release%2Fv1.8.12)_
+
+### Changes
+
+*   The 1.12.2 and below ports have been reworked to use a more modern workflow, allowing for easier development and the arrival of full Beta MC support
+*   Jar Signing Capabilities have been removed, due to obsolete technology
+*   Added `&worldday&` as a new sub-argument for `&worldinfo&` ([#147](https://gitlab.com/CDAGaming/CraftPresence/-/issues/147))
 
 ### Fixes
 
-*   1.14.x - 1.19.x and onwards are now Universal Jars, capable of supporting multiple loaders in a single file
-*   Adjusted KeyBind Registration to work on modern Java Versions
-*   Tweaked the Initialization of the mod to ensure `CraftPresence.instance` is available more often
+*   Fixed an issue in MC 1.1.0 and below where Paginated Screens could render multiple pages at once
+*   Fixed an issue in MC b1.3_01 and below where Scroll Lists could render incorrectly
+*   Fixed an issue in MC 1.2.5 and below that could prevent Mod Metadata from being seen in Forge's Mod Menu
+*   Fixed a rare issue where initialization can occur while the minecraft session is null
 
 ___
 
