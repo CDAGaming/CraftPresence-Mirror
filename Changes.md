@@ -17,6 +17,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 *   Fixed an issue in MC 1.2.5 and below that could prevent Mod Metadata from being seen in Forge's Mod Menu
 *   Fixed a rare issue where initialization can occur while the minecraft session is null
 *   Fixed an issue where the starting page in Paginated Screens was incorrect, causing various issues
+*   Removed LAN Checks for MC 1.2.5 and below, as LAN support did not exist until 12w25a (1.3.1)
 
 ___
 
