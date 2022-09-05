@@ -39,6 +39,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -213,11 +214,11 @@ public class FileUtils {
 
         for (String startString : sourceData) {
             boolean found = false;
-
+            Set<String> classes = MappingUtils.getUnmappedClassesMatching(startString);
             try {
                 for (ClassPath.ClassInfo classInfo : classList) {
                     // Attempt to Add Classes Matching any of the Source Packages
-                    if (classInfo.getName().startsWith(startString)) {
+                    if (classInfo.getName().startsWith(startString) || classes.contains(classInfo.getName())) {
                         found = true;
                         candidateClasses.add(classInfo.load());
                     }

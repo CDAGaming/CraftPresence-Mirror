@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.world.DimensionType;
@@ -215,7 +216,7 @@ public class DimensionUtils {
     public void getDimensions() {
         for (DimensionType TYPE : getDimensionTypes()) {
             if (TYPE != null) {
-                String dimensionName = !StringUtils.isNullOrEmpty(TYPE.getName()) ? TYPE.getName() : TYPE.getClass().getSimpleName();
+                String dimensionName = !StringUtils.isNullOrEmpty(TYPE.getName()) ? TYPE.getName() : MappingUtils.getClassName(TYPE);
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.formatWords);
                 if (!DIMENSION_NAMES.contains(name)) {
                     DIMENSION_NAMES.add(name);

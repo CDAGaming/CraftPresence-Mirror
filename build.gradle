@@ -118,6 +118,20 @@ mappings {
         c("BaseMod", "BaseMod", "net/minecraft/src/BaseMod")
         c("mod_${mod_name}", "mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
     }
+
+    addExport("CLIENT") {
+        it.targetNamespace = ["named"]
+        it.sourceNamespace = "official"
+        it.location = file("$rootDir/src/main/resources/mappings.srg")
+        it.setType "srg"
+    }
+
+    addExport("COMBINED") {
+        it.targetNamespace = ["named"]
+        it.sourceNamespace = "official"
+        it.location = file("$rootDir/src/main/resources/mappings.srg")
+        it.setType "srg"
+    }
 }
 
 sourceSets {
@@ -229,6 +243,16 @@ processResources {
     filesMatching("mod_${mod_name}.info") {
         // replace version
         expand 'version': project.version.toString()
+    }
+
+    filesMatching("mappings.srg") {
+        filter { line ->
+            if (line.startsWith("CL:")) {
+                line
+            } else {
+                null
+            }
+        }
     }
 }
 

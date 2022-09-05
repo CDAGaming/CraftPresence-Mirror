@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.world.biome.Biome;
@@ -205,7 +206,7 @@ public class BiomeUtils {
     public void getBiomes() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
-                String biomeName = !StringUtils.isNullOrEmpty(biome.getBiomeName()) ? biome.getBiomeName() : biome.getClass().getSimpleName();
+                String biomeName = !StringUtils.isNullOrEmpty(biome.getBiomeName()) ? biome.getBiomeName() : MappingUtils.getClassName(biome);
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.formatWords);
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);

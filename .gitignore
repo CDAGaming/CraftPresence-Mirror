@@ -28,6 +28,8 @@ classes/
 
 logs/
 
+src/main/resources/mappings.srg
+
 .vscode/settings.json
 
 .architectury-transformer/
