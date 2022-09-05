@@ -793,17 +793,17 @@ public class StringUtils {
             }
 
             if (formattedKey.toString().equalsIgnoreCase("surface")) {
-                return "overworld";
+                formattedKey = new StringBuilder("overworld");
             } else if (formattedKey.toString().equalsIgnoreCase("hell") || formattedKey.toString().equalsIgnoreCase("nether")) {
-                return "the_nether";
+                formattedKey = new StringBuilder("the_nether");
             } else if (formattedKey.toString().equalsIgnoreCase("end") || formattedKey.toString().equalsIgnoreCase("sky")) {
-                return "the_end";
+                formattedKey = new StringBuilder("the_end");
+            }
+
+            if (formatToId) {
+                return formatAsIcon(formattedKey.toString().replace(" ", "_"));
             } else {
-                if (formatToId) {
-                    return formatAsIcon(formattedKey.toString().replace(" ", "_"));
-                } else {
-                    return formatWord(formattedKey.toString(), avoid);
-                }
+                return formatWord(formattedKey.toString(), avoid);
             }
         }
     }

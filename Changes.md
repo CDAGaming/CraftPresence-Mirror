@@ -21,9 +21,9 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 *   Fixed an issue where the starting page in Paginated Screens was incorrect, causing various issues
 *   Removed LAN Checks for MC 1.2.5 and below, as LAN support did not exist until 12w25a (1.3.1)
 *   Fixed an Issue in MC 1.3.2 - 1.8.9 where reflective Dimension Logic was invalid, restoring the module to working order
-*   Fixed an Issue in MC 1.2.5 and below where Obfuscated names were not considered in Dimension Identity, fixing the module on these versions
-    *   Vanilla Biome names may still appear obfuscated, but there is simply too many of them to add them all as a special case)
+*   Fixed an Issue in MC 1.12.2 and below where Obfuscated names were not considered in Module Name Identities, fixing the effected module on these versions
 *   Backend: Fixed an Issue in `FileUtils#getClassNamesMatchingSuperType` that prevented proper functionality (Fixes Dimension Module in MC 1.1.0 and below)
+*   Backend: Fixed the `formatToId` param from `StringUtils#formatIdentifier` being ignored when converting from legacy->modern naming
 
 ___
 
