@@ -789,11 +789,11 @@ public class StringUtils {
                 formattedKey = new StringBuilder(formattedKey.toString().replaceAll("[{}]", ""));
             }
 
-            if (formattedKey.toString().equalsIgnoreCase("surface")) {
+            if (formattedKey.toString().equalsIgnoreCase("surface") || formattedKey.toString().equalsIgnoreCase("ms")) {
                 return "overworld";
-            } else if (formattedKey.toString().equalsIgnoreCase("hell") || formattedKey.toString().equalsIgnoreCase("nether")) {
+            } else if (formattedKey.toString().equalsIgnoreCase("hell") || formattedKey.toString().equalsIgnoreCase("nether") || formattedKey.toString().equalsIgnoreCase("akf")) {
                 return "the_nether";
-            } else if (formattedKey.toString().equalsIgnoreCase("end") || formattedKey.toString().equalsIgnoreCase("sky")) {
+            } else if (formattedKey.toString().equalsIgnoreCase("end") || formattedKey.toString().equalsIgnoreCase("sky") || formattedKey.toString().equalsIgnoreCase("ii")) {
                 return "the_end";
             } else {
                 if (formatToId) {
