@@ -196,6 +196,7 @@ public class FileUtils {
      */
     public static List<Class<?>> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final boolean includeExtraClasses, final String... sourcePackages) {
         final List<Class<?>> matchingClasses = Lists.newArrayList();
+        final List<Class<?>> candidateClasses = Lists.newArrayList();
         final List<ClassPath.ClassInfo> classList = Lists.newArrayList();
         final List<String> sourceData = Lists.newArrayList(sourcePackages);
 
@@ -212,43 +213,51 @@ public class FileUtils {
 
         for (String startString : sourceData) {
             boolean found = false;
-            Class<?> loadedInstance = null;
 
             try {
                 for (ClassPath.ClassInfo classInfo : classList) {
                     // Attempt to Add Classes Matching any of the Source Packages
                     if (classInfo.getName().startsWith(startString)) {
                         found = true;
-                        loadedInstance = classInfo.load();
+                        candidateClasses.add(classInfo.load());
                     }
                 }
 
                 if (!found && includeExtraClasses) {
                     final Class<?> extraClass = Class.forName(startString, false, ModUtils.CLASS_LOADER);
                     found = true;
-                    loadedInstance = extraClass;
+                    candidateClasses.add(extraClass);
                 }
             } catch (Exception | Error ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }
             } finally {
-                if (found && loadedInstance != null) {
+                if (found && !candidateClasses.isEmpty()) {
                     Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, Lists.newArrayList());
 
-                    for (Class<?> searchClass : searchList) {
-                        subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getSecond());
+                    for (Class<?> loadedInstance : candidateClasses) {
+                        for (Class<?> searchClass : searchList) {
+                            subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getSecond());
 
-                        if (subClassData.getFirst()) {
-                            // If superclass data was found, add the scanned classes
-                            // as well as the original class
-                            matchingClasses.add(loadedInstance);
-                            matchingClasses.addAll(subClassData.getSecond());
+                            if (subClassData.getFirst()) {
+                                // If superclass data was found, add the scanned classes
+                                // as well as the original class
+                                if (!matchingClasses.contains(loadedInstance)) {
+                                    matchingClasses.add(loadedInstance);
+                                }
 
-                            break;
-                        } else {
-                            // If no superclass data found, reset for next data
-                            subClassData = new Pair<>(false, Lists.newArrayList());
+                                for (Class<?> subClassInfo : subClassData.getSecond()) {
+                                    if (!matchingClasses.contains(subClassInfo)) {
+                                        matchingClasses.add(subClassInfo);
+                                    }
+                                }
+
+                                break;
+                            } else {
+                                // If no superclass data found, reset for next data
+                                subClassData = new Pair<>(false, Lists.newArrayList());
+                            }
                         }
                     }
                 }
