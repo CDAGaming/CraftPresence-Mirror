@@ -128,7 +128,7 @@ public class ModUtils {
     /**
      * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
      */
-    public static final TranslationUtils TRANSLATOR = new TranslationUtils(MOD_ID, false);
+    public static final TranslationUtils TRANSLATOR;
 
     /**
      * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
@@ -170,6 +170,7 @@ public class ModUtils {
         VERSION_LABEL = "@VERSION_LABEL@";
         MCVersion = "@MC_VERSION@";
         MCProtocolID = Integer.parseInt("@MC_PROTOCOL@");
+        TRANSLATOR = new TranslationUtils(MOD_ID, false);
         UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
     }
 
