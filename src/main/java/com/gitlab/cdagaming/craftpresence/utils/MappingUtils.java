@@ -58,7 +58,9 @@ public class MappingUtils {
                     reader.close();
                 }
             } catch (Throwable e) {
-                e.printStackTrace();
+                if (ModUtils.MCProtocolID <= 340) {
+                    e.printStackTrace();
+                }
             }
             classMap = cm;
         }
@@ -78,15 +80,19 @@ public class MappingUtils {
         return matches;
     }
 
-    public static String getClassName(Object object) {
+    public static String getClassName(Class<?> object) {
         String result = getClassMap().get(
-                object.getClass().getCanonicalName().replace(".", "/")
+                object.getCanonicalName().replace(".", "/")
         );
         if (result == null) {
-            result = object.getClass().getSimpleName();
+            result = object.getSimpleName();
         } else {
             result = result.substring(result.lastIndexOf("/") + 1);
         }
         return result;
+    }
+
+    public static String getClassName(Object object) {
+        return getClassName(object.getClass());
     }
 }

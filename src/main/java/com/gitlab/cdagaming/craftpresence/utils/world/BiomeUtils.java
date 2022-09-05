@@ -119,7 +119,7 @@ public class BiomeUtils {
         final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.formatWords);
 
         final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.formatWords);
-        final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(newBiome.getClass().getSimpleName(), true, !CraftPresence.CONFIG.formatWords);
+        final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.formatWords);
         final String newBiome_Identifier = !StringUtils.isNullOrEmpty(newBiome_primaryIdentifier) ? newBiome_primaryIdentifier : newBiome_alternativeIdentifier;
 
         if (!newBiomeName.equals(CURRENT_BIOME_NAME) || !newBiome_Identifier.equals(CURRENT_BIOME_IDENTIFIER)) {

@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
+import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -280,7 +281,7 @@ public class GuiUtils {
         } else {
             final GuiScreen newScreen = CraftPresence.instance.currentScreen;
             final Class<?> newScreenClass = newScreen.getClass();
-            final String newScreenName = newScreenClass.getSimpleName();
+            final String newScreenName = MappingUtils.getClassName(newScreen);
 
             if (!newScreen.equals(CURRENT_SCREEN) || !newScreenClass.equals(CURRENT_GUI_CLASS) || !newScreenName.equals(CURRENT_GUI_NAME)) {
                 CURRENT_SCREEN = newScreen;
@@ -309,8 +310,9 @@ public class GuiUtils {
         };
 
         for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Arrays.asList(searchClasses), CraftPresence.CONFIG.includeExtraGuiClasses, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
-            if (!GUI_NAMES.contains(classObj.getSimpleName())) {
-                GUI_NAMES.add(classObj.getSimpleName());
+            String screenName = MappingUtils.getClassName(classObj);
+            if (!GUI_NAMES.contains(screenName)) {
+                GUI_NAMES.add(screenName);
             }
             if (!GUI_CLASSES.contains(classObj)) {
                 GUI_CLASSES.add(classObj);
@@ -335,7 +337,7 @@ public class GuiUtils {
         List<Pair<String, String>> guiArgs = Lists.newArrayList();
 
         guiArgs.add(new Pair<>("&SCREEN&", CURRENT_GUI_NAME));
-        guiArgs.add(new Pair<>("&CLASS&", CURRENT_GUI_CLASS.getSimpleName()));
+        guiArgs.add(new Pair<>("&CLASS&", MappingUtils.getClassName(CURRENT_GUI_CLASS)));
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
