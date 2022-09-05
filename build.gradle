@@ -193,26 +193,41 @@ tasks.withType(JavaCompile).configureEach {
     // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
     // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
     // We'll use that if it's available, but otherwise we'll use the older option.
-    if (JavaVersion.current().isJava9Compatible()) {
+    if (targetVersion.isJava9Compatible()) {
         it.options.release = Integer.parseInt(targetVersion.getMajorVersion())
     }
 }
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
+    inputs.property "version", project.version.toString()
     inputs.property "mcversion", "${mc_version}"
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("mcmod.info") {
         // replace version and mcversion
-        expand 'version': project.version, 'mcversion': "${mc_version}"
+        expand 'version': project.version.toString(),
+                'mcversion': "${mc_version}"
+    }
+
+    // replace stuff in mods.toml, nothing else
+    filesMatching("META-INF/mods.toml") {
+        // replace version and mcversion
+        expand 'version': project.version.toString(),
+                'mcversion': "${mc_version}"
+    }
+
+    // replace stuff in mods.toml, nothing else
+    filesMatching("fabric.mod.json") {
+        // replace version and mcversion
+        expand 'version': project.version.toString(),
+                'mcversion': "${mc_version}"
     }
 
     // replace stuff in mod_modId.info, nothing else
     filesMatching("mod_${mod_name}.info") {
         // replace version
-        expand 'version': project.version
+        expand 'version': project.version.toString()
     }
 }
 
