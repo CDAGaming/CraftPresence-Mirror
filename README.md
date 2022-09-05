@@ -201,6 +201,7 @@ Beginning in v1.5.2, CraftPresence is now split into different editions, based o
 *   Legacy Version (Minecraft 1.2.5 and Below):
     *   Server Support is unavailable in 1.2.5 and Below (Only SinglePlayer will work with showGameStatus enabled)
     *   Minecraft 1.1.0 and below may not work on Forge, and may require a Modified Minecraft Jar with Risugami's ModLoader + ModLoaderMP
+    *   Alpha 1.1.2_01 has its Dimension and Biome Modules disabled, since the logic for that was not present in the game until a1.2.x
 
 **Support for issues related to Vanilla code, Forge, or older/deprecated ModLoaders is extremely limited**
 
