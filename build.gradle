@@ -177,6 +177,7 @@ jar {
 
 remapJar {
     targetNamespace = "official"
+    fallbackFromNamespace = "searge"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
         configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }
