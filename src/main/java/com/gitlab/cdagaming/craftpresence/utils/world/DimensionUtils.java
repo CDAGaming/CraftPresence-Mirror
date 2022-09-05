@@ -82,6 +82,7 @@ public class DimensionUtils {
      */
     public void clearClientData() {
         CURRENT_DIMENSION_NAME = null;
+        CURRENT_DIMENSION_IDENTIFIER = null;
 
         isInUse = false;
         CraftPresence.CLIENT.initArgument("&DIMENSION&");
@@ -91,7 +92,7 @@ public class DimensionUtils {
      * Module Event to Occur on each tick within the Application
      */
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectDimensionData && (!CraftPresence.BIOMES.enabled || !CraftPresence.BIOMES.BIOME_NAMES.isEmpty()) : enabled;
+        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectDimensionData : enabled;
         final boolean needsUpdate = enabled && (
                 DIMENSION_NAMES.isEmpty() || DIMENSION_TYPES.isEmpty()
         );
@@ -214,8 +215,10 @@ public class DimensionUtils {
     public void getDimensions() {
         for (DimensionType TYPE : getDimensionTypes()) {
             if (TYPE != null) {
-                if (!DIMENSION_NAMES.contains(StringUtils.formatIdentifier(TYPE.getName(), true, !CraftPresence.CONFIG.formatWords))) {
-                    DIMENSION_NAMES.add(StringUtils.formatIdentifier(TYPE.getName(), true, !CraftPresence.CONFIG.formatWords));
+                String dimensionName = !StringUtils.isNullOrEmpty(TYPE.getName()) ? TYPE.getName() : TYPE.getClass().getSimpleName();
+                String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.formatWords);
+                if (!DIMENSION_NAMES.contains(name)) {
+                    DIMENSION_NAMES.add(name);
                 }
                 if (!DIMENSION_TYPES.contains(TYPE)) {
                     DIMENSION_TYPES.add(TYPE);
@@ -226,8 +229,11 @@ public class DimensionUtils {
         for (String dimensionMessage : CraftPresence.CONFIG.dimensionMessages) {
             if (!StringUtils.isNullOrEmpty(dimensionMessage)) {
                 final String[] part = dimensionMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0]) && !DIMENSION_NAMES.contains(StringUtils.formatIdentifier(part[0], true, !CraftPresence.CONFIG.formatWords))) {
-                    DIMENSION_NAMES.add(StringUtils.formatIdentifier(part[0], true, !CraftPresence.CONFIG.formatWords));
+                if (!StringUtils.isNullOrEmpty(part[0])) {
+                    String name = StringUtils.formatIdentifier(part[0], true, !CraftPresence.CONFIG.formatWords);
+                    if (!DIMENSION_NAMES.contains(name)) {
+                        DIMENSION_NAMES.add(name);
+                    }
                 }
             }
         }

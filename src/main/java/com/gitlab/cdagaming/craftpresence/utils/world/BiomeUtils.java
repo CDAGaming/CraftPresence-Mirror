@@ -60,6 +60,10 @@ public class BiomeUtils {
      * The Name of the Current Biome the Player is in
      */
     private String CURRENT_BIOME_NAME;
+    /**
+     * The alternative name for the Current Biome the Player is in, if any
+     */
+    private String CURRENT_BIOME_IDENTIFIER;
 
     /**
      * Clears FULL Data from this Module
@@ -75,6 +79,7 @@ public class BiomeUtils {
      */
     public void clearClientData() {
         CURRENT_BIOME_NAME = null;
+        CURRENT_BIOME_IDENTIFIER = null;
 
         isInUse = false;
         CraftPresence.CLIENT.initArgument("&BIOME&");
@@ -110,13 +115,18 @@ public class BiomeUtils {
      */
     private void updateBiomeData() {
         final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
-        final String newBiomeName = newBiome.getBiomeName();
+        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.formatWords);
 
-        if (!newBiomeName.equals(CURRENT_BIOME_NAME)) {
-            CURRENT_BIOME_NAME = newBiomeName;
+        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.formatWords);
+        final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(newBiome.getClass().getSimpleName(), true, !CraftPresence.CONFIG.formatWords);
+        final String newBiome_Identifier = !StringUtils.isNullOrEmpty(newBiome_primaryIdentifier) ? newBiome_primaryIdentifier : newBiome_alternativeIdentifier;
 
-            if (!BIOME_NAMES.contains(newBiomeName)) {
-                BIOME_NAMES.add(newBiomeName);
+        if (!newBiomeName.equals(CURRENT_BIOME_NAME) || !newBiome_Identifier.equals(CURRENT_BIOME_IDENTIFIER)) {
+            CURRENT_BIOME_NAME = !StringUtils.isNullOrEmpty(newBiomeName) ? newBiomeName : newBiome_Identifier;
+            CURRENT_BIOME_IDENTIFIER = newBiome_Identifier;
+
+            if (!BIOME_NAMES.contains(newBiome_Identifier)) {
+                BIOME_NAMES.add(newBiome_Identifier);
             }
             if (!BIOME_TYPES.contains(newBiome)) {
                 BIOME_TYPES.add(newBiome);
@@ -141,8 +151,8 @@ public class BiomeUtils {
         }
 
         final String defaultBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-        final String currentBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultBiomeMessage);
-        final String currentBiomeIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_NAME, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_BIOME_NAME);
+        final String currentBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultBiomeMessage);
+        final String currentBiomeIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_BIOME_IDENTIFIER);
         final String formattedIconKey = StringUtils.formatAsIcon(currentBiomeIcon.replace(" ", "_"));
 
         final String CURRENT_BIOME_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultBiomeIcon);
@@ -195,8 +205,10 @@ public class BiomeUtils {
     public void getBiomes() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
-                if (!BIOME_NAMES.contains(biome.getBiomeName())) {
-                    BIOME_NAMES.add(biome.getBiomeName());
+                String biomeName = !StringUtils.isNullOrEmpty(biome.getBiomeName()) ? biome.getBiomeName() : biome.getClass().getSimpleName();
+                String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.formatWords);
+                if (!BIOME_NAMES.contains(name)) {
+                    BIOME_NAMES.add(name);
                 }
                 if (!BIOME_TYPES.contains(biome)) {
                     BIOME_TYPES.add(biome);
@@ -207,8 +219,11 @@ public class BiomeUtils {
         for (String biomeMessage : CraftPresence.CONFIG.biomeMessages) {
             if (!StringUtils.isNullOrEmpty(biomeMessage)) {
                 final String[] part = biomeMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0]) && !BIOME_NAMES.contains(part[0])) {
-                    BIOME_NAMES.add(part[0]);
+                if (!StringUtils.isNullOrEmpty(part[0])) {
+                    String name = StringUtils.formatIdentifier(part[0], true, !CraftPresence.CONFIG.formatWords);
+                    if (!BIOME_NAMES.contains(name)) {
+                        BIOME_NAMES.add(name);
+                    }
                 }
             }
         }

@@ -776,6 +776,9 @@ public class StringUtils {
             if (formattedKey.toString().contains("WorldProvider")) {
                 formattedKey = new StringBuilder(formattedKey.toString().replace("WorldProvider", ""));
             }
+            if (formattedKey.toString().contains("BiomeGen")) {
+                formattedKey = new StringBuilder(formattedKey.toString().replace("BiomeGen", ""));
+            }
 
             if (formattedKey.toString().contains(" ")) {
                 formattedKey = new StringBuilder(formattedKey.toString().replaceAll("\\s+", " "));
