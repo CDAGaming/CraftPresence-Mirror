@@ -735,7 +735,7 @@ public class StringUtils {
             String[] wordList = original.split(" ");
 
             for (String word : wordList) {
-                if (isNullOrEmpty(lastWord) || !word.equals(lastWord)) {
+                if (isNullOrEmpty(lastWord) || !word.equalsIgnoreCase(lastWord)) {
                     finalString.append(word).append(" ");
                     lastWord = word;
                 }

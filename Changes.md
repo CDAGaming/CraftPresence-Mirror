@@ -24,6 +24,7 @@ _A Detailed Changelog from the last release is available [here](https://gitlab.c
 *   Fixed an Issue in MC 1.12.2 and below where Obfuscated names were not considered in Module Name Identities, fixing the effected module on these versions
 *   Backend: Fixed an Issue in `FileUtils#getClassNamesMatchingSuperType` that prevented proper functionality (Fixes Dimension Module in MC 1.1.0 and below)
 *   Backend: Fixed the `formatToId` param from `StringUtils#formatIdentifier` being ignored when converting from legacy->modern naming
+*   Backend: Changed `removeRepeatWords` to use `equalsIgnoreCase` instead of `equals` to ensure duplicates are actually removed (Technically a fix for Legacy MC)
 
 ___
 
