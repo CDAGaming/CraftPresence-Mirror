@@ -99,6 +99,8 @@ minecraft {
         int protocol = "${mc_protocol}".toInteger()
         if (protocol <= 2) { // MC a1.1.2_01 and below
             targetNamespace = "searge"
+        } else {
+            mcRemapper.fallbackTarget = "searge"
         }
     } else {
         mcRemapper.fallbackTarget = "searge"
@@ -202,6 +204,8 @@ remapJar {
         int protocol = "${mc_protocol}".toInteger()
         if (protocol <= 2) { // MC a1.1.2_01 and below
             sourceNamespace = "searge"
+        } else {
+            fallbackFromNamespace = "searge"
         }
     } else {
         fallbackFromNamespace = "searge"
