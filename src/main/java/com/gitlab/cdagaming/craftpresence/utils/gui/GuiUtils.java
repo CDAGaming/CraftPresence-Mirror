@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -230,7 +231,8 @@ public class GuiUtils {
         CURRENT_GUI_CLASS = null;
 
         isInUse = false;
-        CraftPresence.CLIENT.initArgument("&SCREEN&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&SCREEN&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&SCREEN&");
     }
 
     /**
@@ -349,8 +351,8 @@ public class GuiUtils {
 
         final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentGuiMessage, guiArgs);
 
-        CraftPresence.CLIENT.syncArgument("&SCREEN&", CURRENT_GUI_MESSAGE, false);
-        CraftPresence.CLIENT.initArgument(true, "&SCREEN&");
+        CraftPresence.CLIENT.syncArgument("&SCREEN&", CURRENT_GUI_MESSAGE, ArgumentType.Text);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&SCREEN&");
     }
 
     /**

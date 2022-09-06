@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.PartyPrivacy;
 import com.google.common.collect.Lists;
@@ -208,7 +209,8 @@ public class ServerUtils {
             requestedServerData = null;
         }
 
-        CraftPresence.CLIENT.initArgument("&SERVER&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&SERVER&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&SERVER&");
         CraftPresence.CLIENT.clearPartyData(true, false);
     }
 
@@ -561,8 +563,8 @@ public class ServerUtils {
                 }
             }
 
-            CraftPresence.CLIENT.syncArgument("&SERVER&", StringUtils.sequentialReplaceAnyCase(currentServerMessage, serverArgs), false);
-            CraftPresence.CLIENT.syncArgument("&SERVER&", CraftPresence.CLIENT.imageOf(CURRENT_SERVER_ICON, CraftPresence.CONFIG.defaultServerIcon, true), true);
+            CraftPresence.CLIENT.syncArgument("&SERVER&", StringUtils.sequentialReplaceAnyCase(currentServerMessage, serverArgs), ArgumentType.Text);
+            CraftPresence.CLIENT.syncArgument("&SERVER&", CraftPresence.CLIENT.imageOf(CURRENT_SERVER_ICON, CraftPresence.CONFIG.defaultServerIcon, true), ArgumentType.Image);
             queuedForUpdate = false;
         } else if (CraftPresence.instance.isSingleplayer()) {
             // Form SinglePlayer Pair Argument List
@@ -579,8 +581,8 @@ public class ServerUtils {
             // NOTE: SinglePlayer-Only Presence Updates
             currentServerMessage = CraftPresence.CONFIG.singlePlayerMessage;
 
-            CraftPresence.CLIENT.syncArgument("&SERVER&", StringUtils.sequentialReplaceAnyCase(currentServerMessage, soloArgs), false);
-            CraftPresence.CLIENT.initArgument(true, "&SERVER&");
+            CraftPresence.CLIENT.syncArgument("&SERVER&", StringUtils.sequentialReplaceAnyCase(currentServerMessage, soloArgs), ArgumentType.Text);
+            CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&SERVER&");
             queuedForUpdate = false;
         }
     }

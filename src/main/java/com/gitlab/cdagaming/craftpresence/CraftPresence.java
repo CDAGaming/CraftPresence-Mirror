@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
@@ -255,7 +256,8 @@ public class CraftPresence {
                     } else if (player != null && (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu)) {
                         CommandUtils.isInMainMenu = false;
                         CommandUtils.isLoadingGame = false;
-                        CLIENT.initArgument("&MAINMENU&");
+                        CLIENT.initArgument(ArgumentType.Text, "&MAINMENU&");
+                        CLIENT.initArgument(ArgumentType.Image, "&MAINMENU&");
                     }
 
                     if (SYSTEM.HAS_LOADED) {

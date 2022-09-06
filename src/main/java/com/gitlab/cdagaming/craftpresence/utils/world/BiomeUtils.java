@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.google.common.collect.Lists;
 import net.minecraft.world.biome.Biome;
 
@@ -83,7 +84,8 @@ public class BiomeUtils {
         CURRENT_BIOME_IDENTIFIER = null;
 
         isInUse = false;
-        CraftPresence.CLIENT.initArgument("&BIOME&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&BIOME&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&BIOME&");
     }
 
     /**
@@ -159,8 +161,8 @@ public class BiomeUtils {
         final String CURRENT_BIOME_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultBiomeIcon);
         final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentBiomeMessage, biomeArgs);
 
-        CraftPresence.CLIENT.syncArgument("&BIOME&", CURRENT_BIOME_MESSAGE, false);
-        CraftPresence.CLIENT.syncArgument("&BIOME&", CraftPresence.CLIENT.imageOf(CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon, true), true);
+        CraftPresence.CLIENT.syncArgument("&BIOME&", CURRENT_BIOME_MESSAGE, ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&BIOME&", CraftPresence.CLIENT.imageOf(CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon, true), ArgumentType.Image);
     }
 
     /**

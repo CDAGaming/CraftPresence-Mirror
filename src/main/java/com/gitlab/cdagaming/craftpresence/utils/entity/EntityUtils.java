@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.google.common.collect.Lists;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
@@ -155,6 +156,7 @@ public class EntityUtils {
         allEntitiesEmpty = true;
         isInUse = false;
         currentlyCleared = true;
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
     }
 
     /**
@@ -329,11 +331,11 @@ public class EntityUtils {
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (!allEntitiesEmpty) {
-            CraftPresence.CLIENT.syncArgument("&TARGETENTITY&", CURRENT_TARGET_MESSAGE, false);
-            CraftPresence.CLIENT.syncArgument("&ATTACKINGENTITY&", CURRENT_ATTACKING_MESSAGE, false);
-            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CURRENT_RIDING_MESSAGE, false);
+            CraftPresence.CLIENT.syncArgument("&TARGETENTITY&", CURRENT_TARGET_MESSAGE, ArgumentType.Text);
+            CraftPresence.CLIENT.syncArgument("&ATTACKINGENTITY&", CURRENT_ATTACKING_MESSAGE, ArgumentType.Text);
+            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CURRENT_RIDING_MESSAGE, ArgumentType.Text);
         } else if (!currentlyCleared) {
-            CraftPresence.CLIENT.initArgument("&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
+            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
         }
     }
 

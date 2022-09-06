@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
@@ -263,6 +264,7 @@ public class TileEntityUtils {
         allItemsEmpty = true;
         isInUse = false;
         currentlyCleared = true;
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TILEENTITY&");
     }
 
     /**
@@ -547,9 +549,9 @@ public class TileEntityUtils {
 
         // NOTE: Only Apply if Items are not Empty, otherwise Clear Argument
         if (!allItemsEmpty) {
-            CraftPresence.CLIENT.syncArgument("&TILEENTITY&", CURRENT_MESSAGE, false);
+            CraftPresence.CLIENT.syncArgument("&TILEENTITY&", CURRENT_MESSAGE, ArgumentType.Text);
         } else if (!currentlyCleared) {
-            CraftPresence.CLIENT.initArgument("&TILEENTITY&");
+            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TILEENTITY&");
         }
     }
 

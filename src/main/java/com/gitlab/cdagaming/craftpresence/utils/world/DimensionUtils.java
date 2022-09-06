@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.google.common.collect.Lists;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
@@ -86,7 +87,8 @@ public class DimensionUtils {
         CURRENT_DIMENSION_IDENTIFIER = null;
 
         isInUse = false;
-        CraftPresence.CLIENT.initArgument("&DIMENSION&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&DIMENSION&");
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&DIMENSION&");
     }
 
     /**
@@ -163,8 +165,8 @@ public class DimensionUtils {
         final String CURRENT_DIMENSION_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultDimensionIcon);
         final String CURRENT_DIMENSION_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentDimensionMessage, dimensionArgs);
 
-        CraftPresence.CLIENT.syncArgument("&DIMENSION&", CURRENT_DIMENSION_MESSAGE, false);
-        CraftPresence.CLIENT.syncArgument("&DIMENSION&", CraftPresence.CLIENT.imageOf(CURRENT_DIMENSION_ICON, CraftPresence.CONFIG.defaultDimensionIcon, true), true);
+        CraftPresence.CLIENT.syncArgument("&DIMENSION&", CURRENT_DIMENSION_MESSAGE, ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&DIMENSION&", CraftPresence.CLIENT.imageOf(CURRENT_DIMENSION_ICON, CraftPresence.CONFIG.defaultDimensionIcon, true), ArgumentType.Image);
     }
 
     /**
