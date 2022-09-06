@@ -94,6 +94,7 @@ gui.config.message.empty.list=This list is empty and cannot be displayed!\n\n Pl
 gui.config.message.hover.access=**Enable "%1$s" and save your config to use this menu**
 gui.config.message.hover.empty.default=**Default info cannot be empty and must be valid**
 gui.config.message.hover.value.name=Name to identify this value
+gui.config.message.hover.value.message=Message data to attach with this value
 gui.config.message.tags=Current tag placeholders -> %1$s
 ## CONFIG MENU - NON-CONFIG BUTTONS AND NAMES ##
 gui.config.comment.button.sync.config=Synchronize any live changes made from craftpresence.properties\nWarning: This will overwrite any changes made in here if unsaved!

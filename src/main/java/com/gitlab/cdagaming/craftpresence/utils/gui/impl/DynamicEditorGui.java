@@ -36,13 +36,13 @@ import net.minecraft.client.gui.GuiScreen;
 public class DynamicEditorGui extends ExtendedScreen {
     private final boolean isNewValue, isDefaultValue;
     private final PairConsumer<String, String> onAdjustEntry, onRemoveEntry;
-    private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onSpecificCallback, onHoverCallback;
-    public String specificMessage, defaultMessage, mainTitle;
+    private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onSpecificCallback, onHoverPrimaryCallback, onHoverSecondaryCallback;
+    public String specificMessage, defaultMessage, mainTitle, messageText, valueNameText;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl specificMessageInput, newValueName;
     private String attributeName, removeMessage;
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, PairConsumer<String, String> onAdjustEntry, PairConsumer<String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverCallback) {
+    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, PairConsumer<String, String> onAdjustEntry, PairConsumer<String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, PairConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super(parentScreen);
         this.attributeName = attributeName;
         isNewValue = StringUtils.isNullOrEmpty(attributeName);
@@ -53,7 +53,20 @@ public class DynamicEditorGui extends ExtendedScreen {
         this.onAdjustEntry = onAdjustEntry;
         this.onRemoveEntry = onRemoveEntry;
         this.onSpecificCallback = onSpecificCallback;
-        this.onHoverCallback = onHoverCallback;
+        this.onHoverPrimaryCallback = onHoverPrimaryCallback;
+        this.onHoverSecondaryCallback = onHoverSecondaryCallback;
+    }
+
+    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, PairConsumer<String, String> onAdjustEntry, PairConsumer<String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
+        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) -> {
+            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+        });
+    }
+
+    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, PairConsumer<String, String> onAdjustEntry, PairConsumer<String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback) {
+        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) -> {
+            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.message")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+        });
     }
 
     @Override
@@ -67,6 +80,13 @@ public class DynamicEditorGui extends ExtendedScreen {
             if (onAdjustInit != null) {
                 onAdjustInit.accept(attributeName, this);
             }
+        }
+
+        if (StringUtils.isNullOrEmpty(messageText)) {
+            messageText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
+        }
+        if (StringUtils.isNullOrEmpty(valueNameText)) {
+            valueNameText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.value.name");
         }
 
         removeMessage = ModUtils.TRANSLATOR.translate("gui.config.message.remove");
@@ -147,9 +167,6 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        final String messageText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
-        final String valueNameText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.value.name");
-
         renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
         renderString(messageText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
         if (isNewValue) {
@@ -170,17 +187,16 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void postRender() {
-        final String messageText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
-        final String valueNameText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.value.name");
-        final boolean isHovering = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), StringUtils.getStringWidth(messageText), getFontHeight());
+        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), StringUtils.getStringWidth(messageText), getFontHeight());
+        final boolean isHoveringOverSecondary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), StringUtils.getStringWidth(valueNameText), getFontHeight());
         // Hovering over Message Label
-        if (isHovering && onHoverCallback != null) {
-            onHoverCallback.accept(attributeName, this);
+        if (isHoveringOverPrimary && onHoverPrimaryCallback != null) {
+            onHoverPrimaryCallback.accept(attributeName, this);
         }
 
         // Hovering over Value Name Label
-        if (isNewValue && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), StringUtils.getStringWidth(valueNameText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (isNewValue && isHoveringOverSecondary && onHoverSecondaryCallback != null) {
+            onHoverSecondaryCallback.accept(attributeName, this);
         }
     }
 }
