@@ -774,10 +774,17 @@ public class StringUtils {
             return formattedKey.toString();
         } else {
             if (formattedKey.toString().contains("WorldProvider")) {
-                formattedKey = new StringBuilder(formattedKey.toString().replace("WorldProvider", ""));
+                if (ModUtils.IS_LEGACY_SOFT && ModUtils.MCProtocolID <= 11 && formattedKey.toString().equals("WorldProvider")) {
+                    formattedKey = new StringBuilder("overworld");
+                } else {
+                    formattedKey = new StringBuilder(formattedKey.toString().replace("WorldProvider", ""));
+                }
             }
             if (formattedKey.toString().contains("BiomeGen")) {
                 formattedKey = new StringBuilder(formattedKey.toString().replace("BiomeGen", ""));
+            }
+            if (formattedKey.toString().contains("MobSpawner")) {
+                formattedKey = new StringBuilder(formattedKey.toString().replace("MobSpawner", ""));
             }
 
             if (formattedKey.toString().contains(" ")) {
