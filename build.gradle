@@ -95,7 +95,14 @@ minecraft {
             break
     }
     // required when using mcp mappings
-    mcRemapper.fallbackTarget = "searge"
+    if ("${isLegacy}".toBoolean()) {
+        int protocol = "${mc_protocol}".toInteger()
+        if (protocol <= 2) { // MC a1.1.2_01 and below
+            targetNamespace = "searge"
+        }
+    } else {
+        mcRemapper.fallbackTarget = "searge"
+    }
 
     mcRemapper.tinyRemapperConf = {
         // most mcp mappings (except older format) dont include field desc
@@ -109,25 +116,25 @@ mappings {
     // ability to add custom mappings
     // available targets are "CLIENT", "SERVER", "COMBINED"
     getStub("COMBINED").withMappings(["searge", "named"]) {
-        c("ModLoader", "ModLoader", "net/minecraft/src/ModLoader")
-        c("BaseMod", "BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", "mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
+        c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
+        c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
+        c("mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
     }
     getStub("CLIENT").withMappings(["searge", "named"]) {
-        c("ModLoader", "ModLoader", "net/minecraft/src/ModLoader")
-        c("BaseMod", "BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", "mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
+        c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
+        c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
+        c("mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
     }
 
     addExport("CLIENT") {
-        it.targetNamespace = ["named"]
+        it.targetNamespace = ["searge"]
         it.sourceNamespace = "official"
         it.location = file("$rootDir/src/main/resources/mappings.srg")
         it.setType "srg"
     }
 
     addExport("COMBINED") {
-        it.targetNamespace = ["named"]
+        it.targetNamespace = ["searge"]
         it.sourceNamespace = "official"
         it.location = file("$rootDir/src/main/resources/mappings.srg")
         it.setType "srg"
@@ -191,7 +198,14 @@ jar {
 
 remapJar {
     targetNamespace = "official"
-    fallbackFromNamespace = "searge"
+    if ("${isLegacy}".toBoolean()) {
+        int protocol = "${mc_protocol}".toInteger()
+        if (protocol <= 2) { // MC a1.1.2_01 and below
+            sourceNamespace = "searge"
+        }
+    } else {
+        fallbackFromNamespace = "searge"
+    }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
         configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }
