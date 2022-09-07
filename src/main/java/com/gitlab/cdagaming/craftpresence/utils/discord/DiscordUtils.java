@@ -268,7 +268,7 @@ public class DiscordUtils {
     public void syncArgument(String argumentName, String insertString, ArgumentType dataType) {
         // Remove and Replace Placeholder Data, if the placeholder needs Updates
         if (!StringUtils.isNullOrEmpty(argumentName)) {
-            setArgumentFor(dataType, new Pair<>(argumentName, insertString));
+            setArgumentsFor(dataType, new Pair<>(argumentName, insertString));
         }
     }
 
@@ -285,6 +285,12 @@ public class DiscordUtils {
         }
     }
 
+    /**
+     * Retrieve all arguments for the specified type
+     *
+     * @param type The type the arguments should be retrieved from
+     * @return The found list of arguments
+     */
     public List<Pair<String, String>> getArgumentsFor(final ArgumentType type) {
         if (!presenceData.containsKey(type)) {
             presenceData.put(type, Lists.newArrayList());
@@ -292,11 +298,23 @@ public class DiscordUtils {
         return presenceData.get(type);
     }
 
+    /**
+     * Stores the specified argument data for the specified type
+     *
+     * @param type The type the arguments should be stored as
+     * @param data The list of data to interpret
+     */
     public void setArgumentsFor(final ArgumentType type, List<Pair<String, String>> data) {
         presenceData.put(type, data);
     }
 
-    public void setArgumentFor(final ArgumentType type, Pair<String, String> data) {
+    /**
+     * Stores the specified argument data for the specified type
+     *
+     * @param type The type the arguments should be stored as
+     * @param data The data to interpret
+     */
+    public void setArgumentsFor(final ArgumentType type, Pair<String, String> data) {
         final List<Pair<String, String>> list = getArgumentsFor(type);
         list.removeIf(e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
         list.add(data);
