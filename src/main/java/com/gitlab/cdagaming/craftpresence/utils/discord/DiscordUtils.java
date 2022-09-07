@@ -55,7 +55,7 @@ public class DiscordUtils {
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
-    private final Map<ArgumentType, List<Pair<String, String>>> presenseData = Maps.newHashMap();
+    private final Map<ArgumentType, List<Pair<String, String>>> presenceData = Maps.newHashMap();
     /**
      * The Current User, tied to the Rich Presence
      */
@@ -263,7 +263,7 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
-     * @param isIconData   Whether the Argument is an RPC Message or an Icon Placeholder
+     * @param dataType     The type the argument should be stored as
      */
     public void syncArgument(String argumentName, String insertString, ArgumentType dataType) {
         // Remove and Replace Placeholder Data, if the placeholder needs Updates
@@ -286,23 +286,20 @@ public class DiscordUtils {
     }
 
     public List<Pair<String, String>> getArgumentsFor(final ArgumentType type) {
-        return presenseData.getOrDefault(type, Lists.newArrayList());
+        if (!presenceData.containsKey(type)) {
+            presenceData.put(type, Lists.newArrayList());
+        }
+        return presenceData.get(type);
     }
 
     public void setArgumentsFor(final ArgumentType type, List<Pair<String, String>> data) {
-        if (presenseData.containsKey(type)) {
-            presenseData.replace(type, getArgumentsFor(type), data);
-        } else {
-            presenseData.put(type, data);
-        }
+        presenceData.put(type, data);
     }
 
     public void setArgumentFor(final ArgumentType type, Pair<String, String> data) {
         final List<Pair<String, String>> list = getArgumentsFor(type);
-        synchronized (list) {
-            list.removeIf(e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
-            list.add(data);
-        }
+        list.removeIf(e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
+        list.add(data);
         setArgumentsFor(type, list);
     }
 
