@@ -660,8 +660,9 @@ public class ConfigUtils {
 
                     // Ensure default Value for String Array is available
                     // If default value is not present, give it a dummy value
+                    boolean isOptionalList = configDataSet.getFirst().toLowerCase().contains("extra") || configDataSet.getFirst().toLowerCase().contains("optional");
                     boolean defaultFound = !StringUtils.isNullOrEmpty(StringUtils.getConfigPart(finalArray, "default", 0, 1, splitCharacter, null));
-                    if (!defaultFound) {
+                    if (!isOptionalList && !defaultFound) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", configDataSet.getFirst()));
                         finalArray = StringUtils.addToArray(finalArray, finalArray.length, "default" + splitCharacter + "NaN");
                         needsDataSync = true;
