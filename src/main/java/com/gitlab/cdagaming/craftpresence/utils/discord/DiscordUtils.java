@@ -313,6 +313,82 @@ public class DiscordUtils {
     }
 
     /**
+     * Remove any arguments following the specified format within the selected Argument Type
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param format The string format to interpret
+     */
+    public void removeArgumentsFrom(final ArgumentType type, final String format) {
+        if (presenceData.containsKey(type)) {
+            final List<Pair<String, String>> list = presenceData.get(type);
+            for (Pair<String, String> entry : presenceData.get(type)) {
+                if (entry.getFirst().contains(format)) {
+                    list.remove(entry);
+                }
+            }
+            setArgumentsFor(type, list);
+        }
+    }
+
+    /**
+     * Retrieves any arguments within the specified type that match the specified string format
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param format The string format to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final String format) {
+        final List<Pair<String, String>> list = Lists.newArrayList();
+        if (presenceData.containsKey(type)) {
+            for (Pair<String, String> entry : presenceData.get(type)) {
+                if (entry.getFirst().contains(format)) {
+                    list.add(entry);
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Retrieves any argument entries within the specified type that match the specified string format
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param format The string format to interpret
+     * @param formatToLower Whether to lower-cases the resulting entries
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<String> getArgumentEntries(final ArgumentType type, final String format, final boolean formatToLower) {
+        final List<Pair<String, String>> list = getArgumentsMatching(type, format);
+        final List<String> result = Lists.newArrayList();
+        for (Pair<String, String> entry : list) {
+            result.add(formatToLower ? entry.getFirst().toLowerCase() : entry.getFirst());
+        }
+        return result;
+    }
+
+    /**
+     * Retrieves any argument entries within the specified type that match the specified string format
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param format The string format to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<String> getArgumentEntries(final ArgumentType type, final String format) {
+        return getArgumentEntries(type, format, false);
+    }
+
+    /**
+     * Determines whether there are any matching arguments within the specified type matching the specified string format
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param format The string format to interpret
+     * @return Whether the resulting list has any matching entries
+     */
+    public boolean hasArgumentsMatching(final ArgumentType type, final String format) {
+        return !getArgumentsMatching(type, format).isEmpty();
+    }
+
+    /**
      * Stores the specified argument data for the specified type
      *
      * @param type The type the arguments should be stored as
