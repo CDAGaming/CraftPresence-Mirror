@@ -506,8 +506,15 @@ public class DiscordUtils {
                 final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
                 JsonObject buttonObj = new JsonObject();
                 if (!StringUtils.isNullOrEmpty(part[0])) {
-                    buttonObj.addProperty("label", part[0]);
-                    buttonObj.addProperty("url", !StringUtils.isNullOrEmpty(part[1]) ? part[1] : "");
+                    buttonObj.addProperty("label", StringUtils.formatWord(
+                            StringUtils.sequentialReplaceAnyCase(part[0], getArgumentsFor(ArgumentType.Button)),
+                            !CraftPresence.CONFIG.formatWords, true, 1
+                    ));
+                    buttonObj.addProperty("url", !StringUtils.isNullOrEmpty(part[1]) ?
+                            StringUtils.formatWord(
+                                    StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button)),
+                                    !CraftPresence.CONFIG.formatWords, true, 1
+                            ) : "");
                     BUTTONS.add(buttonObj);
                 }
             }
