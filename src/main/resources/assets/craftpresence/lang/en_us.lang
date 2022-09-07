@@ -171,6 +171,7 @@ gui.config.name.display.details_message=Details Message Format
 gui.config.name.display.game_state_message=Game State Message Format
 gui.config.name.display.small_image_key=Small Image Key Format
 gui.config.name.display.large_image_key=Large Image Key Format
+gui.config.name.display.button_messages=Extra Button Messages
 ## CONFIG MESSAGES - COMMENTS ##
 gui.config.comment.general.client_id=Client ID used for retrieving assets, icon keys, and titles
 gui.config.comment.general.default_icon=Default icon\n (Used in main menu, dimensions and servers)

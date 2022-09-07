@@ -42,6 +42,7 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.pipe.PipeSt
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Map;
@@ -497,6 +498,20 @@ public class DiscordUtils {
 
         LARGE_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
         SMALL_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
+
+        // Format Buttons Array based on Config Value
+        BUTTONS = new JsonArray();
+        for (String buttonElement : CraftPresence.CONFIG.buttonMessages) {
+            if (!StringUtils.isNullOrEmpty(buttonElement)) {
+                final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
+                JsonObject buttonObj = new JsonObject();
+                if (!StringUtils.isNullOrEmpty(part[0])) {
+                    buttonObj.addProperty("label", part[0]);
+                    buttonObj.addProperty("url", !StringUtils.isNullOrEmpty(part[1]) ? part[1] : "");
+                    BUTTONS.add(buttonObj);
+                }
+            }
+        }
 
         final RichPresence newRPCData = new RichPresence.Builder()
                 .setState(GAME_STATE)
