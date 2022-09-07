@@ -250,6 +250,19 @@ public class DiscordUtils {
         syncPackArguments();
     }
 
+    public List<String> createButtonsList() {
+        final List<String> result = Lists.newArrayList();
+        for (String buttonElement : CraftPresence.CONFIG.buttonMessages) {
+            if (!StringUtils.isNullOrEmpty(buttonElement)) {
+                final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
+                if (!StringUtils.isNullOrEmpty(part[0])) {
+                    result.add(part[0]);
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * Updates the Starting Unix Timestamp, if allowed
      */
@@ -505,17 +518,19 @@ public class DiscordUtils {
             if (!StringUtils.isNullOrEmpty(buttonElement)) {
                 final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
                 JsonObject buttonObj = new JsonObject();
-                if (!StringUtils.isNullOrEmpty(part[0])) {
-                    buttonObj.addProperty("label", StringUtils.formatWord(
-                            StringUtils.sequentialReplaceAnyCase(part[0], getArgumentsFor(ArgumentType.Button)),
-                            !CraftPresence.CONFIG.formatWords, true, 1
-                    ));
-                    buttonObj.addProperty("url", !StringUtils.isNullOrEmpty(part[1]) ?
-                            StringUtils.formatWord(
-                                    StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button)),
-                                    !CraftPresence.CONFIG.formatWords, true, 1
-                            ) : "");
-                    BUTTONS.add(buttonObj);
+                if (!StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default")) {
+                    if (!StringUtils.isNullOrEmpty(part[1])) {
+                        buttonObj.addProperty("label", StringUtils.formatWord(
+                                StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button)),
+                                !CraftPresence.CONFIG.formatWords, true, 1
+                        ));
+                        buttonObj.addProperty("url", !StringUtils.isNullOrEmpty(part[2]) ?
+                                StringUtils.formatWord(
+                                        StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button)),
+                                        !CraftPresence.CONFIG.formatWords, true, 1
+                                ) : "");
+                        BUTTONS.add(buttonObj);
+                    }
                 }
             }
         }

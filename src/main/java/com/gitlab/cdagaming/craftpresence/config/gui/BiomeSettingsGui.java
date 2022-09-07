@@ -87,15 +87,15 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
-                                                                screenInstance.defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.specificMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.defaultMessage);
+                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
                                                             },
-                                                            (attributeName, inputText) -> {
+                                                            (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
                                                             },
-                                                            (attributeName, inputText) -> {
+                                                            (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.biomeMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.biomeMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
@@ -138,14 +138,14 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 parentScreen, null,
                                                                 (attributeName, screenInstance) -> {
                                                                     // Event to occur when initializing new data
-                                                                    screenInstance.specificMessage = screenInstance.defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                    screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
                                                                 }, null,
-                                                                (attributeName, inputText) -> {
+                                                                (screenInstance, attributeName, inputText) -> {
                                                                     // Event to occur when adjusting set data
                                                                     CraftPresence.CONFIG.hasChanged = true;
                                                                     CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
                                                                 },
-                                                                (attributeName, inputText) -> {
+                                                                (screenInstance, attributeName, inputText) -> {
                                                                     // Event to occur when removing set data
                                                                     CraftPresence.CONFIG.biomeMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.biomeMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                     CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);

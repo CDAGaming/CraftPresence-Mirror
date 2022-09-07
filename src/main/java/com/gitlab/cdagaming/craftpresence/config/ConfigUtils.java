@@ -299,7 +299,7 @@ public class ConfigUtils {
         smallImageMessage = "&SERVER& &PACK&";
         largeImageKey = "&MAINMENU&&DIMENSION&";
         smallImageKey = "&SERVER&&PACK&";
-        buttonMessages = new String[]{};
+        buttonMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label")+ (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")};
 
         syncMappings();
         initialized = true;
@@ -663,9 +663,8 @@ public class ConfigUtils {
 
                     // Ensure default Value for String Array is available
                     // If default value is not present, give it a dummy value
-                    boolean isOptionalList = configDataSet.getFirst().toLowerCase().contains("extra") || configDataSet.getFirst().toLowerCase().contains("optional");
                     boolean defaultFound = !StringUtils.isNullOrEmpty(StringUtils.getConfigPart(finalArray, "default", 0, 1, splitCharacter, null));
-                    if (!isOptionalList && !defaultFound) {
+                    if (!defaultFound) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", configDataSet.getFirst()));
                         finalArray = StringUtils.addToArray(finalArray, finalArray.length, "default" + splitCharacter + "NaN");
                         needsDataSync = true;
