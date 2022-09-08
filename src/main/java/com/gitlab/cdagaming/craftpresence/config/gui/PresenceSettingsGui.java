@@ -39,7 +39,6 @@ import net.minecraft.client.gui.GuiScreen;
 public class PresenceSettingsGui extends PaginatedScreen {
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
-    private ExtendedButtonControl buttonMessagesControl;
 
     PresenceSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -101,7 +100,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         smallImageKeyFormat.setText(CraftPresence.CONFIG.smallImageKey);
         largeImageKeyFormat.setText(CraftPresence.CONFIG.largeImageKey);
 
-        buttonMessagesControl = addControl(
+        addControl(
                 new ExtendedButtonControl(
                         (width / 2) - 90, CraftPresence.GUIS.getButtonY(3),
                         180, 20,

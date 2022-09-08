@@ -263,6 +263,13 @@ public class DiscordUtils {
         return result;
     }
 
+    public String sanitizePlaceholders(String input) {
+        if (StringUtils.isNullOrEmpty(input) || !CraftPresence.CONFIG.formatWords) {
+            return input;
+        }
+        return input.replaceAll("&[^&]*&", "");
+    }
+
     /**
      * Updates the Starting Unix Timestamp, if allowed
      */
@@ -596,34 +603,32 @@ public class DiscordUtils {
             if (!StringUtils.isNullOrEmpty(buttonElement)) {
                 final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
                 JsonObject buttonObj = new JsonObject();
-                if (!StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default")) {
-                    if (!StringUtils.isNullOrEmpty(part[1])) {
-                        String label = StringUtils.formatWord(
-                                StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button)),
-                                !CraftPresence.CONFIG.formatWords, true, 1
-                        );
-                        String url = !StringUtils.isNullOrEmpty(part[2]) ?
-                                StringUtils.formatWord(
-                                        StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button)),
-                                        !CraftPresence.CONFIG.formatWords, true, 1
-                                ) : "";
-                        buttonObj.addProperty("label", label.replaceAll("&[^&]*&", ""));
-                        buttonObj.addProperty("url", url.replaceAll("&[^&]*&", ""));
-                        BUTTONS.add(buttonObj);
-                    }
+                if (!StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
+                    String label = StringUtils.formatWord(
+                            StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button)),
+                            !CraftPresence.CONFIG.formatWords, true, 1
+                    );
+                    String url = !StringUtils.isNullOrEmpty(part[2]) ?
+                            StringUtils.formatWord(
+                                    StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button)),
+                                    !CraftPresence.CONFIG.formatWords, true, 1
+                            ) : "";
+                    buttonObj.addProperty("label", sanitizePlaceholders(label));
+                    buttonObj.addProperty("url", sanitizePlaceholders(url));
+                    BUTTONS.add(buttonObj);
                 }
             }
         }
 
         final RichPresence newRPCData = new RichPresence.Builder()
-                .setState(GAME_STATE = GAME_STATE.replaceAll("&[^&]*&", ""))
-                .setDetails(DETAILS = DETAILS.replaceAll("&[^&]*&", ""))
+                .setState(GAME_STATE = sanitizePlaceholders(GAME_STATE))
+                .setDetails(DETAILS = sanitizePlaceholders(DETAILS))
                 .setStartTimestamp(START_TIMESTAMP)
                 .setEndTimestamp(END_TIMESTAMP)
-                .setLargeImage(LARGE_IMAGE_KEY = LARGE_IMAGE_KEY.replaceAll("&[^&]*&", ""),
-                        LARGE_IMAGE_TEXT = LARGE_IMAGE_TEXT.replaceAll("&[^&]*&", ""))
-                .setSmallImage(SMALL_IMAGE_KEY = SMALL_IMAGE_KEY.replaceAll("&[^&]*&", ""),
-                        SMALL_IMAGE_TEXT = SMALL_IMAGE_TEXT.replaceAll("&[^&]*&", ""))
+                .setLargeImage(LARGE_IMAGE_KEY = sanitizePlaceholders(LARGE_IMAGE_KEY),
+                        LARGE_IMAGE_TEXT = sanitizePlaceholders(LARGE_IMAGE_TEXT))
+                .setSmallImage(SMALL_IMAGE_KEY = sanitizePlaceholders(SMALL_IMAGE_KEY),
+                        SMALL_IMAGE_TEXT = sanitizePlaceholders(SMALL_IMAGE_TEXT))
                 .setParty(PARTY_ID, PARTY_SIZE, PARTY_MAX, PARTY_PRIVACY.getPartyIndex())
                 .setMatchSecret(MATCH_SECRET)
                 .setJoinSecret(JOIN_SECRET)
