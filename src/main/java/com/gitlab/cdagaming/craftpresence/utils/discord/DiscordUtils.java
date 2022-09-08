@@ -320,7 +320,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Remove any arguments following the specified format within the selected Argument Type
+     * Remove any arguments following the specified formats within the selected Argument Type
      *
      * @param type The type the arguments should be retrieved from
      * @param args The string formats to interpret
@@ -340,18 +340,20 @@ public class DiscordUtils {
     }
 
     /**
-     * Retrieves any arguments within the specified type that match the specified string format
+     * Retrieves any arguments within the specified type that match the specified string formats
      *
      * @param type The type the arguments should be retrieved from
-     * @param format The string format to interpret
+     * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final String format) {
+    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final String... args) {
         final List<Pair<String, String>> list = Lists.newArrayList();
         if (presenceData.containsKey(type)) {
             for (Pair<String, String> entry : presenceData.get(type)) {
-                if (entry.getFirst().contains(format)) {
-                    list.add(entry);
+                for (String format : args) {
+                    if (entry.getFirst().contains(format)) {
+                        list.add(entry);
+                    }
                 }
             }
         }
@@ -359,15 +361,15 @@ public class DiscordUtils {
     }
 
     /**
-     * Retrieves any argument entries within the specified type that match the specified string format
+     * Retrieves any argument entries within the specified type that match the specified string formats
      *
      * @param type The type the arguments should be retrieved from
-     * @param format The string format to interpret
      * @param formatToLower Whether to lower-cases the resulting entries
+     * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getArgumentEntries(final ArgumentType type, final String format, final boolean formatToLower) {
-        final List<Pair<String, String>> list = getArgumentsMatching(type, format);
+    public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final String... args) {
+        final List<Pair<String, String>> list = getArgumentsMatching(type, args);
         final List<String> result = Lists.newArrayList();
         for (Pair<String, String> entry : list) {
             result.add(formatToLower ? entry.getFirst().toLowerCase() : entry.getFirst());
@@ -376,25 +378,25 @@ public class DiscordUtils {
     }
 
     /**
-     * Retrieves any argument entries within the specified type that match the specified string format
+     * Retrieves any argument entries within the specified type that match the specified string formats
      *
      * @param type The type the arguments should be retrieved from
-     * @param format The string format to interpret
+     * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getArgumentEntries(final ArgumentType type, final String format) {
-        return getArgumentEntries(type, format, false);
+    public List<String> getArgumentEntries(final ArgumentType type, final String... args) {
+        return getArgumentEntries(type, false, args);
     }
 
     /**
-     * Determines whether there are any matching arguments within the specified type matching the specified string format
+     * Determines whether there are any matching arguments within the specified type matching the specified string formats
      *
      * @param type The type the arguments should be retrieved from
-     * @param format The string format to interpret
+     * @param args The string formats to interpret
      * @return Whether the resulting list has any matching entries
      */
-    public boolean hasArgumentsMatching(final ArgumentType type, final String format) {
-        return !getArgumentsMatching(type, format).isEmpty();
+    public boolean hasArgumentsMatching(final ArgumentType type, final String... args) {
+        return !getArgumentsMatching(type, args).isEmpty();
     }
 
     /**

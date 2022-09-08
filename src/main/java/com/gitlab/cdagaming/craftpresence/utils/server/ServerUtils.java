@@ -299,7 +299,7 @@ public class ServerUtils {
             }
 
             // NOTE: Universal + Custom Events
-            List<String> matchingArgs = CraftPresence.CLIENT.getArgumentEntries(ArgumentType.Text, subArgumentFormat, true);
+            List<String> matchingArgs = CraftPresence.CLIENT.getArgumentEntries(ArgumentType.Text, true, subArgumentFormat);
             String item, subItem;
             if (!StringUtils.isNullOrEmpty(currentServerMessage) || !matchingArgs.isEmpty()) {
                 // &PLAYERINFO& Sub-Arguments
