@@ -250,6 +250,10 @@ public class DiscordUtils {
         syncPackArguments();
     }
 
+    /**
+     * Creates a string-based representation of the button-list, from config values
+     * @return the output list
+     */
     public List<String> createButtonsList() {
         final List<String> result = Lists.newArrayList();
         for (String buttonElement : CraftPresence.CONFIG.buttonMessages) {
@@ -263,6 +267,12 @@ public class DiscordUtils {
         return result;
     }
 
+    /**
+     * Removes any invalid data from a placeholder argument
+     *
+     * @param input The string to interpret
+     * @return The resulting output string
+     */
     public String sanitizePlaceholders(String input) {
         if (StringUtils.isNullOrEmpty(input) || !CraftPresence.CONFIG.formatWords) {
             return input;
