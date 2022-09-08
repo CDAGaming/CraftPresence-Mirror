@@ -611,12 +611,12 @@ public class DiscordUtils {
                 JsonObject buttonObj = new JsonObject();
                 if (!StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
                     String label = StringUtils.formatWord(
-                            StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button)),
+                            StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
                             !CraftPresence.CONFIG.formatWords, true, 1
                     );
                     String url = !StringUtils.isNullOrEmpty(part[2]) ?
                             StringUtils.formatWord(
-                                    StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button)),
+                                    StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
                                     !CraftPresence.CONFIG.formatWords, true, 1
                             ) : "";
                     buttonObj.addProperty("label", sanitizePlaceholders(label));
