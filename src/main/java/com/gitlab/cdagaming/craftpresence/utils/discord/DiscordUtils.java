@@ -598,15 +598,17 @@ public class DiscordUtils {
                 JsonObject buttonObj = new JsonObject();
                 if (!StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default")) {
                     if (!StringUtils.isNullOrEmpty(part[1])) {
-                        buttonObj.addProperty("label", StringUtils.formatWord(
+                        String label = StringUtils.formatWord(
                                 StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button)),
                                 !CraftPresence.CONFIG.formatWords, true, 1
-                        ));
-                        buttonObj.addProperty("url", !StringUtils.isNullOrEmpty(part[2]) ?
+                        );
+                        String url = !StringUtils.isNullOrEmpty(part[2]) ?
                                 StringUtils.formatWord(
                                         StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button)),
                                         !CraftPresence.CONFIG.formatWords, true, 1
-                                ) : "");
+                                ) : "";
+                        buttonObj.addProperty("label", label.replaceAll("&[^&]*&", ""));
+                        buttonObj.addProperty("url", url.replaceAll("&[^&]*&", ""));
                         BUTTONS.add(buttonObj);
                     }
                 }
@@ -614,12 +616,14 @@ public class DiscordUtils {
         }
 
         final RichPresence newRPCData = new RichPresence.Builder()
-                .setState(GAME_STATE)
-                .setDetails(DETAILS)
+                .setState(GAME_STATE = GAME_STATE.replaceAll("&[^&]*&", ""))
+                .setDetails(DETAILS = DETAILS.replaceAll("&[^&]*&", ""))
                 .setStartTimestamp(START_TIMESTAMP)
                 .setEndTimestamp(END_TIMESTAMP)
-                .setLargeImage(LARGE_IMAGE_KEY, LARGE_IMAGE_TEXT)
-                .setSmallImage(SMALL_IMAGE_KEY, SMALL_IMAGE_TEXT)
+                .setLargeImage(LARGE_IMAGE_KEY = LARGE_IMAGE_KEY.replaceAll("&[^&]*&", ""),
+                        LARGE_IMAGE_TEXT = LARGE_IMAGE_TEXT.replaceAll("&[^&]*&", ""))
+                .setSmallImage(SMALL_IMAGE_KEY = SMALL_IMAGE_KEY.replaceAll("&[^&]*&", ""),
+                        SMALL_IMAGE_TEXT = SMALL_IMAGE_TEXT.replaceAll("&[^&]*&", ""))
                 .setParty(PARTY_ID, PARTY_SIZE, PARTY_MAX, PARTY_PRIVACY.getPartyIndex())
                 .setMatchSecret(MATCH_SECRET)
                 .setJoinSecret(JOIN_SECRET)
