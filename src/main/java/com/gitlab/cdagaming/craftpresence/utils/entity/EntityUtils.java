@@ -156,6 +156,7 @@ public class EntityUtils {
         allEntitiesEmpty = true;
         isInUse = false;
         currentlyCleared = true;
+        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:", "&ATTACKINGENTITY:", "&RIDINGENTITY:");
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
     }
 
@@ -318,6 +319,17 @@ public class EntityUtils {
             }
         }
 
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : entityTargetArgs) {
+            CraftPresence.CLIENT.syncArgument("&TARGETENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : entityAttackingArgs) {
+            CraftPresence.CLIENT.syncArgument("&ATTACKINGENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : entityRidingArgs) {
+            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
             entityTargetArgs.addAll(CraftPresence.CLIENT.generalArgs);
@@ -335,6 +347,7 @@ public class EntityUtils {
             CraftPresence.CLIENT.syncArgument("&ATTACKINGENTITY&", CURRENT_ATTACKING_MESSAGE, ArgumentType.Text);
             CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CURRENT_RIDING_MESSAGE, ArgumentType.Text);
         } else if (!currentlyCleared) {
+            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:", "&ATTACKINGENTITY:", "&RIDINGENTITY:");
             CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
         }
     }

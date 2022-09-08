@@ -219,7 +219,7 @@ public class ServerUtils {
             requestedServerData = null;
         }
 
-        CraftPresence.CLIENT.removeArgumentsFrom(ArgumentType.Text, subArgumentFormat);
+        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
         CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
         CraftPresence.CLIENT.clearPartyData(true, false);

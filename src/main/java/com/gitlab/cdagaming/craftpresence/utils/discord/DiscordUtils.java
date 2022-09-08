@@ -316,14 +316,16 @@ public class DiscordUtils {
      * Remove any arguments following the specified format within the selected Argument Type
      *
      * @param type The type the arguments should be retrieved from
-     * @param format The string format to interpret
+     * @param args The string formats to interpret
      */
-    public void removeArgumentsFrom(final ArgumentType type, final String format) {
+    public void removeArgumentsMatching(final ArgumentType type, final String... args) {
         if (presenceData.containsKey(type)) {
             final List<Pair<String, String>> list = presenceData.get(type);
             for (Pair<String, String> entry : presenceData.get(type)) {
-                if (entry.getFirst().contains(format)) {
-                    list.remove(entry);
+                for (String format : args) {
+                    if (entry.getFirst().contains(format)) {
+                        list.remove(entry);
+                    }
                 }
             }
             setArgumentsFor(type, list);

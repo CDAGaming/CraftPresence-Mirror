@@ -102,6 +102,16 @@ public class GuiUtils {
     private GuiScreen CURRENT_SCREEN;
 
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&SCREEN&";
+
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&SCREEN:";
+
+    /**
      * Gets the Default/Global Font Renderer
      *
      * @return The Default/Global Font Renderer
@@ -231,8 +241,9 @@ public class GuiUtils {
         CURRENT_GUI_CLASS = null;
 
         isInUse = false;
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&SCREEN&");
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&SCREEN&");
+        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
     }
 
     /**
@@ -341,6 +352,11 @@ public class GuiUtils {
         guiArgs.add(new Pair<>("&SCREEN&", CURRENT_GUI_NAME));
         guiArgs.add(new Pair<>("&CLASS&", MappingUtils.getClassName(CURRENT_GUI_CLASS)));
 
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : guiArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
             guiArgs.addAll(CraftPresence.CLIENT.generalArgs);
@@ -351,8 +367,8 @@ public class GuiUtils {
 
         final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentGuiMessage, guiArgs);
 
-        CraftPresence.CLIENT.syncArgument("&SCREEN&", CURRENT_GUI_MESSAGE, ArgumentType.Text);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&SCREEN&");
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_GUI_MESSAGE, ArgumentType.Text);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
     }
 
     /**

@@ -68,6 +68,16 @@ public class BiomeUtils {
     private String CURRENT_BIOME_IDENTIFIER;
 
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&BIOME&";
+
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&BIOME:";
+
+    /**
      * Clears FULL Data from this Module
      */
     private void emptyData() {
@@ -84,8 +94,9 @@ public class BiomeUtils {
         CURRENT_BIOME_IDENTIFIER = null;
 
         isInUse = false;
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&BIOME&");
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&BIOME&");
+        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
     }
 
     /**
@@ -148,6 +159,11 @@ public class BiomeUtils {
 
         biomeArgs.add(new Pair<>("&BIOME&", CURRENT_BIOME_NAME));
 
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : biomeArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
             biomeArgs.addAll(CraftPresence.CLIENT.generalArgs);
@@ -161,8 +177,8 @@ public class BiomeUtils {
         final String CURRENT_BIOME_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultBiomeIcon);
         final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentBiomeMessage, biomeArgs);
 
-        CraftPresence.CLIENT.syncArgument("&BIOME&", CURRENT_BIOME_MESSAGE, ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&BIOME&", CraftPresence.CLIENT.imageOf(CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon, true), ArgumentType.Image);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_BIOME_MESSAGE, ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon, true), ArgumentType.Image);
     }
 
     /**

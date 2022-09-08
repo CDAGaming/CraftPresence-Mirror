@@ -216,6 +216,16 @@ public class TileEntityUtils {
     private boolean currentlyCleared = true;
 
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&TILEENTITY&";
+
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&TILEENTITY:";
+
+    /**
      * Clears FULL Data from this Module
      */
     private void emptyData() {
@@ -264,7 +274,8 @@ public class TileEntityUtils {
         allItemsEmpty = true;
         isInUse = false;
         currentlyCleared = true;
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TILEENTITY&");
+        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
     }
 
     /**
@@ -540,6 +551,11 @@ public class TileEntityUtils {
         tileEntityArgs.add(new Pair<>("&BOOTS&", !StringUtils.isNullOrEmpty(CURRENT_BOOTS_NAME) ?
                 StringUtils.replaceAnyCase(bootsMessage, "&item&", CURRENT_BOOTS_NAME) : ""));
 
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : tileEntityArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
             tileEntityArgs.addAll(CraftPresence.CLIENT.generalArgs);
@@ -549,9 +565,10 @@ public class TileEntityUtils {
 
         // NOTE: Only Apply if Items are not Empty, otherwise Clear Argument
         if (!allItemsEmpty) {
-            CraftPresence.CLIENT.syncArgument("&TILEENTITY&", CURRENT_MESSAGE, ArgumentType.Text);
+            CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_MESSAGE, ArgumentType.Text);
         } else if (!currentlyCleared) {
-            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TILEENTITY&");
+            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
+            CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
         }
     }
 
