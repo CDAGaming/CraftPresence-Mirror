@@ -320,7 +320,7 @@ public class DiscordUtils {
      */
     public void removeArgumentsMatching(final ArgumentType type, final String... args) {
         if (presenceData.containsKey(type)) {
-            final List<Pair<String, String>> list = presenceData.get(type);
+            final List<Pair<String, String>> list = Lists.newArrayList(presenceData.get(type));
             for (Pair<String, String> entry : presenceData.get(type)) {
                 for (String format : args) {
                     if (entry.getFirst().contains(format)) {
