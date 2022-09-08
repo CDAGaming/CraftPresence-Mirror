@@ -307,16 +307,20 @@ public class DiscordUtils {
     }
 
     /**
-     * Retrieve all arguments for the specified type
+     * Retrieve all arguments for the specified types
      *
-     * @param type The type the arguments should be retrieved from
+     * @param typeList The types the arguments should be retrieved from
      * @return The found list of arguments
      */
-    public List<Pair<String, String>> getArgumentsFor(final ArgumentType type) {
-        if (!presenceData.containsKey(type)) {
-            presenceData.put(type, Lists.newArrayList());
+    public List<Pair<String, String>> getArgumentsFor(final ArgumentType... typeList) {
+        List<Pair<String, String>> result = Lists.newArrayList();
+        for (ArgumentType type : typeList) {
+            if (!presenceData.containsKey(type)) {
+                presenceData.put(type, Lists.newArrayList());
+            }
+            result.addAll(presenceData.get(type));
         }
-        return presenceData.get(type);
+        return result;
     }
 
     /**

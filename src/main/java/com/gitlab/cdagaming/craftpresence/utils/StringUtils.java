@@ -299,24 +299,26 @@ public class StringUtils {
      * @return The completed and replaced String
      */
     public static String sequentialReplaceAnyCase(final String source, final List<Pair<String, String>> replaceData) {
-        return sequentialReplaceAnyCase(source, replaceData, true);
+        return sequentialReplaceAnyCase(source, true, replaceData);
     }
 
     /**
      * Replaces Data in a sequential order, following Case-Insensitivity
      *
      * @param source        The original String to replace within
-     * @param replaceData   The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @param allowMinified Flag for whether or not to allow Minified Placeholders (Trimmed String down to a length of 4)
+     * @param replaceArgs   The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */
-    public static String sequentialReplaceAnyCase(final String source, final List<Pair<String, String>> replaceData, final boolean allowMinified) {
+    public static String sequentialReplaceAnyCase(final String source, final boolean allowMinified, final List<Pair<String, String>>... replaceArgs) {
         if (!isNullOrEmpty(source)) {
             String finalResult = source;
 
-            if (!replaceData.isEmpty()) {
-                for (Pair<String, String> replacementData : replaceData) {
-                    finalResult = replaceAnyCase(finalResult, replacementData.getFirst(), replacementData.getSecond(), allowMinified);
+            for (List<Pair<String, String>> replaceData : replaceArgs) {
+                if (!replaceData.isEmpty()) {
+                    for (Pair<String, String> replacementData : replaceData) {
+                        finalResult = replaceAnyCase(finalResult, replacementData.getFirst(), replacementData.getSecond(), allowMinified);
+                    }
                 }
             }
             return finalResult;
