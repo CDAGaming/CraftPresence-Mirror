@@ -241,7 +241,7 @@ gui.config.comment.accessibility.show_background_as_dark=Show background colors 
 gui.config.comment.accessibility.strip_translation_colors=Allows CraftPresence to remove color and formatting codes from it's translations
 gui.config.comment.accessibility.show_logging_in_chat=Allows CraftPresence to display it's logging in the chat hud
 gui.config.comment.accessibility.strip_extra_gui_elements=Allows CraftPresence to remove excess visual improvements from the Gui\n (Can improve gui performance in some areas)
-gui.config.comment.display.button_messages=Customize messages to display in the extra buttons in the RPC\n (Manual format: label;url)\n Available placeholders:\n - TBD = TBD
+gui.config.comment.display.button_messages=Customize messages to display in the extra buttons in the RPC\n (Manual format: id;label;url)\n Notes:\n - Any placeholder from other modules can be uses (Globals, Biomes, Dimensions, etc)\n - Sub-Placeholders can also be used (Ex: &SERVER:IP& = server IP being called from elsewhere)
 ## KEYBIND MESSAGES ##
 key.craftpresence.category=CraftPresence - Controls
 key.craftpresence.config_keycode.name=Config Gui Keybind
