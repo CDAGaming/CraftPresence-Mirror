@@ -201,14 +201,14 @@ public class DynamicEditorGui extends ExtendedScreen {
     @Override
     public void postRender() {
         final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, primaryInput.getControlPosY() + 5, StringUtils.getStringWidth(primaryText), getFontHeight());
-        final boolean isHoveringOverSecondary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, secondaryInput.getControlPosY() + 5, StringUtils.getStringWidth(secondaryText), getFontHeight());
+        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, secondaryInput.getControlPosY() + 5, StringUtils.getStringWidth(secondaryText), getFontHeight());
         // Hovering over Message Label
         if (isHoveringOverPrimary && onHoverPrimaryCallback != null) {
             onHoverPrimaryCallback.accept(attributeName, this);
         }
 
         // Hovering over Value Name Label
-        if (willRenderSecondaryInput && isHoveringOverSecondary && onHoverSecondaryCallback != null) {
+        if (isHoveringOverSecondary && onHoverSecondaryCallback != null) {
             onHoverSecondaryCallback.accept(attributeName, this);
         }
     }
