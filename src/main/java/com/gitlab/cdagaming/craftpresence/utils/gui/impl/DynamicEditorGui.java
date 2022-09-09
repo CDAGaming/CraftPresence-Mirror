@@ -95,7 +95,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.value.name");
         }
 
-        removeMessage = ModUtils.TRANSLATOR.translate("gui.config.message.remove");
+        removeMessage = ModUtils.TRANSLATOR.translate("gui.config.message.remove", primaryText.replaceAll("[^a-zA-Z0-9]", ""));
 
         primaryInput = addControl(
                 new ExtendedTextControl(
