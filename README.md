@@ -221,10 +221,8 @@ If so, you can make a request on my [Issue Tracker](https://gitlab.com/CDAGaming
 
 *   If adding an Icon from a dimension, specify the Mod's link that the dimension derives from
     *   This is because specific Icon IDs must be used, which can be found by the mod or from checking your Logs/Chat after entering the dimension as CraftPresence will tell you the ID expected
-
 *   An Icon of size between `512x512` and `1024x1024` to be used (Either minimum or recommended size for best quality)
     *   Icons between these sizes can be used, but may not give a great final quality
-
 *   If requesting an icon to be modified or removed from the Default Client ID, please specify a reason why
     *   Mostly just so it can be logged why it was changed for future reference
 
@@ -248,9 +246,7 @@ This project makes usage of the following dependencies internally:
 
 *   [DiscordIPC API](https://github.com/jagrosh/DiscordIPC) by [jagrosh](https://github.com/jagrosh)
     *   [JUnixSocket](https://github.com/kohlschutter/junixsocket) by [kohlschutter](https://github.com/kohlschutter)
-
 *   [Google's Guava Api](https://github.com/google/guava) by [Google](https://github.com/google/)
-
 *   [Java Native Access (JNA) API](https://github.com/java-native-access/jna) on v1.5.x and Below
 
 #### Discord Terms of Service

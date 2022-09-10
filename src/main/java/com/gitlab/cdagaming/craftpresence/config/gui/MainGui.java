@@ -408,6 +408,7 @@ public class MainGui extends ExtendedScreen {
         dimensionSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectDimensionData : dimensionSet.isControlEnabled());
         serverSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectWorldData : serverSet.isControlEnabled());
         commandGUIButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enableCommands : commandGUIButton.isControlEnabled());
+        controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
 
         proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? ModUtils.TRANSLATOR.translate("gui.config.message.button.save") : ModUtils.TRANSLATOR.translate("gui.config.message.button.back"));
     }
