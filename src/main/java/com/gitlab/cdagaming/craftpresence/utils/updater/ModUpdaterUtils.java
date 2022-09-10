@@ -313,7 +313,7 @@ public class ModUpdaterUtils {
         String displayName;
 
         UpdateState() {
-            displayName = StringUtils.formatWord(name());
+            displayName = StringUtils.formatWord(name().toLowerCase());
         }
 
         UpdateState(final String displayName) {
