@@ -11,6 +11,7 @@ Completely customize the way others see you play Minecraft via Discord's Rich Pr
 ## Port Notes
 *   Some versions of CraftPresence for Minecraft 1.14.x and above require the [FabricMC ModLoader](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 *   Some versions of CraftPresence for Minecraft 1.13.x require the [Rift ModLoader](https://www.curseforge.com/minecraft/mc-mods/rift)
+*   Versions of CraftPresence for Minecraft 1.1.0 and below require [Risugami's ModLoader](https://mcarchive.net/mods/modloader) and are only available on [Modrinth](https://modrinth.com/mod/craftpresence)
 
 ## Features
 In addition to having the ability to change your discord status from "Playing Minecraft",
@@ -81,6 +82,7 @@ Keep in mind the following:
 *   In v1.6.0 and above, you can now define where in the Rich Presence the messages should go
 *   Placeholders are not case-sensitive, but should be entered lowercase to prevent issues with recognizing them on v1.5.x and below
 *   As of v1.6.8, you can now also use minified versions of placeholders, which are trimmed down to a length of 4; `&DIM&` and `&DIMENSION&` are the same in this case
+*   As of v1.9.0, you can now use the inner-placeholders of modules in a sub-argument format, such as `&SERVER:IP&`, to allow using a module's placeholders in multiple areas without the global placeholder
 
 ___
 
@@ -209,6 +211,8 @@ Beginning in v1.5.2, CraftPresence is now split into different editions, based o
 
 ### Minecraft Object Obfuscation
 Due to obfuscation in Minecraft, some of Minecraft Objects such as Screens, Dimensions, or Servers must be opened once in the session to be separately customized.
+
+This has been resolved in v1.8.12 for MC 1.12.x and below, due to newer Translation Logic, but some issues may still be present.
 
 ### Icon Requesting
 Not seeing an Icon you like or have a suggestion for an Icon to add/modify on the default Client ID?

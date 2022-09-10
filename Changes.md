@@ -1,43 +1,38 @@
 # CraftPresence Changes
 
-## v1.8.12 (09/12/2022)
+## v1.9.0 (09/??/2022)
 
-_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.11...release%2Fv1.8.12)_
+_A Detailed Changelog from the last release is available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.12...release%2Fv1.9.0)_
 
 ### Changes
 
-*   The 1.12.2 and below ports have been reworked to use a more modern workflow, allowing for easier development and the arrival of full Beta MC support
-*   Jar Signing Capabilities have been removed, due to obsolete technology
-*   Added `&worldday&` as a new sub-argument for `&worldinfo&` ([#147](https://gitlab.com/CDAGaming/CraftPresence/-/issues/147))
-*   Breaking: Biomes now use an identifier based system, similar to how the dimension module works
-    *   This means any custom entries in the Biome Settings will need to migrate to these names
+*   Added a new `buttonMessages` config field for full frontend support of the buttons array in Rich Presence
+    *   The buttons array will only take the first two detected entries, excluding `default` (Which is a template), since Discord's RPC only allows two buttons
+    *   This can be customized in the `Presence Settings` menu of the Config UI, and all text placeholders are supported.
+*   Unknown Placeholders after parsing will now be filtered out of the final Rich Presence Builder, if `formatWords` is enabled
+*   Support for Sub-Arguments (Calling upon the individual inner arguments without it needing to be in a specialized message) has been implemented
+    *   This allows much more customization, and the ability to use different types of a module in different areas more easily
+    *   Format: `&<moduleName>:<innerPlaceholder>&` (For example: `&server:IP&` for the Server's `&IP&` inner-placeholder)
+    *   Special Thanks to [this ticket](https://gitlab.com/CDAGaming/CraftPresence/-/issues/114) for suggesting the idea!
 
 ### Fixes
 
-*   Fixed an issue in MC 1.1.0 and below where Paginated Screens could render multiple pages at once
-*   Fixed an issue in MC b1.3_01 and below where Scroll Lists could render incorrectly
-*   Fixed an issue in MC 1.2.5 and below that could prevent Mod Metadata from being seen in Forge's Mod Menu
-*   Fixed a rare issue where initialization can occur while the minecraft session is null
-*   Fixed an issue where the starting page in Paginated Screens was incorrect, causing various issues
-*   Removed LAN Checks for MC 1.2.5 and below, as LAN support did not exist until 12w25a (1.3.1)
-*   Fixed an Issue in MC 1.3.2 - 1.8.9 where reflective Dimension Logic was invalid, restoring the module to working order
-*   Fixed an Issue in MC 1.12.2 and below where Obfuscated names were not considered in Module Name Identities, fixing the effected module on these versions
-*   Backend: Fixed an Issue in `FileUtils#getClassNamesMatchingSuperType` that prevented proper functionality (Fixes Dimension Module in MC 1.1.0 and below)
-*   Backend: Fixed the `formatToId` param from `StringUtils#formatIdentifier` being ignored when converting from legacy->modern naming
-*   Backend: Changed `removeRepeatWords` to use `equalsIgnoreCase` instead of `equals` to ensure duplicates are actually removed (Technically a fix for Legacy MC)
+*   Fixed the alignment of elements in the `DynamicEditor` GUIs to avoid Gaps in certain circumstances
+*   Fixed a visual error in `UpdateState` caused by a typo in retrieving the display name
 
 ___
 
 ### More Information
 
-#### v1.8.0 Upgrade Info
+#### v1.9.0 Upgrade Info
 
-v1.8.0 of CraftPresence is the next major feature and technical update after the v1.7.x pipeline.
+v1.9.0 of CraftPresence is the next major feature and technical update after the v1.8.x pipeline.
 It is a culmination of long-standing requests and fixes that have been sent in over the last few months.
+It also is the first incubation period for the Beta MC ports, and their acheivements!
 
-While no config migrations are necessary at this time for updating to v1.8.x, this can change as time goes on in the v1.8.x Pipeline, and will be noted here as such when and if these types of changes occur.
+While no config migrations are necessary at this time for updating to v1.9.x, this can change as time goes on in the v1.8.x Pipeline, and will be noted here as such when and if these types of changes occur.
 
-More features will additionally be planned and added for later in the v1.8.x Pipeline as further releases arrive (and as they are requested).
+More features will additionally be planned and added for later in the v1.9.x Pipeline as further releases arrive (and as they are requested).
 
 #### 1.13.x Build Info
 
@@ -65,11 +60,12 @@ Snapshot Builds, depending on circumstances, may also contain changes for a futu
 
 #### Legacy Build Info (Minecraft Versions 1.5.2 and Below)
 
-Ports of this Mod for Minecraft Versions 1.5.2 and Lower are on very limited support.
+Ports of this Mod for Minecraft Versions 1.5.2 and Lower are on very limited support, if using CraftPresence v1.8.11 and lower.
 
 Please keep in mind the following:
 
-*   There is NO Support for Server RPC Displays from MC 1.2.5 and Below, due to modding limitations.
-*   Bugs that relate with or are caused by issues in the Vanilla Codebase, are unlikely able to be fixed due to Minecraft's limitations
+*   Ports for MC 1.1.0 and lower are only available on Modrinth, due to lack of support in CurseForge
+*   The MC a1.1.2_01 Port has its Dimension and Biome Modules **disabled**, as Mojang did not implement the logic for this until MC a1.2.x
+*   Bugs that are related to or are caused by issues in the Vanilla Codebase, are unlikely able to be fixed due to Minecraft's limitations
 
 See the Mod Description // README for More Info
