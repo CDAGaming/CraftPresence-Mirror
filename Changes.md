@@ -44,11 +44,11 @@ Starting in v1.5.0, The 1.13 Rift Port of CraftPresence was deprecated in favor 
 
 Starting in v1.7.0, The aforementioned KeyCode warning is now void, due to new systems introduced to convert keybindings between LWJGL versions, and this message will be removed in v1.7.1.
 
-Note: Due to Maven Troubles on behalf of the Rift Team, Rift Versions are no longer supported as of v1.6.1, though the Differences do still take effect for Forge.
+Note: Due to Maven Troubles on behalf of the Rift Team, Rift Versions are no longer supported as of v1.6.1, though the differences do still take effect for Forge.
 
-#### 1.14.x - 1.16.x Build Info
+#### 1.14+ Build Info
 
-Some 1.14.x, 1.15.x, and 1.16.x Ports of this Mod Require the [FabricMC ModLoader](https://www.curseforge.com/minecraft/mc-mods/fabric-api) and contains the same differences as the 1.13.x Port.
+Some 1.14+ Ports of this Mod require the [FabricMC ModLoader](https://www.curseforge.com/minecraft/mc-mods/fabric-api) and contains the same differences as the 1.13.x Port.
 
 #### Snapshot Build Info
 
@@ -65,7 +65,8 @@ Ports of this Mod for Minecraft Versions 1.5.2 and Lower are on very limited sup
 Please keep in mind the following:
 
 *   Ports for MC 1.1.0 and lower are only available on Modrinth, due to lack of support in CurseForge
-*   The MC a1.1.2_01 Port has its Dimension and Biome Modules **disabled**, as Mojang did not implement the logic for this until MC a1.2.x
+*   Ports for MC 1.6.4 and lower will now show Images for `ServerData` type Scroll Lists, as Mojang did not implement the logic for this until MC 1.7 and above
+*   The MC a1.1.2_01 Port has its Dimension and Biome Modules **disabled**, as Mojang did not implement the logic for this until MC a1.2.x and above
 *   Bugs that are related to or are caused by issues in the Vanilla Codebase, are unlikely able to be fixed due to Minecraft's limitations
 
 See the Mod Description // README for More Info
