@@ -293,7 +293,7 @@ public class ModUpdaterUtils {
     }
 
     /**
-     * Mapping for CFU State (Based on https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/)
+     * Mapping for CFU State (Based on <a href="https://docs.minecraftforge.net/en/latest/misc/updatechecker/">Forges Systems</a>)
      *
      * <p>FAILED: The version checker could not connect to the URL provided or was unable to retrieve/parse data
      * <p>UP_TO_DATE: The current version is equal to or newer than the latest stable version
@@ -310,10 +310,10 @@ public class ModUpdaterUtils {
         BETA,
         PENDING;
 
-        String displayName;
+        final String displayName;
 
         UpdateState() {
-            displayName = StringUtils.formatWord(name());
+            displayName = StringUtils.formatWord(name().toLowerCase());
         }
 
         UpdateState(final String displayName) {

@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.google.common.collect.Lists;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
@@ -70,6 +71,16 @@ public class DimensionUtils {
     private String CURRENT_DIMENSION_IDENTIFIER;
 
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&DIMENSION&";
+
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&DIMENSION:";
+
+    /**
      * Clears FULL Data from this Module
      */
     private void emptyData() {
@@ -86,7 +97,9 @@ public class DimensionUtils {
         CURRENT_DIMENSION_IDENTIFIER = null;
 
         isInUse = false;
-        CraftPresence.CLIENT.initArgument("&DIMENSION&");
+        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
+        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
     }
 
     /**
@@ -150,6 +163,11 @@ public class DimensionUtils {
 
         dimensionArgs.add(new Pair<>("&DIMENSION&", CURRENT_DIMENSION_NAME));
 
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : dimensionArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
             dimensionArgs.addAll(CraftPresence.CLIENT.generalArgs);
@@ -163,8 +181,8 @@ public class DimensionUtils {
         final String CURRENT_DIMENSION_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultDimensionIcon);
         final String CURRENT_DIMENSION_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentDimensionMessage, dimensionArgs);
 
-        CraftPresence.CLIENT.syncArgument("&DIMENSION&", CURRENT_DIMENSION_MESSAGE, false);
-        CraftPresence.CLIENT.syncArgument("&DIMENSION&", CraftPresence.CLIENT.imageOf(CURRENT_DIMENSION_ICON, CraftPresence.CONFIG.defaultDimensionIcon, true), true);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_DIMENSION_MESSAGE, ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(CURRENT_DIMENSION_ICON, CraftPresence.CONFIG.defaultDimensionIcon, true), ArgumentType.Image);
     }
 
     /**

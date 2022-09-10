@@ -88,15 +88,15 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
-                                                                screenInstance.defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.specificMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.defaultMessage);
+                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
                                                             },
-                                                            (attributeName, inputText) -> {
+                                                            (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
                                                             },
-                                                            (attributeName, inputText) -> {
+                                                            (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.dimensionMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
@@ -139,14 +139,14 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 parentScreen, null,
                                                                 (attributeName, screenInstance) -> {
                                                                     // Event to occur when initializing new data
-                                                                    screenInstance.specificMessage = screenInstance.defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                    screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
                                                                 }, null,
-                                                                (attributeName, inputText) -> {
+                                                                (screenInstance, attributeName, inputText) -> {
                                                                     // Event to occur when adjusting set data
                                                                     CraftPresence.CONFIG.hasChanged = true;
                                                                     CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
                                                                 },
-                                                                (attributeName, inputText) -> {
+                                                                (screenInstance, attributeName, inputText) -> {
                                                                     // Event to occur when removing set data
                                                                     CraftPresence.CONFIG.dimensionMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);

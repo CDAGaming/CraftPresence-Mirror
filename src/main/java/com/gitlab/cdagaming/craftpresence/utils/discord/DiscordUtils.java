@@ -37,15 +37,15 @@ import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordStatus;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.RichPresence;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.User;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.pipe.PipeStatus;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Variables and Methods used to update the RPC Presence States to display within Discord
@@ -56,19 +56,7 @@ public class DiscordUtils {
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
-    private final List<Pair<String, String>> messageData = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments available to use as Icon Key Placeholders
-     */
-    private final List<Pair<String, String>> iconData = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &MODS& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> modsArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &IGN& RPC Message Placeholder
-     */
-    private final List<Pair<String, String>> playerInfoArgs = Lists.newArrayList();
+    private final Map<ArgumentType, List<Pair<String, String>>> presenceData = Maps.newHashMap();
     /**
      * The Current User, tied to the Rich Presence
      */
@@ -159,10 +147,6 @@ public class DiscordUtils {
      */
     public byte INSTANCE;
     /**
-     * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
-     */
-    public List<Pair<String, String>> generalArgs = Lists.newArrayList();
-    /**
      * An Instance of the {@link IPCClient}, responsible for sending and receiving RPC Events
      */
     public IPCClient ipcInstance;
@@ -181,6 +165,20 @@ public class DiscordUtils {
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
      */
     private RichPresence currentPresence;
+
+    // Generalized Argument Types
+    /**
+     * A Mapping of the Arguments attached to the &MODS& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> modsArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &IGN& RPC Message Placeholder
+     */
+    private final List<Pair<String, String>> playerInfoArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
+     */
+    public List<Pair<String, String>> generalArgs = Lists.newArrayList();
 
     /**
      * Setup any Critical Methods needed for the RPC
@@ -225,8 +223,8 @@ public class DiscordUtils {
         }
 
         // Initialize and Sync any Pre-made Arguments (And Reset Related Data)
-        initArgument(false, "&MAINMENU&", "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&", "&TILEENTITY&", "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
-        initArgument(true, "&DEFAULT&", "&MAINMENU&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&");
+        initArgument(ArgumentType.Text, "&MAINMENU&", "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&", "&TILEENTITY&", "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
+        initArgument(ArgumentType.Image, "&DEFAULT&", "&MAINMENU&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&");
 
         // Ensure Main Menu RPC Resets properly
         CommandUtils.isInMainMenu = false;
@@ -243,13 +241,43 @@ public class DiscordUtils {
         for (Pair<String, String> generalArgument : generalArgs) {
             // For each General (Can be used Anywhere) Argument
             // Ensure they sync as Formatter Arguments too
-            syncArgument(generalArgument.getFirst(), generalArgument.getSecond(), false);
+            syncArgument(generalArgument.getFirst(), generalArgument.getSecond(), ArgumentType.Text);
         }
 
         // Sync the Default Icon Argument
-        syncArgument("&DEFAULT&", CraftPresence.CONFIG.defaultIcon, true);
+        syncArgument("&DEFAULT&", CraftPresence.CONFIG.defaultIcon, ArgumentType.Image);
 
         syncPackArguments();
+    }
+
+    /**
+     * Creates a string-based representation of the button-list, from config values
+     * @return the output list
+     */
+    public List<String> createButtonsList() {
+        final List<String> result = Lists.newArrayList();
+        for (String buttonElement : CraftPresence.CONFIG.buttonMessages) {
+            if (!StringUtils.isNullOrEmpty(buttonElement)) {
+                final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
+                if (!StringUtils.isNullOrEmpty(part[0])) {
+                    result.add(part[0]);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Removes any invalid data from a placeholder argument
+     *
+     * @param input The string to interpret
+     * @return The resulting output string
+     */
+    public String sanitizePlaceholders(String input) {
+        if (StringUtils.isNullOrEmpty(input) || !CraftPresence.CONFIG.formatWords) {
+            return input;
+        }
+        return input.replaceAll("&[^&]*&", "");
     }
 
     /**
@@ -266,60 +294,146 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
-     * @param isIconData   Whether the Argument is an RPC Message or an Icon Placeholder
+     * @param dataType     The type the argument should be stored as
      */
-    public void syncArgument(String argumentName, String insertString, boolean isIconData) {
+    public void syncArgument(String argumentName, String insertString, ArgumentType dataType) {
         // Remove and Replace Placeholder Data, if the placeholder needs Updates
         if (!StringUtils.isNullOrEmpty(argumentName)) {
-            if (isIconData) {
-                synchronized (iconData) {
-                    if (iconData.removeIf(e -> e.getFirst().equalsIgnoreCase(argumentName) && !e.getSecond().equalsIgnoreCase(insertString))) {
-                        iconData.add(new Pair<>(argumentName, insertString));
-                    }
-                }
-            } else {
-                synchronized (messageData) {
-                    if (messageData.removeIf(e -> e.getFirst().equalsIgnoreCase(argumentName) && !e.getSecond().equalsIgnoreCase(insertString))) {
-                        messageData.add(new Pair<>(argumentName, insertString));
-                    }
-                }
-            }
+            setArgumentsFor(dataType, new Pair<>(argumentName, insertString));
         }
     }
 
     /**
      * Initialize the Specified Arguments as Empty Data
      *
-     * @param isIconData Whether the Argument is an RPC Message or an Icon Placeholder
+     * @param dataType The type the argument should be stored as
      * @param args       The Arguments to Initialize
      */
-    public void initArgument(boolean isIconData, String... args) {
+    public void initArgument(ArgumentType dataType, String... args) {
         // Initialize Specified Arguments to Empty Data
-        if (isIconData) {
-            for (String argumentName : args) {
-                synchronized (iconData) {
-                    iconData.removeIf(e -> e.getFirst().equalsIgnoreCase(argumentName));
-                    iconData.add(new Pair<>(argumentName, ""));
-                }
-            }
-        } else {
-            for (String argumentName : args) {
-                synchronized (messageData) {
-                    messageData.removeIf(e -> e.getFirst().equalsIgnoreCase(argumentName));
-                    messageData.add(new Pair<>(argumentName, ""));
-                }
-            }
+        for (String argumentName : args) {
+            syncArgument(argumentName, "", dataType);
         }
     }
 
     /**
-     * Initialize the Specified Arguments in all regards
+     * Retrieve all arguments for the specified types
      *
-     * @param args The Arguments to Initialize as Empty Data for both Icons and RPC Messages
+     * @param typeList The types the arguments should be retrieved from
+     * @return The found list of arguments
      */
-    public void initArgument(String... args) {
-        initArgument(false, args);
-        initArgument(true, args);
+    public List<Pair<String, String>> getArgumentsFor(final ArgumentType... typeList) {
+        List<Pair<String, String>> result = Lists.newArrayList();
+        for (ArgumentType type : typeList) {
+            if (!presenceData.containsKey(type)) {
+                presenceData.put(type, Lists.newArrayList());
+            }
+            result.addAll(presenceData.get(type));
+        }
+        return result;
+    }
+
+    /**
+     * Remove any arguments following the specified formats within the selected Argument Type
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     */
+    public void removeArgumentsMatching(final ArgumentType type, final String... args) {
+        if (presenceData.containsKey(type)) {
+            final List<Pair<String, String>> list = Lists.newArrayList(presenceData.get(type));
+            for (Pair<String, String> entry : presenceData.get(type)) {
+                for (String format : args) {
+                    if (entry.getFirst().contains(format)) {
+                        list.remove(entry);
+                    }
+                }
+            }
+            setArgumentsFor(type, list);
+        }
+    }
+
+    /**
+     * Retrieves any arguments within the specified type that match the specified string formats
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final String... args) {
+        final List<Pair<String, String>> list = Lists.newArrayList();
+        if (presenceData.containsKey(type)) {
+            for (Pair<String, String> entry : presenceData.get(type)) {
+                for (String format : args) {
+                    if (entry.getFirst().contains(format)) {
+                        list.add(entry);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Retrieves any argument entries within the specified type that match the specified string formats
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param formatToLower Whether to lower-cases the resulting entries
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final String... args) {
+        final List<Pair<String, String>> list = getArgumentsMatching(type, args);
+        final List<String> result = Lists.newArrayList();
+        for (Pair<String, String> entry : list) {
+            result.add(formatToLower ? entry.getFirst().toLowerCase() : entry.getFirst());
+        }
+        return result;
+    }
+
+    /**
+     * Retrieves any argument entries within the specified type that match the specified string formats
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<String> getArgumentEntries(final ArgumentType type, final String... args) {
+        return getArgumentEntries(type, false, args);
+    }
+
+    /**
+     * Determines whether there are any matching arguments within the specified type matching the specified string formats
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return Whether the resulting list has any matching entries
+     */
+    public boolean hasArgumentsMatching(final ArgumentType type, final String... args) {
+        return !getArgumentsMatching(type, args).isEmpty();
+    }
+
+    /**
+     * Stores the specified argument data for the specified type
+     *
+     * @param type The type the arguments should be stored as
+     * @param data The list of data to interpret
+     */
+    public void setArgumentsFor(final ArgumentType type, List<Pair<String, String>> data) {
+        presenceData.put(type, data);
+    }
+
+    /**
+     * Stores the specified argument data for the specified type
+     *
+     * @param type The type the arguments should be stored as
+     * @param data The data to interpret
+     */
+    public void setArgumentsFor(final ArgumentType type, Pair<String, String> data) {
+        final List<Pair<String, String>> list = getArgumentsFor(type);
+        list.removeIf(e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
+        list.add(data);
+        setArgumentsFor(type, list);
     }
 
     /**
@@ -351,8 +465,8 @@ public class DiscordUtils {
             foundPackIcon = foundPackName;
         }
 
-        syncArgument("&PACK&", StringUtils.formatWord(StringUtils.replaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, "&NAME&", !StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : ""), !CraftPresence.CONFIG.formatWords), false);
-        syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", true);
+        syncArgument("&PACK&", StringUtils.formatWord(StringUtils.replaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, "&NAME&", !StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : ""), !CraftPresence.CONFIG.formatWords), ArgumentType.Text);
+        syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
     }
 
     /**
@@ -490,22 +604,47 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence() {
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.detailsMessage, messageData), !CraftPresence.CONFIG.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.gameStateMessage, messageData), !CraftPresence.CONFIG.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.detailsMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.gameStateMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
 
-        LARGE_IMAGE_KEY = StringUtils.formatAsIcon(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageKey, iconData));
-        SMALL_IMAGE_KEY = StringUtils.formatAsIcon(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageKey, iconData));
+        LARGE_IMAGE_KEY = StringUtils.formatAsIcon(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageKey, getArgumentsFor(ArgumentType.Image)));
+        SMALL_IMAGE_KEY = StringUtils.formatAsIcon(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageKey, getArgumentsFor(ArgumentType.Image)));
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageMessage, messageData), !CraftPresence.CONFIG.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageMessage, messageData), !CraftPresence.CONFIG.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
+
+        // Format Buttons Array based on Config Value
+        BUTTONS = new JsonArray();
+        for (String buttonElement : CraftPresence.CONFIG.buttonMessages) {
+            if (!StringUtils.isNullOrEmpty(buttonElement)) {
+                final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
+                JsonObject buttonObj = new JsonObject();
+                if (!StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
+                    String label = StringUtils.formatWord(
+                            StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
+                            !CraftPresence.CONFIG.formatWords, true, 1
+                    );
+                    String url = !StringUtils.isNullOrEmpty(part[2]) ?
+                            StringUtils.formatWord(
+                                    StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
+                                    !CraftPresence.CONFIG.formatWords, true, 1
+                            ) : "";
+                    buttonObj.addProperty("label", sanitizePlaceholders(label));
+                    buttonObj.addProperty("url", sanitizePlaceholders(url));
+                    BUTTONS.add(buttonObj);
+                }
+            }
+        }
 
         final RichPresence newRPCData = new RichPresence.Builder()
-                .setState(GAME_STATE)
-                .setDetails(DETAILS)
+                .setState(GAME_STATE = sanitizePlaceholders(GAME_STATE))
+                .setDetails(DETAILS = sanitizePlaceholders(DETAILS))
                 .setStartTimestamp(START_TIMESTAMP)
                 .setEndTimestamp(END_TIMESTAMP)
-                .setLargeImage(LARGE_IMAGE_KEY, LARGE_IMAGE_TEXT)
-                .setSmallImage(SMALL_IMAGE_KEY, SMALL_IMAGE_TEXT)
+                .setLargeImage(LARGE_IMAGE_KEY = sanitizePlaceholders(LARGE_IMAGE_KEY),
+                        LARGE_IMAGE_TEXT = sanitizePlaceholders(LARGE_IMAGE_TEXT))
+                .setSmallImage(SMALL_IMAGE_KEY = sanitizePlaceholders(SMALL_IMAGE_KEY),
+                        SMALL_IMAGE_TEXT = sanitizePlaceholders(SMALL_IMAGE_TEXT))
                 .setParty(PARTY_ID, PARTY_SIZE, PARTY_MAX, PARTY_PRIVACY.getPartyIndex())
                 .setMatchSecret(MATCH_SECRET)
                 .setJoinSecret(JOIN_SECRET)

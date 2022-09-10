@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.mcupdater.MCUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -145,8 +146,8 @@ public class CommandUtils {
 
         CraftPresence.CLIENT.clearPartyData(true, false);
 
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.loadingMessage, loadingArgs), false);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf(CraftPresence.CONFIG.defaultIcon, "", false), true);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.loadingMessage, loadingArgs), ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf(CraftPresence.CONFIG.defaultIcon, "", false), ArgumentType.Image);
 
         isLoadingGame = true;
     }
@@ -165,13 +166,14 @@ public class CommandUtils {
 
         // Clear Loading Game State, if applicable
         if (isLoadingGame) {
-            CraftPresence.CLIENT.initArgument("&MAINMENU&");
+            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&MAINMENU&");
+            CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&MAINMENU&");
 
             isLoadingGame = false;
         }
 
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.mainMenuMessage, mainMenuArgs), false);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf(CraftPresence.CONFIG.defaultIcon, "", false), true);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.mainMenuMessage, mainMenuArgs), ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf(CraftPresence.CONFIG.defaultIcon, "", false), ArgumentType.Image);
 
         isInMainMenu = true;
     }

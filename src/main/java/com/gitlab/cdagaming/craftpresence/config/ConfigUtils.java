@@ -84,7 +84,7 @@ public class ConfigUtils {
     // ACCESSIBILITY
     public String NAME_tooltipBackgroundColor, NAME_tooltipBorderColor, NAME_guiBackgroundColor, NAME_buttonBackgroundColor, NAME_showBackgroundAsDark, NAME_languageId, NAME_stripTranslationColors, NAME_showLoggingInChat, NAME_stripExtraGuiElements, NAME_configKeyCode;
     // DISPLAY MESSAGES
-    public String NAME_gameStateMessage_FORMAT, NAME_detailsMessage_FORMAT, NAME_largeImageMessage_FORMAT, NAME_smallImageMessage_FORMAT, NAME_largeImageKey_FORMAT, NAME_smallImageKey_FORMAT;
+    public String NAME_gameStateMessage_FORMAT, NAME_detailsMessage_FORMAT, NAME_largeImageMessage_FORMAT, NAME_smallImageMessage_FORMAT, NAME_largeImageKey_FORMAT, NAME_smallImageKey_FORMAT, NAME_buttonMessages;
     // Config Variables
     // GLOBAL (NON-USER-ADJUSTABLE)
     public String schemaVersion, lastMcVersionId;
@@ -117,6 +117,7 @@ public class ConfigUtils {
     public boolean showBackgroundAsDark, stripTranslationColors, showLoggingInChat, stripExtraGuiElements;
     // DISPLAY MESSAGES
     public String gameStateMessage, detailsMessage, largeImageMessage, smallImageMessage, largeImageKey, smallImageKey;
+    public String[] buttonMessages;
     // CLASS-SPECIFIC - PUBLIC
     public boolean hasChanged = false, hasClientPropertiesChanged = false;
     public Map<String, Integer> keySyncQueue = Maps.newHashMap();
@@ -291,12 +292,14 @@ public class ConfigUtils {
         NAME_smallImageMessage_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.small_image_message").replaceAll(" ", "_");
         NAME_largeImageKey_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.large_image_key").replaceAll(" ", "_");
         NAME_smallImageKey_FORMAT = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.small_image_key").replaceAll(" ", "_");
+        NAME_buttonMessages = ModUtils.TRANSLATOR.translate(true, "gui.config.name.display.button_messages").replaceAll(" ", "_");
         gameStateMessage = "&SERVER& &PACK&";
         detailsMessage = "&MAINMENU&&DIMENSION&";
         largeImageMessage = "&MAINMENU&&DIMENSION&";
         smallImageMessage = "&SERVER& &PACK&";
         largeImageKey = "&MAINMENU&&DIMENSION&";
         smallImageKey = "&SERVER&&PACK&";
+        buttonMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label")+ (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")};
 
         syncMappings();
         initialized = true;

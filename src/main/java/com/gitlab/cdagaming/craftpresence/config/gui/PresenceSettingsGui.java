@@ -27,7 +27,11 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -95,6 +99,105 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
         smallImageKeyFormat.setText(CraftPresence.CONFIG.smallImageKey);
         largeImageKeyFormat.setText(CraftPresence.CONFIG.largeImageKey);
+
+        addControl(
+                new ExtendedButtonControl(
+                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(3),
+                        180, 20,
+                        ModUtils.TRANSLATOR.translate("gui.config.name.display.button_messages"),
+                        () -> CraftPresence.GUIS.openScreen(
+                                new SelectorGui(
+                                        currentScreen,
+                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(),
+                                        null, null,
+                                        true, true, ScrollableListControl.RenderType.None,
+                                        null,
+                                        (currentValue, parentScreen) -> {
+                                            // Event to occur when Setting Dynamic/Specific Data
+                                            CraftPresence.GUIS.openScreen(
+                                                    new DynamicEditorGui(
+                                                            parentScreen, currentValue, null,
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when initializing existing data
+                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.overrideSecondaryRender = true;
+                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
+                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
+                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.secondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, screenInstance.originalSecondaryMessage);
+                                                            },
+                                                            (screenInstance, secondaryText, inputText) -> {
+                                                                // Event to occur when adjusting set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, secondaryText);
+                                                            },
+                                                            (screenInstance, secondaryText, inputText) -> {
+                                                                // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                            }, null,
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when Hovering over Primary Label
+                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                            },
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when Hovering over Secondary Label
+                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                            }
+                                                    )
+                                            );
+                                        },
+                                        (parentScreen) ->
+                                                CraftPresence.GUIS.openScreen(
+                                                        new DynamicEditorGui(
+                                                                parentScreen, null,
+                                                                (attributeName, screenInstance) -> {
+                                                                    // Event to occur when initializing new data
+                                                                    screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList().size();
+                                                                    screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
+                                                                    screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                    screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                    screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                    screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
+                                                                }, null,
+                                                                (screenInstance, secondaryText, inputText) -> {
+                                                                    // Event to occur when adjusting set data
+                                                                    CraftPresence.CONFIG.hasChanged = true;
+                                                                    CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                    CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, secondaryText);
+                                                                },
+                                                                (screenInstance, secondaryText, inputText) -> {
+                                                                    // Event to occur when removing set data
+                                                                    CraftPresence.CONFIG.buttonMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                }, null,
+                                                                (attributeName, screenInstance) -> {
+                                                                    // Event to occur when Hovering over Primary Label
+                                                                    CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                },
+                                                                (attributeName, screenInstance) -> {
+                                                                    // Event to occur when Hovering over Secondary Label
+                                                                    CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                }
+                                                        )
+                                                )
+                                )
+                        ),
+                        () -> {
+                            CraftPresence.GUIS.drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                    ),
+                                    getMouseX(), getMouseY(),
+                                    width, height,
+                                    getWrapWidth(),
+                                    getFontRenderer(),
+                                    true
+                            );
+                        }
+                ), startPage + 1
+        );
 
         super.initializeUi();
 
