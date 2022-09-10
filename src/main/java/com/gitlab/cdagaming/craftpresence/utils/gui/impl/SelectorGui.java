@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -46,14 +45,13 @@ public class SelectorGui extends ExtendedScreen {
     private final PairConsumer<String, String> onUpdatedCallback;
     private final RenderType renderType;
     private final PairConsumer<String, GuiScreen> onAdjustDynamicEntry;
-    private final DataConsumer<GuiScreen> onAddDynamicEntry;
     private ExtendedButtonControl proceedButton;
     private ScrollableListControl scrollList;
     private ExtendedTextControl searchBox;
     private String searchTerm;
     private List<String> itemList;
 
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, String> onUpdatedCallback, PairConsumer<String, GuiScreen> onAdjustDynamicEntry, DataConsumer<GuiScreen> onAddDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, String> onUpdatedCallback, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         super(parentScreen);
         itemList = originalList = list;
         originalValue = currentValue;
@@ -64,15 +62,14 @@ public class SelectorGui extends ExtendedScreen {
         this.renderType = renderType;
         this.onUpdatedCallback = onUpdatedCallback;
         this.onAdjustDynamicEntry = onAdjustDynamicEntry;
-        this.onAddDynamicEntry = onAddDynamicEntry;
     }
 
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry, DataConsumer<GuiScreen> onAddDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry, onAddDynamicEntry);
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry, DataConsumer<GuiScreen> onAddDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry, onAddDynamicEntry);
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
     }
 
     @Override
@@ -127,14 +124,14 @@ public class SelectorGui extends ExtendedScreen {
                     )
             );
 
-            if (allowDynamicEditing && onAddDynamicEntry != null) {
+            if (allowDynamicEditing && onAdjustDynamicEntry != null) {
                 // Adding Add New Button
                 addControl(
                         new ExtendedButtonControl(
                                 (width - 195), (height - 30),
                                 90, 20,
                                 ModUtils.TRANSLATOR.translate("gui.config.message.button.add.new"),
-                                () -> onAddDynamicEntry.accept(parentScreen)
+                                () -> onAdjustDynamicEntry.accept(null, parentScreen)
                         )
                 );
             }

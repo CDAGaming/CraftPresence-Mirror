@@ -116,7 +116,16 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             CraftPresence.GUIS.openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue, null,
+                                                            parentScreen, currentValue,
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when initializing new data
+                                                                screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList().size();
+                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
+                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
+                                                            },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
@@ -148,40 +157,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             }
                                                     )
                                             );
-                                        },
-                                        (parentScreen) ->
-                                                CraftPresence.GUIS.openScreen(
-                                                        new DynamicEditorGui(
-                                                                parentScreen, null,
-                                                                (attributeName, screenInstance) -> {
-                                                                    // Event to occur when initializing new data
-                                                                    screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList().size();
-                                                                    screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
-                                                                    screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
-                                                                    screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                    screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                    screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
-                                                                }, null,
-                                                                (screenInstance, secondaryText, inputText) -> {
-                                                                    // Event to occur when adjusting set data
-                                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                                    CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
-                                                                    CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, secondaryText);
-                                                                },
-                                                                (screenInstance, secondaryText, inputText) -> {
-                                                                    // Event to occur when removing set data
-                                                                    CraftPresence.CONFIG.buttonMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, CraftPresence.CONFIG.splitCharacter);
-                                                                }, null,
-                                                                (attributeName, screenInstance) -> {
-                                                                    // Event to occur when Hovering over Primary Label
-                                                                    CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
-                                                                },
-                                                                (attributeName, screenInstance) -> {
-                                                                    // Event to occur when Hovering over Secondary Label
-                                                                    CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
-                                                                }
-                                                        )
-                                                )
+                                        }
                                 )
                         ),
                         () -> {

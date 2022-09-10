@@ -99,7 +99,11 @@ public class ServerSettingsGui extends ExtendedScreen {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             CraftPresence.GUIS.openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue, null,
+                                                            parentScreen, currentValue,
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when initializing new data
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                            },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName);
@@ -137,7 +141,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                                         CraftPresence.CONFIG.serverMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.serverMessages, innerAttributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage);
                                                                                     }
                                                                                     CraftPresence.CONFIG.serverMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.serverMessages, innerAttributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, innerCurrentValue);
-                                                                                }, null, null
+                                                                                }, null
                                                                         )
                                                                 );
                                                             },
@@ -147,32 +151,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             }
                                                     )
                                             );
-                                        },
-                                        (parentScreen) ->
-                                                CraftPresence.GUIS.openScreen(
-                                                        new DynamicEditorGui(
-                                                                parentScreen, null,
-                                                                (attributeName, screenInstance) -> {
-                                                                    // Event to occur when initializing new data
-                                                                    screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                }, null,
-                                                                (screenInstance, attributeName, inputText) -> {
-                                                                    // Event to occur when adjusting set data
-                                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                                    CraftPresence.CONFIG.serverMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.serverMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
-                                                                },
-                                                                (screenInstance, attributeName, inputText) -> {
-                                                                    // Event to occur when removing set data
-                                                                    CraftPresence.CONFIG.serverMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.serverMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
-                                                                    CraftPresence.SERVER.knownAddresses.remove(attributeName);
-                                                                    CraftPresence.SERVER.getServerAddresses();
-                                                                }, null,
-                                                                (attributeName, screenInstance) -> {
-                                                                    // Event to occur when Hovering over Message Label
-                                                                    CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
-                                                                }
-                                                        )
-                                                )
+                                        }
                                 )
                         ),
                         () -> {
@@ -219,7 +198,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                             CraftPresence.CONFIG.hasChanged = true;
                                             CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                             CraftPresence.CONFIG.defaultServerIcon = currentValue;
-                                        }, null, null
+                                        }, null
                                 )
                         ),
                         () -> CraftPresence.GUIS.drawMultiLineString(
