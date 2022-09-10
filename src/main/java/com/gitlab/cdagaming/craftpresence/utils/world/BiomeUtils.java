@@ -47,6 +47,14 @@ public class BiomeUtils {
      */
     private final List<Biome> BIOME_TYPES = Lists.newArrayList();
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&BIOME&";
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&BIOME:";
+    /**
      * Whether this module is active and currently in use
      */
     public boolean isInUse = false;
@@ -66,16 +74,6 @@ public class BiomeUtils {
      * The alternative name for the Current Biome the Player is in, if any
      */
     private String CURRENT_BIOME_IDENTIFIER;
-
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&BIOME&";
-
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&BIOME:";
 
     /**
      * Clears FULL Data from this Module

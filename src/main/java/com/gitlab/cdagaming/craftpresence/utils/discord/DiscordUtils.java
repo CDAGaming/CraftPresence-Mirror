@@ -58,6 +58,14 @@ public class DiscordUtils {
      */
     private final Map<ArgumentType, List<Pair<String, String>>> presenceData = Maps.newHashMap();
     /**
+     * A Mapping of the Arguments attached to the &MODS& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> modsArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &IGN& RPC Message Placeholder
+     */
+    private final List<Pair<String, String>> playerInfoArgs = Lists.newArrayList();
+    /**
      * The Current User, tied to the Rich Presence
      */
     public User CURRENT_USER;
@@ -154,6 +162,12 @@ public class DiscordUtils {
      * Whether Discord is currently awaiting a response to a Ask to Join or Spectate Request, if any
      */
     public boolean awaitingReply = false;
+
+    // Generalized Argument Types
+    /**
+     * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
+     */
+    public List<Pair<String, String>> generalArgs = Lists.newArrayList();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to prevent sending duplicate packets and cache data for repeated images in other areas
@@ -165,20 +179,6 @@ public class DiscordUtils {
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
      */
     private RichPresence currentPresence;
-
-    // Generalized Argument Types
-    /**
-     * A Mapping of the Arguments attached to the &MODS& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> modsArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &IGN& RPC Message Placeholder
-     */
-    private final List<Pair<String, String>> playerInfoArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
-     */
-    public List<Pair<String, String>> generalArgs = Lists.newArrayList();
 
     /**
      * Setup any Critical Methods needed for the RPC
@@ -252,6 +252,7 @@ public class DiscordUtils {
 
     /**
      * Creates a string-based representation of the button-list, from config values
+     *
      * @return the output list
      */
     public List<String> createButtonsList() {
@@ -307,7 +308,7 @@ public class DiscordUtils {
      * Initialize the Specified Arguments as Empty Data
      *
      * @param dataType The type the argument should be stored as
-     * @param args       The Arguments to Initialize
+     * @param args     The Arguments to Initialize
      */
     public void initArgument(ArgumentType dataType, String... args) {
         // Initialize Specified Arguments to Empty Data
@@ -377,9 +378,9 @@ public class DiscordUtils {
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param type The type the arguments should be retrieved from
+     * @param type          The type the arguments should be retrieved from
      * @param formatToLower Whether to lower-cases the resulting entries
-     * @param args The string formats to interpret
+     * @param args          The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final String... args) {

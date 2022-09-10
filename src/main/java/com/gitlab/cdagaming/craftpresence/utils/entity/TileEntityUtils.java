@@ -76,6 +76,14 @@ public class TileEntityUtils {
      */
     private final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&TILEENTITY&";
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&TILEENTITY:";
+    /**
      * Whether this module is active and currently in use
      */
     public boolean isInUse = false;
@@ -119,111 +127,82 @@ public class TileEntityUtils {
      * The Player's Current Main Hand Item, if any
      */
     private ItemStack CURRENT_MAIN_HAND_ITEM;
-
     /**
      * The Player's Current Off Hand Item, if any
      */
     private ItemStack CURRENT_OFFHAND_ITEM;
-
     /**
      * The Player's Currently Equipped Helmet, if any
      */
     private ItemStack CURRENT_HELMET;
-
     /**
      * The Player's Currently Equipped ChestPlate, if any
      */
     private ItemStack CURRENT_CHEST;
-
     /**
      * The Player's Currently Equipped Leggings, if any
      */
     private ItemStack CURRENT_LEGS;
-
     /**
      * The Player's Currently Equipped Boots, if any
      */
     private ItemStack CURRENT_BOOTS;
-
     /**
      * The Player's Current Main Hand Item Name, if any
      */
     private String CURRENT_MAIN_HAND_ITEM_NAME;
-
     /**
      * The Player's Current Off Hand Item Name, if any
      */
     private String CURRENT_OFFHAND_ITEM_NAME;
-
     /**
      * The Player's Currently Equipped Helmet Name, if any
      */
     private String CURRENT_HELMET_NAME;
-
     /**
      * The Player's Currently Equipped ChestPlate Name, if any
      */
     private String CURRENT_CHEST_NAME;
-
     /**
      * The Player's Currently Equipped Leggings Name, if any
      */
     private String CURRENT_LEGS_NAME;
-
     /**
      * The Player's Currently Equipped Boots Name, if any
      */
     private String CURRENT_BOOTS_NAME;
-
     /**
      * The Player's Current Main Hand Item's Tag, if any
      */
     private NBTTagCompound CURRENT_MAIN_HAND_ITEM_TAG;
-
     /**
      * The Player's Current Off Hand Item's Tag, if any
      */
     private NBTTagCompound CURRENT_OFFHAND_ITEM_TAG;
-
     /**
      * The Player's Currently equipped Helmet's Tag, if any
      */
     private NBTTagCompound CURRENT_HELMET_TAG;
-
     /**
      * The Player's Currently equipped Chest's Tag, if any
      */
     private NBTTagCompound CURRENT_CHEST_TAG;
-
     /**
      * The Player's Currently equipped Leggings Tag, if any
      */
     private NBTTagCompound CURRENT_LEGS_TAG;
-
     /**
      * The Player's Currently equipped Boots Tag, if any
      */
     private NBTTagCompound CURRENT_BOOTS_TAG;
-
     /**
      * If the Player doesn't have any Items in the Critical Slots such as equipped items or armor
      */
     private boolean allItemsEmpty = false;
-
     /**
      * If this Module's Runtime Data is currently Cleared
      */
     private boolean currentlyCleared = true;
-
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&TILEENTITY&";
-
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&TILEENTITY:";
 
     /**
      * Clears FULL Data from this Module

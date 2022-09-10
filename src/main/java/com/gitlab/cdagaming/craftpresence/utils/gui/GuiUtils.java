@@ -64,6 +64,14 @@ public class GuiUtils {
      */
     private final List<Class<?>> GUI_CLASSES = Lists.newArrayList();
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&SCREEN&";
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&SCREEN:";
+    /**
      * If the Config GUI is currently open
      */
     public boolean configGUIOpened = false;
@@ -100,16 +108,6 @@ public class GuiUtils {
      * The Current Instance of the Gui the player is in
      */
     private GuiScreen CURRENT_SCREEN;
-
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&SCREEN&";
-
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&SCREEN:";
 
     /**
      * Gets the Default/Global Font Renderer

@@ -299,7 +299,7 @@ public class ConfigUtils {
         smallImageMessage = "&SERVER& &PACK&";
         largeImageKey = "&MAINMENU&&DIMENSION&";
         smallImageKey = "&SERVER&&PACK&";
-        buttonMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label")+ (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")};
+        buttonMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label") + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")};
 
         syncMappings();
         initialized = true;

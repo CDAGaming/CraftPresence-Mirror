@@ -52,136 +52,111 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class ServerUtils {
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&SERVER&";
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&SERVER:";
+    /**
      * Whether this module is active and currently in use
      */
     public boolean isInUse = false;
-
     /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
-
     /**
      * The Current Player Map, if available
      */
     public List<NetworkPlayerInfo> currentPlayerList = Lists.newArrayList();
-
     /**
      * A List of the detected Server Addresses
      */
     public List<String> knownAddresses = Lists.newArrayList();
-
     /**
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = Maps.newHashMap();
-
     /**
      * The IP Address of the Current Server the Player is in
      */
     private String currentServer_IP;
-
     /**
      * The Name of the Current Server the Player is in
      */
     private String currentServer_Name;
-
     /**
      * The Message of the Day of the Current Server the Player is in
      */
     private String currentServer_MOTD;
-
     /**
      * The Current Server RPC Message being used, with Arguments
      */
     private String currentServerMessage;
-
     /**
      * The Current Formatted World Time, as a String
      */
     private String timeString;
-
     /**
      * The Current Formatted World Days, as a String
      */
     private String dayString;
-
     /**
      * The Current World's Difficulty
      */
     private String currentDifficulty;
-
     /**
      * The Current World's Name
      */
     private String currentWorldName;
-
     /**
      * The Amount of Players in the Current Server the Player is in
      */
     private int currentPlayers;
-
     /**
      * The Maximum Amount of Players allowed in the Current Server the Player is in
      */
     private int maxPlayers;
-
     /**
      * The amount of Currently detected Server Addresses
      */
     private int serverIndex;
-
     /**
      * Mapping storing the Current X, Y and Z Position of the Player in a World
      * Format: Position (X, Y, Z)
      */
     private Tuple<Double, Double, Double> currentCoordinates = new Tuple<>(0.0D, 0.0D, 0.0D);
-
     /**
      * Mapping storing the Current and Maximum Health the Player currently has in a World
      */
     private Pair<Double, Double> currentHealth = new Pair<>(0.0D, 0.0D);
-
     /**
      * The Current Server Connection Data and Info
      */
     private ServerData currentServerData;
-
     /**
      * The Queued Server Connection Data and Info to Join, if any
      */
     private ServerData requestedServerData;
-
     /**
      * The Player's Current Connection Data
      */
     private NetHandlerPlayClient currentConnection;
-
     /**
      * If the RPC needs to be Updated or Re-Synchronized<p>
      * Needed here for Multiple-Condition RPC Triggers
      */
     private boolean queuedForUpdate = false;
-
     /**
      * If in Progress of Joining a World/Server from another World/Server
      */
     private boolean joinInProgress = false;
-
     /**
      * If the Current Server is on a LAN-Based Connection (A Local Network Game)
      */
     private boolean isOnLAN = false;
-
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&SERVER&";
-
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&SERVER:";
 
     /**
      * Clears FULL Data from this Module

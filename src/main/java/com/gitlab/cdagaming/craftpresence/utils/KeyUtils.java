@@ -99,6 +99,7 @@ public class KeyUtils {
 
     /**
      * Retrieve if the keybindings are successfully registered to necessary systems
+     *
      * @return {@code true} if and only if the keybindings are successfully registered
      */
     public boolean areKeysRegistered() {

@@ -50,6 +50,14 @@ public class DimensionUtils {
      */
     private final List<DimensionType> DIMENSION_TYPES = Lists.newArrayList();
     /**
+     * The argument format to follow for Rich Presence Data
+     */
+    private final String argumentFormat = "&DIMENSION&";
+    /**
+     * The sub-argument format to follow for Rich Presence Data
+     */
+    private final String subArgumentFormat = "&DIMENSION:";
+    /**
      * Whether this module is active and currently in use
      */
     public boolean isInUse = false;
@@ -69,16 +77,6 @@ public class DimensionUtils {
      * The alternative name for the Current Dimension the Player is in, if any
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
-
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&DIMENSION&";
-
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&DIMENSION:";
 
     /**
      * Clears FULL Data from this Module
