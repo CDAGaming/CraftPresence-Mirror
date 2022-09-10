@@ -295,11 +295,12 @@ public class StringUtils {
      * Replaces Data in a sequential order, following Case-Insensitivity
      *
      * @param source      The original String to replace within
-     * @param replaceData The replacement list to follow with the form of: targetToReplace:replaceWithValue
+     * @param replaceArgs   The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */
-    public static String sequentialReplaceAnyCase(final String source, final List<Pair<String, String>> replaceData) {
-        return sequentialReplaceAnyCase(source, true, replaceData);
+    @SafeVarargs
+    public static String sequentialReplaceAnyCase(final String source, final List<Pair<String, String>>... replaceArgs) {
+        return sequentialReplaceAnyCase(source, true, replaceArgs);
     }
 
     /**
@@ -310,6 +311,7 @@ public class StringUtils {
      * @param replaceArgs   The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */
+    @SafeVarargs
     public static String sequentialReplaceAnyCase(final String source, final boolean allowMinified, final List<Pair<String, String>>... replaceArgs) {
         if (!isNullOrEmpty(source)) {
             String finalResult = source;
