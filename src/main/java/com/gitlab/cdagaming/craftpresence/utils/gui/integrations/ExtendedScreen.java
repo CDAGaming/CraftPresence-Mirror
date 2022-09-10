@@ -104,6 +104,7 @@ public class ExtendedScreen extends GuiScreen {
      * Initialization Event for this Control, assigning defined arguments
      *
      * @param parentScreen The Parent Screen for this Instance
+     * @param debugMode    Whether debug mode should be enabled for this screen
      */
     public ExtendedScreen(GuiScreen parentScreen, boolean debugMode) {
         this(parentScreen);
@@ -114,6 +115,8 @@ public class ExtendedScreen extends GuiScreen {
      * Initialization Event for this Control, assigning defined arguments
      *
      * @param parentScreen The Parent Screen for this Instance
+     * @param debugMode    Whether debug mode should be enabled for this screen
+     * @param verboseMode  Whether verbose mode should be enabled for this screen
      */
     public ExtendedScreen(GuiScreen parentScreen, boolean debugMode, boolean verboseMode) {
         this(parentScreen, debugMode);

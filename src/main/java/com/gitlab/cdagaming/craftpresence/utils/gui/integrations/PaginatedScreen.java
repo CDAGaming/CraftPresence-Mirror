@@ -112,8 +112,9 @@ public class PaginatedScreen extends ExtendedScreen {
     /**
      * Adds a Compatible Control to this Screen with specified type
      *
-     * @param buttonIn The Control to add to this Screen
-     * @param <T>      The Control's Class Type
+     * @param buttonIn     The Control to add to this Screen
+     * @param <T>          The Control's Class Type
+     * @param renderTarget The Control's render target, or page to render on
      * @return The added control with attached class type
      */
     @Nonnull
@@ -132,8 +133,9 @@ public class PaginatedScreen extends ExtendedScreen {
     /**
      * Adds a Compatible Scroll List to this Screen with specified type
      *
-     * @param buttonIn The Scroll List to add to this Screen
-     * @param <T>      The Scroll List's Class Type
+     * @param buttonIn     The Scroll List to add to this Screen
+     * @param <T>          The Scroll List's Class Type
+     * @param renderTarget The Control's render target, or page to render on
      * @return The added scroll list with attached class type
      */
     @Nonnull
@@ -195,10 +197,11 @@ public class PaginatedScreen extends ExtendedScreen {
     /**
      * Renders a String in the Screen, in the style of normal text
      *
-     * @param text  The text to render to the screen
-     * @param xPos  The X position to render the text at
-     * @param yPos  The Y position to render the text at
-     * @param color The color to render the text in
+     * @param text         The text to render to the screen
+     * @param xPos         The X position to render the text at
+     * @param yPos         The Y position to render the text at
+     * @param color        The color to render the text in
+     * @param renderTarget The Control's render target, or page to render on
      */
     public void renderString(String text, float xPos, float yPos, int color, int renderTarget) {
         if (renderTarget == currentPage) {

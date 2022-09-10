@@ -115,7 +115,7 @@ public class DiscordAssetUtils {
     }
 
     /**
-     * Retrieves the Parsed Icon Id from the specified key, if present
+     * Retrieves the Parsed Icon ID from the specified key, if present
      *
      * @param key The Specified Key to gain info for
      * @return The Parsed Icon ID from the {@link DiscordAsset} data
@@ -181,8 +181,8 @@ public class DiscordAssetUtils {
      * Url Format: https://cdn.discordapp.com/app-assets/[clientId]/[id].png
      *
      * @param clientId    The client id to load asset data from
-     * @param key         The Specified Key Id to gain info for (Can only be a key name if isLocalName is true)
-     * @param isLocalName Whether or not the specified Key Id is a Key name derived from the currently synced client id
+     * @param keyId       The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
+     * @param isLocalName Whether the specified Key ID is a Key name derived from the currently synced client id
      * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
      */
     public static String getAssetUrl(final String clientId, final String keyId, final boolean isLocalName) {
@@ -196,7 +196,7 @@ public class DiscordAssetUtils {
      * Url Format: https://discord.com/api/oauth2/applications/[clientId]/assets
      *
      * @param clientId     The client id to load asset data from
-     * @param filterToMain Whether this client id is submitting it's assets as the assets to use in CraftPresence
+     * @param filterToMain Whether this client id is submitting its assets as the assets to use in CraftPresence
      * @return The list of discord asset data attached to this client id
      */
     public static DiscordAsset[] loadAssets(final String clientId, final boolean filterToMain) {

@@ -79,6 +79,11 @@ public enum ArgumentType {
         return Invalid;
     }
 
+    /**
+     * Retrieves the display name for the specified {@link ArgumentType}
+     *
+     * @return The display name corresponding to the {@link ArgumentType}
+     */
     public String getDisplayName() {
         return displayName;
     }
