@@ -1117,6 +1117,7 @@ public class StringUtils {
      * support removal then an {@code UnsupportedOperationException} will be
      * thrown on the first matching element.
      *
+     * @param collection the collection to interpret
      * @param filter a predicate which returns {@code true} for elements to be
      *        removed
      * @return {@code true} if any elements were removed
@@ -1138,6 +1139,39 @@ public class StringUtils {
             }
         }
         return removed;
+    }
+
+    /**
+     * Returns a collection consisting of the elements of this collection that match
+     * the given predicate.
+     *
+     * @implSpec
+     * The default implementation traverses all elements of the collection using
+     * its {@link Collection#iterator}.  Each non-matching element is removed using
+     * {@link Iterator#remove()}.  If the collection's iterator does not
+     * support removal then an {@code UnsupportedOperationException} will be
+     * thrown on the first matching element.
+     *
+     * @param collection the collection to interpret
+     * @param filter a predicate which returns {@code true} for elements to be
+     *        removed
+     * @return {@code true} if any elements were removed
+     * @throws NullPointerException if the specified filter is null
+     * @throws UnsupportedOperationException if elements cannot be removed
+     *         from this collection.  Implementations may throw this exception if a
+     *         matching element cannot be removed or if, in general, removal is not
+     *         supported.
+     * @implNote Stubbed Function from Stream#filter for Java 7 Support
+     */
+    public static <E> Collection<E> filter(Collection<E> collection, Predicate<? super E> filter) {
+        Objects.requireNonNull(filter);
+        final Iterator<E> each = collection.iterator();
+        while (each.hasNext()) {
+            if (!filter.test(each.next())) {
+                each.remove();
+            }
+        }
+        return collection;
     }
 
     /**
@@ -1173,8 +1207,7 @@ public class StringUtils {
      * @return whether the specified class contains the specified field name
      */
     public static boolean doesClassContainField(Class<?> classToAccess, String fieldName) {
-        return Arrays.stream(classToAccess.getDeclaredFields())
-                .anyMatch(f -> f.getName().equals(fieldName));
+        return !filter(Arrays.asList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
     }
 
     /**

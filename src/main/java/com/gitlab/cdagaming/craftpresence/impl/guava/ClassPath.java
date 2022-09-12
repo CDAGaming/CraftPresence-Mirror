@@ -14,6 +14,8 @@
 
 package com.gitlab.cdagaming.craftpresence.impl.guava;
 
+import com.gitlab.cdagaming.craftpresence.impl.Predicate;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
@@ -29,13 +31,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -104,14 +104,20 @@ public final class ClassPath {
      * @since 16.0
      */
     public Set<ClassInfo> getAllClasses() {
-        return resources.stream().filter(ClassInfo.class::isInstance).map(ClassInfo.class::cast).collect(Collectors.toSet());
+        final Set<ClassInfo> results = new HashSet<>();
+        for (ResourceInfo resource : resources) {
+            if (resource instanceof ClassInfo) {
+                results.add((ClassInfo) resource);
+            }
+        }
+        return results;
     }
 
     /**
      * Returns all top level classes loadable from the current class path.
      */
     public Set<ClassInfo> getTopLevelClasses() {
-        return resources.stream().filter(ClassInfo.class::isInstance).map(ClassInfo.class::cast).filter(IS_TOP_LEVEL).collect(Collectors.toSet());
+        return new HashSet<>(StringUtils.filter(getAllClasses(), IS_TOP_LEVEL));
     }
 
     /**
