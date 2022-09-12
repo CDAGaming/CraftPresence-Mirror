@@ -420,7 +420,7 @@ public class DiscordUtils {
      * @param type The type the arguments should be stored as
      * @param data The list of data to interpret
      */
-    public void setArgumentsFor(final ArgumentType type, List<Pair<String, String>> data) {
+    public void setArgumentsFor(final ArgumentType type, final List<Pair<String, String>> data) {
         presenceData.put(type, data);
     }
 
@@ -430,9 +430,9 @@ public class DiscordUtils {
      * @param type The type the arguments should be stored as
      * @param data The data to interpret
      */
-    public void setArgumentsFor(final ArgumentType type, Pair<String, String> data) {
+    public void setArgumentsFor(final ArgumentType type, final Pair<String, String> data) {
         final List<Pair<String, String>> list = getArgumentsFor(type);
-        list.removeIf(e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
+        StringUtils.removeIf(list, e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
         list.add(data);
         setArgumentsFor(type, list);
     }
