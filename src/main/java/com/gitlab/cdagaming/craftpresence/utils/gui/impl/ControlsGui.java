@@ -40,7 +40,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +73,7 @@ public class ControlsGui extends PaginatedScreen {
     }
 
     public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
-        this(parentScreen, filterMode, Arrays.asList(filterData));
+        this(parentScreen, filterMode, Lists.newArrayList(filterData));
     }
 
     @Override

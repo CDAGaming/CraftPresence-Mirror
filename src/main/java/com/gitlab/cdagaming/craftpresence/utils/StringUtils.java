@@ -1052,7 +1052,7 @@ public class StringUtils {
             if (formattedText.contains("\\\\n+")) {
                 formattedText = original.replace("\\\\n+", "&newline&");
             }
-            return Arrays.asList(formattedText.split("&newline&"));
+            return Lists.newArrayList(formattedText.split("&newline&"));
         } else {
             return Lists.newArrayList();
         }
@@ -1068,7 +1068,7 @@ public class StringUtils {
         if (sender instanceof EntityPlayer) {
             final EntityPlayer player = (EntityPlayer) sender;
             final List<String> lines = splitTextByNewLine(message);
-            if (lines != null && !lines.isEmpty()) {
+            if (!lines.isEmpty()) {
                 for (String line : lines) {
                     player.sendMessage(new TextComponentString(line));
                 }
