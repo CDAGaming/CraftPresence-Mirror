@@ -43,6 +43,7 @@ import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 
@@ -225,7 +226,7 @@ public class CommandsGui extends ExtendedScreen {
                                             hasError = true;
                                         }
                                         // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
-                                        outputData = new FileOutputStream(dataDir);
+                                        outputData = Files.newOutputStream(dataDir.toPath());
                                         outputStream = new OutputStreamWriter(outputData, CraftPresence.CLIENT.ipcInstance.getEncoding());
                                         bw = new BufferedWriter(outputStream);
 

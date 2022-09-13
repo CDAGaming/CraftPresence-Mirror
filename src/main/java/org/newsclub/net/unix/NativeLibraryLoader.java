@@ -20,10 +20,10 @@ package org.newsclub.net.unix;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -152,7 +152,7 @@ final class NativeLibraryLoader implements Closeable {
       File libFile;
       try {
         libFile = createTempFile("libtmp", System.mapLibraryName(libraryNameAndVersion));
-        try (OutputStream out = new FileOutputStream(libFile)) { // NOPMD UseTryWithResources
+        try (OutputStream out = Files.newOutputStream(libFile.toPath())) { // NOPMD UseTryWithResources
           byte[] buf = new byte[4096];
           int read;
           while ((read = libraryIn.read(buf)) >= 0) {

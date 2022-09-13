@@ -35,6 +35,7 @@ import net.minecraft.launchwrapper.Launch;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
@@ -203,7 +204,7 @@ public class ModUtils {
             // Write data from local charData to directory if an update is needed
             if (inputData != null) {
                 try {
-                    outputData = new FileOutputStream(charDataDir);
+                    outputData = Files.newOutputStream(charDataDir.toPath());
 
                     byte[] transferBuffer = new byte[inputData.available()];
                     for (int readBuffer = inputData.read(transferBuffer); readBuffer != -1; readBuffer = inputData.read(transferBuffer)) {
@@ -221,7 +222,7 @@ public class ModUtils {
 
         if (!errored) {
             try {
-                inputData = new FileInputStream(charDataDir);
+                inputData = Files.newInputStream(charDataDir.toPath());
                 inputStream = new InputStreamReader(inputData, Charset.forName(encoding));
                 reader = new BufferedReader(inputStream);
 
@@ -304,7 +305,7 @@ public class ModUtils {
         if (charDataDir.exists()) {
             try {
                 // Read and Queue Character Data
-                inputData = new FileInputStream(charDataDir);
+                inputData = Files.newInputStream(charDataDir.toPath());
                 inputStream = new InputStreamReader(inputData, Charset.forName(encoding));
                 br = new BufferedReader(inputStream);
 
@@ -320,7 +321,7 @@ public class ModUtils {
                 }
 
                 // Write Queued Character Data
-                outputData = new FileOutputStream(charDataDir);
+                outputData = Files.newOutputStream(charDataDir.toPath());
                 outputStream = new OutputStreamWriter(outputData, Charset.forName(encoding));
                 bw = new BufferedWriter(outputStream);
 

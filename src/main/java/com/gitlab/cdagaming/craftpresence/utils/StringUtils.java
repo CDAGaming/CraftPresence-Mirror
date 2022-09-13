@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -575,19 +576,17 @@ public class StringUtils {
      * @return The evaluated array
      */
     public static String[] removeFromArray(final String[] originalArray, final String searchTerm, final int searchIndex, final String splitCharacter) {
-        int indexNumber = 0;
-        List<String> formatted = Lists.newLinkedList(Arrays.asList(originalArray));
-        if (!isNullOrEmpty(formatted.toString())) {
-            for (String part : formatted) {
+        if (originalArray.length > 0) {
+            for (int indexNumber = 0; indexNumber < originalArray.length; indexNumber++) {
+                String part = originalArray[indexNumber];
                 String[] splitPart = part.split(splitCharacter);
                 if (!StringUtils.isNullOrEmpty(splitPart[searchIndex]) && splitPart[searchIndex].equalsIgnoreCase(searchTerm)) {
-                    formatted.remove(indexNumber);
+                    ArrayUtils.remove(originalArray, indexNumber);
                     break;
                 }
-                indexNumber++;
             }
         }
-        return formatted.toArray(new String[0]);
+        return originalArray;
     }
 
     /**

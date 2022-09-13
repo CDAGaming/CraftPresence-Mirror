@@ -38,6 +38,7 @@ import com.google.common.collect.Maps;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -710,10 +711,10 @@ public class ConfigUtils {
      */
     public void save(final String encoding) {
         Writer configWriter = null;
-        FileOutputStream outputStream = null;
+        OutputStream outputStream = null;
 
         try {
-            outputStream = new FileOutputStream(configFile);
+            outputStream = Files.newOutputStream(configFile.toPath());
             configWriter = new OutputStreamWriter(outputStream, Charset.forName(encoding));
             properties.store(configWriter,
                     ModUtils.TRANSLATOR.translate(true, "gui.config.title") + "\n" +
