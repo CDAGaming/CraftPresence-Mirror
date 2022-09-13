@@ -38,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -46,7 +45,6 @@ import org.lwjgl.input.Keyboard;
 import java.io.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommandsGui extends ExtendedScreen {
     private static String[] executionCommandArgs;
@@ -81,16 +79,11 @@ public class CommandsGui extends ExtendedScreen {
         List<String> list = Lists.newArrayList();
 
         if (!possibleCompletions.isEmpty()) {
-            for (String s1 : possibleCompletions.stream().map(Functions.toStringFunction()).collect(Collectors.toList())) {
-                if (doesStringStartWith(s, s1)) {
-                    list.add(s1);
-                }
-            }
-
-            if (list.isEmpty()) {
-                for (Object object : possibleCompletions) {
-                    if (!StringUtils.isNullOrEmpty(String.valueOf(object)) && doesStringStartWith(s, String.valueOf(object))) {
-                        list.add(String.valueOf(object));
+            for (Object object : possibleCompletions) {
+                if (object != null) {
+                    String str = String.valueOf(object);
+                    if (doesStringStartWith(s, str)) {
+                        list.add(str);
                     }
                 }
             }
