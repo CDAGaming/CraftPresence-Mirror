@@ -43,7 +43,7 @@ import java.util.List;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({"DuplicatedCode", "ConstantConditions", "PointlessBooleanExpression"})
 public class ModUtils {
     /**
      * The Application's Name
