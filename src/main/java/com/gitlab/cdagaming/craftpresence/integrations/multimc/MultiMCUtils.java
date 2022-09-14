@@ -29,9 +29,10 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -83,7 +84,7 @@ public class MultiMCUtils {
     public static void loadInstance() {
         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.instance.init"));
         try {
-            final InputStream STREAM = new FileInputStream(instanceFile);
+            final InputStream STREAM = Files.newInputStream(Paths.get(instanceFile));
             configFile.load(STREAM);
 
             INSTANCE_NAME = get("name");

@@ -24,10 +24,13 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities;
 
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCListener;
+
 /**
  * A encapsulation of a Discord User's data provided when a
- * {@link com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCListener IPCListener} fires
- * {@link com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCListener#onActivityJoinRequest(com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient, String, User)
+ * {@link IPCListener IPCListener} fires
+ * {@link IPCListener#onActivityJoinRequest(IPCClient, String, User)
  * onActivityJoinRequest}.
  *
  * @author John Grosh (john.a.grosh@gmail.com)

@@ -42,6 +42,7 @@ import java.util.Random;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("JavadocLinkAsPlainText")
 public class DiscordAssetUtils {
     /**
      * A List of the Icon IDs available as ImageType SMALL

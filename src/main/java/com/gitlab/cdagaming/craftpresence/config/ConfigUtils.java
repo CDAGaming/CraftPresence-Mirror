@@ -179,7 +179,7 @@ public class ConfigUtils {
         resetTimeOnInit = false;
         autoRegister = false;
         // BIOME MESSAGES
-        NAME_defaultBiomeIcon = ModUtils.TRANSLATOR.translate(true, "gui.config.name.biome_messages.biome_icon".replaceAll(" ", "_"));
+        NAME_defaultBiomeIcon = ModUtils.TRANSLATOR.translate(true, "gui.config.name.biome_messages.biome_icon").replaceAll(" ", "_");
         NAME_biomeMessages = ModUtils.TRANSLATOR.translate(true, "gui.config.name.biome_messages.biome_messages").replaceAll(" ", "_");
         defaultBiomeIcon = "unknown";
         biomeMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Playing in &biome&"};

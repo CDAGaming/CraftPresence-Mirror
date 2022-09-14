@@ -37,7 +37,6 @@ import java.util.Set;
 public class MappingUtils {
     private static Map<String, String> classMap = null;
 
-    @SuppressWarnings("UnstableApiUsage")
     public static Map<String, String> getClassMap() {
         if (classMap == null) {
             Map<String, String> cm = new HashMap<String, String>();

@@ -24,14 +24,16 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities;
 
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCListener;
 import com.google.gson.JsonObject;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 /**
- * A data-packet received from Discord via an {@link com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient IPCClient}.<br>
- * These can be handled via an implementation of {@link com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCListener IPCListener}.
+ * A data-packet received from Discord via an {@link IPCClient IPCClient}.<br>
+ * These can be handled via an implementation of {@link IPCListener IPCListener}.
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */

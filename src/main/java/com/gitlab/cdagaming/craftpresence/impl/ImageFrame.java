@@ -42,10 +42,11 @@ import java.util.ArrayList;
 
 /**
  * Image Conversion Layers and Utilities used to translate other Image Types
- * <p>Reference: https://stackoverflow.com/a/17269591
+ * <p>Reference: <a href="https://stackoverflow.com/a/17269591">Click Here</a>
  *
  * @author CDAGaming
  */
+@SuppressWarnings("ConstantConditions")
 public class ImageFrame {
     /**
      * The delay between image transitions
@@ -312,6 +313,6 @@ public class ImageFrame {
      * @return Whether or not this frame has rendered up to or past the delay
      */
     public boolean shouldRenderNext() {
-        return System.currentTimeMillis() - getRenderTime() > getDelay() * 10;
+        return System.currentTimeMillis() - getRenderTime() > getDelay() * 10L;
     }
 }

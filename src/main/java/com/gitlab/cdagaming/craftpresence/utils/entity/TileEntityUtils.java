@@ -46,6 +46,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("ConstantConditions")
 public class TileEntityUtils {
     /**
      * A List of the detected Block Names

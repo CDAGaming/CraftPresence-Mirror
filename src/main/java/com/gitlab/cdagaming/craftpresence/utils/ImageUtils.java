@@ -39,10 +39,11 @@ import org.apache.commons.codec.binary.Base64;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,10 +89,10 @@ public class ImageUtils {
                                 final Object originData = request.getSecond().getSecond();
                                 switch (request.getSecond().getFirst()) {
                                     case FileData:
-                                        streamData = new FileInputStream((File) originData);
+                                        streamData = Files.newInputStream(((File) originData).toPath());
                                         break;
                                     case FileStream:
-                                        streamData = new FileInputStream(originData.toString());
+                                        streamData = Files.newInputStream(Paths.get(originData.toString()));
                                         break;
                                     case ByteStream:
                                         final Tuple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());

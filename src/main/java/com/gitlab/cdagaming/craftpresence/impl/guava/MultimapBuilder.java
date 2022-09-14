@@ -50,7 +50,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Louis Wasserman
  * @since 16.0
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "Guava"})
 public abstract class MultimapBuilder<K0, V0> {
     /*
      * Leaving K and V as upper bounds rather than the actual key and value types allows type

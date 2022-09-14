@@ -209,7 +209,7 @@ public class DimensionUtils {
                 for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
                     if (classObj != null) {
                         try {
-                            WorldProvider providerObj = (WorldProvider) classObj.newInstance();
+                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
                             if (!dimensionTypes.contains(providerObj.getDimensionType())) {
                                 dimensionTypes.add(providerObj.getDimensionType());
                             }

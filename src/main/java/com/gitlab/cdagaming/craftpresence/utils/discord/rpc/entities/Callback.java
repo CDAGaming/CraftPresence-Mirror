@@ -25,12 +25,13 @@
 package com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities;
 
 import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
 
 /**
  * A callback for asynchronous logic when dealing processes that
  * would normally block the calling thread.
  * <p>
- * This is most visibly implemented in {@link com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient IPCClient}.
+ * This is most visibly implemented in {@link IPCClient IPCClient}.
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */

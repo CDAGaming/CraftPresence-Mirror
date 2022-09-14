@@ -200,7 +200,7 @@ public class BiomeUtils {
             for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Biome.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
                 if (classObj != null) {
                     try {
-                        Biome biomeObj = (Biome) classObj.newInstance();
+                        Biome biomeObj = (Biome) classObj.getDeclaredConstructor().newInstance();
                         if (!biomeTypes.contains(biomeObj)) {
                             biomeTypes.add(biomeObj);
                         }

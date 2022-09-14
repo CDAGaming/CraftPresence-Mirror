@@ -54,6 +54,7 @@ import java.util.TimerTask;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("ConstantConditions")
 @Mod(modid = ModUtils.MOD_ID, name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = ModUtils.GUI_FACTORY, canBeDeactivated = true, updateJSON = ModUtils.UPDATE_JSON, acceptedMinecraftVersions = "*")
 public class CraftPresence {
     /**
