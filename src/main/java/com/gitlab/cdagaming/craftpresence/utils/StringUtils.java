@@ -1201,7 +1201,7 @@ public class StringUtils {
      * @param fieldName     The Field name to search for
      * @return whether the specified class contains the specified field name
      */
-    public static boolean doesClassContainField(Class<?> classToAccess, String fieldName) {
+    public static boolean doesClassContainField(Class<?> classToAccess, final String fieldName) {
         return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
     }
 
