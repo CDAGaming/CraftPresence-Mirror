@@ -37,8 +37,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1109,22 +1109,20 @@ public class StringUtils {
      * predicate.  Errors or runtime exceptions thrown during iteration or by
      * the predicate are relayed to the caller.
      *
-     * @implSpec
-     * The default implementation traverses all elements of the collection using
+     * @param collection the collection to interpret
+     * @param filter     a predicate which returns {@code true} for elements to be
+     *                   removed
+     * @return {@code true} if any elements were removed
+     * @throws NullPointerException          if the specified filter is null
+     * @throws UnsupportedOperationException if elements cannot be removed
+     *                                       from this collection.  Implementations may throw this exception if a
+     *                                       matching element cannot be removed or if, in general, removal is not
+     *                                       supported.
+     * @implSpec The default implementation traverses all elements of the collection using
      * its {@link Collection#iterator}.  Each matching element is removed using
      * {@link Iterator#remove()}.  If the collection's iterator does not
      * support removal then an {@code UnsupportedOperationException} will be
      * thrown on the first matching element.
-     *
-     * @param collection the collection to interpret
-     * @param filter a predicate which returns {@code true} for elements to be
-     *        removed
-     * @return {@code true} if any elements were removed
-     * @throws NullPointerException if the specified filter is null
-     * @throws UnsupportedOperationException if elements cannot be removed
-     *         from this collection.  Implementations may throw this exception if a
-     *         matching element cannot be removed or if, in general, removal is not
-     *         supported.
      * @implNote Stubbed Function from {@link Collection#removeIf} for Java 7 Support
      */
     public static <E> boolean removeIf(Collection<E> collection, Predicate<? super E> filter) {
@@ -1144,22 +1142,20 @@ public class StringUtils {
      * Returns a collection consisting of the elements of this collection that match
      * the given predicate.
      *
-     * @implSpec
-     * The default implementation traverses all elements of the collection using
+     * @param collection the collection to interpret
+     * @param filter     a predicate which returns {@code true} for elements to be
+     *                   removed
+     * @return {@code true} if any elements were removed
+     * @throws NullPointerException          if the specified filter is null
+     * @throws UnsupportedOperationException if elements cannot be removed
+     *                                       from this collection.  Implementations may throw this exception if a
+     *                                       matching element cannot be removed or if, in general, removal is not
+     *                                       supported.
+     * @implSpec The default implementation traverses all elements of the collection using
      * its {@link Collection#iterator}.  Each non-matching element is removed using
      * {@link Iterator#remove()}.  If the collection's iterator does not
      * support removal then an {@code UnsupportedOperationException} will be
      * thrown on the first matching element.
-     *
-     * @param collection the collection to interpret
-     * @param filter a predicate which returns {@code true} for elements to be
-     *        removed
-     * @return {@code true} if any elements were removed
-     * @throws NullPointerException if the specified filter is null
-     * @throws UnsupportedOperationException if elements cannot be removed
-     *         from this collection.  Implementations may throw this exception if a
-     *         matching element cannot be removed or if, in general, removal is not
-     *         supported.
      * @implNote Stubbed Function from Stream#filter for Java 7 Support
      */
     public static <E> Collection<E> filter(Collection<E> collection, Predicate<? super E> filter) {
