@@ -1108,6 +1108,14 @@ public class StringUtils {
      * Removes all of the elements of this collection that satisfy the given
      * predicate.  Errors or runtime exceptions thrown during iteration or by
      * the predicate are relayed to the caller.
+     * <p>
+     * The default implementation traverses all elements of the collection using
+     * its {@link Collection#iterator}.  Each matching element is removed using
+     * {@link Iterator#remove()}.  If the collection's iterator does not
+     * support removal then an {@code UnsupportedOperationException} will be
+     * thrown on the first matching element.
+     * <p>
+     * This is a stubbed function from {@link Collection#removeIf} for older java versions
      *
      * @param collection the collection to interpret
      * @param filter     a predicate which returns {@code true} for elements to be
@@ -1118,12 +1126,6 @@ public class StringUtils {
      *                                       from this collection.  Implementations may throw this exception if a
      *                                       matching element cannot be removed or if, in general, removal is not
      *                                       supported.
-     * @implSpec The default implementation traverses all elements of the collection using
-     * its {@link Collection#iterator}.  Each matching element is removed using
-     * {@link Iterator#remove()}.  If the collection's iterator does not
-     * support removal then an {@code UnsupportedOperationException} will be
-     * thrown on the first matching element.
-     * @implNote Stubbed Function from {@link Collection#removeIf} for Java 7 Support
      */
     public static <E> boolean removeIf(Collection<E> collection, Predicate<? super E> filter) {
         Objects.requireNonNull(filter);
@@ -1141,6 +1143,14 @@ public class StringUtils {
     /**
      * Returns a collection consisting of the elements of this collection that match
      * the given predicate.
+     * <p>
+     * The default implementation traverses all elements of the collection using
+     * its {@link Collection#iterator}.  Each non-matching element is removed using
+     * {@link Iterator#remove()}.  If the collection's iterator does not
+     * support removal then an {@code UnsupportedOperationException} will be
+     * thrown on the first matching element.
+     * <p>
+     * This is a stubbed function from Stream#filter for older java versions
      *
      * @param collection the collection to interpret
      * @param filter     a predicate which returns {@code true} for elements to be
@@ -1151,12 +1161,6 @@ public class StringUtils {
      *                                       from this collection.  Implementations may throw this exception if a
      *                                       matching element cannot be removed or if, in general, removal is not
      *                                       supported.
-     * @implSpec The default implementation traverses all elements of the collection using
-     * its {@link Collection#iterator}.  Each non-matching element is removed using
-     * {@link Iterator#remove()}.  If the collection's iterator does not
-     * support removal then an {@code UnsupportedOperationException} will be
-     * thrown on the first matching element.
-     * @implNote Stubbed Function from Stream#filter for Java 7 Support
      */
     public static <E> Collection<E> filter(Collection<E> collection, Predicate<? super E> filter) {
         Objects.requireNonNull(filter);
