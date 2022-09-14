@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v1.9.0 (09/??/2022)
+## v1.9.0 (09/20/2022)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.12...release%2Fv1.9.0)_
@@ -19,11 +19,16 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       easily
     * Format: `&<moduleName>:<innerPlaceholder>&` (For example: `&server:IP&` for the Server's `&IP&` inner-placeholder)
     * Special Thanks to [this ticket](https://gitlab.com/CDAGaming/CraftPresence/-/issues/114) for suggesting the idea!
+* Multiple backend optimizations and deprecation fixes
 
 ### Fixes
 
 * Fixed the alignment of elements in the `DynamicEditor` GUIs to avoid Gaps in certain circumstances
 * Fixed a visual error in `UpdateState` caused by a typo in retrieving the display name
+* Fixed an Issue where the Controls GUI can still be accessed if KeyBinds were not fully registered
+* Fixed an NPE that can occur during Tab Completion in the Commands Gui
+* Fixed a typo in the `defaultBiomeIcon` name causing incorrect formatting
+    * Note: This does reset the property to apply the fix
 
 ___
 
