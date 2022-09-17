@@ -19,6 +19,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       easily
     * Format: `&<moduleName>:<innerPlaceholder>&` (For example: `&server:IP&` for the Server's `&IP&` inner-placeholder)
     * Special Thanks to [this ticket](https://gitlab.com/CDAGaming/CraftPresence/-/issues/114) for suggesting the idea!
+* Backend: Adjusted JUnixSocket to use it's official implementation
+    * Uses 2.4.0 on Java 7 Compilers, and 2.5.1 on Java 8+ compilers
 * Multiple backend optimizations and deprecation fixes
 
 ### Fixes
