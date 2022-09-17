@@ -214,8 +214,8 @@ remapJar {
         fallbackFromNamespace = "searge"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from {
-        configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }
+    from(configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude 'META-INF/versions/**'
     }
 }
 
