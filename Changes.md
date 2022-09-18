@@ -25,6 +25,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Backend: Fixed scenarios of `SocketException`'s occuring due to empty folders being considered in `Pipe#getPipeLocation` in IPC Logic
 * Fixed the alignment of elements in the `DynamicEditor` GUIs to avoid Gaps in certain circumstances
 * Fixed a visual error in `UpdateState` caused by a typo in retrieving the display name
 * Fixed an Issue where the Controls GUI can still be accessed if KeyBinds were not fully registered

@@ -210,6 +210,7 @@ public abstract class Pipe {
      * @param index The index to try getting the IPC at.
      * @return The IPC location.
      */
+    @SuppressWarnings("ConstantConditions")
     private static String getPipeLocation(int index) {
         String tmpPath = null, pipePath = "discord-ipc-" + index;
         if (System.getProperty("os.name").contains("Win"))
@@ -227,9 +228,9 @@ public abstract class Pipe {
             File snapFile = new File(snapPath),
                     flatpakFile = new File(flatpakPath);
 
-            if (snapFile.exists() && snapFile.isDirectory()) {
+            if (snapFile.exists() && snapFile.isDirectory() && snapFile.list().length > 0) {
                 tmpPath = snapPath;
-            } else if (flatpakFile.exists() && flatpakFile.isDirectory()) {
+            } else if (flatpakFile.exists() && flatpakFile.isDirectory() && flatpakFile.list().length > 0) {
                 tmpPath = flatpakPath;
             }
         }
