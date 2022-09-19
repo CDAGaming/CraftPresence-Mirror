@@ -27,13 +27,14 @@ package com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.pipe;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.Callback;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class MacPipe extends UnixPipe {
 
-    MacPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, String location) throws IOException {
+    MacPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, File location) throws IOException {
         super(ipcClient, callbacks, location);
     }
 

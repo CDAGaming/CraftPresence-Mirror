@@ -45,11 +45,11 @@ import java.util.HashMap;
 public class UnixPipe extends Pipe {
     private final AFUNIXSocket socket;
 
-    UnixPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, String location) throws IOException {
+    UnixPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, File location) throws IOException {
         super(ipcClient, callbacks);
 
         socket = AFUNIXSocket.newInstance();
-        socket.connect(AFUNIXSocketAddress.of(new File(location)));
+        socket.connect(AFUNIXSocketAddress.of(location));
     }
 
     @Override

@@ -44,7 +44,7 @@ public class WindowsPipe extends Pipe {
     private final long targetLongKey = targetKey;
     public RandomAccessFile file;
 
-    WindowsPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, String location) {
+    WindowsPipe(IPCClient ipcClient, HashMap<String, Callback> callbacks, File location) {
         super(ipcClient, callbacks);
         try {
             this.file = new RandomAccessFile(location, "rw");
