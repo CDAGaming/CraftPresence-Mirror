@@ -34,24 +34,20 @@ public enum PartyPrivacy {
     /**
      * Constant for the "Private" Discord RPC Party privacy level.
      */
-    Private(0),
+    Private,
 
     /**
      * Constant for the "Public" Discord RPC Party privacy level.
      */
-    Public(1);
+    Public;
 
     private final String displayName;
 
-    private final int index;
-
-    PartyPrivacy(final int index) {
-        this.index = index;
+    PartyPrivacy() {
         this.displayName = StringUtils.formatWord(name());
     }
 
-    PartyPrivacy(final int index, final String displayName) {
-        this.index = index;
+    PartyPrivacy(final String displayName) {
         this.displayName = displayName;
     }
 
@@ -66,7 +62,7 @@ public enum PartyPrivacy {
      */
     public static PartyPrivacy from(int index) {
         for (PartyPrivacy value : values()) {
-            if (value.getIndex() == index) {
+            if (value.ordinal() == index) {
                 return value;
             }
         }
@@ -103,20 +99,11 @@ public enum PartyPrivacy {
      */
     public static PartyPrivacy from(int index, String displayName) {
         for (PartyPrivacy value : values()) {
-            if (!StringUtils.isNullOrEmpty(value.getDisplayName()) && value.getDisplayName().equals(displayName) && value.getIndex() == index) {
+            if (!StringUtils.isNullOrEmpty(value.getDisplayName()) && value.getDisplayName().equals(displayName) && value.ordinal() == index) {
                 return value;
             }
         }
         return Public;
-    }
-
-    /**
-     * Retrieves the index of the current {@link PartyPrivacy}
-     *
-     * @return the current index
-     */
-    public int getIndex() {
-        return index;
     }
 
     /**
