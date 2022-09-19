@@ -107,7 +107,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         buttonCalc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).getDisplayName(),
-                        () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % 2,
+                        () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
