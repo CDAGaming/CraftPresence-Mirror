@@ -106,6 +106,10 @@ public class DiscordUtils {
      */
     public String CLIENT_ID;
     /**
+     * The preferred {@link DiscordBuild} to try pairing to
+     */
+    public DiscordBuild PREFERRED_CLIENT = DiscordBuild.ANY;
+    /**
      * Whether to register this application as an application with discord
      */
     public boolean AUTO_REGISTER;
@@ -212,7 +216,11 @@ public class DiscordUtils {
             // Create IPC Instance and Listener and Make a Connection if possible
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), ModUtils.IS_DEV, ModUtils.IS_VERBOSE, AUTO_REGISTER, CLIENT_ID);
             ipcInstance.setListener(new ModIPCListener());
-            ipcInstance.connect();
+            if (PREFERRED_CLIENT != DiscordBuild.ANY) {
+                ipcInstance.connect(PREFERRED_CLIENT, DiscordBuild.ANY);
+            } else {
+                ipcInstance.connect();
+            }
 
             // Subscribe to RPC Events after Connection
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_JOIN);

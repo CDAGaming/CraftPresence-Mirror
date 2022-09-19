@@ -66,6 +66,24 @@ public enum DiscordBuild {
     }
 
     /**
+     * Gets a {@link DiscordBuild} matching the specified index.
+     * <p>
+     * This is only internally implemented.
+     *
+     * @param index The index to get from.
+     * @return The {@link DiscordBuild} corresponding to the parameters, or
+     * {@link DiscordBuild#ANY} if none match.
+     */
+    public static DiscordBuild from(int index) {
+        for (DiscordBuild value : values()) {
+            if (value.ordinal() == index) {
+                return value;
+            }
+        }
+        return ANY;
+    }
+
+    /**
      * Gets a {@link DiscordBuild} matching the specified endpoint.
      * <p>
      * This is only internally implemented.

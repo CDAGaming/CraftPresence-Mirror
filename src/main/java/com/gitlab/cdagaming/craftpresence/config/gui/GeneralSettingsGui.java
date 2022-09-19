@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordBuild;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -39,7 +40,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ExtendedScreen {
-    private ExtendedButtonControl proceedButton, partyPrivacyLevelButton;
+    private ExtendedButtonControl proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
             detectMCUpdaterInstanceButton, detectTechnicPackButton, showTimeButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
@@ -47,6 +48,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
     private ExtendedTextControl clientId;
 
     private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
+    private int currentPreferredClient = DiscordBuild.ANY.ordinal();
 
     GeneralSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -318,6 +320,25 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
+        currentPreferredClient = CraftPresence.CONFIG.preferredClientLevel;
+        preferredClientLevelButton = addControl(
+                new ExtendedButtonControl(
+                        (width / 2) - 90, (height - 55),
+                        180, 20,
+                        ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + StringUtils.formatWord(DiscordBuild.from(currentPreferredClient).name()),
+                        () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
+                                ),
+                                getMouseX(), getMouseY(),
+                                width, height,
+                                getWrapWidth(),
+                                getFontRenderer(),
+                                true
+                        )
+                )
+        );
         proceedButton = addControl(
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 30),
@@ -333,6 +354,11 @@ public class GeneralSettingsGui extends ExtendedScreen {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CraftPresence.CONFIG.partyPrivacyLevel = currentPartyPrivacy;
+                            }
+                            if (currentPreferredClient != CraftPresence.CONFIG.preferredClientLevel) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.preferredClientLevel = currentPreferredClient;
                             }
                             if (detectCurseManifestButton.isChecked() != CraftPresence.CONFIG.detectCurseManifest) {
                                 CraftPresence.CONFIG.hasChanged = true;
@@ -422,6 +448,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         renderString(clientIdText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         partyPrivacyLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + StringUtils.formatWord(PartyPrivacy.from(currentPartyPrivacy).name()));
+        preferredClientLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + StringUtils.formatWord(DiscordBuild.from(currentPreferredClient).name()));
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(clientId.getText()) && clientId.getText().length() >= 18 && StringUtils.getValidLong(clientId.getText()).getFirst());
     }
 

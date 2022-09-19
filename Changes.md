@@ -7,6 +7,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Added a `preferredClientLevel` config setting to allow specifying if you want a specific Discord Client to receive events
 * Added a new `buttonMessages` config field for full frontend support of the buttons array in Rich Presence
     * The buttons array will only take the first two detected entries, excluding `default` (Which is a template), since
       Discord's RPC only allows two buttons

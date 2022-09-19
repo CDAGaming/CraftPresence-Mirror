@@ -33,6 +33,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordBuild;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -105,6 +106,9 @@ public class CommandUtils {
             CraftPresence.CLIENT.CLIENT_ID = CraftPresence.CONFIG.clientId;
         } else {
             DiscordAssetUtils.clearClientData();
+        }
+        if (!CraftPresence.CLIENT.PREFERRED_CLIENT.equals(DiscordBuild.from(CraftPresence.CONFIG.preferredClientLevel))) {
+            CraftPresence.CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.preferredClientLevel);
         }
         DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.clientId, true);
         CraftPresence.CLIENT.init(CraftPresence.CONFIG.resetTimeOnInit);

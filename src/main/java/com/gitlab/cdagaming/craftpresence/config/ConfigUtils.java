@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordBuild;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.PartyPrivacy;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -67,7 +68,7 @@ public class ConfigUtils {
     public String NAME_detectCurseManifest, NAME_detectMultiMCManifest, NAME_detectMCUpdaterInstance, NAME_detectTechnicPack,
             NAME_showTime, NAME_detectBiomeData, NAME_detectDimensionData,
             NAME_detectWorldData, NAME_clientId, NAME_defaultIcon, NAME_enableJoinRequest,
-            NAME_partyPrivacyLevel, NAME_resetTimeOnInit, NAME_autoRegister;
+            NAME_partyPrivacyLevel, NAME_preferredClientLevel, NAME_resetTimeOnInit, NAME_autoRegister;
     // BIOME MESSAGES
     public String NAME_defaultBiomeIcon, NAME_biomeMessages;
     // DIMENSION MESSAGES
@@ -93,7 +94,7 @@ public class ConfigUtils {
     public boolean detectCurseManifest, detectMultiMCManifest, detectMCUpdaterInstance, detectTechnicPack, showTime,
             detectBiomeData, detectDimensionData, detectWorldData, enableJoinRequest, resetTimeOnInit, autoRegister;
     public String clientId, defaultIcon;
-    public int partyPrivacyLevel;
+    public int partyPrivacyLevel, preferredClientLevel;
     // BIOME MESSAGES
     public String defaultBiomeIcon;
     public String[] biomeMessages;
@@ -162,6 +163,7 @@ public class ConfigUtils {
         NAME_defaultIcon = ModUtils.TRANSLATOR.translate(true, "gui.config.name.general.default_icon").replaceAll(" ", "_");
         NAME_enableJoinRequest = ModUtils.TRANSLATOR.translate(true, "gui.config.name.general.enable_join_request").replaceAll(" ", "_");
         NAME_partyPrivacyLevel = ModUtils.TRANSLATOR.translate(true, "gui.config.name.general.party_privacy").replaceAll(" ", "_");
+        NAME_preferredClientLevel = ModUtils.TRANSLATOR.translate(true, "gui.config.name.general.preferred_client").replaceAll(" ", "_");
         NAME_resetTimeOnInit = ModUtils.TRANSLATOR.translate(true, "gui.config.name.general.reset_time_on_init").replaceAll(" ", "_");
         NAME_autoRegister = ModUtils.TRANSLATOR.translate(true, "gui.config.name.general.auto_register").replaceAll(" ", "_");
         detectCurseManifest = true;
@@ -176,6 +178,7 @@ public class ConfigUtils {
         defaultIcon = "grass";
         enableJoinRequest = false;
         partyPrivacyLevel = PartyPrivacy.Public.ordinal();
+        preferredClientLevel = DiscordBuild.ANY.ordinal();
         resetTimeOnInit = false;
         autoRegister = false;
         // BIOME MESSAGES
