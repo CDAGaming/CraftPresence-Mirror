@@ -41,16 +41,6 @@ public enum PartyPrivacy {
      */
     Public;
 
-    private final String displayName;
-
-    PartyPrivacy() {
-        this.displayName = StringUtils.formatWord(name());
-    }
-
-    PartyPrivacy(final String displayName) {
-        this.displayName = displayName;
-    }
-
     /**
      * Gets a {@link PartyPrivacy} matching the specified index.
      * <p>
@@ -74,13 +64,13 @@ public enum PartyPrivacy {
      * <p>
      * This is only internally implemented.
      *
-     * @param displayName The display name to get from.
+     * @param name The name to get from.
      * @return The {@link PartyPrivacy} corresponding to the parameters, or
      * {@link PartyPrivacy#Public} if none match.
      */
-    public static PartyPrivacy from(String displayName) {
+    public static PartyPrivacy from(String name) {
         for (PartyPrivacy value : values()) {
-            if (!StringUtils.isNullOrEmpty(value.getDisplayName()) && value.getDisplayName().equals(displayName)) {
+            if (!StringUtils.isNullOrEmpty(value.name()) && value.name().equalsIgnoreCase(name)) {
                 return value;
             }
         }
@@ -88,30 +78,21 @@ public enum PartyPrivacy {
     }
 
     /**
-     * Gets a {@link PartyPrivacy} matching the specified display name.
+     * Gets a {@link PartyPrivacy} matching the specified name.
      * <p>
      * This is only internally implemented.
      *
-     * @param index       The index to get from.
-     * @param displayName The display name to get from.
+     * @param index The index to get from.
+     * @param name  The name to get from.
      * @return The {@link PartyPrivacy} corresponding to the parameters, or
      * {@link PartyPrivacy#Public} if none match.
      */
-    public static PartyPrivacy from(int index, String displayName) {
+    public static PartyPrivacy from(int index, String name) {
         for (PartyPrivacy value : values()) {
-            if (!StringUtils.isNullOrEmpty(value.getDisplayName()) && value.getDisplayName().equals(displayName) && value.ordinal() == index) {
+            if (!StringUtils.isNullOrEmpty(value.name()) && value.name().equalsIgnoreCase(name) && value.ordinal() == index) {
                 return value;
             }
         }
         return Public;
-    }
-
-    /**
-     * Retrieves the display name of the current {@link PartyPrivacy}
-     *
-     * @return the current index
-     */
-    public String getDisplayName() {
-        return displayName;
     }
 }
