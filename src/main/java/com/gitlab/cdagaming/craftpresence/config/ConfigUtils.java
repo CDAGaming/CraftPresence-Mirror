@@ -175,7 +175,7 @@ public class ConfigUtils {
         clientId = "450485984333660181";
         defaultIcon = "grass";
         enableJoinRequest = false;
-        partyPrivacyLevel = PartyPrivacy.Public.getPartyIndex();
+        partyPrivacyLevel = PartyPrivacy.Public.ordinal();
         resetTimeOnInit = false;
         autoRegister = false;
         // BIOME MESSAGES
