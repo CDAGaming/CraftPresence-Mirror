@@ -45,6 +45,7 @@ public abstract class Pipe {
     private static final int VERSION = 1;
     // a list of system property keys to get IPC file from different unix systems.
     private final static String[] unixPaths = {"XDG_RUNTIME_DIR", "TMPDIR", "TMP", "TEMP"};
+    private final static String[] unixFolderPaths = {"/snap.discord", "/app/com.discordapp.Discord"};
     final IPCClient ipcClient;
     private final HashMap<String, Callback> callbacks;
     PipeStatus status = PipeStatus.CONNECTING;
@@ -70,14 +71,14 @@ public abstract class Pipe {
         for (int i = 0; i < 10; i++) {
             String location = getPipeLocation(i);
             if (ipcClient.isDebugMode()) {
-                ModUtils.LOG.debugInfo(String.format("Searching for IPC: %s", location));
+                ModUtils.LOG.debugInfo(String.format("Searching for IPC Pipe: \"%s\"", location));
             }
 
             try {
                 File fileLocation = new File(location);
                 if (fileLocation.exists()) {
                     if (ipcClient.isDebugMode()) {
-                        ModUtils.LOG.debugInfo(String.format("Attempting connection to IPC: %s", location));
+                        ModUtils.LOG.debugInfo(String.format("Found valid file, attempting connection to IPC: \"%s\"", location));
                     }
                     pipe = createPipe(ipcClient, callbacks, fileLocation);
 
@@ -127,7 +128,7 @@ public abstract class Pipe {
                     }
                 } else {
                     if (ipcClient.isDebugMode()) {
-                        ModUtils.LOG.debugInfo(String.format("Unable to locate IPC: %s", location));
+                        ModUtils.LOG.debugInfo(String.format("Unable to locate IPC Pipe: \"%s\"", location));
                     }
                 }
             } catch (IOException | JsonParseException ex) {
@@ -233,16 +234,13 @@ public abstract class Pipe {
         }
         if (tmpPath == null) {
             tmpPath = "/tmp";
-        } else {
-            String snapPath = tmpPath + "/snap.discord", flatpakPath = tmpPath + "/app/com.discordapp.Discord";
-
-            File snapFile = new File(snapPath),
-                    flatpakFile = new File(flatpakPath);
-
-            if (snapFile.exists() && snapFile.isDirectory() && snapFile.list().length > 0) {
-                tmpPath = snapPath;
-            } else if (flatpakFile.exists() && flatpakFile.isDirectory() && flatpakFile.list().length > 0) {
-                tmpPath = flatpakPath;
+        }
+        for (String str : unixFolderPaths) {
+            String folderPath = tmpPath + str;
+            File folderFile = new File(folderPath);
+            if (folderFile.exists() && folderFile.isDirectory() && folderFile.list().length > 0) {
+                tmpPath = folderPath;
+                break;
             }
         }
         return tmpPath + "/" + pipePath;
