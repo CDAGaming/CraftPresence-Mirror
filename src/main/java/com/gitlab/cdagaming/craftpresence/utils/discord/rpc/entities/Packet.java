@@ -122,7 +122,7 @@ public class Packet {
     /**
      * Discord response OpCode values that are
      * sent with response data to and from Discord
-     * and the {@link com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient IPCClient}
+     * and the {@link IPCClient IPCClient}
      * connected.
      */
     public enum OpCode {

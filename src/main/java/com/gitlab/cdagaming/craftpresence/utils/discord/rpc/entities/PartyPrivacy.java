@@ -43,30 +43,30 @@ public enum PartyPrivacy {
 
     private final String displayName;
 
-    private final int partyIndex;
+    private final int index;
 
-    PartyPrivacy(final int partyIndex) {
-        this.partyIndex = partyIndex;
+    PartyPrivacy(final int index) {
+        this.index = index;
         this.displayName = StringUtils.formatWord(name());
     }
 
-    PartyPrivacy(final int partyIndex, final String displayName) {
-        this.partyIndex = partyIndex;
+    PartyPrivacy(final int index, final String displayName) {
+        this.index = index;
         this.displayName = displayName;
     }
 
     /**
-     * Gets a {@link PartyPrivacy} matching the specified display name.
+     * Gets a {@link PartyPrivacy} matching the specified index.
      * <p>
      * This is only internally implemented.
      *
-     * @param partyIndex The party index to get from.
-     * @return The PartyPrivacy corresponding to the display name, or
+     * @param index The index to get from.
+     * @return The {@link PartyPrivacy} corresponding to the parameters, or
      * {@link PartyPrivacy#Public} if none match.
      */
-    public static PartyPrivacy from(int partyIndex) {
+    public static PartyPrivacy from(int index) {
         for (PartyPrivacy value : values()) {
-            if (value.getPartyIndex() == partyIndex) {
+            if (value.getIndex() == index) {
                 return value;
             }
         }
@@ -79,12 +79,12 @@ public enum PartyPrivacy {
      * This is only internally implemented.
      *
      * @param displayName The display name to get from.
-     * @return The PartyPrivacy corresponding to the display name, or
+     * @return The {@link PartyPrivacy} corresponding to the parameters, or
      * {@link PartyPrivacy#Public} if none match.
      */
     public static PartyPrivacy from(String displayName) {
         for (PartyPrivacy value : values()) {
-            if (value.getDisplayName() != null && value.getDisplayName().equals(displayName)) {
+            if (!StringUtils.isNullOrEmpty(value.getDisplayName()) && value.getDisplayName().equals(displayName)) {
                 return value;
             }
         }
@@ -96,23 +96,34 @@ public enum PartyPrivacy {
      * <p>
      * This is only internally implemented.
      *
+     * @param index       The index to get from.
      * @param displayName The display name to get from.
-     * @return The PartyPrivacy corresponding to the display name, or
+     * @return The {@link PartyPrivacy} corresponding to the parameters, or
      * {@link PartyPrivacy#Public} if none match.
      */
-    public static PartyPrivacy from(int partyIndex, String displayName) {
+    public static PartyPrivacy from(int index, String displayName) {
         for (PartyPrivacy value : values()) {
-            if (value.getDisplayName() != null && value.getDisplayName().equals(displayName) && value.getPartyIndex() == partyIndex) {
+            if (!StringUtils.isNullOrEmpty(value.getDisplayName()) && value.getDisplayName().equals(displayName) && value.getIndex() == index) {
                 return value;
             }
         }
         return Public;
     }
 
-    public int getPartyIndex() {
-        return partyIndex;
+    /**
+     * Retrieves the index of the current {@link PartyPrivacy}
+     *
+     * @return the current index
+     */
+    public int getIndex() {
+        return index;
     }
 
+    /**
+     * Retrieves the display name of the current {@link PartyPrivacy}
+     *
+     * @return the current index
+     */
     public String getDisplayName() {
         return displayName;
     }

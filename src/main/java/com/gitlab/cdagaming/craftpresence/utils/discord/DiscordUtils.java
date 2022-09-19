@@ -646,7 +646,7 @@ public class DiscordUtils {
                         LARGE_IMAGE_TEXT = sanitizePlaceholders(LARGE_IMAGE_TEXT))
                 .setSmallImage(SMALL_IMAGE_KEY = sanitizePlaceholders(SMALL_IMAGE_KEY),
                         SMALL_IMAGE_TEXT = sanitizePlaceholders(SMALL_IMAGE_TEXT))
-                .setParty(PARTY_ID, PARTY_SIZE, PARTY_MAX, PARTY_PRIVACY.getPartyIndex())
+                .setParty(PARTY_ID, PARTY_SIZE, PARTY_MAX, PARTY_PRIVACY.getIndex())
                 .setMatchSecret(MATCH_SECRET)
                 .setJoinSecret(JOIN_SECRET)
                 .setSpectateSecret(SPECTATE_SECRET)

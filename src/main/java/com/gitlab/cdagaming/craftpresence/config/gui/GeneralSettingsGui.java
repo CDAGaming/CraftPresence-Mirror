@@ -46,7 +46,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
             enableJoinRequestButton, resetTimeOnInitButton, autoRegisterButton;
     private ExtendedTextControl clientId;
 
-    private int currentPartyPrivacy = PartyPrivacy.Public.getPartyIndex();
+    private int currentPartyPrivacy = PartyPrivacy.Public.getIndex();
 
     GeneralSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

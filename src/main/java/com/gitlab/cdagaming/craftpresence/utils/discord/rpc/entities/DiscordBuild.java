@@ -24,6 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities;
 
+import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
+
 /**
  * Constants representing various Discord client builds,
  * such as Stable, Canary, Public Test Build (PTB)
@@ -45,7 +47,7 @@ public enum DiscordBuild {
     STABLE("//discord.com/api"),
 
     /**
-     * 'Wildcard' build constant used in {@link com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient#connect(DiscordBuild...)
+     * 'Wildcard' build constant used in {@link IPCClient#connect(DiscordBuild...)
      * IPCClient#connect(DiscordBuild...)} to signify that the build to target is not important, and
      * that the first valid build will be used.
      * <p>
