@@ -697,7 +697,7 @@ public class StringUtils {
      * @return The formatted and evaluated String
      */
     public static String formatWord(final String original, final boolean avoid, final boolean skipSymbolReplacement, final int caseCheckTimes) {
-        String formattedKey = original.toLowerCase();
+        String formattedKey = original;
         if (isNullOrEmpty(formattedKey) || avoid) {
             return formattedKey;
         } else {

@@ -108,7 +108,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         buttonCalc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + StringUtils.formatWord(PartyPrivacy.from(currentPartyPrivacy).name()),
+                        ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name(),
                         () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -325,7 +325,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 55),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + StringUtils.formatWord(DiscordBuild.from(currentPreferredClient).name()),
+                        ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + DiscordBuild.from(currentPreferredClient).name(),
                         () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -447,8 +447,8 @@ public class GeneralSettingsGui extends ExtendedScreen {
         renderString(subTitle, (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
         renderString(clientIdText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
-        partyPrivacyLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + StringUtils.formatWord(PartyPrivacy.from(currentPartyPrivacy).name()));
-        preferredClientLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + StringUtils.formatWord(DiscordBuild.from(currentPreferredClient).name()));
+        partyPrivacyLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name());
+        preferredClientLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + DiscordBuild.from(currentPreferredClient).name());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(clientId.getText()) && clientId.getText().length() >= 18 && StringUtils.getValidLong(clientId.getText()).getFirst());
     }
 
