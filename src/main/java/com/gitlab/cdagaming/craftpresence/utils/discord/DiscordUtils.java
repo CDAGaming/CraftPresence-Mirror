@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.*;
@@ -86,6 +87,10 @@ public class DiscordUtils {
      */
     public String DETAILS;
     /**
+     * The Current Small Image Asset being displayed in the RPC, if any
+     */
+    public DiscordAsset SMALL_IMAGE_ASSET;
+    /**
      * The Current Small Image Icon being displayed in the RPC, if any
      */
     public String SMALL_IMAGE_KEY;
@@ -93,6 +98,10 @@ public class DiscordUtils {
      * The Current Message tied to the Small Image, if any
      */
     public String SMALL_IMAGE_TEXT;
+    /**
+     * The Current Large Image Asset being displayed in the RPC, if any
+     */
+    public DiscordAsset LARGE_IMAGE_ASSET;
     /**
      * The Current Large Image Icon being displayed in the RPC, if any
      */
@@ -616,8 +625,13 @@ public class DiscordUtils {
         DETAILS = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.detailsMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
         GAME_STATE = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.gameStateMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
 
-        LARGE_IMAGE_KEY = StringUtils.formatAsIcon(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageKey, getArgumentsFor(ArgumentType.Image)));
-        SMALL_IMAGE_KEY = StringUtils.formatAsIcon(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageKey, getArgumentsFor(ArgumentType.Image)));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageKey, getArgumentsFor(ArgumentType.Image)));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageKey, getArgumentsFor(ArgumentType.Image)));
+
+        LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
+                StringUtils.sequentialReplaceAnyCase(LARGE_IMAGE_ASSET.getUrl(), getArgumentsFor(ArgumentType.Text)) : LARGE_IMAGE_ASSET.getName()) : "";
+        SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
+                StringUtils.sequentialReplaceAnyCase(SMALL_IMAGE_ASSET.getUrl(), getArgumentsFor(ArgumentType.Text)) : SMALL_IMAGE_ASSET.getName()) : "";
 
         LARGE_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
         SMALL_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);

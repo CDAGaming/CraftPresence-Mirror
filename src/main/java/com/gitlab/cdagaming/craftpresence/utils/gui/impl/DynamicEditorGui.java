@@ -39,6 +39,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onSpecificCallback, onHoverPrimaryCallback, onHoverSecondaryCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
     public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, overrideSecondaryRender = false;
+    public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
     private String removeMessage;
@@ -104,6 +105,9 @@ public class DynamicEditorGui extends ExtendedScreen {
                         180, 20
                 )
         );
+        if (maxPrimaryLength > 0) {
+            primaryInput.setMaxStringLength(maxPrimaryLength);
+        }
         if (!StringUtils.isNullOrEmpty(primaryMessage)) {
             primaryInput.setText(primaryMessage);
         }
@@ -127,6 +131,9 @@ public class DynamicEditorGui extends ExtendedScreen {
                             180, 20
                     )
             );
+            if (maxSecondaryLength > 0) {
+                secondaryInput.setMaxStringLength(maxSecondaryLength);
+            }
             if (!StringUtils.isNullOrEmpty(secondaryMessage)) {
                 secondaryInput.setText(secondaryMessage);
             }

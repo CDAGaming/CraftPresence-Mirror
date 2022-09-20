@@ -26,7 +26,9 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
@@ -46,32 +48,35 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
     @Override
     public void initializeUi() {
+        final int calc1 = (width / 2) - 183;
+        final int calc2 = (width / 2) + 3;
+
         // Page 1 Items
         detailsFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(1),
+                        calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20
                 ), startPage
         );
         gameStateFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(2),
+                        calc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20
                 ), startPage
         );
         largeImageFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(3),
+                        calc2, CraftPresence.GUIS.getButtonY(3),
                         180, 20
                 ), startPage
         );
         smallImageFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(4),
+                        calc2, CraftPresence.GUIS.getButtonY(4),
                         180, 20
                 ), startPage
         );
@@ -85,14 +90,14 @@ public class PresenceSettingsGui extends PaginatedScreen {
         smallImageKeyFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(1),
+                        calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20
                 ), startPage + 1
         );
         largeImageKeyFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(2),
+                        calc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20
                 ), startPage + 1
         );
@@ -100,9 +105,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
         smallImageKeyFormat.setText(CraftPresence.CONFIG.smallImageKey);
         largeImageKeyFormat.setText(CraftPresence.CONFIG.largeImageKey);
 
+        // Button Messages Button
         addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(3),
+                        calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.name.display.button_messages"),
                         () -> CraftPresence.GUIS.openScreen(
@@ -164,6 +170,80 @@ public class PresenceSettingsGui extends PaginatedScreen {
                             CraftPresence.GUIS.drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
                                             ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                    ),
+                                    getMouseX(), getMouseY(),
+                                    width, height,
+                                    getWrapWidth(),
+                                    getFontRenderer(),
+                                    true
+                            );
+                        }
+                ), startPage + 1
+        );
+
+        // Dynamic Icons Button
+        addControl(
+                new ExtendedButtonControl(
+                        calc2, CraftPresence.GUIS.getButtonY(3),
+                        180, 20,
+                        ModUtils.TRANSLATOR.translate("gui.config.name.display.dynamic_icons"),
+                        () -> CraftPresence.GUIS.openScreen(
+                                new SelectorGui(
+                                        currentScreen,
+                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ICON_LIST,
+                                        null, null,
+                                        true, true, ScrollableListControl.RenderType.DiscordAsset,
+                                        null,
+                                        (currentValue, parentScreen) -> {
+                                            // Event to occur when Setting Dynamic/Specific Data
+                                            CraftPresence.GUIS.openScreen(
+                                                    new DynamicEditorGui(
+                                                            parentScreen, currentValue,
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when initializing new data
+                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.maxPrimaryLength = 32767;
+                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.maxSecondaryLength = 32;
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                            },
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when initializing existing data
+                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.maxPrimaryLength = 32767;
+                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.maxSecondaryLength = 32;
+                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
+                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
+                                                            },
+                                                            (screenInstance, attributeName, inputText) -> {
+                                                                // Event to occur when adjusting set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.dynamicIcons = StringUtils.setConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                            },
+                                                            (screenInstance, attributeName, inputText) -> {
+                                                                // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.dynamicIcons = StringUtils.removeFromArray(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                CommandUtils.rebootRPC(true);
+                                                            }, null,
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when Hovering over Primary Label
+                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                            },
+                                                            (attributeName, screenInstance) -> {
+                                                                // Event to occur when Hovering over Secondary Label
+                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                            }
+                                                    )
+                                            );
+                                        }
+                                )
+                        ),
+                        () -> {
+                            CraftPresence.GUIS.drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
                                     ),
                                     getMouseX(), getMouseY(),
                                     width, height,

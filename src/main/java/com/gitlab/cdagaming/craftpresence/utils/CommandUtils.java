@@ -97,11 +97,13 @@ public class CommandUtils {
 
     /**
      * Restarts and Initializes the RPC Data
+     *
+     * @param flushAssets Whether to refresh RPC assets
      */
-    public static void rebootRPC() {
+    public static void rebootRPC(boolean flushAssets) {
         CraftPresence.CLIENT.shutDown();
 
-        if (!CraftPresence.CLIENT.CLIENT_ID.equals(CraftPresence.CONFIG.clientId)) {
+        if (flushAssets) {
             DiscordAssetUtils.emptyData();
             CraftPresence.CLIENT.CLIENT_ID = CraftPresence.CONFIG.clientId;
         } else {
@@ -112,6 +114,13 @@ public class CommandUtils {
         }
         DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.clientId, true);
         CraftPresence.CLIENT.init(CraftPresence.CONFIG.resetTimeOnInit);
+    }
+
+    /**
+     * Restarts and Initializes the RPC Data
+     */
+    public static void rebootRPC() {
+        rebootRPC(!CraftPresence.CLIENT.CLIENT_ID.equals(CraftPresence.CONFIG.clientId));
     }
 
     /**

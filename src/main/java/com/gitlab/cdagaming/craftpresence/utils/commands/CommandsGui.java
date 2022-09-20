@@ -243,7 +243,7 @@ public class CommandsGui extends ExtendedScreen {
                                 }
 
                                 for (DiscordAsset asset : assetList) {
-                                    final String assetUrl = DiscordAssetUtils.getAssetUrl(clientId, asset.getId(), false);
+                                    final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false);
                                     final String assetName = asset.getName() + ".png";
                                     if (doFullCopy) {
                                         FileUtils.downloadFile(assetUrl, new File(filePath + assetName));

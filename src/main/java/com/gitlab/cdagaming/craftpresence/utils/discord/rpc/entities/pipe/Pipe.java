@@ -276,8 +276,8 @@ public abstract class Pipe {
     /**
      * Sends json with the given {@link Packet.OpCode}.
      *
-     * @param op       The {@link Packet.OpCode} to send data with.
-     * @param data     The data to send.
+     * @param op   The {@link Packet.OpCode} to send data with.
+     * @param data The data to send.
      */
     public void send(Packet.OpCode op, JsonObject data) {
         send(op, data, null);

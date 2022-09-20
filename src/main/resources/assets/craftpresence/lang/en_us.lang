@@ -20,6 +20,7 @@ gui.config.title.gui.edit_specific_gui=CraftPresence - Edit Gui (%1$s)
 gui.config.title.item.edit_specific_item=CraftPresence - Edit Item (%1$s)
 gui.config.title.entity.edit_specific_entity=CraftPresence - Edit Entity (%1$s)
 gui.config.title.display.edit_specific_button=CraftPresence - Edit Button (%1$s)
+gui.config.title.display.edit_specific_icon=CraftPresence - Edit Icon (%1$s)
 gui.config.title.editor.color=CraftPresence - Color Editor (%1$s)
 gui.config.title.editor.character=CraftPresence - Character Editor
 gui.config.title.editor.add.new=CraftPresence - Add New Value
@@ -178,6 +179,7 @@ gui.config.name.display.game_state_message=Game State Message Format
 gui.config.name.display.small_image_key=Small Image Key Format
 gui.config.name.display.large_image_key=Large Image Key Format
 gui.config.name.display.button_messages=Extra Button Messages
+gui.config.name.display.dynamic_icons=Dynamic Icons
 ## CONFIG MESSAGES - COMMENTS ##
 gui.config.comment.general.client_id=Client ID used for retrieving assets, icon keys, and titles
 gui.config.comment.general.default_icon=Default icon\n (Used in main menu, dimensions and servers)
@@ -244,6 +246,7 @@ gui.config.comment.accessibility.strip_translation_colors=Allows CraftPresence t
 gui.config.comment.accessibility.show_logging_in_chat=Allows CraftPresence to display it's logging in the chat hud
 gui.config.comment.accessibility.strip_extra_gui_elements=Allows CraftPresence to remove excess visual improvements from the Gui\n (Can improve gui performance in some areas)
 gui.config.comment.display.button_messages=Customize messages to display in the extra buttons in the RPC\n (Manual format: id;label;url)\n Notes:\n - Any placeholder from other modules can be uses (Globals, Biomes, Dimensions, etc)\n - Sub-Placeholders can also be used (Ex: &SERVER:IP& = server IP being called from elsewhere)
+gui.config.comment.display.dynamic_icons=Customize dynamic images to display in the RPC\n (Manual format: name;url)\n Notes:\n - Any placeholder from other modules can be uses (Globals, Biomes, Dimensions, etc)\n - Sub-Placeholders can also be used (Ex: &SERVER:IP& = server IP being called from elsewhere)
 ## KEYBIND MESSAGES ##
 key.craftpresence.category=CraftPresence - Controls
 key.craftpresence.config_keycode.name=Config Gui Keybind
@@ -271,6 +274,7 @@ craftpresence.defaults.placeholder.mods=&modcount& Mod(s)
 craftpresence.defaults.special.vivecraft=Playing in VR via Vivecraft
 craftpresence.defaults.display.button.label=Example Text
 craftpresence.defaults.display.button.url=https://google.com
+craftpresence.defaults.display.image.url=https://via.placeholder.com/256.png
 craftpresence.multiplayer.status.cannot_connect=Can't connect to server
 craftpresence.multiplayer.status.pinging=Pinging...
 craftpresence.multiplayer.status.polling=Polling...

@@ -55,12 +55,27 @@ public class DiscordAsset {
     private String name;
 
     /**
+     * The Url for this asset (Optional, unless Custom Asset)
+     */
+    private String url;
+
+    /**
      * Retrieves the {@link AssetType} for this Asset
      *
      * @return The parsed {@link AssetType} for this Asset
      */
     public AssetType getType() {
         return type;
+    }
+
+    /**
+     * Sets the {@link AssetType} for this Asset
+     *
+     * @return The parsed {@link DiscordAsset}
+     */
+    public DiscordAsset setType(AssetType type) {
+        this.type = type;
+        return this;
     }
 
     /**
@@ -73,12 +88,51 @@ public class DiscordAsset {
     }
 
     /**
+     * Sets the Parsed ID for this Asset
+     *
+     * @return The parsed {@link DiscordAsset}
+     */
+    public DiscordAsset setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    /**
      * Retrieves the Parsed Name for this Asset
      *
      * @return The Parsed Name for this Asset
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Sets the Parsed Name for this Asset
+     *
+     * @return The parsed {@link DiscordAsset}
+     */
+    public DiscordAsset setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Retrieves the URL for this Asset
+     *
+     * @return The parsed URL for this Asset
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Sets the URL for this Asset
+     *
+     * @return The parsed {@link DiscordAsset}
+     */
+    public DiscordAsset setUrl(String url) {
+        this.url = url;
+        return this;
     }
 
     /**
@@ -100,6 +154,9 @@ public class DiscordAsset {
         SMALL,
         @SerializedName("2")
         @Expose
-        LARGE
+        LARGE,
+        @SerializedName("-999")
+        @Expose
+        CUSTOM
     }
 }

@@ -42,8 +42,15 @@ import java.util.Random;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("JavadocLinkAsPlainText")
 public class DiscordAssetUtils {
+    /**
+     * The endpoint url for the Discord Applications backend
+     */
+    private static final String applicationEndpoint = "https://discord.com/api/oauth2/applications/";
+    /**
+     * The endpoint url for the Discord Application Assets backend
+     */
+    private static final String assetsEndpoint = "https://cdn.discordapp.com/app-assets/";
     /**
      * A List of the Icon IDs available as ImageType SMALL
      */
@@ -72,6 +79,10 @@ public class DiscordAssetUtils {
      * A List of all the Icons available within the Current Client ID
      */
     public static List<String> ICON_LIST = Lists.newArrayList();
+    /**
+     * A List of all the Icons available from dynamic data
+     */
+    public static List<String> CUSTOM_ICON_LIST = Lists.newArrayList();
     /**
      * Mapping storing the Icon Keys and Asset Data attached to the Current Client
      * ID
@@ -139,6 +150,25 @@ public class DiscordAssetUtils {
     }
 
     /**
+     * Retrieves the Parsed Image Url from the specified key, if present
+     *
+     * @param key The Specified Key to gain info for
+     * @return The Parsed Image Url from the {@link DiscordAsset} data
+     */
+    public static String getUrl(final String key) {
+        final String formattedKey = StringUtils.isNullOrEmpty(key) ? "" : key.replace(" ", "_").toLowerCase();
+        if (contains(formattedKey)) {
+            final DiscordAsset asset = ASSET_LIST.get(formattedKey);
+            if (!StringUtils.isNullOrEmpty(asset.getId()) && !asset.getType().equals(DiscordAsset.AssetType.CUSTOM)) {
+                return getDiscordAssetUrl(formattedKey);
+            } else {
+                return contains(formattedKey) ? ASSET_LIST.get(formattedKey).getUrl() : "";
+            }
+        }
+        return "";
+    }
+
+    /**
      * Clears FULL Data from this Module
      */
     public static void emptyData() {
@@ -149,6 +179,7 @@ public class DiscordAssetUtils {
         LARGE_IDS.clear();
         ICON_LIST.clear();
         ICON_IDS.clear();
+        CUSTOM_ICON_LIST.clear();
 
         clearClientData();
     }
@@ -179,22 +210,47 @@ public class DiscordAssetUtils {
     /**
      * Attempts to retrieve the Asset Url from the specified icon key, if present
      * <p>
-     * Url Format: https://cdn.discordapp.com/app-assets/[clientId]/[id].png
+     * Url Format: [assetsEndpoint]/[clientId]/[id].png
      *
      * @param clientId    The client id to load asset data from
      * @param keyId       The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
      * @param isLocalName Whether the specified Key ID is a Key name derived from the currently synced client id
      * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
      */
-    public static String getAssetUrl(final String clientId, final String keyId, final boolean isLocalName) {
-        return !StringUtils.isNullOrEmpty(keyId) ? "https://cdn.discordapp.com/app-assets/"
+    public static String getDiscordAssetUrl(final String clientId, final String keyId, final boolean isLocalName) {
+        return !StringUtils.isNullOrEmpty(keyId) ? assetsEndpoint
                 + clientId + "/" + (isLocalName ? getId(keyId) : keyId) + ".png" : "";
+    }
+
+    /**
+     * Attempts to retrieve the Asset Url from the specified icon key, if present
+     * <p>
+     * Url Format: [assetsEndpoint]/[clientId]/[id].png
+     *
+     * @param clientId The client id to load asset data from
+     * @param keyId    The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
+     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
+     */
+    public static String getDiscordAssetUrl(final String clientId, final String keyId) {
+        return getDiscordAssetUrl(clientId, keyId, clientId.equals(CraftPresence.CONFIG.clientId));
+    }
+
+    /**
+     * Attempts to retrieve the Asset Url from the specified icon key, if present
+     * <p>
+     * Url Format: [assetsEndpoint]/[clientId]/[id].png
+     *
+     * @param keyId The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
+     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
+     */
+    public static String getDiscordAssetUrl(final String keyId) {
+        return getDiscordAssetUrl(CraftPresence.CONFIG.clientId, keyId);
     }
 
     /**
      * Retrieves and Synchronizes the List of Available Discord Assets from the Client ID
      * <p>
-     * Url Format: https://discord.com/api/oauth2/applications/[clientId]/assets
+     * Default Url Format: [applicationEndpoint]/[clientId]/assets
      *
      * @param clientId     The client id to load asset data from
      * @param filterToMain Whether this client id is submitting its assets as the assets to use in CraftPresence
@@ -205,12 +261,17 @@ public class DiscordAssetUtils {
         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load.credits"));
 
         try {
-            final String url = "https://discord.com/api/oauth2/applications/" + clientId + "/assets";
+            final String url = applicationEndpoint + clientId + "/assets";
             final DiscordAsset[] assets = UrlUtils.getJSONFromURL(url, DiscordAsset[].class);
 
             if (assets != null && filterToMain) {
                 ASSET_LIST = Maps.newHashMap();
                 for (DiscordAsset asset : assets) {
+                    // Ensure URL is set before-hand for non-custom Assets
+                    // localName set to false to avoid unneeded calls
+                    if (!StringUtils.isNullOrEmpty(asset.getUrl()) && asset.getType() != DiscordAsset.AssetType.CUSTOM) {
+                        asset.setUrl(getDiscordAssetUrl(clientId, asset.getId(), false));
+                    }
                     if (asset.getType().equals(DiscordAsset.AssetType.LARGE)) {
                         if (!LARGE_ICONS.contains(asset.getName())) {
                             LARGE_ICONS.add(asset.getName());
@@ -227,6 +288,11 @@ public class DiscordAssetUtils {
                             SMALL_IDS.add(asset.getId());
                         }
                     }
+                    if (asset.getType().equals(DiscordAsset.AssetType.CUSTOM)) {
+                        if (!CUSTOM_ICON_LIST.contains(asset.getName())) {
+                            CUSTOM_ICON_LIST.add(asset.getName());
+                        }
+                    }
                     if (!ICON_LIST.contains(asset.getName())) {
                         ICON_LIST.add(asset.getName());
                     }
@@ -235,6 +301,26 @@ public class DiscordAssetUtils {
                     }
                     if (!ICON_IDS.contains(asset.getId())) {
                         ICON_IDS.add(asset.getId());
+                    }
+                }
+
+                for (String iconData : CraftPresence.CONFIG.dynamicIcons) {
+                    if (!StringUtils.isNullOrEmpty(iconData)) {
+                        final String[] part = iconData.split(CraftPresence.CONFIG.splitCharacter);
+                        if (!StringUtils.isNullOrEmpty(part[0]) && !StringUtils.isNullOrEmpty(part[1])) {
+                            DiscordAsset asset = new DiscordAsset()
+                                    .setName(part[0])
+                                    .setUrl(part[1])
+                                    .setType(DiscordAsset.AssetType.CUSTOM);
+
+                            if (!CUSTOM_ICON_LIST.contains(asset.getName())) {
+                                CUSTOM_ICON_LIST.add(asset.getName());
+                            }
+                            // If a Discord Icon exists with the same name, give priority to the custom one
+                            ICON_LIST.remove(asset.getName());
+                            ICON_LIST.add(asset.getName());
+                            ASSET_LIST.put(asset.getName(), asset);
+                        }
                     }
                 }
             }

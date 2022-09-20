@@ -468,9 +468,9 @@ public final class IPCClient implements Closeable {
     /**
      * Responds to a {@link Event#ACTIVITY_JOIN_REQUEST} from a requester {@link User}.
      *
-     * @param user The {@link User} to respond to
+     * @param user         The {@link User} to respond to
      * @param approvalMode The {@link ApprovalMode} to respond to the requester with
-     * @param callback The {@link Callback} to handle success or failure
+     * @param callback     The {@link Callback} to handle success or failure
      */
     public void respondToJoinRequest(User user, ApprovalMode approvalMode, Callback callback) {
         checkConnected(true);
@@ -495,7 +495,7 @@ public final class IPCClient implements Closeable {
     /**
      * Responds to a {@link Event#ACTIVITY_JOIN_REQUEST} from a requester {@link User}.
      *
-     * @param user The {@link User} to respond to
+     * @param user         The {@link User} to respond to
      * @param approvalMode The {@link ApprovalMode} to respond to the requester with
      */
     public void respondToJoinRequest(User user, ApprovalMode approvalMode) {
