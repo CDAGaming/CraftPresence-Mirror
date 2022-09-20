@@ -7,6 +7,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Added a `dynamicIcons` config setting to allow using URLs as Discord RPC Images
+    * This can be customized in the `Presence Settings` menu of the Config UI, and all text placeholders are supported.
+    * In the event that a Client ID Image is under the same name as a dynamic image, the dynamic image will take priority.
 * Added a `preferredClientLevel` config setting to allow specifying if you want a specific Discord Client to receive events
 * Added a new `buttonMessages` config field for full frontend support of the buttons array in Rich Presence
     * The buttons array will only take the first two detected entries, excluding `default` (Which is a template), since
