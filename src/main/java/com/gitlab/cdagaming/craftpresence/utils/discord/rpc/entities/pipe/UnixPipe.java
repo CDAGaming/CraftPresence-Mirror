@@ -103,7 +103,7 @@ public class UnixPipe extends Pipe {
         }
 
         status = PipeStatus.CLOSING;
-        send(Packet.OpCode.CLOSE, new JsonObject(), null);
+        send(Packet.OpCode.CLOSE, new JsonObject());
         status = PipeStatus.CLOSED;
         socket.close();
     }

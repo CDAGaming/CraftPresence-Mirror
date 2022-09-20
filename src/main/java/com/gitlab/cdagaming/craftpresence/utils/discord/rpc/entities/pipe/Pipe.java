@@ -88,7 +88,7 @@ public abstract class Pipe {
                         finalObject.addProperty("v", VERSION);
                         finalObject.addProperty("client_id", Long.toString(clientId));
 
-                        pipe.send(Packet.OpCode.HANDSHAKE, finalObject, null);
+                        pipe.send(Packet.OpCode.HANDSHAKE, finalObject);
 
                         Packet p = pipe.read(); // this is a valid client at this point
 
@@ -271,6 +271,16 @@ public abstract class Pipe {
             ModUtils.LOG.error("Encountered an IOException while sending a packet and disconnected!");
             status = PipeStatus.DISCONNECTED;
         }
+    }
+
+    /**
+     * Sends json with the given {@link Packet.OpCode}.
+     *
+     * @param op       The {@link Packet.OpCode} to send data with.
+     * @param data     The data to send.
+     */
+    public void send(Packet.OpCode op, JsonObject data) {
+        send(op, data, null);
     }
 
     /**

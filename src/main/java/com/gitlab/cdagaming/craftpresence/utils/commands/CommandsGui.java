@@ -156,7 +156,7 @@ public class CommandsGui extends ExtendedScreen {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.info", CraftPresence.CLIENT.REQUESTER_USER.getName(), CraftPresence.SYSTEM.TIMER);
                                 CraftPresence.CLIENT.awaitingReply = true;
                             } else {
-                                CraftPresence.CLIENT.ipcInstance.respondToJoinRequest(CraftPresence.CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY, null);
+                                CraftPresence.CLIENT.ipcInstance.respondToJoinRequest(CraftPresence.CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY);
                                 CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
                                 CraftPresence.SYSTEM.TIMER = 0;
                                 CraftPresence.CLIENT.awaitingReply = false;
@@ -169,13 +169,13 @@ public class CommandsGui extends ExtendedScreen {
                         if (CraftPresence.CLIENT.awaitingReply && CraftPresence.CONFIG.enableJoinRequest) {
                             if (executionCommandArgs[1].equalsIgnoreCase("accept")) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.accept", CraftPresence.CLIENT.REQUESTER_USER.getName());
-                                CraftPresence.CLIENT.ipcInstance.respondToJoinRequest(CraftPresence.CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.ACCEPT, null);
+                                CraftPresence.CLIENT.ipcInstance.respondToJoinRequest(CraftPresence.CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.ACCEPT);
                                 CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
                                 CraftPresence.SYSTEM.TIMER = 0;
                                 CraftPresence.CLIENT.awaitingReply = false;
                             } else if (executionCommandArgs[1].equalsIgnoreCase("deny")) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.denied", CraftPresence.CLIENT.REQUESTER_USER.getName());
-                                CraftPresence.CLIENT.ipcInstance.respondToJoinRequest(CraftPresence.CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY, null);
+                                CraftPresence.CLIENT.ipcInstance.respondToJoinRequest(CraftPresence.CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY);
                                 CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
                                 CraftPresence.SYSTEM.TIMER = 0;
                                 CraftPresence.CLIENT.awaitingReply = false;

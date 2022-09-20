@@ -465,6 +465,13 @@ public final class IPCClient implements Closeable {
         pipe.send(OpCode.FRAME, pipeData, callback);
     }
 
+    /**
+     * Responds to a {@link Event#ACTIVITY_JOIN_REQUEST} from a requester {@link User}.
+     *
+     * @param user The {@link User} to respond to
+     * @param approvalMode The {@link ApprovalMode} to respond to the requester with
+     * @param callback The {@link Callback} to handle success or failure
+     */
     public void respondToJoinRequest(User user, ApprovalMode approvalMode, Callback callback) {
         checkConnected(true);
 
@@ -485,6 +492,15 @@ public final class IPCClient implements Closeable {
         }
     }
 
+    /**
+     * Responds to a {@link Event#ACTIVITY_JOIN_REQUEST} from a requester {@link User}.
+     *
+     * @param user The {@link User} to respond to
+     * @param approvalMode The {@link ApprovalMode} to respond to the requester with
+     */
+    public void respondToJoinRequest(User user, ApprovalMode approvalMode) {
+        respondToJoinRequest(user, approvalMode, null);
+    }
 
     /**
      * Gets the IPCClient's current {@link PipeStatus}.

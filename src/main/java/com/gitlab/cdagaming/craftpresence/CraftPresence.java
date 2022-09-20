@@ -264,7 +264,7 @@ public class CraftPresence {
                     if (SYSTEM.HAS_LOADED) {
                         if (CLIENT.awaitingReply && SYSTEM.TIMER == 0) {
                             StringUtils.sendMessageToPlayer(player, ModUtils.TRANSLATOR.translate("craftpresence.command.request.ignored", CLIENT.REQUESTER_USER.getName()));
-                            CLIENT.ipcInstance.respondToJoinRequest(CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY, null);
+                            CLIENT.ipcInstance.respondToJoinRequest(CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY);
                             CLIENT.awaitingReply = false;
                             CLIENT.STATUS = DiscordStatus.Ready;
                         } else if (!CLIENT.awaitingReply && CLIENT.REQUESTER_USER != null) {
