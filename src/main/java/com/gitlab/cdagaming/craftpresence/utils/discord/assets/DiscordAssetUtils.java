@@ -87,7 +87,24 @@ public class DiscordAssetUtils {
      * Mapping storing the Icon Keys and Asset Data attached to the Current Client
      * ID
      */
-    private static Map<String, DiscordAsset> ASSET_LIST = Maps.newHashMap();
+    public static Map<String, DiscordAsset> ASSET_LIST = Maps.newHashMap();
+    /**
+     * Mapping storing the Icon Keys and Asset Data attached from dynamic data
+     */
+    public static Map<String, DiscordAsset> CUSTOM_ASSET_LIST = Maps.newHashMap();
+
+    /**
+     * Determines if the Specified Icon Key is present under the specified list
+     *
+     * @param list The list to iterate through
+     * @param key The Specified Icon Key to Check
+     * @return {@code true} if the Icon Key is present and able to be used
+     */
+    public static boolean contains(final Map<String, DiscordAsset> list, final String key) {
+        final String formattedKey = StringUtils.isNullOrEmpty(key) ? ""
+                : StringUtils.formatAsIcon(key.replace(" ", "_"));
+        return list.containsKey(formattedKey);
+    }
 
     /**
      * Determines if the Specified Icon Key is present under the Current Client ID
@@ -96,9 +113,21 @@ public class DiscordAssetUtils {
      * @return {@code true} if the Icon Key is present and able to be used
      */
     public static boolean contains(final String key) {
+        return contains(ASSET_LIST, key);
+    }
+
+    /**
+     * Retrieves the Specified {@link DiscordAsset} data from an Icon Key, if
+     * present
+     *
+     * @param list The list to iterate through
+     * @param key The Specified Icon Key to gain info for
+     * @return The {@link DiscordAsset} data for this Icon Key
+     */
+    public static DiscordAsset get(final Map<String, DiscordAsset> list, final String key) {
         final String formattedKey = StringUtils.isNullOrEmpty(key) ? ""
                 : StringUtils.formatAsIcon(key.replace(" ", "_"));
-        return ASSET_LIST.containsKey(formattedKey);
+        return contains(formattedKey) ? list.get(formattedKey) : null;
     }
 
     /**
@@ -109,9 +138,19 @@ public class DiscordAssetUtils {
      * @return The {@link DiscordAsset} data for this Icon Key
      */
     public static DiscordAsset get(final String key) {
-        final String formattedKey = StringUtils.isNullOrEmpty(key) ? ""
-                : StringUtils.formatAsIcon(key.replace(" ", "_"));
-        return contains(formattedKey) ? ASSET_LIST.get(formattedKey) : null;
+        return get(ASSET_LIST, key);
+    }
+
+    /**
+     * Retrieves the Parsed Icon Key from the specified key, if present
+     *
+     * @param list The list to iterate through
+     * @param key The Specified Key to gain info for
+     * @return The Parsed Icon Key from the {@link DiscordAsset} data
+     */
+    public static String getKey(final Map<String, DiscordAsset> list, final String key) {
+        final DiscordAsset asset = get(list, key);
+        return asset != null ? asset.getName() : "";
     }
 
     /**
@@ -121,9 +160,19 @@ public class DiscordAssetUtils {
      * @return The Parsed Icon Key from the {@link DiscordAsset} data
      */
     public static String getKey(final String key) {
-        final String formattedKey = StringUtils.isNullOrEmpty(key) ? ""
-                : StringUtils.formatAsIcon(key.replace(" ", "_"));
-        return contains(formattedKey) ? ASSET_LIST.get(formattedKey).getName() : "";
+        return getKey(ASSET_LIST, key);
+    }
+
+    /**
+     * Retrieves the Parsed Icon ID from the specified key, if present
+     *
+     * @param list The list to iterate through
+     * @param key The Specified Key to gain info for
+     * @return The Parsed Icon ID from the {@link DiscordAsset} data
+     */
+    public static String getId(final Map<String, DiscordAsset> list, final String key) {
+        final DiscordAsset asset = get(list, key);
+        return asset != null ? asset.getId() : "";
     }
 
     /**
@@ -133,9 +182,19 @@ public class DiscordAssetUtils {
      * @return The Parsed Icon ID from the {@link DiscordAsset} data
      */
     public static String getId(final String key) {
-        final String formattedKey = StringUtils.isNullOrEmpty(key) ? ""
-                : StringUtils.formatAsIcon(key.replace(" ", "_"));
-        return contains(formattedKey) ? ASSET_LIST.get(formattedKey).getId() : "";
+        return getId(ASSET_LIST, key);
+    }
+
+    /**
+     * Retrieves the Parsed Image Type from the specified key, if present
+     *
+     * @param list The list to iterate through
+     * @param key The Specified Key to gain info for
+     * @return The Parsed Image Type from the {@link DiscordAsset} data
+     */
+    public static DiscordAsset.AssetType getType(final Map<String, DiscordAsset> list, final String key) {
+        final DiscordAsset asset = get(list, key);
+        return asset != null ? asset.getType() : DiscordAsset.AssetType.LARGE;
     }
 
     /**
@@ -145,8 +204,25 @@ public class DiscordAssetUtils {
      * @return The Parsed Image Type from the {@link DiscordAsset} data
      */
     public static DiscordAsset.AssetType getType(final String key) {
-        final String formattedKey = StringUtils.isNullOrEmpty(key) ? "" : key.replace(" ", "_").toLowerCase();
-        return contains(formattedKey) ? ASSET_LIST.get(formattedKey).getType() : DiscordAsset.AssetType.LARGE;
+        return getType(ASSET_LIST, key);
+    }
+
+    /**
+     * Retrieves the Parsed Image Url from the specified key, if present
+     *
+     * @param key The Specified Key to gain info for
+     * @return The Parsed Image Url from the {@link DiscordAsset} data
+     */
+    public static String getUrl(final Map<String, DiscordAsset> list, final String key) {
+        final DiscordAsset asset = get(list, key);
+        if (asset != null) {
+            if (!StringUtils.isNullOrEmpty(asset.getId())) {
+                return getDiscordAssetUrl(asset.getName());
+            } else {
+                return asset.getUrl();
+            }
+        }
+        return "";
     }
 
     /**
@@ -156,16 +232,7 @@ public class DiscordAssetUtils {
      * @return The Parsed Image Url from the {@link DiscordAsset} data
      */
     public static String getUrl(final String key) {
-        final String formattedKey = StringUtils.isNullOrEmpty(key) ? "" : key.replace(" ", "_").toLowerCase();
-        if (contains(formattedKey)) {
-            final DiscordAsset asset = ASSET_LIST.get(formattedKey);
-            if (!StringUtils.isNullOrEmpty(asset.getId()) && !asset.getType().equals(DiscordAsset.AssetType.CUSTOM)) {
-                return getDiscordAssetUrl(formattedKey);
-            } else {
-                return contains(formattedKey) ? ASSET_LIST.get(formattedKey).getUrl() : "";
-            }
-        }
-        return "";
+        return getUrl(ASSET_LIST, key);
     }
 
     /**
@@ -179,6 +246,7 @@ public class DiscordAssetUtils {
         LARGE_IDS.clear();
         ICON_LIST.clear();
         ICON_IDS.clear();
+        CUSTOM_ASSET_LIST.clear();
         CUSTOM_ICON_LIST.clear();
 
         clearClientData();
@@ -264,43 +332,47 @@ public class DiscordAssetUtils {
             final String url = applicationEndpoint + clientId + "/assets";
             final DiscordAsset[] assets = UrlUtils.getJSONFromURL(url, DiscordAsset[].class);
 
-            if (assets != null && filterToMain) {
+            if (filterToMain) {
+                // Setup Data
                 ASSET_LIST = Maps.newHashMap();
-                for (DiscordAsset asset : assets) {
-                    // Ensure URL is set before-hand for non-custom Assets
-                    // localName set to false to avoid unneeded calls
-                    if (!StringUtils.isNullOrEmpty(asset.getUrl()) && asset.getType() != DiscordAsset.AssetType.CUSTOM) {
-                        asset.setUrl(getDiscordAssetUrl(clientId, asset.getId(), false));
-                    }
-                    if (asset.getType().equals(DiscordAsset.AssetType.LARGE)) {
-                        if (!LARGE_ICONS.contains(asset.getName())) {
-                            LARGE_ICONS.add(asset.getName());
+                CUSTOM_ASSET_LIST = Maps.newHashMap();
+                if (assets != null) {
+                    for (DiscordAsset asset : assets) {
+                        // Ensure URL is set before-hand for non-custom Assets
+                        // localName set to false to avoid unneeded calls
+                        if (!StringUtils.isNullOrEmpty(asset.getUrl()) && asset.getType() != DiscordAsset.AssetType.CUSTOM) {
+                            asset.setUrl(getDiscordAssetUrl(clientId, asset.getId(), false));
                         }
-                        if (!LARGE_IDS.contains(asset.getId())) {
-                            LARGE_IDS.add(asset.getId());
+                        if (asset.getType().equals(DiscordAsset.AssetType.LARGE)) {
+                            if (!LARGE_ICONS.contains(asset.getName())) {
+                                LARGE_ICONS.add(asset.getName());
+                            }
+                            if (!LARGE_IDS.contains(asset.getId())) {
+                                LARGE_IDS.add(asset.getId());
+                            }
                         }
-                    }
-                    if (asset.getType().equals(DiscordAsset.AssetType.SMALL)) {
-                        if (!SMALL_ICONS.contains(asset.getName())) {
-                            SMALL_ICONS.add(asset.getName());
+                        if (asset.getType().equals(DiscordAsset.AssetType.SMALL)) {
+                            if (!SMALL_ICONS.contains(asset.getName())) {
+                                SMALL_ICONS.add(asset.getName());
+                            }
+                            if (!SMALL_IDS.contains(asset.getId())) {
+                                SMALL_IDS.add(asset.getId());
+                            }
                         }
-                        if (!SMALL_IDS.contains(asset.getId())) {
-                            SMALL_IDS.add(asset.getId());
+                        if (asset.getType().equals(DiscordAsset.AssetType.CUSTOM)) {
+                            if (!CUSTOM_ICON_LIST.contains(asset.getName())) {
+                                CUSTOM_ICON_LIST.add(asset.getName());
+                            }
                         }
-                    }
-                    if (asset.getType().equals(DiscordAsset.AssetType.CUSTOM)) {
-                        if (!CUSTOM_ICON_LIST.contains(asset.getName())) {
-                            CUSTOM_ICON_LIST.add(asset.getName());
+                        if (!ICON_LIST.contains(asset.getName())) {
+                            ICON_LIST.add(asset.getName());
                         }
-                    }
-                    if (!ICON_LIST.contains(asset.getName())) {
-                        ICON_LIST.add(asset.getName());
-                    }
-                    if (!ASSET_LIST.containsKey(asset.getName())) {
-                        ASSET_LIST.put(asset.getName(), asset);
-                    }
-                    if (!ICON_IDS.contains(asset.getId())) {
-                        ICON_IDS.add(asset.getId());
+                        if (!ASSET_LIST.containsKey(asset.getName())) {
+                            ASSET_LIST.put(asset.getName(), asset);
+                        }
+                        if (!ICON_IDS.contains(asset.getId())) {
+                            ICON_IDS.add(asset.getId());
+                        }
                     }
                 }
 
@@ -316,10 +388,16 @@ public class DiscordAssetUtils {
                             if (!CUSTOM_ICON_LIST.contains(asset.getName())) {
                                 CUSTOM_ICON_LIST.add(asset.getName());
                             }
+                            if (!CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
+                                CUSTOM_ASSET_LIST.put(asset.getName(), asset);
+                            }
                             // If a Discord Icon exists with the same name, give priority to the custom one
-                            ICON_LIST.remove(asset.getName());
-                            ICON_LIST.add(asset.getName());
-                            ASSET_LIST.put(asset.getName(), asset);
+                            // Unless the icon is the default template, in which we don't add it at all
+                            if (!asset.getName().equalsIgnoreCase("default")) {
+                                ICON_LIST.remove(asset.getName());
+                                ICON_LIST.add(asset.getName());
+                                ASSET_LIST.put(asset.getName(), asset);
+                            }
                         }
                     }
                 }
