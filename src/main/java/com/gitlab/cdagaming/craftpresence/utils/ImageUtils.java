@@ -232,8 +232,8 @@ public class ImageUtils {
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final Pair<InputType, Object> stream) {
         synchronized (cachedImages) {
-            if (!cachedImages.containsKey(textureName)) {
-                // Setup Initial data if not present
+            if (!cachedImages.containsKey(textureName) || !cachedImages.get(textureName).getFirst().equals(stream)) {
+                // Setup Initial data if not present (Or reset if the stream has changed)
                 //
                 // Note that the ResourceLocation needs to be
                 // initially null here for compatibility reasons
