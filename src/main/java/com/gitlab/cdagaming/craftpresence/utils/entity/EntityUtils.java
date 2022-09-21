@@ -117,16 +117,6 @@ public class EntityUtils {
     private NBTTagCompound CURRENT_RIDING_TAG;
 
     /**
-     * If the Player doesn't have an Entity in Critical Slots such as Targeted or Riding
-     */
-    private boolean allEntitiesEmpty = false;
-
-    /**
-     * If this Module's Runtime Data is currently Cleared
-     */
-    private boolean currentlyCleared = true;
-
-    /**
      * Clears FULL Data from this Module
      */
     private void emptyData() {
@@ -153,9 +143,7 @@ public class EntityUtils {
         CURRENT_ATTACKING_TAGS.clear();
         CURRENT_RIDING_TAGS.clear();
 
-        allEntitiesEmpty = true;
         isInUse = false;
-        currentlyCleared = true;
         CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:", "&ATTACKINGENTITY:", "&RIDINGENTITY:");
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
     }
@@ -263,7 +251,6 @@ public class EntityUtils {
         }
 
         if (hasTargetChanged || hasAttackingChanged || hasRidingChanged) {
-            allEntitiesEmpty = CURRENT_TARGET == null && CURRENT_ATTACKING == null && CURRENT_RIDING == null;
             updateEntityPresence();
         }
     }
@@ -342,13 +329,23 @@ public class EntityUtils {
         final String CURRENT_RIDING_MESSAGE = StringUtils.sequentialReplaceAnyCase(ridingEntityMessage, entityRidingArgs);
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
-        if (!allEntitiesEmpty) {
+        if (CURRENT_TARGET != null) {
             CraftPresence.CLIENT.syncArgument("&TARGETENTITY&", CURRENT_TARGET_MESSAGE, ArgumentType.Text);
+        } else {
+            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:");
+            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&");
+        }
+        if (CURRENT_ATTACKING != null) {
             CraftPresence.CLIENT.syncArgument("&ATTACKINGENTITY&", CURRENT_ATTACKING_MESSAGE, ArgumentType.Text);
+        } else {
+            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&ATTACKINGENTITY:");
+            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&ATTACKINGENTITY&");
+        }
+        if (CURRENT_RIDING != null) {
             CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CURRENT_RIDING_MESSAGE, ArgumentType.Text);
-        } else if (!currentlyCleared) {
-            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:", "&ATTACKINGENTITY:", "&RIDINGENTITY:");
-            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&", "&ATTACKINGENTITY&", "&RIDINGENTITY&");
+        } else {
+            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&RIDINGENTITY:");
+            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&RIDINGENTITY&");
         }
     }
 

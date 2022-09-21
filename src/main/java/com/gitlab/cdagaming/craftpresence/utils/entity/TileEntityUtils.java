@@ -200,10 +200,6 @@ public class TileEntityUtils {
      * If the Player doesn't have any Items in the Critical Slots such as equipped items or armor
      */
     private boolean allItemsEmpty = false;
-    /**
-     * If this Module's Runtime Data is currently Cleared
-     */
-    private boolean currentlyCleared = true;
 
     /**
      * Clears FULL Data from this Module
@@ -253,7 +249,6 @@ public class TileEntityUtils {
 
         allItemsEmpty = true;
         isInUse = false;
-        currentlyCleared = true;
         CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
     }
@@ -546,7 +541,7 @@ public class TileEntityUtils {
         // NOTE: Only Apply if Items are not Empty, otherwise Clear Argument
         if (!allItemsEmpty) {
             CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_MESSAGE, ArgumentType.Text);
-        } else if (!currentlyCleared) {
+        } else {
             CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
             CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
         }
