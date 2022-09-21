@@ -44,6 +44,7 @@ gui.config.title.selector.view.guis=CraftPresence - Available Guis
 gui.config.title.selector.view.items=CraftPresence - Available Items
 ## CONFIG MESSAGES - TITLE COMMENTS ##
 gui.config.comment.title=Current Version -> %1$s (Schema v%2$s)
+gui.config.comment.title.changes=Minecraft Version -> %1$s
 gui.config.comment.title.general=General settings for display info
 gui.config.comment.title.biome_messages=Customize messages to display with biomes\n (Manual format: biome_name;message)\n Available placeholders:\n - &biome& = Biome name\n - &icon& = Default biome icon
 gui.config.comment.title.dimension_messages=Customize messages to display with dimensions\n (Manual format: dimension_name;message)\n Available placeholders:\n - &dimension& = Dimension name\n - &icon& = Default dimension icon
@@ -304,6 +305,7 @@ craftpresence.command.reboot.post=§2§lCraftPresence has been rebooted!
 craftpresence.logger.info.os=Detected OS: %1$s (Architecture: %2$s, Is 64-Bit: %3$s)
 craftpresence.logger.info.load=Loaded display data with Client Id: %1$s (Logged in as %2$s)
 craftpresence.logger.info.shutdown=Shutting down CraftPresence...
+craftpresence.logger.info.updater.init=Starting version check for %1$s (MC %2$s) at %3$s
 craftpresence.logger.info.updater.status=Detected %1$s version for %2$s -> %3$s
 craftpresence.logger.info.updater.receive.data=Received update data: %1$s
 craftpresence.logger.info.updater.receive.changelog=Received changelog: %1$s
