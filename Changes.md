@@ -31,6 +31,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* The `&entity&` sub-placeholder in the Per-Entity System will now use the Player's name instead of their UUID
+    * This is not breaking to configs, as configs still use UUIDs for players
+    * It is being debated whether to also use UUIDs for Entity customization in a future v1.9.x update, to allow more in-depth customization.
 * Backend: Fixed issues where fully uppercased values were incorrectly formatted in `StringUtils#formatWords`
 * Backend: Fixed scenarios of `SocketException`'s occuring due to empty folders being considered
   in `Pipe#getPipeLocation` in IPC Logic

@@ -296,9 +296,9 @@ public class EntityUtils {
         // Form Entity Argument List
         final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList(), entityAttackingArgs = Lists.newArrayList(), entityRidingArgs = Lists.newArrayList();
 
-        entityTargetArgs.add(new Pair<>("&entity&", CURRENT_TARGET_NAME));
-        entityAttackingArgs.add(new Pair<>("&entity&", CURRENT_ATTACKING_NAME));
-        entityRidingArgs.add(new Pair<>("&entity&", CURRENT_RIDING_NAME));
+        entityTargetArgs.add(new Pair<>("&entity&", StringUtils.isValidUuid(CURRENT_TARGET_NAME) ? CURRENT_TARGET.getName() : CURRENT_TARGET_NAME));
+        entityAttackingArgs.add(new Pair<>("&entity&", StringUtils.isValidUuid(CURRENT_ATTACKING_NAME) ? CURRENT_ATTACKING.getName() : CURRENT_ATTACKING_NAME));
+        entityRidingArgs.add(new Pair<>("&entity&", StringUtils.isValidUuid(CURRENT_RIDING_NAME) ? CURRENT_RIDING.getName() : CURRENT_RIDING_NAME));
 
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
