@@ -571,10 +571,11 @@ public class TileEntityUtils {
      * @return The Resulting TileEntity Tag Placeholder String
      */
     public String generatePlaceholderString(final String name, final boolean addExtraData, final List<String> tags) {
-        final StringBuilder finalString = new StringBuilder();
+        final StringBuilder finalString = new StringBuilder(addExtraData ? "" : "\n{");
         if (!tags.isEmpty()) {
-            for (String tagName : tags) {
-                finalString.append("\n - &").append(tagName).append("&");
+            for (int i = 0; i < tags.size(); i++) {
+                final String tagName = tags.get(i);
+                finalString.append(addExtraData ? "\n - " : "").append("&").append(tagName).append("&");
 
                 if (addExtraData) {
                     // If specified, also append the Tag's value to the placeholder String
@@ -589,10 +590,18 @@ public class TileEntityUtils {
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
                         finalString.append(" (Value -> ").append(tagValue).append(")");
                     }
+                } else if (i < tags.size() - 1) {
+                    finalString.append(",");
+                    if (i % 5 == 4) {
+                        finalString.append("\n");
+                    }
                 }
             }
         }
-        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + (!StringUtils.isNullOrEmpty(finalString.toString()) ? finalString.toString() : "\\n - N/A"));
+        if (!addExtraData) {
+            finalString.append("}");
+        }
+        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + ((!StringUtils.isNullOrEmpty(finalString.toString()) && !finalString.toString().contains("{}")) ? finalString.toString() : "\\n - N/A"));
     }
 
     /**
