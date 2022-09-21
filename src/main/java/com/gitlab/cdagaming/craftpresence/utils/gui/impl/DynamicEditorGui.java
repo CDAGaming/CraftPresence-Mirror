@@ -191,7 +191,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             renderString(secondaryText, (width / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
         }
 
-        if (!isNewValue) {
+        if (!isNewValue && !isDefaultValue) {
             renderString(removeMessage, (width / 2f) - (StringUtils.getStringWidth(removeMessage) / 2f), (height - 45), 0xFFFFFF);
         }
 
