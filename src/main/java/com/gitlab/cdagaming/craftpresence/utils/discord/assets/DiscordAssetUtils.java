@@ -97,7 +97,7 @@ public class DiscordAssetUtils {
      * Determines if the Specified Icon Key is present under the specified list
      *
      * @param list The list to iterate through
-     * @param key The Specified Icon Key to Check
+     * @param key  The Specified Icon Key to Check
      * @return {@code true} if the Icon Key is present and able to be used
      */
     public static boolean contains(final Map<String, DiscordAsset> list, final String key) {
@@ -121,7 +121,7 @@ public class DiscordAssetUtils {
      * present
      *
      * @param list The list to iterate through
-     * @param key The Specified Icon Key to gain info for
+     * @param key  The Specified Icon Key to gain info for
      * @return The {@link DiscordAsset} data for this Icon Key
      */
     public static DiscordAsset get(final Map<String, DiscordAsset> list, final String key) {
@@ -145,7 +145,7 @@ public class DiscordAssetUtils {
      * Retrieves the Parsed Icon Key from the specified key, if present
      *
      * @param list The list to iterate through
-     * @param key The Specified Key to gain info for
+     * @param key  The Specified Key to gain info for
      * @return The Parsed Icon Key from the {@link DiscordAsset} data
      */
     public static String getKey(final Map<String, DiscordAsset> list, final String key) {
@@ -167,7 +167,7 @@ public class DiscordAssetUtils {
      * Retrieves the Parsed Icon ID from the specified key, if present
      *
      * @param list The list to iterate through
-     * @param key The Specified Key to gain info for
+     * @param key  The Specified Key to gain info for
      * @return The Parsed Icon ID from the {@link DiscordAsset} data
      */
     public static String getId(final Map<String, DiscordAsset> list, final String key) {
@@ -189,7 +189,7 @@ public class DiscordAssetUtils {
      * Retrieves the Parsed Image Type from the specified key, if present
      *
      * @param list The list to iterate through
-     * @param key The Specified Key to gain info for
+     * @param key  The Specified Key to gain info for
      * @return The Parsed Image Type from the {@link DiscordAsset} data
      */
     public static DiscordAsset.AssetType getType(final Map<String, DiscordAsset> list, final String key) {
