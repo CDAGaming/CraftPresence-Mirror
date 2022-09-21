@@ -89,17 +89,17 @@ public class EntityUtils {
     /**
      * The Player's Current Target Entity, if any
      */
-    private Entity CURRENT_TARGET;
+    public Entity CURRENT_TARGET;
 
     /**
      * The Player's Currently Attacking Entity, if any
      */
-    private Entity CURRENT_ATTACKING;
+    public Entity CURRENT_ATTACKING;
 
     /**
      * The Player's Current Riding Entity, if any
      */
-    private Entity CURRENT_RIDING;
+    public Entity CURRENT_RIDING;
 
     /**
      * The Player's Current Targeted Entity's Tag, if any
@@ -283,9 +283,9 @@ public class EntityUtils {
         // Form Entity Argument List
         final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList(), entityAttackingArgs = Lists.newArrayList(), entityRidingArgs = Lists.newArrayList();
 
-        entityTargetArgs.add(new Pair<>("&entity&", StringUtils.isValidUuid(CURRENT_TARGET_NAME) ? CURRENT_TARGET.getName() : CURRENT_TARGET_NAME));
-        entityAttackingArgs.add(new Pair<>("&entity&", StringUtils.isValidUuid(CURRENT_ATTACKING_NAME) ? CURRENT_ATTACKING.getName() : CURRENT_ATTACKING_NAME));
-        entityRidingArgs.add(new Pair<>("&entity&", StringUtils.isValidUuid(CURRENT_RIDING_NAME) ? CURRENT_RIDING.getName() : CURRENT_RIDING_NAME));
+        entityTargetArgs.add(new Pair<>("&entity&", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME)));
+        entityAttackingArgs.add(new Pair<>("&entity&", getEntityName(CURRENT_ATTACKING, CURRENT_ATTACKING_NAME)));
+        entityRidingArgs.add(new Pair<>("&entity&", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME)));
 
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
@@ -347,6 +347,17 @@ public class EntityUtils {
             CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&RIDINGENTITY:");
             CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&RIDINGENTITY&");
         }
+    }
+
+    /**
+     * Retrieves the entities display name, derived from the original supplied name
+     *
+     * @param entity   The entity to interpret
+     * @param original The original entity string name
+     * @return The formatted entity display name to use
+     */
+    public String getEntityName(final Entity entity, final String original) {
+        return StringUtils.isValidUuid(original) ? entity.getName() : original;
     }
 
     /**
