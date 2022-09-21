@@ -144,7 +144,14 @@ public class DiscordAsset {
      */
     @Override
     public String toString() {
-        return "DiscordAsset{" + "type=" + getType() + ", id='" + getId() + '\'' + ", name='" + getName() + '\'' + '}';
+        String result = "DiscordAsset{" + "type=" + getType();
+        if (getType().equals(AssetType.CUSTOM)) {
+            result += ", url='" + getUrl() + '\'';
+        } else {
+            result += ", id='" + getId() + '\'';
+        }
+        result += ", name='" + getName() + '\'' + '}';
+        return result;
     }
 
     /**
