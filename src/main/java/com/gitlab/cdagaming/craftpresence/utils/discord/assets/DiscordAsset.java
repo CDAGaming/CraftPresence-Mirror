@@ -42,6 +42,7 @@ public class DiscordAsset {
 
     /**
      * The Parsed ID for this Asset
+     * (Leave this empty if this is a custom asset)
      */
     @SerializedName("id")
     @Expose
@@ -55,7 +56,8 @@ public class DiscordAsset {
     private String name;
 
     /**
-     * The Url for this asset (Optional, unless Custom Asset)
+     * The Url for this asset
+     * (This is optional, unless this is a custom asset)
      */
     private String url;
 
