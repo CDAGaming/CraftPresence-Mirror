@@ -37,6 +37,20 @@ license {
     exclude "**/impl/guava/**"
 }
 
+// CurseForge Compatibility Layer (For Modloader and Beta MC)
+// (This can be removed when/if CurseForge ever adds support for this)
+def cf_loader = "${loader_name}"
+def cf_version = "${mc_version}"
+if ("${isLegacy}".toBoolean()) {
+    int protocol = "${mc_protocol}".toInteger()
+    if ((protocol == 22 || protocol == 23) && cf_loader == "${"ModLoader"}") { // MC 1.0.0 and 1.1.0
+        cf_loader = "Forge"
+    } else if (protocol < 22) {
+        cf_loader = ""
+        cf_version = "1.0"
+    }
+}
+
 curseforge {
     project {
         apiKey = System.getenv("CF_APIKEY")
@@ -44,8 +58,12 @@ curseforge {
         changelog = file("Changes.md")
         changelogType = "markdown"
         releaseType = "${deploymentType}".toLowerCase()
-        addGameVersion "${mc_version}"
-        addGameVersion "${loader_name}"
+        if (!cf_version.isEmpty()) {
+            addGameVersion cf_version
+        }
+        if (!cf_loader.isEmpty()) {
+            addGameVersion cf_loader
+        }
 
         mainArtifact(remapJar) {
             displayName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
