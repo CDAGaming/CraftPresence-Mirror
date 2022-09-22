@@ -145,20 +145,20 @@ public class DynamicEditorGui extends ExtendedScreen {
                         180, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> {
-                            if (StringUtils.isNullOrEmpty(attributeName) && !StringUtils.isNullOrEmpty(secondaryInput.getText())) {
+                            if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText())) {
                                 attributeName = secondaryInput.getText();
                             }
                             if (!primaryInput.getText().equals(primaryMessage) ||
                                     (willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText()) && (!primaryInput.getText().equals(primaryMessage) || !secondaryInput.getText().equals(secondaryMessage))) ||
                                     (isDefaultValue && !StringUtils.isNullOrEmpty(primaryInput.getText()) && !primaryInput.getText().equals(primaryMessage))) {
                                 if (onAdjustEntry != null) {
-                                    onAdjustEntry.accept(this, secondaryInput.getText(), primaryInput.getText());
+                                    onAdjustEntry.accept(this, attributeName, primaryInput.getText());
                                 }
                             }
                             if (StringUtils.isNullOrEmpty(primaryInput.getText()) ||
                                     (primaryInput.getText().equalsIgnoreCase(originalPrimaryMessage) && !primaryMessage.equals(originalPrimaryMessage) && !isDefaultValue)) {
                                 if (onRemoveEntry != null) {
-                                    onRemoveEntry.accept(this, secondaryInput.getText(), primaryInput.getText());
+                                    onRemoveEntry.accept(this, attributeName, primaryInput.getText());
                                 }
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);

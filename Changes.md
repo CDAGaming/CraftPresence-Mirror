@@ -1,50 +1,17 @@
 # CraftPresence Changes
 
-## v1.9.0 (09/22/2022)
+## v1.9.1 (09/23/2022)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.8.12...release%2Fv1.9.0)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.0...release%2Fv1.9.1)_
 
 ### Changes
 
-* Added a `dynamicIcons` config setting to allow using URLs as Discord RPC Images
-    * This can be customized in the `Presence Settings` menu of the Config UI, and all text placeholders are supported.
-    * In the event that a Client ID Image is under the same name as a dynamic image, the dynamic image will take
-      priority.
-* Added a `preferredClientLevel` config setting to allow specifying if you want a specific Discord Client to receive
-  events
-* Added a new `buttonMessages` config field for full frontend support of the buttons array in Rich Presence
-    * The buttons array will only take the first two detected entries, excluding `default` (Which is a template), since
-      Discord's RPC only allows two buttons
-    * This can be customized in the `Presence Settings` menu of the Config UI, and all text placeholders are supported.
-* Unknown Placeholders after parsing will now be filtered out of the final Rich Presence Builder, if `formatWords` is
-  enabled
-* Support for Sub-Arguments (Calling upon the individual inner arguments without it needing to be in a specialized
-  message) has been implemented
-    * This allows much more customization, and the ability to use different types of a module in different areas more
-      easily
-    * Format: `&<moduleName>:<innerPlaceholder>&` (For example: `&server:IP&` for the Server's `&IP&` inner-placeholder)
-    * Special Thanks to [this ticket](https://gitlab.com/CDAGaming/CraftPresence/-/issues/114) for suggesting the idea!
-* Backend: Adjusted JUnixSocket to use it's official implementation
-    * Uses 2.4.0 on Java 7 Compilers, and 2.5.1 on Java 8+ compilers
-* Multiple backend optimizations and deprecation fixes
+* Misc. backend tweaks to re-allow Beta and Alpha MC Uploads to CurseForge
 
 ### Fixes
 
-* The `&entity&` sub-placeholder in the Per-Entity System will now use the Player's name instead of their UUID
-    * This is not breaking to configs, as configs still use UUIDs for players
-    * It is being debated whether to also use UUIDs for Entity customization in a future v1.9.x update, to allow more
-      in-depth customization.
-* Backend: Fixed the Per-Entity module not properly clearing data
-* Backend: Fixed issues where fully uppercased values were incorrectly formatted in `StringUtils#formatWords`
-* Backend: Fixed scenarios of `SocketException`'s occuring due to empty folders being considered
-  in `Pipe#getPipeLocation` in IPC Logic
-* Fixed the alignment of elements in the `DynamicEditor` GUIs to avoid Gaps in certain circumstances
-* Fixed a visual error in `UpdateState` caused by a typo in retrieving the display name
-* Fixed an Issue where the Controls GUI can still be accessed if KeyBinds were not fully registered
-* Fixed an NPE that can occur during Tab Completion in the Commands Gui
-* Fixed a typo in the `defaultBiomeIcon` name causing incorrect formatting
-    * Note: This does reset the property to apply the fix
+* Fixed several cases of a `NullPointerException` on Dynamic Editor Screens without secondary input
 
 ___
 
