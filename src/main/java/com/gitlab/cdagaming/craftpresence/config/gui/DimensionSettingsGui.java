@@ -99,12 +99,14 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.DIMENSIONS.DIMENSION_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.DIMENSIONS.DIMENSION_NAMES.add(attributeName);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.dimensionMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
-                                                                CraftPresence.DIMENSIONS.getDimensions();
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding an attachment icon to set data

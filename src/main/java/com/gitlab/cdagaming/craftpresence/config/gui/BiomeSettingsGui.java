@@ -98,12 +98,14 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.BIOMES.BIOME_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.BIOMES.BIOME_NAMES.add(attributeName);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.biomeMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.biomeMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
-                                                                CraftPresence.BIOMES.getBiomes();
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding an attachment icon to set data

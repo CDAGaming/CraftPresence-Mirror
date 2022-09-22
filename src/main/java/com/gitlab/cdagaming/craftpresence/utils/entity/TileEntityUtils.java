@@ -51,7 +51,7 @@ public class TileEntityUtils {
     /**
      * A List of the detected Block Names
      */
-    private final List<String> BLOCK_NAMES = Lists.newArrayList();
+    public final List<String> BLOCK_NAMES = Lists.newArrayList();
     /**
      * A List of the detected Block Class Names
      */
@@ -59,7 +59,7 @@ public class TileEntityUtils {
     /**
      * A List of the detected Item Names
      */
-    private final List<String> ITEM_NAMES = Lists.newArrayList();
+    public final List<String> ITEM_NAMES = Lists.newArrayList();
     /**
      * A List of the detected Item Class Names
      */
@@ -664,7 +664,7 @@ public class TileEntityUtils {
     /**
      * Verifies, Synchronizes and Removes any Invalid Items and Blocks from their Lists
      */
-    private void verifyEntities() {
+    public void verifyEntities() {
         List<String> removingBlocks = Lists.newArrayList();
         List<String> removingItems = Lists.newArrayList();
         for (String itemName : ITEM_NAMES) {

@@ -105,12 +105,14 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.guiMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.guiMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.GUIS.GUI_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.GUIS.GUI_NAMES.add(attributeName);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.guiMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.guiMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.GUIS.GUI_NAMES.remove(attributeName);
-                                                                CraftPresence.GUIS.getScreens();
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
@@ -179,12 +181,19 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.itemMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.itemMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.TILE_ENTITIES.ITEM_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.TILE_ENTITIES.ITEM_NAMES.add(attributeName);
+                                                                }
+                                                                if (!CraftPresence.TILE_ENTITIES.BLOCK_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.TILE_ENTITIES.BLOCK_NAMES.add(attributeName);
+                                                                }
+                                                                CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES.remove(attributeName);
+                                                                CraftPresence.TILE_ENTITIES.verifyEntities();
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.itemMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.itemMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES.remove(attributeName);
-                                                                CraftPresence.TILE_ENTITIES.getEntities();
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
@@ -260,12 +269,14 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.entityTargetMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.entityTargetMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.entityTargetMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.entityTargetMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
-                                                                CraftPresence.ENTITIES.getEntities();
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
@@ -341,12 +352,14 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.entityAttackingMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.entityAttackingMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.entityAttackingMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.entityAttackingMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
-                                                                CraftPresence.ENTITIES.getEntities();
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
@@ -422,12 +435,14 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.entityRidingMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.entityRidingMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
+                                                                    CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.entityRidingMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.entityRidingMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
-                                                                CraftPresence.ENTITIES.getEntities();
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label

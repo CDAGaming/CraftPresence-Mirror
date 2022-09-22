@@ -114,12 +114,14 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.serverMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.serverMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                if (!CraftPresence.SERVER.knownAddresses.contains(attributeName)) {
+                                                                    CraftPresence.SERVER.knownAddresses.add(attributeName);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.serverMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.serverMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.SERVER.knownAddresses.remove(attributeName);
-                                                                CraftPresence.SERVER.getServerAddresses();
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding an attachment icon to set data
