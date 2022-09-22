@@ -8,13 +8,15 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 ### Changes
 
 * Adding new data using Dynamic Editor Guis no longer requires a restart to see those values
-  * Effects: `GUI_NAMES`, `ITEM_NAMES`, `BLOCK_NAMES`, `TILE_ENTITY_NAMES`, `ENTITY_NAMES`, `BIOME_NAMES`, and `DIMENSION_NAMES`
+    * Effects: `GUI_NAMES`, `ITEM_NAMES`, `BLOCK_NAMES`, `TILE_ENTITY_NAMES`, `ENTITY_NAMES`, `BIOME_NAMES`,
+      and `DIMENSION_NAMES`
 * Misc. backend tweaks to re-allow Beta and Alpha MC Uploads to CurseForge
 
 ### Fixes
 
 * Fixed several cases of a `NullPointerException` on Dynamic Editor Screens without secondary input
-* Removed the need for Dynamic Editor Guis to require a full re-scan of their effected module, hopefully saving some performance
+* Removed the need for Dynamic Editor Guis to require a full re-scan of their effected module, hopefully saving some
+  performance
 * Fixed a regression in `StringUtils#removeFromArray` causing the function to not properly work
 
 ___

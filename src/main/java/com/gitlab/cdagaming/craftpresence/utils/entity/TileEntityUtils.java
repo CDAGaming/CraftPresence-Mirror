@@ -53,13 +53,13 @@ public class TileEntityUtils {
      */
     public final List<String> BLOCK_NAMES = Lists.newArrayList();
     /**
-     * A List of the detected Block Class Names
-     */
-    private final List<String> BLOCK_CLASSES = Lists.newArrayList();
-    /**
      * A List of the detected Item Names
      */
     public final List<String> ITEM_NAMES = Lists.newArrayList();
+    /**
+     * A List of the detected Block Class Names
+     */
+    private final List<String> BLOCK_CLASSES = Lists.newArrayList();
     /**
      * A List of the detected Item Class Names
      */
