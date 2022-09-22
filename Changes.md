@@ -15,6 +15,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 * Fixed several cases of a `NullPointerException` on Dynamic Editor Screens without secondary input
 * Removed the need for Dynamic Editor Guis to require a full re-scan of their effected module, hopefully saving some performance
+* Fixed a regression in `StringUtils#removeFromArray` causing the function to not properly work
 
 ___
 

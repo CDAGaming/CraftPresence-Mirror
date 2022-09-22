@@ -576,17 +576,18 @@ public class StringUtils {
      * @return The evaluated array
      */
     public static String[] removeFromArray(final String[] originalArray, final String searchTerm, final int searchIndex, final String splitCharacter) {
+        String[] resultArray = originalArray;
         if (originalArray.length > 0) {
             for (int indexNumber = 0; indexNumber < originalArray.length; indexNumber++) {
                 String part = originalArray[indexNumber];
                 String[] splitPart = part.split(splitCharacter);
                 if (!StringUtils.isNullOrEmpty(splitPart[searchIndex]) && splitPart[searchIndex].equalsIgnoreCase(searchTerm)) {
-                    ArrayUtils.remove(originalArray, indexNumber);
+                    resultArray = ArrayUtils.remove(originalArray, indexNumber);
                     break;
                 }
             }
         }
-        return originalArray;
+        return resultArray;
     }
 
     /**
