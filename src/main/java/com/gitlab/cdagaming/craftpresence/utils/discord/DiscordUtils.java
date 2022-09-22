@@ -642,7 +642,7 @@ public class DiscordUtils {
             if (!StringUtils.isNullOrEmpty(buttonElement)) {
                 final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
                 JsonObject buttonObj = new JsonObject();
-                if (!StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
+                if (part.length == 3 && !StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
                     String label = StringUtils.formatWord(
                             StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
                             !CraftPresence.CONFIG.formatWords, true, 1

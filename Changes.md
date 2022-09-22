@@ -14,6 +14,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Fixed `OutOfBounds` exceptions caused when removing the `URL` from a custom RPC button
 * Fixed several cases of a `NullPointerException` on Dynamic Editor Screens without secondary input
 * Removed the need for Dynamic Editor Guis to require a full re-scan of their effected module, hopefully saving some
   performance
