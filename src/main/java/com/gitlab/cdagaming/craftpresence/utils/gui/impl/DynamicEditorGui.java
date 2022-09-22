@@ -152,13 +152,13 @@ public class DynamicEditorGui extends ExtendedScreen {
                                     (willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText()) && (!primaryInput.getText().equals(primaryMessage) || !secondaryInput.getText().equals(secondaryMessage))) ||
                                     (isDefaultValue && !StringUtils.isNullOrEmpty(primaryInput.getText()) && !primaryInput.getText().equals(primaryMessage))) {
                                 if (onAdjustEntry != null) {
-                                    onAdjustEntry.accept(this, attributeName, primaryInput.getText());
+                                    onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getText() : attributeName, primaryInput.getText());
                                 }
                             }
                             if (StringUtils.isNullOrEmpty(primaryInput.getText()) ||
                                     (primaryInput.getText().equalsIgnoreCase(originalPrimaryMessage) && !primaryMessage.equals(originalPrimaryMessage) && !isDefaultValue)) {
                                 if (onRemoveEntry != null) {
-                                    onRemoveEntry.accept(this, attributeName, primaryInput.getText());
+                                    onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getText() : attributeName, primaryInput.getText());
                                 }
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
