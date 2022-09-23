@@ -1,24 +1,21 @@
 # CraftPresence Changes
 
-## v1.9.1 (09/23/2022)
+## v1.9.2 (09/23/2022)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.0...release%2Fv1.9.1)_
 
 ### Changes
 
-* Adding new data using Dynamic Editor Guis no longer requires a restart to see those values
-    * Effects: `GUI_NAMES`, `ITEM_NAMES`, `BLOCK_NAMES`, `TILE_ENTITY_NAMES`, `ENTITY_NAMES`, `BIOME_NAMES`,
-      and `DIMENSION_NAMES`
-* Misc. backend tweaks to re-allow Beta and Alpha MC Uploads to CurseForge
+* Added Support for more Image Types with Scrollable Lists and Dynamic Icons
+  * For specifics: GIFs are now supported in `ImageUtils` in url form, so long as it ends in `.gif`
 
 ### Fixes
 
-* Fixed `OutOfBounds` exceptions caused when removing the `URL` from a custom RPC button
-* Fixed several cases of a `NullPointerException` on Dynamic Editor Screens without secondary input
-* Removed the need for Dynamic Editor Guis to require a full re-scan of their effected module, hopefully saving some
-  performance
-* Fixed a regression in `StringUtils#removeFromArray` causing the function to not properly work
+* Fixed an oversight causing RPC Assets to not be re-synced when resetting the config or syncing the local config to the game
+* Fixed an issue where added dynamic icons did not appear until after a client restart
+* Fixed an issue where recursive entry into the same dynamic Editor can cause excess gaps in the GUI
+  * An example of this behavior is choosing an icon in the gui multiple times
 
 ___
 
