@@ -102,7 +102,8 @@ public class ImageUtils {
                                         isGif = base64Data.getSecond().contains("gif");
                                         break;
                                     case Url:
-                                        streamData = UrlUtils.getURLStream((URL) originData);
+                                        streamData = UrlUtils.getURLStream(originData instanceof URL ? (URL) originData : new URL(originData.toString()));
+                                        isGif = originData.toString().endsWith(".gif");
                                         break;
                                     default:
                                         streamData = null;
