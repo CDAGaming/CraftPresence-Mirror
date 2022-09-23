@@ -8,14 +8,15 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 ### Changes
 
 * Added Support for more Image Types with Scrollable Lists and Dynamic Icons
-  * For specifics: GIFs are now supported in `ImageUtils` in url form, so long as it ends in `.gif`
+    * For specifics: GIFs are now supported in `ImageUtils` in url form, so long as it ends in `.gif`
 
 ### Fixes
 
-* Fixed an oversight causing RPC Assets to not be re-synced when resetting the config or syncing the local config to the game
+* Fixed an oversight causing RPC Assets to not be re-synced when resetting the config or syncing the local config to the
+  game
 * Fixed an issue where added dynamic icons did not appear until after a client restart
 * Fixed an issue where recursive entry into the same dynamic Editor can cause excess gaps in the GUI
-  * An example of this behavior is choosing an icon in the gui multiple times
+    * An example of this behavior is choosing an icon in the gui multiple times
 
 ___
 
