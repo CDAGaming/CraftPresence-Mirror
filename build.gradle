@@ -10,6 +10,8 @@ plugins {
 import groovy.io.FileType
 import org.apache.tools.ant.filters.ReplaceTokens
 
+import java.util.regex.Pattern
+
 def archive_name = "${mod_name}-${loader_name}"
 def generatedResources = "$buildDir/generated-resources"
 
@@ -281,7 +283,8 @@ task generateMyResources {
             if (file.path.endsWith(".json")) {
                 def contents = "#PARSE_ESCAPES\n"
                 System.out.println("Converting json to lang: " + file.path)
-                // Logic from TranslationUtils#getTranslationMap (Without the escape replacements)
+                // Logic from TranslationUtils#getTranslationMap
+                // Does not include the escape replacements, as those are done later
                 for (currentString in file.text.readLines()) {
                     currentString = currentString.trim()
                     if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && currentString.contains(":")) {
@@ -291,7 +294,13 @@ task generateMyResources {
                         contents += "${str1}=${str2}\n"
                     }
                 }
-                def resultFile = new File(resultDir, file.name.replace(".json", ".lang"))
+                def resultName = file.name.replace(".json", ".lang")
+                if ("${mc_protocol}".toInteger() <= 210) {
+                    // On 1.10.2 (Pack Format 2 or below)
+                    // Adjust name format from xx_xx to xx_XX
+                    resultName = Pattern.compile("_.+?\\.").matcher(s).replaceAll(m -> m.group().toUpperCase())
+                }
+                def resultFile = new File(resultDir, resultName)
                 resultFile.createNewFile()
                 System.out.println("Outputting to: " + resultFile.path)
                 resultFile.text = contents.replaceAll("\\\\\\\\", "\\\\")
