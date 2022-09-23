@@ -6,6 +6,8 @@ plugins {
     id "org.cadixdev.licenser" version "0.6.1"
 }
 
+
+import groovy.io.FileType
 import org.apache.tools.ant.filters.ReplaceTokens
 
 def archive_name = "${mod_name}-${loader_name}"
@@ -269,18 +271,13 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-import groovy.io.FileType
-
-// Ensure processResources is always run
-//processResources.outputs.upToDateWhen{ false }
-
 task generateMyResources {
     doFirst {
         def langDir = new File(sourceSets.main.output.resourcesDir, "/assets/$rootProject.name/lang")
         def resultDir = new File(generatedResources, "/assets/$rootProject.name/lang")
         langDir.mkdirs()
         resultDir.mkdirs()
-        langDir.eachFileRecurse (FileType.FILES) { file ->
+        langDir.eachFileRecurse(FileType.FILES) { file ->
             if (file.path.endsWith(".json")) {
                 def contents = "#PARSE_ESCAPES\n"
                 System.out.println("Converting json to lang: " + file.path)
