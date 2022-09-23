@@ -9,6 +9,13 @@ plugins {
 import org.apache.tools.ant.filters.ReplaceTokens
 
 def archive_name = "${mod_name}-${loader_name}"
+def generatedResources = "$buildDir/generated-resources"
+
+sourceSets {
+    main {
+        output.dir(generatedResources, builtBy: 'generateMyResources')
+    }
+}
 
 version = "${versionId}"
 group = "com.gitlab.cdagaming"
@@ -259,6 +266,40 @@ tasks.withType(JavaCompile).configureEach {
     // We'll use that if it's available, but otherwise we'll use the older option.
     if (targetVersion.isJava9Compatible()) {
         it.options.release = Integer.parseInt(targetVersion.getMajorVersion())
+    }
+}
+
+import groovy.io.FileType
+
+// Ensure processResources is always run
+//processResources.outputs.upToDateWhen{ false }
+
+task generateMyResources {
+    doFirst {
+        def langDir = new File(sourceSets.main.output.resourcesDir, "/assets/$rootProject.name/lang")
+        def resultDir = new File(generatedResources, "/assets/$rootProject.name/lang")
+        langDir.mkdirs()
+        resultDir.mkdirs()
+        langDir.eachFileRecurse (FileType.FILES) { file ->
+            if (file.path.endsWith(".json")) {
+                def contents = "#PARSE_ESCAPES\n"
+                System.out.println("Converting json to lang: " + file.path)
+                // Logic from TranslationUtils#getTranslationMap (Without the escape replacements)
+                for (currentString in file.text.readLines()) {
+                    currentString = currentString.trim()
+                    if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && currentString.contains(":")) {
+                        final String[] splitTranslation = currentString.split(":", 2)
+                        String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim()
+                        String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - 2).trim()
+                        contents += "${str1}=${str2}\n"
+                    }
+                }
+                def resultFile = new File(resultDir, file.name.replace(".json", ".lang"))
+                resultFile.createNewFile()
+                System.out.println("Outputting to: " + resultFile.path)
+                resultFile.text = contents.replaceAll("\\\\\\\\", "\\\\")
+            }
+        }
     }
 }
 
