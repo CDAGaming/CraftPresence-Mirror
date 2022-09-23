@@ -47,13 +47,17 @@ public class TranslationUtils {
      */
     private final Map<String, Boolean> requestMap = Maps.newHashMap();
     /**
+     * The default/fallback Language ID to Locate and Retrieve Translations
+     */
+    private final String defaultLanguageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
+    /**
      * Whether the Translations are utilizing Unicode Characters
      */
     public boolean isUnicode = false;
     /**
      * The Language ID to Locate and Retrieve Translations
      */
-    private String languageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
+    private String languageId = defaultLanguageId;
     /**
      * The Target ID to locate the Language File
      */
@@ -116,7 +120,7 @@ public class TranslationUtils {
      * @param encoding The Charset Encoding to parse Language Files
      */
     public TranslationUtils(final String modId, final boolean useJson, final String encoding) {
-        setLanguage(CraftPresence.CONFIG != null ? CraftPresence.CONFIG.languageId : languageId);
+        setLanguage(checkCurrentLanguage());
         setModId(modId);
         setUsingJson(useJson);
         setEncoding(encoding);
@@ -157,15 +161,31 @@ public class TranslationUtils {
      * Comprises of Synchronizing Data, and Updating Translation Data as needed
      */
     void onTick() {
-        if (CraftPresence.CONFIG != null && !languageId.equals(CraftPresence.CONFIG.languageId) &&
-                (!requestMap.containsKey(CraftPresence.CONFIG.languageId) || requestMap.get(CraftPresence.CONFIG.languageId))) {
-            setLanguage(CraftPresence.CONFIG.languageId);
+        String currentLanguageId = checkCurrentLanguage();
+        if (!languageId.equals(currentLanguageId) &&
+                (!requestMap.containsKey(currentLanguageId) || requestMap.get(currentLanguageId))) {
+            setLanguage(currentLanguageId);
             getTranslationMap(encoding);
             checkUnicode();
         }
 
         if (CraftPresence.instance.gameSettings != null && isUnicode != CraftPresence.instance.gameSettings.forceUnicodeFont) {
             checkUnicode();
+        }
+    }
+
+    /**
+     * Determine the current language ID to be using
+     *
+     * @return the current language id to be used
+     */
+    private String checkCurrentLanguage() {
+        if (CraftPresence.instance.gameSettings != null) {
+            return CraftPresence.instance.gameSettings.language;
+        } else if (CraftPresence.CONFIG != null) {
+            return CraftPresence.CONFIG.languageId;
+        } else {
+            return defaultLanguageId;
         }
     }
 
@@ -210,7 +230,7 @@ public class TranslationUtils {
         if (!StringUtils.isNullOrEmpty(languageId)) {
             this.languageId = languageId;
         } else {
-            this.languageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
+            this.languageId = defaultLanguageId;
         }
     }
 
@@ -276,7 +296,7 @@ public class TranslationUtils {
         } else {
             ModUtils.LOG.error("Translations for " + modId + " do not exist for " + languageId);
             requestMap.put(languageId, false);
-            setLanguage(ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US");
+            setLanguage(defaultLanguageId);
         }
     }
 
