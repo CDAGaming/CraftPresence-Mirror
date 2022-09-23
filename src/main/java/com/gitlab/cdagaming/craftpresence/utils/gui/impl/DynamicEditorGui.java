@@ -58,8 +58,6 @@ public class DynamicEditorGui extends ExtendedScreen {
         this.onSpecificCallback = onSpecificCallback;
         this.onHoverPrimaryCallback = onHoverPrimaryCallback;
         this.onHoverSecondaryCallback = onHoverSecondaryCallback;
-
-        this.controlIndex = 1;
     }
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
@@ -76,6 +74,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void initializeUi() {
+        this.controlIndex = 1;
         if (isNewValue) {
             mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
             if (onNewInit != null) {
