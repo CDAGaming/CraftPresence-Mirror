@@ -1,14 +1,18 @@
 # CraftPresence Changes
 
-## v1.9.2 (09/23/2022)
+## v1.9.2 (09/29/2022)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.0...release%2Fv1.9.1)_
 
 ### Changes
 
+* Adjusted the `Language ID` setting, so on modern versions, the game's language ID has priority
+    * In versions where this setting does not exist, behavior is unchanged.
 * Added Support for more Image Types with Scrollable Lists and Dynamic Icons
     * For specifics: GIFs are now supported in `ImageUtils` in url form, so long as it ends in `.gif`
+* Misc. Backend Tweaks to allow all MC versions to use JSON for translations
+    * This will be key towards opening up more public means of translation contribution.
 
 ### Fixes
 
