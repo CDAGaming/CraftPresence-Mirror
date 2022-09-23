@@ -285,10 +285,11 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.CONFIG.updateConfig(false);
                                 CraftPresence.CONFIG.read(false, "UTF-8");
                                 if (CraftPresence.CONFIG.hasClientPropertiesChanged) {
-                                    CommandUtils.rebootRPC();
+                                    CommandUtils.rebootRPC(CraftPresence.CONFIG.flushClientProperties);
                                     CraftPresence.CONFIG.hasClientPropertiesChanged = false;
                                 }
                                 CommandUtils.reloadData(true);
+                                CraftPresence.CONFIG.flushClientProperties = false;
                                 CraftPresence.CONFIG.hasChanged = false;
                             }
 
@@ -328,6 +329,7 @@ public class MainGui extends ExtendedScreen {
                             CraftPresence.CONFIG.setupInitialValues();
                             CraftPresence.CONFIG.hasChanged = true;
                             CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.flushClientProperties = true;
                             syncRenderStates();
                         }
                 )
@@ -346,6 +348,7 @@ public class MainGui extends ExtendedScreen {
                             if (!CraftPresence.CONFIG.configDataMappings.equals(currentConfigDataMappings)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.flushClientProperties = true;
                                 syncRenderStates();
                             }
                         },

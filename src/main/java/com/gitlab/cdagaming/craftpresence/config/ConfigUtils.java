@@ -121,7 +121,7 @@ public class ConfigUtils {
     public String gameStateMessage, detailsMessage, largeImageMessage, smallImageMessage, largeImageKey, smallImageKey;
     public String[] buttonMessages, dynamicIcons;
     // CLASS-SPECIFIC - PUBLIC
-    public boolean hasChanged = false, hasClientPropertiesChanged = false;
+    public boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false;
     public Map<String, Integer> keySyncQueue = Maps.newHashMap();
     public List<String> avoidanceFilter = Lists.newArrayList();
 
