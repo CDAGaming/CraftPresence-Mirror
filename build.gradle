@@ -13,6 +13,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.util.regex.Pattern
 
 def archive_name = "${mod_name}-${loader_name}"
+
+def mainResources = "$rootDir/src/main/resources"
 def generatedResources = "$buildDir/generated-resources"
 
 sourceSets {
@@ -275,7 +277,7 @@ tasks.withType(JavaCompile).configureEach {
 
 task generateMyResources {
     doFirst {
-        def langDir = new File(sourceSets.main.output.resourcesDir, "/assets/$rootProject.name/lang")
+        def langDir = new File(mainResources, "/assets/$rootProject.name/lang")
         def resultDir = new File(generatedResources, "/assets/$rootProject.name/lang")
         langDir.mkdirs()
         resultDir.mkdirs()
