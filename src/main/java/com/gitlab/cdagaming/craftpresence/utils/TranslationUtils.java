@@ -315,7 +315,7 @@ public class TranslationUtils {
         boolean hasError = false;
         String translatedString = translationKey;
         try {
-            if (translationMap.containsKey(translationKey)) {
+            if (hasTranslation(translationKey)) {
                 String rawString = translationMap.get(translationKey);
                 translatedString = parameters.length > 0 ? String.format(rawString, parameters) : rawString;
             } else {
@@ -342,6 +342,16 @@ public class TranslationUtils {
      */
     public String translate(final String translationKey, final Object... parameters) {
         return translate(CraftPresence.CONFIG != null && CraftPresence.CONFIG.stripTranslationColors, translationKey, parameters);
+    }
+
+    /**
+     * Determines whether the specified translation exists
+     *
+     * @param translationKey The unLocalized String to interpret
+     * @return whether the specified translation exists
+     */
+    public boolean hasTranslation(final String translationKey) {
+        return translationMap.containsKey(translationKey);
     }
 
     /**
