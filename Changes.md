@@ -78,7 +78,6 @@ lower.
 
 Please keep in mind the following:
 
-* Ports for MC 1.1.0 and lower are only available on Modrinth, due to lack of support in CurseForge
 * Ports for MC 1.6.4 and lower will now show Images for `ServerData` type Scroll Lists, as Mojang did not implement the
   logic for this until MC 1.7 and above
 * The MC a1.1.2_01 Port has its Dimension and Biome Modules **disabled**, as Mojang did not implement the logic for this

@@ -18,8 +18,7 @@ by [jagrosh](https://github.com/jagrosh)!
 * Some versions of CraftPresence for Minecraft 1.13.x require
   the [Rift ModLoader](https://www.curseforge.com/minecraft/mc-mods/rift)
 * Versions of CraftPresence for Minecraft 1.1.0 and below
-  require [Risugami's ModLoader](https://mcarchive.net/mods/modloader) and are only available
-  on [Modrinth](https://modrinth.com/mod/craftpresence)
+  require [Risugami's ModLoader](https://mcarchive.net/mods/modloader)
 
 ## Features
 
