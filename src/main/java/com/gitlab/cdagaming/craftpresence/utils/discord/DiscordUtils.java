@@ -574,10 +574,13 @@ public class DiscordUtils {
     public void clearPresenceData(Tuple<Boolean, Boolean, Boolean> partyClearArgs) {
         GAME_STATE = "";
         DETAILS = "";
+        LARGE_IMAGE_ASSET = null;
         LARGE_IMAGE_KEY = "";
         LARGE_IMAGE_TEXT = "";
+        SMALL_IMAGE_ASSET = null;
         SMALL_IMAGE_KEY = "";
         SMALL_IMAGE_TEXT = "";
+        BUTTONS = new JsonArray();
 
         if (partyClearArgs.getFirst()) {
             clearPartyData(partyClearArgs.getSecond(), partyClearArgs.getThird());
