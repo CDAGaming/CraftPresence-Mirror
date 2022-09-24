@@ -283,7 +283,7 @@ public class ConfigUtils {
         tooltipBorderColor = "0x505000FF";
         guiBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
         buttonBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? "/gui/gui.png" : "textures/gui/widgets.png");
-        languageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
+        languageId = ModUtils.TRANSLATOR.defaultLanguageId;
         showBackgroundAsDark = true;
         stripTranslationColors = false;
         showLoggingInChat = false;

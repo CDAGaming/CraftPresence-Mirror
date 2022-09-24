@@ -295,8 +295,8 @@ task generateMyResources {
                     }
                 }
                 def resultName = file.name.replace(".json", ".lang")
-                if ("${mc_protocol}".toInteger() <= 210) {
-                    // On 1.10.2 (Pack Format 2 or below)
+                if ("${isLegacy}".toBoolean() || "${mc_protocol}".toInteger() <= 210) {
+                    // On 1.10.2 (Pack Format 2 or below) or Legacy MC
                     // Adjust name format from xx_xx to xx_XX
                     resultName = Pattern.compile("_.+?\\.").matcher(s).replaceAll(m -> m.group().toUpperCase())
                 }

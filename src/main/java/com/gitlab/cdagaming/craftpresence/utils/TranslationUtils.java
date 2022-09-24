@@ -49,13 +49,13 @@ public class TranslationUtils {
     /**
      * The default/fallback Language ID to Locate and Retrieve Translations
      */
-    private final String defaultLanguageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
+    public final String defaultLanguageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
     /**
-     * Whether the Translations are utilizing Unicode Characters
+     * Whether the translations are utilizing Unicode Characters
      */
     public boolean isUnicode = false;
     /**
-     * The Language ID to Locate and Retrieve Translations
+     * The current Language ID to Locate and Retrieve Translations
      */
     private String languageId = defaultLanguageId;
     /**
