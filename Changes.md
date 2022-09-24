@@ -19,6 +19,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Backend: Added additional String<->UUID conversion utils to ensure anything involving UUIDs follows Mojang's format
 * Backend: Rewritten `UrlUtils#openUrl` to support Linux + Modern Versions of Windows and Java
 * Backend: Fixed `DiscordUtils#updateTimestamp` not properly working
 * Fixed a regression in the Entity Module, exposing a (now-fixed) flaw where `StringUtils#isValidUUID` could accept a

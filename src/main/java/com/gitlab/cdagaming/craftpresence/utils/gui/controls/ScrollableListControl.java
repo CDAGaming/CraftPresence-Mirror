@@ -175,7 +175,7 @@ public class ScrollableListControl extends GuiSlot {
             } else if (renderType == RenderType.EntityData) {
                 if (StringUtils.isValidUuid(displayName)) {
                     // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
-                    displayName = displayName.replaceAll("-", "");
+                    displayName = StringUtils.getFromUuid(displayName);
                     texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.playerSkinEndpoint, displayName));
                 }
             } else if (renderType == RenderType.ItemData) {

@@ -68,7 +68,7 @@ public class StringUtils {
     /**
      * Regex Pattern for Uuid Detection
      */
-    private static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}");
+    private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
     /**
      * Regex Pattern for Brackets containing Digits
      */
@@ -528,6 +528,40 @@ public class StringUtils {
      */
     public static boolean isValidUuid(final String input) {
         return !StringUtils.isNullOrEmpty(input) && UUID_PATTERN.matcher(input).find();
+    }
+
+    /**
+     * Converts a String into a UUID, presuming it is valid and not-null
+     * <p>
+     * Use {@link StringUtils#isValidUuid(String)} to ensure validity
+     *
+     * @param input The original string
+     * @return the resulting UUID
+     */
+    public static UUID getAsUuid(final String input) {
+        return UUID.fromString(UUID_PATTERN.matcher(input).replaceFirst("$1-$2-$3-$4-$5"));
+    }
+
+    /**
+     * Converts a UUID into a String, presuming it is valid and not-null
+     * <p>
+     * Use {@link StringUtils#isValidUuid(String)} to ensure validity
+     *
+     * @param input The original string
+     * @return the resulting UUID
+     */
+    public static String getFromUuid(final String input) {
+        return input.replace("-", "");
+    }
+
+    /**
+     * Converts a UUID into a String, presuming it is valid and not-null
+     *
+     * @param input The original string
+     * @return the resulting UUID
+     */
+    public static String getFromUuid(final UUID input) {
+        return getFromUuid(input.toString());
     }
 
     /**
