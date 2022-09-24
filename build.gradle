@@ -292,20 +292,20 @@ task generateMyResources {
                     if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && currentString.contains(":")) {
                         final String[] splitTranslation = currentString.split(":", 2)
                         String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim()
-                        String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - 2).trim()
+                        String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - (splitTranslation[1].endsWith(",") ? 2 : 1)).trim()
                         contents += "${str1}=${str2}\n"
                     }
                 }
                 def resultName = file.name.replace(".json", ".lang")
-                if ("${isLegacy}".toBoolean() || "${mc_protocol}".toInteger() <= 210) {
+                if ("${rootProject.isLegacy}".toBoolean() || "${rootProject.mc_protocol}".toInteger() <= 210) {
                     // On 1.10.2 (Pack Format 2 or below) or Legacy MC
                     // Adjust name format from xx_xx to xx_XX
-                    resultName = Pattern.compile("_.+?\\.").matcher(s).replaceAll(m -> m.group().toUpperCase())
+                    resultName = Pattern.compile("_.+?\\.").matcher(resultName).replaceAll(m -> m.group().toUpperCase())
                 }
                 def resultFile = new File(resultDir, resultName)
                 resultFile.createNewFile()
                 System.out.println("Outputting to: " + resultFile.path)
-                resultFile.text = contents.replaceAll("\\\\\\\\", "\\\\")
+                resultFile.text = contents.replaceAll("(?s)\\\\(.)", '$1')
             }
         }
     }

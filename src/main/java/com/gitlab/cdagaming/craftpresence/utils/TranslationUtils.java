@@ -279,9 +279,12 @@ public class TranslationUtils {
                     if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && (usingJson ? currentString.contains(":") : currentString.contains("="))) {
                         final String[] splitTranslation = usingJson ? currentString.split(":", 2) : currentString.split("=", 2);
                         if (usingJson) {
-                            String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).replace("\\n", "\n").replace("\\", "").trim();
-                            String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - 2).replace("\\n", "\n").replace("\\", "").trim();
-                            translationMap.put(str1, str2);
+                            String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim();
+                            String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - (splitTranslation[1].endsWith(",") ? 2 : 1)).trim();
+                            translationMap.put(
+                                    str1.replaceAll("(?s)\\\\(.)", "$1"),
+                                    str2.replaceAll("(?s)\\\\(.)", "$1")
+                            );
                         } else {
                             translationMap.put(splitTranslation[0].trim(), splitTranslation[1].trim());
                         }

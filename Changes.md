@@ -16,6 +16,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Fixed an oversight in Translation logic that could cause the final value to be cut off when `usingJson` is true
+    * For CraftPresence, this is the `craftpresence.exception.config.prop.null` translation
 * Fixed an oversight causing RPC Assets to not be re-synced when resetting the config or syncing the local config to the
   game
 * Fixed an issue where added dynamic icons did not appear until after a client restart
