@@ -107,11 +107,6 @@ public class ModUtils {
     public static final String modsDir = CraftPresence.SYSTEM.USER_DIR + File.separator + "mods";
 
     /**
-     * The Detected Username within Minecraft
-     */
-    public static final String USERNAME = Minecraft.getMinecraft().getSession().getUsername();
-
-    /**
      * The URL to receive Update Information from
      */
     public static final String UPDATE_JSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json";

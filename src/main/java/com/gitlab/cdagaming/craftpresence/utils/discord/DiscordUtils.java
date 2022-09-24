@@ -248,7 +248,8 @@ public class DiscordUtils {
 
         // Add Any Generalized Argument Data needed
         modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
-        playerInfoArgs.add(new Pair<>("&NAME&", ModUtils.USERNAME));
+        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
+        playerInfoArgs.add(new Pair<>("&UUID&", CraftPresence.session.getProfile().getId().toString()));
 
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));

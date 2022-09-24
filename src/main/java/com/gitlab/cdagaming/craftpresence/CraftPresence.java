@@ -42,6 +42,7 @@ import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.Session;
 import net.minecraftforge.fml.common.Mod;
 
 import java.io.File;
@@ -76,6 +77,11 @@ public class CraftPresence {
      * The Minecraft Instance attached to this Mod
      */
     public static Minecraft instance;
+
+    /**
+     * The Minecraft Instance Session attached to this Mod
+     */
+    public static Session session;
 
     /**
      * The Current Player detected from the Minecraft Instance
@@ -241,6 +247,7 @@ public class CraftPresence {
         if (!closing) {
             instance = Minecraft.getMinecraft();
             if (initialized) {
+                session = instance.getSession();
                 player = instance.player;
                 // Synchronize Developer and Verbose Modes with Config Options, if they were not overridden pre-setup
                 ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.debugMode : ModUtils.IS_DEV;
@@ -273,8 +280,11 @@ public class CraftPresence {
                         }
                     }
                 }
-            } else if (instance != null && instance.getSession() != null) {
-                init();
+            } else if (instance != null) {
+                session = instance.getSession();
+                if (session != null) {
+                    init();
+                }
             }
 
             scheduleTick();
