@@ -527,7 +527,7 @@ public class StringUtils {
      * @return Whether the specified String classifies as a valid Uuid
      */
     public static boolean isValidUuid(final String input) {
-        return UUID_PATTERN.matcher(input).find();
+        return !StringUtils.isNullOrEmpty(input) && UUID_PATTERN.matcher(input).find();
     }
 
     /**
