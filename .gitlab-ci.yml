@@ -3,6 +3,10 @@ image: openjdk:17
 build:
   script:
     - ./gradlew build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ "l10n_master"
+    - if: $CI_COMMIT_BRANCH =~ "l10n_master"
   artifacts:
     paths:
       - build/libs/*.jar
