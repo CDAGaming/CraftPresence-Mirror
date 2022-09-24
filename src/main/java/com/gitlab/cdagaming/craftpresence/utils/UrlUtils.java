@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,6 +46,11 @@ public class UrlUtils {
      * The User Agent to Identify As when Accessing other URLs
      */
     private static final String USER_AGENT = ModUtils.MOD_ID + "/" + ModUtils.MCVersion;
+
+    /**
+     * The Operating System Name
+     */
+    private static final String OS_NAME = System.getProperty("os.name");
 
     /**
      * The Java Specification Version
@@ -204,20 +208,32 @@ public class UrlUtils {
      *
      * @param targetUrl The URL to Open, as a URI
      */
+    @SuppressWarnings("RedundantArrayCreation")
     public static void openUrl(final URI targetUrl) {
-        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            final Desktop desktop = Desktop.getDesktop();
+        try {
+            // Attempt to use the Desktop Library from JDK 1.6+
+            Class<?> d = Class.forName("java.awt.Desktop");
+            d.getDeclaredMethod("browse",
+                    new Class<?>[]{java.net.URI.class}).invoke(
+                    d.getDeclaredMethod("getDesktop").invoke(null),
+                    new Object[]{targetUrl});
+        } catch (Exception ignored) {
+            // Library not available or failed; use alternatives depending on OS
             try {
-                desktop.browse(targetUrl);
+                if (OS_NAME.contains("Win")) {
+                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + targetUrl.toString());
+                } else if (OS_NAME.startsWith("Mac")) {
+                    Class.forName("com.apple.eio.FileManager").getDeclaredMethod(
+                            "openURL", new Class<?>[]{String.class}).invoke(null,
+                            new Object[]{targetUrl.toString()});
+                } else {
+                    Runtime.getRuntime().exec("xdg-open " + targetUrl.toString());
+                }
             } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            final Runtime runtime = Runtime.getRuntime();
-            try {
-                runtime.exec("xdg-open " + targetUrl.toString());
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.web", targetUrl.toString()));
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

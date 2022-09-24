@@ -70,14 +70,7 @@ public class AboutGui extends ExtendedScreen {
                         (width / 2) - 90, (height - 55),
                         180, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.message.button.view_source"),
-                        () -> {
-                            try {
-                                UrlUtils.openUrl(SOURCE_URL);
-                            } catch (Exception ex) {
-                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.web", SOURCE_URL));
-                                ex.printStackTrace();
-                            }
-                        }
+                        () -> UrlUtils.openUrl(SOURCE_URL)
                 )
         );
 

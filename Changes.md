@@ -19,6 +19,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Backend: Rewritten `UrlUtils#openUrl` to support Linux + Modern Versions of Windows and Java
 * Fixed a regression in the Entity Module, exposing a (now-fixed) flaw where `StringUtils#isValidUUID` could accept a
   null input, causing a crash
 * Fixed an oversight in Translation logic that could cause the final value to be cut off when `usingJson` is true

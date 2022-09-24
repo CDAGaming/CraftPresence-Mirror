@@ -82,14 +82,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         (width - 105), (height - 30),
                         95, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.message.button.download"),
-                        () -> {
-                            try {
-                                UrlUtils.openUrl(modUpdater.downloadUrl);
-                            } catch (Exception ex) {
-                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.web", modUpdater.downloadUrl));
-                                ex.printStackTrace();
-                            }
-                        }
+                        () -> UrlUtils.openUrl(modUpdater.downloadUrl)
                 )
         );
 
