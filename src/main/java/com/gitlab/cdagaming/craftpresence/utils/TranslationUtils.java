@@ -41,15 +41,15 @@ import java.util.Map;
  */
 public class TranslationUtils {
     /**
+     * The default/fallback Language ID to Locate and Retrieve Translations
+     */
+    public final String defaultLanguageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
+    /**
      * The Stored Mapping of Language Request History
      * <p>
      * Format: languageId:doesExist
      */
     private final Map<String, Boolean> requestMap = Maps.newHashMap();
-    /**
-     * The default/fallback Language ID to Locate and Retrieve Translations
-     */
-    public final String defaultLanguageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
     /**
      * Whether the translations are utilizing Unicode Characters
      */

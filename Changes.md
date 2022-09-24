@@ -7,16 +7,20 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
-* Adjusted the `Language ID` setting, so on modern versions, the game's language ID has priority
-    * In versions where this setting does not exist, behavior is unchanged.
+* Adjusted the `Language ID` setting, so that on MC 1.1.0 and above, the game's language setting has priority
+    * In versions below MC 1.1.0, this behavior is unchanged from the prior version.
 * Added Support for more Image Types with Scrollable Lists and Dynamic Icons
     * For specifics: GIFs are now supported in `ImageUtils` in url form, so long as it ends in `.gif`
 * Misc. Backend Tweaks to allow all MC versions to use JSON for translations
-    * This will be key towards opening up more public means of translation contribution.
+    * JSON and LANG files are now supplied with each build, where LANG files are auto-generated from their JSON
+      equivalent
+    * Crowdin Integration has also been implemented and can be
+      accessed [here](https://crowdin.com/project/craftpresence)
 
 ### Fixes
 
-* Fixed a regression in the Entity Module, exposing a (now-fixed) flaw where `StringUtils#isValidUUID` could accept a null input, causing a crash
+* Fixed a regression in the Entity Module, exposing a (now-fixed) flaw where `StringUtils#isValidUUID` could accept a
+  null input, causing a crash
 * Fixed an oversight in Translation logic that could cause the final value to be cut off when `usingJson` is true
     * For CraftPresence, the `craftpresence.exception.config.prop.null` translation was effected by this
 * Fixed an oversight causing RPC Assets to not be re-synced when resetting the config or syncing the local config to the
