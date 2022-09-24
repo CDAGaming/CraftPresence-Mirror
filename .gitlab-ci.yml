@@ -6,7 +6,7 @@ build:
   rules:
     - if: $CI_COMMIT_BRANCH == "l10n_master" || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "l10n_master"
       when: never
-    - if: $CI_COMMIT_BRANCH =~ "l10n_master"
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
   artifacts:
     paths:
       - build/libs/*.jar
