@@ -205,15 +205,19 @@ public class UrlUtils {
      * @param targetUrl The URL to Open, as a URI
      */
     public static void openUrl(final URI targetUrl) {
-        try {
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
             final Desktop desktop = Desktop.getDesktop();
-            desktop.browse(targetUrl);
-        } catch (Exception ex) {
             try {
-                final Runtime runtime = Runtime.getRuntime();
+                desktop.browse(targetUrl);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            final Runtime runtime = Runtime.getRuntime();
+            try {
                 runtime.exec("xdg-open " + targetUrl.toString());
-            } catch (Exception ex2) {
-                ex2.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }
