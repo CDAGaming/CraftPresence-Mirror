@@ -249,7 +249,7 @@ public class DiscordUtils {
         // Add Any Generalized Argument Data needed
         modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
         playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
-        playerInfoArgs.add(new Pair<>("&UUID&", CraftPresence.session.getProfile().getId().toString()));
+        playerInfoArgs.add(new Pair<>("&UUID&", CraftPresence.session.getPlayerID()));
 
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
@@ -304,7 +304,7 @@ public class DiscordUtils {
      */
     public void updateTimestamp() {
         if (CraftPresence.CONFIG.showTime) {
-            START_TIMESTAMP = CraftPresence.SYSTEM.CURRENT_TIMESTAMP / 1000L;
+            START_TIMESTAMP = System.currentTimeMillis() / 1000L;
         }
     }
 
