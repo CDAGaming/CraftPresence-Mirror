@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.commands.CommandsGui;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;
+import com.jagrosh.discordipc.entities.Packet;
 import com.jagrosh.discordipc.entities.User;
 
 /**
