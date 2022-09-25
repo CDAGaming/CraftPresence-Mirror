@@ -32,9 +32,9 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordBuild;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.io.*;
 import java.lang.reflect.Field;

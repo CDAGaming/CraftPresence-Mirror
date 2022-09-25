@@ -231,6 +231,7 @@ dependencies {
         shadow(implementation('com.kohlschutter.junixsocket:junixsocket-native-common:2.4.0'))
     }
     implementation "com.google.code.findbugs:jsr305:3.0.2"
+    shadow(implementation("local_mod:DiscordIPC:${ipc_version}"))
 }
 
 jar {

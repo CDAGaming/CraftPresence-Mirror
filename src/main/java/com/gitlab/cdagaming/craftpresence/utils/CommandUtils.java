@@ -33,8 +33,8 @@ import com.gitlab.cdagaming.craftpresence.integrations.mcupdater.MCUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordBuild;
 import com.google.common.collect.Lists;
+import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.util.List;
 
