@@ -54,7 +54,7 @@ public class TranslationUtils {
      * <p>
      * Format: languageId:doesExist
      */
-    private final Map<String, Boolean> requestMap = Maps.newHashMap();
+    private final Map<String, Map<String, String>> requestMap = Maps.newHashMap();
     /**
      * Whether the translations are utilizing Unicode Characters
      */
@@ -71,12 +71,6 @@ public class TranslationUtils {
      * The Charset Encoding to parse translations in
      */
     private String encoding;
-    /**
-     * The Stored Mapping of Valid Translations
-     * <p>
-     * Format: unlocalizedKey:localizedString
-     */
-    private Map<String, String> translationMap = Maps.newHashMap();
     /**
      * If using a .Json or .Lang Language File
      */
@@ -126,10 +120,10 @@ public class TranslationUtils {
      */
     public TranslationUtils(final String modId, final boolean useJson, final String encoding) {
         setUsingJson(useJson);
-        setLanguage(checkCurrentLanguage());
+        setLanguage(getCurrentLanguage());
         setModId(modId);
         setEncoding(encoding);
-        getTranslationMap(encoding, getLocaleStreams(CraftPresence.instance.getResourceManager()).toArray(new InputStream[0]));
+        getTranslationMapFrom(languageId, encoding);
         checkUnicode();
     }
 
@@ -166,10 +160,10 @@ public class TranslationUtils {
      * Comprises of Synchronizing Data, and Updating Translation Data as needed
      */
     void onTick() {
-        final String currentLanguageId = checkCurrentLanguage();
+        final String currentLanguageId = getCurrentLanguage();
         if (!languageId.equals(currentLanguageId) &&
-                (!requestMap.containsKey(currentLanguageId) || requestMap.get(currentLanguageId))) {
-            refreshTranslationData(currentLanguageId);
+                (!requestMap.containsKey(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty())) {
+            syncTranslations(currentLanguageId);
         }
 
         if (CraftPresence.instance.gameSettings != null && isUnicode != CraftPresence.instance.gameSettings.forceUnicodeFont) {
@@ -182,17 +176,17 @@ public class TranslationUtils {
      *
      * @param languageId the language ID to interpret
      */
-    void refreshTranslationData(final String languageId) {
+    void syncTranslations(final String languageId) {
         setLanguage(languageId);
-        getTranslationMap(encoding, getLocaleStreams(CraftPresence.instance.getResourceManager()).toArray(new InputStream[0]));
+        getTranslationMapFrom(languageId, encoding);
         checkUnicode();
     }
 
     /**
      * Synchronize the translation mappings with the specified language ID
      */
-    void refreshTranslationData() {
-        refreshTranslationData(checkCurrentLanguage());
+    void syncTranslations() {
+        syncTranslations(getCurrentLanguage());
     }
 
     /**
@@ -200,7 +194,7 @@ public class TranslationUtils {
      *
      * @return the current language id to be used
      */
-    private String checkCurrentLanguage() {
+    private String getCurrentLanguage() {
         String result;
         if (CraftPresence.instance.gameSettings != null) {
             result = CraftPresence.instance.gameSettings.language;
@@ -213,26 +207,44 @@ public class TranslationUtils {
     }
 
     /**
+     * Determine the default language ID to be using
+     *
+     * @return the default language id to be used
+     */
+    public String getDefaultLanguage() {
+        return usingJson ? defaultLanguageId.toLowerCase() : defaultLanguageId;
+    }
+
+    /**
+     * Determines whether the translations contain Unicode Characters
+     */
+    private void checkUnicode(String languageId) {
+        isUnicode = false;
+        if (requestMap.containsKey(languageId)) {
+            int extendedCharCount = 0;
+            int totalLength = 0;
+
+            for (String currentString : requestMap.get(languageId).values()) {
+                final int currentLength = currentString.length();
+                totalLength += currentLength;
+
+                for (int index = 0; index < currentLength; ++index) {
+                    if (currentString.charAt(index) >= 256) {
+                        ++extendedCharCount;
+                    }
+                }
+            }
+
+            float f = (float) extendedCharCount / (float) totalLength;
+            isUnicode = (double) f > 0.1D || (CraftPresence.instance.gameSettings != null && CraftPresence.instance.gameSettings.forceUnicodeFont);
+        }
+    }
+
+    /**
      * Determines whether the translations contain Unicode Characters
      */
     private void checkUnicode() {
-        isUnicode = false;
-        int extendedCharCount = 0;
-        int totalLength = 0;
-
-        for (String currentString : translationMap.values()) {
-            final int currentLength = currentString.length();
-            totalLength += currentLength;
-
-            for (int index = 0; index < currentLength; ++index) {
-                if (currentString.charAt(index) >= 256) {
-                    ++extendedCharCount;
-                }
-            }
-        }
-
-        float f = (float) extendedCharCount / (float) totalLength;
-        isUnicode = (double) f > 0.1D || (CraftPresence.instance.gameSettings != null && CraftPresence.instance.gameSettings.forceUnicodeFont);
+        checkUnicode(languageId);
     }
 
     /**
@@ -287,7 +299,7 @@ public class TranslationUtils {
      * @param ext             The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager, final String ext) {
+    private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager, final String ext) {
         final String assetsPath = String.format("/assets/%s/", modId);
         final String langPath = String.format("lang/%s.%s", languageId, ext);
         final List<InputStream> results = Lists.newArrayList(
@@ -310,18 +322,40 @@ public class TranslationUtils {
      * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @return the interpreted list of valid {@link InputStream}'s
      */
+    private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager) {
+        return getLocaleStreamsFrom(languageId, resourceManager, (usingJson ? "json" : "lang"));
+    }
+
+    /**
+     * Fetches a list of valid {@link InputStream}'s that can be used for the current language
+     *
+     * @param resourceManager The resource manager to interpret (Resource Pack Support)
+     * @param ext             The file extension to look for (Default: lang or json)
+     * @return the interpreted list of valid {@link InputStream}'s
+     */
+    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager, final String ext) {
+        return getLocaleStreamsFrom(languageId, resourceManager, ext);
+    }
+
+    /**
+     * Fetches a list of valid {@link InputStream}'s that can be used for the current language
+     *
+     * @param resourceManager The resource manager to interpret (Resource Pack Support)
+     * @return the interpreted list of valid {@link InputStream}'s
+     */
     private List<InputStream> getLocaleStreams(final IResourceManager resourceManager) {
-        return getLocaleStreams(resourceManager, (usingJson ? "json" : "lang"));
+        return getLocaleStreamsFrom(languageId, resourceManager);
     }
 
     /**
      * Retrieves and Synchronizes a List of Translations from a Language File
      */
-    private void getTranslationMap(final String encoding, InputStream... data) {
+    private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding, List<InputStream> data) {
         boolean hasError = false;
-        translationMap = Maps.newHashMap();
+        requestMap.remove(languageId);
+        final Map<String, String> translationMap = Maps.newHashMap();
 
-        if (data != null && data.length > 0) {
+        if (data != null && !data.isEmpty()) {
             for (InputStream in : data) {
                 if (in != null) {
                     final BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName(encoding)));
@@ -362,9 +396,65 @@ public class TranslationUtils {
 
         if (hasError) {
             ModUtils.LOG.error("Translations for " + modId + " do not exist for " + languageId);
-            requestMap.put(languageId, false);
+            translationMap.clear();
+            requestMap.put(languageId, translationMap);
             setLanguage(defaultLanguageId);
+        } else {
+            ModUtils.LOG.debugInfo("Found translations for " + modId + " for " + languageId);
+            requestMap.put(languageId, translationMap);
         }
+        return translationMap;
+    }
+
+    /**
+     * Retrieves and Synchronizes a List of Translations from a Language File
+     */
+    private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding) {
+        return getTranslationMapFrom(languageId, encoding, getLocaleStreamsFrom(languageId, CraftPresence.instance.getResourceManager()));
+    }
+
+    /**
+     * Retrieves and Synchronizes a List of Translations from a Language File
+     */
+    private Map<String, String> getTranslationMapFrom(final String languageId) {
+        return getTranslationMapFrom(languageId, "UTF-8");
+    }
+
+    /**
+     * Retrieves and Synchronizes a List of Translations from a Language File
+     */
+    private Map<String, String> getTranslationMap() {
+        return getTranslationMapFrom(languageId);
+    }
+
+    /**
+     * Translates an Unlocalized String, based on the Translations retrieved
+     *
+     * @param stripColors    Whether to Remove Color and Formatting Codes
+     * @param translationKey The unLocalized String to translate
+     * @param parameters     Extra Formatting Arguments, if needed
+     * @return The Localized Translated String
+     */
+    public String translateFrom(final String languageId, final boolean stripColors, final String translationKey, final Object... parameters) {
+        boolean hasError = false;
+        String translatedString = translationKey;
+        try {
+            if (hasTranslationFrom(languageId, translationKey)) {
+                String rawString = getTranslationFrom(languageId, translationKey);
+                translatedString = parameters.length > 0 ? String.format(rawString, parameters) : rawString;
+            } else {
+                hasError = true;
+            }
+        } catch (Exception ex) {
+            ModUtils.LOG.error("Exception parsing " + translationKey + " from " + languageId);
+            ex.printStackTrace();
+            hasError = true;
+        }
+
+        if (hasError) {
+            ModUtils.LOG.error("Unable to retrieve a translation for " + translationKey + " from " + languageId);
+        }
+        return stripColors ? StringUtils.stripColors(translatedString) : translatedString;
     }
 
     /**
@@ -376,25 +466,18 @@ public class TranslationUtils {
      * @return The Localized Translated String
      */
     public String translate(final boolean stripColors, final String translationKey, final Object... parameters) {
-        boolean hasError = false;
-        String translatedString = translationKey;
-        try {
-            if (hasTranslation(translationKey)) {
-                String rawString = translationMap.get(translationKey);
-                translatedString = parameters.length > 0 ? String.format(rawString, parameters) : rawString;
-            } else {
-                hasError = true;
-            }
-        } catch (Exception ex) {
-            ModUtils.LOG.error("Exception parsing " + translationKey);
-            ex.printStackTrace();
-            hasError = true;
-        }
+        return translateFrom(languageId, stripColors, translationKey, parameters);
+    }
 
-        if (hasError) {
-            ModUtils.LOG.error("Unable to retrieve a translation for " + translationKey);
-        }
-        return stripColors ? StringUtils.stripColors(translatedString) : translatedString;
+    /**
+     * Translates an Unlocalized String, based on the Translations retrieved
+     *
+     * @param translationKey The unLocalized String to translate
+     * @param parameters     Extra Formatting Arguments, if needed
+     * @return The Localized Translated String
+     */
+    public String translateFrom(final String languageId, final String translationKey, final Object... parameters) {
+        return translateFrom(languageId, CraftPresence.CONFIG != null && CraftPresence.CONFIG.stripTranslationColors, translationKey, parameters);
     }
 
     /**
@@ -405,7 +488,21 @@ public class TranslationUtils {
      * @return The Localized Translated String
      */
     public String translate(final String translationKey, final Object... parameters) {
-        return translate(CraftPresence.CONFIG != null && CraftPresence.CONFIG.stripTranslationColors, translationKey, parameters);
+        return translateFrom(languageId, translationKey, parameters);
+    }
+
+    /**
+     * Determines whether the specified translation exists
+     *
+     * @param translationKey The unLocalized String to interpret
+     * @return whether the specified translation exists
+     */
+    public boolean hasTranslationFrom(final String languageId, final String translationKey) {
+        if (requestMap.containsKey(languageId)) {
+            return requestMap.get(languageId).containsKey(translationKey);
+        } else {
+            return getTranslationMapFrom(languageId).containsKey(translationKey);
+        }
     }
 
     /**
@@ -415,7 +512,30 @@ public class TranslationUtils {
      * @return whether the specified translation exists
      */
     public boolean hasTranslation(final String translationKey) {
-        return translationMap.containsKey(translationKey);
+        return hasTranslationFrom(languageId, translationKey);
+    }
+
+    /**
+     * Retrieves the specified translation, if it exists
+     *
+     * @param translationKey The unLocalized String to interpret
+     * @return whether the specified translation exists
+     */
+    public String getTranslationFrom(final String languageId, final String translationKey) {
+        if (hasTranslationFrom(languageId, translationKey)) {
+            return requestMap.get(languageId).get(translationKey);
+        }
+        return null;
+    }
+
+    /**
+     * Retrieves the specified translation, if it exists
+     *
+     * @param translationKey The unLocalized String to interpret
+     * @return whether the specified translation exists
+     */
+    public String getTranslation(final String translationKey) {
+        return getTranslationFrom(languageId, translationKey);
     }
 
     /**
