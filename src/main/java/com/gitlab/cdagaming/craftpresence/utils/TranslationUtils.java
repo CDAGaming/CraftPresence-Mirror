@@ -37,7 +37,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -126,9 +125,9 @@ public class TranslationUtils {
      * @param encoding The Charset Encoding to parse Language Files
      */
     public TranslationUtils(final String modId, final boolean useJson, final String encoding) {
+        setUsingJson(useJson);
         setLanguage(checkCurrentLanguage());
         setModId(modId);
-        setUsingJson(useJson);
         setEncoding(encoding);
         getTranslationMap(encoding, getLocaleStreams(CraftPresence.instance.getResourceManager()).toArray(new InputStream[0]));
         checkUnicode();
@@ -202,13 +201,15 @@ public class TranslationUtils {
      * @return the current language id to be used
      */
     private String checkCurrentLanguage() {
+        String result;
         if (CraftPresence.instance.gameSettings != null) {
-            return CraftPresence.instance.gameSettings.language;
+            result = CraftPresence.instance.gameSettings.language;
         } else if (CraftPresence.CONFIG != null) {
-            return CraftPresence.CONFIG.languageId;
+            result = CraftPresence.CONFIG.languageId;
         } else {
-            return defaultLanguageId;
+            result = defaultLanguageId;
         }
+        return usingJson ? result.toLowerCase() : result;
     }
 
     /**
@@ -249,11 +250,8 @@ public class TranslationUtils {
      * @param languageId The Language ID (Default: en_US)
      */
     private void setLanguage(final String languageId) {
-        if (!StringUtils.isNullOrEmpty(languageId)) {
-            this.languageId = usingJson ? languageId.toLowerCase() : languageId;
-        } else {
-            this.languageId = usingJson ? defaultLanguageId.toLowerCase() : defaultLanguageId;
-        }
+        String result = !StringUtils.isNullOrEmpty(languageId) ? languageId : defaultLanguageId;
+        this.languageId = usingJson ? result.toLowerCase() : result;
     }
 
     /**
