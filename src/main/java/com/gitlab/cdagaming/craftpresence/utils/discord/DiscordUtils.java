@@ -257,6 +257,14 @@ public class DiscordUtils {
         playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
         playerInfoArgs.add(new Pair<>("&UUID&", CraftPresence.session.getPlayerID()));
 
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : modsArgs) {
+            syncArgument("&MODS:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : playerInfoArgs) {
+            syncArgument("&IGN:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
         generalArgs.add(new Pair<>("&MODS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.modsPlaceholderMessage, modsArgs)));

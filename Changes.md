@@ -7,6 +7,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Allow the usage of placeholders in Dynamic Icon Urls
+    * You cannot use them in name's, since those are meant to always be static for easy retrieval
+* You can now use the sub-arguments from `&IGN&` and `&MODS&` independently from their placeholders
 * Adjusted the `Language ID` setting, so that on MC 1.1.0 and above, the game's language setting has priority
     * In versions below MC 1.1.0, this behavior is unchanged from the prior version.
 * Added Support for more Image Types with Scrollable Lists and Dynamic Icons
