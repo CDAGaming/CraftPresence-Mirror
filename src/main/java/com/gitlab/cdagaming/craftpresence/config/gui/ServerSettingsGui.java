@@ -120,6 +120,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.serverMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.serverMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.SERVER.knownAddresses.remove(attributeName);
                                                             },

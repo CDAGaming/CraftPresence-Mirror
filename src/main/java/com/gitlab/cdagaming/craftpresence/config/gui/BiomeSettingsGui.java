@@ -104,6 +104,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.biomeMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.biomeMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
                                                             },

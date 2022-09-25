@@ -105,6 +105,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.dimensionMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
                                                             },

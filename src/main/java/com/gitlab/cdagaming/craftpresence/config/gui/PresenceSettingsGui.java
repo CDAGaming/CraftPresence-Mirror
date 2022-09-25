@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -151,6 +150,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.buttonMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -220,13 +220,16 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                                                CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CraftPresence.CONFIG.dynamicIcons = StringUtils.setConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
-                                                                CommandUtils.rebootRPC(true);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                                                CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CraftPresence.CONFIG.dynamicIcons = StringUtils.removeFromArray(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
-                                                                CommandUtils.rebootRPC(true);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label

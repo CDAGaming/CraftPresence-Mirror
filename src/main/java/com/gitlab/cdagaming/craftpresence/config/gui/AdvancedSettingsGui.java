@@ -111,6 +111,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.guiMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.guiMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.GUIS.GUI_NAMES.remove(attributeName);
                                                             }, null,
@@ -192,7 +193,10 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.itemMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.itemMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                CraftPresence.TILE_ENTITIES.ITEM_NAMES.remove(attributeName);
+                                                                CraftPresence.TILE_ENTITIES.BLOCK_NAMES.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -275,6 +279,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.entityTargetMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.entityTargetMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                             }, null,
@@ -358,6 +363,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.entityAttackingMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.entityAttackingMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                             }, null,
@@ -441,6 +447,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
+                                                                CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.entityRidingMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.entityRidingMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                             }, null,
