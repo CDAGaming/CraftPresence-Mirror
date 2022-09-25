@@ -108,7 +108,7 @@ public class ModLogger {
      */
     public void debugInfo(final String logMessage, Object... logArguments) {
         if (ModUtils.IS_DEV) {
-            info("[Debug] " + logMessage, logArguments);
+            info("[DEBUG] " + logMessage, logArguments);
         }
     }
 
@@ -120,7 +120,7 @@ public class ModLogger {
      */
     public void debugWarn(final String logMessage, Object... logArguments) {
         if (ModUtils.IS_DEV) {
-            warn("[Debug] " + logMessage, logArguments);
+            warn("[DEBUG] " + logMessage, logArguments);
         }
     }
 
@@ -132,7 +132,7 @@ public class ModLogger {
      */
     public void debugError(final String logMessage, Object... logArguments) {
         if (ModUtils.IS_DEV) {
-            error("[Debug] " + logMessage, logArguments);
+            error("[DEBUG] " + logMessage, logArguments);
         }
     }
 }
