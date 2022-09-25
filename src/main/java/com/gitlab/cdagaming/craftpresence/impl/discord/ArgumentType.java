@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities;
+package com.gitlab.cdagaming.craftpresence.impl.discord;
 
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 

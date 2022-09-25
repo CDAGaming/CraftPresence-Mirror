@@ -26,14 +26,14 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.ConfigUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
+import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.IPCClient;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;

@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordStatus;
+import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.google.common.collect.Lists;
 
 import java.util.List;

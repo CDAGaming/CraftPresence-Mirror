@@ -27,12 +27,12 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.integrations.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.mcupdater.MCUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.discord.rpc.entities.DiscordBuild;
 import com.google.common.collect.Lists;
 
