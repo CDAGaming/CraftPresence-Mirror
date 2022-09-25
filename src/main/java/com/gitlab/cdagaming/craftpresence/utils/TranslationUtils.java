@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -249,9 +250,9 @@ public class TranslationUtils {
      */
     private void setLanguage(final String languageId) {
         if (!StringUtils.isNullOrEmpty(languageId)) {
-            this.languageId = languageId;
+            this.languageId = usingJson ? languageId.toLowerCase() : languageId;
         } else {
-            this.languageId = defaultLanguageId;
+            this.languageId = usingJson ? defaultLanguageId.toLowerCase() : defaultLanguageId;
         }
     }
 
