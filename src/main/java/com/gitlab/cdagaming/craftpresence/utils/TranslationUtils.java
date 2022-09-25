@@ -26,12 +26,17 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -124,7 +129,7 @@ public class TranslationUtils {
         setModId(modId);
         setUsingJson(useJson);
         setEncoding(encoding);
-        getTranslationMap(encoding);
+        getTranslationMap(encoding, getLocaleStreams(CraftPresence.instance.getResourceManager()).toArray(new InputStream[0]));
         checkUnicode();
     }
 
@@ -161,17 +166,33 @@ public class TranslationUtils {
      * Comprises of Synchronizing Data, and Updating Translation Data as needed
      */
     void onTick() {
-        String currentLanguageId = checkCurrentLanguage();
+        final String currentLanguageId = checkCurrentLanguage();
         if (!languageId.equals(currentLanguageId) &&
                 (!requestMap.containsKey(currentLanguageId) || requestMap.get(currentLanguageId))) {
-            setLanguage(currentLanguageId);
-            getTranslationMap(encoding);
-            checkUnicode();
+            refreshTranslationData(currentLanguageId);
         }
 
         if (CraftPresence.instance.gameSettings != null && isUnicode != CraftPresence.instance.gameSettings.forceUnicodeFont) {
             checkUnicode();
         }
+    }
+
+    /**
+     * Synchronize the translation mappings with the specified language ID
+     *
+     * @param languageId the language ID to interpret
+     */
+    void refreshTranslationData(final String languageId) {
+        setLanguage(languageId);
+        getTranslationMap(encoding, getLocaleStreams(CraftPresence.instance.getResourceManager()).toArray(new InputStream[0]));
+        checkUnicode();
+    }
+
+    /**
+     * Synchronize the translation mappings with the specified language ID
+     */
+    void refreshTranslationData() {
+        refreshTranslationData(checkCurrentLanguage());
     }
 
     /**
@@ -261,42 +282,86 @@ public class TranslationUtils {
     }
 
     /**
+     * Fetches a list of valid {@link InputStream}'s that can be used for the current language
+     *
+     * @param resourceManager The resource manager to interpret (Resource Pack Support)
+     * @param ext             The file extension to look for (Default: lang or json)
+     * @return the interpreted list of valid {@link InputStream}'s
+     */
+    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager, final String ext) {
+        final String assetsPath = String.format("/assets/%s/", modId);
+        final String langPath = String.format("lang/%s.%s", languageId, ext);
+        final List<InputStream> results = Lists.newArrayList(
+                FileUtils.getResourceAsStream(TranslationUtils.class, assetsPath + langPath)
+        );
+
+        try {
+            List<IResource> resources = resourceManager.getAllResources(new ResourceLocation(modId, langPath));
+            for (IResource resource : resources) {
+                results.add(resource.getInputStream());
+            }
+        } catch (Exception ignored) {
+        }
+        return results;
+    }
+
+    /**
+     * Fetches a list of valid {@link InputStream}'s that can be used for the current language
+     *
+     * @param resourceManager The resource manager to interpret (Resource Pack Support)
+     * @return the interpreted list of valid {@link InputStream}'s
+     */
+    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager) {
+        return getLocaleStreams(resourceManager, (usingJson ? "json" : "lang"));
+    }
+
+    /**
      * Retrieves and Synchronizes a List of Translations from a Language File
      */
-    private void getTranslationMap(final String encoding) {
+    private void getTranslationMap(final String encoding, InputStream... data) {
+        boolean hasError = false;
         translationMap = Maps.newHashMap();
 
-        final InputStream in = FileUtils.getResourceAsStream(TranslationUtils.class, "/assets/"
-                + (!StringUtils.isNullOrEmpty(modId) ? modId + "/" : "") +
-                "lang/" + languageId + (usingJson ? ".json" : ".lang"));
-
-        if (in != null) {
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName(encoding)));
-            try {
-                String currentString;
-                while ((currentString = reader.readLine()) != null) {
-                    currentString = currentString.trim();
-                    if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && (usingJson ? currentString.contains(":") : currentString.contains("="))) {
-                        final String[] splitTranslation = usingJson ? currentString.split(":", 2) : currentString.split("=", 2);
-                        if (usingJson) {
-                            String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim();
-                            String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - (splitTranslation[1].endsWith(",") ? 2 : 1)).trim();
-                            translationMap.put(
-                                    str1.replaceAll("(?s)\\\\(.)", "$1"),
-                                    str2.replaceAll("(?s)\\\\(.)", "$1")
-                            );
-                        } else {
-                            translationMap.put(splitTranslation[0].trim(), splitTranslation[1].trim());
+        if (data != null && data.length > 0) {
+            for (InputStream in : data) {
+                if (in != null) {
+                    final BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName(encoding)));
+                    try {
+                        String currentString;
+                        while ((currentString = reader.readLine()) != null) {
+                            currentString = currentString.trim();
+                            if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && (usingJson ? currentString.contains(":") : currentString.contains("="))) {
+                                final String[] splitTranslation = usingJson ? currentString.split(":", 2) : currentString.split("=", 2);
+                                if (usingJson) {
+                                    String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim();
+                                    String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - (splitTranslation[1].endsWith(",") ? 2 : 1)).trim();
+                                    translationMap.put(
+                                            str1.replaceAll("(?s)\\\\(.)", "$1"),
+                                            str2.replaceAll("(?s)\\\\(.)", "$1")
+                                    );
+                                } else {
+                                    translationMap.put(splitTranslation[0].trim(), splitTranslation[1].trim());
+                                }
+                            }
                         }
-                    }
-                }
 
-                in.close();
-            } catch (Exception ex) {
-                ModUtils.LOG.error("An Exception has occurred while Loading Translation Mappings, things may not work well...");
-                ex.printStackTrace();
+                        in.close();
+                    } catch (Exception ex) {
+                        ModUtils.LOG.error("An exception has occurred while loading Translation Mappings, aborting scan to prevent issues...");
+                        ex.printStackTrace();
+                        hasError = true;
+                        break;
+                    }
+                } else {
+                    hasError = true;
+                    break;
+                }
             }
         } else {
+            hasError = true;
+        }
+
+        if (hasError) {
             ModUtils.LOG.error("Translations for " + modId + " do not exist for " + languageId);
             requestMap.put(languageId, false);
             setLanguage(defaultLanguageId);

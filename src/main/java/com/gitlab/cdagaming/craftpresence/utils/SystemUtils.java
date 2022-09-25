@@ -184,7 +184,6 @@ public class SystemUtils {
                     HAS_GAME_LOADED = true;
                 }
                 CraftPresence.CLIENT.updatePresence(CraftPresence.CLIENT.buildRichPresence());
-                ModUtils.LOG.info("TICK");
                 LAST_TIME = ELAPSED_TIME;
                 refreshedCallbacks = true;
             }

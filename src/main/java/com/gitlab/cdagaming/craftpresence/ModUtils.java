@@ -165,7 +165,7 @@ public class ModUtils {
         VERSION_LABEL = "@VERSION_LABEL@";
         MCVersion = "@MC_VERSION@";
         MCProtocolID = Integer.parseInt("@MC_PROTOCOL@");
-        TRANSLATOR = new TranslationUtils(MOD_ID, !IS_LEGACY_SOFT && MCProtocolID >= 393);
+        TRANSLATOR = new TranslationUtils(MOD_ID, true);
         UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
     }
 

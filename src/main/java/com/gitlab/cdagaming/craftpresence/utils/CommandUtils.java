@@ -74,6 +74,7 @@ public class CommandUtils {
             CraftPresence.SERVER.onTick();
 
             if (forceUpdateRPC) {
+                ModUtils.TRANSLATOR.refreshTranslationData();
                 if (CraftPresence.DIMENSIONS.isInUse) {
                     CraftPresence.DIMENSIONS.updateDimensionPresence();
                 }
