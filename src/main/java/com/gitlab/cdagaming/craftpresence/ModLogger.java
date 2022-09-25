@@ -50,6 +50,15 @@ public class ModLogger {
     }
 
     /**
+     * Get the instance of the root logging manager
+     *
+     * @return An instance of the root logging manager
+     */
+    public Logger getLogInstance() {
+        return logInstance;
+    }
+
+    /**
      * Sends a Message with an ERROR Level to either Chat or Logs
      *
      * @param logMessage   The Log Message to Send
