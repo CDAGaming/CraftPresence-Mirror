@@ -217,6 +217,8 @@ public class TranslationUtils {
 
     /**
      * Determines whether the translations contain Unicode Characters
+     *
+     * @param languageId The language ID to interpret
      */
     private void checkUnicode(String languageId) {
         isUnicode = false;
@@ -295,6 +297,7 @@ public class TranslationUtils {
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the current language
      *
+     * @param languageId      The language ID to interpret
      * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @param ext             The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
@@ -319,6 +322,7 @@ public class TranslationUtils {
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the current language
      *
+     * @param languageId      The language ID to interpret
      * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @return the interpreted list of valid {@link InputStream}'s
      */
@@ -349,6 +353,11 @@ public class TranslationUtils {
 
     /**
      * Retrieves and Synchronizes a List of Translations from a Language File
+     *
+     * @param languageId The language ID to interpret
+     * @param encoding   The Charset Encoding (Default: UTF-8)
+     * @param data       The {@link InputStream}'s to accept data from
+     * @return the processed list of translations
      */
     private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding, List<InputStream> data) {
         boolean hasError = false;
@@ -408,6 +417,9 @@ public class TranslationUtils {
 
     /**
      * Retrieves and Synchronizes a List of Translations from a Language File
+     *
+     * @param languageId The language ID to interpret
+     * @param encoding   The Charset Encoding (Default: UTF-8)
      */
     private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding) {
         return getTranslationMapFrom(languageId, encoding, getLocaleStreamsFrom(languageId, CraftPresence.instance.getResourceManager()));
@@ -415,6 +427,8 @@ public class TranslationUtils {
 
     /**
      * Retrieves and Synchronizes a List of Translations from a Language File
+     *
+     * @param languageId The language ID to interpret
      */
     private Map<String, String> getTranslationMapFrom(final String languageId) {
         return getTranslationMapFrom(languageId, "UTF-8");
@@ -430,6 +444,7 @@ public class TranslationUtils {
     /**
      * Translates an Unlocalized String, based on the Translations retrieved
      *
+     * @param languageId     The language ID to interpret
      * @param stripColors    Whether to Remove Color and Formatting Codes
      * @param translationKey The unLocalized String to translate
      * @param parameters     Extra Formatting Arguments, if needed
@@ -472,6 +487,7 @@ public class TranslationUtils {
     /**
      * Translates an Unlocalized String, based on the Translations retrieved
      *
+     * @param languageId     The language ID to interpret
      * @param translationKey The unLocalized String to translate
      * @param parameters     Extra Formatting Arguments, if needed
      * @return The Localized Translated String
@@ -494,6 +510,7 @@ public class TranslationUtils {
     /**
      * Determines whether the specified translation exists
      *
+     * @param languageId     The language ID to interpret
      * @param translationKey The unLocalized String to interpret
      * @return whether the specified translation exists
      */
@@ -518,6 +535,7 @@ public class TranslationUtils {
     /**
      * Retrieves the specified translation, if it exists
      *
+     * @param languageId     The language ID to interpret
      * @param translationKey The unLocalized String to interpret
      * @return whether the specified translation exists
      */
