@@ -84,6 +84,16 @@ public class ModIPCListener implements IPCListener {
     }
 
     @Override
+    public void onPacketReceived(IPCClient client, Packet packet) {
+        // N/A
+    }
+
+    @Override
+    public void onPacketSent(IPCClient client, Packet packet) {
+        // N/A
+    }
+
+    @Override
     public void onReady(IPCClient client) {
         if (CraftPresence.CLIENT.STATUS != DiscordStatus.Ready) {
             CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
