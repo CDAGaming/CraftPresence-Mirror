@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.client.ClientBrandRetriever;
-import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.Launch;
 
 import java.io.*;
