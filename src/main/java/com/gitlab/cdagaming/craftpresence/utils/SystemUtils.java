@@ -38,88 +38,88 @@ import java.util.List;
  */
 public class SystemUtils {
     /**
+     * How long to wait by default (In Seconds) before callbacks refresh
+     */
+    private static final int DEFAULT_REFRESH_RATE = 2;
+    /**
      * The Current Time Remaining on the Timer
      */
     public int TIMER = 0;
-
     /**
      * The Name of the User's Operating System
      */
     public String OS_NAME;
-
     /**
      * The Architecture of the User's System
      */
     public String OS_ARCH;
-
     /**
      * The Directory the Application is running in
      */
     public String USER_DIR;
-
     /**
      * If the {@link SystemUtils#OS_NAME} can be classified as LINUX
      */
     public boolean IS_LINUX = false;
-
     /**
      * If the {@link SystemUtils#OS_NAME} can be classified as MAC
      */
     public boolean IS_MAC = false;
-
     /**
      * If the {@link SystemUtils#OS_NAME} can be classified as WINDOWS
      */
     public boolean IS_WINDOWS = false;
-
     /**
      * If the {@link SystemUtils#OS_ARCH} is 64-bit or x64
      */
     public boolean IS_64_BIT = false;
-
     /**
      * If Loading of critical data has been completed<p>
      * Becomes true after callbacks synchronize once if previously false
      */
     public boolean HAS_LOADED = false;
-
     /**
      * If Loading of game data has been completed<p>
      * Becomes true after callbacks synchronize if previously false but game is loaded
      */
     public boolean HAS_GAME_LOADED = false;
-
     /**
      * The Current Epoch Unix Timestamp in Milliseconds
      */
     public long CURRENT_TIMESTAMP;
-
     /**
      * Whether the Timer is Currently Active
      */
     private boolean isTiming = false;
-
     /**
      * Whether the Callbacks related to the Mod have been refreshed
      * <p>
      * In this case, the RPC Updates every 2 Seconds with this check ensuring such
      */
     private boolean refreshedCallbacks = false;
-
     /**
      * The Beginning Unix Timestamp to count down from
      */
     private long BEGINNING_TIMESTAMP;
-
     /**
      * The Elapsed Time since the application started (In Seconds)
      */
     private long ELAPSED_TIME;
+    /**
+     * The Last Time since the callbacks refreshed (In Seconds)
+     */
+    private long LAST_TIME;
+    /**
+     * How long to wait (In Seconds) before callbacks refresh
+     */
+    private int REFRESH_RATE;
 
     /**
      * Initialize OS and Timer Information
+     *
+     * @param refreshRate The rate (in seconds) at which callbacks should be updated
      */
-    public SystemUtils() {
+    public SystemUtils(int refreshRate) {
         try {
             OS_NAME = System.getProperty("os.name");
             OS_ARCH = System.getProperty("os.arch");
@@ -130,6 +130,8 @@ public class SystemUtils {
             IS_WINDOWS = OS_NAME.startsWith("Windows");
             CURRENT_TIMESTAMP = System.currentTimeMillis();
             ELAPSED_TIME = 0;
+            LAST_TIME = 0;
+            REFRESH_RATE = refreshRate;
 
             // Calculate if 64-Bit Architecture
             final List<String> x64 = Lists.newArrayList("amd64", "x86_64");
@@ -138,6 +140,22 @@ public class SystemUtils {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.system"));
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Initialize OS and Timer Information
+     */
+    public SystemUtils() {
+        this(DEFAULT_REFRESH_RATE);
+    }
+
+    /**
+     * Sets the time (in seconds) at which to execute callbacks
+     *
+     * @param refreshRate the new refresh rate
+     */
+    public void setRefreshRate(int refreshRate) {
+        this.REFRESH_RATE = refreshRate > 1 ? refreshRate : DEFAULT_REFRESH_RATE;
     }
 
     /**
@@ -157,7 +175,7 @@ public class SystemUtils {
         }
 
         // Every <passTime> Seconds, refresh Callbacks and load state status
-        if (ELAPSED_TIME % CraftPresence.CONFIG.refreshRate == 0) {
+        if (ELAPSED_TIME - LAST_TIME >= REFRESH_RATE) {
             if (!refreshedCallbacks) {
                 if (!HAS_LOADED && CraftPresence.CLIENT.STATUS == DiscordStatus.Ready) {
                     HAS_LOADED = true;
@@ -166,6 +184,8 @@ public class SystemUtils {
                     HAS_GAME_LOADED = true;
                 }
                 CraftPresence.CLIENT.updatePresence(CraftPresence.CLIENT.buildRichPresence());
+                ModUtils.LOG.info("TICK");
+                LAST_TIME = ELAPSED_TIME;
                 refreshedCallbacks = true;
             }
         } else {
