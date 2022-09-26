@@ -38,6 +38,10 @@ import java.util.List;
  */
 public class SystemUtils {
     /**
+     * The minimum time to wait by default (In Seconds) before callbacks refresh
+     */
+    public static final int MINIMUM_REFRESH_RATE = 2;
+    /**
      * The Current Time Remaining on the Timer
      */
     public int TIMER = 0;
@@ -143,7 +147,7 @@ public class SystemUtils {
         }
 
         // Every <passTime> Seconds, refresh Callbacks and load state status
-        if (ELAPSED_TIME % CraftPresence.CONFIG.refreshRate == 0) {
+        if (ELAPSED_TIME % getRefreshRate() == 0) {
             if (!refreshedCallbacks) {
                 if (!HAS_LOADED && CraftPresence.CLIENT.STATUS == DiscordStatus.Ready) {
                     HAS_LOADED = true;
@@ -157,6 +161,19 @@ public class SystemUtils {
         } else {
             refreshedCallbacks = false;
         }
+    }
+
+    /**
+     * Retrieve the current rate at which to execute callbacks
+     *
+     * @return the current refresh rate
+     */
+    private int getRefreshRate() {
+        int result = CraftPresence.CONFIG.refreshRate;
+        if (result < MINIMUM_REFRESH_RATE) {
+            result = MINIMUM_REFRESH_RATE;
+        }
+        return result;
     }
 
     /**

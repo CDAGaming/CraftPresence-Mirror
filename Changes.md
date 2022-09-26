@@ -7,6 +7,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Adjusted `Refresh Rate` to prevent it from being below 2 seconds
+    * Tests have shown that multiple issues can occur with it being any lower
 * Added Resource Pack Support on select MC versions for Translations
     * As a side-effect, doing `/cp reload` in the Commands UI will reload translations as well
 * Allow the usage of placeholders in Dynamic Icon Urls
