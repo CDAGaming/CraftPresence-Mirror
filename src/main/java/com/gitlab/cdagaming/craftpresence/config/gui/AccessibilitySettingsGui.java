@@ -340,8 +340,8 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
 
         final String languageIdTitle = ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.language_id");
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
         renderString(languageIdTitle, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF);
 
@@ -356,7 +356,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         final String languageIdTitle = ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.language_id");
 
         // Hovering over Language Id Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), StringUtils.getStringWidth(languageIdTitle), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(languageIdTitle), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.language_id")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
     }

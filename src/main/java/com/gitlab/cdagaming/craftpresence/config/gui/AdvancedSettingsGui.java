@@ -31,13 +31,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.CharacterEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
-
-import java.util.Arrays;
 
 public class AdvancedSettingsGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityAttackingMessagesButton, entityRidingMessagesButton;
@@ -495,16 +492,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 )
         );
 
-        // Adding Character Editor Button
-        addControl(
-                new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(4),
-                        160, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.char.editor"),
-                        () -> CraftPresence.GUIS.openScreen(new CharacterEditorGui(currentScreen))
-                )
-        );
-
         enableCommandsButton = addControl(
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(5),
@@ -686,9 +673,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             }
                             if (renderTooltipsButton.isChecked() != CraftPresence.CONFIG.renderTooltips) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                if (renderTooltipsButton.isChecked() && (Arrays.equals(StringUtils.MC_CHAR_WIDTH, new int[256]) || Arrays.equals(StringUtils.MC_GLYPH_WIDTH, new byte[65536]))) {
-                                    ModUtils.loadCharData(true, "UTF-8");
-                                }
                                 CraftPresence.CONFIG.renderTooltips = renderTooltipsButton.isChecked();
                             }
                             if (formatWordsButton.isChecked() != CraftPresence.CONFIG.formatWords) {
@@ -732,8 +716,8 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         final String splitCharacterText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.split_character");
         final String refreshRateText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.refresh_rate");
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
         renderString(splitCharacterText, (width / 2f) - 145, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
         renderString(refreshRateText, (width / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
@@ -755,12 +739,12 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         final String splitCharacterText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.split_character");
         final String refreshRateText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.refresh_rate");
         // Hovering over Split Character Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 145, CraftPresence.GUIS.getButtonY(1, 5), StringUtils.getStringWidth(splitCharacterText), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 145, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(splitCharacterText), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.split_character")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
 
         // Hovering over Refresh Rate Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), StringUtils.getStringWidth(refreshRateText), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(refreshRateText), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
     }

@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -414,7 +413,7 @@ public class ExtendedScreen extends GuiScreen {
         if (notice != null && !notice.isEmpty()) {
             for (int i = 0; i < notice.size(); i++) {
                 final String string = notice.get(i);
-                renderString(string, (useXAsActual ? widthScale : (width / widthScale)) - (StringUtils.getStringWidth(string) / widthScale), (useYAsActual ? heightScale : (height / heightScale)) + (i * 10), 0xFFFFFF);
+                renderString(string, (useXAsActual ? widthScale : (width / widthScale)) - (getStringWidth(string) / widthScale), (useYAsActual ? heightScale : (height / heightScale)) + (i * 10), 0xFFFFFF);
             }
         }
     }
@@ -429,6 +428,16 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void renderString(String text, float xPos, float yPos, int color) {
         getFontRenderer().drawStringWithShadow(text, xPos, yPos, color);
+    }
+
+    /**
+     * Get the Width of a String from the FontRenderer
+     *
+     * @param string The string to interpret
+     * @return the string's width from the font renderer
+     */
+    public int getStringWidth(final String string) {
+        return getFontRenderer().getStringWidth(string);
     }
 
     /**

@@ -184,14 +184,14 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
         renderString(primaryText, (width / 2f) - 130, primaryInput.getControlPosY() + 5, 0xFFFFFF);
         if (willRenderSecondaryInput) {
             renderString(secondaryText, (width / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
         }
 
         if (!isNewValue && !isDefaultValue) {
-            renderString(removeMessage, (width / 2f) - (StringUtils.getStringWidth(removeMessage) / 2f), (height - 45), 0xFFFFFF);
+            renderString(removeMessage, (width / 2f) - (getStringWidth(removeMessage) / 2f), (height - 45), 0xFFFFFF);
         }
 
         proceedButton.setControlMessage(
@@ -206,8 +206,8 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void postRender() {
-        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, primaryInput.getControlPosY() + 5, StringUtils.getStringWidth(primaryText), getFontHeight());
-        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, secondaryInput.getControlPosY() + 5, StringUtils.getStringWidth(secondaryText), getFontHeight());
+        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, primaryInput.getControlPosY() + 5, getStringWidth(primaryText), getFontHeight());
+        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, secondaryInput.getControlPosY() + 5, getStringWidth(secondaryText), getFontHeight());
         // Hovering over Message Label
         if (isHoveringOverPrimary && onHoverPrimaryCallback != null) {
             onHoverPrimaryCallback.accept(attributeName, this);

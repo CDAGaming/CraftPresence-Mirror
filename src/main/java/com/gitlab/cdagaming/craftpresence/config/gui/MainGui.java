@@ -373,10 +373,10 @@ public class MainGui extends ExtendedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID + " - " + StringUtils.formatWord(ModUtils.VERSION_LABEL));
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
 
         if (!ModUtils.VERSION_TYPE.equalsIgnoreCase("release")) {
-            renderString(releaseNotice, (width / 2f) - (StringUtils.getStringWidth(releaseNotice) / 2f), height - 85, 0xFFFFFF);
+            renderString(releaseNotice, (width / 2f) - (getStringWidth(releaseNotice) / 2f), height - 85, 0xFFFFFF);
         }
 
         syncRenderStates();
@@ -387,7 +387,7 @@ public class MainGui extends ExtendedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
 
         // Hovering over Title Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 15, StringUtils.getStringWidth(mainTitle), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, getStringWidth(mainTitle), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
     }

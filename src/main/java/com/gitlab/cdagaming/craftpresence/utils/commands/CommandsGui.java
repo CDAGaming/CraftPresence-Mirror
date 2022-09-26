@@ -136,7 +136,7 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.commands");
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
 
         if (!StringUtils.isNullOrEmpty(commandInput.getText()) && commandInput.getText().startsWith("/")) {
             commandArgs = commandInput.getText().replace("/", "").split(" ");

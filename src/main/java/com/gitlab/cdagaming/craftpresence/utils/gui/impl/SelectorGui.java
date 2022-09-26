@@ -185,7 +185,7 @@ public class SelectorGui extends ExtendedScreen {
         final String extraText = isVerboseMode() ? ModUtils.TRANSLATOR.translate("gui.config.title.selector.extra", itemList.size(), originalList.size()) : "";
         final String displayText = mainTitle + " " + extraText;
 
-        renderString(searchText, (30 - (StringUtils.getStringWidth(searchText) / 2f)), (height - 25), 0xFFFFFF);
-        renderString(displayText, (width / 2f) - (StringUtils.getStringWidth(displayText) / 2f), 15, 0xFFFFFF);
+        renderString(searchText, (30 - (getStringWidth(searchText) / 2f)), (height - 25), 0xFFFFFF);
+        renderString(displayText, (width / 2f) - (getStringWidth(displayText) / 2f), 15, 0xFFFFFF);
     }
 }

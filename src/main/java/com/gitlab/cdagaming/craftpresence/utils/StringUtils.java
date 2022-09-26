@@ -60,7 +60,7 @@ public class StringUtils {
     /**
      * Regex Pattern for Color and Formatting Codes
      */
-    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
+    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
     /**
      * Regex Pattern for Base64 Detection
      */
@@ -73,14 +73,6 @@ public class StringUtils {
      * Regex Pattern for Brackets containing Digits
      */
     private static final Pattern BRACKET_PATTERN = Pattern.compile("\\([^0-9]*\\d+[^0-9]*\\)");
-    /**
-     * The Stored Character Render Widths to interpret when rendering tooltips
-     */
-    public static int[] MC_CHAR_WIDTH = new int[256];
-    /**
-     * The Stored Unicode Character Glyph Render Widths to interpret when rendering tooltips
-     */
-    public static byte[] MC_GLYPH_WIDTH = new byte[65536];
 
     /**
      * Attempts to Convert a Hexadecimal String into a Valid interpretable Java Color
@@ -855,28 +847,6 @@ public class StringUtils {
     }
 
     /**
-     * Wraps a String based on the specified target width per line<p>
-     * Separated by newline characters, as needed
-     *
-     * @param stringInput The original String to wrap
-     * @param wrapWidth   The target width per line, to wrap the input around
-     * @return The converted and wrapped version of the original input
-     */
-    public static String wrapFormattedStringToWidth(String stringInput, int wrapWidth) {
-        int stringSizeToWidth = sizeStringToWidth(stringInput, wrapWidth);
-
-        if (stringInput.length() <= stringSizeToWidth) {
-            return stringInput;
-        } else {
-            String subString = stringInput.substring(0, stringSizeToWidth);
-            char currentCharacter = stringInput.charAt(stringSizeToWidth);
-            boolean flag = Character.isSpaceChar(currentCharacter) || currentCharacter == '\n';
-            String s1 = getFormatFromString(subString) + stringInput.substring(stringSizeToWidth + (flag ? 1 : 0));
-            return subString + "\n" + wrapFormattedStringToWidth(s1, wrapWidth);
-        }
-    }
-
-    /**
      * Returns the Color and Formatting Characters within a String<p>
      * Defined by {@link StringUtils#STRIP_COLOR_PATTERN}
      *
@@ -899,126 +869,6 @@ public class StringUtils {
         }
 
         return s.toString();
-    }
-
-    /**
-     * Returns the combined rendering width of the String entry
-     *
-     * @param originalString The original String to evaluate
-     * @return The expected rendering width for the input
-     */
-    public static int getStringWidth(final String originalString) {
-        if (isNullOrEmpty(originalString)) {
-            return 0;
-        } else {
-            int strLength = 0;
-            boolean flag = false;
-
-            for (int index = 0; index < originalString.length(); ++index) {
-                char strChar = originalString.charAt(index);
-                int charWidth = getCharWidth(strChar, ModUtils.TRANSLATOR.isUnicode);
-
-                if (charWidth < 0 && index < originalString.length() - 1) {
-                    ++index;
-                    strChar = originalString.charAt(index);
-
-                    if (strChar != 'l' && strChar != 'L') {
-                        if (strChar == 'r' || strChar == 'R') {
-                            flag = false;
-                        }
-                    } else {
-                        flag = true;
-                    }
-
-                    charWidth = 0;
-                }
-
-                strLength += charWidth;
-
-                if (flag && charWidth > 0) {
-                    ++strLength;
-                }
-            }
-
-            return strLength;
-        }
-    }
-
-    /**
-     * Returns the Render Character/Glyph Width of the specified character
-     *
-     * @param characterInput The character to evaluate
-     * @param usingUnicode   Whether the specified character is a Unicode Character
-     * @return The expected render character/glyph width for the input
-     */
-    public static int getCharWidth(char characterInput, boolean usingUnicode) {
-        if (Character.isSpaceChar(characterInput) || characterInput == 160) {
-            return 4;
-        } else if (characterInput == 167) {
-            return -1;
-        } else {
-            try {
-                if (characterInput > 0 && characterInput <= MC_CHAR_WIDTH.length && !usingUnicode) {
-                    return MC_CHAR_WIDTH[characterInput];
-                } else if (MC_GLYPH_WIDTH[characterInput] != 0) {
-                    int glyphIndex = MC_GLYPH_WIDTH[characterInput] & 255;
-                    int shiftedIndex = glyphIndex >>> 4;
-                    int remappedIndex = glyphIndex & 15;
-                    ++remappedIndex;
-                    return (remappedIndex - shiftedIndex) / 2 + 1;
-                } else {
-                    return 4; // Rather this be more, then it be cut off mid-text
-                }
-            } catch (Exception ex) {
-                return 4; // Rather this be more, then it be cut off mid-text
-            }
-        }
-    }
-
-    /**
-     * Returns the Wrapped Width of a String, defined by the target wrapWidth
-     *
-     * @param stringEntry The original String to evaluate
-     * @param wrapWidth   The target width to wrap within
-     * @return The expected wrapped width the String should be
-     */
-    public static int sizeStringToWidth(String stringEntry, int wrapWidth) {
-        int stringLength = stringEntry.length();
-        int charWidth = 0;
-        int currentLine = 0;
-        int currentIndex = -1;
-
-        for (boolean flag = false; currentLine < stringLength; ++currentLine) {
-            char currentCharacter = stringEntry.charAt(currentLine);
-
-            if (currentCharacter == ' ' || currentCharacter == '\n') {
-                currentIndex = currentLine;
-
-                if (currentCharacter == '\n') {
-                    break;
-                }
-            }
-
-            if (currentCharacter == '\u00a7' && currentLine < stringLength - 1) {
-                ++currentLine;
-                currentCharacter = stringEntry.charAt(currentLine);
-                String stringOfCharacter = String.valueOf(currentCharacter);
-
-                flag = stringOfCharacter.equalsIgnoreCase("l") && !(stringOfCharacter.equalsIgnoreCase("r") || STRIP_COLOR_PATTERN.matcher(stringOfCharacter).find());
-            }
-
-            charWidth += getCharWidth(currentCharacter, ModUtils.TRANSLATOR.isUnicode);
-            if (flag) {
-                ++charWidth;
-            }
-
-            if (charWidth > wrapWidth) {
-                break;
-            }
-        }
-
-
-        return currentLine != stringLength && currentIndex != -1 && currentIndex < currentLine ? currentIndex : currentLine;
     }
 
     /**

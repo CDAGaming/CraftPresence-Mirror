@@ -239,8 +239,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome_messages");
         final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.biome");
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
         renderString(defaultMessageText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getText()));
@@ -251,7 +251,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
     public void postRender() {
         final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.biome");
         // Hovering over Default Biome Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), StringUtils.getStringWidth(defaultMessageText), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(defaultMessageText), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title.biome_messages")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
     }

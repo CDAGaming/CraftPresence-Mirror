@@ -82,7 +82,7 @@ public class AboutGui extends ExtendedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.about.config");
         final List<String> notice = StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.credits"));
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
         renderNotice(notice);
     }
 }

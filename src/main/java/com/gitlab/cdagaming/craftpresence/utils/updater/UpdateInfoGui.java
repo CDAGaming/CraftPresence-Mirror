@@ -100,8 +100,8 @@ public class UpdateInfoGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
         final List<String> notice = StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.changelog", modUpdater.targetVersion, modUpdater.targetChangelogData));
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
         CraftPresence.GUIS.drawMultiLineString(notice, 10, 45, width, height, getWrapWidth(), getFontRenderer(), false);
     }
@@ -112,11 +112,11 @@ public class UpdateInfoGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
 
         // Hovering over Title Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 10, StringUtils.getStringWidth(mainTitle), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, getStringWidth(mainTitle), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
         // Hovering over Subtitle Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, StringUtils.getStringWidth(subTitle), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (getStringWidth(subTitle) / 2f), 20, getStringWidth(subTitle), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
     }

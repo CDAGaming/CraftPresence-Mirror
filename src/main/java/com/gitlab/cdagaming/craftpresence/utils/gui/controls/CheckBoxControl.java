@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
@@ -61,7 +60,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
         is_Checked = isChecked;
         boxWidth = 11;
         height = 11;
-        width = boxWidth + 2 + StringUtils.getStringWidth(displayString);
+        width = boxWidth + 2 + getFontRenderer().getStringWidth(displayString);
     }
 
     /**

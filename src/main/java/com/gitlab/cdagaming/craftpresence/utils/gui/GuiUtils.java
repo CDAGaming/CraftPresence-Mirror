@@ -128,6 +128,76 @@ public class GuiUtils {
     }
 
     /**
+     * Wraps a String based on the specified target width per line<p>
+     * Separated by newline characters, as needed
+     *
+     * @param stringInput The original String to wrap
+     * @param wrapWidth   The target width per line, to wrap the input around
+     * @return The converted and wrapped version of the original input
+     */
+    public static String wrapFormattedStringToWidth(final FontRenderer fontRenderer, String stringInput, int wrapWidth) {
+        int stringSizeToWidth = sizeStringToWidth(fontRenderer, stringInput, wrapWidth);
+
+        if (stringInput.length() <= stringSizeToWidth) {
+            return stringInput;
+        } else {
+            String subString = stringInput.substring(0, stringSizeToWidth);
+            char currentCharacter = stringInput.charAt(stringSizeToWidth);
+            boolean flag = Character.isSpaceChar(currentCharacter) || currentCharacter == '\n';
+            String s1 = StringUtils.getFormatFromString(subString) + stringInput.substring(stringSizeToWidth + (flag ? 1 : 0));
+            return subString + "\n" + wrapFormattedStringToWidth(fontRenderer, s1, wrapWidth);
+        }
+    }
+
+    /**
+     * Returns the Wrapped Width of a String, defined by the target wrapWidth
+     *
+     * @param stringEntry The original String to evaluate
+     * @param wrapWidth   The target width to wrap within
+     * @return The expected wrapped width the String should be
+     */
+    public static int sizeStringToWidth(final FontRenderer fontRenderer, String stringEntry, int wrapWidth) {
+        int stringLength = stringEntry.length();
+        int charWidth = 0;
+        int currentLine = 0;
+        int currentIndex = -1;
+
+        for (boolean flag = false; currentLine < stringLength; ++currentLine) {
+            char currentCharacter = stringEntry.charAt(currentLine);
+            String stringOfCharacter = String.valueOf(currentCharacter);
+
+            if (currentCharacter == ' ' || currentCharacter == '\n') {
+                currentIndex = currentLine;
+
+                if (currentCharacter == '\n') {
+                    break;
+                }
+            }
+
+            if (currentCharacter == '\u00a7' && currentLine < stringLength - 1) {
+                ++currentLine;
+                currentCharacter = stringEntry.charAt(currentLine);
+                stringOfCharacter = String.valueOf(currentCharacter);
+
+                flag = stringOfCharacter.equalsIgnoreCase("l") && !(stringOfCharacter.equalsIgnoreCase("r") ||
+                        StringUtils.STRIP_COLOR_PATTERN.matcher(stringOfCharacter).find());
+            }
+
+            charWidth += fontRenderer.getStringWidth(stringOfCharacter);
+            if (flag) {
+                ++charWidth;
+            }
+
+            if (charWidth > wrapWidth) {
+                break;
+            }
+        }
+
+
+        return currentLine != stringLength && currentIndex != -1 && currentIndex < currentLine ? currentIndex : currentLine;
+    }
+
+    /**
      * Draws a Textured Rectangle (Modal Version), following the defined arguments
      *
      * @param x      The Starting X Position of the Object
@@ -387,7 +457,7 @@ public class GuiUtils {
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
-                int textLineWidth = StringUtils.getStringWidth(textLine);
+                int textLineWidth = fontRenderer.getStringWidth(textLine);
 
                 if (textLineWidth > tooltipTextWidth) {
                     tooltipTextWidth = textLineWidth;
@@ -421,13 +491,13 @@ public class GuiUtils {
                 List<String> wrappedTextLines = Lists.newArrayList();
                 for (int i = 0; i < textLines.size(); i++) {
                     String textLine = textLines.get(i);
-                    List<String> wrappedLine = StringUtils.splitTextByNewLine(StringUtils.wrapFormattedStringToWidth(textLine, tooltipTextWidth));
+                    List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLine, tooltipTextWidth));
                     if (i == 0) {
                         titleLinesCount = wrappedLine.size();
                     }
 
                     for (String line : wrappedLine) {
-                        int lineWidth = StringUtils.getStringWidth(line);
+                        int lineWidth = fontRenderer.getStringWidth(line);
                         if (lineWidth > wrappedTooltipWidth) {
                             wrappedTooltipWidth = lineWidth;
                         }

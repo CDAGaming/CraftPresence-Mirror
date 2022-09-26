@@ -443,8 +443,8 @@ public class GeneralSettingsGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.general");
         final String clientIdText = ModUtils.TRANSLATOR.translate("gui.config.name.general.client_id");
 
-        renderString(mainTitle, (width / 2f) - (StringUtils.getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (StringUtils.getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
         renderString(clientIdText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         partyPrivacyLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name());
@@ -456,7 +456,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
     public void postRender() {
         final String clientIdText = ModUtils.TRANSLATOR.translate("gui.config.name.general.client_id");
         // Hovering over Client ID Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), StringUtils.getStringWidth(clientIdText), getFontHeight())) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(clientIdText), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.general.client_id")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
         }
     }
