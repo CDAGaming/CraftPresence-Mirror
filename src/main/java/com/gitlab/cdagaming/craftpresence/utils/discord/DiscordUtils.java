@@ -665,11 +665,9 @@ public class DiscordUtils {
                             StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
                             !CraftPresence.CONFIG.formatWords, true, 1
                     );
-                    String url = !StringUtils.isNullOrEmpty(part[2]) ?
-                            StringUtils.formatWord(
-                                    StringUtils.sequentialReplaceAnyCase(part[2], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
-                                    !CraftPresence.CONFIG.formatWords, true, 1
-                            ) : "";
+                    String url = !StringUtils.isNullOrEmpty(part[2]) ? StringUtils.sequentialReplaceAnyCase(
+                            part[2], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)
+                    ) : "";
                     buttonObj.addProperty("label", sanitizePlaceholders(label));
                     buttonObj.addProperty("url", sanitizePlaceholders(url));
                     BUTTONS.add(buttonObj);
