@@ -41,6 +41,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class PresenceSettingsGui extends PaginatedScreen {
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
+    private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
 
     PresenceSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -106,7 +107,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         largeImageKeyFormat.setText(CraftPresence.CONFIG.largeImageKey);
 
         // Button Messages Button
-        addControl(
+        buttonMessagesButton = addControl(
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
@@ -166,24 +167,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                             );
                                         }
                                 )
-                        ),
-                        () -> {
-                            CraftPresence.GUIS.drawMultiLineString(
-                                    StringUtils.splitTextByNewLine(
-                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                    ),
-                                    getMouseX(), getMouseY(),
-                                    width, height,
-                                    getWrapWidth(),
-                                    getFontRenderer(),
-                                    true
-                            );
-                        }
+                        )
                 ), startPage + 1
         );
 
         // Dynamic Icons Button
-        addControl(
+        dynamicIconsButton = addControl(
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
@@ -262,19 +251,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                             );
                                         }
                                 )
-                        ),
-                        () -> {
-                            CraftPresence.GUIS.drawMultiLineString(
-                                    StringUtils.splitTextByNewLine(
-                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                    ),
-                                    getMouseX(), getMouseY(),
-                                    width, height,
-                                    getWrapWidth(),
-                                    getFontRenderer(),
-                                    true
-                            );
-                        }
+                        )
                 ), startPage + 1
         );
 
@@ -377,6 +354,32 @@ public class PresenceSettingsGui extends PaginatedScreen {
             // Hovering over Large Image Key Format Message Label
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(largeImageKeyFormatTitle), getFontHeight())) {
                 CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+            }
+            // Hovering over Button Messages Button
+            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), buttonMessagesButton)) {
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                        ),
+                        getMouseX(), getMouseY(),
+                        width, height,
+                        getWrapWidth(),
+                        getFontRenderer(),
+                        true
+                );
+            }
+            // Hovering over Dynamic Icons Button
+            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), dynamicIconsButton)) {
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                        ),
+                        getMouseX(), getMouseY(),
+                        width, height,
+                        getWrapWidth(),
+                        getFontRenderer(),
+                        true
+                );
             }
         }
     }
