@@ -182,7 +182,7 @@ public class ColorEditorGui extends PaginatedScreen {
 
     @Override
     public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.color", configValueName.replaceAll("_", " "));
+        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.color", configValueName);
         final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview");
 
         renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);

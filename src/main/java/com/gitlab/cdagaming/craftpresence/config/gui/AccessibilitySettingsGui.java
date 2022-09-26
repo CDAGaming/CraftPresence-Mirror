@@ -54,10 +54,10 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        CraftPresence.CONFIG.NAME_tooltipBackgroundColor.replaceAll("_", " "),
+                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, CraftPresence.CONFIG.NAME_tooltipBackgroundColor,
+                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
                                         (pageNumber, screenInstance) -> {
                                             if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.tooltipBackgroundColor)) {
                                                 CraftPresence.CONFIG.hasChanged = true;
@@ -96,10 +96,10 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        CraftPresence.CONFIG.NAME_tooltipBorderColor.replaceAll("_", " "),
+                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, CraftPresence.CONFIG.NAME_tooltipBorderColor,
+                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
                                         (pageNumber, screenInstance) -> {
                                             if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.tooltipBorderColor)) {
                                                 CraftPresence.CONFIG.hasChanged = true;
@@ -138,10 +138,10 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        CraftPresence.CONFIG.NAME_guiBackgroundColor.replaceAll("_", " "),
+                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, CraftPresence.CONFIG.NAME_guiBackgroundColor,
+                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
                                         (pageNumber, screenInstance) -> {
                                             if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.guiBackgroundColor)) {
                                                 CraftPresence.CONFIG.hasChanged = true;
@@ -180,10 +180,10 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        CraftPresence.CONFIG.NAME_buttonBackgroundColor.replaceAll("_", " "),
+                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, CraftPresence.CONFIG.NAME_buttonBackgroundColor,
+                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
                                         (pageNumber, screenInstance) -> {
                                             if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.buttonBackgroundColor)) {
                                                 CraftPresence.CONFIG.hasChanged = true;
