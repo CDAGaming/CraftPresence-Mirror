@@ -295,7 +295,7 @@ public class CommandsGui extends ExtendedScreen {
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.shutdown.post");
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reboot")) {
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reboot.pre");
-                    CommandUtils.rebootRPC();
+                    CommandUtils.rebootRPC(true);
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reboot.post");
                 } else if (executionCommandArgs[0].equalsIgnoreCase("view")) {
                     if (executionCommandArgs.length == 1) {
