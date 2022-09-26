@@ -61,7 +61,6 @@ public class CommandUtils {
      */
     public static void reloadData(final boolean forceUpdateRPC) {
         ModUtils.TRANSLATOR.onTick();
-        CraftPresence.SYSTEM.setRefreshRate(CraftPresence.CONFIG.refreshRate);
         CraftPresence.SYSTEM.onTick();
         CraftPresence.instance.addScheduledTask(() -> CraftPresence.KEYBINDINGS.onTick());
         CraftPresence.GUIS.onTick();
