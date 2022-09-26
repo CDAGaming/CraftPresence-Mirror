@@ -395,11 +395,12 @@ public class MainGui extends ExtendedScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
-            if (CraftPresence.CONFIG.hasChanged || CraftPresence.CONFIG.hasClientPropertiesChanged) {
+            if (CraftPresence.CONFIG.hasChanged || CraftPresence.CONFIG.hasClientPropertiesChanged || CraftPresence.CONFIG.flushClientProperties) {
                 CraftPresence.CONFIG.setupInitialValues();
                 CraftPresence.CONFIG.read(false, "UTF-8");
                 CraftPresence.CONFIG.hasChanged = false;
                 CraftPresence.CONFIG.hasClientPropertiesChanged = false;
+                CraftPresence.CONFIG.flushClientProperties = false;
             }
             CraftPresence.GUIS.configGUIOpened = false;
         }

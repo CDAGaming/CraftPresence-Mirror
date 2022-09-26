@@ -409,8 +409,8 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         entityRidingMessagesButton = addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(4),
-                        160, 20,
+                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(4),
+                        180, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.entity_riding_messages"),
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
