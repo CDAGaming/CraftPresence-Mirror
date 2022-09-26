@@ -163,7 +163,6 @@ public class TranslationUtils {
         final String currentLanguageId = getCurrentLanguage();
         final boolean hasLanguageChanged = (!languageId.equals(currentLanguageId) &&
                 (!hasTranslationsFrom(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty()));
-        final boolean shouldSync = CraftPresence.SYSTEM.HAS_GAME_LOADED && !hasTranslationsFrom(currentLanguageId);
         if (CraftPresence.SYSTEM.HAS_GAME_LOADED) {
             if (needsSync) {
                 // Sync All if we need to initialize/re-initialize
@@ -172,11 +171,9 @@ public class TranslationUtils {
                     syncTranslations(key, false);
                 }
                 needsSync = false;
-            } else {
+            } else if (!hasTranslationsFrom(currentLanguageId)) {
                 // Otherwise, only sync the current language if none exist
-                if (!hasTranslationsFrom(currentLanguageId)) {
-                    syncTranslations(currentLanguageId);
-                }
+                syncTranslations(currentLanguageId);
             }
         }
     }
