@@ -56,10 +56,6 @@ public class TranslationUtils {
      */
     private final Map<String, Map<String, String>> requestMap = Maps.newHashMap();
     /**
-     * Whether the translations are utilizing Unicode Characters
-     */
-    public boolean isUnicode = false;
-    /**
      * The current Language ID to Locate and Retrieve Translations
      */
     private String languageId = defaultLanguageId;
@@ -124,7 +120,6 @@ public class TranslationUtils {
         setModId(modId);
         setEncoding(encoding);
         getTranslationMapFrom(languageId, encoding);
-        checkUnicode();
     }
 
     /**
@@ -165,10 +160,6 @@ public class TranslationUtils {
                 (!requestMap.containsKey(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty())) {
             syncTranslations(currentLanguageId);
         }
-
-        if (CraftPresence.instance.gameSettings != null && isUnicode != CraftPresence.instance.gameSettings.forceUnicodeFont) {
-            checkUnicode();
-        }
     }
 
     /**
@@ -179,7 +170,6 @@ public class TranslationUtils {
     void syncTranslations(final String languageId) {
         setLanguage(languageId);
         getTranslationMapFrom(languageId, encoding);
-        checkUnicode();
     }
 
     /**
@@ -213,40 +203,6 @@ public class TranslationUtils {
      */
     public String getDefaultLanguage() {
         return usingJson ? defaultLanguageId.toLowerCase() : defaultLanguageId;
-    }
-
-    /**
-     * Determines whether the translations contain Unicode Characters
-     *
-     * @param languageId The language ID to interpret
-     */
-    private void checkUnicode(String languageId) {
-        isUnicode = false;
-        if (requestMap.containsKey(languageId)) {
-            int extendedCharCount = 0;
-            int totalLength = 0;
-
-            for (String currentString : requestMap.get(languageId).values()) {
-                final int currentLength = currentString.length();
-                totalLength += currentLength;
-
-                for (int index = 0; index < currentLength; ++index) {
-                    if (currentString.charAt(index) >= 256) {
-                        ++extendedCharCount;
-                    }
-                }
-            }
-
-            float f = (float) extendedCharCount / (float) totalLength;
-            isUnicode = (double) f > 0.1D || (CraftPresence.instance.gameSettings != null && CraftPresence.instance.gameSettings.forceUnicodeFont);
-        }
-    }
-
-    /**
-     * Determines whether the translations contain Unicode Characters
-     */
-    private void checkUnicode() {
-        checkUnicode(languageId);
     }
 
     /**
