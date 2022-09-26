@@ -153,7 +153,7 @@ public class ScrollableListControl extends GuiSlot {
         int xOffset = xPos;
         String displayName = getSelectedItem(slotIndex);
         if (!CraftPresence.CONFIG.stripExtraGuiElements &&
-                (renderType == RenderType.DiscordAsset || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
+                ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
                         (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
                         (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
             ResourceLocation texture = new ResourceLocation("");
@@ -166,9 +166,9 @@ public class ScrollableListControl extends GuiSlot {
                     assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
                     texture = ImageUtils.getTextureFromUrl(displayName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
                 }
-            } else if (renderType == RenderType.DiscordAsset) {
+            } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
                 assetUrl = DiscordAssetUtils.getUrl(
-                        itemList.equals(DiscordAssetUtils.CUSTOM_ICON_LIST) ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
+                        renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
                         displayName
                 );
                 texture = ImageUtils.getTextureFromUrl(displayName, assetUrl);
@@ -226,6 +226,6 @@ public class ScrollableListControl extends GuiSlot {
      * The Rendering Type for this Scroll List
      */
     public enum RenderType {
-        DiscordAsset, ServerData, EntityData, ItemData, None
+        DiscordAsset, CustomDiscordAsset, ServerData, EntityData, ItemData, None
     }
 }

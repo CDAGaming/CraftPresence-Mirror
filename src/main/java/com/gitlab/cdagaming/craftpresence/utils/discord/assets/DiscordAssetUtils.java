@@ -29,10 +29,8 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -53,37 +51,9 @@ public class DiscordAssetUtils {
      */
     private static final String assetsEndpoint = "https://cdn.discordapp.com/app-assets/";
     /**
-     * A List of the Icon IDs available as ImageType SMALL
-     */
-    private static final List<String> SMALL_IDS = Lists.newArrayList();
-    /**
-     * A List of the Icon IDs available as ImageType LARGE
-     */
-    private static final List<String> LARGE_IDS = Lists.newArrayList();
-    /**
-     * A List of all the Icon IDs available within the Current Client ID
-     */
-    private static final List<String> ICON_IDS = Lists.newArrayList();
-    /**
      * If the Asset Check had completed
      */
     public static boolean syncCompleted = false;
-    /**
-     * A List of the Icons available as ImageType SMALL
-     */
-    public static List<String> SMALL_ICONS = Lists.newArrayList();
-    /**
-     * A List of the Icons available as ImageType LARGE
-     */
-    public static List<String> LARGE_ICONS = Lists.newArrayList();
-    /**
-     * A List of all the Icons available within the Current Client ID
-     */
-    public static List<String> ICON_LIST = Lists.newArrayList();
-    /**
-     * A List of all the Icons available from dynamic data
-     */
-    public static List<String> CUSTOM_ICON_LIST = Lists.newArrayList();
     /**
      * Mapping storing the Icon Keys and Asset Data attached to the Current Client
      * ID
@@ -243,14 +213,7 @@ public class DiscordAssetUtils {
      */
     public static void emptyData() {
         ASSET_LIST.clear();
-        SMALL_ICONS.clear();
-        SMALL_IDS.clear();
-        LARGE_ICONS.clear();
-        LARGE_IDS.clear();
-        ICON_LIST.clear();
-        ICON_IDS.clear();
         CUSTOM_ASSET_LIST.clear();
-        CUSTOM_ICON_LIST.clear();
 
         clearClientData();
     }
@@ -263,19 +226,30 @@ public class DiscordAssetUtils {
     }
 
     /**
+     * Attempts to retrieve a Random Icon from the available assets
+     *
+     * @return A Randomly retrieved Icon, if found
+     */
+    public static DiscordAsset getRandomAsset() {
+        try {
+            final Random randomObj = new Random();
+            DiscordAsset[] values = ASSET_LIST.values().toArray(new DiscordAsset[0]);
+            return values[randomObj.nextInt(values.length)];
+        } catch (Exception ex) {
+            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * Attempts to retrieve a Random Icon Key from the available assets
      *
      * @return A Randomly retrieved Icon Key, if found
      */
-    public static String getRandomAsset() {
-        try {
-            final Random randomObj = new Random();
-            return ICON_LIST.get(randomObj.nextInt(ICON_LIST.size()));
-        } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
-            ex.printStackTrace();
-            return "";
-        }
+    public static String getRandomAssetName() {
+        final DiscordAsset randAsset = getRandomAsset();
+        return randAsset != null ? randAsset.getName() : "";
     }
 
     /**
@@ -346,35 +320,8 @@ public class DiscordAssetUtils {
                         if (!StringUtils.isNullOrEmpty(asset.getUrl()) && asset.getType() != DiscordAsset.AssetType.CUSTOM) {
                             asset.setUrl(getDiscordAssetUrl(clientId, asset.getId(), false));
                         }
-                        if (asset.getType().equals(DiscordAsset.AssetType.LARGE)) {
-                            if (!LARGE_ICONS.contains(asset.getName())) {
-                                LARGE_ICONS.add(asset.getName());
-                            }
-                            if (!LARGE_IDS.contains(asset.getId())) {
-                                LARGE_IDS.add(asset.getId());
-                            }
-                        }
-                        if (asset.getType().equals(DiscordAsset.AssetType.SMALL)) {
-                            if (!SMALL_ICONS.contains(asset.getName())) {
-                                SMALL_ICONS.add(asset.getName());
-                            }
-                            if (!SMALL_IDS.contains(asset.getId())) {
-                                SMALL_IDS.add(asset.getId());
-                            }
-                        }
-                        if (asset.getType().equals(DiscordAsset.AssetType.CUSTOM)) {
-                            if (!CUSTOM_ICON_LIST.contains(asset.getName())) {
-                                CUSTOM_ICON_LIST.add(asset.getName());
-                            }
-                        }
-                        if (!ICON_LIST.contains(asset.getName())) {
-                            ICON_LIST.add(asset.getName());
-                        }
                         if (!ASSET_LIST.containsKey(asset.getName())) {
                             ASSET_LIST.put(asset.getName(), asset);
-                        }
-                        if (!ICON_IDS.contains(asset.getId())) {
-                            ICON_IDS.add(asset.getId());
                         }
                     }
                 }
@@ -383,22 +330,16 @@ public class DiscordAssetUtils {
                     if (!StringUtils.isNullOrEmpty(iconData)) {
                         final String[] part = iconData.split(CraftPresence.CONFIG.splitCharacter);
                         if (!StringUtils.isNullOrEmpty(part[0]) && !StringUtils.isNullOrEmpty(part[1])) {
-                            DiscordAsset asset = new DiscordAsset()
+                            final DiscordAsset asset = new DiscordAsset()
                                     .setName(part[0])
                                     .setUrl(part[1])
                                     .setType(DiscordAsset.AssetType.CUSTOM);
-
-                            if (!CUSTOM_ICON_LIST.contains(asset.getName())) {
-                                CUSTOM_ICON_LIST.add(asset.getName());
-                            }
                             if (!CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
                                 CUSTOM_ASSET_LIST.put(asset.getName(), asset);
                             }
                             // If a Discord Icon exists with the same name, give priority to the custom one
                             // Unless the icon is the default template, in which we don't add it at all
                             if (!asset.getName().equalsIgnoreCase("default")) {
-                                ICON_LIST.remove(asset.getName());
-                                ICON_LIST.add(asset.getName());
                                 ASSET_LIST.put(asset.getName(), asset);
                             }
                         }
@@ -425,7 +366,7 @@ public class DiscordAssetUtils {
         boolean needsFullUpdate = false;
         for (String property : CraftPresence.CONFIG.properties.stringPropertyNames()) {
             if ((property.equals(CraftPresence.CONFIG.NAME_defaultIcon) || property.equals(CraftPresence.CONFIG.NAME_defaultDimensionIcon) || property.equals(CraftPresence.CONFIG.NAME_defaultServerIcon)) && !contains(CraftPresence.CONFIG.properties.getProperty(property))) {
-                final String newAsset = contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : getRandomAsset();
+                final String newAsset = contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : getRandomAssetName();
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.pre", CraftPresence.CONFIG.properties.getProperty(property), property));
                 CraftPresence.CONFIG.properties.setProperty(property, newAsset);
                 needsFullUpdate = true;

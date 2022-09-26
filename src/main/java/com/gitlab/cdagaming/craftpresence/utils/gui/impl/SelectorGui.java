@@ -37,6 +37,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
+import java.util.Set;
 
 public class SelectorGui extends ExtendedScreen {
     private final String mainTitle, attributeName, originalValue;
@@ -64,11 +65,23 @@ public class SelectorGui extends ExtendedScreen {
         this.onAdjustDynamicEntry = onAdjustDynamicEntry;
     }
 
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, String> onUpdatedCallback, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(parentScreen, mainTitle, Lists.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
+    }
+
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
+    }
+
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
+    }
+
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
     }
 

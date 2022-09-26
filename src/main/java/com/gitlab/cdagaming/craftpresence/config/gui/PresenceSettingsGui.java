@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -190,9 +191,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ICON_LIST,
+                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                         null, null,
-                                        true, true, ScrollableListControl.RenderType.DiscordAsset,
+                                        true, true, ScrollableListControl.RenderType.CustomDiscordAsset,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -223,6 +224,18 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                                                 CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CraftPresence.CONFIG.dynamicIcons = StringUtils.setConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                final DiscordAsset asset = new DiscordAsset()
+                                                                        .setName(attributeName)
+                                                                        .setUrl(inputText)
+                                                                        .setType(DiscordAsset.AssetType.CUSTOM);
+                                                                if (!DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
+                                                                    DiscordAssetUtils.CUSTOM_ASSET_LIST.put(asset.getName(), asset);
+                                                                }
+                                                                // If a Discord Icon exists with the same name, give priority to the custom one
+                                                                // Unless the icon is the default template, in which we don't add it at all
+                                                                if (!asset.getName().equalsIgnoreCase("default")) {
+                                                                    DiscordAssetUtils.ASSET_LIST.put(asset.getName(), asset);
+                                                                }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
@@ -230,6 +243,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                                                 CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CraftPresence.CONFIG.dynamicIcons = StringUtils.removeFromArray(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
+                                                                    DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
+                                                                    if (!attributeName.equalsIgnoreCase("default")) {
+                                                                        DiscordAssetUtils.ASSET_LIST.remove(attributeName);
+                                                                    }
+                                                                }
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label

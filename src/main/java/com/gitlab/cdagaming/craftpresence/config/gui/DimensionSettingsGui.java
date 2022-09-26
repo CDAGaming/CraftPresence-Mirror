@@ -116,7 +116,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.openScreen(
                                                                         new SelectorGui(
                                                                                 screenInstance,
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ICON_LIST,
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                                                                 specificIcon, attributeName,
                                                                                 true, false, RenderType.DiscordAsset,
                                                                                 (innerAttributeName, innerCurrentValue) -> {
@@ -179,7 +179,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ICON_LIST,
+                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         CraftPresence.CONFIG.defaultDimensionIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {

@@ -343,12 +343,10 @@ public class CommandsGui extends ExtendedScreen {
                             if (executionCommandArgs.length == 2) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.view.assets");
                             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[2])) {
-                                if (executionCommandArgs[2].equalsIgnoreCase("large")) {
-                                    CraftPresence.GUIS.openScreen(new SelectorGui(currentScreen, ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.large"), DiscordAssetUtils.LARGE_ICONS, null, null, false, false, RenderType.DiscordAsset, null, null));
-                                } else if (executionCommandArgs[2].equalsIgnoreCase("small")) {
-                                    CraftPresence.GUIS.openScreen(new SelectorGui(currentScreen, ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.small"), DiscordAssetUtils.SMALL_ICONS, null, null, false, false, RenderType.DiscordAsset, null, null));
+                                if (executionCommandArgs[2].equalsIgnoreCase("custom")) {
+                                    CraftPresence.GUIS.openScreen(new SelectorGui(currentScreen, ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.custom"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(), null, null, false, false, RenderType.CustomDiscordAsset, null, null));
                                 } else if (executionCommandArgs[2].equalsIgnoreCase("all")) {
-                                    CraftPresence.GUIS.openScreen(new SelectorGui(currentScreen, ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"), DiscordAssetUtils.ICON_LIST, null, null, false, false, RenderType.DiscordAsset, null, null));
+                                    CraftPresence.GUIS.openScreen(new SelectorGui(currentScreen, ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"), DiscordAssetUtils.ASSET_LIST.keySet(), null, null, false, false, RenderType.DiscordAsset, null, null));
                                 }
                             }
                         } else {

@@ -528,7 +528,7 @@ public class DiscordUtils {
         // Ensures Assets were fully synced from the Client ID before running
         if (DiscordAssetUtils.syncCompleted) {
             if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equalsIgnoreCase(evalString)) {
-                final String defaultIcon = DiscordAssetUtils.contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : DiscordAssetUtils.getRandomAsset();
+                final String defaultIcon = DiscordAssetUtils.contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : DiscordAssetUtils.getRandomAssetName();
                 lastRequestedImageData.setFirst(evalString);
 
                 String finalKey = evalString;
