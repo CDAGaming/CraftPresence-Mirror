@@ -71,6 +71,10 @@ public class TranslationUtils {
      * If using a .Json or .Lang Language File
      */
     private boolean usingJson = false;
+    /**
+     * If this module needs a full sync
+     */
+    private boolean needsSync;
 
     /**
      * Sets initial Data and Retrieves Valid Translations
@@ -116,10 +120,11 @@ public class TranslationUtils {
      */
     public TranslationUtils(final String modId, final boolean useJson, final String encoding) {
         setUsingJson(useJson);
-        setLanguage(getCurrentLanguage());
         setModId(modId);
         setEncoding(encoding);
-        getTranslationMapFrom(languageId, encoding);
+        // Retrieve localized default translations
+        syncTranslations(getDefaultLanguage());
+        needsSync = true;
     }
 
     /**
@@ -156,10 +161,37 @@ public class TranslationUtils {
      */
     void onTick() {
         final String currentLanguageId = getCurrentLanguage();
-        if (!languageId.equals(currentLanguageId) &&
-                (!requestMap.containsKey(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty())) {
-            syncTranslations(currentLanguageId);
+        final boolean hasLanguageChanged = (!languageId.equals(currentLanguageId) &&
+                (!hasTranslationsFrom(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty()));
+        final boolean shouldSync = CraftPresence.SYSTEM.HAS_GAME_LOADED && !hasTranslationsFrom(currentLanguageId);
+        if (CraftPresence.SYSTEM.HAS_GAME_LOADED) {
+            if (needsSync) {
+                // Sync All if we need to initialize/re-initialize
+                final List<String> requestedKeys = Lists.newArrayList(requestMap.keySet());
+                for (String key : requestedKeys) {
+                    syncTranslations(key, false);
+                }
+                needsSync = false;
+            } else {
+                // Otherwise, only sync the current language if none exist
+                if (!hasTranslationsFrom(currentLanguageId)) {
+                    syncTranslations(currentLanguageId);
+                }
+            }
         }
+    }
+
+    /**
+     * Synchronize the translation mappings with the specified language ID
+     *
+     * @param languageId  the language ID to interpret
+     * @param setLanguage Whether we want the language ID to be the one in use
+     */
+    public void syncTranslations(final String languageId, final boolean setLanguage) {
+        if (setLanguage) {
+            setLanguage(languageId);
+        }
+        getTranslationMapFrom(languageId, encoding);
     }
 
     /**
@@ -167,16 +199,15 @@ public class TranslationUtils {
      *
      * @param languageId the language ID to interpret
      */
-    void syncTranslations(final String languageId) {
-        setLanguage(languageId);
-        getTranslationMapFrom(languageId, encoding);
+    public void syncTranslations(final String languageId) {
+        syncTranslations(languageId, true);
     }
 
     /**
-     * Synchronize the translation mappings with the specified language ID
+     * Synchronize the translation mappings for all language ids
      */
-    void syncTranslations() {
-        syncTranslations(getCurrentLanguage());
+    public void syncTranslations() {
+        needsSync = true;
     }
 
     /**
@@ -316,7 +347,7 @@ public class TranslationUtils {
      * @return the processed list of translations
      */
     private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding, List<InputStream> data) {
-        boolean hasError = false;
+        boolean hasError = false, hadBefore = hasTranslationsFrom(languageId);
         requestMap.remove(languageId);
         final Map<String, String> translationMap = Maps.newHashMap();
 
@@ -365,7 +396,7 @@ public class TranslationUtils {
             requestMap.put(languageId, translationMap);
             setLanguage(defaultLanguageId);
         } else {
-            ModUtils.LOG.debugInfo("Found translations for " + modId + " for " + languageId);
+            ModUtils.LOG.debugInfo((hadBefore ? "Refreshed" : "Added") + " translations for " + modId + " for " + languageId);
             requestMap.put(languageId, translationMap);
         }
         return translationMap;
@@ -407,7 +438,7 @@ public class TranslationUtils {
      * @return The Localized Translated String
      */
     public String translateFrom(final String languageId, final boolean stripColors, final String translationKey, final Object... parameters) {
-        boolean hasError = false;
+        boolean hasError = false, showErrors;
         String translatedString = translationKey;
         try {
             if (hasTranslationFrom(languageId, translationKey)) {
@@ -423,7 +454,16 @@ public class TranslationUtils {
         }
 
         if (hasError) {
-            ModUtils.LOG.error("Unable to retrieve a translation for " + translationKey + " from " + languageId);
+            showErrors = CraftPresence.SYSTEM.HAS_GAME_LOADED || languageId.equals(getDefaultLanguage());
+            if (showErrors) {
+                ModUtils.LOG.error("Unable to retrieve a translation for " + translationKey + " from " + languageId);
+            }
+            if (!languageId.equals(getDefaultLanguage())) {
+                if (showErrors) {
+                    ModUtils.LOG.error("Attempting to retrieve default translation for " + translationKey);
+                }
+                return translateFrom(getDefaultLanguage(), stripColors, translationKey, parameters);
+            }
         }
         return stripColors ? StringUtils.stripColors(translatedString) : translatedString;
     }
@@ -464,6 +504,16 @@ public class TranslationUtils {
     }
 
     /**
+     * Determines whether translations are present for the specified language
+     *
+     * @param languageId Tje language ID to interpret
+     * @return whether translations are present for this language
+     */
+    public boolean hasTranslationsFrom(final String languageId) {
+        return requestMap.containsKey(languageId);
+    }
+
+    /**
      * Determines whether the specified translation exists
      *
      * @param languageId     The language ID to interpret
@@ -471,7 +521,7 @@ public class TranslationUtils {
      * @return whether the specified translation exists
      */
     public boolean hasTranslationFrom(final String languageId, final String translationKey) {
-        if (requestMap.containsKey(languageId)) {
+        if (hasTranslationsFrom(languageId)) {
             return requestMap.get(languageId).containsKey(translationKey);
         } else {
             return getTranslationMapFrom(languageId).containsKey(translationKey);

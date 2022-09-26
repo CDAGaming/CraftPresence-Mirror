@@ -214,7 +214,7 @@ public class UrlUtils {
             // Attempt to use the Desktop Library from JDK 1.6+
             Class<?> d = Class.forName("java.awt.Desktop");
             d.getDeclaredMethod("browse",
-                    new Class<?>[]{java.net.URI.class}).invoke(
+                    new Class<?>[]{URI.class}).invoke(
                     d.getDeclaredMethod("getDesktop").invoke(null),
                     new Object[]{targetUrl});
         } catch (Exception ignored) {
