@@ -265,21 +265,7 @@ public class DiscordUtils {
             syncArgument("&IGN:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
         }
 
-        generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
-        generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
-        generalArgs.add(new Pair<>("&MODS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.modsPlaceholderMessage, modsArgs)));
-        generalArgs.add(new Pair<>("&IGN&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.outerPlayerPlaceholderMessage, playerInfoArgs)));
-
-        for (Pair<String, String> generalArgument : generalArgs) {
-            // For each General (Can be used Anywhere) Argument
-            // Ensure they sync as Formatter Arguments too
-            syncArgument(generalArgument.getFirst(), generalArgument.getSecond(), ArgumentType.Text);
-        }
-
-        // Sync the Default Icon Argument
-        syncArgument("&DEFAULT&", CraftPresence.CONFIG.defaultIcon, ArgumentType.Image);
-
-        syncPackArguments();
+        syncPlaceholders();
     }
 
     /**
@@ -500,6 +486,28 @@ public class DiscordUtils {
 
         syncArgument("&PACK&", StringUtils.formatWord(StringUtils.replaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, "&NAME&", !StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : ""), !CraftPresence.CONFIG.formatWords), ArgumentType.Text);
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
+    }
+
+    /**
+     * Synchronizes and Updates Dynamic Placeholder data in this module
+     */
+    public void syncPlaceholders() {
+        generalArgs.clear();
+
+        generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
+        generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
+        generalArgs.add(new Pair<>("&MODS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.modsPlaceholderMessage, modsArgs)));
+        generalArgs.add(new Pair<>("&IGN&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.outerPlayerPlaceholderMessage, playerInfoArgs)));
+
+        for (Pair<String, String> generalArgument : generalArgs) {
+            // For each General (Can be used Anywhere) Argument
+            // Ensure they sync as Formatter Arguments too
+            syncArgument(generalArgument.getFirst(), generalArgument.getSecond(), ArgumentType.Text);
+        }
+
+        // Sync the Default Icon Argument
+        syncArgument("&DEFAULT&", CraftPresence.CONFIG.defaultIcon, ArgumentType.Image);
+        syncPackArguments();
     }
 
     /**
