@@ -30,6 +30,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.BufferedReader;
@@ -44,7 +46,8 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-public class TranslationUtils {
+@SuppressWarnings("deprecation")
+public class TranslationUtils implements IResourceManagerReloadListener {
     /**
      * The default/fallback Language ID to Locate and Retrieve Translations
      */
@@ -125,6 +128,7 @@ public class TranslationUtils {
         // Retrieve localized default translations
         syncTranslations(getDefaultLanguage());
         needsSync = true;
+        ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
     }
 
     /**
@@ -165,14 +169,14 @@ public class TranslationUtils {
                 (!hasTranslationsFrom(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty()));
         if (CraftPresence.SYSTEM.HAS_GAME_LOADED) {
             if (needsSync) {
-                // Sync All if we need to initialize/re-initialize
+                // Sync All if we need to (Normally for initialization or reload purposes)
                 final List<String> requestedKeys = Lists.newArrayList(requestMap.keySet());
                 for (String key : requestedKeys) {
                     syncTranslations(key, false);
                 }
                 needsSync = false;
-            } else if (!hasTranslationsFrom(currentLanguageId)) {
-                // Otherwise, only sync the current language if none exist
+            } else if (hasLanguageChanged) {
+                // Otherwise, only sync the current language if needed
                 syncTranslations(currentLanguageId);
             }
         }
@@ -557,6 +561,12 @@ public class TranslationUtils {
      */
     public String getTranslation(final String translationKey) {
         return getTranslationFrom(languageId, translationKey);
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager) {
+        ModUtils.LOG.info("TESTME");
+        syncTranslations();
     }
 
     /**
