@@ -293,10 +293,10 @@ public class DiscordUtils {
      * @return The resulting output string
      */
     public String sanitizePlaceholders(String input) {
-        if (StringUtils.isNullOrEmpty(input) || !CraftPresence.CONFIG.formatWords) {
+        if (StringUtils.isNullOrEmpty(input, true) || !CraftPresence.CONFIG.formatWords) {
             return input;
         }
-        return input.replaceAll("&[^&]*&", "");
+        return input.replaceAll("&[^&]*&", "").trim();
     }
 
     /**
@@ -676,9 +676,14 @@ public class DiscordUtils {
                     String url = !StringUtils.isNullOrEmpty(part[2]) ? StringUtils.sequentialReplaceAnyCase(
                             part[2], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)
                     ) : "";
-                    buttonObj.addProperty("label", sanitizePlaceholders(label));
-                    buttonObj.addProperty("url", sanitizePlaceholders(url));
-                    BUTTONS.add(buttonObj);
+
+                    label = sanitizePlaceholders(label);
+                    url = sanitizePlaceholders(url);
+                    if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
+                        buttonObj.addProperty("label", sanitizePlaceholders(label));
+                        buttonObj.addProperty("url", sanitizePlaceholders(url));
+                        BUTTONS.add(buttonObj);
+                    }
                 }
             }
         }
