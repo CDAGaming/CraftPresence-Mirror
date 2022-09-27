@@ -35,6 +35,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Fixed a NPE that can occur when rendering one of the Per-Item/Per-Entity tooltips
 * Backend: Added additional String<->UUID conversion utils to ensure anything involving UUIDs follows Mojang's format
 * Backend: Rewritten `UrlUtils#openUrl` to support Linux + Modern Versions of Windows and Java
 * Backend: Fixed `DiscordUtils#updateTimestamp` not properly working

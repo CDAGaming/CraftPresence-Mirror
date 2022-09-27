@@ -553,7 +553,8 @@ public class TileEntityUtils {
      * @param name The TileEntity Name
      * @return A List of Tags from a TileEntity name, if currently equipped
      */
-    public List<String> getListFromName(final String name) {
+    public List<String> getListFromName(String name) {
+        name = !StringUtils.isNullOrEmpty(name) ? name : "";
         return name.equalsIgnoreCase(CURRENT_MAIN_HAND_ITEM_NAME) ? CURRENT_MAIN_HAND_ITEM_TAGS
                 : name.equalsIgnoreCase(CURRENT_OFFHAND_ITEM_NAME) ? CURRENT_OFFHAND_ITEM_TAGS
                 : name.equalsIgnoreCase(CURRENT_HELMET_NAME) ? CURRENT_HELMET_TAGS

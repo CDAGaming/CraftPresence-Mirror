@@ -297,7 +297,8 @@ public class EntityUtils {
      * @param name The Entity Name
      * @return A List of Tags from a Entity name, if currently equipped
      */
-    public List<String> getListFromName(final String name) {
+    public List<String> getListFromName(String name) {
+        name = !StringUtils.isNullOrEmpty(name) ? name : "";
         return name.equalsIgnoreCase(CURRENT_TARGET_NAME) ? CURRENT_TARGET_TAGS
                 : name.equalsIgnoreCase(CURRENT_RIDING_NAME) ? CURRENT_RIDING_TAGS : Lists.newArrayList();
     }
