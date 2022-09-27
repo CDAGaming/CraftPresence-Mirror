@@ -192,7 +192,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Synchronize the translation mappings with the specified language ID
+     * Synchronize the translation mappings for the specified language ID
      *
      * @param languageId  the language ID to interpret
      * @param setLanguage Whether we want the language ID to be the one in use
@@ -205,7 +205,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Synchronize the translation mappings with the specified language ID
+     * Synchronize the translation mappings for the specified language ID
      *
      * @param languageId the language ID to interpret
      */
@@ -292,7 +292,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Fetches a list of valid {@link InputStream}'s that can be used for the current language
+     * Fetches a list of valid {@link InputStream}'s that can be used for the specified language
      *
      * @param languageId      The language ID to interpret
      * @param resourceManager The resource manager to interpret (Resource Pack Support)
@@ -317,7 +317,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Fetches a list of valid {@link InputStream}'s that can be used for the current language
+     * Fetches a list of valid {@link InputStream}'s that can be used for the specified language
      *
      * @param languageId      The language ID to interpret
      * @param resourceManager The resource manager to interpret (Resource Pack Support)
@@ -439,7 +439,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Translates an Unlocalized String, based on the Translations retrieved
+     * Translates an Unlocalized String, based on the translations retrieved for the specified language
      *
      * @param languageId     The language ID to interpret
      * @param stripColors    Whether to Remove Color and Formatting Codes
@@ -479,7 +479,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Translates an Unlocalized String, based on the Translations retrieved
+     * Translates an Unlocalized String, based on the translations retrieved for the current language
      *
      * @param stripColors    Whether to Remove Color and Formatting Codes
      * @param translationKey The unLocalized String to translate
@@ -491,7 +491,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Translates an Unlocalized String, based on the Translations retrieved
+     * Translates an Unlocalized String, based on the translations retrieved for the specified language
      *
      * @param languageId     The language ID to interpret
      * @param translationKey The unLocalized String to translate
@@ -503,7 +503,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Translates an Unlocalized String, based on the Translations retrieved
+     * Translates an Unlocalized String, based on the translations retrieved for the current language
      *
      * @param translationKey The unLocalized String to translate
      * @param parameters     Extra Formatting Arguments, if needed
@@ -516,7 +516,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     /**
      * Determines whether translations are present for the specified language
      *
-     * @param languageId Tje language ID to interpret
+     * @param languageId The language ID to interpret
      * @return whether translations are present for this language
      */
     public boolean hasTranslationsFrom(final String languageId) {
@@ -524,7 +524,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Determines whether the specified translation exists
+     * Determines whether the specified translation exists for the specified language
      *
      * @param languageId     The language ID to interpret
      * @param translationKey The unLocalized String to interpret
@@ -539,7 +539,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Determines whether the specified translation exists
+     * Determines whether the specified translation exists for the current language
      *
      * @param translationKey The unLocalized String to interpret
      * @return whether the specified translation exists
@@ -549,7 +549,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Retrieves the specified translation, if it exists
+     * Retrieves the specified translation, if it exists for the specified language
      *
      * @param languageId     The language ID to interpret
      * @param translationKey The unLocalized String to interpret
@@ -563,7 +563,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Retrieves the specified translation, if it exists
+     * Retrieves the specified translation, if it exists for the current language
      *
      * @param translationKey The unLocalized String to interpret
      * @return whether the specified translation exists
