@@ -39,6 +39,7 @@
   "gui.config.title.selector.view.servers": "CraftPresence - Server Addresses",
   "gui.config.title.selector.view.guis": "CraftPresence - Available Guis",
   "gui.config.title.selector.view.items": "CraftPresence - Available Items",
+  "gui.config.title.selector.view.entities": "CraftPresence - Available Entities",
   "gui.config.comment.title": "Current Version -> %1$s (Schema v%2$s)",
   "gui.config.comment.title.changes": "Minecraft Version -> %1$s",
   "gui.config.comment.title.general": "General settings for display info",

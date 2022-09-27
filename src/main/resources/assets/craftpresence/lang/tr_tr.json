@@ -39,6 +39,7 @@
   "gui.config.title.selector.view.servers": "CraftPresence - Sunucu adresleri",
   "gui.config.title.selector.view.guis": "CraftPresence - Mevcut Arayüzler",
   "gui.config.title.selector.view.items": "CraftPresence - Mevcut Eşyalar",
+  "gui.config.title.selector.view.entities": "CraftPresence - Available Entities",
   "gui.config.comment.title": "Şimdiki Sürüm -> %1$s (Şema v%2$s)",
   "gui.config.comment.title.changes": "Minecraft Sürümü -> %1$s",
   "gui.config.comment.title.general": "Görüntü bilgileri için genel ayarlar",
