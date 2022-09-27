@@ -32,6 +32,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * The Character Editor GUI as well as it's utilities have been deprecated to use the FontRenderer instead, solving a
       variety of issues relating to Unicode and tooltip displays
     * Unicode Logic has similarly been removed from `TranslationUtils` to opt for the FontRenderer implementation
+* Backend: `StringUtils#isNullOrEmpty` now no longer allows all-whitespace strings (IE it'll return false for it)
+    * Use the overload version of this function if you wish to allow whitespace
 
 ### Fixes
 

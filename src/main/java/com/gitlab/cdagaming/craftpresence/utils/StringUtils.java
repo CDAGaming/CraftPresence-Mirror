@@ -344,8 +344,21 @@ public class StringUtils {
      * @param entry The String to evaluate
      * @return {@code true} if Entry is classified as NULL or EMPTY
      */
-    public static boolean isNullOrEmpty(final String entry) {
+    public static boolean isNullOrEmpty(String entry, final boolean allowWhitespace) {
+        if (entry != null) {
+            entry = allowWhitespace ? entry : entry.trim();
+        }
         return entry == null || entry.isEmpty() || entry.equalsIgnoreCase("null");
+    }
+
+    /**
+     * Determines whether a String classifies as NULL or EMPTY
+     *
+     * @param entry The String to evaluate
+     * @return {@code true} if Entry is classified as NULL or EMPTY
+     */
+    public static boolean isNullOrEmpty(final String entry) {
+        return isNullOrEmpty(entry, false);
     }
 
     /**

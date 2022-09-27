@@ -43,7 +43,6 @@ public class DynamicEditorGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
     private String removeMessage;
-    private int controlIndex;
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, PairConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super(parentScreen);
@@ -74,7 +73,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void initializeUi() {
-        this.controlIndex = 1;
+        int controlIndex = 1;
         if (isNewValue) {
             mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
             if (onNewInit != null) {
@@ -147,15 +146,12 @@ public class DynamicEditorGui extends ExtendedScreen {
                             if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText())) {
                                 attributeName = secondaryInput.getText();
                             }
-                            if (!primaryInput.getText().equals(primaryMessage) ||
-                                    (willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText()) && (!primaryInput.getText().equals(primaryMessage) || !secondaryInput.getText().equals(secondaryMessage))) ||
-                                    (isDefaultValue && !StringUtils.isNullOrEmpty(primaryInput.getText()) && !primaryInput.getText().equals(primaryMessage))) {
+                            if (isAdjusting()) {
                                 if (onAdjustEntry != null) {
                                     onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getText() : attributeName, primaryInput.getText());
                                 }
                             }
-                            if (StringUtils.isNullOrEmpty(primaryInput.getText()) ||
-                                    (primaryInput.getText().equalsIgnoreCase(originalPrimaryMessage) && !primaryMessage.equals(originalPrimaryMessage) && !isDefaultValue)) {
+                            if (isRemoving()) {
                                 if (onRemoveEntry != null) {
                                     onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getText() : attributeName, primaryInput.getText());
                                 }
@@ -195,13 +191,11 @@ public class DynamicEditorGui extends ExtendedScreen {
         }
 
         proceedButton.setControlMessage(
-                !primaryInput.getText().equals(primaryMessage) ||
-                        (willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText()) && (!primaryInput.getText().equals(primaryMessage) || !secondaryInput.getText().equals(secondaryMessage))) ||
-                        (isDefaultValue && !StringUtils.isNullOrEmpty(primaryInput.getText()) && !primaryInput.getText().equals(primaryMessage)) ?
+                (isAdjusting() || isRemoving()) ?
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
 
-        proceedButton.setControlEnabled(!(StringUtils.isNullOrEmpty(primaryInput.getText()) && isDefaultValue));
+        proceedButton.setControlEnabled(isValidEntries());
     }
 
     @Override
@@ -216,6 +210,61 @@ public class DynamicEditorGui extends ExtendedScreen {
         // Hovering over Value Name Label
         if (isHoveringOverSecondary && onHoverSecondaryCallback != null) {
             onHoverSecondaryCallback.accept(attributeName, this);
+        }
+    }
+
+    /**
+     * Whether the inputs in this screen classify as being adjusted
+     *
+     * @return {@link true} if we are doing an adjustment
+     */
+    private boolean isAdjusting() {
+        final String primaryText = primaryInput != null ? primaryInput.getText() : "";
+        final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
+        final String secondaryText = secondaryInput != null ? secondaryInput.getText() : "";
+        final boolean isSecondaryEmpty = StringUtils.isNullOrEmpty(secondaryText);
+
+        final boolean areEitherEmpty = isPrimaryEmpty || isSecondaryEmpty;
+        if (willRenderSecondaryInput) {
+            return !areEitherEmpty && (!primaryText.equals(primaryMessage) || !secondaryText.equals(secondaryMessage));
+        } else if (isDefaultValue) {
+            return !isPrimaryEmpty && !primaryText.equals(primaryMessage);
+        } else {
+            return !primaryText.equals(primaryMessage);
+        }
+    }
+
+    /**
+     * Whether the inputs in this screen classify as being removed
+     *
+     * @return {@link true} if we are doing an removal
+     */
+    private boolean isRemoving() {
+        final String primaryText = primaryInput != null ? primaryInput.getText() : "";
+        final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
+
+        if (!isDefaultValue && !isNewValue) {
+            return isPrimaryEmpty || (
+                    primaryText.equalsIgnoreCase(originalPrimaryMessage) && !primaryMessage.equals(originalPrimaryMessage)
+            );
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Determines whether the inputs are considered valid
+     *
+     * @return {@link true} if inputs are valid
+     */
+    private boolean isValidEntries() {
+        final String primaryText = primaryInput != null ? primaryInput.getText() : "";
+        final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
+
+        if (isDefaultValue) {
+            return !isPrimaryEmpty;
+        } else {
+            return true;
         }
     }
 }
