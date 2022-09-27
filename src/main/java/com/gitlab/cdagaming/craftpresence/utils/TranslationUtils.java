@@ -565,7 +565,6 @@ public class TranslationUtils implements IResourceManagerReloadListener {
 
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
-        ModUtils.LOG.info("TESTME");
         syncTranslations();
     }
 
