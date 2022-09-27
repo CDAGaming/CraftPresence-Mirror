@@ -341,7 +341,8 @@ public class StringUtils {
     /**
      * Determines whether a String classifies as NULL or EMPTY
      *
-     * @param entry The String to evaluate
+     * @param entry           The String to evaluate
+     * @param allowWhitespace Whether to allow whitespace strings
      * @return {@code true} if Entry is classified as NULL or EMPTY
      */
     public static boolean isNullOrEmpty(String entry, final boolean allowWhitespace) {
