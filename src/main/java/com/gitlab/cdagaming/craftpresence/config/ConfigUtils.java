@@ -82,7 +82,7 @@ public class ConfigUtils {
             NAME_playerAmountPlaceholderMessage, NAME_playerItemsPlaceholderMessage, NAME_worldPlaceholderMessage, NAME_modsPlaceholderMessage, NAME_vivecraftMessage, NAME_fallbackPackPlaceholderMessage;
     // ADVANCED
     public String NAME_enableCommands, NAME_enablePerGui, NAME_enablePerItem, NAME_enablePerEntity, NAME_renderTooltips, NAME_formatWords, NAME_debugMode, NAME_verboseMode,
-            NAME_splitCharacter, NAME_refreshRate, NAME_roundSize, NAME_includeExtraGuiClasses, NAME_guiMessages, NAME_itemMessages, NAME_entityTargetMessages, NAME_entityAttackingMessages, NAME_entityRidingMessages, NAME_playerSkinEndpoint;
+            NAME_splitCharacter, NAME_refreshRate, NAME_roundSize, NAME_includeExtraGuiClasses, NAME_guiMessages, NAME_itemMessages, NAME_entityTargetMessages, NAME_entityRidingMessages, NAME_playerSkinEndpoint;
     // ACCESSIBILITY
     public String NAME_tooltipBackgroundColor, NAME_tooltipBorderColor, NAME_guiBackgroundColor, NAME_buttonBackgroundColor, NAME_showBackgroundAsDark, NAME_languageId, NAME_stripTranslationColors, NAME_showLoggingInChat, NAME_stripExtraGuiElements, NAME_configKeyCode;
     // DISPLAY MESSAGES
@@ -112,7 +112,7 @@ public class ConfigUtils {
     public boolean enableCommands, enablePerGui, enablePerItem, enablePerEntity, renderTooltips, formatWords, debugMode, verboseMode, includeExtraGuiClasses;
     public String splitCharacter, playerSkinEndpoint;
     public int refreshRate, roundSize;
-    public String[] guiMessages, itemMessages, entityTargetMessages, entityAttackingMessages, entityRidingMessages;
+    public String[] guiMessages, itemMessages, entityTargetMessages, entityRidingMessages;
     // ACCESSIBILITY
     public String tooltipBackgroundColor, tooltipBorderColor, guiBackgroundColor, buttonBackgroundColor, languageId;
     public int configKeyCode;
@@ -247,7 +247,6 @@ public class ConfigUtils {
         NAME_guiMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.gui_messages").replaceAll(" ", "_");
         NAME_itemMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.item_messages").replaceAll(" ", "_");
         NAME_entityTargetMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.entity_target_messages").replaceAll(" ", "_");
-        NAME_entityAttackingMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.entity_attacking_messages").replaceAll(" ", "_");
         NAME_entityRidingMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.entity_riding_messages").replaceAll(" ", "_");
         NAME_playerSkinEndpoint = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.player_skin_endpoint").replaceAll(" ", "_");
         enableCommands = true;
@@ -265,7 +264,6 @@ public class ConfigUtils {
         guiMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "In &screen&"};
         itemMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Holding &item&"};
         entityTargetMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Targeting &entity&"};
-        entityAttackingMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Attacking &entity&"};
         entityRidingMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Riding &entity&"};
         playerSkinEndpoint = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.advanced.player_skin_endpoint");
         // ACCESSIBILITY

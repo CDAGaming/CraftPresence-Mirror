@@ -39,7 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
 public class AdvancedSettingsGui extends ExtendedScreen {
-    private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityAttackingMessagesButton, entityRidingMessagesButton;
+    private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enableCommandsButton, enablePerGuiButton,
             enablePerItemButton, enablePerEntityButton, renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton;
     private ExtendedTextControl splitCharacter, refreshRate;
@@ -325,94 +325,10 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         }
                 )
         );
-        entityAttackingMessagesButton = addControl(
+        entityRidingMessagesButton = addControl(
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(3),
                         160, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.entity_attacking_messages"),
-                        () -> CraftPresence.GUIS.openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
-                                        null, null,
-                                        true, true, RenderType.EntityData,
-                                        null,
-                                        (currentValue, parentScreen) -> {
-                                            // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
-                                                    new DynamicEditorGui(
-                                                            parentScreen, currentValue,
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.entityAttackingMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing existing data
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
-                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.entityAttackingMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.entityAttackingMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
-                                                            },
-                                                            (screenInstance, attributeName, inputText) -> {
-                                                                // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.entityAttackingMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.entityAttackingMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
-                                                                if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
-                                                                    CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
-                                                                }
-                                                            },
-                                                            (screenInstance, attributeName, inputText) -> {
-                                                                // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.entityAttackingMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.entityAttackingMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
-                                                                CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
-                                                            }, null,
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(
-                                                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_attacking_messages",
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                                        CraftPresence.ENTITIES.generatePlaceholderString(attributeName, screenInstance.isDebugMode(), CraftPresence.ENTITIES.getListFromName(attributeName))))
-                                                                ), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
-                                                            }
-                                                    )
-                                            );
-                                        }
-                                )
-                        ),
-                        () -> {
-                            if (!entityAttackingMessagesButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
-                                );
-                            } else {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_attacking_messages",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                CraftPresence.ENTITIES.generatePlaceholderString(CraftPresence.ENTITIES.getEntityName(CraftPresence.ENTITIES.CURRENT_ATTACKING, CraftPresence.ENTITIES.CURRENT_ATTACKING_NAME), isDebugMode(), CraftPresence.ENTITIES.CURRENT_ATTACKING_TAGS)))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
-                                );
-                            }
-                        }
-                )
-        );
-        entityRidingMessagesButton = addControl(
-                new ExtendedButtonControl(
-                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(4),
-                        180, 20,
                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.entity_riding_messages"),
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
@@ -733,7 +649,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         guiMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.GUIS.enabled : guiMessagesButton.isControlEnabled());
         itemMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.TILE_ENTITIES.enabled : itemMessagesButton.isControlEnabled());
         entityTargetMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.ENTITIES.enabled : entityTargetMessagesButton.isControlEnabled());
-        entityAttackingMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.ENTITIES.enabled : entityAttackingMessagesButton.isControlEnabled());
         entityRidingMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.ENTITIES.enabled : entityRidingMessagesButton.isControlEnabled());
     }
 
