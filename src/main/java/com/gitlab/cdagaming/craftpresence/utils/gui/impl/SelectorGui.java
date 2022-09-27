@@ -92,7 +92,7 @@ public class SelectorGui extends ExtendedScreen {
                     new ExtendedButtonControl(
                             (width - 100), (height - 30),
                             90, 20,
-                            ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                            "gui.config.message.button.back",
                             () -> {
                                 if (allowContinuing && scrollList.currentValue != null) {
                                     if (originalValue != null) {
@@ -143,7 +143,7 @@ public class SelectorGui extends ExtendedScreen {
                         new ExtendedButtonControl(
                                 (width - 195), (height - 30),
                                 90, 20,
-                                ModUtils.TRANSLATOR.translate("gui.config.message.button.add.new"),
+                                "gui.config.message.button.add.new",
                                 () -> onAdjustDynamicEntry.accept(null, parentScreen)
                         )
                 );
@@ -188,7 +188,7 @@ public class SelectorGui extends ExtendedScreen {
         proceedButton.setControlMessage(
                 allowContinuing && scrollList.currentValue != null &&
                         ((originalValue != null && !scrollList.currentValue.equals(originalValue)) || (StringUtils.isNullOrEmpty(originalValue))) ?
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.continue") : ModUtils.TRANSLATOR.translate("gui.config.message.button.back")
+                        "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
     }
 

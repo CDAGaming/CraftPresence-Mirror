@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -230,7 +231,7 @@ public class ExtendedButtonControl extends GuiButton {
                 color = 14737632;
             }
 
-            drawCenteredString(getFontRenderer(), getControlMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
+            drawCenteredString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
         }
     }
 
@@ -340,6 +341,14 @@ public class ExtendedButtonControl extends GuiButton {
         if (onHoverEvent != null) {
             onHoverEvent.run();
         }
+    }
+
+    public String getDisplayMessage() {
+        String result = getControlMessage();
+        if (ModUtils.TRANSLATOR.hasTranslation(getControlMessage())) {
+            result = ModUtils.TRANSLATOR.translate(result);
+        }
+        return result;
     }
 
     /**

@@ -62,7 +62,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.biome_messages.biome_messages"),
+                        "gui.config.name.biome_messages.biome_messages",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -174,7 +174,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.biome_messages.biome_icon"),
+                        "gui.config.name.biome_messages.biome_icon",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -204,7 +204,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 30),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> {
                             if (!defaultMessage.getText().equals(defaultBiomeMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;

@@ -54,7 +54,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
+                        "gui.config.name.accessibility.tooltip_background_color",
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
@@ -96,7 +96,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
+                        "gui.config.name.accessibility.tooltip_border_color",
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
@@ -138,7 +138,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
+                        "gui.config.name.accessibility.gui_background_color",
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
@@ -180,7 +180,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
+                        "gui.config.name.accessibility.button_background_color",
                         () -> CraftPresence.GUIS.openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
@@ -230,7 +230,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         showBackgroundAsDarkButton = addControl(
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(4),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.show_background_as_dark"),
+                        "gui.config.name.accessibility.show_background_as_dark",
                         CraftPresence.CONFIG.showBackgroundAsDark,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -248,7 +248,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         stripTranslationColorsButton = addControl(
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(4),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.strip_translation_colors"),
+                        "gui.config.name.accessibility.strip_translation_colors",
                         CraftPresence.CONFIG.stripTranslationColors,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -266,7 +266,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         showLoggingInChatButton = addControl(
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(5, -10),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.show_logging_in_chat"),
+                        "gui.config.name.accessibility.show_logging_in_chat",
                         CraftPresence.CONFIG.showLoggingInChat,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -284,7 +284,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         stripExtraGuiElementsButton = addControl(
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(5, -10),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.strip_extra_gui_elements"),
+                        "gui.config.name.accessibility.strip_extra_gui_elements",
                         CraftPresence.CONFIG.stripExtraGuiElements,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -303,7 +303,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         10, (height - 30),
                         95, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> {
                             if (!languageIdText.getText().equals(CraftPresence.CONFIG.languageId)) {
                                 CraftPresence.CONFIG.hasChanged = true;

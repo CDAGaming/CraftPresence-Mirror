@@ -150,7 +150,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
             if (is_Checked)
                 drawCenteredString(getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
 
-            drawString(getFontRenderer(), getControlMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
+            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
         }
     }
 

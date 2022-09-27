@@ -77,7 +77,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         buttonCalc1, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.default_icon"),
+                        "gui.config.name.general.default_icon",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -108,7 +108,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         buttonCalc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name(),
+                        CraftPresence.CONFIG.NAME_partyPrivacyLevel.replaceAll("_", " ") + " => " + PartyPrivacy.from(currentPartyPrivacy).name(),
                         () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -125,7 +125,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         detectCurseManifestButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(3),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_curse_manifest"),
+                        "gui.config.name.general.detect_curse_manifest",
                         CraftPresence.CONFIG.detectCurseManifest,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -143,7 +143,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         detectMultiMCManifestButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc2, CraftPresence.GUIS.getButtonY(3),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_multimc_manifest"),
+                        "gui.config.name.general.detect_multimc_manifest",
                         CraftPresence.CONFIG.detectMultiMCManifest,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -161,7 +161,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         detectMCUpdaterInstanceButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(4, -10),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_mcupdater_instance"),
+                        "gui.config.name.general.detect_mcupdater_instance",
                         CraftPresence.CONFIG.detectMCUpdaterInstance,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -179,7 +179,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         detectTechnicPackButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc2, CraftPresence.GUIS.getButtonY(4, -10),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_technic_pack"),
+                        "gui.config.name.general.detect_technic_pack",
                         CraftPresence.CONFIG.detectTechnicPack,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -197,7 +197,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         showTimeButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(5, -20),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.show_time"),
+                        "gui.config.name.general.show_time",
                         CraftPresence.CONFIG.showTime,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -215,7 +215,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         detectBiomeDataButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc2, CraftPresence.GUIS.getButtonY(5, -20),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"),
+                        "gui.config.name.general.detect_biome_data",
                         CraftPresence.CONFIG.detectBiomeData,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -233,7 +233,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         detectDimensionDataButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(6, -30),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"),
+                        "gui.config.name.general.detect_dimension_data",
                         CraftPresence.CONFIG.detectDimensionData,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -251,7 +251,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         detectWorldDataButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc2, CraftPresence.GUIS.getButtonY(6, -30),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_world_data"),
+                        "gui.config.name.general.detect_world_data",
                         CraftPresence.CONFIG.detectWorldData,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -269,7 +269,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         enableJoinRequestButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(7, -40),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.enable_join_request"),
+                        "gui.config.name.general.enable_join_request",
                         CraftPresence.CONFIG.enableJoinRequest,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -287,7 +287,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         resetTimeOnInitButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc2, CraftPresence.GUIS.getButtonY(7, -40),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.reset_time_on_init"),
+                        "gui.config.name.general.reset_time_on_init",
                         CraftPresence.CONFIG.resetTimeOnInit,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -305,7 +305,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         autoRegisterButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(8, -50),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.auto_register"),
+                        "gui.config.name.general.auto_register",
                         CraftPresence.CONFIG.autoRegister,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -325,7 +325,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 55),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + DiscordBuild.from(currentPreferredClient).name(),
+                        CraftPresence.CONFIG.NAME_preferredClientLevel.replaceAll("_", " ") + " => " + DiscordBuild.from(currentPreferredClient).name(),
                         () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -343,7 +343,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 30),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> {
                             if (!clientId.getText().equals(CraftPresence.CONFIG.clientId)) {
                                 CraftPresence.CONFIG.hasChanged = true;
@@ -447,8 +447,8 @@ public class GeneralSettingsGui extends ExtendedScreen {
         renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
         renderString(clientIdText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
-        partyPrivacyLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name());
-        preferredClientLevelButton.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.name.general.preferred_client") + " => " + DiscordBuild.from(currentPreferredClient).name());
+        partyPrivacyLevelButton.setControlMessage(CraftPresence.CONFIG.NAME_partyPrivacyLevel.replaceAll("_", " ") + " => " + PartyPrivacy.from(currentPartyPrivacy).name());
+        preferredClientLevelButton.setControlMessage(CraftPresence.CONFIG.NAME_preferredClientLevel.replaceAll("_", " ") + " => " + DiscordBuild.from(currentPreferredClient).name());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(clientId.getText()) && clientId.getText().length() >= 18 && StringUtils.getValidLong(clientId.getText()).getFirst());
     }
 

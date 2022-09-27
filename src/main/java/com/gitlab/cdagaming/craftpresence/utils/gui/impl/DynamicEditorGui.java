@@ -117,7 +117,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                     new ExtendedButtonControl(
                             (width / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
                             180, 20,
-                            ModUtils.TRANSLATOR.translate("gui.config.message.button.icon.change"),
+                            "gui.config.message.button.icon.change",
                             () -> onSpecificCallback.accept(attributeName, this)
                     )
             );
@@ -142,7 +142,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 30),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> {
                             if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText())) {
                                 attributeName = secondaryInput.getText();
@@ -198,7 +198,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 !primaryInput.getText().equals(primaryMessage) ||
                         (willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText()) && (!primaryInput.getText().equals(primaryMessage) || !secondaryInput.getText().equals(secondaryMessage))) ||
                         (isDefaultValue && !StringUtils.isNullOrEmpty(primaryInput.getText()) && !primaryInput.getText().equals(primaryMessage)) ?
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.continue") : ModUtils.TRANSLATOR.translate("gui.config.message.button.back")
+                        "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
 
         proceedButton.setControlEnabled(!(StringUtils.isNullOrEmpty(primaryInput.getText()) && isDefaultValue));

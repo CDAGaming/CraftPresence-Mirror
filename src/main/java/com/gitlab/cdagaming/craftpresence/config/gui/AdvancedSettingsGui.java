@@ -77,7 +77,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(2),
                         160, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.gui_messages"),
+                        "gui.config.name.advanced.gui_messages",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -154,7 +154,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(2),
                         160, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.item_messages"),
+                        "gui.config.name.advanced.item_messages",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -245,7 +245,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         160, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.entity_target_messages"),
+                        "gui.config.name.advanced.entity_target_messages",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -329,7 +329,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(3),
                         160, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.entity_riding_messages"),
+                        "gui.config.name.advanced.entity_riding_messages",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -413,7 +413,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         enableCommandsButton = addControl(
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(5),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_commands"),
+                        "gui.config.name.advanced.enable_commands",
                         CraftPresence.CONFIG.enableCommands,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -431,7 +431,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         enablePerGuiButton = addControl(
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(5),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui"),
+                        "gui.config.name.advanced.enable_per_gui",
                         CraftPresence.CONFIG.enablePerGui,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -449,7 +449,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         enablePerItemButton = addControl(
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(6, -10),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item"),
+                        "gui.config.name.advanced.enable_per_item",
                         CraftPresence.CONFIG.enablePerItem,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -467,7 +467,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         enablePerEntityButton = addControl(
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(6, -10),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"),
+                        "gui.config.name.advanced.enable_per_entity",
                         CraftPresence.CONFIG.enablePerEntity,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -485,7 +485,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         renderTooltipsButton = addControl(
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(7, -20),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.render_tooltips"),
+                        "gui.config.name.advanced.render_tooltips",
                         CraftPresence.CONFIG.renderTooltips,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -503,7 +503,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         formatWordsButton = addControl(
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(7, -20),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.format_words"),
+                        "gui.config.name.advanced.format_words",
                         CraftPresence.CONFIG.formatWords,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -521,7 +521,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         debugModeButton = addControl(
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(8, -30),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.debug_mode"),
+                        "gui.config.name.advanced.debug_mode",
                         CraftPresence.CONFIG.debugMode,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -539,7 +539,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         verboseModeButton = addControl(
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(8, -30),
-                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.verbose_mode"),
+                        "gui.config.name.advanced.verbose_mode",
                         CraftPresence.CONFIG.verboseMode,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -558,7 +558,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 30),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> {
                             if (!splitCharacter.getText().equals(CraftPresence.CONFIG.splitCharacter)) {
                                 CraftPresence.CONFIG.hasChanged = true;

@@ -122,7 +122,7 @@ public class CommandsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         10, (height - 30),
                         100, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
                 )
         );

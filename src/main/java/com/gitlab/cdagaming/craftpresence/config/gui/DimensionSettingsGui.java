@@ -62,7 +62,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.dimension_messages.dimension_messages"),
+                        "gui.config.name.dimension_messages.dimension_messages",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -175,7 +175,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.dimension_messages.dimension_icon"),
+                        "gui.config.name.dimension_messages.dimension_icon",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -205,7 +205,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 30),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> {
                             if (!defaultMessage.getText().equals(defaultDimensionMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;

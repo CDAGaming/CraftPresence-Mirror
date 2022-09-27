@@ -59,7 +59,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.general"),
+                        "gui.config.title.general",
                         () -> CraftPresence.GUIS.openScreen(new GeneralSettingsGui(currentScreen)),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -77,7 +77,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.biome_messages"),
+                        "gui.config.title.biome_messages",
                         () -> CraftPresence.GUIS.openScreen(new BiomeSettingsGui(currentScreen)),
                         () -> {
                             if (!biomeSet.isControlEnabled()) {
@@ -111,7 +111,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.dimension_messages"),
+                        "gui.config.title.dimension_messages",
                         () -> CraftPresence.GUIS.openScreen(new DimensionSettingsGui(currentScreen)),
                         () -> {
                             if (!dimensionSet.isControlEnabled()) {
@@ -145,7 +145,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.server_messages"),
+                        "gui.config.title.server_messages",
                         () -> CraftPresence.GUIS.openScreen(new ServerSettingsGui(currentScreen)),
                         () -> {
                             if (!serverSet.isControlEnabled()) {
@@ -180,7 +180,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.status_messages"),
+                        "gui.config.title.status_messages",
                         () -> CraftPresence.GUIS.openScreen(new StatusMessagesGui(currentScreen)),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -199,7 +199,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.advanced"),
+                        "gui.config.title.advanced",
                         () -> CraftPresence.GUIS.openScreen(new AdvancedSettingsGui(currentScreen)),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -218,7 +218,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(4),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.accessibility"),
+                        "gui.config.title.accessibility",
                         () -> CraftPresence.GUIS.openScreen(new AccessibilitySettingsGui(currentScreen)),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -237,7 +237,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(4),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.title.presence_settings"),
+                        "gui.config.title.presence_settings",
                         () -> CraftPresence.GUIS.openScreen(new PresenceSettingsGui(currentScreen)),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -266,7 +266,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 55),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.controls"),
+                        "gui.config.message.button.controls",
                         () -> CraftPresence.GUIS.openScreen(
                                 new ControlsGui(
                                         currentScreen, finalControlMode,
@@ -279,7 +279,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width / 2) - 90, (height - 30),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.back"),
+                        "gui.config.message.button.back",
                         () -> {
                             if (CraftPresence.CONFIG.hasChanged) {
                                 CraftPresence.CONFIG.updateConfig(false);
@@ -307,7 +307,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width - 105), (height - 55),
                         95, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.about"),
+                        "gui.config.message.button.about",
                         () -> CraftPresence.GUIS.openScreen(new AboutGui(currentScreen))
                 )
         );
@@ -315,7 +315,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (width - 105), (height - 30),
                         95, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.commands"),
+                        "gui.config.message.button.commands",
                         () -> CraftPresence.GUIS.openScreen(new CommandsGui(currentScreen))
                 )
         );
@@ -324,7 +324,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         10, (height - 30),
                         95, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.reset"),
+                        "gui.config.message.button.reset",
                         () -> {
                             CraftPresence.CONFIG.setupInitialValues();
                             CraftPresence.CONFIG.hasChanged = true;
@@ -339,7 +339,7 @@ public class MainGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         10, (height - 55),
                         95, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.message.button.sync.config"),
+                        "gui.config.message.button.sync.config",
                         () -> {
                             final List<Pair<String, Object>> currentConfigDataMappings = CraftPresence.CONFIG.configDataMappings;
                             CraftPresence.CONFIG.read(false, "UTF-8");
@@ -414,6 +414,6 @@ public class MainGui extends ExtendedScreen {
         commandGUIButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enableCommands : commandGUIButton.isControlEnabled());
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
 
-        proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? ModUtils.TRANSLATOR.translate("gui.config.message.button.save") : ModUtils.TRANSLATOR.translate("gui.config.message.button.back"));
+        proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }
 }

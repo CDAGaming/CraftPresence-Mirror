@@ -215,7 +215,7 @@ public class ControlsGui extends PaginatedScreen {
             entryData = new Pair<>(button, button.getOptionalArgs()[0]);
 
             backupKeyString = button.getControlMessage();
-            button.setControlMessage(ModUtils.TRANSLATOR.translate("gui.config.message.editor.enter_key"));
+            button.setControlMessage("gui.config.message.editor.enter_key");
         }
     }
 

@@ -111,7 +111,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.display.button_messages"),
+                        "gui.config.name.display.button_messages",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -176,7 +176,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
-                        ModUtils.TRANSLATOR.translate("gui.config.name.display.dynamic_icons"),
+                        "gui.config.name.display.dynamic_icons",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
