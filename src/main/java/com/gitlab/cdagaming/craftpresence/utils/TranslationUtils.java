@@ -78,6 +78,10 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * If this module needs a full sync
      */
     private boolean needsSync;
+    /**
+     * If this module needs to initialize
+     */
+    private boolean needsInit;
 
     /**
      * Sets initial Data and Retrieves Valid Translations
@@ -128,7 +132,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         // Retrieve localized default translations
         syncTranslations(getDefaultLanguage());
         needsSync = true;
-        ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
+        needsInit = true;
     }
 
     /**
@@ -168,13 +172,18 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         final boolean hasLanguageChanged = (!languageId.equals(currentLanguageId) &&
                 (!hasTranslationsFrom(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty()));
         if (CraftPresence.SYSTEM.HAS_GAME_LOADED) {
-            if (needsSync) {
+            if (needsInit || needsSync) {
+                if (needsInit && CraftPresence.instance.getResourceManager() != null) {
+                    ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
+                }
+
                 // Sync All if we need to (Normally for initialization or reload purposes)
                 final List<String> requestedKeys = Lists.newArrayList(requestMap.keySet());
                 for (String key : requestedKeys) {
                     syncTranslations(key, false);
                 }
                 needsSync = false;
+                needsInit = false;
             } else if (hasLanguageChanged) {
                 // Otherwise, only sync the current language if needed
                 syncTranslations(currentLanguageId);

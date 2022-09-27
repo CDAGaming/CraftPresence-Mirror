@@ -7,6 +7,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Removed `&ATTACKINGENTITY&` and related info due to faulty and deprecated logic
 * Added a `custom` sub-argument to the `/cp view assets` command to view dynamic assets on their own
     * Due to refactors made to how discord assets are stored, `large` and `small` have been removed as sub-arguments
       from this command due to being deprecated a long time ago
