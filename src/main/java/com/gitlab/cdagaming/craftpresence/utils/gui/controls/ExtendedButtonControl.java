@@ -343,6 +343,11 @@ public class ExtendedButtonControl extends GuiButton {
         }
     }
 
+    /**
+     * Gets the control's current display message
+     *
+     * @return The control's current display message
+     */
     public String getDisplayMessage() {
         String result = getControlMessage();
         if (ModUtils.TRANSLATOR.hasTranslation(getControlMessage())) {
@@ -352,9 +357,9 @@ public class ExtendedButtonControl extends GuiButton {
     }
 
     /**
-     * Gets the control's current display message
+     * Gets the control's current text contents
      *
-     * @return The control's current display message
+     * @return The control's current text contents
      */
     public String getControlMessage() {
         return this.displayString;

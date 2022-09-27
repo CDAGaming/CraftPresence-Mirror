@@ -415,10 +415,10 @@ public class CommandsGui extends ExtendedScreen {
         viewCompletions.add("items");
         viewCompletions.add("entities");
         viewCompletions.add("servers");
+        viewCompletions.add("screens");
 
         assetsCompletions.add("all");
-        assetsCompletions.add("large");
-        assetsCompletions.add("small");
+        assetsCompletions.add("custom");
 
         requestCompletions.add("accept");
         requestCompletions.add("deny");

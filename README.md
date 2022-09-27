@@ -65,7 +65,7 @@ ___
 * `/cp shutdown` - Shutdown the RPC (Can be turned on from `/cp reboot`)
 * `/cp request` - View Join Request Info
 * `/cp view currentData` - Displays your Current RPC Data, in text form
-* `/cp view assets (large | small | all)` - Displays all asset icon keys available to you
+* `/cp view assets (custom | all)` - Displays all asset icon keys available to you
 * `/cp view dimensions` - Displays all Dimension Names available for use, requires `Show Current Dimension` to be
   enabled
 * `/cp view biomes` - Displays all Biome Names available for use, requires `Show Current Biome` to be enabled
@@ -129,8 +129,6 @@ a deeper level via their sub-placeholders.
   sub-placeholders)
 * `&TARGETENTITY&` - The Targeted Entity Message, if in use. (See `Advanced Settings :: Entity Target Messages` for
   sub-placeholders)
-* `&ATTACKINGENTITY&` - The Attacking Entity Message, if in use. (See `Advanced Settings :: Entity Attacking Messages`
-  for sub-placeholders)
 * `&RIDINGENTITY&` - The Riding Entity Message, if in use. (See `Advanced Settings :: Entity Riding Messages` for
   sub-placeholders)
 
@@ -228,10 +226,10 @@ ___
 
 ## Entity Placeholders
 
-These placeholders translate to the `&TARGETENTITY&`, `&ATTACKINGENTITY&`, and `&RIDINGENTITY&` Global Placeholder in
+These placeholders translate to the `&TARGETENTITY&` and `&RIDINGENTITY&` Global Placeholder in
 the `Presence Settings` menu within the Config Gui.
 
-You can configure these Sub-Placeholders throughout the `Advanced Settings::Entity [Target,Attacking,Riding] Messages`
+You can configure these Sub-Placeholders throughout the `Advanced Settings::Entity [Target,Riding] Messages`
 area of the Config Gui.
 
 * `&ENTITY&` - The Entity Name
