@@ -280,8 +280,7 @@ public class DiscordUtils {
      * @return The resulting output string
      */
     public String sanitizePlaceholders(String input) {
-        input = !StringUtils.isNullOrEmpty(input) ? input : "";
-        return !CraftPresence.CONFIG.formatWords ? input.replaceAll("&[^&]*&", "").trim() : input;
+        return !StringUtils.isNullOrEmpty(input) ? input.replaceAll("&[^&]*&", "").trim() : "";
     }
 
     /**
