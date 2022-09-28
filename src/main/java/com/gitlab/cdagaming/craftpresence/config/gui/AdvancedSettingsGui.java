@@ -412,7 +412,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
 
         enableCommandsButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(5),
+                        calc1, CraftPresence.GUIS.getButtonY(4),
                         "gui.config.name.advanced.enable_commands",
                         CraftPresence.CONFIG.enableCommands,
                         null,
@@ -430,7 +430,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         enablePerGuiButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(5),
+                        calc2, CraftPresence.GUIS.getButtonY(4),
                         "gui.config.name.advanced.enable_per_gui",
                         CraftPresence.CONFIG.enablePerGui,
                         null,
@@ -448,7 +448,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         enablePerItemButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(6, -10),
+                        calc1, CraftPresence.GUIS.getButtonY(5, -10),
                         "gui.config.name.advanced.enable_per_item",
                         CraftPresence.CONFIG.enablePerItem,
                         null,
@@ -466,7 +466,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         enablePerEntityButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(6, -10),
+                        calc2, CraftPresence.GUIS.getButtonY(5, -10),
                         "gui.config.name.advanced.enable_per_entity",
                         CraftPresence.CONFIG.enablePerEntity,
                         null,
@@ -484,7 +484,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         renderTooltipsButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(7, -20),
+                        calc1, CraftPresence.GUIS.getButtonY(6, -20),
                         "gui.config.name.advanced.render_tooltips",
                         CraftPresence.CONFIG.renderTooltips,
                         null,
@@ -502,7 +502,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         formatWordsButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(7, -20),
+                        calc2, CraftPresence.GUIS.getButtonY(6, -20),
                         "gui.config.name.advanced.format_words",
                         CraftPresence.CONFIG.formatWords,
                         null,
@@ -520,7 +520,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         debugModeButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(8, -30),
+                        calc1, CraftPresence.GUIS.getButtonY(7, -30),
                         "gui.config.name.advanced.debug_mode",
                         CraftPresence.CONFIG.debugMode,
                         null,
@@ -538,7 +538,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         verboseModeButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(8, -30),
+                        calc2, CraftPresence.GUIS.getButtonY(7, -30),
                         "gui.config.name.advanced.verbose_mode",
                         CraftPresence.CONFIG.verboseMode,
                         null,
