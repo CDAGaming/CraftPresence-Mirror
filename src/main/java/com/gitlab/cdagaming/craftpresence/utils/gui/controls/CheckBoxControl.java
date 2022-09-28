@@ -60,7 +60,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
         is_Checked = isChecked;
         boxWidth = 11;
         height = 11;
-        width = boxWidth + 2 + getFontRenderer().getStringWidth(displayString);
+        width = boxWidth + 2 + getFontRenderer().getStringWidth(getDisplayMessage());
     }
 
     /**
