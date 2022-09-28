@@ -252,19 +252,6 @@ public class DiscordUtils {
         // Ensure Main Menu RPC Resets properly
         CommandUtils.isInMainMenu = false;
 
-        // Add Any Generalized Argument Data needed
-        modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
-        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
-        playerInfoArgs.add(new Pair<>("&UUID&", CraftPresence.session.getPlayerID()));
-
-        // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : modsArgs) {
-            syncArgument("&MODS:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
-        for (Pair<String, String> argumentData : playerInfoArgs) {
-            syncArgument("&IGN:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
-
         syncPlaceholders();
     }
 
@@ -493,6 +480,13 @@ public class DiscordUtils {
      */
     public void syncPlaceholders() {
         generalArgs.clear();
+        modsArgs.clear();
+        playerInfoArgs.clear();
+
+        // Add Any Generalized Argument Data needed
+        modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
+        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
+        playerInfoArgs.add(new Pair<>("&UUID&", CraftPresence.session.getPlayerID()));
 
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
@@ -503,6 +497,14 @@ public class DiscordUtils {
             // For each General (Can be used Anywhere) Argument
             // Ensure they sync as Formatter Arguments too
             syncArgument(generalArgument.getFirst(), generalArgument.getSecond(), ArgumentType.Text);
+        }
+
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : modsArgs) {
+            syncArgument("&MODS:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : playerInfoArgs) {
+            syncArgument("&IGN:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
         }
 
         // Sync the Default Icon Argument
@@ -680,8 +682,8 @@ public class DiscordUtils {
                     label = sanitizePlaceholders(label);
                     url = sanitizePlaceholders(url);
                     if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
-                        buttonObj.addProperty("label", sanitizePlaceholders(label));
-                        buttonObj.addProperty("url", sanitizePlaceholders(url));
+                        buttonObj.addProperty("label", label);
+                        buttonObj.addProperty("url", url);
                         BUTTONS.add(buttonObj);
                     }
                 }
