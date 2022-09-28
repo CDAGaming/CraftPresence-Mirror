@@ -69,7 +69,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         final int buttonCalc1 = (width / 2) - 183;
         final int buttonCalc2 = (width / 2) + 3;
 
-        final int checkboxCalc1 = (width / 2) - 145;
+        final int checkboxCalc1 = (width / 2) - 168;
         final int checkboxCalc2 = (width / 2) + 18;
 
         // Adding Default Icon Button
