@@ -185,21 +185,21 @@ public class ConfigUtils {
         NAME_defaultBiomeIcon = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.biome_messages.biome_icon").replaceAll(" ", "_");
         NAME_biomeMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.biome_messages.biome_messages").replaceAll(" ", "_");
         defaultBiomeIcon = "unknown";
-        biomeMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Playing in &biome&"};
+        biomeMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.biome_messages.biome_messages")};
         // DIMENSION MESSAGES
         NAME_defaultDimensionIcon = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.dimension_messages.dimension_icon").replaceAll(" ", "_");
         NAME_dimensionMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.dimension_messages.dimension_messages").replaceAll(" ", "_");
         defaultDimensionIcon = "unknown";
-        dimensionMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "In the &dimension&"};
+        dimensionMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.dimension_messages.dimension_messages")};
         // SERVER MESSAGES
         NAME_defaultServerIcon = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_icon").replaceAll(" ", "_");
         NAME_defaultServerName = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_name").replaceAll(" ", "_");
         NAME_defaultServerMotd = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_motd").replaceAll(" ", "_");
         NAME_serverMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_messages").replaceAll(" ", "_");
         defaultServerIcon = "default";
-        defaultServerName = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.server_messages.server_name");
-        defaultServerMotd = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.server_messages.server_motd");
-        serverMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Playing on &motd&"};
+        defaultServerName = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_name");
+        defaultServerMotd = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_motd");
+        serverMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_messages")};
         // STATUS MESSAGES
         NAME_mainMenuMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.main_menu_message").replaceAll(" ", "_");
         NAME_loadingMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.loading_message").replaceAll(" ", "_");
@@ -216,20 +216,20 @@ public class ConfigUtils {
         NAME_modsPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.mods_message").replaceAll(" ", "_");
         NAME_vivecraftMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.special.vivecraft_message").replaceAll(" ", "_");
         NAME_fallbackPackPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.fallback.pack_placeholder_message").replaceAll(" ", "_");
-        mainMenuMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.state.main_menu");
-        loadingMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.state.loading");
-        lanMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.state.lan");
-        singlePlayerMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.state.single_player");
-        packPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.pack");
-        outerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.player_info.out");
-        innerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.player_info.in");
-        playerCoordinatePlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.player_info.coordinate");
-        playerHealthPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.player_info.health");
-        playerAmountPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.players");
-        playerItemsPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.player_info.items");
-        worldPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.world_info");
-        modsPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.placeholder.mods");
-        vivecraftMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.special.vivecraft");
+        mainMenuMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.main_menu");
+        loadingMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.loading");
+        lanMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.lan");
+        singlePlayerMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.single_player");
+        packPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.pack");
+        outerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.out");
+        innerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.in");
+        playerCoordinatePlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.coordinate");
+        playerHealthPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.health");
+        playerAmountPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.players");
+        playerItemsPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.items");
+        worldPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.world_info");
+        modsPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.mods");
+        vivecraftMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.special.vivecraft");
         fallbackPackPlaceholderMessage = "";
         // ADVANCED
         NAME_enableCommands = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.enable_commands").replaceAll(" ", "_");
@@ -261,11 +261,11 @@ public class ConfigUtils {
         refreshRate = 2;
         roundSize = 3;
         includeExtraGuiClasses = false;
-        guiMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "In &screen&"};
-        itemMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Holding &item&"};
-        entityTargetMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Targeting &entity&"};
-        entityRidingMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + "Riding &entity&"};
-        playerSkinEndpoint = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.defaults.advanced.player_skin_endpoint");
+        guiMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.gui_messages")};
+        itemMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.item_messages")};
+        entityTargetMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_target_messages")};
+        entityRidingMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages")};
+        playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
         // ACCESSIBILITY
         NAME_tooltipBackgroundColor = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.tooltip_background_color").replaceAll(" ", "_");
         NAME_tooltipBorderColor = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.tooltip_border_color").replaceAll(" ", "_");
@@ -302,8 +302,8 @@ public class ConfigUtils {
         smallImageMessage = "&SERVER& &PACK&";
         largeImageKey = "&MAINMENU&&DIMENSION&";
         smallImageKey = "&SERVER&&PACK&";
-        buttonMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), "craftpresence.defaults.display.button.label") + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), "craftpresence.defaults.display.button.url")};
-        dynamicIcons = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), "craftpresence.defaults.display.image.url")};
+        buttonMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label") + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")};
+        dynamicIcons = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url")};
 
         syncMappings();
         initialized = true;
