@@ -634,10 +634,10 @@ public class ServerUtils {
         return knownServerData.getOrDefault(serverAddress, null);
     }
 
-    public List<Pair<String, String>> generateArgumentList(ArgumentType... types) {
+    public List<Pair<String, String>> generateArgumentList(List<Pair<String, String>> targetList, ArgumentType... types) {
         List<Pair<String, String>> results = Lists.newArrayList();
         for (ArgumentType type : types) {
-            final List<Pair<String, String>> primaryList = type == ArgumentType.Image ? iconArgs : serverArgs;
+            final List<Pair<String, String>> primaryList = targetList != null ? targetList : (type == ArgumentType.Image ? iconArgs : serverArgs);
             if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
                 primaryList.removeAll(CraftPresence.CLIENT.generalArgs);
             }
@@ -665,6 +665,10 @@ public class ServerUtils {
             }
         }
         return results;
+    }
+
+    public List<Pair<String, String>> generateArgumentList(ArgumentType... types) {
+        return generateArgumentList(null, types);
     }
 
     public String getArgumentMessage(ArgumentType... types) {
