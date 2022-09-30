@@ -75,6 +75,9 @@ public class BiomeUtils {
      */
     private String CURRENT_BIOME_IDENTIFIER;
 
+    List<Pair<String, String>> biomeArgs = Lists.newArrayList();
+    List<Pair<String, String>> iconArgs = Lists.newArrayList();
+
     /**
      * Clears FULL Data from this Module
      */
@@ -90,11 +93,12 @@ public class BiomeUtils {
     public void clearClientData() {
         CURRENT_BIOME_NAME = null;
         CURRENT_BIOME_IDENTIFIER = null;
+        biomeArgs.clear();
+        iconArgs.clear();
 
         isInUse = false;
-        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
+        CraftPresence.CLIENT.removeArgumentsMatching(subArgumentFormat);
+        CraftPresence.CLIENT.initArgument(argumentFormat);
     }
 
     /**
@@ -153,13 +157,24 @@ public class BiomeUtils {
      */
     public void updateBiomePresence() {
         // Form Biome Argument List
-        List<Pair<String, String>> biomeArgs = Lists.newArrayList();
+        biomeArgs.clear();
+        iconArgs.clear();
+
+        final String defaultBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+        final String currentBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultBiomeMessage);
+        final String currentBiomeIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_BIOME_IDENTIFIER);
+        final String formattedIconKey = StringUtils.formatAsIcon(currentBiomeIcon.replace(" ", "_"));
 
         biomeArgs.add(new Pair<>("&BIOME&", CURRENT_BIOME_NAME));
+
+        iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.defaultBiomeIcon));
 
         // Add applicable args as sub-placeholders
         for (Pair<String, String> argumentData : biomeArgs) {
             CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : iconArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
         }
 
         // Add All Generalized Arguments, if any
@@ -167,12 +182,7 @@ public class BiomeUtils {
             StringUtils.addEntriesNotPresent(biomeArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        final String defaultBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-        final String currentBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultBiomeMessage);
-        final String currentBiomeIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_BIOME_IDENTIFIER);
-        final String formattedIconKey = StringUtils.formatAsIcon(currentBiomeIcon.replace(" ", "_"));
-
-        final String CURRENT_BIOME_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultBiomeIcon);
+        final String CURRENT_BIOME_ICON = StringUtils.sequentialReplaceAnyCase(formattedIconKey, iconArgs);
         final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentBiomeMessage, biomeArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_BIOME_MESSAGE, ArgumentType.Text);
@@ -244,5 +254,45 @@ public class BiomeUtils {
                 }
             }
         }
+    }
+
+    public List<Pair<String, String>> generateArgumentList(List<Pair<String, String>> targetList, ArgumentType... types) {
+        List<Pair<String, String>> results = Lists.newArrayList();
+        for (ArgumentType type : types) {
+            final List<Pair<String, String>> primaryList = targetList != null ? targetList : (type == ArgumentType.Image ? iconArgs : biomeArgs);
+            if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
+                primaryList.removeAll(CraftPresence.CLIENT.generalArgs);
+            }
+            if (!primaryList.isEmpty()) {
+                StringUtils.addEntriesNotPresent(results, primaryList);
+            }
+
+            if (type == ArgumentType.Image) {
+                StringUtils.addEntriesNotPresent(results,
+                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                        CraftPresence.CLIENT.convertToArgumentList(
+                                "&ICON&"
+                        ));
+            } else if (type == ArgumentType.Text) {
+                StringUtils.addEntriesNotPresent(results,
+                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                        CraftPresence.CLIENT.convertToArgumentList(
+                                "&BIOME&"
+                        ));
+            }
+        }
+        return results;
+    }
+
+    public List<Pair<String, String>> generateArgumentList(ArgumentType... types) {
+        return generateArgumentList(null, types);
+    }
+
+    public String getArgumentMessage(ArgumentType... types) {
+        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(types));
+    }
+
+    public String getArgumentMessage() {
+        return getArgumentMessage(ArgumentType.values());
     }
 }

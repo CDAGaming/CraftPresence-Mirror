@@ -95,7 +95,8 @@ public class MainGui extends ExtendedScreen {
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.title.biome_messages")
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                        CraftPresence.BIOMES.getArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
