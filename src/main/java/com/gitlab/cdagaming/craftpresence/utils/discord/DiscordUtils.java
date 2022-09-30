@@ -202,6 +202,18 @@ public class DiscordUtils {
      */
     private RichPresence currentPresence;
 
+    public static final List<String> textModules = Lists.newArrayList(
+            "&MAINMENU&",
+            "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&",
+            "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&",
+            "&TILEENTITY&", "&TARGETENTITY&", "&RIDINGENTITY&"
+    );
+
+    public static final List<String> iconModules = Lists.newArrayList(
+            "&DEFAULT&", "&MAINMENU&", "&PACK&",
+            "&DIMENSION&", "&BIOME&", "&SERVER&"
+    );
+
     /**
      * Setup any Critical Methods needed for the RPC
      * <p>In this case, ensures a Thread is in place to shut down the RPC onExit
@@ -250,8 +262,12 @@ public class DiscordUtils {
         }
 
         // Initialize and Sync any Pre-made Arguments (And Reset Related Data)
-        initArgument(ArgumentType.Text, "&MAINMENU&", "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&", "&TILEENTITY&", "&TARGETENTITY&", "&RIDINGENTITY&");
-        initArgument(ArgumentType.Image, "&DEFAULT&", "&MAINMENU&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&");
+        for (String moduleId : textModules) {
+            initArgument(ArgumentType.Text, moduleId);
+        }
+        for (String moduleId : iconModules) {
+            initArgument(ArgumentType.Image, moduleId);
+        }
 
         // Ensure Main Menu RPC Resets properly
         CommandUtils.isInMainMenu = false;
@@ -524,10 +540,10 @@ public class DiscordUtils {
 
     public String generatePlaceholderString(final String rootArgument, final String subPrefix, final boolean addExtraData, final List<Pair<String, String>> args) {
         final StringBuilder finalString = new StringBuilder(
-                String.format("%s %s:",
+                String.format("%s%s:",
                         ModUtils.TRANSLATOR.translate(
                                 String.format("%s.placeholders.title", ModUtils.MOD_ID)
-                        ), (!StringUtils.isNullOrEmpty(rootArgument) ? ("(" + rootArgument.toLowerCase() + ")") : "")
+                        ), (!StringUtils.isNullOrEmpty(rootArgument) ? (" (" + rootArgument.toLowerCase() + ")") : "")
                 )
         );
         if (args != null && !args.isEmpty()) {
@@ -539,6 +555,8 @@ public class DiscordUtils {
                         placeholderName = placeholderName.replaceAll(subPrefix, rootArgument.substring(0, 1));
                     }
                     translationName = (rootArgument + "." + placeholderName).replaceAll(rootArgument.substring(0, 1), "");
+                } else {
+                    translationName = translationName.replaceAll("[^a-zA-Z0-9]", "");
                 }
                 finalString.append(
                         String.format("\\n - %s = %s",
@@ -580,6 +598,10 @@ public class DiscordUtils {
             }
         }
         return result;
+    }
+
+    public List<Pair<String, String>> convertToArgumentList(ArgumentType type, List<String> inputs) {
+        return convertToArgumentList(type, inputs.toArray(new String[0]));
     }
 
     /**
