@@ -78,6 +78,9 @@ public class DimensionUtils {
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
 
+    List<Pair<String, String>> dimensionArgs = Lists.newArrayList();
+    List<Pair<String, String>> iconArgs = Lists.newArrayList();
+
     /**
      * Clears FULL Data from this Module
      */
@@ -93,9 +96,12 @@ public class DimensionUtils {
     public void clearClientData() {
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
+        dimensionArgs.clear();
+        iconArgs.clear();
 
         isInUse = false;
         CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
+        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Image, subArgumentFormat);
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
         CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
     }
@@ -157,13 +163,24 @@ public class DimensionUtils {
      */
     public void updateDimensionPresence() {
         // Form Dimension Argument List
-        List<Pair<String, String>> dimensionArgs = Lists.newArrayList();
+        dimensionArgs.clear();
+        iconArgs.clear();
+
+        final String defaultDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+        final String currentDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultDimensionMessage);
+        final String currentDimensionIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_DIMENSION_IDENTIFIER);
+        final String formattedIconKey = StringUtils.formatAsIcon(currentDimensionIcon.replace(" ", "_"));
 
         dimensionArgs.add(new Pair<>("&DIMENSION&", CURRENT_DIMENSION_NAME));
+
+        iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.defaultDimensionIcon));
 
         // Add applicable args as sub-placeholders
         for (Pair<String, String> argumentData : dimensionArgs) {
             CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : iconArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
         }
 
         // Add All Generalized Arguments, if any
@@ -171,12 +188,7 @@ public class DimensionUtils {
             dimensionArgs.addAll(CraftPresence.CLIENT.generalArgs);
         }
 
-        final String defaultDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-        final String currentDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultDimensionMessage);
-        final String currentDimensionIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_DIMENSION_IDENTIFIER);
-        final String formattedIconKey = StringUtils.formatAsIcon(currentDimensionIcon.replace(" ", "_"));
-
-        final String CURRENT_DIMENSION_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultDimensionIcon);
+        final String CURRENT_DIMENSION_ICON = StringUtils.sequentialReplaceAnyCase(formattedIconKey, iconArgs);
         final String CURRENT_DIMENSION_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentDimensionMessage, dimensionArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_DIMENSION_MESSAGE, ArgumentType.Text);
@@ -254,5 +266,34 @@ public class DimensionUtils {
                 }
             }
         }
+    }
+
+    public List<Pair<String, String>> generateArgumentList(ArgumentType... types) {
+        List<Pair<String, String>> results = Lists.newArrayList();
+        for (ArgumentType type : types) {
+            final List<Pair<String, String>> primaryList = type == ArgumentType.Image ? iconArgs : dimensionArgs;
+            if (!primaryList.isEmpty()) {
+                results.addAll(primaryList);
+            } else {
+                if (type == ArgumentType.Image) {
+                    results.addAll(CraftPresence.CLIENT.convertToArgumentList(
+                            subArgumentFormat + "ICON&"
+                    ));
+                } else if (type == ArgumentType.Text) {
+                    results.addAll(CraftPresence.CLIENT.convertToArgumentList(
+                            subArgumentFormat + "DIMENSION&"
+                    ));
+                }
+            }
+        }
+        return results;
+    }
+
+    public String getArgumentMessage(ArgumentType... types) {
+        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(types));
+    }
+
+    public String getArgumentMessage() {
+        return getArgumentMessage(ArgumentType.values());
     }
 }

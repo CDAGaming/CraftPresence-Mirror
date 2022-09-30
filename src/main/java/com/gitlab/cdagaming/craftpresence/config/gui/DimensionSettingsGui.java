@@ -135,7 +135,17 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                                                        CraftPresence.DIMENSIONS.getArgumentMessage())
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -158,7 +168,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages")
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                        CraftPresence.DIMENSIONS.getArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -253,7 +264,17 @@ public class DimensionSettingsGui extends ExtendedScreen {
         final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.dimension");
         // Hovering over Default Dimension Message Label
         if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 140, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(defaultMessageText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title.dimension_messages")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                    CraftPresence.DIMENSIONS.getArgumentMessage())
+                    ),
+                    getMouseX(), getMouseY(),
+                    width, height,
+                    getWrapWidth(),
+                    getFontRenderer(),
+                    true
+            );
         }
     }
 }

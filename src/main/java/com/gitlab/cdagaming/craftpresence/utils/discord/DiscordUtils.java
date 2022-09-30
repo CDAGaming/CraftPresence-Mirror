@@ -472,6 +472,69 @@ public class DiscordUtils {
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
     }
 
+    public String generatePlaceholderString(final String rootArgument, final String subPrefix, final boolean addExtraData, final List<Pair<String, String>> args) {
+        final StringBuilder finalString = new StringBuilder(
+                String.format("%s %s",
+                        ModUtils.TRANSLATOR.translate(
+                                String.format("%s.placeholders.title", ModUtils.MOD_ID)
+                        ), "(" + (!StringUtils.isNullOrEmpty(rootArgument) ? rootArgument.toLowerCase() : "None") + ")"
+                )
+        );
+        if (args != null && !args.isEmpty()) {
+            for (Pair<String, String> argData : args) {
+                String placeholderName = argData.getFirst();
+                if (!StringUtils.isNullOrEmpty(subPrefix)) {
+                    placeholderName = rootArgument.charAt(0) + placeholderName.replaceAll(subPrefix, "");
+                }
+                finalString.append(
+                        String.format("\\n - %s = %s",
+                                placeholderName.toLowerCase(),
+                                ModUtils.TRANSLATOR.translate(
+                                        String.format("%s.placeholders.%s.description",
+                                                ModUtils.MOD_ID,
+                                                (rootArgument + "." + placeholderName).replaceAll(rootArgument.substring(0, 1), "")
+                                        )
+                                ))
+                );
+
+                if (addExtraData && !StringUtils.isNullOrEmpty(argData.getSecond())) {
+                    finalString.append(String.format(" (Preview: %s)", argData.getSecond()));
+                }
+            }
+        } else {
+            finalString.append("\\n - N/A");
+        }
+        return finalString.toString();
+    }
+
+    public String generatePlaceholderString(final String rootArgument, final String subPrefix, final List<Pair<String, String>> args) {
+        return generatePlaceholderString(rootArgument, subPrefix, CraftPresence.CONFIG.debugMode, args);
+    }
+
+    public String generatePlaceholderString(final String prefix, final String subPrefix, final boolean addExtraData, String... args) {
+        return generatePlaceholderString(prefix, subPrefix, addExtraData, convertToArgumentList(args));
+    }
+
+    public String generatePlaceholderString(final String prefix, final String subPrefix, String... args) {
+        return generatePlaceholderString(prefix, subPrefix, CraftPresence.CONFIG.debugMode, args);
+    }
+
+    public String generatePlaceholderString(final String prefix, final boolean addExtraData, String... args) {
+        return generatePlaceholderString(prefix, null, addExtraData, args);
+    }
+
+    public String generatePlaceholderString(final String prefix, String... args) {
+        return generatePlaceholderString(prefix, null, args);
+    }
+
+    public List<Pair<String, String>> convertToArgumentList(String... inputs) {
+        final List<Pair<String, String>> result = Lists.newArrayList();
+        for (String argumentName : inputs) {
+            result.add(new Pair<>(argumentName, ""));
+        }
+        return result;
+    }
+
     /**
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */

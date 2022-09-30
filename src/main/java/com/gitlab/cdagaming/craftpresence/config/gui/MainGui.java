@@ -129,7 +129,8 @@ public class MainGui extends ExtendedScreen {
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.title.dimension_messages")
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                        CraftPresence.DIMENSIONS.getArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
