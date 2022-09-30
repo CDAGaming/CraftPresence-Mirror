@@ -427,7 +427,7 @@ public class GuiUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            guiArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(guiArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         final String defaultGuiMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.guiMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);

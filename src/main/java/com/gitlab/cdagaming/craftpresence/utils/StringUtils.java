@@ -570,6 +570,33 @@ public class StringUtils {
         return getFromUuid(input.toString());
     }
 
+    public static <T> List<T> addEntriesNotPresent(List<T> original, List<T> newList) {
+        for (T entry : newList) {
+            if (!original.contains(entry)) {
+                original.add(entry);
+            }
+        }
+        return original;
+    }
+
+    public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, List<T> newList) {
+        newList = Lists.newArrayList(filter(newList, filter));
+        return addEntriesNotPresent(original, newList);
+    }
+
+    public static <T> List<T> addEntriesNotPresent(List<T> original, Set<T> newList) {
+        return addEntriesNotPresent(original, Lists.newArrayList(newList));
+    }
+
+    public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, Set<T> newList) {
+        newList = new HashSet<>(filter(newList, filter));
+        return addEntriesNotPresent(original, newList);
+    }
+
+    public static <T> List<T> addEntriesNotPresent(List<T> original, T[] newList) {
+        return addEntriesNotPresent(original, Arrays.asList(newList));
+    }
+
     /**
      * Expands or Contracts an Array, depending on Conditions
      *

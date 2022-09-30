@@ -258,8 +258,8 @@ public class EntityUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            entityTargetArgs.addAll(CraftPresence.CLIENT.generalArgs);
-            entityRidingArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(entityTargetArgs, CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(entityRidingArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         final String CURRENT_TARGET_MESSAGE = StringUtils.sequentialReplaceAnyCase(targetEntityMessage, entityTargetArgs);

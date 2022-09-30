@@ -164,7 +164,8 @@ public class MainGui extends ExtendedScreen {
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.title.server_messages")
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
+                                                        CraftPresence.SERVER.getArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -257,7 +258,7 @@ public class MainGui extends ExtendedScreen {
         KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
         if (ModUtils.IS_LEGACY_SOFT) {
             controlInfo.clear();
-            controlInfo.addAll(CraftPresence.KEYBINDINGS.getRawKeyMappings().keySet());
+            StringUtils.addEntriesNotPresent(controlInfo, CraftPresence.KEYBINDINGS.getRawKeyMappings().keySet());
 
             controlMode = KeyUtils.FilterMode.Name;
         }

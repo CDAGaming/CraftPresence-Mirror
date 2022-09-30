@@ -297,12 +297,14 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
-     * @param dataType     The type the argument should be stored as
+     * @param dataTypes     The type(s) the argument should be stored as
      */
-    public void syncArgument(String argumentName, String insertString, ArgumentType dataType) {
-        // Remove and Replace Placeholder Data, if the placeholder needs Updates
-        if (!StringUtils.isNullOrEmpty(argumentName)) {
-            setArgumentsFor(dataType, new Pair<>(argumentName, insertString));
+    public void syncArgument(String argumentName, String insertString, ArgumentType... dataTypes) {
+        for (ArgumentType dataType : dataTypes) {
+            // Remove and Replace Placeholder Data, if the placeholder needs Updates
+            if (!StringUtils.isNullOrEmpty(argumentName)) {
+                setArgumentsFor(dataType, new Pair<>(argumentName, insertString));
+            }
         }
     }
 
@@ -320,6 +322,17 @@ public class DiscordUtils {
     }
 
     /**
+     * Initialize the Specified Arguments as Empty Data
+     *
+     * @param args     The Arguments to Initialize
+     */
+    public void initArgument(String... args) {
+        for (ArgumentType type : ArgumentType.values()) {
+            initArgument(type, args);
+        }
+    }
+
+    /**
      * Retrieve all arguments for the specified types
      *
      * @param typeList The types the arguments should be retrieved from
@@ -331,7 +344,7 @@ public class DiscordUtils {
             if (!presenceData.containsKey(type)) {
                 presenceData.put(type, Lists.newArrayList());
             }
-            result.addAll(presenceData.get(type));
+            StringUtils.addEntriesNotPresent(result, presenceData.get(type));
         }
         return result;
     }
@@ -357,6 +370,17 @@ public class DiscordUtils {
     }
 
     /**
+     * Remove any arguments following the specified formats within the selected Argument Type
+     *
+     * @param args The string formats to interpret
+     */
+    public void removeArgumentsMatching(final String... args) {
+        for (ArgumentType type : ArgumentType.values()) {
+            removeArgumentsMatching(type, args);
+        }
+    }
+
+    /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
      * @param type The type the arguments should be retrieved from
@@ -375,6 +399,20 @@ public class DiscordUtils {
             }
         }
         return list;
+    }
+
+    /**
+     * Retrieves any arguments within the specified type that match the specified string formats
+     *
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<Pair<String, String>> getArgumentsMatching(final String... args) {
+        final List<Pair<String, String>> results = Lists.newArrayList();
+        for (ArgumentType type : ArgumentType.values()) {
+            StringUtils.addEntriesNotPresent(results, getArgumentsMatching(type, args));
+        }
+        return results;
     }
 
     /**
@@ -484,7 +522,7 @@ public class DiscordUtils {
             for (Pair<String, String> argData : args) {
                 String placeholderName = argData.getFirst();
                 if (!StringUtils.isNullOrEmpty(subPrefix)) {
-                    placeholderName = rootArgument.charAt(0) + placeholderName.replaceAll(subPrefix, "");
+                    placeholderName = placeholderName.replaceAll(subPrefix, rootArgument.substring(0, 1));
                 }
                 finalString.append(
                         String.format("\\n - %s = %s",

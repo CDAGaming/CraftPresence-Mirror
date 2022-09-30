@@ -156,7 +156,7 @@ public class CommandUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            loadingArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(loadingArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         CraftPresence.CLIENT.clearPartyData(true, false);
@@ -176,7 +176,7 @@ public class CommandUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            mainMenuArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(mainMenuArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         // Clear Loading Game State, if applicable

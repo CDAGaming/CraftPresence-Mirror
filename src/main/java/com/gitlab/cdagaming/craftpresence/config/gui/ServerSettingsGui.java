@@ -150,7 +150,17 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
+                                                                                        CraftPresence.SERVER.getArgumentMessage())
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -173,7 +183,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages")
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
+                                                        CraftPresence.SERVER.getArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -292,7 +303,17 @@ public class ServerSettingsGui extends ExtendedScreen {
         }
         // Hovering over Default Server Message Label
         if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(defaultMessageText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title.server_messages")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
+                                    CraftPresence.SERVER.getArgumentMessage())
+                    ),
+                    getMouseX(), getMouseY(),
+                    width, height,
+                    getWrapWidth(),
+                    getFontRenderer(),
+                    true
+            );
         }
     }
 }

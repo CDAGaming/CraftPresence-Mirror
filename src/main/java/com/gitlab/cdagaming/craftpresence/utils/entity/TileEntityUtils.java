@@ -533,7 +533,7 @@ public class TileEntityUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            tileEntityArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(tileEntityArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         final String CURRENT_MESSAGE = StringUtils.sequentialReplaceAnyCase(placeholderItemMessage, tileEntityArgs);
@@ -691,10 +691,10 @@ public class TileEntityUtils {
         BLOCK_NAMES.removeAll(ITEM_NAMES);
         BLOCK_NAMES.removeAll(removingBlocks);
 
-        TILE_ENTITY_NAMES.addAll(BLOCK_NAMES);
-        TILE_ENTITY_NAMES.addAll(ITEM_NAMES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, BLOCK_NAMES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, ITEM_NAMES);
 
-        TILE_ENTITY_CLASSES.addAll(BLOCK_CLASSES);
-        TILE_ENTITY_CLASSES.addAll(ITEM_CLASSES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_CLASSES, BLOCK_CLASSES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_CLASSES, ITEM_CLASSES);
     }
 }

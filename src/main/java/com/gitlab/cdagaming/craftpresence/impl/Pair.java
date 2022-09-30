@@ -111,17 +111,27 @@ public class Pair<U, V> {
     /**
      * Determines if elements in two different Pair's are equivalent
      *
-     * @param obj The Pair to compare against
-     * @return If the Two Opposing Pair's are equivalent
+     * @param obj The Object to compare against
+     * @return If the Two Opposing Objects's are equivalent
      */
-    public boolean equals(final Pair<?, ?> obj) {
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Pair)) {
+            return false;
+        }
+
+        Pair<?, ?> p = (Pair<?, ?>)obj;
         try {
             // Case 1: Attempt ToString Conversion Checking
-            return (this.getFirst().toString().equals(obj.getFirst().toString())) && (this.getSecond().toString().equals(obj.getSecond().toString()));
+            return (this.getFirst().toString().equals(p.getFirst().toString())) && (this.getSecond().toString().equals(p.getSecond().toString()));
         } catch (Exception ex) {
             // Case 2: Automated Checking
             // Note: Can Likely return false positives depending on conditions
-            return ((this.getFirst() == obj.getFirst()) && (this.getSecond() == obj.getSecond())) || (this == obj);
+            return (this.getFirst() == p.getFirst()) && (this.getSecond() == p.getSecond());
         }
     }
 

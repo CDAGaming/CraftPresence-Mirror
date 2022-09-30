@@ -35,7 +35,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -100,10 +99,8 @@ public class DimensionUtils {
         iconArgs.clear();
 
         isInUse = false;
-        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
-        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Image, subArgumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
+        CraftPresence.CLIENT.removeArgumentsMatching(subArgumentFormat);
+        CraftPresence.CLIENT.initArgument(argumentFormat);
     }
 
     /**
@@ -185,7 +182,7 @@ public class DimensionUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            dimensionArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(dimensionArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         final String CURRENT_DIMENSION_ICON = StringUtils.sequentialReplaceAnyCase(formattedIconKey, iconArgs);
@@ -204,7 +201,7 @@ public class DimensionUtils {
         List<DimensionType> dimensionTypes = Lists.newArrayList();
         Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.lookupObject(DimensionType.class, null, "dimensionTypes");
 
-        Collections.addAll(dimensionTypes, DimensionType.values());
+        StringUtils.addEntriesNotPresent(dimensionTypes, DimensionType.values());
 
         if (dimensionTypes.isEmpty()) {
             // Fallback 1: Use Reflected Dimension Types
@@ -272,18 +269,25 @@ public class DimensionUtils {
         List<Pair<String, String>> results = Lists.newArrayList();
         for (ArgumentType type : types) {
             final List<Pair<String, String>> primaryList = type == ArgumentType.Image ? iconArgs : dimensionArgs;
+            if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
+                primaryList.removeAll(CraftPresence.CLIENT.generalArgs);
+            }
             if (!primaryList.isEmpty()) {
-                results.addAll(primaryList);
-            } else {
-                if (type == ArgumentType.Image) {
-                    results.addAll(CraftPresence.CLIENT.convertToArgumentList(
-                            subArgumentFormat + "ICON&"
-                    ));
-                } else if (type == ArgumentType.Text) {
-                    results.addAll(CraftPresence.CLIENT.convertToArgumentList(
-                            subArgumentFormat + "DIMENSION&"
-                    ));
-                }
+                StringUtils.addEntriesNotPresent(results, primaryList);
+            }
+
+            if (type == ArgumentType.Image) {
+                StringUtils.addEntriesNotPresent(results,
+                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                        CraftPresence.CLIENT.convertToArgumentList(
+                                "&ICON&"
+                        ));
+            } else if (type == ArgumentType.Text) {
+                StringUtils.addEntriesNotPresent(results,
+                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                        CraftPresence.CLIENT.convertToArgumentList(
+                                "&DIMENSION&"
+                        ));
             }
         }
         return results;
