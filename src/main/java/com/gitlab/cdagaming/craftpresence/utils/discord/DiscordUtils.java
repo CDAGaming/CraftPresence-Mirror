@@ -512,17 +512,21 @@ public class DiscordUtils {
 
     public String generatePlaceholderString(final String rootArgument, final String subPrefix, final boolean addExtraData, final List<Pair<String, String>> args) {
         final StringBuilder finalString = new StringBuilder(
-                String.format("%s %s",
+                String.format("%s %s:",
                         ModUtils.TRANSLATOR.translate(
                                 String.format("%s.placeholders.title", ModUtils.MOD_ID)
-                        ), "(" + (!StringUtils.isNullOrEmpty(rootArgument) ? rootArgument.toLowerCase() : "None") + ")"
+                        ), (!StringUtils.isNullOrEmpty(rootArgument) ? ("(" + rootArgument.toLowerCase() + ")") : "")
                 )
         );
         if (args != null && !args.isEmpty()) {
             for (Pair<String, String> argData : args) {
                 String placeholderName = argData.getFirst();
-                if (!StringUtils.isNullOrEmpty(subPrefix)) {
-                    placeholderName = placeholderName.replaceAll(subPrefix, rootArgument.substring(0, 1));
+                String translationName = placeholderName;
+                if (!StringUtils.isNullOrEmpty(rootArgument)) {
+                    if (!StringUtils.isNullOrEmpty(subPrefix)) {
+                        placeholderName = placeholderName.replaceAll(subPrefix, rootArgument.substring(0, 1));
+                    }
+                    translationName = (rootArgument + "." + placeholderName).replaceAll(rootArgument.substring(0, 1), "");
                 }
                 finalString.append(
                         String.format("\\n - %s = %s",
@@ -530,13 +534,13 @@ public class DiscordUtils {
                                 ModUtils.TRANSLATOR.translate(
                                         String.format("%s.placeholders.%s.description",
                                                 ModUtils.MOD_ID,
-                                                (rootArgument + "." + placeholderName).replaceAll(rootArgument.substring(0, 1), "")
+                                                translationName
                                         )
                                 ))
                 );
 
                 if (addExtraData && !StringUtils.isNullOrEmpty(argData.getSecond())) {
-                    finalString.append(String.format(" (Preview: %s)", argData.getSecond()));
+                    finalString.append(String.format("\\n  ==> Preview: \"%s\"", argData.getSecond()));
                 }
             }
         } else {
