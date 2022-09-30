@@ -274,7 +274,7 @@
   "craftpresence.placeholders.DIMENSION.ICON.description": "The default dimension icon",
   "craftpresence.placeholders.BIOME.BIOME.description": "The current biome name",
   "craftpresence.placeholders.BIOME.ICON.description": "The default biome icon",
-  "craftpresence.placeholders.SERVER.ICON.description": "The default server icon",
+  "craftpresence.placeholders.SERVER.ICON.description": "(MP) The default server icon",
   "craftpresence.placeholders.SERVER.PLAYERINFO.description": "Your in-world player info message",
   "craftpresence.placeholders.SERVER.WORLDINFO.description": "Your in-world game info message",
   "craftpresence.placeholders.SERVER.IP.description": "(MP) The current server address",

@@ -72,6 +72,10 @@ public class DiscordUtils {
      */
     private final List<Pair<String, String>> playerInfoArgs = Lists.newArrayList();
     /**
+     * A Mapping of the Arguments attached to the &PACK& RPC Message Placeholder
+     */
+    private final List<Pair<String, String>> packArgs = Lists.newArrayList();
+    /**
      * The Current User, tied to the Rich Presence
      */
     public User CURRENT_USER;
@@ -482,6 +486,7 @@ public class DiscordUtils {
      */
     private void syncPackArguments() {
         // Add &PACK& Placeholder to ArgumentData
+        packArgs.clear();
         String foundPackName = "", foundPackIcon = "";
 
         if (ModUtils.BRAND.contains("vivecraft")) {
@@ -506,7 +511,14 @@ public class DiscordUtils {
             foundPackIcon = foundPackName;
         }
 
-        syncArgument("&PACK&", StringUtils.formatWord(StringUtils.replaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, "&NAME&", !StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : ""), !CraftPresence.CONFIG.formatWords), ArgumentType.Text);
+        packArgs.add(new Pair<>("&NAME&", (!StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : "")));
+
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : packArgs) {
+            CraftPresence.CLIENT.syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
+        syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, packArgs), ArgumentType.Text);
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
     }
 
@@ -553,26 +565,19 @@ public class DiscordUtils {
         return generatePlaceholderString(rootArgument, subPrefix, CraftPresence.CONFIG.debugMode, args);
     }
 
-    public String generatePlaceholderString(final String prefix, final String subPrefix, final boolean addExtraData, String... args) {
-        return generatePlaceholderString(prefix, subPrefix, addExtraData, convertToArgumentList(args));
-    }
-
-    public String generatePlaceholderString(final String prefix, final String subPrefix, String... args) {
-        return generatePlaceholderString(prefix, subPrefix, CraftPresence.CONFIG.debugMode, args);
-    }
-
-    public String generatePlaceholderString(final String prefix, final boolean addExtraData, String... args) {
-        return generatePlaceholderString(prefix, null, addExtraData, args);
-    }
-
-    public String generatePlaceholderString(final String prefix, String... args) {
-        return generatePlaceholderString(prefix, null, args);
-    }
-
-    public List<Pair<String, String>> convertToArgumentList(String... inputs) {
+    public List<Pair<String, String>> convertToArgumentList(ArgumentType type, String... inputs) {
         final List<Pair<String, String>> result = Lists.newArrayList();
+        final List<Pair<String, String>> existingArgs = getArgumentsMatching(type, inputs);
         for (String argumentName : inputs) {
-            result.add(new Pair<>(argumentName, ""));
+            if (!existingArgs.isEmpty()) {
+                for (Pair<String, String> entry : existingArgs) {
+                    if (entry.getFirst().contains(argumentName)) {
+                        result.add(entry);
+                    }
+                }
+            } else {
+                result.add(new Pair<>(argumentName, ""));
+            }
         }
         return result;
     }

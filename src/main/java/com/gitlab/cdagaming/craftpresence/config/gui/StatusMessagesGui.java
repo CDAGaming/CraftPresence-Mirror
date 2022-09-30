@@ -400,7 +400,12 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.pack_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString("&PACK&", "&PACK:", CraftPresence.CLIENT.getArgumentsMatching(ArgumentType.Text, "&PACK:")))
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&PACK&", "&PACK:",
+                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Text,
+                                                        "&PACK:"
+                                                )
+                                        ))
                         ),
                         getMouseX(), getMouseY(),
                         width, height,
@@ -414,7 +419,12 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.mods_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString("&MODS&", "&MODS:", CraftPresence.CLIENT.getArgumentsMatching(ArgumentType.Text, "&MODS:")))
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&MODS&", "&MODS:",
+                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Text,
+                                                        "&MODS:"
+                                                )
+                                        ))
                         ),
                         getMouseX(), getMouseY(),
                         width, height,
@@ -435,7 +445,12 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_message.out",
-                                        CraftPresence.CLIENT.generatePlaceholderString("&IGN&", "&IGN:", CraftPresence.CLIENT.getArgumentsMatching(ArgumentType.Text, "&IGN:")))
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&IGN&", "&IGN:",
+                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Text,
+                                                        "&IGN:"
+                                                )
+                                        ))
                         ),
                         getMouseX(), getMouseY(),
                         width, height,

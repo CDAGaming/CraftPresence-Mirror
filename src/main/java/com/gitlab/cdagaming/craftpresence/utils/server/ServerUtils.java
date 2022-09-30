@@ -635,32 +635,24 @@ public class ServerUtils {
     }
 
     public List<Pair<String, String>> generateArgumentList(List<Pair<String, String>> targetList, ArgumentType... types) {
-        List<Pair<String, String>> results = Lists.newArrayList();
+        final List<Pair<String, String>> results = Lists.newArrayList();
         for (ArgumentType type : types) {
-            final List<Pair<String, String>> primaryList = targetList != null ? targetList : (type == ArgumentType.Image ? iconArgs : serverArgs);
-            if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-                primaryList.removeAll(CraftPresence.CLIENT.generalArgs);
-            }
-            if (!primaryList.isEmpty()) {
-                StringUtils.addEntriesNotPresent(results, primaryList);
-            }
-
             if (type == ArgumentType.Image) {
                 StringUtils.addEntriesNotPresent(results,
                         data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(
-                                "&ICON&"
+                        CraftPresence.CLIENT.convertToArgumentList(type,
+                                subArgumentFormat + "ICON&"
                         ));
             } else if (type == ArgumentType.Text) {
                 StringUtils.addEntriesNotPresent(results,
                         data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(
-                                "&PLAYERINFO&",
-                                "&WORLDINFO&",
-                                "&IP&",
-                                "&NAME&",
-                                "&MOTD&",
-                                "&PLAYERS&"
+                        CraftPresence.CLIENT.convertToArgumentList(type,
+                                subArgumentFormat + "PLAYERINFO&",
+                                subArgumentFormat + "WORLDINFO&",
+                                subArgumentFormat + "IP&",
+                                subArgumentFormat + "NAME&",
+                                subArgumentFormat + "MOTD&",
+                                subArgumentFormat + "PLAYERS&"
                         ));
             }
         }
