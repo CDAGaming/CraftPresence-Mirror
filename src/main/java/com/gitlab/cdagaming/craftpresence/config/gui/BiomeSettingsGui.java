@@ -137,7 +137,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                                                        CraftPresence.BIOMES.getArgumentMessage())
+                                                                                        CraftPresence.BIOMES.generateArgumentMessage())
                                                                         ),
                                                                         screenInstance.getMouseX(), screenInstance.getMouseY(),
                                                                         screenInstance.width, screenInstance.height,
@@ -168,7 +168,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                        CraftPresence.BIOMES.getArgumentMessage())
+                                                        CraftPresence.BIOMES.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -266,7 +266,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                    CraftPresence.BIOMES.getArgumentMessage())
+                                    CraftPresence.BIOMES.generateArgumentMessage())
                     ),
                     getMouseX(), getMouseY(),
                     width, height,

@@ -284,7 +284,15 @@ public class EntityUtils {
         }
     }
 
-    public String getArgumentMessage(final String argumentFormat, final String subArgumentFormat, ArgumentType... types) {
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param types             The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, ArgumentType... types) {
         types = (types != null && types.length > 0 ? types : ArgumentType.values());
         final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
         List<String> queuedEntries;

@@ -560,10 +560,10 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
+     * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param addExtraData Whether to add additional data to the string
-     * @param args The data to interpret
+     * @param addExtraData      Whether to add additional data to the string
+     * @param args              The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final boolean addExtraData, final List<Pair<String, String>> args) {
@@ -610,9 +610,9 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
+     * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param args The data to interpret
+     * @param args              The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final List<Pair<String, String>> args) {
@@ -623,7 +623,7 @@ public class DiscordUtils {
      * Generate a parsable display string for the argument data provided
      *
      * @param argumentFormat The primary argument format to interpret
-     * @param args The data to interpret
+     * @param args           The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final List<Pair<String, String>> args) {
@@ -633,9 +633,9 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
+     * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param args The data to interpret
+     * @param args              The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final Map<ArgumentType, List<String>> args) {
@@ -646,7 +646,7 @@ public class DiscordUtils {
      * Generate a parsable display string for the argument data provided
      *
      * @param argumentFormat The primary argument format to interpret
-     * @param args The data to interpret
+     * @param args           The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final Map<ArgumentType, List<String>> args) {
@@ -656,9 +656,9 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
+     * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param args The data to interpret
+     * @param args              The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final String... args) {
@@ -669,7 +669,7 @@ public class DiscordUtils {
      * Generate a parsable display string for the argument data provided
      *
      * @param argumentFormat The primary argument format to interpret
-     * @param args The data to interpret
+     * @param args           The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final String... args) {
@@ -679,9 +679,9 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
+     * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param args The data to interpret
+     * @param args              The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final List<String> args) {
@@ -692,7 +692,7 @@ public class DiscordUtils {
      * Generate a parsable display string for the argument data provided
      *
      * @param argumentFormat The primary argument format to interpret
-     * @param args The data to interpret
+     * @param args           The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final List<String> args) {
@@ -701,6 +701,7 @@ public class DiscordUtils {
 
     /**
      * Convert a list of strings into a valid argument list
+     *
      * @param type The type the arguments should be retrieved from
      * @param args The string formats to interpret
      * @return the resulting list of argument entries
@@ -724,6 +725,7 @@ public class DiscordUtils {
 
     /**
      * Convert a list of strings into a valid argument list
+     *
      * @param type The type the arguments should be retrieved from
      * @param args The string formats to interpret
      * @return the resulting list of argument entries

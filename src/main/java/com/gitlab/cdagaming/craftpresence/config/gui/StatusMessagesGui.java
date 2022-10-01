@@ -372,7 +372,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
-                                        CraftPresence.SERVER.getArgumentMessage())
+                                        CraftPresence.SERVER.generateArgumentMessage())
                         ),
                         getMouseX(), getMouseY(),
                         width, height,
@@ -386,7 +386,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
-                                        CraftPresence.SERVER.getArgumentMessage())
+                                        CraftPresence.SERVER.generateArgumentMessage())
                         ),
                         getMouseX(), getMouseY(),
                         width, height,

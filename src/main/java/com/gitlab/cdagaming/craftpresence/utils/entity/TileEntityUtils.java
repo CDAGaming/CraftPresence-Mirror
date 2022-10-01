@@ -560,7 +560,13 @@ public class TileEntityUtils {
         }
     }
 
-    public String getArgumentMessage(ArgumentType... types) {
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param types The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(ArgumentType... types) {
         types = (types != null && types.length > 0 ? types : ArgumentType.values());
         final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
         List<String> queuedEntries;

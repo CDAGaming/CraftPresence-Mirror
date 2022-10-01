@@ -153,7 +153,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                                                                        CraftPresence.SERVER.getArgumentMessage())
+                                                                                        CraftPresence.SERVER.generateArgumentMessage())
                                                                         ),
                                                                         screenInstance.getMouseX(), screenInstance.getMouseY(),
                                                                         screenInstance.width, screenInstance.height,
@@ -184,7 +184,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                                        CraftPresence.SERVER.getArgumentMessage())
+                                                        CraftPresence.SERVER.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -306,7 +306,7 @@ public class ServerSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                    CraftPresence.SERVER.getArgumentMessage())
+                                    CraftPresence.SERVER.generateArgumentMessage())
                     ),
                     getMouseX(), getMouseY(),
                     width, height,

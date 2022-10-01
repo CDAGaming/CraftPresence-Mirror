@@ -96,7 +96,7 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                        CraftPresence.BIOMES.getArgumentMessage())
+                                                        CraftPresence.BIOMES.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -131,7 +131,7 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                                        CraftPresence.DIMENSIONS.getArgumentMessage())
+                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -166,7 +166,7 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                                        CraftPresence.SERVER.getArgumentMessage())
+                                                        CraftPresence.SERVER.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,

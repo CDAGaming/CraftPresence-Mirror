@@ -138,7 +138,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                                                                        CraftPresence.DIMENSIONS.getArgumentMessage())
+                                                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
                                                                         ),
                                                                         screenInstance.getMouseX(), screenInstance.getMouseY(),
                                                                         screenInstance.width, screenInstance.height,
@@ -169,7 +169,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                                        CraftPresence.DIMENSIONS.getArgumentMessage())
+                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -267,7 +267,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                    CraftPresence.DIMENSIONS.getArgumentMessage())
+                                    CraftPresence.DIMENSIONS.generateArgumentMessage())
                     ),
                     getMouseX(), getMouseY(),
                     width, height,
