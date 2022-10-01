@@ -456,7 +456,7 @@ public class GuiUtils {
             }
             argumentData.put(type, queuedEntries);
         }
-        return CraftPresence.CLIENT.getArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
+        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**

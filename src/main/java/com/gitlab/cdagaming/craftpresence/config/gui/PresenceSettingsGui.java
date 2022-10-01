@@ -339,11 +339,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                null, null,
-                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Text,
-                                                        DiscordUtils.textModules
-                                                )
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                null,
+                                                ArgumentType.Text, DiscordUtils.textModules
                                         ))
                         ),
                         getMouseX(), getMouseY(),
@@ -362,11 +360,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                null, null,
-                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Image,
-                                                        DiscordUtils.iconModules
-                                                )
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                null,
+                                                ArgumentType.Image, DiscordUtils.iconModules
                                         ))
                         ),
                         getMouseX(), getMouseY(),

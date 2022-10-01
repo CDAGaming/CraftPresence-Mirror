@@ -533,49 +533,56 @@ public class DiscordUtils {
 
         // Add applicable args as sub-placeholders
         for (Pair<String, String> argumentData : packArgs) {
-            CraftPresence.CLIENT.syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+            syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
         }
 
         syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, packArgs), ArgumentType.Text);
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
     }
 
-    public List<Pair<String, String>> generateArgumentList(Map<ArgumentType, List<String>> argumentData) {
+    /**
+     * Generate a list of Arguments, depending on the Argument Types and String List
+     *
+     * @param argumentData The data to interpret
+     * @return the list of parsed arguments
+     */
+    public List<Pair<String, String>> generateArgumentList(final Map<ArgumentType, List<String>> argumentData) {
         final List<Pair<String, String>> results = Lists.newArrayList();
         for (Map.Entry<ArgumentType, List<String>> entry : argumentData.entrySet()) {
             StringUtils.addEntriesNotPresent(results,
                     data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                    CraftPresence.CLIENT.convertToArgumentList(entry.getKey(), entry.getValue())
+                    convertToArgumentList(entry.getKey(), entry.getValue())
             );
         }
         return results;
     }
 
-    public String getArgumentMessage(String argumentFormat, String subArgumentFormat, Map<ArgumentType, List<String>> argumentData) {
-        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(argumentData));
-    }
-
-    public String getArgumentMessage(String argumentFormat, Map<ArgumentType, List<String>> argumentData) {
-        return getArgumentMessage(argumentFormat, null, argumentData);
-    }
-
-    public String generatePlaceholderString(final String rootArgument, final String subPrefix, final boolean addExtraData, final List<Pair<String, String>> args) {
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param addExtraData Whether to add additional data to the string
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final boolean addExtraData, final List<Pair<String, String>> args) {
         final StringBuilder finalString = new StringBuilder(
                 String.format("%s%s:",
                         ModUtils.TRANSLATOR.translate(
                                 String.format("%s.placeholders.title", ModUtils.MOD_ID)
-                        ), (!StringUtils.isNullOrEmpty(rootArgument) ? (" (" + rootArgument.toLowerCase() + ")") : "")
+                        ), (!StringUtils.isNullOrEmpty(argumentFormat) ? (" (" + argumentFormat.toLowerCase() + ")") : "")
                 )
         );
         if (args != null && !args.isEmpty()) {
             for (Pair<String, String> argData : args) {
                 String placeholderName = argData.getFirst();
                 String translationName = placeholderName;
-                if (!StringUtils.isNullOrEmpty(rootArgument)) {
-                    if (!StringUtils.isNullOrEmpty(subPrefix)) {
-                        placeholderName = placeholderName.replaceAll(subPrefix, rootArgument.substring(0, 1));
+                if (!StringUtils.isNullOrEmpty(argumentFormat)) {
+                    if (!StringUtils.isNullOrEmpty(subArgumentFormat)) {
+                        placeholderName = placeholderName.replaceAll(subArgumentFormat, argumentFormat.substring(0, 1));
                     }
-                    translationName = (rootArgument + "." + placeholderName).replaceAll(rootArgument.substring(0, 1), "");
+                    translationName = (argumentFormat + "." + placeholderName).replaceAll(argumentFormat.substring(0, 1), "");
                 } else {
                     translationName = translationName.replaceAll("[^a-zA-Z0-9]", "");
                 }
@@ -600,14 +607,108 @@ public class DiscordUtils {
         return finalString.toString();
     }
 
-    public String generatePlaceholderString(final String rootArgument, final String subPrefix, final List<Pair<String, String>> args) {
-        return generatePlaceholderString(rootArgument, subPrefix, CraftPresence.CONFIG.debugMode, args);
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final List<Pair<String, String>> args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, ipcInstance.isDebugMode(), args);
     }
 
-    public List<Pair<String, String>> convertToArgumentList(ArgumentType type, String... inputs) {
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final List<Pair<String, String>> args) {
+        return generateArgumentMessage(argumentFormat, null, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final Map<ArgumentType, List<String>> args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, generateArgumentList(args));
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final Map<ArgumentType, List<String>> args) {
+        return generateArgumentMessage(argumentFormat, null, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final String... args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, args));
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final String... args) {
+        return generateArgumentMessage(argumentFormat, null, type, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final List<String> args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, args));
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final List<String> args) {
+        return generateArgumentMessage(argumentFormat, null, type, args);
+    }
+
+    /**
+     * Convert a list of strings into a valid argument list
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return the resulting list of argument entries
+     */
+    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final String... args) {
         final List<Pair<String, String>> result = Lists.newArrayList();
-        final List<Pair<String, String>> existingArgs = getArgumentsMatching(type, inputs);
-        for (String argumentName : inputs) {
+        final List<Pair<String, String>> existingArgs = getArgumentsMatching(type, args);
+        for (String argumentName : args) {
             if (!existingArgs.isEmpty()) {
                 for (Pair<String, String> entry : existingArgs) {
                     if (entry.getFirst().contains(argumentName)) {
@@ -621,8 +722,14 @@ public class DiscordUtils {
         return result;
     }
 
-    public List<Pair<String, String>> convertToArgumentList(ArgumentType type, List<String> inputs) {
-        return convertToArgumentList(type, inputs.toArray(new String[0]));
+    /**
+     * Convert a list of strings into a valid argument list
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return the resulting list of argument entries
+     */
+    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final List<String> args) {
+        return convertToArgumentList(type, args.toArray(new String[0]));
     }
 
     /**

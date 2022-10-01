@@ -400,11 +400,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.pack_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                        CraftPresence.CLIENT.generateArgumentMessage(
                                                 "&PACK&", "&PACK:",
-                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Text,
-                                                        "&PACK:"
-                                                )
+                                                ArgumentType.Text, "&PACK:"
                                         ))
                         ),
                         getMouseX(), getMouseY(),
@@ -419,11 +417,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.mods_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                        CraftPresence.CLIENT.generateArgumentMessage(
                                                 "&MODS&", "&MODS:",
-                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Text,
-                                                        "&MODS:"
-                                                )
+                                                ArgumentType.Text, "&MODS:"
                                         ))
                         ),
                         getMouseX(), getMouseY(),
@@ -445,11 +441,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_message.out",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                        CraftPresence.CLIENT.generateArgumentMessage(
                                                 "&IGN&", "&IGN:",
-                                                CraftPresence.CLIENT.convertToArgumentList(ArgumentType.Text,
-                                                        "&IGN:"
-                                                )
+                                                ArgumentType.Text, "&IGN:"
                                         ))
                         ),
                         getMouseX(), getMouseY(),
@@ -464,8 +458,8 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_message.in",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                "&SERVER:PLAYERINFO&", null,
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                "&SERVER:PLAYERINFO&",
                                                 CraftPresence.SERVER.playerDataArgs
                                         ))
                         ),
@@ -481,8 +475,8 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_coordinate_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                "&SERVER:PLAYERINFO:COORDS&", null,
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                "&SERVER:PLAYERINFO:COORDS&",
                                                 CraftPresence.SERVER.coordinateArgs
                                         ))
                         ),
@@ -498,8 +492,8 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_health_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                "&SERVER:PLAYERINFO:HEALTH&", null,
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                "&SERVER:PLAYERINFO:HEALTH&",
                                                 CraftPresence.SERVER.healthArgs
                                         ))
                         ),
@@ -515,8 +509,8 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_amount_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                "&SERVER:PLAYERS&", null,
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                "&SERVER:PLAYERS&",
                                                 CraftPresence.SERVER.playerAmountArgs
                                         ))
                         ),
@@ -532,8 +526,8 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.world_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                "&SERVER:WORLDINFO&", null,
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                "&SERVER:WORLDINFO&",
                                                 CraftPresence.SERVER.worldDataArgs
                                         ))
                         ),
@@ -556,8 +550,8 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_item_message",
-                                        CraftPresence.CLIENT.generatePlaceholderString(
-                                                "&TILEENTITY&", null,
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                "&TILEENTITY&",
                                                 CraftPresence.TILE_ENTITIES.equipmentArgs
                                         ))
                         ),
