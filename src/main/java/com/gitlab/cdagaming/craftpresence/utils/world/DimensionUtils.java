@@ -265,21 +265,28 @@ public class DimensionUtils {
         }
     }
 
-    public List<Pair<String, String>> generateArgumentList(List<Pair<String, String>> targetList, ArgumentType... types) {
-        List<Pair<String, String>> results = Lists.newArrayList();
+    public List<Pair<String, String>> generateArgumentList(List<String> targetList, ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+
+        final List<Pair<String, String>> results = Lists.newArrayList();
+        List<String> queuedEntries = Lists.newArrayList();
         for (ArgumentType type : types) {
+            queuedEntries.clear();
             if (type == ArgumentType.Image) {
-                StringUtils.addEntriesNotPresent(results,
-                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(type,
-                                subArgumentFormat + "ICON&"
-                        ));
+                queuedEntries = targetList != null ? targetList : Lists.newArrayList(
+                        subArgumentFormat + "ICON&"
+                );
             } else if (type == ArgumentType.Text) {
+                queuedEntries = targetList != null ? targetList : Lists.newArrayList(
+                        subArgumentFormat + "DIMENSION&"
+                );
+            }
+
+            if (!queuedEntries.isEmpty()) {
                 StringUtils.addEntriesNotPresent(results,
                         data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(type,
-                                subArgumentFormat + "DIMENSION&"
-                        ));
+                        CraftPresence.CLIENT.convertToArgumentList(type, queuedEntries)
+                );
             }
         }
         return results;
@@ -289,11 +296,19 @@ public class DimensionUtils {
         return generateArgumentList(null, types);
     }
 
-    public String getArgumentMessage(ArgumentType... types) {
-        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(types));
+    public String getArgumentMessage(String argumentFormat, String subArgumentFormat, List<String> targetList, ArgumentType... types) {
+        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(targetList, types));
     }
 
-    public String getArgumentMessage() {
-        return getArgumentMessage(ArgumentType.values());
+    public String getArgumentMessage(String argumentFormat, List<String> targetList, ArgumentType... types) {
+        return getArgumentMessage(argumentFormat, null, targetList, types);
+    }
+
+    public String getArgumentMessage(List<String> targetList, ArgumentType... types) {
+        return getArgumentMessage(null, null, targetList, types);
+    }
+
+    public String getArgumentMessage(ArgumentType... types) {
+        return getArgumentMessage(argumentFormat, subArgumentFormat, null, types);
     }
 }

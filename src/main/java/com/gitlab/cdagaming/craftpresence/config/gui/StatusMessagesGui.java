@@ -461,7 +461,20 @@ public class StatusMessagesGui extends PaginatedScreen {
             }
             // Hovering over Inner Player Message Label
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(innerPlayerText), getFontHeight())) {
-                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_message.in")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_message.in",
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&PLAYERINFO&", null,
+                                                CraftPresence.SERVER.playerDataArgs
+                                        ))
+                        ),
+                        getMouseX(), getMouseY(),
+                        width, height,
+                        getWrapWidth(),
+                        getFontRenderer(),
+                        true
+                );
             }
             // Hovering over Player Coords Message
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(playerCoordsText), getFontHeight())) {

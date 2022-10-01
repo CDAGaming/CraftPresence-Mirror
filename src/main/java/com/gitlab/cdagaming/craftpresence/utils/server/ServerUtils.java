@@ -165,6 +165,12 @@ public class ServerUtils {
     List<Pair<String, String>> serverArgs = Lists.newArrayList();
     List<Pair<String, String>> iconArgs = Lists.newArrayList();
 
+    public List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
+    List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
+    List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
+    List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
+    List<Pair<String, String>> healthArgs = Lists.newArrayList();
+
     /**
      * Clears FULL Data from this Module
      */
@@ -194,8 +200,15 @@ public class ServerUtils {
         dayString = null;
         currentPlayers = 0;
         maxPlayers = 0;
+
         serverArgs.clear();
         iconArgs.clear();
+
+        playerDataArgs.clear();
+        playerAmountArgs.clear();
+        worldDataArgs.clear();
+        coordinateArgs.clear();
+        healthArgs.clear();
 
         queuedForUpdate = false;
         isOnLAN = false;
@@ -487,8 +500,10 @@ public class ServerUtils {
         serverArgs.clear();
         iconArgs.clear();
 
-        List<Pair<String, String>> playerDataArgs = Lists.newArrayList(), worldDataArgs = Lists.newArrayList();
-        List<Pair<String, String>> coordinateArgs = Lists.newArrayList(), healthArgs = Lists.newArrayList();
+        playerDataArgs.clear();
+        worldDataArgs.clear();
+        coordinateArgs.clear();
+        healthArgs.clear();
 
         coordinateArgs.add(new Pair<>("&xPosition&", currentCoordinates.getFirst().toString()));
         coordinateArgs.add(new Pair<>("&yPosition&", currentCoordinates.getSecond().toString()));
@@ -515,7 +530,7 @@ public class ServerUtils {
 
         if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
             // Form Pair List of Argument for Servers/LAN Games
-            List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
+            playerAmountArgs.clear();
 
             // Player Amount Arguments
             playerAmountArgs.add(new Pair<>("&CURRENT&", Integer.toString(currentPlayers)));
@@ -634,26 +649,33 @@ public class ServerUtils {
         return knownServerData.getOrDefault(serverAddress, null);
     }
 
-    public List<Pair<String, String>> generateArgumentList(List<Pair<String, String>> targetList, ArgumentType... types) {
+    public List<Pair<String, String>> generateArgumentList(List<String> targetList, ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+
         final List<Pair<String, String>> results = Lists.newArrayList();
+        List<String> queuedEntries = Lists.newArrayList();
         for (ArgumentType type : types) {
+            queuedEntries.clear();
             if (type == ArgumentType.Image) {
-                StringUtils.addEntriesNotPresent(results,
-                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(type,
-                                subArgumentFormat + "ICON&"
-                        ));
+                queuedEntries = targetList != null ? targetList : Lists.newArrayList(
+                        subArgumentFormat + "ICON&"
+                );
             } else if (type == ArgumentType.Text) {
+                queuedEntries = targetList != null ? targetList : Lists.newArrayList(
+                        subArgumentFormat + "PLAYERINFO&",
+                        subArgumentFormat + "WORLDINFO&",
+                        subArgumentFormat + "IP&",
+                        subArgumentFormat + "NAME&",
+                        subArgumentFormat + "MOTD&",
+                        subArgumentFormat + "PLAYERS&"
+                );
+            }
+
+            if (!queuedEntries.isEmpty()) {
                 StringUtils.addEntriesNotPresent(results,
                         data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(type,
-                                subArgumentFormat + "PLAYERINFO&",
-                                subArgumentFormat + "WORLDINFO&",
-                                subArgumentFormat + "IP&",
-                                subArgumentFormat + "NAME&",
-                                subArgumentFormat + "MOTD&",
-                                subArgumentFormat + "PLAYERS&"
-                        ));
+                        CraftPresence.CLIENT.convertToArgumentList(type, queuedEntries)
+                );
             }
         }
         return results;
@@ -663,11 +685,19 @@ public class ServerUtils {
         return generateArgumentList(null, types);
     }
 
-    public String getArgumentMessage(ArgumentType... types) {
-        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(types));
+    public String getArgumentMessage(String argumentFormat, String subArgumentFormat, List<String> targetList, ArgumentType... types) {
+        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(targetList, types));
     }
 
-    public String getArgumentMessage() {
-        return getArgumentMessage(ArgumentType.values());
+    public String getArgumentMessage(String argumentFormat, List<String> targetList, ArgumentType... types) {
+        return getArgumentMessage(argumentFormat, null, targetList, types);
+    }
+
+    public String getArgumentMessage(List<String> targetList, ArgumentType... types) {
+        return getArgumentMessage(null, null, targetList, types);
+    }
+
+    public String getArgumentMessage(ArgumentType... types) {
+        return getArgumentMessage(argumentFormat, subArgumentFormat, null, types);
     }
 }
