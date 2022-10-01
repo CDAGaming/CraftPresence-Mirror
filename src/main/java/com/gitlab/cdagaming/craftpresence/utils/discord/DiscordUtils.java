@@ -538,6 +538,25 @@ public class DiscordUtils {
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
     }
 
+    public List<Pair<String, String>> generateArgumentList(Map<ArgumentType, List<String>> argumentData) {
+        final List<Pair<String, String>> results = Lists.newArrayList();
+        for (Map.Entry<ArgumentType, List<String>> entry : argumentData.entrySet()) {
+            StringUtils.addEntriesNotPresent(results,
+                    data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                    CraftPresence.CLIENT.convertToArgumentList(entry.getKey(), entry.getValue())
+            );
+        }
+        return results;
+    }
+
+    public String getArgumentMessage(String argumentFormat, String subArgumentFormat, Map<ArgumentType, List<String>> argumentData) {
+        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(argumentData));
+    }
+
+    public String getArgumentMessage(String argumentFormat, Map<ArgumentType, List<String>> argumentData) {
+        return getArgumentMessage(argumentFormat, null, argumentData);
+    }
+
     public String generatePlaceholderString(final String rootArgument, final String subPrefix, final boolean addExtraData, final List<Pair<String, String>> args) {
         final StringBuilder finalString = new StringBuilder(
                 String.format("%s%s:",

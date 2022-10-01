@@ -38,6 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -51,6 +52,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Gui Utilities used to Parse Gui Data and handle related RPC Events, and rendering tasks
@@ -440,48 +442,19 @@ public class GuiUtils {
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_GUI_MESSAGE, ArgumentType.Text);
     }
 
-    public List<Pair<String, String>> generateArgumentList(List<String> targetList, ArgumentType... types) {
-        types = (types != null && types.length > 0 ? types : ArgumentType.values());
-
-        final List<Pair<String, String>> results = Lists.newArrayList();
-        List<String> queuedEntries = Lists.newArrayList();
-        for (ArgumentType type : types) {
-            queuedEntries.clear();
-            if (type == ArgumentType.Text) {
-                queuedEntries = targetList != null ? targetList : Lists.newArrayList(
-                        subArgumentFormat + "SCREEN&",
-                        subArgumentFormat + "CLASS&"
-                );
-            }
-
-            if (!queuedEntries.isEmpty()) {
-                StringUtils.addEntriesNotPresent(results,
-                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(type, queuedEntries)
-                );
-            }
-        }
-        return results;
-    }
-
-    public List<Pair<String, String>> generateArgumentList(ArgumentType... types) {
-        return generateArgumentList(null, types);
-    }
-
-    public String getArgumentMessage(String argumentFormat, String subArgumentFormat, List<String> targetList, ArgumentType... types) {
-        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(targetList, types));
-    }
-
-    public String getArgumentMessage(String argumentFormat, List<String> targetList, ArgumentType... types) {
-        return getArgumentMessage(argumentFormat, null, targetList, types);
-    }
-
-    public String getArgumentMessage(List<String> targetList, ArgumentType... types) {
-        return getArgumentMessage(null, null, targetList, types);
-    }
-
     public String getArgumentMessage(ArgumentType... types) {
-        return getArgumentMessage(argumentFormat, subArgumentFormat, null, types);
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
+        List<String> queuedEntries;
+        for (ArgumentType type : types) {
+            queuedEntries = Lists.newArrayList();
+            if (type == ArgumentType.Text) {
+                queuedEntries.add(subArgumentFormat + "SCREEN&");
+                queuedEntries.add(subArgumentFormat + "CLASS&");
+            }
+            argumentData.put(type, queuedEntries);
+        }
+        return CraftPresence.CLIENT.getArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**

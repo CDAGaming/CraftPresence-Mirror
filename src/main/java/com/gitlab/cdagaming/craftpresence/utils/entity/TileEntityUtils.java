@@ -551,47 +551,18 @@ public class TileEntityUtils {
         }
     }
 
-    public List<Pair<String, String>> generateArgumentList(List<String> targetList, ArgumentType... types) {
-        types = (types != null && types.length > 0 ? types : ArgumentType.values());
-
-        final List<Pair<String, String>> results = Lists.newArrayList();
-        List<String> queuedEntries = Lists.newArrayList();
-        for (ArgumentType type : types) {
-            queuedEntries.clear();
-            if (type == ArgumentType.Text) {
-                queuedEntries = targetList != null ? targetList : Lists.newArrayList(
-                        subArgumentFormat + "ITEM&"
-                );
-            }
-
-            if (!queuedEntries.isEmpty()) {
-                StringUtils.addEntriesNotPresent(results,
-                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                        CraftPresence.CLIENT.convertToArgumentList(type, queuedEntries)
-                );
-            }
-        }
-        return results;
-    }
-
-    public List<Pair<String, String>> generateArgumentList(ArgumentType... types) {
-        return generateArgumentList(null, types);
-    }
-
-    public String getArgumentMessage(String argumentFormat, String subArgumentFormat, List<String> targetList, ArgumentType... types) {
-        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(targetList, types));
-    }
-
-    public String getArgumentMessage(String argumentFormat, List<String> targetList, ArgumentType... types) {
-        return getArgumentMessage(argumentFormat, null, targetList, types);
-    }
-
-    public String getArgumentMessage(List<String> targetList, ArgumentType... types) {
-        return getArgumentMessage(null, null, targetList, types);
-    }
-
     public String getArgumentMessage(ArgumentType... types) {
-        return getArgumentMessage(argumentFormat, subArgumentFormat, null, types);
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
+        List<String> queuedEntries;
+        for (ArgumentType type : types) {
+            queuedEntries = Lists.newArrayList();
+            if (type == ArgumentType.Text) {
+                queuedEntries.add(subArgumentFormat + "ITEM&");
+            }
+            argumentData.put(type, queuedEntries);
+        }
+        return CraftPresence.CLIENT.getArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**
