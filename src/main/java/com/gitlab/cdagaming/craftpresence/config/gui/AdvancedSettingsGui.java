@@ -211,11 +211,24 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(
-                                                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                                        CraftPresence.TILE_ENTITIES.generatePlaceholderString(attributeName, screenInstance.isDebugMode(), CraftPresence.TILE_ENTITIES.getListFromName(attributeName))))
-                                                                ), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
+                                                                                        CraftPresence.TILE_ENTITIES.getArgumentMessage(),
+                                                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
+                                                                                                CraftPresence.TILE_ENTITIES.generatePlaceholderString(
+                                                                                                        attributeName, screenInstance.isDebugMode(),
+                                                                                                        CraftPresence.TILE_ENTITIES.getListFromName(attributeName)
+                                                                                                )
+                                                                                        )
+                                                                                )
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -239,8 +252,14 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
+                                                        CraftPresence.TILE_ENTITIES.getArgumentMessage(),
                                                         ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                CraftPresence.ENTITIES.generatePlaceholderString("", isDebugMode(), CraftPresence.TILE_ENTITIES.getListFromName(""))))
+                                                                CraftPresence.TILE_ENTITIES.generatePlaceholderString(
+                                                                        "", isDebugMode(),
+                                                                        CraftPresence.TILE_ENTITIES.getListFromName("")
+                                                                )
+                                                        )
+                                                )
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
