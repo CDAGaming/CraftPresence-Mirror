@@ -1,58 +1,17 @@
 # CraftPresence Changes
 
-## v1.9.2 (09/29/2022)
+## v1.9.3 (10/11/2022)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.1...release%2Fv1.9.2)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.2...release%2Fv1.9.3)_
 
 ### Changes
 
-* Removed `&ATTACKINGENTITY&` and related info due to faulty and deprecated logic
-* Added a `custom` sub-argument to the `/cp view assets` command to view dynamic assets on their own
-    * Due to refactors made to how discord assets are stored, `large` and `small` have been removed as sub-arguments
-      from this command due to being deprecated a long time ago
-* Adjusted the `Refresh Rate` setting to prevent it from being anything below 2 seconds
-    * Tests have shown that multiple issues can occur with it being any lower
-* Added Resource Pack Support on select MC versions for Translations
-    * As a side-effect, doing `/cp reload` in the Commands UI will reload translations as well
-* Allow the usage of placeholders in Dynamic Icon Urls
-    * You cannot use them in name's, since those are meant to always be static for easy retrieval
-* You can now use the sub-arguments from `&IGN&` and `&MODS&` independently from their placeholders
-    * As a side-tangent to this, `&UUID&` was also added to `&IGN&`'s arguments on select MC versions
-* Adjusted the `Language ID` setting, so that on MC 1.1.0 and above, the game's language setting has priority
-    * In versions below MC 1.1.0, this behavior is unchanged from the prior version.
-* Added Support for more Image Types with Scrollable Lists and Dynamic Icons
-    * For specifics: GIFs are now supported in `ImageUtils` in url form, so long as it ends in `.gif`
-* Misc. Backend Tweaks to allow all MC versions to use JSON for translations, as well as refactors to translation logic
-  in general
-    * JSON and LANG files are now supplied with each build, where LANG files are auto-generated from their JSON
-      equivalent
-    * Crowdin Integration has also been implemented and can be
-      accessed [here](https://crowdin.com/project/craftpresence)
-    * The Character Editor GUI as well as it's utilities have been deprecated to use the FontRenderer instead, solving a
-      variety of issues relating to Unicode and tooltip displays
-    * Unicode Logic has similarly been removed from `TranslationUtils` to opt for the FontRenderer implementation
-* Backend: `StringUtils#isNullOrEmpty` now no longer allows all-whitespace strings (IE it'll return false for it)
-    * Use the overload version of this function if you wish to allow whitespace
+* TBD
 
 ### Fixes
 
-* Fixed regressions relating to `sanitizePlaceholders` in addition to a NPE with buttons
-* Fixed an oversight preventing `&MODS&` and `&IGN&` (And their sub-arguments) from being dynamically synchronized
-* Fixed a NPE that can occur when rendering one of the Per-Item/Per-Entity tooltips
-* Backend: Added additional String<->UUID conversion utils to ensure anything involving UUIDs follows Mojang's format
-* Backend: Rewritten `UrlUtils#openUrl` to support Linux + Modern Versions of Windows and Java
-* Backend: Fixed `DiscordUtils#updateTimestamp` not properly working
-* Fixed a regression in the Entity Module, exposing a (now-fixed) flaw where `StringUtils#isValidUUID` could accept a
-  null input, causing a crash
-* Fixed an oversight in Translation logic that could cause the final value to be cut off when `usingJson` is true
-    * For CraftPresence, the `craftpresence.exception.config.prop.null` translation was effected by this
-* Fixed an oversight causing RPC Assets to not be re-synced when resetting the config or syncing the local config to the
-  game
-* Fixed an issue where added dynamic icons did not appear until after a client restart
-* Fixed issues relating to dynamic icons not being properly added or removed in some cases
-* Fixed an issue where recursive entry into the same dynamic editor can cause excess gaps in the GUI
-    * An example of this behavior is choosing an icon in the gui multiple times
+* TBD
 
 ___
 
