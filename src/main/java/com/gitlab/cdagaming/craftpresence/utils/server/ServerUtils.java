@@ -166,10 +166,10 @@ public class ServerUtils {
     List<Pair<String, String>> iconArgs = Lists.newArrayList();
 
     public List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
-    List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
-    List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
+    public List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
+    public List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
     public List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
-    List<Pair<String, String>> healthArgs = Lists.newArrayList();
+    public List<Pair<String, String>> healthArgs = Lists.newArrayList();
 
     /**
      * Clears FULL Data from this Module

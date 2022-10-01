@@ -495,15 +495,54 @@ public class StatusMessagesGui extends PaginatedScreen {
             }
             // Hovering over Player Health Message
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), getStringWidth(playerHealthText), getFontHeight())) {
-                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_health_message")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_health_message",
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&SERVER:PLAYERINFO:HEALTH&", null,
+                                                CraftPresence.SERVER.healthArgs
+                                        ))
+                        ),
+                        getMouseX(), getMouseY(),
+                        width, height,
+                        getWrapWidth(),
+                        getFontRenderer(),
+                        true
+                );
             }
             // Hovering over Player Amount Message Label
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(5, 5), getStringWidth(playerAmountText), getFontHeight())) {
-                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_amount_message")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_amount_message",
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&SERVER:PLAYERS&", null,
+                                                CraftPresence.SERVER.playerAmountArgs
+                                        ))
+                        ),
+                        getMouseX(), getMouseY(),
+                        width, height,
+                        getWrapWidth(),
+                        getFontRenderer(),
+                        true
+                );
             }
             // Hovering over World Data Message Label
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), getStringWidth(worldDataText), getFontHeight())) {
-                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.world_message")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.world_message",
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&SERVER:WORLDINFO&", null,
+                                                CraftPresence.SERVER.worldDataArgs
+                                        ))
+                        ),
+                        getMouseX(), getMouseY(),
+                        width, height,
+                        getWrapWidth(),
+                        getFontRenderer(),
+                        true
+                );
             }
         }
 
