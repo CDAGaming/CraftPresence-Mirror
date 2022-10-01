@@ -216,7 +216,7 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering critical elements before other elements
      */
     public void renderCriticalData() {
-        CraftPresence.GUIS.drawBackground(width, height);
+        CraftPresence.GUIS.drawBackground(getScreenWidth(), getScreenHeight());
     }
 
     /**
@@ -413,7 +413,7 @@ public class ExtendedScreen extends GuiScreen {
         if (notice != null && !notice.isEmpty()) {
             for (int i = 0; i < notice.size(); i++) {
                 final String string = notice.get(i);
-                renderString(string, (useXAsActual ? widthScale : (width / widthScale)) - (getStringWidth(string) / widthScale), (useYAsActual ? heightScale : (height / heightScale)) + (i * 10), 0xFFFFFF);
+                renderString(string, (useXAsActual ? widthScale : (getScreenWidth() / widthScale)) - (getStringWidth(string) / widthScale), (useYAsActual ? heightScale : (getScreenHeight() / heightScale)) + (i * 10), 0xFFFFFF);
             }
         }
     }
@@ -441,15 +441,6 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Get the Current Mouse's X Coordinate Position
-     *
-     * @return The Mouse's X Coordinate Position
-     */
-    public int getMouseX() {
-        return lastMouseX;
-    }
-
-    /**
      * Get the wrap width for elements to be wrapped by
      * <p>Mostly used as a helper method for wrapping String elements
      *
@@ -460,12 +451,39 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Get the Current Mouse's X Coordinate Position
+     *
+     * @return The Mouse's X Coordinate Position
+     */
+    public int getMouseX() {
+        return lastMouseX;
+    }
+
+    /**
      * Get the Current Mouse's Y Coordinate Position
      *
      * @return The Mouse's Y Coordinate Position
      */
     public int getMouseY() {
         return lastMouseY;
+    }
+
+    /**
+     * Get the Current Screen Width
+     *
+     * @return the width of the screen
+     */
+    public int getScreenWidth() {
+        return width;
+    }
+
+    /**
+     * Get the Current Screen Height
+     *
+     * @return the height of the screen
+     */
+    public int getScreenHeight() {
+        return height;
     }
 
     /**

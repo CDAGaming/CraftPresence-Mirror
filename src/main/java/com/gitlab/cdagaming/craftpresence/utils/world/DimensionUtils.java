@@ -32,10 +32,10 @@ import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +57,14 @@ public class DimensionUtils {
      * The sub-argument format to follow for Rich Presence Data
      */
     private final String subArgumentFormat = "&DIMENSION:";
+    /**
+     * A Mapping of the Arguments attached to the &DIMENSION& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> dimensionArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> iconArgs = Lists.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -93,11 +101,12 @@ public class DimensionUtils {
     public void clearClientData() {
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
+        dimensionArgs.clear();
+        iconArgs.clear();
 
         isInUse = false;
-        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
+        CraftPresence.CLIENT.removeArgumentsMatching(subArgumentFormat);
+        CraftPresence.CLIENT.initArgument(argumentFormat);
     }
 
     /**
@@ -157,26 +166,32 @@ public class DimensionUtils {
      */
     public void updateDimensionPresence() {
         // Form Dimension Argument List
-        List<Pair<String, String>> dimensionArgs = Lists.newArrayList();
-
-        dimensionArgs.add(new Pair<>("&DIMENSION&", CURRENT_DIMENSION_NAME));
-
-        // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : dimensionArgs) {
-            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
-
-        // Add All Generalized Arguments, if any
-        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            dimensionArgs.addAll(CraftPresence.CLIENT.generalArgs);
-        }
+        dimensionArgs.clear();
+        iconArgs.clear();
 
         final String defaultDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
         final String currentDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultDimensionMessage);
         final String currentDimensionIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_DIMENSION_IDENTIFIER);
         final String formattedIconKey = StringUtils.formatAsIcon(currentDimensionIcon.replace(" ", "_"));
 
-        final String CURRENT_DIMENSION_ICON = formattedIconKey.replace("&icon&", CraftPresence.CONFIG.defaultDimensionIcon);
+        dimensionArgs.add(new Pair<>("&DIMENSION&", CURRENT_DIMENSION_NAME));
+
+        iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.defaultDimensionIcon));
+
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : dimensionArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : iconArgs) {
+            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
+        }
+
+        // Add All Generalized Arguments, if any
+        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
+            StringUtils.addEntriesNotPresent(dimensionArgs, CraftPresence.CLIENT.generalArgs);
+        }
+
+        final String CURRENT_DIMENSION_ICON = StringUtils.sequentialReplaceAnyCase(formattedIconKey, iconArgs);
         final String CURRENT_DIMENSION_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentDimensionMessage, dimensionArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_DIMENSION_MESSAGE, ArgumentType.Text);
@@ -192,7 +207,7 @@ public class DimensionUtils {
         List<DimensionType> dimensionTypes = Lists.newArrayList();
         Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.lookupObject(DimensionType.class, null, "dimensionTypes");
 
-        Collections.addAll(dimensionTypes, DimensionType.values());
+        StringUtils.addEntriesNotPresent(dimensionTypes, DimensionType.values());
 
         if (dimensionTypes.isEmpty()) {
             // Fallback 1: Use Reflected Dimension Types
@@ -254,5 +269,27 @@ public class DimensionUtils {
                 }
             }
         }
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param types The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
+        List<String> queuedEntries;
+        for (ArgumentType type : types) {
+            queuedEntries = Lists.newArrayList();
+            if (type == ArgumentType.Image) {
+                queuedEntries.add(subArgumentFormat + "ICON&");
+            } else if (type == ArgumentType.Text) {
+                queuedEntries.add(subArgumentFormat + "DIMENSION&");
+            }
+            argumentData.put(type, queuedEntries);
+        }
+        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 }

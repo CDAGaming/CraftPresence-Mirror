@@ -38,6 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -51,6 +52,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Gui Utilities used to Parse Gui Data and handle related RPC Events, and rendering tasks
@@ -71,6 +73,10 @@ public class GuiUtils {
      * The sub-argument format to follow for Rich Presence Data
      */
     private final String subArgumentFormat = "&SCREEN:";
+    /**
+     * A Mapping of the Arguments attached to the &SCREEN& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> guiArgs = Lists.newArrayList();
     /**
      * If the Config GUI is currently open
      */
@@ -307,11 +313,11 @@ public class GuiUtils {
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
         CURRENT_GUI_CLASS = null;
+        guiArgs.clear();
 
         isInUse = false;
         CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
     }
 
     /**
@@ -415,7 +421,7 @@ public class GuiUtils {
      */
     public void updateGUIPresence() {
         // Form GUI Argument List
-        List<Pair<String, String>> guiArgs = Lists.newArrayList();
+        guiArgs.clear();
 
         guiArgs.add(new Pair<>("&SCREEN&", CURRENT_GUI_NAME));
         guiArgs.add(new Pair<>("&CLASS&", MappingUtils.getClassName(CURRENT_GUI_CLASS)));
@@ -427,7 +433,7 @@ public class GuiUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            guiArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(guiArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         final String defaultGuiMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.guiMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
@@ -436,7 +442,27 @@ public class GuiUtils {
         final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentGuiMessage, guiArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_GUI_MESSAGE, ArgumentType.Text);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param types The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
+        List<String> queuedEntries;
+        for (ArgumentType type : types) {
+            queuedEntries = Lists.newArrayList();
+            if (type == ArgumentType.Text) {
+                queuedEntries.add(subArgumentFormat + "SCREEN&");
+                queuedEntries.add(subArgumentFormat + "CLASS&");
+            }
+            argumentData.put(type, queuedEntries);
+        }
+        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**
@@ -658,6 +684,36 @@ public class GuiUtils {
                 GL11.glEnable(GL11.GL_DEPTH_TEST);
             }
         }
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput    The Specified Multi-Line String, split by lines into a list
+     * @param posX           The starting X position to render the String
+     * @param posY           The starting Y position to render the String
+     * @param screenInstance The screen instance to use to render the String
+     * @param withBackground Whether a background should display around and under the String, like a tooltip
+     */
+    public void drawMultiLineString(final List<String> textToInput, int posX, int posY, ExtendedScreen screenInstance, boolean withBackground) {
+        drawMultiLineString(textToInput,
+                posX, posY,
+                screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                screenInstance.getWrapWidth(),
+                screenInstance.getFontRenderer(),
+                withBackground
+        );
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput    The Specified Multi-Line String, split by lines into a list
+     * @param screenInstance The screen instance to use to render the String
+     * @param withBackground Whether a background should display around and under the String, like a tooltip
+     */
+    public void drawMultiLineString(final List<String> textToInput, ExtendedScreen screenInstance, boolean withBackground) {
+        drawMultiLineString(textToInput, screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance, withBackground);
     }
 
     /**

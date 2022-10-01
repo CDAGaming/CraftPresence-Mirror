@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -38,6 +39,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Entity Utilities used to Parse Entity Data and handle related RPC Events
@@ -49,6 +51,14 @@ public class EntityUtils {
      * A List of the detected Entity Class Names
      */
     private final List<String> ENTITY_CLASSES = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &TARGETENTITY& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &RIDINGENTITY& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> entityRidingArgs = Lists.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -77,22 +87,18 @@ public class EntityUtils {
      * The Player's Currently Riding Entity's Nbt Tags, if any
      */
     public List<String> CURRENT_RIDING_TAGS = Lists.newArrayList();
-
     /**
      * The Player's Current Target Entity, if any
      */
     public Entity CURRENT_TARGET;
-
     /**
      * The Player's Current Riding Entity, if any
      */
     public Entity CURRENT_RIDING;
-
     /**
      * The Player's Current Targeted Entity's Tag, if any
      */
     private NBTTagCompound CURRENT_TARGET_TAG;
-
     /**
      * The Player's Current Riding Entity's Tag, if any
      */
@@ -120,6 +126,9 @@ public class EntityUtils {
 
         CURRENT_TARGET_TAGS.clear();
         CURRENT_RIDING_TAGS.clear();
+
+        entityTargetArgs.clear();
+        entityRidingArgs.clear();
 
         isInUse = false;
         CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:", "&RIDINGENTITY:");
@@ -230,10 +239,11 @@ public class EntityUtils {
                 defaultEntityRidingMessage);
 
         // Form Entity Argument List
-        final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList(), entityRidingArgs = Lists.newArrayList();
+        entityTargetArgs.clear();
+        entityRidingArgs.clear();
 
-        entityTargetArgs.add(new Pair<>("&entity&", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME)));
-        entityRidingArgs.add(new Pair<>("&entity&", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME)));
+        entityTargetArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME)));
+        entityRidingArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME)));
 
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
@@ -258,8 +268,8 @@ public class EntityUtils {
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            entityTargetArgs.addAll(CraftPresence.CLIENT.generalArgs);
-            entityRidingArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(entityTargetArgs, CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(entityRidingArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         final String CURRENT_TARGET_MESSAGE = StringUtils.sequentialReplaceAnyCase(targetEntityMessage, entityTargetArgs);
@@ -278,6 +288,28 @@ public class EntityUtils {
             CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&RIDINGENTITY:");
             CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&RIDINGENTITY&");
         }
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param types             The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
+        List<String> queuedEntries;
+        for (ArgumentType type : types) {
+            queuedEntries = Lists.newArrayList();
+            if (type == ArgumentType.Text) {
+                queuedEntries.add(subArgumentFormat + "ENTITY&");
+            }
+            argumentData.put(type, queuedEntries);
+        }
+        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**

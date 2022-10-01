@@ -27,8 +27,8 @@ package com.gitlab.cdagaming.craftpresence.impl.discord;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 /**
- * Constants representing various Discord client statuses,
- * such as Ready, Errored, Disconnected, and event trigger names
+ * Constants representing various Discord argument types,
+ * such as Images or Text contents
  */
 public enum ArgumentType {
     /**
@@ -39,17 +39,7 @@ public enum ArgumentType {
     /**
      * Constant for the "Text" Argument Type.
      */
-    Text,
-
-    /**
-     * Constant for the "Button" Argument Type.
-     */
-    Button,
-
-    /**
-     * 'Wildcard' build constant used to specify an errored or invalid status
-     */
-    Invalid;
+    Text;
 
     private final String displayName;
 
@@ -68,7 +58,7 @@ public enum ArgumentType {
      *
      * @param displayName The display name to get from.
      * @return The DiscordStatus corresponding to the display name, or
-     * {@link ArgumentType#Invalid} if none match.
+     * {@link ArgumentType#Text} if none match.
      */
     public static ArgumentType from(String displayName) {
         for (ArgumentType value : values()) {
@@ -76,7 +66,7 @@ public enum ArgumentType {
                 return value;
             }
         }
-        return Invalid;
+        return Text;
     }
 
     /**

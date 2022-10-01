@@ -139,17 +139,27 @@ public class Tuple<T, U, V> {
     /**
      * Determines if elements in two different Tuple objects are equivalent
      *
-     * @param obj The Tuple to compare against
-     * @return If the two Opposing Tuple objects are equivalent
+     * @param obj The Object to compare against
+     * @return If the two Opposing objects are equivalent
      */
-    public boolean equals(final Tuple<?, ?, ?> obj) {
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Tuple)) {
+            return false;
+        }
+
+        Tuple<?, ?, ?> p = (Tuple<?, ?, ?>) obj;
         try {
             // Case 1: Attempt ToString Conversion Checking
-            return (this.getFirst().toString().equals(obj.getFirst().toString())) && (this.getSecond().toString().equals(obj.getSecond().toString())) && this.getThird().toString().equals(obj.getThird().toString());
+            return (this.getFirst().toString().equals(p.getFirst().toString())) && (this.getSecond().toString().equals(p.getSecond().toString())) && this.getThird().toString().equals(p.getThird().toString());
         } catch (Exception ex) {
             // Case 2: Automated Checking
             // Note: Can Likely return false positives depending on conditions
-            return ((this.getFirst() == obj.getFirst()) && (this.getSecond() == obj.getSecond()) && this.getThird() == obj.getThird()) || (this == obj);
+            return (this.getFirst() == p.getFirst()) && (this.getSecond() == p.getSecond()) && this.getThird() == p.getThird();
         }
     }
 

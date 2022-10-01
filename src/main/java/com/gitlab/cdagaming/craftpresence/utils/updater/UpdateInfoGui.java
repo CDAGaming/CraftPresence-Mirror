@@ -49,7 +49,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     public void initializeUi() {
         checkButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.checkForUpdates",
                         () ->
@@ -71,7 +71,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         // Adding Back Button
         addControl(
                 new ExtendedButtonControl(
-                        10, (height - 30),
+                        10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
@@ -79,7 +79,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         );
         downloadButton = addControl(
                 new ExtendedButtonControl(
-                        (width - 105), (height - 30),
+                        (getScreenWidth() - 105), (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.download",
                         () -> UrlUtils.openUrl(modUpdater.downloadUrl)
@@ -100,10 +100,10 @@ public class UpdateInfoGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
         final List<String> notice = StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.changelog", modUpdater.targetVersion, modUpdater.targetChangelogData));
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
-        CraftPresence.GUIS.drawMultiLineString(notice, 10, 45, width, height, getWrapWidth(), getFontRenderer(), false);
+        CraftPresence.GUIS.drawMultiLineString(notice, 10, 45, this, false);
     }
 
     @Override
@@ -112,12 +112,20 @@ public class UpdateInfoGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
 
         // Hovering over Title Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, getStringWidth(mainTitle), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, getStringWidth(mainTitle), getFontHeight())) {
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)
+                    ), this, true
+            );
         }
         // Hovering over Subtitle Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (getStringWidth(subTitle) / 2f), 20, getStringWidth(subTitle), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, getStringWidth(subTitle), getFontHeight())) {
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)
+                    ), this, true
+            );
         }
     }
 }

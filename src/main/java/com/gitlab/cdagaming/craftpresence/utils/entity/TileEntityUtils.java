@@ -57,6 +57,10 @@ public class TileEntityUtils {
      */
     public final List<String> ITEM_NAMES = Lists.newArrayList();
     /**
+     * A Mapping of the Arguments attached to the &TILEENTITY& Equipment placeholders
+     */
+    public final List<Pair<String, String>> equipmentArgs = Lists.newArrayList();
+    /**
      * A List of the detected Block Class Names
      */
     private final List<String> BLOCK_CLASSES = Lists.newArrayList();
@@ -124,6 +128,10 @@ public class TileEntityUtils {
      * The Player's Currently equipped Boots Nbt Tags, if any
      */
     public List<String> CURRENT_BOOTS_TAGS = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &TILEENTITY& RPC Message placeholder
+     */
+    private List<Pair<String, String>> tileEntityArgs = Lists.newArrayList();
     /**
      * The Player's Current Main Hand Item, if any
      */
@@ -246,6 +254,9 @@ public class TileEntityUtils {
         CURRENT_CHEST_TAGS.clear();
         CURRENT_LEGS_TAGS.clear();
         CURRENT_BOOTS_TAGS.clear();
+
+        tileEntityArgs.clear();
+        equipmentArgs.clear();
 
         allItemsEmpty = true;
         isInUse = false;
@@ -474,7 +485,8 @@ public class TileEntityUtils {
                 CURRENT_BOOTS_NAME);
 
         // Form Entity/Item Argument List
-        List<Pair<String, String>> tileEntityArgs = Lists.newArrayList();
+        tileEntityArgs.clear();
+        equipmentArgs.clear();
 
         // Extend Argument Messages, if tags available
         if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
@@ -513,27 +525,28 @@ public class TileEntityUtils {
             }
         }
 
-        tileEntityArgs.add(new Pair<>("&MAIN&", !StringUtils.isNullOrEmpty(CURRENT_MAIN_HAND_ITEM_NAME) ?
+        equipmentArgs.add(new Pair<>("&MAIN&", !StringUtils.isNullOrEmpty(CURRENT_MAIN_HAND_ITEM_NAME) ?
                 StringUtils.replaceAnyCase(mainItemMessage, "&item&", CURRENT_MAIN_HAND_ITEM_NAME) : ""));
-        tileEntityArgs.add(new Pair<>("&OFFHAND&", !StringUtils.isNullOrEmpty(CURRENT_OFFHAND_ITEM_NAME) ?
+        equipmentArgs.add(new Pair<>("&OFFHAND&", !StringUtils.isNullOrEmpty(CURRENT_OFFHAND_ITEM_NAME) ?
                 StringUtils.replaceAnyCase(offHandItemMessage, "&item&", CURRENT_OFFHAND_ITEM_NAME) : ""));
-        tileEntityArgs.add(new Pair<>("&HELMET&", !StringUtils.isNullOrEmpty(CURRENT_HELMET_NAME) ?
+        equipmentArgs.add(new Pair<>("&HELMET&", !StringUtils.isNullOrEmpty(CURRENT_HELMET_NAME) ?
                 StringUtils.replaceAnyCase(helmetMessage, "&item&", CURRENT_HELMET_NAME) : ""));
-        tileEntityArgs.add(new Pair<>("&CHEST&", !StringUtils.isNullOrEmpty(CURRENT_CHEST_NAME) ?
+        equipmentArgs.add(new Pair<>("&CHEST&", !StringUtils.isNullOrEmpty(CURRENT_CHEST_NAME) ?
                 StringUtils.replaceAnyCase(chestMessage, "&item&", CURRENT_CHEST_NAME) : ""));
-        tileEntityArgs.add(new Pair<>("&LEGS&", !StringUtils.isNullOrEmpty(CURRENT_LEGS_NAME) ?
+        equipmentArgs.add(new Pair<>("&LEGS&", !StringUtils.isNullOrEmpty(CURRENT_LEGS_NAME) ?
                 StringUtils.replaceAnyCase(legsMessage, "&item&", CURRENT_LEGS_NAME) : ""));
-        tileEntityArgs.add(new Pair<>("&BOOTS&", !StringUtils.isNullOrEmpty(CURRENT_BOOTS_NAME) ?
+        equipmentArgs.add(new Pair<>("&BOOTS&", !StringUtils.isNullOrEmpty(CURRENT_BOOTS_NAME) ?
                 StringUtils.replaceAnyCase(bootsMessage, "&item&", CURRENT_BOOTS_NAME) : ""));
 
         // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : tileEntityArgs) {
+        for (Pair<String, String> argumentData : equipmentArgs) {
             CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
         }
 
         // Add All Generalized Arguments, if any
+        tileEntityArgs = Lists.newArrayList(equipmentArgs);
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            tileEntityArgs.addAll(CraftPresence.CLIENT.generalArgs);
+            StringUtils.addEntriesNotPresent(tileEntityArgs, CraftPresence.CLIENT.generalArgs);
         }
 
         final String CURRENT_MESSAGE = StringUtils.sequentialReplaceAnyCase(placeholderItemMessage, tileEntityArgs);
@@ -545,6 +558,26 @@ public class TileEntityUtils {
             CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
             CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
         }
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param types The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
+        List<String> queuedEntries;
+        for (ArgumentType type : types) {
+            queuedEntries = Lists.newArrayList();
+            if (type == ArgumentType.Text) {
+                queuedEntries.add(subArgumentFormat + "ITEM&");
+            }
+            argumentData.put(type, queuedEntries);
+        }
+        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**
@@ -691,10 +724,10 @@ public class TileEntityUtils {
         BLOCK_NAMES.removeAll(ITEM_NAMES);
         BLOCK_NAMES.removeAll(removingBlocks);
 
-        TILE_ENTITY_NAMES.addAll(BLOCK_NAMES);
-        TILE_ENTITY_NAMES.addAll(ITEM_NAMES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, BLOCK_NAMES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, ITEM_NAMES);
 
-        TILE_ENTITY_CLASSES.addAll(BLOCK_CLASSES);
-        TILE_ENTITY_CLASSES.addAll(ITEM_CLASSES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_CLASSES, BLOCK_CLASSES);
+        StringUtils.addEntriesNotPresent(TILE_ENTITY_CLASSES, ITEM_CLASSES);
     }
 }

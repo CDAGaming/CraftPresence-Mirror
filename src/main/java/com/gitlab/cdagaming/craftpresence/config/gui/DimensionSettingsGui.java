@@ -52,15 +52,15 @@ public class DimensionSettingsGui extends ExtendedScreen {
         defaultMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(1),
+                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
                         180, 20
                 )
         );
-        defaultMessage.setText(defaultDimensionMessage);
+        defaultMessage.setControlMessage(defaultDimensionMessage);
 
         dimensionMessagesButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -135,7 +135,12 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
+                                                                        ), screenInstance, true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -148,23 +153,14 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
+                                        ), this, true
                                 );
                             }
                         }
@@ -173,7 +169,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
         // Adding Default Icon Button
         addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(3),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_icon",
                         () -> CraftPresence.GUIS.openScreen(
@@ -192,25 +188,20 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
-                                ),
-                                getMouseX(), getMouseY(),
-                                width, height,
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (!defaultMessage.getText().equals(defaultDimensionMessage)) {
+                            if (!defaultMessage.getControlMessage().equals(defaultDimensionMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage.getText());
+                                StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage.getControlMessage());
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },
@@ -219,12 +210,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -240,11 +226,11 @@ public class DimensionSettingsGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension_messages");
         final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.dimension");
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
-        renderString(defaultMessageText, (width / 2f) - 140, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(defaultMessageText, (getScreenWidth() / 2f) - 140, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
-        proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getText()));
+        proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
     }
 
@@ -252,8 +238,13 @@ public class DimensionSettingsGui extends ExtendedScreen {
     public void postRender() {
         final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.dimension");
         // Hovering over Default Dimension Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 140, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(defaultMessageText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title.dimension_messages")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 140, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(defaultMessageText), getFontHeight())) {
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                    CraftPresence.DIMENSIONS.generateArgumentMessage())
+                    ), this, true
+            );
         }
     }
 }

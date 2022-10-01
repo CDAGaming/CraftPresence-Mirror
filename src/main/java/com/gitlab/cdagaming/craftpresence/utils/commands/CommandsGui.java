@@ -112,15 +112,15 @@ public class CommandsGui extends ExtendedScreen {
         commandInput = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        115, (height - 30),
-                        (width - 120), 20
+                        115, (getScreenHeight() - 30),
+                        (getScreenWidth() - 120), 20
                 )
         );
-        commandInput.setMaxStringLength(512);
+        commandInput.setControlMaxLength(512);
 
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        10, (height - 30),
+                        10, (getScreenHeight() - 30),
                         100, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
@@ -136,11 +136,11 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.commands");
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
 
-        if (!StringUtils.isNullOrEmpty(commandInput.getText()) && commandInput.getText().startsWith("/")) {
-            commandArgs = commandInput.getText().replace("/", "").split(" ");
-            filteredCommandArgs = commandInput.getText().replace("/", "").replace("cp", "").replace(ModUtils.MOD_ID, "").trim().split(" ");
+        if (!StringUtils.isNullOrEmpty(commandInput.getControlMessage()) && commandInput.getControlMessage().startsWith("/")) {
+            commandArgs = commandInput.getControlMessage().replace("/", "").split(" ");
+            filteredCommandArgs = commandInput.getControlMessage().replace("/", "").replace("cp", "").replace(ModUtils.MOD_ID, "").trim().split(" ");
             tabCompletions = getTabCompletions(filteredCommandArgs);
         }
 
@@ -364,16 +364,16 @@ public class CommandsGui extends ExtendedScreen {
         executionCommandArgs = null;
         // COMMANDS END
 
-        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 25, 35, width, height, getWrapWidth(), getFontRenderer(), false);
+        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 25, 35, this, false);
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (commandInput.isFocused() && commandInput.getText().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
+        if (commandInput.isFocused() && commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                 (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(ModUtils.MOD_ID))) {
             if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
                 if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 || filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?"))) {
-                    commandInput.setText(commandInput.getText().replace(filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)));
+                    commandInput.setControlMessage(commandInput.getControlMessage().replace(filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)));
                 }
             } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
                 executeCommand(filteredCommandArgs);

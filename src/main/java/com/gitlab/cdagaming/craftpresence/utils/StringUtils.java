@@ -571,6 +571,75 @@ public class StringUtils {
     }
 
     /**
+     * Add entries from the specified list, to the original list, if not present already
+     *
+     * @param original The original list to interpret
+     * @param newList  The new list to interpret
+     * @param <T>      The list type
+     * @return the resulting list
+     */
+    public static <T> List<T> addEntriesNotPresent(List<T> original, List<T> newList) {
+        for (T entry : newList) {
+            if (!original.contains(entry)) {
+                original.add(entry);
+            }
+        }
+        return original;
+    }
+
+    /**
+     * Add entries from the specified list, to the original list, if it passes the filter
+     *
+     * @param original The original list to interpret
+     * @param filter   The filter, at which to interpret the newList through
+     * @param newList  The new list to interpret
+     * @param <T>      The list type
+     * @return the resulting list
+     */
+    public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, List<T> newList) {
+        newList = Lists.newArrayList(filter(newList, filter));
+        return addEntriesNotPresent(original, newList);
+    }
+
+    /**
+     * Add entries from the specified list, to the original list, if not present already
+     *
+     * @param original The original list to interpret
+     * @param newList  The new list to interpret
+     * @param <T>      The list type
+     * @return the resulting list
+     */
+    public static <T> List<T> addEntriesNotPresent(List<T> original, Set<T> newList) {
+        return addEntriesNotPresent(original, Lists.newArrayList(newList));
+    }
+
+    /**
+     * Add entries from the specified list, to the original list, if it passes the filter
+     *
+     * @param original The original list to interpret
+     * @param filter   The filter, at which to interpret the newList through
+     * @param newList  The new list to interpret
+     * @param <T>      The list type
+     * @return the resulting list
+     */
+    public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, Set<T> newList) {
+        newList = new HashSet<>(filter(newList, filter));
+        return addEntriesNotPresent(original, newList);
+    }
+
+    /**
+     * Add entries from the specified list, to the original list, if not present already
+     *
+     * @param original The original list to interpret
+     * @param newList  The new list to interpret
+     * @param <T>      The list type
+     * @return the resulting list
+     */
+    public static <T> List<T> addEntriesNotPresent(List<T> original, T[] newList) {
+        return addEntriesNotPresent(original, Arrays.asList(newList));
+    }
+
+    /**
      * Expands or Contracts an Array, depending on Conditions
      *
      * @param theArray The original Array to adjust

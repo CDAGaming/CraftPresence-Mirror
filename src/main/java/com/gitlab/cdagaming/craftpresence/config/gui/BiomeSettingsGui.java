@@ -52,15 +52,15 @@ public class BiomeSettingsGui extends ExtendedScreen {
         defaultMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(1),
+                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
                         180, 20
                 )
         );
-        defaultMessage.setText(defaultBiomeMessage);
+        defaultMessage.setControlMessage(defaultBiomeMessage);
 
         biomeMessagesButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.biome_messages.biome_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -134,7 +134,12 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                                                        CraftPresence.BIOMES.generateArgumentMessage())
+                                                                        ), screenInstance, true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -147,23 +152,14 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                        CraftPresence.BIOMES.generateArgumentMessage())
+                                        ), this, true
                                 );
                             }
                         }
@@ -172,7 +168,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
         // Adding Default Icon Button
         addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, CraftPresence.GUIS.getButtonY(3),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.name.biome_messages.biome_icon",
                         () -> CraftPresence.GUIS.openScreen(
@@ -191,25 +187,20 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
-                                ),
-                                getMouseX(), getMouseY(),
-                                width, height,
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (!defaultMessage.getText().equals(defaultBiomeMessage)) {
+                            if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage.getText());
+                                StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage.getControlMessage());
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },
@@ -218,12 +209,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        width, height,
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -239,11 +225,11 @@ public class BiomeSettingsGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome_messages");
         final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.biome");
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
-        renderString(defaultMessageText, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(defaultMessageText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
-        proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getText()));
+        proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.enabled);
     }
 
@@ -251,8 +237,13 @@ public class BiomeSettingsGui extends ExtendedScreen {
     public void postRender() {
         final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.biome");
         // Hovering over Default Biome Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(defaultMessageText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title.biome_messages")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(defaultMessageText), getFontHeight())) {
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                    CraftPresence.BIOMES.generateArgumentMessage())
+                    ), this, true
+            );
         }
     }
 }

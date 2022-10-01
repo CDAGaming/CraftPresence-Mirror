@@ -118,6 +118,42 @@ public class ExtendedTextControl extends GuiTextField {
     }
 
     /**
+     * Gets the control's current text contents
+     *
+     * @return The control's current text contents
+     */
+    public String getControlMessage() {
+        return this.getText();
+    }
+
+    /**
+     * Sets the control's display message to the specified value
+     *
+     * @param newMessage The new display message for this control
+     */
+    public void setControlMessage(final String newMessage) {
+        this.setText(newMessage);
+    }
+
+    /**
+     * Gets the control's maximum text length
+     *
+     * @return The control's maximum text contents
+     */
+    public int getControlMaxLength() {
+        return this.getMaxStringLength();
+    }
+
+    /**
+     * Sets the control's message maximum length to the specified value
+     *
+     * @param newLength The new maximum length for this control's message
+     */
+    public void setControlMaxLength(final int newLength) {
+        this.setMaxStringLength(newLength);
+    }
+
+    /**
      * Sets the Event to occur upon typing keys
      *
      * @param event The event to occur

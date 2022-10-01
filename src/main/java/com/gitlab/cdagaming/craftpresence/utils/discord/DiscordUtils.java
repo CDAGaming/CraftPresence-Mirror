@@ -60,6 +60,22 @@ import java.util.Map;
  */
 public class DiscordUtils {
     /**
+     * A list of the text modules for this application
+     */
+    public static final List<String> textModules = Lists.newArrayList(
+            "&MAINMENU&",
+            "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&",
+            "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&",
+            "&TILEENTITY&", "&TARGETENTITY&", "&RIDINGENTITY&"
+    );
+    /**
+     * A list of the icon modules for this application
+     */
+    public static final List<String> iconModules = Lists.newArrayList(
+            "&DEFAULT&", "&MAINMENU&", "&PACK&",
+            "&DIMENSION&", "&BIOME&", "&SERVER&"
+    );
+    /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
     private final Map<ArgumentType, List<Pair<String, String>>> presenceData = Maps.newHashMap();
@@ -71,6 +87,10 @@ public class DiscordUtils {
      * A Mapping of the Arguments attached to the &IGN& RPC Message Placeholder
      */
     private final List<Pair<String, String>> playerInfoArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &PACK& RPC Message Placeholder
+     */
+    private final List<Pair<String, String>> packArgs = Lists.newArrayList();
     /**
      * The Current User, tied to the Rich Presence
      */
@@ -180,8 +200,6 @@ public class DiscordUtils {
      * Whether Discord is currently awaiting a response to a Ask to Join or Spectate Request, if any
      */
     public boolean awaitingReply = false;
-
-    // Generalized Argument Types
     /**
      * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
      */
@@ -246,8 +264,12 @@ public class DiscordUtils {
         }
 
         // Initialize and Sync any Pre-made Arguments (And Reset Related Data)
-        initArgument(ArgumentType.Text, "&MAINMENU&", "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&", "&TILEENTITY&", "&TARGETENTITY&", "&RIDINGENTITY&");
-        initArgument(ArgumentType.Image, "&DEFAULT&", "&MAINMENU&", "&PACK&", "&DIMENSION&", "&BIOME&", "&SERVER&");
+        for (String moduleId : textModules) {
+            initArgument(ArgumentType.Text, moduleId);
+        }
+        for (String moduleId : iconModules) {
+            initArgument(ArgumentType.Image, moduleId);
+        }
 
         // Ensure Main Menu RPC Resets properly
         CommandUtils.isInMainMenu = false;
@@ -297,12 +319,14 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
-     * @param dataType     The type the argument should be stored as
+     * @param dataTypes    The type(s) the argument should be stored as
      */
-    public void syncArgument(String argumentName, String insertString, ArgumentType dataType) {
-        // Remove and Replace Placeholder Data, if the placeholder needs Updates
-        if (!StringUtils.isNullOrEmpty(argumentName)) {
-            setArgumentsFor(dataType, new Pair<>(argumentName, insertString));
+    public void syncArgument(String argumentName, String insertString, ArgumentType... dataTypes) {
+        for (ArgumentType dataType : dataTypes) {
+            // Remove and Replace Placeholder Data, if the placeholder needs updates
+            if (!StringUtils.isNullOrEmpty(argumentName)) {
+                setArgumentsFor(dataType, new Pair<>(argumentName, insertString));
+            }
         }
     }
 
@@ -320,6 +344,17 @@ public class DiscordUtils {
     }
 
     /**
+     * Initialize the Specified Arguments as Empty Data
+     *
+     * @param args The Arguments to Initialize
+     */
+    public void initArgument(String... args) {
+        for (ArgumentType type : ArgumentType.values()) {
+            initArgument(type, args);
+        }
+    }
+
+    /**
      * Retrieve all arguments for the specified types
      *
      * @param typeList The types the arguments should be retrieved from
@@ -331,7 +366,7 @@ public class DiscordUtils {
             if (!presenceData.containsKey(type)) {
                 presenceData.put(type, Lists.newArrayList());
             }
-            result.addAll(presenceData.get(type));
+            StringUtils.addEntriesNotPresent(result, presenceData.get(type));
         }
         return result;
     }
@@ -357,6 +392,17 @@ public class DiscordUtils {
     }
 
     /**
+     * Remove any arguments following the specified formats within the selected Argument Type
+     *
+     * @param args The string formats to interpret
+     */
+    public void removeArgumentsMatching(final String... args) {
+        for (ArgumentType type : ArgumentType.values()) {
+            removeArgumentsMatching(type, args);
+        }
+    }
+
+    /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
      * @param type The type the arguments should be retrieved from
@@ -375,6 +421,20 @@ public class DiscordUtils {
             }
         }
         return list;
+    }
+
+    /**
+     * Retrieves any arguments within the specified type that match the specified string formats
+     *
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<Pair<String, String>> getArgumentsMatching(final String... args) {
+        final List<Pair<String, String>> results = Lists.newArrayList();
+        for (ArgumentType type : ArgumentType.values()) {
+            StringUtils.addEntriesNotPresent(results, getArgumentsMatching(type, args));
+        }
+        return results;
     }
 
     /**
@@ -444,6 +504,7 @@ public class DiscordUtils {
      */
     private void syncPackArguments() {
         // Add &PACK& Placeholder to ArgumentData
+        packArgs.clear();
         String foundPackName = "", foundPackIcon = "";
 
         if (ModUtils.BRAND.contains("vivecraft")) {
@@ -468,8 +529,209 @@ public class DiscordUtils {
             foundPackIcon = foundPackName;
         }
 
-        syncArgument("&PACK&", StringUtils.formatWord(StringUtils.replaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, "&NAME&", !StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : ""), !CraftPresence.CONFIG.formatWords), ArgumentType.Text);
+        packArgs.add(new Pair<>("&NAME&", (!StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : "")));
+
+        // Add applicable args as sub-placeholders
+        for (Pair<String, String> argumentData : packArgs) {
+            syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+
+        syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, packArgs), ArgumentType.Text);
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
+    }
+
+    /**
+     * Generate a list of Arguments, depending on the Argument Types and String List
+     *
+     * @param argumentData The data to interpret
+     * @return the list of parsed arguments
+     */
+    public List<Pair<String, String>> generateArgumentList(final Map<ArgumentType, List<String>> argumentData) {
+        final List<Pair<String, String>> results = Lists.newArrayList();
+        for (Map.Entry<ArgumentType, List<String>> entry : argumentData.entrySet()) {
+            StringUtils.addEntriesNotPresent(results,
+                    data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                    convertToArgumentList(entry.getKey(), entry.getValue())
+            );
+        }
+        return results;
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param addExtraData      Whether to add additional data to the string
+     * @param args              The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final boolean addExtraData, final List<Pair<String, String>> args) {
+        final StringBuilder finalString = new StringBuilder(
+                String.format("%s%s:",
+                        ModUtils.TRANSLATOR.translate(
+                                String.format("%s.placeholders.title", ModUtils.MOD_ID)
+                        ), (!StringUtils.isNullOrEmpty(argumentFormat) ? (" (" + argumentFormat.toLowerCase() + ")") : "")
+                )
+        );
+        if (args != null && !args.isEmpty()) {
+            for (Pair<String, String> argData : args) {
+                String placeholderName = argData.getFirst();
+                String translationName = placeholderName;
+                if (!StringUtils.isNullOrEmpty(argumentFormat)) {
+                    if (!StringUtils.isNullOrEmpty(subArgumentFormat)) {
+                        placeholderName = placeholderName.replaceAll(subArgumentFormat, argumentFormat.substring(0, 1));
+                    }
+                    translationName = (argumentFormat + "." + placeholderName).replaceAll(argumentFormat.substring(0, 1), "");
+                } else {
+                    translationName = translationName.replaceAll("[^a-zA-Z0-9]", "");
+                }
+                finalString.append(
+                        String.format("\\n - %s = %s",
+                                placeholderName.toLowerCase(),
+                                ModUtils.TRANSLATOR.translate(
+                                        String.format("%s.placeholders.%s.description",
+                                                ModUtils.MOD_ID,
+                                                translationName.replaceAll(":", ".")
+                                        )
+                                ))
+                );
+
+                if (addExtraData && !StringUtils.isNullOrEmpty(argData.getSecond())) {
+                    finalString.append(String.format("\\n  ==> Preview: \"%s\"", argData.getSecond()));
+                }
+            }
+        } else {
+            finalString.append("\\n - N/A");
+        }
+        return finalString.toString();
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args              The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final List<Pair<String, String>> args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, ipcInstance.isDebugMode(), args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args           The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final List<Pair<String, String>> args) {
+        return generateArgumentMessage(argumentFormat, null, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args              The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final Map<ArgumentType, List<String>> args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, generateArgumentList(args));
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args           The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final Map<ArgumentType, List<String>> args) {
+        return generateArgumentMessage(argumentFormat, null, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args              The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final String... args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, args));
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args           The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final String... args) {
+        return generateArgumentMessage(argumentFormat, null, type, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args              The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final List<String> args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, args));
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args           The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final List<String> args) {
+        return generateArgumentMessage(argumentFormat, null, type, args);
+    }
+
+    /**
+     * Convert a list of strings into a valid argument list
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return the resulting list of argument entries
+     */
+    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final String... args) {
+        final List<Pair<String, String>> result = Lists.newArrayList();
+        final List<Pair<String, String>> existingArgs = getArgumentsMatching(type, args);
+        for (String argumentName : args) {
+            if (!existingArgs.isEmpty()) {
+                for (Pair<String, String> entry : existingArgs) {
+                    if (entry.getFirst().contains(argumentName)) {
+                        result.add(entry);
+                    }
+                }
+            } else {
+                result.add(new Pair<>(argumentName, ""));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Convert a list of strings into a valid argument list
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return the resulting list of argument entries
+     */
+    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final List<String> args) {
+        return convertToArgumentList(type, args.toArray(new String[0]));
     }
 
     /**
@@ -669,11 +931,11 @@ public class DiscordUtils {
                 JsonObject buttonObj = new JsonObject();
                 if (part.length == 3 && !StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
                     String label = StringUtils.formatWord(
-                            StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)),
+                            StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Text)),
                             !CraftPresence.CONFIG.formatWords, true, 1
                     );
                     String url = !StringUtils.isNullOrEmpty(part[2]) ? StringUtils.sequentialReplaceAnyCase(
-                            part[2], getArgumentsFor(ArgumentType.Button, ArgumentType.Text)
+                            part[2], getArgumentsFor(ArgumentType.Text)
                     ) : "";
 
                     label = sanitizePlaceholders(label);

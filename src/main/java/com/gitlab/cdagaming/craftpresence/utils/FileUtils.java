@@ -202,12 +202,12 @@ public class FileUtils {
         final List<String> sourceData = Lists.newArrayList(sourcePackages);
 
         if (includeExtraClasses) {
-            sourceData.addAll(getModClassNames());
+            StringUtils.addEntriesNotPresent(sourceData, getModClassNames());
         }
 
         // Attempt to get all possible classes from the JVM Class Loader
         try {
-            classList.addAll(ClassPath.from(ModUtils.CLASS_LOADER).getAllClasses());
+            StringUtils.addEntriesNotPresent(classList, ClassPath.from(ModUtils.CLASS_LOADER).getAllClasses());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
