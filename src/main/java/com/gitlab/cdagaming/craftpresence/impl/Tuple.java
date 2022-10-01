@@ -152,7 +152,7 @@ public class Tuple<T, U, V> {
             return false;
         }
 
-        Tuple<?, ?, ?> p = (Tuple<?, ?, ?>)obj;
+        Tuple<?, ?, ?> p = (Tuple<?, ?, ?>) obj;
         try {
             // Case 1: Attempt ToString Conversion Checking
             return (this.getFirst().toString().equals(p.getFirst().toString())) && (this.getSecond().toString().equals(p.getSecond().toString())) && this.getThird().toString().equals(p.getThird().toString());

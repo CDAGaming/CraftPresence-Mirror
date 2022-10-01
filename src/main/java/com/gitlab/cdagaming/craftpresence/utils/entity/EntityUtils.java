@@ -51,6 +51,8 @@ public class EntityUtils {
      * A List of the detected Entity Class Names
      */
     private final List<String> ENTITY_CLASSES = Lists.newArrayList();
+    private final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
+    private final List<Pair<String, String>> entityRidingArgs = Lists.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -79,29 +81,22 @@ public class EntityUtils {
      * The Player's Currently Riding Entity's Nbt Tags, if any
      */
     public List<String> CURRENT_RIDING_TAGS = Lists.newArrayList();
-
     /**
      * The Player's Current Target Entity, if any
      */
     public Entity CURRENT_TARGET;
-
     /**
      * The Player's Current Riding Entity, if any
      */
     public Entity CURRENT_RIDING;
-
     /**
      * The Player's Current Targeted Entity's Tag, if any
      */
     private NBTTagCompound CURRENT_TARGET_TAG;
-
     /**
      * The Player's Current Riding Entity's Tag, if any
      */
     private NBTTagCompound CURRENT_RIDING_TAG;
-
-    List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
-    List<Pair<String, String>> entityRidingArgs = Lists.newArrayList();
 
     /**
      * Clears FULL Data from this Module

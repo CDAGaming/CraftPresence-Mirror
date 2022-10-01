@@ -59,6 +59,8 @@ public class ServerUtils {
      * The sub-argument format to follow for Rich Presence Data
      */
     private final String subArgumentFormat = "&SERVER:";
+    private final List<Pair<String, String>> serverArgs = Lists.newArrayList();
+    private final List<Pair<String, String>> iconArgs = Lists.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -79,6 +81,11 @@ public class ServerUtils {
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = Maps.newHashMap();
+    public List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
+    public List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
+    public List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
+    public List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
+    public List<Pair<String, String>> healthArgs = Lists.newArrayList();
     /**
      * The IP Address of the Current Server the Player is in
      */
@@ -161,15 +168,6 @@ public class ServerUtils {
      * If the Current Server is on a LAN-Based Connection (A Local Network Game)
      */
     private boolean isOnLAN = false;
-
-    List<Pair<String, String>> serverArgs = Lists.newArrayList();
-    List<Pair<String, String>> iconArgs = Lists.newArrayList();
-
-    public List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
-    public List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
-    public List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
-    public List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
-    public List<Pair<String, String>> healthArgs = Lists.newArrayList();
 
     /**
      * Clears FULL Data from this Module

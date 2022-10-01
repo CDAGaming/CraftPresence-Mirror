@@ -74,6 +74,10 @@ public class GuiUtils {
      */
     private final String subArgumentFormat = "&SCREEN:";
     /**
+     * A Mapping of the Arguments attached to the &SCREEN& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> guiArgs = Lists.newArrayList();
+    /**
      * If the Config GUI is currently open
      */
     public boolean configGUIOpened = false;
@@ -110,8 +114,6 @@ public class GuiUtils {
      * The Current Instance of the Gui the player is in
      */
     private GuiScreen CURRENT_SCREEN;
-
-    List<Pair<String, String>> guiArgs = Lists.newArrayList();
 
     /**
      * Gets the Default/Global Font Renderer

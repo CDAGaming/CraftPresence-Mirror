@@ -152,7 +152,7 @@ public class CommandUtils {
      */
     public static void setLoadingPresence() {
         // Form Argument Lists
-        List<Pair<String, String>> loadingArgs = Lists.newArrayList();
+        final List<Pair<String, String>> loadingArgs = Lists.newArrayList();
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
@@ -172,7 +172,7 @@ public class CommandUtils {
      */
     public static void setMainMenuPresence() {
         // Form Argument Lists
-        List<Pair<String, String>> mainMenuArgs = Lists.newArrayList();
+        final List<Pair<String, String>> mainMenuArgs = Lists.newArrayList();
 
         // Add All Generalized Arguments, if any
         if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {

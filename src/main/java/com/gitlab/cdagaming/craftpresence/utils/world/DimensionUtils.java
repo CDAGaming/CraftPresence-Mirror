@@ -58,6 +58,14 @@ public class DimensionUtils {
      */
     private final String subArgumentFormat = "&DIMENSION:";
     /**
+     * A Mapping of the Arguments attached to the &DIMENSION& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> dimensionArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> iconArgs = Lists.newArrayList();
+    /**
      * Whether this module is active and currently in use
      */
     public boolean isInUse = false;
@@ -77,9 +85,6 @@ public class DimensionUtils {
      * The alternative name for the Current Dimension the Player is in, if any
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
-
-    List<Pair<String, String>> dimensionArgs = Lists.newArrayList();
-    List<Pair<String, String>> iconArgs = Lists.newArrayList();
 
     /**
      * Clears FULL Data from this Module

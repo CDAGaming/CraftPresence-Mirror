@@ -57,6 +57,14 @@ public class BiomeUtils {
      */
     private final String subArgumentFormat = "&BIOME:";
     /**
+     * A Mapping of the Arguments attached to the &BIOME& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> biomeArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> iconArgs = Lists.newArrayList();
+    /**
      * Whether this module is active and currently in use
      */
     public boolean isInUse = false;
@@ -76,9 +84,6 @@ public class BiomeUtils {
      * The alternative name for the Current Biome the Player is in, if any
      */
     private String CURRENT_BIOME_IDENTIFIER;
-
-    List<Pair<String, String>> biomeArgs = Lists.newArrayList();
-    List<Pair<String, String>> iconArgs = Lists.newArrayList();
 
     /**
      * Clears FULL Data from this Module

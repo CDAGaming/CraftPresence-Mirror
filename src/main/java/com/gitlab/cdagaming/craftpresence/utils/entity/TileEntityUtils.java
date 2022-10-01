@@ -57,6 +57,10 @@ public class TileEntityUtils {
      */
     public final List<String> ITEM_NAMES = Lists.newArrayList();
     /**
+     * A Mapping of the Arguments attached to the &TILEENTITY& Equipment placeholders
+     */
+    public final List<Pair<String, String>> equipmentArgs = Lists.newArrayList();
+    /**
      * A List of the detected Block Class Names
      */
     private final List<String> BLOCK_CLASSES = Lists.newArrayList();
@@ -124,6 +128,10 @@ public class TileEntityUtils {
      * The Player's Currently equipped Boots Nbt Tags, if any
      */
     public List<String> CURRENT_BOOTS_TAGS = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &TILEENTITY& RPC Message placeholder
+     */
+    private List<Pair<String, String>> tileEntityArgs = Lists.newArrayList();
     /**
      * The Player's Current Main Hand Item, if any
      */
@@ -200,10 +208,6 @@ public class TileEntityUtils {
      * If the Player doesn't have any Items in the Critical Slots such as equipped items or armor
      */
     private boolean allItemsEmpty = false;
-
-    public List<Pair<String, String>> tileEntityArgs = Lists.newArrayList();
-
-    public List<Pair<String, String>> equipmentArgs = Lists.newArrayList();
 
     /**
      * Clears FULL Data from this Module

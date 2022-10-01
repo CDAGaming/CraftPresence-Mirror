@@ -124,7 +124,7 @@ public class Pair<U, V> {
             return false;
         }
 
-        Pair<?, ?> p = (Pair<?, ?>)obj;
+        Pair<?, ?> p = (Pair<?, ?>) obj;
         try {
             // Case 1: Attempt ToString Conversion Checking
             return (this.getFirst().toString().equals(p.getFirst().toString())) && (this.getSecond().toString().equals(p.getSecond().toString()));

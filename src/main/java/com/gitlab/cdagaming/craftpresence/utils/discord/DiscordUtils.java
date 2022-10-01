@@ -60,6 +60,22 @@ import java.util.Map;
  */
 public class DiscordUtils {
     /**
+     * A list of the text modules for this application
+     */
+    public static final List<String> textModules = Lists.newArrayList(
+            "&MAINMENU&",
+            "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&",
+            "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&",
+            "&TILEENTITY&", "&TARGETENTITY&", "&RIDINGENTITY&"
+    );
+    /**
+     * A list of the icon modules for this application
+     */
+    public static final List<String> iconModules = Lists.newArrayList(
+            "&DEFAULT&", "&MAINMENU&", "&PACK&",
+            "&DIMENSION&", "&BIOME&", "&SERVER&"
+    );
+    /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
     private final Map<ArgumentType, List<Pair<String, String>>> presenceData = Maps.newHashMap();
@@ -184,8 +200,6 @@ public class DiscordUtils {
      * Whether Discord is currently awaiting a response to a Ask to Join or Spectate Request, if any
      */
     public boolean awaitingReply = false;
-
-    // Generalized Argument Types
     /**
      * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
      */
@@ -201,18 +215,6 @@ public class DiscordUtils {
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
      */
     private RichPresence currentPresence;
-
-    public static final List<String> textModules = Lists.newArrayList(
-            "&MAINMENU&",
-            "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&",
-            "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&",
-            "&TILEENTITY&", "&TARGETENTITY&", "&RIDINGENTITY&"
-    );
-
-    public static final List<String> iconModules = Lists.newArrayList(
-            "&DEFAULT&", "&MAINMENU&", "&PACK&",
-            "&DIMENSION&", "&BIOME&", "&SERVER&"
-    );
 
     /**
      * Setup any Critical Methods needed for the RPC
@@ -317,7 +319,7 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
-     * @param dataTypes     The type(s) the argument should be stored as
+     * @param dataTypes    The type(s) the argument should be stored as
      */
     public void syncArgument(String argumentName, String insertString, ArgumentType... dataTypes) {
         for (ArgumentType dataType : dataTypes) {
@@ -344,7 +346,7 @@ public class DiscordUtils {
     /**
      * Initialize the Specified Arguments as Empty Data
      *
-     * @param args     The Arguments to Initialize
+     * @param args The Arguments to Initialize
      */
     public void initArgument(String... args) {
         for (ArgumentType type : ArgumentType.values()) {
