@@ -66,7 +66,7 @@ public class PaginatedScreen extends ExtendedScreen {
     public void initializeUi() {
         backButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
@@ -74,7 +74,7 @@ public class PaginatedScreen extends ExtendedScreen {
         );
         previousPageButton = addControl(
                 new ExtendedButtonControl(
-                        backButton.getControlPosX() - 23, (height - 30),
+                        backButton.getControlPosX() - 23, (getScreenHeight() - 30),
                         20, 20,
                         "<",
                         () -> {
@@ -89,7 +89,7 @@ public class PaginatedScreen extends ExtendedScreen {
         );
         nextPageButton = addControl(
                 new ExtendedButtonControl(
-                        (backButton.getControlPosX() + backButton.getControlWidth()) + 3, (height - 30),
+                        (backButton.getControlPosX() + backButton.getControlWidth()) + 3, (getScreenHeight() - 30),
                         20, 20,
                         ">",
                         () -> {

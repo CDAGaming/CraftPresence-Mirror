@@ -95,8 +95,8 @@ public class ControlsGui extends PaginatedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.message.button.controls");
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
         super.preRender();
 
@@ -114,7 +114,16 @@ public class ControlsGui extends PaginatedScreen {
             final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = postRenderQueue.get(pageNumber);
             for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
                 if (currentPage == pageNumber && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
-                    CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+                    CraftPresence.GUIS.drawMultiLineString(
+                            StringUtils.splitTextByNewLine(
+                                    ModUtils.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))
+                            ),
+                            getMouseX(), getMouseY(),
+                            getScreenWidth(), getScreenHeight(),
+                            getWrapWidth(),
+                            getFontRenderer(),
+                            true
+                    );
                 }
             }
         }
@@ -151,10 +160,10 @@ public class ControlsGui extends PaginatedScreen {
         preRenderQueue.clear();
         postRenderQueue.clear();
 
-        final int renderPosition = (width / 2) + 3;
+        final int renderPosition = (getScreenWidth() / 2) + 3;
         for (String categoryName : categorizedNames.keySet()) {
             syncPageData();
-            final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((width / 2f) - (getStringWidth(categoryName) / 2f), (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+            final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((getScreenWidth() / 2f) - (getStringWidth(categoryName) / 2f), (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
             if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                 preRenderQueue.put(currentAllocatedPage, Lists.newArrayList());
             }
@@ -167,7 +176,7 @@ public class ControlsGui extends PaginatedScreen {
 
             for (String keyName : keyNames) {
                 final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
-                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((width / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
                 if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                     preRenderQueue.put(currentAllocatedPage, Lists.newArrayList(positionData));
                 } else {

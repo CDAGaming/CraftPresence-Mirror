@@ -53,25 +53,25 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         splitCharacter = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) - 60, CraftPresence.GUIS.getButtonY(1),
+                        (getScreenWidth() / 2) - 60, CraftPresence.GUIS.getButtonY(1),
                         45, 20
                 )
         );
-        splitCharacter.setText(CraftPresence.CONFIG.splitCharacter);
-        splitCharacter.setMaxStringLength(1);
+        splitCharacter.setControlMessage(CraftPresence.CONFIG.splitCharacter);
+        splitCharacter.setControlMaxLength(1);
 
         refreshRate = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 103, CraftPresence.GUIS.getButtonY(1),
+                        (getScreenWidth() / 2) + 103, CraftPresence.GUIS.getButtonY(1),
                         45, 20
                 )
         );
-        refreshRate.setText(Integer.toString(CraftPresence.CONFIG.refreshRate));
-        refreshRate.setMaxStringLength(3);
+        refreshRate.setControlMessage(Integer.toString(CraftPresence.CONFIG.refreshRate));
+        refreshRate.setControlMaxLength(3);
 
-        final int calc1 = (width / 2) - 160;
-        final int calc2 = (width / 2) + 3;
+        final int calc1 = (getScreenWidth() / 2) - 160;
+        final int calc2 = (getScreenWidth() / 2) + 3;
 
         guiMessagesButton = addControl(
                 new ExtendedButtonControl(
@@ -122,7 +122,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                         CraftPresence.GUIS.generateArgumentMessage())
                                                                         ),
                                                                         screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
                                                                         screenInstance.getWrapWidth(),
                                                                         screenInstance.getFontRenderer(),
                                                                         true
@@ -141,7 +141,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui"))
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true);
@@ -152,7 +152,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                         CraftPresence.GUIS.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -224,7 +224,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                 )
                                                                         ),
                                                                         screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
                                                                         screenInstance.getWrapWidth(),
                                                                         screenInstance.getFontRenderer(),
                                                                         true
@@ -243,7 +243,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item"))
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -262,7 +262,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                 )
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -327,7 +327,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                 )
                                                                         ),
                                                                         screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
                                                                         screenInstance.getWrapWidth(),
                                                                         screenInstance.getFontRenderer(),
                                                                         true
@@ -346,7 +346,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -366,7 +366,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                 )
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -431,7 +431,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                 )
                                                                         ),
                                                                         screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
                                                                         screenInstance.getWrapWidth(),
                                                                         screenInstance.getFontRenderer(),
                                                                         true
@@ -450,7 +450,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -470,7 +470,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                 )
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -491,7 +491,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_commands")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -509,7 +509,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_gui")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -527,7 +527,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_item")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -545,7 +545,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_entity")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -563,7 +563,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.render_tooltips")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -581,7 +581,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.format_words")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -599,7 +599,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", CraftPresence.isDevStatusOverridden)
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -617,7 +617,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", CraftPresence.isVerboseStatusOverridden)
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -626,19 +626,19 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (!splitCharacter.getText().equals(CraftPresence.CONFIG.splitCharacter)) {
+                            if (!splitCharacter.getControlMessage().equals(CraftPresence.CONFIG.splitCharacter)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.queuedSplitCharacter = splitCharacter.getText();
+                                CraftPresence.CONFIG.queuedSplitCharacter = splitCharacter.getControlMessage();
                             }
-                            if (!refreshRate.getText().equals(Integer.toString(CraftPresence.CONFIG.refreshRate))) {
+                            if (!refreshRate.getControlMessage().equals(Integer.toString(CraftPresence.CONFIG.refreshRate))) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getText()).getSecond();
+                                CraftPresence.CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
                             }
                             if (enableCommandsButton.isChecked() != CraftPresence.CONFIG.enableCommands) {
                                 CraftPresence.CONFIG.hasChanged = true;
@@ -684,7 +684,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -704,16 +704,16 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         final String splitCharacterText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.split_character");
         final String refreshRateText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.refresh_rate");
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
-        renderString(splitCharacterText, (width / 2f) - 145, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
-        renderString(refreshRateText, (width / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(splitCharacterText, (getScreenWidth() / 2f) - 145, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+        renderString(refreshRateText, (getScreenWidth() / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
-        final Pair<Boolean, Integer> refreshRateData = StringUtils.getValidInteger(refreshRate.getText());
+        final Pair<Boolean, Integer> refreshRateData = StringUtils.getValidInteger(refreshRate.getControlMessage());
         proceedButton.setControlEnabled(
-                !StringUtils.isNullOrEmpty(splitCharacter.getText()) && splitCharacter.getText().length() == 1 &&
-                        !splitCharacter.getText().matches(".*[a-z].*") && !splitCharacter.getText().matches(".*[A-Z].*") &&
-                        !splitCharacter.getText().matches(".*[0-9].*") && (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
+                !StringUtils.isNullOrEmpty(splitCharacter.getControlMessage()) && splitCharacter.getControlMessage().length() == 1 &&
+                        !splitCharacter.getControlMessage().matches(".*[a-z].*") && !splitCharacter.getControlMessage().matches(".*[A-Z].*") &&
+                        !splitCharacter.getControlMessage().matches(".*[0-9].*") && (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
         );
 
         guiMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.GUIS.enabled : guiMessagesButton.isControlEnabled());
@@ -727,13 +727,31 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         final String splitCharacterText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.split_character");
         final String refreshRateText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.refresh_rate");
         // Hovering over Split Character Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 145, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(splitCharacterText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.split_character")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 145, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(splitCharacterText), getFontHeight())) {
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.split_character")
+                    ),
+                    getMouseX(), getMouseY(),
+                    getScreenWidth(), getScreenHeight(),
+                    getWrapWidth(),
+                    getFontRenderer(),
+                    true
+            );
         }
 
         // Hovering over Refresh Rate Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(refreshRateText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(refreshRateText), getFontHeight())) {
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")
+                    ),
+                    getMouseX(), getMouseY(),
+                    getScreenWidth(), getScreenHeight(),
+                    getWrapWidth(),
+                    getFontRenderer(),
+                    true
+            );
         }
     }
 }

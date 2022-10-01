@@ -60,15 +60,31 @@ public class DynamicEditorGui extends ExtendedScreen {
     }
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
-        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) -> {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
-        });
+        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")
+                        ),
+                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                        screenInstance.getWrapWidth(),
+                        screenInstance.getFontRenderer(),
+                        true
+                ));
     }
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback) {
-        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) -> {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.message")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
-        });
+        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.message")
+                        ),
+                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                        screenInstance.getWrapWidth(),
+                        screenInstance.getFontRenderer(),
+                        true
+                ));
     }
 
     @Override
@@ -99,22 +115,22 @@ public class DynamicEditorGui extends ExtendedScreen {
         primaryInput = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
-                        (width / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex++),
+                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex++),
                         180, 20
                 )
         );
         if (maxPrimaryLength > 0) {
-            primaryInput.setMaxStringLength(maxPrimaryLength);
+            primaryInput.setControlMaxLength(maxPrimaryLength);
         }
         if (!StringUtils.isNullOrEmpty(primaryMessage)) {
-            primaryInput.setText(primaryMessage);
+            primaryInput.setControlMessage(primaryMessage);
         }
 
         if (onSpecificCallback != null && !isNewValue) {
             // Adding Specific Icon Button
             addControl(
                     new ExtendedButtonControl(
-                            (width / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
+                            (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
                             180, 20,
                             "gui.config.message.button.icon.change",
                             () -> onSpecificCallback.accept(attributeName, this)
@@ -125,35 +141,35 @@ public class DynamicEditorGui extends ExtendedScreen {
             secondaryInput = addControl(
                     new ExtendedTextControl(
                             getFontRenderer(),
-                            (width / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex++),
+                            (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex++),
                             180, 20
                     )
             );
             if (maxSecondaryLength > 0) {
-                secondaryInput.setMaxStringLength(maxSecondaryLength);
+                secondaryInput.setControlMaxLength(maxSecondaryLength);
             }
             if (!StringUtils.isNullOrEmpty(secondaryMessage)) {
-                secondaryInput.setText(secondaryMessage);
+                secondaryInput.setControlMessage(secondaryMessage);
             }
         }
 
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getText())) {
-                                attributeName = secondaryInput.getText();
+                            if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
+                                attributeName = secondaryInput.getControlMessage();
                             }
                             if (isAdjusting()) {
                                 if (onAdjustEntry != null) {
-                                    onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getText() : attributeName, primaryInput.getText());
+                                    onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                                 }
                             }
                             if (isRemoving()) {
                                 if (onRemoveEntry != null) {
-                                    onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getText() : attributeName, primaryInput.getText());
+                                    onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                                 }
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
@@ -165,7 +181,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -180,14 +196,14 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
-        renderString(primaryText, (width / 2f) - 130, primaryInput.getControlPosY() + 5, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderString(primaryText, (getScreenWidth() / 2f) - 130, primaryInput.getControlPosY() + 5, 0xFFFFFF);
         if (willRenderSecondaryInput) {
-            renderString(secondaryText, (width / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
+            renderString(secondaryText, (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
         }
 
         if (!isNewValue && !isDefaultValue) {
-            renderString(removeMessage, (width / 2f) - (getStringWidth(removeMessage) / 2f), (height - 45), 0xFFFFFF);
+            renderString(removeMessage, (getScreenWidth() / 2f) - (getStringWidth(removeMessage) / 2f), (getScreenHeight() - 45), 0xFFFFFF);
         }
 
         proceedButton.setControlMessage(
@@ -200,8 +216,8 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void postRender() {
-        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, primaryInput.getControlPosY() + 5, getStringWidth(primaryText), getFontHeight());
-        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 130, secondaryInput.getControlPosY() + 5, getStringWidth(secondaryText), getFontHeight());
+        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, primaryInput.getControlPosY() + 5, getStringWidth(primaryText), getFontHeight());
+        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, getStringWidth(secondaryText), getFontHeight());
         // Hovering over Message Label
         if (isHoveringOverPrimary && onHoverPrimaryCallback != null) {
             onHoverPrimaryCallback.accept(attributeName, this);
@@ -219,9 +235,9 @@ public class DynamicEditorGui extends ExtendedScreen {
      * @return {@link true} if we are doing an adjustment
      */
     private boolean isAdjusting() {
-        final String primaryText = primaryInput != null ? primaryInput.getText() : "";
+        final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
         final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
-        final String secondaryText = secondaryInput != null ? secondaryInput.getText() : "";
+        final String secondaryText = secondaryInput != null ? secondaryInput.getControlMessage() : "";
         final boolean isSecondaryEmpty = StringUtils.isNullOrEmpty(secondaryText);
 
         final boolean areEitherEmpty = isPrimaryEmpty || isSecondaryEmpty;
@@ -240,7 +256,7 @@ public class DynamicEditorGui extends ExtendedScreen {
      * @return {@link true} if we are doing an removal
      */
     private boolean isRemoving() {
-        final String primaryText = primaryInput != null ? primaryInput.getText() : "";
+        final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
         final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
 
         if (!isDefaultValue && !isNewValue) {
@@ -258,7 +274,7 @@ public class DynamicEditorGui extends ExtendedScreen {
      * @return {@link true} if inputs are valid
      */
     private boolean isValidEntries() {
-        final String primaryText = primaryInput != null ? primaryInput.getText() : "";
+        final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
         final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
 
         if (isDefaultValue) {

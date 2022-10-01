@@ -51,8 +51,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
     @Override
     public void initializeUi() {
-        final int calc1 = (width / 2) - 183;
-        final int calc2 = (width / 2) + 3;
+        final int calc1 = (getScreenWidth() / 2) - 183;
+        final int calc2 = (getScreenWidth() / 2) + 3;
 
         // Page 1 Items
         detailsFormat = addControl(
@@ -84,10 +84,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage
         );
 
-        detailsFormat.setText(CraftPresence.CONFIG.detailsMessage);
-        gameStateFormat.setText(CraftPresence.CONFIG.gameStateMessage);
-        largeImageFormat.setText(CraftPresence.CONFIG.largeImageMessage);
-        smallImageFormat.setText(CraftPresence.CONFIG.smallImageMessage);
+        detailsFormat.setControlMessage(CraftPresence.CONFIG.detailsMessage);
+        gameStateFormat.setControlMessage(CraftPresence.CONFIG.gameStateMessage);
+        largeImageFormat.setControlMessage(CraftPresence.CONFIG.largeImageMessage);
+        smallImageFormat.setControlMessage(CraftPresence.CONFIG.smallImageMessage);
 
         // Page 2 Items
         smallImageKeyFormat = addControl(
@@ -105,8 +105,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
-        smallImageKeyFormat.setText(CraftPresence.CONFIG.smallImageKey);
-        largeImageKeyFormat.setText(CraftPresence.CONFIG.largeImageKey);
+        smallImageKeyFormat.setControlMessage(CraftPresence.CONFIG.smallImageKey);
+        largeImageKeyFormat.setControlMessage(CraftPresence.CONFIG.largeImageKey);
 
         // Button Messages Button
         buttonMessagesButton = addControl(
@@ -159,11 +159,29 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Secondary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -243,11 +261,29 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Secondary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -261,35 +297,35 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
         backButton.setOnClick(
                 () -> {
-                    if (!detailsFormat.getText().equals(CraftPresence.CONFIG.detailsMessage)) {
+                    if (!detailsFormat.getControlMessage().equals(CraftPresence.CONFIG.detailsMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.detailsMessage = detailsFormat.getText();
+                        CraftPresence.CONFIG.detailsMessage = detailsFormat.getControlMessage();
                     }
-                    if (!gameStateFormat.getText().equals(CraftPresence.CONFIG.gameStateMessage)) {
+                    if (!gameStateFormat.getControlMessage().equals(CraftPresence.CONFIG.gameStateMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.gameStateMessage = gameStateFormat.getText();
+                        CraftPresence.CONFIG.gameStateMessage = gameStateFormat.getControlMessage();
                     }
-                    if (!largeImageFormat.getText().equals(CraftPresence.CONFIG.largeImageMessage)) {
+                    if (!largeImageFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageMessage = largeImageFormat.getText();
+                        CraftPresence.CONFIG.largeImageMessage = largeImageFormat.getControlMessage();
                     }
-                    if (!smallImageFormat.getText().equals(CraftPresence.CONFIG.smallImageMessage)) {
+                    if (!smallImageFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageMessage = smallImageFormat.getText();
+                        CraftPresence.CONFIG.smallImageMessage = smallImageFormat.getControlMessage();
                     }
-                    if (!largeImageKeyFormat.getText().equals(CraftPresence.CONFIG.largeImageKey)) {
+                    if (!largeImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageKey)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageKey = largeImageKeyFormat.getText();
+                        CraftPresence.CONFIG.largeImageKey = largeImageKeyFormat.getControlMessage();
                     }
-                    if (!smallImageKeyFormat.getText().equals(CraftPresence.CONFIG.smallImageKey)) {
+                    if (!smallImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageKey)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageKey = smallImageKeyFormat.getText();
+                        CraftPresence.CONFIG.smallImageKey = smallImageKeyFormat.getControlMessage();
                     }
                     CraftPresence.GUIS.openScreen(parentScreen);
                 }
@@ -307,16 +343,16 @@ public class PresenceSettingsGui extends PaginatedScreen {
         final String smallImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.small_image_key");
         final String largeImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.large_image_key");
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (width / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
-        renderString(detailsFormatTitle, (width / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage);
-        renderString(gameStateFormatTitle, (width / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage);
-        renderString(largeImageFormatTitle, (width / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage);
-        renderString(smallImageFormatTitle, (width / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage);
+        renderString(detailsFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage);
+        renderString(gameStateFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage);
+        renderString(largeImageFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage);
+        renderString(smallImageFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage);
 
-        renderString(smallImageKeyFormatTitle, (width / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 1);
-        renderString(largeImageKeyFormatTitle, (width / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
+        renderString(smallImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 1);
+        renderString(largeImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
 
         super.preRender();
     }
@@ -330,10 +366,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
         final String smallImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.small_image_key");
         final String largeImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.large_image_key");
         if (currentPage == startPage) {
-            final boolean hoveringOverDetails = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(detailsFormatTitle), getFontHeight());
-            final boolean hoveringOverGameState = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(gameStateFormatTitle), getFontHeight());
-            final boolean hoveringOverLargeImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(largeImageFormatTitle), getFontHeight());
-            final boolean hoveringOverSmallImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), getStringWidth(smallImageFormatTitle), getFontHeight());
+            final boolean hoveringOverDetails = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(detailsFormatTitle), getFontHeight());
+            final boolean hoveringOverGameState = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(gameStateFormatTitle), getFontHeight());
+            final boolean hoveringOverLargeImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(largeImageFormatTitle), getFontHeight());
+            final boolean hoveringOverSmallImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), getStringWidth(smallImageFormatTitle), getFontHeight());
 
             if (hoveringOverDetails || hoveringOverGameState || hoveringOverLargeImageFormat || hoveringOverSmallImageFormat) {
                 CraftPresence.GUIS.drawMultiLineString(
@@ -345,7 +381,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                         ))
                         ),
                         getMouseX(), getMouseY(),
-                        width, height,
+                        getScreenWidth(), getScreenHeight(),
                         getWrapWidth(),
                         getFontRenderer(),
                         true
@@ -354,8 +390,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
         }
 
         if (currentPage == (startPage + 1)) {
-            final boolean hoveringOverSmallImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(smallImageKeyFormatTitle), getFontHeight());
-            final boolean hoveringOverLargeImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(largeImageKeyFormatTitle), getFontHeight());
+            final boolean hoveringOverSmallImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(smallImageKeyFormatTitle), getFontHeight());
+            final boolean hoveringOverLargeImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(largeImageKeyFormatTitle), getFontHeight());
             if (hoveringOverSmallImageFormat || hoveringOverLargeImageFormat) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
@@ -366,7 +402,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                         ))
                         ),
                         getMouseX(), getMouseY(),
-                        width, height,
+                        getScreenWidth(), getScreenHeight(),
                         getWrapWidth(),
                         getFontRenderer(),
                         true
@@ -379,7 +415,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
                         ),
                         getMouseX(), getMouseY(),
-                        width, height,
+                        getScreenWidth(), getScreenHeight(),
                         getWrapWidth(),
                         getFontRenderer(),
                         true
@@ -392,7 +428,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
                         ),
                         getMouseX(), getMouseY(),
-                        width, height,
+                        getScreenWidth(), getScreenHeight(),
                         getWrapWidth(),
                         getFontRenderer(),
                         true

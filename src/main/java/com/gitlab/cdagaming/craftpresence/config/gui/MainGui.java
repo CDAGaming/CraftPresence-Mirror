@@ -51,8 +51,8 @@ public class MainGui extends ExtendedScreen {
     public void initializeUi() {
         CraftPresence.GUIS.configGUIOpened = true;
 
-        final int calc1 = (width / 2) - 183;
-        final int calc2 = (width / 2) + 3;
+        final int calc1 = (getScreenWidth() / 2) - 183;
+        final int calc2 = (getScreenWidth() / 2) + 3;
 
         // Added General Settings Button
         addControl(
@@ -66,7 +66,7 @@ public class MainGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.general")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -87,7 +87,7 @@ public class MainGui extends ExtendedScreen {
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -99,7 +99,7 @@ public class MainGui extends ExtendedScreen {
                                                         CraftPresence.BIOMES.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -122,7 +122,7 @@ public class MainGui extends ExtendedScreen {
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -134,7 +134,7 @@ public class MainGui extends ExtendedScreen {
                                                         CraftPresence.DIMENSIONS.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -157,7 +157,7 @@ public class MainGui extends ExtendedScreen {
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_world_data"))
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -169,7 +169,7 @@ public class MainGui extends ExtendedScreen {
                                                         CraftPresence.SERVER.generateArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
-                                        width, height,
+                                        getScreenWidth(), getScreenHeight(),
                                         getWrapWidth(),
                                         getFontRenderer(),
                                         true
@@ -190,7 +190,7 @@ public class MainGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.status_messages")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -209,7 +209,7 @@ public class MainGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.advanced")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -228,7 +228,7 @@ public class MainGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.accessibility")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -247,7 +247,7 @@ public class MainGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.presence_settings")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -267,7 +267,7 @@ public class MainGui extends ExtendedScreen {
         final KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 55),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
                         180, 20,
                         "gui.config.message.button.controls",
                         () -> CraftPresence.GUIS.openScreen(
@@ -280,7 +280,7 @@ public class MainGui extends ExtendedScreen {
         );
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
@@ -308,7 +308,7 @@ public class MainGui extends ExtendedScreen {
         // Added About Button
         addControl(
                 new ExtendedButtonControl(
-                        (width - 105), (height - 55),
+                        (getScreenWidth() - 105), (getScreenHeight() - 55),
                         95, 20,
                         "gui.config.message.button.about",
                         () -> CraftPresence.GUIS.openScreen(new AboutGui(currentScreen))
@@ -316,7 +316,7 @@ public class MainGui extends ExtendedScreen {
         );
         commandGUIButton = addControl(
                 new ExtendedButtonControl(
-                        (width - 105), (height - 30),
+                        (getScreenWidth() - 105), (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.commands",
                         () -> CraftPresence.GUIS.openScreen(new CommandsGui(currentScreen))
@@ -325,7 +325,7 @@ public class MainGui extends ExtendedScreen {
         // Added Reset Config Button
         addControl(
                 new ExtendedButtonControl(
-                        10, (height - 30),
+                        10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
                         () -> {
@@ -340,7 +340,7 @@ public class MainGui extends ExtendedScreen {
         // Added Sync Config Button
         addControl(
                 new ExtendedButtonControl(
-                        10, (height - 55),
+                        10, (getScreenHeight() - 55),
                         95, 20,
                         "gui.config.message.button.sync.config",
                         () -> {
@@ -360,7 +360,7 @@ public class MainGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.button.sync.config")
                                 ),
                                 getMouseX(), getMouseY(),
-                                width, height,
+                                getScreenWidth(), getScreenHeight(),
                                 getWrapWidth(),
                                 getFontRenderer(),
                                 true
@@ -376,10 +376,10 @@ public class MainGui extends ExtendedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID + " - " + StringUtils.formatWord(ModUtils.VERSION_LABEL));
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
 
         if (!ModUtils.VERSION_TYPE.equalsIgnoreCase("release")) {
-            renderString(releaseNotice, (width / 2f) - (getStringWidth(releaseNotice) / 2f), height - 85, 0xFFFFFF);
+            renderString(releaseNotice, (getScreenWidth() / 2f) - (getStringWidth(releaseNotice) / 2f), getScreenHeight() - 85, 0xFFFFFF);
         }
 
         syncRenderStates();
@@ -390,8 +390,17 @@ public class MainGui extends ExtendedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
 
         // Hovering over Title Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, getStringWidth(mainTitle), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, getStringWidth(mainTitle), getFontHeight())) {
+            CraftPresence.GUIS.drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)
+                    ),
+                    getMouseX(), getMouseY(),
+                    getScreenWidth(), getScreenHeight(),
+                    getWrapWidth(),
+                    getFontRenderer(),
+                    true
+            );
         }
     }
 

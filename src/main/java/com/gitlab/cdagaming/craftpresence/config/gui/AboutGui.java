@@ -47,7 +47,7 @@ public class AboutGui extends ExtendedScreen {
         // Adding Version Check Button
         addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.versionInfo",
                         () -> CraftPresence.GUIS.openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER))
@@ -57,7 +57,7 @@ public class AboutGui extends ExtendedScreen {
         // Adding Back Button
         addControl(
                 new ExtendedButtonControl(
-                        10, (height - 30),
+                        10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
@@ -67,7 +67,7 @@ public class AboutGui extends ExtendedScreen {
         // Adding View Source Button
         addControl(
                 new ExtendedButtonControl(
-                        (width / 2) - 90, (height - 55),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
                         180, 20,
                         "gui.config.message.button.view_source",
                         () -> UrlUtils.openUrl(SOURCE_URL)
@@ -82,7 +82,7 @@ public class AboutGui extends ExtendedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.about.config");
         final List<String> notice = StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.credits"));
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
         renderNotice(notice);
     }
 }

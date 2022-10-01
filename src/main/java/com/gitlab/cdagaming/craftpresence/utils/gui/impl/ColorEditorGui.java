@@ -69,8 +69,8 @@ public class ColorEditorGui extends PaginatedScreen {
 
     @Override
     public void initializeUi() {
-        final int calc1 = (width / 2) - 183;
-        final int calc2 = (width / 2) + 3;
+        final int calc1 = (getScreenWidth() / 2) - 183;
+        final int calc2 = (getScreenWidth() / 2) + 3;
 
         // Page 1 Items
         final String redTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.red");
@@ -85,7 +85,7 @@ public class ColorEditorGui extends PaginatedScreen {
                         180, 20
                 ), startPage
         );
-        hexText.setMaxStringLength(10);
+        hexText.setControlMaxLength(10);
 
         redText = addControl(
                 new SliderControl(
@@ -157,7 +157,7 @@ public class ColorEditorGui extends PaginatedScreen {
                         this::syncValues
                 ), startPage + 1
         );
-        textureText.setMaxStringLength(32767);
+        textureText.setControlMaxLength(32767);
 
         initValues();
         syncValues();
@@ -185,12 +185,12 @@ public class ColorEditorGui extends PaginatedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.color", configValueName);
         final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview");
 
-        renderString(mainTitle, (width / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(previewTitle, width - 90, height - 29.5f, 0xFFFFFF);
+        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderString(previewTitle, getScreenWidth() - 90, getScreenHeight() - 29.5f, 0xFFFFFF);
 
         // Setup Data for Drawing
-        double tooltipX = width - 45;
-        double tooltipY = height - 45;
+        double tooltipX = getScreenWidth() - 45;
+        double tooltipY = getScreenHeight() - 45;
         double tooltipHeight = 40;
         double tooltipTextWidth = 40;
 
@@ -203,19 +203,19 @@ public class ColorEditorGui extends PaginatedScreen {
         if (currentPage == startPage) {
             final String hexCodeTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.hex_code");
 
-            renderString(hexCodeTitle, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
-            backButton.setControlEnabled(!StringUtils.isNullOrEmpty(hexText.getText()));
+            renderString(hexCodeTitle, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+            backButton.setControlEnabled(!StringUtils.isNullOrEmpty(hexText.getControlMessage()));
 
             // Draw Preview Box
-            CraftPresence.GUIS.drawGradientRect(300, tooltipX - 3, tooltipY - 3, width - 2, height - 2, currentConvertedHexValue, currentConvertedHexValue);
+            CraftPresence.GUIS.drawGradientRect(300, tooltipX - 3, tooltipY - 3, getScreenWidth() - 2, getScreenHeight() - 2, currentConvertedHexValue, currentConvertedHexValue);
         }
 
         // Page 2 Items
         if (currentPage == startPage + 1) {
             final String textureTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path");
 
-            renderString(textureTitle, (width / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
-            backButton.setControlEnabled(!StringUtils.isNullOrEmpty(textureText.getText()));
+            renderString(textureTitle, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+            backButton.setControlEnabled(!StringUtils.isNullOrEmpty(textureText.getControlMessage()));
 
             if (currentTexture == null) {
                 currentTexture = new ResourceLocation("");
@@ -235,7 +235,7 @@ public class ColorEditorGui extends PaginatedScreen {
             }
 
             // Draw Preview Box
-            CraftPresence.GUIS.drawTextureRect(0.0D, width - 47, height - 47, 44, 44, 0, widthDivider, heightDivider, false, currentTexture);
+            CraftPresence.GUIS.drawTextureRect(0.0D, getScreenWidth() - 47, getScreenHeight() - 47, 44, 44, 0, widthDivider, heightDivider, false, currentTexture);
         }
 
         // Draw Border around Preview Box
@@ -254,15 +254,15 @@ public class ColorEditorGui extends PaginatedScreen {
         if (onInit != null) {
             onInit.accept(this);
 
-            if (StringUtils.isNullOrEmpty(hexText.getText()) && !StringUtils.isNullOrEmpty(startingHexValue)) {
-                hexText.setText(startingHexValue);
+            if (StringUtils.isNullOrEmpty(hexText.getControlMessage()) && !StringUtils.isNullOrEmpty(startingHexValue)) {
+                hexText.setControlMessage(startingHexValue);
                 currentNormalHexValue = null;
                 currentConvertedHexValue = null;
                 currentConvertedTexturePath = null;
                 currentTexture = new ResourceLocation("");
                 currentPage = startPage;
-            } else if (StringUtils.isNullOrEmpty(textureText.getText()) && !StringUtils.isNullOrEmpty(startingTexturePath)) {
-                textureText.setText(startingTexturePath);
+            } else if (StringUtils.isNullOrEmpty(textureText.getControlMessage()) && !StringUtils.isNullOrEmpty(startingTexturePath)) {
+                textureText.setControlMessage(startingTexturePath);
                 currentNormalHexValue = null;
                 currentConvertedHexValue = null;
                 currentConvertedTexturePath = null;
@@ -281,17 +281,17 @@ public class ColorEditorGui extends PaginatedScreen {
             Integer localValue = null;
             Color localColor;
 
-            if (!StringUtils.isNullOrEmpty(hexText.getText())) {
-                if (hexText.getText().startsWith("#") || hexText.getText().length() == 6) {
-                    localValue = StringUtils.getColorFromHex(hexText.getText()).getRGB();
-                } else if (hexText.getText().startsWith("0x")) {
+            if (!StringUtils.isNullOrEmpty(hexText.getControlMessage())) {
+                if (hexText.getControlMessage().startsWith("#") || hexText.getControlMessage().length() == 6) {
+                    localValue = StringUtils.getColorFromHex(hexText.getControlMessage()).getRGB();
+                } else if (hexText.getControlMessage().startsWith("0x")) {
                     try {
-                        localColor = new Color(Long.decode(hexText.getText()).intValue(), true);
+                        localColor = new Color(Long.decode(hexText.getControlMessage()).intValue(), true);
                         localValue = localColor.getRGB();
                     } catch (Exception ignored) {
                     }
-                } else if (StringUtils.getValidInteger(hexText.getText()).getFirst()) {
-                    localValue = Integer.decode(hexText.getText());
+                } else if (StringUtils.getValidInteger(hexText.getControlMessage()).getFirst()) {
+                    localValue = Integer.decode(hexText.getControlMessage());
                 }
             }
 
@@ -306,7 +306,7 @@ public class ColorEditorGui extends PaginatedScreen {
                 greenText.setSliderValue(currentGreen);
                 blueText.setSliderValue(currentBlue);
 
-                currentNormalHexValue = hexText.getText();
+                currentNormalHexValue = hexText.getControlMessage();
                 currentConvertedHexValue = Integer.toString(localValue);
             } else {
                 final boolean isRedDifferent = redText.isDragging() && redText.getSliderValue(false) != currentRed,
@@ -324,35 +324,35 @@ public class ColorEditorGui extends PaginatedScreen {
                     localColor = new Color(currentRed, currentGreen, currentBlue, currentAlpha);
 
                     currentNormalHexValue = StringUtils.getHexFromColor(localColor);
-                    hexText.setText(currentNormalHexValue);
+                    hexText.setControlMessage(currentNormalHexValue);
 
                     currentConvertedHexValue = Long.toString(Long.decode(currentNormalHexValue).intValue());
                 }
             }
-            isModified = !hexText.getText().equals(startingHexValue);
+            isModified = !hexText.getControlMessage().equals(startingHexValue);
         }
 
         // Page 2 - Texture Syncing
         if (currentPage == startPage + 1) {
-            if (!StringUtils.isNullOrEmpty(textureText.getText())) {
-                usingExternalTexture = ImageUtils.isExternalImage(textureText.getText());
+            if (!StringUtils.isNullOrEmpty(textureText.getControlMessage())) {
+                usingExternalTexture = ImageUtils.isExternalImage(textureText.getControlMessage());
 
                 // Only Perform Texture Conversion Steps if not an external Url
                 // As an external Url should be parsed as-is in most use cases
                 if (!usingExternalTexture) {
-                    if (textureText.getText().contains(CraftPresence.CONFIG.splitCharacter)) {
-                        textureText.setText(textureText.getText().replace(CraftPresence.CONFIG.splitCharacter, ":"));
+                    if (textureText.getControlMessage().contains(CraftPresence.CONFIG.splitCharacter)) {
+                        textureText.setControlMessage(textureText.getControlMessage().replace(CraftPresence.CONFIG.splitCharacter, ":"));
                     }
 
-                    if (textureText.getText().contains(":") && !textureText.getText().startsWith(":")) {
-                        currentNormalTexturePath = textureText.getText();
-                    } else if (textureText.getText().startsWith(":")) {
-                        currentNormalTexturePath = textureText.getText().substring(1);
+                    if (textureText.getControlMessage().contains(":") && !textureText.getControlMessage().startsWith(":")) {
+                        currentNormalTexturePath = textureText.getControlMessage();
+                    } else if (textureText.getControlMessage().startsWith(":")) {
+                        currentNormalTexturePath = textureText.getControlMessage().substring(1);
                     } else {
-                        currentNormalTexturePath = "minecraft:" + textureText.getText();
+                        currentNormalTexturePath = "minecraft:" + textureText.getControlMessage();
                     }
                 } else {
-                    currentNormalTexturePath = textureText.getText();
+                    currentNormalTexturePath = textureText.getControlMessage();
                 }
 
                 currentConvertedTexturePath = currentNormalTexturePath.trim();
@@ -378,7 +378,7 @@ public class ColorEditorGui extends PaginatedScreen {
             } else {
                 currentTexture = new ResourceLocation("");
             }
-            isModified = !StringUtils.isNullOrEmpty(startingTexturePath) && !textureText.getText().equals(startingTexturePath.replace(CraftPresence.CONFIG.splitCharacter, ":"));
+            isModified = !StringUtils.isNullOrEmpty(startingTexturePath) && !textureText.getControlMessage().equals(startingTexturePath.replace(CraftPresence.CONFIG.splitCharacter, ":"));
         }
     }
 }
