@@ -116,7 +116,17 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages")), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
+                                                                                        CraftPresence.GUIS.getArgumentMessage())
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -138,7 +148,8 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages")
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
+                                                        CraftPresence.GUIS.getArgumentMessage())
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,

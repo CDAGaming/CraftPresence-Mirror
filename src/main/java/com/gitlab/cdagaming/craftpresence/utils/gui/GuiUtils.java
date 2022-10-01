@@ -109,6 +109,8 @@ public class GuiUtils {
      */
     private GuiScreen CURRENT_SCREEN;
 
+    List<Pair<String, String>> guiArgs = Lists.newArrayList();
+
     /**
      * Gets the Default/Global Font Renderer
      *
@@ -307,11 +309,11 @@ public class GuiUtils {
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
         CURRENT_GUI_CLASS = null;
+        guiArgs.clear();
 
         isInUse = false;
         CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
     }
 
     /**
@@ -415,7 +417,7 @@ public class GuiUtils {
      */
     public void updateGUIPresence() {
         // Form GUI Argument List
-        List<Pair<String, String>> guiArgs = Lists.newArrayList();
+        guiArgs.clear();
 
         guiArgs.add(new Pair<>("&SCREEN&", CURRENT_GUI_NAME));
         guiArgs.add(new Pair<>("&CLASS&", MappingUtils.getClassName(CURRENT_GUI_CLASS)));
@@ -436,7 +438,50 @@ public class GuiUtils {
         final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentGuiMessage, guiArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_GUI_MESSAGE, ArgumentType.Text);
-        CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
+    }
+
+    public List<Pair<String, String>> generateArgumentList(List<String> targetList, ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+
+        final List<Pair<String, String>> results = Lists.newArrayList();
+        List<String> queuedEntries = Lists.newArrayList();
+        for (ArgumentType type : types) {
+            queuedEntries.clear();
+            if (type == ArgumentType.Text) {
+                queuedEntries = targetList != null ? targetList : Lists.newArrayList(
+                        subArgumentFormat + "SCREEN&",
+                        subArgumentFormat + "CLASS&"
+                );
+            }
+
+            if (!queuedEntries.isEmpty()) {
+                StringUtils.addEntriesNotPresent(results,
+                        data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                        CraftPresence.CLIENT.convertToArgumentList(type, queuedEntries)
+                );
+            }
+        }
+        return results;
+    }
+
+    public List<Pair<String, String>> generateArgumentList(ArgumentType... types) {
+        return generateArgumentList(null, types);
+    }
+
+    public String getArgumentMessage(String argumentFormat, String subArgumentFormat, List<String> targetList, ArgumentType... types) {
+        return CraftPresence.CLIENT.generatePlaceholderString(argumentFormat, subArgumentFormat, generateArgumentList(targetList, types));
+    }
+
+    public String getArgumentMessage(String argumentFormat, List<String> targetList, ArgumentType... types) {
+        return getArgumentMessage(argumentFormat, null, targetList, types);
+    }
+
+    public String getArgumentMessage(List<String> targetList, ArgumentType... types) {
+        return getArgumentMessage(null, null, targetList, types);
+    }
+
+    public String getArgumentMessage(ArgumentType... types) {
+        return getArgumentMessage(argumentFormat, subArgumentFormat, null, types);
     }
 
     /**
