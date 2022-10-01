@@ -465,7 +465,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_message.in",
                                         CraftPresence.CLIENT.generatePlaceholderString(
-                                                "&PLAYERINFO&", null,
+                                                "&SERVER:PLAYERINFO&", null,
                                                 CraftPresence.SERVER.playerDataArgs
                                         ))
                         ),
@@ -478,7 +478,20 @@ public class StatusMessagesGui extends PaginatedScreen {
             }
             // Hovering over Player Coords Message
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(playerCoordsText), getFontHeight())) {
-                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_coordinate_message")), getMouseX(), getMouseY(), width, height, getWrapWidth(), getFontRenderer(), true);
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_coordinate_message",
+                                        CraftPresence.CLIENT.generatePlaceholderString(
+                                                "&SERVER:PLAYERINFO:COORDS&", null,
+                                                CraftPresence.SERVER.coordinateArgs
+                                        ))
+                        ),
+                        getMouseX(), getMouseY(),
+                        width, height,
+                        getWrapWidth(),
+                        getFontRenderer(),
+                        true
+                );
             }
             // Hovering over Player Health Message
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (width / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), getStringWidth(playerHealthText), getFontHeight())) {

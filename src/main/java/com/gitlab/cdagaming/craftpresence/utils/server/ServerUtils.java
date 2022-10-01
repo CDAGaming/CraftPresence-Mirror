@@ -168,7 +168,7 @@ public class ServerUtils {
     public List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
     List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
     List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
-    List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
+    public List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
     List<Pair<String, String>> healthArgs = Lists.newArrayList();
 
     /**

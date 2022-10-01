@@ -564,7 +564,7 @@ public class DiscordUtils {
                                 ModUtils.TRANSLATOR.translate(
                                         String.format("%s.placeholders.%s.description",
                                                 ModUtils.MOD_ID,
-                                                translationName
+                                                translationName.replaceAll(":", ".")
                                         )
                                 ))
                 );
