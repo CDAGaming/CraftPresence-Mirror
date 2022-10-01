@@ -51,7 +51,13 @@ public class EntityUtils {
      * A List of the detected Entity Class Names
      */
     private final List<String> ENTITY_CLASSES = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &TARGETENTITY& RPC Message placeholder
+     */
     private final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &RIDINGENTITY& RPC Message placeholder
+     */
     private final List<Pair<String, String>> entityRidingArgs = Lists.newArrayList();
     /**
      * Whether this module is active and currently in use

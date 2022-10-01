@@ -81,10 +81,25 @@ public class ServerUtils {
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = Maps.newHashMap();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO& RPC Message placeholder
+     */
     public List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERS& RPC Message placeholder
+     */
     public List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:WORLDINFO& RPC Message placeholder
+     */
     public List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:COORDS& RPC Message placeholder
+     */
     public List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:HEALTH& RPC Message placeholder
+     */
     public List<Pair<String, String>> healthArgs = Lists.newArrayList();
     /**
      * The IP Address of the Current Server the Player is in
