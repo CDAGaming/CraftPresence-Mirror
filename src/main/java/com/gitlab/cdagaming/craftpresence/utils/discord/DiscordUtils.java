@@ -623,19 +623,6 @@ public class DiscordUtils {
         return convertToArgumentList(type, inputs.toArray(new String[0]));
     }
 
-    @SafeVarargs
-    public final List<String> convertToArgumentNames(Pair<String, String>... inputs) {
-        final List<String> result = Lists.newArrayList();
-        for (Pair<String, String> entry : inputs) {
-            result.add(entry.getFirst());
-        }
-        return result;
-    }
-
-    public List<String> convertToArgumentNames(List<Pair<String, String>> inputs) {
-        return convertToArgumentNames(inputs.toArray(new Pair[0]));
-    }
-
     /**
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */

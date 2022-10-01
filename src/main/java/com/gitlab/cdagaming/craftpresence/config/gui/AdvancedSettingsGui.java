@@ -314,11 +314,24 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(
-                                                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                                        CraftPresence.ENTITIES.generatePlaceholderString(attributeName, screenInstance.isDebugMode(), CraftPresence.ENTITIES.getListFromName(attributeName))))
-                                                                ), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
+                                                                                        CraftPresence.ENTITIES.getArgumentMessage("&TARGETENTITY&", "&TARGETENTITY:"),
+                                                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
+                                                                                                CraftPresence.ENTITIES.generatePlaceholderString(
+                                                                                                        attributeName, screenInstance.isDebugMode(),
+                                                                                                        CraftPresence.ENTITIES.getListFromName(attributeName)
+                                                                                                )
+                                                                                        )
+                                                                                )
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -342,8 +355,15 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
+                                                        CraftPresence.ENTITIES.getArgumentMessage("&TARGETENTITY&", "&TARGETENTITY:"),
                                                         ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                CraftPresence.ENTITIES.generatePlaceholderString(CraftPresence.ENTITIES.getEntityName(CraftPresence.ENTITIES.CURRENT_TARGET, CraftPresence.ENTITIES.CURRENT_TARGET_NAME), isDebugMode(), CraftPresence.ENTITIES.CURRENT_TARGET_TAGS)))
+                                                                CraftPresence.ENTITIES.generatePlaceholderString(
+                                                                        CraftPresence.ENTITIES.getEntityName(
+                                                                                CraftPresence.ENTITIES.CURRENT_TARGET, CraftPresence.ENTITIES.CURRENT_TARGET_NAME
+                                                                        ), isDebugMode(), CraftPresence.ENTITIES.CURRENT_TARGET_TAGS
+                                                                )
+                                                        )
+                                                )
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,
@@ -398,11 +418,24 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(
-                                                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                                        CraftPresence.ENTITIES.generatePlaceholderString(attributeName, screenInstance.isDebugMode(), CraftPresence.ENTITIES.getListFromName(attributeName))))
-                                                                ), screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance.width, screenInstance.height, screenInstance.getWrapWidth(), screenInstance.getFontRenderer(), true);
+                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                        StringUtils.splitTextByNewLine(
+                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
+                                                                                        CraftPresence.ENTITIES.getArgumentMessage("&RIDINGENTITY&", "&RIDINGENTITY:"),
+                                                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
+                                                                                                CraftPresence.ENTITIES.generatePlaceholderString(
+                                                                                                        attributeName, screenInstance.isDebugMode(),
+                                                                                                        CraftPresence.ENTITIES.getListFromName(attributeName)
+                                                                                                )
+                                                                                        )
+                                                                                )
+                                                                        ),
+                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
+                                                                        screenInstance.width, screenInstance.height,
+                                                                        screenInstance.getWrapWidth(),
+                                                                        screenInstance.getFontRenderer(),
+                                                                        true
+                                                                );
                                                             }
                                                     )
                                             );
@@ -426,8 +459,15 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
+                                                        CraftPresence.ENTITIES.getArgumentMessage("&RIDINGENTITY&", "&RIDINGENTITY:"),
                                                         ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                CraftPresence.ENTITIES.generatePlaceholderString(CraftPresence.ENTITIES.getEntityName(CraftPresence.ENTITIES.CURRENT_RIDING, CraftPresence.ENTITIES.CURRENT_RIDING_NAME), isDebugMode(), CraftPresence.ENTITIES.CURRENT_RIDING_TAGS)))
+                                                                CraftPresence.ENTITIES.generatePlaceholderString(
+                                                                        CraftPresence.ENTITIES.getEntityName(
+                                                                                CraftPresence.ENTITIES.CURRENT_RIDING, CraftPresence.ENTITIES.CURRENT_RIDING_NAME
+                                                                        ), isDebugMode(), CraftPresence.ENTITIES.CURRENT_RIDING_TAGS
+                                                                )
+                                                        )
+                                                )
                                         ),
                                         getMouseX(), getMouseY(),
                                         width, height,

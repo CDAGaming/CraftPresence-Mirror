@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -38,6 +39,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Entity Utilities used to Parse Entity Data and handle related RPC Events
@@ -98,6 +100,9 @@ public class EntityUtils {
      */
     private NBTTagCompound CURRENT_RIDING_TAG;
 
+    List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
+    List<Pair<String, String>> entityRidingArgs = Lists.newArrayList();
+
     /**
      * Clears FULL Data from this Module
      */
@@ -120,6 +125,9 @@ public class EntityUtils {
 
         CURRENT_TARGET_TAGS.clear();
         CURRENT_RIDING_TAGS.clear();
+
+        entityTargetArgs.clear();
+        entityRidingArgs.clear();
 
         isInUse = false;
         CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:", "&RIDINGENTITY:");
@@ -230,10 +238,11 @@ public class EntityUtils {
                 defaultEntityRidingMessage);
 
         // Form Entity Argument List
-        final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList(), entityRidingArgs = Lists.newArrayList();
+        entityTargetArgs.clear();
+        entityRidingArgs.clear();
 
-        entityTargetArgs.add(new Pair<>("&entity&", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME)));
-        entityRidingArgs.add(new Pair<>("&entity&", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME)));
+        entityTargetArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME)));
+        entityRidingArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME)));
 
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
@@ -278,6 +287,20 @@ public class EntityUtils {
             CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&RIDINGENTITY:");
             CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&RIDINGENTITY&");
         }
+    }
+
+    public String getArgumentMessage(final String argumentFormat, final String subArgumentFormat, ArgumentType... types) {
+        types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
+        List<String> queuedEntries;
+        for (ArgumentType type : types) {
+            queuedEntries = Lists.newArrayList();
+            if (type == ArgumentType.Text) {
+                queuedEntries.add(subArgumentFormat + "ENTITY&");
+            }
+            argumentData.put(type, queuedEntries);
+        }
+        return CraftPresence.CLIENT.getArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**
