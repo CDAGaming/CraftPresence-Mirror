@@ -687,6 +687,36 @@ public class GuiUtils {
     }
 
     /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput    The Specified Multi-Line String, split by lines into a list
+     * @param posX           The starting X position to render the String
+     * @param posY           The starting Y position to render the String
+     * @param screenInstance The screen instance to use to render the String
+     * @param withBackground Whether a background should display around and under the String, like a tooltip
+     */
+    public void drawMultiLineString(final List<String> textToInput, int posX, int posY, ExtendedScreen screenInstance, boolean withBackground) {
+        drawMultiLineString(textToInput,
+                posX, posY,
+                screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
+                screenInstance.getWrapWidth(),
+                screenInstance.getFontRenderer(),
+                withBackground
+        );
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput    The Specified Multi-Line String, split by lines into a list
+     * @param screenInstance The screen instance to use to render the String
+     * @param withBackground Whether a background should display around and under the String, like a tooltip
+     */
+    public void drawMultiLineString(final List<String> textToInput, ExtendedScreen screenInstance, boolean withBackground) {
+        drawMultiLineString(textToInput, screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance, withBackground);
+    }
+
+    /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
      * @param width  The width to render the background to

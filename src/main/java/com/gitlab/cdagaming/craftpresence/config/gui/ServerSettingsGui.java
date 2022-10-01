@@ -154,12 +154,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                                                         CraftPresence.SERVER.generateArgumentMessage())
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -173,24 +168,14 @@ public class ServerSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.server_messages.server_messages"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                         CraftPresence.SERVER.generateArgumentMessage())
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -218,12 +203,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_icon")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -255,12 +235,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -298,12 +273,7 @@ public class ServerSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_name")
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
         // Hovering over Default Server MOTD Label
@@ -311,12 +281,7 @@ public class ServerSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_motd")
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
         // Hovering over Default Server Message Label
@@ -325,12 +290,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                     CraftPresence.SERVER.generateArgumentMessage())
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
     }

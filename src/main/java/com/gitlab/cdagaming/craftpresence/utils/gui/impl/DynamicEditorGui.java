@@ -64,12 +64,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")
-                        ),
-                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                        screenInstance.getWrapWidth(),
-                        screenInstance.getFontRenderer(),
-                        true
+                        ), screenInstance, true
                 ));
     }
 
@@ -78,12 +73,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.message")
-                        ),
-                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                        screenInstance.getWrapWidth(),
-                        screenInstance.getFontRenderer(),
-                        true
+                        ), screenInstance, true
                 ));
     }
 
@@ -179,12 +169,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }

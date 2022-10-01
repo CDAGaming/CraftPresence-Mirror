@@ -120,12 +120,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
                                                                                         CraftPresence.GUIS.generateArgumentMessage())
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -139,23 +134,13 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true);
+                                        ), this, true);
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
                                                         CraftPresence.GUIS.generateArgumentMessage())
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -222,12 +207,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                                 )
                                                                                         )
                                                                                 )
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -241,12 +221,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -260,12 +235,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 )
                                                         )
                                                 )
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -325,12 +295,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                                 )
                                                                                         )
                                                                                 )
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -344,12 +309,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -364,12 +324,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 )
                                                         )
                                                 )
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -429,12 +384,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                                 )
                                                                                         )
                                                                                 )
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -448,12 +398,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -468,12 +413,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 )
                                                         )
                                                 )
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -489,12 +429,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_commands")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -507,12 +442,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_gui")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -525,12 +455,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_item")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -543,12 +468,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_entity")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -561,12 +481,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.render_tooltips")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -579,12 +494,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.format_words")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -597,12 +507,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", CraftPresence.isDevStatusOverridden)
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -615,12 +520,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", CraftPresence.isVerboseStatusOverridden)
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -682,12 +582,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -731,12 +626,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.split_character")
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
 
@@ -745,12 +635,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
     }

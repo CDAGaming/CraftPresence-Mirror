@@ -269,12 +269,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                         CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         );
                     }
                 }
@@ -368,12 +363,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message")
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over LAN Message Label
@@ -382,12 +372,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
                                         CraftPresence.SERVER.generateArgumentMessage())
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Single Player Message Label
@@ -396,12 +381,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
                                         CraftPresence.SERVER.generateArgumentMessage())
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Pack Message Label
@@ -413,12 +393,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&PACK&", "&PACK:",
                                                 ArgumentType.Text, "&PACK:"
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Mods Message Label
@@ -430,12 +405,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&MODS&", "&MODS:",
                                                 ArgumentType.Text, "&MODS:"
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Vivecraft Message Label
@@ -443,12 +413,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.special.vivecraft_message")
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
         }
@@ -463,12 +428,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&IGN&", "&IGN:",
                                                 ArgumentType.Text, "&IGN:"
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Inner Player Message Label
@@ -480,12 +440,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&SERVER:PLAYERINFO&",
                                                 CraftPresence.SERVER.playerDataArgs
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Player Coords Message
@@ -497,12 +452,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&SERVER:PLAYERINFO:COORDS&",
                                                 CraftPresence.SERVER.coordinateArgs
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Player Health Message
@@ -514,12 +464,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&SERVER:PLAYERINFO:HEALTH&",
                                                 CraftPresence.SERVER.healthArgs
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Player Amount Message Label
@@ -531,12 +476,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&SERVER:PLAYERS&",
                                                 CraftPresence.SERVER.playerAmountArgs
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over World Data Message Label
@@ -548,12 +488,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&SERVER:WORLDINFO&",
                                                 CraftPresence.SERVER.worldDataArgs
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
         }
@@ -564,12 +499,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message")
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Player Items Message Label
@@ -581,12 +511,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 "&TILEENTITY&",
                                                 CraftPresence.TILE_ENTITIES.equipmentArgs
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Fallback Pack Placeholder Label
@@ -594,12 +519,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.fallback.pack_placeholder_message")
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
         }

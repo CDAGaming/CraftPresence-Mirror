@@ -94,12 +94,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.default_icon")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -113,12 +108,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -131,12 +121,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_curse_manifest")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -149,12 +134,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_multimc_manifest")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -167,12 +147,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_mcupdater_instance")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -185,12 +160,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_technic_pack")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -203,12 +173,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.show_time")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -221,12 +186,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -239,12 +199,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -257,12 +212,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -275,12 +225,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -293,12 +238,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -311,12 +251,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.auto_register")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -330,12 +265,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -422,12 +352,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -460,12 +385,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.general.client_id")
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
     }

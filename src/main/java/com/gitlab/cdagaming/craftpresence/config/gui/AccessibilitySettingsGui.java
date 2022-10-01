@@ -82,12 +82,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_background_color")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -124,12 +119,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_border_color")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -166,12 +156,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -208,12 +193,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.button_background_color")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -236,12 +216,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_background_as_dark")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -254,12 +229,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -272,12 +242,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_logging_in_chat")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -290,12 +255,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_extra_gui_elements")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -360,12 +320,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.language_id")
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
     }

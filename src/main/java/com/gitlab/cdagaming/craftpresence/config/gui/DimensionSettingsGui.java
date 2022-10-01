@@ -139,12 +139,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                                                         CraftPresence.DIMENSIONS.generateArgumentMessage())
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -158,24 +153,14 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             } else {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                         CraftPresence.DIMENSIONS.generateArgumentMessage())
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -203,12 +188,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
-                                ),
-                                getMouseX(), getMouseY(),
-                                getScreenWidth(), getScreenHeight(),
-                                getWrapWidth(),
-                                getFontRenderer(),
-                                true
+                                ), this, true
                         )
                 )
         );
@@ -230,12 +210,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ),
-                                        getMouseX(), getMouseY(),
-                                        getScreenWidth(), getScreenHeight(),
-                                        getWrapWidth(),
-                                        getFontRenderer(),
-                                        true
+                                        ), this, true
                                 );
                             }
                         }
@@ -268,12 +243,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                     CraftPresence.DIMENSIONS.generateArgumentMessage())
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
     }

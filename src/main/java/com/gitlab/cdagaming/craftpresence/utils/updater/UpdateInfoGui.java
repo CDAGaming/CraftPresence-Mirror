@@ -103,7 +103,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
-        CraftPresence.GUIS.drawMultiLineString(notice, 10, 45, getScreenWidth(), getScreenHeight(), getWrapWidth(), getFontRenderer(), false);
+        CraftPresence.GUIS.drawMultiLineString(notice, 10, 45, this, false);
     }
 
     @Override
@@ -116,12 +116,7 @@ public class UpdateInfoGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
         // Hovering over Subtitle Label
@@ -129,12 +124,7 @@ public class UpdateInfoGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)
-                    ),
-                    getMouseX(), getMouseY(),
-                    getScreenWidth(), getScreenHeight(),
-                    getWrapWidth(),
-                    getFontRenderer(),
-                    true
+                    ), this, true
             );
         }
     }

@@ -162,12 +162,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             },
                                                             (attributeName, screenInstance) -> {
@@ -175,12 +170,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -264,12 +254,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             },
                                                             (attributeName, screenInstance) -> {
@@ -277,12 +262,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                                                        ),
-                                                                        screenInstance.getMouseX(), screenInstance.getMouseY(),
-                                                                        screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
-                                                                        screenInstance.getWrapWidth(),
-                                                                        screenInstance.getFontRenderer(),
-                                                                        true
+                                                                        ), screenInstance, true
                                                                 );
                                                             }
                                                     )
@@ -379,12 +359,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 null,
                                                 ArgumentType.Text, DiscordUtils.textModules
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
         }
@@ -400,12 +375,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 null,
                                                 ArgumentType.Image, DiscordUtils.iconModules
                                         ))
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Button Messages Button
@@ -413,12 +383,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
             // Hovering over Dynamic Icons Button
@@ -426,12 +391,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                        ),
-                        getMouseX(), getMouseY(),
-                        getScreenWidth(), getScreenHeight(),
-                        getWrapWidth(),
-                        getFontRenderer(),
-                        true
+                        ), this, true
                 );
             }
         }

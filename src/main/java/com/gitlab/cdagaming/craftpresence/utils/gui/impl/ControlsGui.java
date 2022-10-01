@@ -117,12 +117,7 @@ public class ControlsGui extends PaginatedScreen {
                     CraftPresence.GUIS.drawMultiLineString(
                             StringUtils.splitTextByNewLine(
                                     ModUtils.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))
-                            ),
-                            getMouseX(), getMouseY(),
-                            getScreenWidth(), getScreenHeight(),
-                            getWrapWidth(),
-                            getFontRenderer(),
-                            true
+                            ), this, true
                     );
                 }
             }

@@ -364,16 +364,7 @@ public class CommandsGui extends ExtendedScreen {
         executionCommandArgs = null;
         // COMMANDS END
 
-        CraftPresence.GUIS.drawMultiLineString(
-                StringUtils.splitTextByNewLine(
-                        executionString
-                ),
-                25, 35,
-                getScreenWidth(), getScreenHeight(),
-                getWrapWidth(),
-                getFontRenderer(),
-                false
-        );
+        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 25, 35, this, false);
     }
 
     @Override
