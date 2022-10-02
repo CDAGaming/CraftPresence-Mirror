@@ -139,12 +139,12 @@ public class CraftPresence {
     public static GuiUtils GUIS = new GuiUtils();
 
     /**
-     * Whether or not {@link ModUtils#IS_DEV} has been overridden pre-setup
+     * Whether {@link ModUtils#IS_DEV} has been overridden pre-setup
      */
     public static boolean isDevStatusOverridden = false;
 
     /**
-     * Whether or not {@link ModUtils#IS_VERBOSE} has been overridden pre-setup
+     * Whether {@link ModUtils#IS_VERBOSE} has been overridden pre-setup
      */
     public static boolean isVerboseStatusOverridden = false;
 

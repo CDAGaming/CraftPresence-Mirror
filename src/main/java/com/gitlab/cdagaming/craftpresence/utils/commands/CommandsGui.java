@@ -369,7 +369,7 @@ public class CommandsGui extends ExtendedScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (commandInput.isFocused() && commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
+        if (commandInput.isControlFocused() && commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                 (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(ModUtils.MOD_ID))) {
             if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
                 if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 || filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?"))) {
@@ -388,60 +388,42 @@ public class CommandsGui extends ExtendedScreen {
      * @param args The Command Arguments to parse
      * @return The Possible Tab Completions from the specified arguments
      */
-    private List<String> getTabCompletions(String[] args) {
-        List<String> baseCompletions = Lists.newArrayList();
-        List<String> exportCompletions = Lists.newArrayList();
-        List<String> assetsCompletions = Lists.newArrayList();
-        List<String> viewCompletions = Lists.newArrayList();
-        List<String> requestCompletions = Lists.newArrayList();
-
-        baseCompletions.add("?");
-        baseCompletions.add("help");
-        baseCompletions.add("config");
-        baseCompletions.add("reload");
-        baseCompletions.add("request");
-        baseCompletions.add("export");
-        baseCompletions.add("view");
-        baseCompletions.add("reboot");
-        baseCompletions.add("shutdown");
-
-        exportCompletions.add("assets");
-
-        viewCompletions.add("currentData");
-        viewCompletions.add("assets");
-        viewCompletions.add("dimensions");
-        viewCompletions.add("biomes");
-        viewCompletions.add("guis");
-        viewCompletions.add("items");
-        viewCompletions.add("entities");
-        viewCompletions.add("servers");
-        viewCompletions.add("screens");
-
-        assetsCompletions.add("all");
-        assetsCompletions.add("custom");
-
-        requestCompletions.add("accept");
-        requestCompletions.add("deny");
+    private List<String> getTabCompletions(final String[] args) {
+        final List<String> completions = Lists.newArrayList();
 
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, baseCompletions);
+            completions.add("?");
+            completions.add("help");
+            completions.add("config");
+            completions.add("reload");
+            completions.add("request");
+            completions.add("export");
+            completions.add("view");
+            completions.add("reboot");
+            completions.add("shutdown");
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("export")) {
-                return getListOfStringsMatchingLastWord(args, exportCompletions);
+                completions.add("assets");
             } else if (args[0].equalsIgnoreCase("view")) {
-                return getListOfStringsMatchingLastWord(args, viewCompletions);
+                completions.add("currentData");
+                completions.add("assets");
+                completions.add("dimensions");
+                completions.add("biomes");
+                completions.add("guis");
+                completions.add("items");
+                completions.add("entities");
+                completions.add("servers");
+                completions.add("screens");
             } else if (args[0].equalsIgnoreCase("request")) {
-                return getListOfStringsMatchingLastWord(args, requestCompletions);
-            } else {
-                return Lists.newArrayList();
+                completions.add("accept");
+                completions.add("deny");
             }
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("view") && args[1].equalsIgnoreCase("assets")) {
-                return getListOfStringsMatchingLastWord(args, assetsCompletions);
-            } else {
-                return Lists.newArrayList();
+                completions.add("all");
+                completions.add("custom");
             }
         }
-        return Lists.newArrayList();
+        return getListOfStringsMatchingLastWord(args, completions);
     }
 }

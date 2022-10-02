@@ -569,10 +569,12 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             }
                             if (debugModeButton.isChecked() != CraftPresence.CONFIG.debugMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
+                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CraftPresence.CONFIG.debugMode = debugModeButton.isChecked();
                             }
                             if (verboseModeButton.isChecked() != CraftPresence.CONFIG.verboseMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
+                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CraftPresence.CONFIG.verboseMode = verboseModeButton.isChecked();
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);

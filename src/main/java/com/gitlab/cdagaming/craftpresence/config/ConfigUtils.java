@@ -368,7 +368,7 @@ public class ConfigUtils {
      * Reads available Config Data from the {@link ConfigUtils#configFile}
      * <p>Also ensures validity for the properties detected
      *
-     * @param skipLogging Whether or not Logging should be skipped
+     * @param skipLogging Whether Logging should be skipped
      * @param encoding    The Encoding for the {@link ConfigUtils#configFile}
      */
     public void read(final boolean skipLogging, final String encoding) {
@@ -545,7 +545,7 @@ public class ConfigUtils {
     /**
      * Synchronizes and Checks for any Migration Data, in relation to the fieldObject and other Settings
      *
-     * @param skipLogging    Whether or not Logging should be skipped
+     * @param skipLogging    Whether Logging should be skipped
      * @param migrationData  Mapping for any Existing Migration Data being tracked (Format:
      * @param configProperty The Field Name of the Property to Check for potential changes/migrations
      * @param fieldObject    The Value of the Property to Check for potential changes/migrations

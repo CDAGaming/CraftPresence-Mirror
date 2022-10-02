@@ -236,9 +236,11 @@ public class DiscordUtils {
     /**
      * Initializes and Synchronizes Initial Rich Presence Data
      *
-     * @param updateTimestamp Whether or not to update the starting timestamp
+     * @param debugMode       Whether to enable debug mode for this instance
+     * @param verboseMode     Whether to enable verbose mode for this instance
+     * @param updateTimestamp Whether to update the starting timestamp
      */
-    public synchronized void init(final boolean updateTimestamp) {
+    public synchronized void init(final boolean debugMode, final boolean verboseMode, final boolean updateTimestamp) {
         try {
             // Update Start Timestamp onInit, if needed
             if (updateTimestamp) {
@@ -246,7 +248,7 @@ public class DiscordUtils {
             }
 
             // Create IPC Instance and Listener and Make a Connection if possible
-            ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), ModUtils.IS_DEV, ModUtils.IS_VERBOSE, AUTO_REGISTER, CLIENT_ID);
+            ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
             ipcInstance.setForcedLogger(ModUtils.LOG.getLogInstance());
             ipcInstance.setListener(new ModIPCListener());
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
@@ -275,6 +277,25 @@ public class DiscordUtils {
         CommandUtils.isInMainMenu = false;
 
         syncPlaceholders();
+    }
+
+    /**
+     * Initializes and Synchronizes Initial Rich Presence Data
+     *
+     * @param debugMode       Whether to enable debug mode for this instance
+     * @param updateTimestamp Whether to update the starting timestamp
+     */
+    public synchronized void init(final boolean debugMode, final boolean updateTimestamp) {
+        init(debugMode, ModUtils.IS_VERBOSE, updateTimestamp);
+    }
+
+    /**
+     * Initializes and Synchronizes Initial Rich Presence Data
+     *
+     * @param updateTimestamp Whether to update the starting timestamp
+     */
+    public synchronized void init(final boolean updateTimestamp) {
+        init(ModUtils.IS_DEV, updateTimestamp);
     }
 
     /**

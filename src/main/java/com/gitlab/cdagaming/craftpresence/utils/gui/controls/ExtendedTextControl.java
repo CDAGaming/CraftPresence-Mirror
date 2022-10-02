@@ -154,6 +154,15 @@ public class ExtendedTextControl extends GuiTextField {
     }
 
     /**
+     * Gets whether the control is currently being focused upon
+     *
+     * @return The control's focus status
+     */
+    public boolean isControlFocused() {
+        return this.isFocused();
+    }
+
+    /**
      * Sets the Event to occur upon typing keys
      *
      * @param event The event to occur

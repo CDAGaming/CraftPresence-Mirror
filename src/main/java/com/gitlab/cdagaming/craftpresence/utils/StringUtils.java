@@ -263,7 +263,7 @@ public class StringUtils {
      * @param source          The original String to replace within
      * @param targetToReplace The value to replace on
      * @param replaceWith     The value to replace the target with
-     * @param allowMinified   Flag for whether or not to allow Minified Placeholders (Trimmed String down to a length of 4)
+     * @param allowMinified   Flag for whether to allow Minified Placeholders (Trimmed String down to a length of 4)
      * @return The completed and replaced String
      */
     public static String replaceAnyCase(final String source, final String targetToReplace, final String replaceWith, final boolean allowMinified) {
@@ -301,7 +301,7 @@ public class StringUtils {
      * Replaces Data in a sequential order, following Case-Insensitivity
      *
      * @param source        The original String to replace within
-     * @param allowMinified Flag for whether or not to allow Minified Placeholders (Trimmed String down to a length of 4)
+     * @param allowMinified Flag for whether to allow Minified Placeholders (Trimmed String down to a length of 4)
      * @param replaceArgs   The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */

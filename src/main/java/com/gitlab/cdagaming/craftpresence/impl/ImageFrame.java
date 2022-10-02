@@ -308,9 +308,9 @@ public class ImageFrame {
     }
 
     /**
-     * Determine whether or not this frame has rendered up to or past the delay
+     * Determine whether this frame has rendered up to or past the delay
      *
-     * @return Whether or not this frame has rendered up to or past the delay
+     * @return Whether this frame has rendered up to or past the delay
      */
     public boolean shouldRenderNext() {
         return System.currentTimeMillis() - getRenderTime() > getDelay() * 10L;

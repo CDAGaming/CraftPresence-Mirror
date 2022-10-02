@@ -295,10 +295,10 @@ public class ImageUtils {
     }
 
     /**
-     * Returns whether or not the inputted string matches the format of an external image type
+     * Returns Whether the inputted string matches the format of an external image type
      *
      * @param input The original string to parse
-     * @return whether or not the inputted string matches the format of an external image type
+     * @return Whether the inputted string matches the format of an external image type
      */
     public static boolean isExternalImage(final String input) {
         return !StringUtils.isNullOrEmpty(input) &&
