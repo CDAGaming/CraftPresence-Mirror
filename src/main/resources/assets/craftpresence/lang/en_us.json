@@ -252,6 +252,7 @@
   "craftpresence.defaults.state.lan": "Playing on a LAN Server",
   "craftpresence.defaults.state.single_player": "Playing Singleplayer",
   "craftpresence.defaults.mode.hardcore": "Hardcore",
+  "craftpresence.defaults.world_name": "World",
   "craftpresence.defaults.placeholder.pack": "&name&",
   "craftpresence.defaults.placeholder.players": "&current& / &max& Players",
   "craftpresence.defaults.placeholder.player_info.out": "As &name&",

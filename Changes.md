@@ -16,6 +16,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Fixed `&SERVER:WORLDINFO:WORLDNAME&` not displaying properly on some versions
+    * Now displays the Level Name in Integrated Server Environments, and prior behavior anywhere else
+    * Also adds a fallback default translation to use for it, so Beta and Alpha MC can use it
 * Fixed a regression where some default options only used `en_us` localization, where it was meant to be the current
   language
 * Backend: Fixed an issue preventing `Pair#equals` and `Tuple#equals` from working properly
