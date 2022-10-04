@@ -200,7 +200,7 @@
   "gui.config.comment.status_messages.placeholder.player_coordinate_message": "Message to use for the &coords& argument for the &playerinfo& placeholder in server settings\\n\\n%1$s",
   "gui.config.comment.status_messages.placeholder.player_health_message": "Message to use for the &health& argument for the &playerinfo& placeholder in server settings\\n\\n%1$s",
   "gui.config.comment.status_messages.placeholder.player_amount_message": "Message to use for the &players& placeholder in server settings\\n\\n%1$s",
-  "gui.config.comment.status_messages.placeholder.player_item_message": "Message to use for the &tileentity& general placeholder from Presence settings\\n(Requires Tile Entity Module to be active to see Placeholders)\\n\\n%1$s",
+  "gui.config.comment.status_messages.placeholder.player_item_message": "Message to use for the &tileentity& general placeholder from Presence settings\\n\\n%1$s",
   "gui.config.comment.status_messages.placeholder.world_message": "Message to use for the &worldinfo& placeholder in server settings\\n\\n%1$s",
   "gui.config.comment.status_messages.placeholder.mods_message": "Message to use for the &mods& placeholder in Presence settings\\n\\n%1$s",
   "gui.config.comment.status_messages.special.vivecraft_message": "Message to display in Rich Presence when using Vivecraft",

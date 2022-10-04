@@ -8,9 +8,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 ### Changes
 
 * Overhaul the way tooltips with placeholders are displayed, both for easier translating and for better readability
-    * As a consequence of this change, inner placeholders that require a module to be active (For
-      example, `&SERVER:PLAYERINFO&`) no longer display their placeholders until the module is in use.
-    * This side-effect will hopefully be fixed in an upcoming v1.9.x release.
+    * Aditionally, systems have been added to allow deeper levels of sub-placeholders, expanding on prior v1.9.x systems
 * Added new translations for Default Config Options and for the individual placeholder descriptions
 * Updated existing translations in: `de_de`, `es_es`, `fr_fr`, and `ru_ru`
 * Backend Optimizations and Refactors applied to reduce Beta and Alpha MC changes as well as misc. performance

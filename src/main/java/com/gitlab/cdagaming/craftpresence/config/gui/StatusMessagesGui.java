@@ -507,9 +507,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_item_message",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                        CraftPresence.TILE_ENTITIES.generateArgumentMessage(
                                                 "&TILEENTITY&",
-                                                CraftPresence.TILE_ENTITIES.equipmentArgs
+                                                "&TILEENTITY:"
                                         ))
                         ), this, true
                 );

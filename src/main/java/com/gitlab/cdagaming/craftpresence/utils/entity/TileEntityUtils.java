@@ -59,7 +59,7 @@ public class TileEntityUtils {
     /**
      * A Mapping of the Arguments attached to the &TILEENTITY& Equipment placeholders
      */
-    public final List<Pair<String, String>> equipmentArgs = Lists.newArrayList();
+    private final List<Pair<String, String>> equipmentArgs = Lists.newArrayList();
     /**
      * A List of the detected Block Class Names
      */
@@ -88,6 +88,10 @@ public class TileEntityUtils {
      * The sub-argument format to follow for Rich Presence Data
      */
     private final String subArgumentFormat = "&TILEENTITY:";
+    /**
+     * A Mapping of the Arguments attached to the &TILEENTITY& RPC Message sub-argument placeholders
+     */
+    private final Map<String, List<Pair<String, String>>> subArgumentData = Maps.newHashMap();
     /**
      * Whether this module is active and currently in use
      */
@@ -260,7 +264,13 @@ public class TileEntityUtils {
 
         allItemsEmpty = true;
         isInUse = false;
-        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
+
+        // Clear Sub-Argument Mappings
+        for (String entry : subArgumentData.keySet()) {
+            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, entry);
+        }
+        subArgumentData.clear();
+
         CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
     }
 
@@ -488,6 +498,12 @@ public class TileEntityUtils {
         tileEntityArgs.clear();
         equipmentArgs.clear();
 
+        // Clear Sub-Argument Mappings
+        for (String entry : subArgumentData.keySet()) {
+            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, entry);
+        }
+        subArgumentData.clear();
+
         // Extend Argument Messages, if tags available
         if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
             for (String tagName : CURRENT_MAIN_HAND_ITEM_TAGS) {
@@ -539,8 +555,17 @@ public class TileEntityUtils {
                 StringUtils.replaceAnyCase(bootsMessage, "&item&", CURRENT_BOOTS_NAME) : ""));
 
         // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : equipmentArgs) {
-            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        subArgumentData.put(subArgumentFormat, equipmentArgs);
+        for (Map.Entry<String, List<Pair<String, String>>> entry : subArgumentData.entrySet()) {
+            if (!StringUtils.isNullOrEmpty(entry.getKey()) && !entry.getValue().isEmpty()) {
+                for (Pair<String, String> argumentData : entry.getValue()) {
+                    CraftPresence.CLIENT.syncArgument(
+                            entry.getKey() + argumentData.getFirst().substring(1),
+                            argumentData.getSecond(),
+                            ArgumentType.Text
+                    );
+                }
+            }
         }
 
         // Add All Generalized Arguments, if any
@@ -566,18 +591,43 @@ public class TileEntityUtils {
      * @param types The argument types to interpret
      * @return the parsable string
      */
-    public String generateArgumentMessage(ArgumentType... types) {
+    public String generateArgumentMessage(String argumentFormat, String subArgumentFormat, ArgumentType... types) {
         types = (types != null && types.length > 0 ? types : ArgumentType.values());
+        final boolean useDefault = StringUtils.isNullOrEmpty(argumentFormat) && StringUtils.isNullOrEmpty(subArgumentFormat);
+        if (useDefault) {
+            argumentFormat = this.argumentFormat;
+            subArgumentFormat = this.subArgumentFormat;
+        }
+
         final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
         List<String> queuedEntries;
         for (ArgumentType type : types) {
             queuedEntries = Lists.newArrayList();
             if (type == ArgumentType.Text) {
-                queuedEntries.add(subArgumentFormat + "ITEM&");
+                if (!useDefault) {
+                    queuedEntries.add(subArgumentFormat + "MAIN&");
+                    queuedEntries.add(subArgumentFormat + "OFFHAND&");
+                    queuedEntries.add(subArgumentFormat + "HELMET&");
+                    queuedEntries.add(subArgumentFormat + "CHEST&");
+                    queuedEntries.add(subArgumentFormat + "LEGS&");
+                    queuedEntries.add(subArgumentFormat + "BOOTS&");
+                } else {
+                    queuedEntries.add(subArgumentFormat + "ITEM&");
+                }
             }
             argumentData.put(type, queuedEntries);
         }
         return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param types The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(ArgumentType... types) {
+        return generateArgumentMessage(null, null, types);
     }
 
     /**
