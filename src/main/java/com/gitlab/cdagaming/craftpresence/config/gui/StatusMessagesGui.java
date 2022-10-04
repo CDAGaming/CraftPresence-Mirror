@@ -436,9 +436,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_message.in",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
-                                                "&SERVER:PLAYERINFO&",
-                                                CraftPresence.SERVER.playerDataArgs
+                                        CraftPresence.SERVER.generateArgumentMessage(
+                                                "&SERVER:PLAYERINFO&", "&SERVER:PLAYERINFO:",
+                                                ArgumentType.Text
                                         ))
                         ), this, true
                 );
@@ -448,9 +448,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_coordinate_message",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
-                                                "&SERVER:PLAYERINFO:COORDS&",
-                                                CraftPresence.SERVER.coordinateArgs
+                                        CraftPresence.SERVER.generateArgumentMessage(
+                                                "&SERVER:PLAYERINFO:COORDS&", "&SERVER:PLAYERINFO:COORDS:",
+                                                ArgumentType.Text
                                         ))
                         ), this, true
                 );
@@ -460,9 +460,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_health_message",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
-                                                "&SERVER:PLAYERINFO:HEALTH&",
-                                                CraftPresence.SERVER.healthArgs
+                                        CraftPresence.SERVER.generateArgumentMessage(
+                                                "&SERVER:PLAYERINFO:HEALTH&", "&SERVER:PLAYERINFO:HEALTH:",
+                                                ArgumentType.Text
                                         ))
                         ), this, true
                 );
@@ -472,9 +472,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_amount_message",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
-                                                "&SERVER:PLAYERS&",
-                                                CraftPresence.SERVER.playerAmountArgs
+                                        CraftPresence.SERVER.generateArgumentMessage(
+                                                "&SERVER:PLAYERS&", "&SERVER:PLAYERS:",
+                                                ArgumentType.Text
                                         ))
                         ), this, true
                 );
@@ -484,9 +484,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.world_message",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
-                                                "&SERVER:WORLDINFO&",
-                                                CraftPresence.SERVER.worldDataArgs
+                                        CraftPresence.SERVER.generateArgumentMessage(
+                                                "&SERVER:WORLDINFO&", "&SERVER:WORLDINFO:",
+                                                ArgumentType.Text
                                         ))
                         ), this, true
                 );

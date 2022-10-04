@@ -59,8 +59,38 @@ public class ServerUtils {
      * The sub-argument format to follow for Rich Presence Data
      */
     private final String subArgumentFormat = "&SERVER:";
+    /**
+     * A Mapping of the Arguments attached to the &SERVER& RPC Message placeholder
+     */
     private final List<Pair<String, String>> serverArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER& RPC Image placeholder
+     */
     private final List<Pair<String, String>> iconArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERS& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:WORLDINFO& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:COORDS& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:HEALTH& RPC Message placeholder
+     */
+    private final List<Pair<String, String>> healthArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &SERVER& RPC Message sub-argument placeholders
+     */
+    private final Map<String, List<Pair<String, String>>> subArgumentData = Maps.newHashMap();
     /**
      * Whether this module is active and currently in use
      */
@@ -81,26 +111,6 @@ public class ServerUtils {
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = Maps.newHashMap();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO& RPC Message placeholder
-     */
-    public List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERS& RPC Message placeholder
-     */
-    public List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:WORLDINFO& RPC Message placeholder
-     */
-    public List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:COORDS& RPC Message placeholder
-     */
-    public List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:HEALTH& RPC Message placeholder
-     */
-    public List<Pair<String, String>> healthArgs = Lists.newArrayList();
     /**
      * The IP Address of the Current Server the Player is in
      */
@@ -231,7 +241,12 @@ public class ServerUtils {
             requestedServerData = null;
         }
 
-        CraftPresence.CLIENT.removeArgumentsMatching(subArgumentFormat);
+        // Clear Sub-Argument Mappings
+        for (String entry : subArgumentData.keySet()) {
+            CraftPresence.CLIENT.removeArgumentsMatching(entry);
+        }
+        subArgumentData.clear();
+
         CraftPresence.CLIENT.initArgument(argumentFormat);
         CraftPresence.CLIENT.clearPartyData(true, false);
     }
@@ -518,6 +533,12 @@ public class ServerUtils {
         coordinateArgs.clear();
         healthArgs.clear();
 
+        // Clear Sub-Argument Mappings
+        for (String entry : subArgumentData.keySet()) {
+            CraftPresence.CLIENT.removeArgumentsMatching(entry);
+        }
+        subArgumentData.clear();
+
         coordinateArgs.add(new Pair<>("&xPosition&", currentCoordinates.getFirst().toString()));
         coordinateArgs.add(new Pair<>("&yPosition&", currentCoordinates.getSecond().toString()));
         coordinateArgs.add(new Pair<>("&zPosition&", currentCoordinates.getThird().toString()));
@@ -599,8 +620,22 @@ public class ServerUtils {
         }
 
         // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : serverArgs) {
-            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        subArgumentData.put(subArgumentFormat, serverArgs);
+        subArgumentData.put(subArgumentFormat + "PLAYERINFO:", playerDataArgs);
+        subArgumentData.put(subArgumentFormat + "PLAYERINFO:COORDS:", coordinateArgs);
+        subArgumentData.put(subArgumentFormat + "PLAYERINFO:HEALTH:", healthArgs);
+        subArgumentData.put(subArgumentFormat + "PLAYERS:", playerAmountArgs);
+        subArgumentData.put(subArgumentFormat + "WORLDINFO:", worldDataArgs);
+        for (Map.Entry<String, List<Pair<String, String>>> entry : subArgumentData.entrySet()) {
+            if (!StringUtils.isNullOrEmpty(entry.getKey()) && !entry.getValue().isEmpty()) {
+                for (Pair<String, String> argumentData : entry.getValue()) {
+                    CraftPresence.CLIENT.syncArgument(
+                            entry.getKey() + argumentData.getFirst().substring(1),
+                            argumentData.getSecond(),
+                            ArgumentType.Text
+                    );
+                }
+            }
         }
 
         // Add All Generalized Arguments, if any
@@ -668,7 +703,7 @@ public class ServerUtils {
      * @param types The argument types to interpret
      * @return the parsable string
      */
-    public String generateArgumentMessage(ArgumentType... types) {
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, ArgumentType... types) {
         types = (types != null && types.length > 0 ? types : ArgumentType.values());
         final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
         List<String> queuedEntries;
@@ -677,15 +712,45 @@ public class ServerUtils {
             if (type == ArgumentType.Image) {
                 queuedEntries.add(subArgumentFormat + "ICON&");
             } else if (type == ArgumentType.Text) {
-                queuedEntries.add(subArgumentFormat + "PLAYERINFO&");
-                queuedEntries.add(subArgumentFormat + "WORLDINFO&");
-                queuedEntries.add(subArgumentFormat + "IP&");
-                queuedEntries.add(subArgumentFormat + "NAME&");
-                queuedEntries.add(subArgumentFormat + "MOTD&");
-                queuedEntries.add(subArgumentFormat + "PLAYERS&");
+                if (subArgumentFormat.endsWith("PLAYERINFO:")) {
+                    queuedEntries.add(subArgumentFormat + "COORDS&");
+                    queuedEntries.add(subArgumentFormat + "HEALTH&");
+                } else if (subArgumentFormat.endsWith("PLAYERINFO:COORDS:")) {
+                    queuedEntries.add(subArgumentFormat + "xPosition&");
+                    queuedEntries.add(subArgumentFormat + "yPosition&");
+                    queuedEntries.add(subArgumentFormat + "zPosition&");
+                } else if (subArgumentFormat.endsWith("PLAYERINFO:HEALTH:")) {
+                    queuedEntries.add(subArgumentFormat + "CURRENT&");
+                    queuedEntries.add(subArgumentFormat + "MAX&");
+                } else if (subArgumentFormat.endsWith("PLAYERS:")) {
+                    queuedEntries.add(subArgumentFormat + "CURRENT&");
+                    queuedEntries.add(subArgumentFormat + "MAX&");
+                } else if (subArgumentFormat.endsWith("WORLDINFO:")) {
+                    queuedEntries.add(subArgumentFormat + "DIFFICULTY&");
+                    queuedEntries.add(subArgumentFormat + "WORLDNAME&");
+                    queuedEntries.add(subArgumentFormat + "WORLDTIME&");
+                    queuedEntries.add(subArgumentFormat + "WORLDDAY&");
+                } else {
+                    queuedEntries.add(subArgumentFormat + "PLAYERINFO&");
+                    queuedEntries.add(subArgumentFormat + "WORLDINFO&");
+                    queuedEntries.add(subArgumentFormat + "IP&");
+                    queuedEntries.add(subArgumentFormat + "NAME&");
+                    queuedEntries.add(subArgumentFormat + "MOTD&");
+                    queuedEntries.add(subArgumentFormat + "PLAYERS&");
+                }
             }
             argumentData.put(type, queuedEntries);
         }
         return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param types The argument types to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(ArgumentType... types) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, types);
     }
 }
