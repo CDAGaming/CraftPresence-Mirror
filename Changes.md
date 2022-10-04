@@ -7,11 +7,19 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
-* TBD
+* Overhaul the way tooltips with placeholders are displayed, both for easier translating and for better readability
+  * As a consequence of this change, inner placeholders that require a module to be active (For example, `&SERVER:PLAYERINFO&`) no longer display their placeholders until the module is in use.
+  * This side-effect will hopefully be fixed in an upcoming v1.9.x release.
+* Added new translations for Default Config Options and for the individual placeholder descriptions
+* Updated existing translations in: `de_de`, `es_es`, `fr_fr`, and `ru_ru`
+* Backend Optimizations and Refactors applied to reduce Beta and Alpha MC changes as well as misc. performance improvements
 
 ### Fixes
 
-* TBD
+* Fixed a regression where some default options only used `en_us` localization, where it was meant to be the current language
+* Backend: Fixed an issue preventing `Pair#equals` and `Tuple#equals` from working properly
+* Backend: Removed unnecesary data from the Discord `ArgumentType` enum (`Button` and `Invalid`)
+* Backend: Removed unnecesary code in the GUI Module, where an empty image argument was always assigned, when Images are not supported for it
 
 ___
 
