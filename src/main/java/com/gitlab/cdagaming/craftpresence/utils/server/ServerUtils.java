@@ -292,9 +292,9 @@ public class ServerUtils {
         }
 
         if (!joinInProgress) {
-            final List<String> newPlayerList = newConnection != null ? Lists.newArrayList(newConnection.field_35786_c) : Lists.newArrayList();
-            final int newCurrentPlayers = newConnection != null ? newConnection.field_35786_c.size() : 1;
-            final int newMaxPlayers = newConnection != null && newConnection.field_35785_d >= newCurrentPlayers ? newConnection.field_35785_d : newCurrentPlayers + 1;
+            final List<String> newPlayerList = Lists.newArrayList();
+            final int newCurrentPlayers = 1;
+            final int newMaxPlayers = newCurrentPlayers + 1;
             final boolean newLANStatus = false;
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.getServerIP()) ? newServerData.getServerIP() : "127.0.0.1";

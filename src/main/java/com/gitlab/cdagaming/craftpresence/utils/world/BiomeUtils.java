@@ -204,14 +204,6 @@ public class BiomeUtils {
     private List<BiomeGenBase> getBiomeTypes() {
         List<BiomeGenBase> biomeTypes = Lists.newArrayList();
 
-        if (BiomeGenBase.field_35486_a != null) {
-            for (BiomeGenBase biome : BiomeGenBase.field_35486_a) {
-                if (biome != null && !biomeTypes.contains(biome)) {
-                    biomeTypes.add(biome);
-                }
-            }
-        }
-
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
             for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {

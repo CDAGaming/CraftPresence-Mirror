@@ -163,7 +163,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's maximum text contents
      */
     public int getControlMaxLength() {
-        final Object reflectedInfo = StringUtils.lookupObject(GuiTextField.class, this, "maxStringLength", "field_22074_i", "j");
+        final Object reflectedInfo = StringUtils.lookupObject(GuiTextField.class, this, "maxStringLength", "field_22074_i", "i");
         if (reflectedInfo != null) {
             final Pair<Boolean, Integer> integerData = StringUtils.getValidInteger(reflectedInfo);
             return integerData.getFirst() ? integerData.getSecond() : 0;
