@@ -619,7 +619,11 @@ public class DiscordUtils {
                 );
 
                 if (addExtraData && !StringUtils.isNullOrEmpty(argData.getSecond())) {
-                    finalString.append(String.format("\\n  ==> Preview: \"%s\"", argData.getSecond()));
+                    final String tagValue = argData.getSecond();
+                    finalString.append(String.format("\\n ==> %s \"%s\"",
+                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                            (tagValue.length() >= 128) ? "<...>" : tagValue
+                    ));
                 }
             }
         } else {

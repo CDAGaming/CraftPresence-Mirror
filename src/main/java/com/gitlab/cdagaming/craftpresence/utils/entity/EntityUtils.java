@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -357,7 +358,10 @@ public class EntityUtils {
                                     tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.getTag(tagName).toString() : null;
 
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
-                        finalString.append(" (Value -> ").append(tagValue).append(")");
+                        finalString.append(String.format(" (%s \"%s\")",
+                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                (tagValue.length() >= 128) ? "<...>" : tagValue
+                        ));
                     }
                 } else if (i < tags.size() - 1) {
                     finalString.append(",");
@@ -370,7 +374,7 @@ public class EntityUtils {
         if (!addExtraData) {
             finalString.append("}");
         }
-        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + ((!StringUtils.isNullOrEmpty(finalString.toString()) && !finalString.toString().contains("{}")) ? finalString.toString() : "\\n - N/A"));
+        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + ((!StringUtils.isNullOrEmpty(finalString.toString()) && !finalString.toString().equals("\n{}")) ? finalString.toString() : "\\n - N/A"));
     }
 
     /**

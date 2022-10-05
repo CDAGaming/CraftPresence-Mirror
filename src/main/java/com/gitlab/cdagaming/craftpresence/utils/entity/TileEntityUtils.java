@@ -672,7 +672,10 @@ public class TileEntityUtils {
                                                                     tags.equals(CURRENT_BOOTS_TAGS) ? CURRENT_BOOTS_TAG.getTag(tagName).toString() : null;
 
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
-                        finalString.append(" (Value -> ").append(tagValue).append(")");
+                        finalString.append(String.format(" (%s \"%s\")",
+                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                (tagValue.length() >= 128) ? "<...>" : tagValue
+                        ));
                     }
                 } else if (i < tags.size() - 1) {
                     finalString.append(",");
@@ -685,7 +688,7 @@ public class TileEntityUtils {
         if (!addExtraData) {
             finalString.append("}");
         }
-        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + ((!StringUtils.isNullOrEmpty(finalString.toString()) && !finalString.toString().contains("{}")) ? finalString.toString() : "\\n - N/A"));
+        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + ((!StringUtils.isNullOrEmpty(finalString.toString()) && !finalString.toString().equals("\n{}")) ? finalString.toString() : "\\n - N/A"));
     }
 
     /**

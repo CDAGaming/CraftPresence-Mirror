@@ -9,6 +9,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 * Overhaul the way tooltips with placeholders are displayed, both for easier translating and for better readability
     * Aditionally, systems have been added to allow deeper levels of sub-placeholders, expanding on prior v1.9.x systems
+    * Enabling `Debug Mode` will allow you to see previews of currently active placeholders within the tooltip (If the
+      preview is over 128 characters, it'll show `<...>` as an indicator that it is too large)
 * Added new translations for Default Config Options and for the individual placeholder descriptions
 * Updated existing translations in: `de_de`, `es_es`, `fr_fr`, and `ru_ru`
 * Backend Optimizations and Refactors applied to reduce Beta and Alpha MC changes as well as misc. performance
@@ -16,6 +18,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Fixed a regression from v1.9.0 that prevented Tag Placeholders in Per-Entity and Per-Items to display in some cases
 * Fixed rendering issues with text boxes in Paginated Screens on MC 1.3.2 and 1.2.5
 * Fixed `&SERVER:WORLDINFO:WORLDNAME&` not displaying properly on some versions
     * Now displays the Level Name in Integrated Server Environments, and prior behavior anywhere else
