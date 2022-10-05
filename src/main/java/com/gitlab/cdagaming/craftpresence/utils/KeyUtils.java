@@ -34,8 +34,8 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.GuiControls;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.src.GuiControls;
+import net.minecraft.src.KeyBinding;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 

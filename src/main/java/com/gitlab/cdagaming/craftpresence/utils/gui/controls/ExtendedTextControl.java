@@ -25,8 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.GuiTextField;
 
 /**
  * Extended Gui Widget for a Text Field

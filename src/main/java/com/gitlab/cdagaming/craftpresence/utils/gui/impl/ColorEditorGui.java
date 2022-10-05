@@ -35,7 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
 
 import java.awt.*;
 import java.io.File;

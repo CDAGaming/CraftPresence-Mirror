@@ -38,10 +38,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.GuiContainer;
+import net.minecraft.src.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;

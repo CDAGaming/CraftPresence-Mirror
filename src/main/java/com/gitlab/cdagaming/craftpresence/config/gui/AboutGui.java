@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.updater.UpdateInfoGui;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
 
 import java.util.List;
 

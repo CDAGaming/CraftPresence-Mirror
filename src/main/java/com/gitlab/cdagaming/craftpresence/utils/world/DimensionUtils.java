@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.src.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.List;

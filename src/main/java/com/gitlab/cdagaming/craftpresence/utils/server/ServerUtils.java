@@ -35,11 +35,11 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.multiplayer.GuiConnecting;
-import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.multiplayer.ServerList;
+import net.minecraft.src.GuiPlayerInfo;
+import net.minecraft.src.GuiConnecting;
+import net.minecraft.src.NetClientHandler;
+import net.minecraft.src.ServerData;
+import net.minecraft.src.ServerList;
 
 import java.util.List;
 import java.util.Map;

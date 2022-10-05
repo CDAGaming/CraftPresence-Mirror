@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class StatusMessagesGui extends PaginatedScreen {

@@ -42,8 +42,8 @@ import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import com.jagrosh.discordipc.IPCClient;
 import cpw.mods.fml.common.Mod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Session;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.Session;
 
 import java.io.File;
 import java.lang.reflect.Modifier;

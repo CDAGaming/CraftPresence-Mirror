@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.src.BiomeGenBase;
 
 import java.util.List;
 import java.util.Map;

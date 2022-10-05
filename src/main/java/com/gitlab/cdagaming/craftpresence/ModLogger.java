@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
+import net.minecraft.src.ModLoader;
+
 import java.util.logging.Logger;
 
 /**
@@ -46,7 +48,7 @@ public class ModLogger {
 
     ModLogger(final String loggerName) {
         this.loggerName = loggerName;
-        this.logInstance = Logger.getLogger(loggerName);
+        this.logInstance = ModLoader.getLogger();
     }
 
     /**
@@ -68,7 +70,7 @@ public class ModLogger {
         if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.showLoggingInChat) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§c " + logMessage);
         } else {
-            logInstance.severe(String.format(logMessage, logArguments));
+            logInstance.severe(loggerName + ": " + String.format(logMessage, logArguments));
         }
     }
 
@@ -82,7 +84,7 @@ public class ModLogger {
         if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.showLoggingInChat) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§e " + logMessage);
         } else {
-            logInstance.warning(String.format(logMessage, logArguments));
+            logInstance.warning(loggerName + ": " + String.format(logMessage, logArguments));
         }
     }
 
@@ -96,7 +98,7 @@ public class ModLogger {
         if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.showLoggingInChat) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r " + logMessage);
         } else {
-            logInstance.info(String.format(logMessage, logArguments));
+            logInstance.info(loggerName + ": " + String.format(logMessage, logArguments));
         }
     }
 

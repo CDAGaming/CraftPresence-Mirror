@@ -39,7 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import com.jagrosh.discordipc.IPCClient;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 import java.io.BufferedWriter;

@@ -32,7 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
 
 public class DynamicEditorGui extends ExtendedScreen {
     private final TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, onRemoveEntry;

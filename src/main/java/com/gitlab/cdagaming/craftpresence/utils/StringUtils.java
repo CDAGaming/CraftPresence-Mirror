@@ -29,8 +29,8 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.src.Entity;
+import net.minecraft.src.EntityPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;

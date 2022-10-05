@@ -30,9 +30,9 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.GuiSlot;
+import net.minecraft.src.Tessellator;
 
 import java.util.List;
 

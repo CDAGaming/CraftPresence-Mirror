@@ -25,13 +25,16 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.Gui;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.GuiTextField;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
@@ -182,7 +185,11 @@ public class PaginatedScreen extends ExtendedScreen {
             }
             if (extendedControl instanceof ExtendedTextControl) {
                 ((ExtendedTextControl) extendedControl).setVisible(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
-                ((ExtendedTextControl) extendedControl).func_82265_c(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
+                StringUtils.updateField(GuiTextField.class, ((ExtendedTextControl) extendedControl),
+                        new Tuple("isEnabled", ((ExtendedTextControl) extendedControl).getVisible(), null),
+                        new Tuple("field_73819_m", ((ExtendedTextControl) extendedControl).getVisible(), null),
+                        new Tuple("m", ((ExtendedTextControl) extendedControl).getVisible(), null)
+                );
             }
         }
         for (ScrollableListControl listControl : extendedLists) {

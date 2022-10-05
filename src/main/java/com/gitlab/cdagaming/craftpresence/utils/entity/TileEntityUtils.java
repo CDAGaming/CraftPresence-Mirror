@@ -31,10 +31,10 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.src.Block;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTTagCompound;
 
 import java.util.List;
 import java.util.Map;
@@ -336,15 +336,15 @@ public class TileEntityUtils {
         final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory[0];
 
         final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
-                StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getDisplayName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getItem().getItemName()) : "";
         final String NEW_CURRENT_HELMET_NAME = !isEmpty(NEW_CURRENT_HELMET) ?
-                StringUtils.stripColors(NEW_CURRENT_HELMET.getDisplayName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_HELMET.getItem().getItemName()) : "";
         final String NEW_CURRENT_CHEST_NAME = !isEmpty(NEW_CURRENT_CHEST) ?
-                StringUtils.stripColors(NEW_CURRENT_CHEST.getDisplayName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_CHEST.getItem().getItemName()) : "";
         final String NEW_CURRENT_LEGS_NAME = !isEmpty(NEW_CURRENT_LEGS) ?
-                StringUtils.stripColors(NEW_CURRENT_LEGS.getDisplayName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_LEGS.getItem().getItemName()) : "";
         final String NEW_CURRENT_BOOTS_NAME = !isEmpty(NEW_CURRENT_BOOTS) ?
-                StringUtils.stripColors(NEW_CURRENT_BOOTS.getDisplayName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_BOOTS.getItem().getItemName()) : "";
 
         final boolean hasMainHandChanged = (!isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) &&
                 !NEW_CURRENT_MAIN_HAND_ITEM.equals(CURRENT_MAIN_HAND_ITEM) || !NEW_CURRENT_MAIN_HAND_ITEM_NAME.equals(CURRENT_MAIN_HAND_ITEM_NAME)) ||

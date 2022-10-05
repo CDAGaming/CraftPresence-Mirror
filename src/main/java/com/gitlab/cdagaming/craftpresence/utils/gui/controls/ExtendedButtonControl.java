@@ -30,8 +30,8 @@ import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.GuiButton;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -61,6 +61,8 @@ public class ExtendedButtonControl extends GuiButton {
     private FontRenderer currentFontRender = null;
     
     protected final String buttonTextures = "/gui/gui.png";
+
+    protected boolean field_82253_i = false;
 
     /**
      * Initialization Event for this Control, assigning defined arguments

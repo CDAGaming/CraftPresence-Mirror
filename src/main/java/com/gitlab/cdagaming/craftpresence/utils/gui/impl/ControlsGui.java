@@ -36,8 +36,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;

@@ -37,7 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.jagrosh.discordipc.entities.DiscordBuild;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ExtendedScreen {

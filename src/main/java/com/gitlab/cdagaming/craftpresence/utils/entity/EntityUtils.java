@@ -31,12 +31,12 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumMovingObjectType;
+import net.minecraft.src.GuiPlayerInfo;
+import net.minecraft.src.Entity;
+import net.minecraft.src.EntityList;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.EnumMovingObjectType;
 
 import java.util.List;
 import java.util.Map;
