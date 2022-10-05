@@ -27,8 +27,8 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.GuiDisableButton;
 import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiDisableButton;
 
 /**
  * Extended Gui Widget for a Text Field

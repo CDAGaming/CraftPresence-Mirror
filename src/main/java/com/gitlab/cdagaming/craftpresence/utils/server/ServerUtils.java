@@ -374,9 +374,7 @@ public class ServerUtils {
 
                     // &worldname& Argument = Current Name of the World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldname&")) {
-                        final String primaryWorldName = CraftPresence.player != null ? CraftPresence.player.worldObj.func_22144_v().getWorldName() : "";
-                        final String secondaryWorldName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
-                        final String newWorldName = !StringUtils.isNullOrEmpty(primaryWorldName) ? primaryWorldName : secondaryWorldName;
+                        final String newWorldName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
                         if (!newWorldName.equals(currentWorldName)) {
                             currentWorldName = newWorldName;
                             queuedForUpdate = true;
@@ -385,7 +383,7 @@ public class ServerUtils {
 
                     // &worldtime& Argument = Current Time in World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldtime&")) {
-                        final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.worldObj.func_22139_r()) : null;
+                        final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.worldObj.worldTime) : null;
                         if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString)) {
                             timeString = newGameTime;
                             queuedForUpdate = true;
@@ -394,7 +392,7 @@ public class ServerUtils {
 
                     // &worldday& Argument = Current Amount of Days in World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldday&")) {
-                        final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.worldObj.func_22139_r() / 24000L) : null;
+                        final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.worldObj.worldTime / 24000L) : null;
                         if (!StringUtils.isNullOrEmpty(newGameDay) && !newGameDay.equals(dayString)) {
                             dayString = newGameDay;
                             queuedForUpdate = true;

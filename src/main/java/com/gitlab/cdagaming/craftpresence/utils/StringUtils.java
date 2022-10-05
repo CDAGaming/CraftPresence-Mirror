@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
 import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityPlayerSP;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
@@ -1077,12 +1077,12 @@ public class StringUtils {
      * @param message The Message to send and display in chat
      */
     public static void sendMessageToPlayer(final Entity sender, final String message) {
-        if (sender instanceof EntityPlayer) {
-            final EntityPlayer player = (EntityPlayer) sender;
+        if (sender instanceof EntityPlayerSP) {
+            final EntityPlayerSP player = (EntityPlayerSP) sender;
             final List<String> lines = splitTextByNewLine(message);
             if (!lines.isEmpty()) {
                 for (String line : lines) {
-                    player.func_22055_b(line);
+                    player.sendChatMessage(line);
                 }
             }
         }
