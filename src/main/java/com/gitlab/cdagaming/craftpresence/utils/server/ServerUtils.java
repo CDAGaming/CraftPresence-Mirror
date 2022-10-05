@@ -385,7 +385,7 @@ public class ServerUtils {
 
                     // &worldtime& Argument = Current Time in World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldtime&")) {
-                        final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.worldObj.getWorldTime()) : null;
+                        final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.worldObj.func_22139_r()) : null;
                         if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString)) {
                             timeString = newGameTime;
                             queuedForUpdate = true;
@@ -394,7 +394,7 @@ public class ServerUtils {
 
                     // &worldday& Argument = Current Amount of Days in World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldday&")) {
-                        final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.worldObj.getWorldTime() / 24000L) : null;
+                        final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.worldObj.func_22139_r() / 24000L) : null;
                         if (!StringUtils.isNullOrEmpty(newGameDay) && !newGameDay.equals(dayString)) {
                             dayString = newGameDay;
                             queuedForUpdate = true;

@@ -246,8 +246,8 @@ public class ExtendedScreen extends GuiScreen {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    if (textField.isEnabled) {
-                        textField.drawTextBox();
+                    if (textField.field_22081_b) {
+                        textField.func_22067_c();
                     }
                 }
             }
@@ -310,7 +310,7 @@ public class ExtendedScreen extends GuiScreen {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.textboxKeyTyped(typedChar, keyCode);
+                    textField.func_22072_a(typedChar, keyCode);
                 }
             }
         }
@@ -329,7 +329,7 @@ public class ExtendedScreen extends GuiScreen {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.mouseClicked(mouseX, mouseY, mouseButton);
+                    textField.func_22069_a(mouseX, mouseY, mouseButton);
                 }
             }
             super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -345,7 +345,7 @@ public class ExtendedScreen extends GuiScreen {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.updateCursorCounter();
+                    textField.func_22070_b();
                 }
             }
         }

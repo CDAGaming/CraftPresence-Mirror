@@ -145,7 +145,7 @@ public class ExtendedTextControl extends GuiDisableButton {
      * @return The control's current text contents
      */
     public String getControlMessage() {
-        return this.getText();
+        return this.func_22071_a();
     }
 
     /**
@@ -154,7 +154,7 @@ public class ExtendedTextControl extends GuiDisableButton {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        this.setText(newMessage);
+        this.func_22068_a(newMessage);
     }
 
     /**
@@ -177,7 +177,7 @@ public class ExtendedTextControl extends GuiDisableButton {
      * @param newLength The new maximum length for this control's message
      */
     public void setControlMaxLength(final int newLength) {
-        this.setMaxStringLength(newLength);
+        this.func_22066_a(newLength);
     }
 
     /**
@@ -186,7 +186,7 @@ public class ExtendedTextControl extends GuiDisableButton {
      * @return The control's focus status
      */
     public boolean isControlFocused() {
-        return this.isFocused;
+        return this.field_22082_a;
     }
 
     /**
@@ -215,8 +215,8 @@ public class ExtendedTextControl extends GuiDisableButton {
      * @return Whether the event completed successfully
      */
     @Override
-    public void textboxKeyTyped(char typedChar, int keyCode) {
-        super.textboxKeyTyped(typedChar, keyCode);
+    public void func_22072_a(char typedChar, int keyCode) {
+        super.func_22072_a(typedChar, keyCode);
         onKeyTyped();
     }
 }

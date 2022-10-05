@@ -183,7 +183,7 @@ public class PaginatedScreen extends ExtendedScreen {
                 ((ExtendedButtonControl) extendedControl).setControlEnabled(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
             }
             if (extendedControl instanceof ExtendedTextControl) {
-                ((ExtendedTextControl) extendedControl).isEnabled = (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
+                ((ExtendedTextControl) extendedControl).field_22081_b = (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
             }
         }
         for (ScrollableListControl listControl : extendedLists) {

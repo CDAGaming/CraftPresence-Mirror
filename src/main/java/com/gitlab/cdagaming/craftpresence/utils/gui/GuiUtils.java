@@ -320,7 +320,7 @@ public class GuiUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enablePerGui : enabled;
-        isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.inGameHasFocus;
+        isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.field_6289_L;
         final boolean needsUpdate = enabled && (GUI_NAMES.isEmpty() || GUI_CLASSES.isEmpty());
 
         if (needsUpdate) {
