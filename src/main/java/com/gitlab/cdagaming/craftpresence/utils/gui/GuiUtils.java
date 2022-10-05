@@ -724,7 +724,7 @@ public class GuiUtils {
      */
     public void drawBackground(final double width, final double height) {
         double widthDivider = 32.0D, heightDivider = 32.0D;
-        if (CraftPresence.instance.world != null) {
+        if (CraftPresence.instance.theWorld != null) {
             drawGradientRect(300, 0, 0, width, height, "-1072689136", "-804253680");
         } else {
             String backgroundCode = CraftPresence.CONFIG.guiBackgroundColor;

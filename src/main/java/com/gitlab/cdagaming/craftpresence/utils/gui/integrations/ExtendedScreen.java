@@ -163,19 +163,6 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Adds a Compatible Button to this Screen with specified type
-     *
-     * @param buttonIn The Button to add to this Screen
-     * @param <T>      The Button's Class Type
-     * @return The added button with attached class type
-     */
-    @Nonnull
-    @Override
-    protected <T extends GuiButton> T addButton(@Nonnull T buttonIn) {
-        return addControl(buttonIn);
-    }
-
-    /**
      * Adds a Compatible Control to this Screen with specified type
      *
      * @param buttonIn The Control to add to this Screen
