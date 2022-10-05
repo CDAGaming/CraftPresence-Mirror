@@ -34,7 +34,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.src.WorldProvider;
-import net.minecraftforge.common.DimensionManager;
+import forge.DimensionManager;
 
 import java.util.List;
 import java.util.Map;
@@ -138,10 +138,10 @@ public class DimensionUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateDimensionData() {
-        final WorldProvider newProvider = CraftPresence.player.worldObj.provider;
-        final String newDimensionName = StringUtils.formatIdentifier(newProvider.getDimensionName(), false, !CraftPresence.CONFIG.formatWords);
+        final WorldProvider newProvider = CraftPresence.player.worldObj.worldProvider;
+        final String newDimensionName = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), false, !CraftPresence.CONFIG.formatWords);
 
-        final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(newProvider.getDimensionName(), true, !CraftPresence.CONFIG.formatWords);
+        final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.formatWords);
         final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.formatWords);
         final String newDimension_Identifier = !StringUtils.isNullOrEmpty(newDimension_primaryIdentifier) ? newDimension_primaryIdentifier : newDimension_alternativeIdentifier;
 
@@ -211,7 +211,7 @@ public class DimensionUtils {
             if (reflectedDimensionTypes != null) {
                 for (Object objectType : reflectedDimensionTypes.values()) {
                     try {
-                        WorldProvider type = (objectType instanceof Class<?>) ? (WorldProvider) ((Class<? extends WorldProvider>) objectType).getDeclaredConstructor().newInstance() : null;
+                        WorldProvider type = (objectType instanceof WorldProvider) ? (WorldProvider) objectType : null;
 
                         if (type != null && !dimensionTypes.contains(type)) {
                             dimensionTypes.add(type);
@@ -250,7 +250,7 @@ public class DimensionUtils {
     public void getDimensions() {
         for (WorldProvider TYPE : getDimensionTypes()) {
             if (TYPE != null) {
-                String dimensionName = !StringUtils.isNullOrEmpty(TYPE.getDimensionName()) ? TYPE.getDimensionName() : MappingUtils.getClassName(TYPE);
+                String dimensionName = MappingUtils.getClassName(TYPE);
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.formatWords);
                 if (!DIMENSION_NAMES.contains(name)) {
                     DIMENSION_NAMES.add(name);

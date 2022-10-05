@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
-import net.minecraft.client.ClientBrandRetriever;
 
 import java.io.File;
 
@@ -80,7 +79,7 @@ public class ModUtils {
     /**
      * The Detected Brand Information within Minecraft
      */
-    public static final String BRAND = ClientBrandRetriever.getClientModName();
+    public static final String BRAND = "vanilla";
 
     /**
      * The Application's Configuration Directory

@@ -1,0 +1,17 @@
+[
+{
+  "modid" : "mod_CraftPresence",
+  "name" : "CraftPresence",
+  "version" : "${version}",
+  "url" : "https://minecraft.curseforge.com/projects/craftpresence",
+  "credits" : "",
+  "authors": [
+    "CDA_Gaming"
+  ],
+  "description": "Completely Customize the way others see you play in Discord!",
+  "logoFile" : "/assets/craftpresence/textures/logo.png",
+  "updateUrl" : "https://gitlab.com/CDAGaming/VersionLibrary/raw/master/CraftPresence/update.json",
+  "parent" : "",
+  "screenshots": []
+}
+]

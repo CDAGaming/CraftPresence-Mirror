@@ -171,18 +171,18 @@ public class EntityUtils {
         // Users are still free to manually add Uuid's as they please for this module
         if (NEW_CURRENT_TARGET instanceof EntityPlayer) {
             final EntityPlayer NEW_CURRENT_PLAYER_TARGET = (EntityPlayer) NEW_CURRENT_TARGET;
-            NEW_CURRENT_TARGET_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_TARGET.getEntityName());
+            NEW_CURRENT_TARGET_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_TARGET.getClass().getSimpleName());
         } else {
             NEW_CURRENT_TARGET_NAME = NEW_CURRENT_TARGET != null ?
-                    StringUtils.stripColors(NEW_CURRENT_TARGET.getEntityName()) : "";
+                    StringUtils.stripColors(NEW_CURRENT_TARGET.getClass().getSimpleName()) : "";
         }
 
         if (NEW_CURRENT_RIDING instanceof EntityPlayer) {
             final EntityPlayer NEW_CURRENT_PLAYER_RIDING = (EntityPlayer) NEW_CURRENT_RIDING;
-            NEW_CURRENT_RIDING_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_RIDING.getEntityName());
+            NEW_CURRENT_RIDING_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_RIDING.getClass().getSimpleName());
         } else {
             NEW_CURRENT_RIDING_NAME = NEW_CURRENT_RIDING != null ?
-                    StringUtils.stripColors(NEW_CURRENT_RIDING.getEntityName()) : "";
+                    StringUtils.stripColors(NEW_CURRENT_RIDING.getClass().getSimpleName()) : "";
         }
 
         final boolean hasTargetChanged = (NEW_CURRENT_TARGET != null &&
@@ -320,7 +320,7 @@ public class EntityUtils {
      * @return The formatted entity display name to use
      */
     public String getEntityName(final Entity entity, final String original) {
-        return StringUtils.isValidUuid(original) ? entity.getEntityName() : original;
+        return StringUtils.isValidUuid(original) ? entity.getClass().getSimpleName() : original;
     }
 
     /**
@@ -380,24 +380,6 @@ public class EntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        if (!EntityList.classToStringMapping.values().isEmpty()) {
-            for (Object entityLocationObj : EntityList.classToStringMapping.values()) {
-                final String entityLocation = (String) entityLocationObj;
-                if (entityLocation != null) {
-                    final String entityName = !StringUtils.isNullOrEmpty(entityLocation) ? entityLocation : "generic";
-                    final Class<?> entityClass = (Class<?>) EntityList.stringToClassMapping.get(entityLocation);
-                    if (entityClass != null) {
-                        if (!ENTITY_NAMES.contains(entityName)) {
-                            ENTITY_NAMES.add(entityName);
-                        }
-                        if (!ENTITY_CLASSES.contains(entityClass.getName())) {
-                            ENTITY_CLASSES.add(entityClass.getName());
-                        }
-                    }
-                }
-            }
-        }
-
         // If Server Data is enabled, allow Uuid's to count as entities
         if (CraftPresence.SERVER.enabled) {
             for (GuiPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {

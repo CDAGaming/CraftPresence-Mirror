@@ -184,11 +184,10 @@ public class PaginatedScreen extends ExtendedScreen {
                 ((ExtendedButtonControl) extendedControl).setControlEnabled(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
             }
             if (extendedControl instanceof ExtendedTextControl) {
-                ((ExtendedTextControl) extendedControl).setVisible(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
                 StringUtils.updateField(GuiTextField.class, ((ExtendedTextControl) extendedControl),
-                        new Tuple("isEnabled", ((ExtendedTextControl) extendedControl).getVisible(), null),
-                        new Tuple("field_73819_m", ((ExtendedTextControl) extendedControl).getVisible(), null),
-                        new Tuple("m", ((ExtendedTextControl) extendedControl).getVisible(), null)
+                        new Tuple("isEnabled", (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl)), null),
+                        new Tuple("field_50043_m", (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl)), null),
+                        new Tuple("m", (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl)), null)
                 );
             }
         }

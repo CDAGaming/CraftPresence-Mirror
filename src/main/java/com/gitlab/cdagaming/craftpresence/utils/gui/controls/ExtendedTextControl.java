@@ -161,7 +161,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's maximum text contents
      */
     public int getControlMaxLength() {
-        return this.getMaxStringLength();
+        return this.func_50040_g();
     }
 
     /**
@@ -179,7 +179,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's focus status
      */
     public boolean isControlFocused() {
-        return this.isFocused();
+        return this.getIsFocused();
     }
 
     /**

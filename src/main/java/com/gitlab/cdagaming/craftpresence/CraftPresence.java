@@ -40,9 +40,9 @@ import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import com.jagrosh.discordipc.IPCClient;
-import cpw.mods.fml.common.Mod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.Session;
 
 import java.io.File;
@@ -56,7 +56,6 @@ import java.util.TimerTask;
  * @author CDAGaming
  */
 @SuppressWarnings("ConstantConditions")
-@Mod(modid = ModUtils.MOD_ID, name = "@MOD_NAME@", version = "@VERSION_ID@", acceptedMinecraftVersions = "*")
 public class CraftPresence {
     /**
      * Whether Pack Data was able to be Found and Parsed
@@ -245,7 +244,7 @@ public class CraftPresence {
      */
     private void clientTick() {
         if (!closing) {
-            instance = Minecraft.getMinecraft();
+            instance = ModLoader.getMinecraftInstance();
             if (initialized) {
                 session = instance.session;
                 player = instance.thePlayer;
