@@ -28,14 +28,14 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiTextField;
+import net.minecraft.src.GuiDisableButton;
 
 /**
  * Extended Gui Widget for a Text Field
  *
  * @author CDAGaming
  */
-public class ExtendedTextControl extends GuiTextField {
+public class ExtendedTextControl extends GuiDisableButton {
     /**
      * The event to occur when a key event occurs
      */
@@ -68,7 +68,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(int componentId, FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
-        super(CraftPresence.instance.currentScreen, fontRendererObj, x, y, widthIn, heightIn, "");
+        super(fontRendererObj, x, y, widthIn, heightIn, "");
         this.localWidth = widthIn;
         this.localHeight = heightIn;
         this.localPosX = x;
@@ -163,7 +163,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's maximum text contents
      */
     public int getControlMaxLength() {
-        final Object reflectedInfo = StringUtils.lookupObject(GuiTextField.class, this, "maxStringLength", "field_22074_i", "i");
+        final Object reflectedInfo = StringUtils.lookupObject(GuiDisableButton.class, this, "maxStringLength", "field_22074_i", "i");
         if (reflectedInfo != null) {
             final Pair<Boolean, Integer> integerData = StringUtils.getValidInteger(reflectedInfo);
             return integerData.getFirst() ? integerData.getSecond() : 0;

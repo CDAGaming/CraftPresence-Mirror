@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.src.BiomeGenBase;
+import net.minecraft.src.MobSpawnerBase;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class BiomeUtils {
     /**
      * A List of the detected Biome Type's
      */
-    private final List<BiomeGenBase> BIOME_TYPES = Lists.newArrayList();
+    private final List<MobSpawnerBase> BIOME_TYPES = Lists.newArrayList();
     /**
      * The argument format to follow for Rich Presence Data
      */
@@ -137,7 +137,7 @@ public class BiomeUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateBiomeData() {
-        final BiomeGenBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
+        final MobSpawnerBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
         final String newBiomeName = StringUtils.formatIdentifier(newBiome.biomeName, false, !CraftPresence.CONFIG.formatWords);
 
         final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.biomeName, true, !CraftPresence.CONFIG.formatWords);
@@ -201,15 +201,15 @@ public class BiomeUtils {
      *
      * @return The detected Biome Types found
      */
-    private List<BiomeGenBase> getBiomeTypes() {
-        List<BiomeGenBase> biomeTypes = Lists.newArrayList();
+    private List<MobSpawnerBase> getBiomeTypes() {
+        List<MobSpawnerBase> biomeTypes = Lists.newArrayList();
 
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
-            for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
+            for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(MobSpawnerBase.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
                 if (classObj != null) {
                     try {
-                        BiomeGenBase biomeObj = (BiomeGenBase) classObj.getDeclaredConstructor().newInstance();
+                        MobSpawnerBase biomeObj = (MobSpawnerBase) classObj.getDeclaredConstructor().newInstance();
                         if (!biomeTypes.contains(biomeObj)) {
                             biomeTypes.add(biomeObj);
                         }
@@ -229,7 +229,7 @@ public class BiomeUtils {
      * Updates and Initializes Module Data, based on found Information
      */
     public void getBiomes() {
-        for (BiomeGenBase biome : getBiomeTypes()) {
+        for (MobSpawnerBase biome : getBiomeTypes()) {
             if (biome != null) {
                 String biomeName = !StringUtils.isNullOrEmpty(biome.biomeName) ? biome.biomeName : MappingUtils.getClassName(biome);
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.formatWords);

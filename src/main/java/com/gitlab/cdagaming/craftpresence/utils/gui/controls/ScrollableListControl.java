@@ -113,6 +113,17 @@ public class ScrollableListControl extends GuiSlot {
     }
 
     /**
+     * Retrieves the Content Height of the List
+     *
+     * @return The Content Height of the List
+     */
+    @Override
+    protected int getContentHeight()
+    {
+        return getSize() * 18;
+    }
+
+    /**
      * The Event to Occur if a Slot/Element is Clicked within the List
      *
      * @param slotIndex     The Slot Number that was Clicked
