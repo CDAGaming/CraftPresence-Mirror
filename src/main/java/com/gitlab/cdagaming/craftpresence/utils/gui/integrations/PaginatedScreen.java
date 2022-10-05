@@ -41,8 +41,10 @@ import java.util.Map;
 public class PaginatedScreen extends ExtendedScreen {
     private final Map<Integer, List<Gui>> paginatedControls = Maps.newHashMap();
     private final Map<Integer, List<ScrollableListControl>> paginatedLists = Maps.newHashMap();
-    protected int startPage = 0, currentPage = startPage, maxPages = startPage;
     protected ExtendedButtonControl nextPageButton, previousPageButton, backButton;
+    protected int startPage = 0;
+    protected int currentPage = startPage;
+    protected int maxPages = startPage;
     private Runnable onPageChange;
 
     public PaginatedScreen(GuiScreen parentScreen) {
