@@ -35,7 +35,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiPlayerInfo;
 import net.minecraft.src.GuiConnecting;
 import net.minecraft.src.NetClientHandler;
 
@@ -100,7 +99,7 @@ public class ServerUtils {
     /**
      * The Current Player Map, if available
      */
-    public List<GuiPlayerInfo> currentPlayerList = Lists.newArrayList();
+    public List<String> currentPlayerList = Lists.newArrayList();
     /**
      * A List of the detected Server Addresses
      */
@@ -293,8 +292,8 @@ public class ServerUtils {
         }
 
         if (!joinInProgress) {
-            final List<GuiPlayerInfo> newPlayerList = newConnection != null ? Lists.newArrayList(newConnection.playerInfoList) : Lists.newArrayList();
-            final int newCurrentPlayers = newConnection != null ? newConnection.playerInfoList.size() : 1;
+            final List<String> newPlayerList = newConnection != null ? Lists.newArrayList(newConnection.playerNames) : Lists.newArrayList();
+            final int newCurrentPlayers = newConnection != null ? newConnection.playerNames.size() : 1;
             final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
             final boolean newLANStatus = false;
 
@@ -350,7 +349,7 @@ public class ServerUtils {
 
                     // &health& Argument = Current and Maximum Health of Player
                     if (CraftPresence.CONFIG.innerPlayerPlaceholderMessage.toLowerCase().contains("&health&")) {
-                        final Pair<Double, Double> newHealth = CraftPresence.player != null ? new Pair<>(StringUtils.roundDouble(CraftPresence.player.getHealth(), 0), StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)) : new Pair<>(0.0D, 0.0D);
+                        final Pair<Double, Double> newHealth = CraftPresence.player != null ? new Pair<>(StringUtils.roundDouble(CraftPresence.player.getEntityHealth(), 0), StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)) : new Pair<>(0.0D, 0.0D);
                         if (!newHealth.equals(currentHealth)) {
                             currentHealth = newHealth;
                             queuedForUpdate = true;

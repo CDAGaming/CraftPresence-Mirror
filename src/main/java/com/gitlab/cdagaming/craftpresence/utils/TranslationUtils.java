@@ -219,7 +219,7 @@ public class TranslationUtils {
     private String getCurrentLanguage() {
         String result;
         if (CraftPresence.instance.gameSettings != null) {
-            result = CraftPresence.instance.gameSettings.language;
+            result = CraftPresence.instance.gameSettings.field_44018_Q;
         } else if (CraftPresence.CONFIG != null) {
             result = CraftPresence.CONFIG.languageId;
         } else {

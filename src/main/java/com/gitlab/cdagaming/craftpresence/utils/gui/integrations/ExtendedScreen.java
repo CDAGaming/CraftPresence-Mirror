@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -37,7 +36,6 @@ import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Gui;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiTextField;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
@@ -248,8 +246,7 @@ public class ExtendedScreen extends GuiScreen {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    final Object reflectedInfo = StringUtils.lookupObject(GuiTextField.class, textField, "isEnabled", "field_50043_m", "m");
-                    if (reflectedInfo != null && reflectedInfo.toString().equalsIgnoreCase("true")) {
+                    if (textField.isEnabled) {
                         textField.drawTextBox();
                     }
                 }

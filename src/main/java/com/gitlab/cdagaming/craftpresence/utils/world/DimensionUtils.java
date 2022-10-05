@@ -34,7 +34,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.src.WorldProvider;
-import forge.DimensionManager;
 
 import java.util.List;
 import java.util.Map;
@@ -204,37 +203,19 @@ public class DimensionUtils {
      */
     private List<WorldProvider> getDimensionTypes() {
         List<WorldProvider> dimensionTypes = Lists.newArrayList();
-        Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.lookupObject(DimensionManager.class, null, "providers");
 
         if (dimensionTypes.isEmpty()) {
-            // Fallback 1: Use Reflected Dimension Types
-            if (reflectedDimensionTypes != null) {
-                for (Object objectType : reflectedDimensionTypes.values()) {
+            // Use Manual Class Lookup
+            for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
+                if (classObj != null) {
                     try {
-                        WorldProvider type = (objectType instanceof WorldProvider) ? (WorldProvider) objectType : null;
-
-                        if (type != null && !dimensionTypes.contains(type)) {
-                            dimensionTypes.add(type);
+                        WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
+                        if (!dimensionTypes.contains(providerObj)) {
+                            dimensionTypes.add(providerObj);
                         }
                     } catch (Exception | Error ex) {
                         if (ModUtils.IS_VERBOSE) {
                             ex.printStackTrace();
-                        }
-                    }
-                }
-            } else {
-                // Fallback 2: Use Manual Class Lookup
-                for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
-                    if (classObj != null) {
-                        try {
-                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj)) {
-                                dimensionTypes.add(providerObj);
-                            }
-                        } catch (Exception | Error ex) {
-                            if (ModUtils.IS_VERBOSE) {
-                                ex.printStackTrace();
-                            }
                         }
                     }
                 }

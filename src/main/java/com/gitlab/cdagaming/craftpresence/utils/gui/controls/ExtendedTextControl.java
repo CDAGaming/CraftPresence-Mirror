@@ -25,6 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiTextField;
 
@@ -66,7 +68,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(int componentId, FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
-        super(fontRendererObj, x, y, widthIn, heightIn);
+        super(CraftPresence.instance.currentScreen, fontRendererObj, x, y, widthIn, heightIn, "");
         this.localWidth = widthIn;
         this.localHeight = heightIn;
         this.localPosX = x;
@@ -161,7 +163,12 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's maximum text contents
      */
     public int getControlMaxLength() {
-        return this.func_50040_g();
+        final Object reflectedInfo = StringUtils.lookupObject(GuiTextField.class, this, "maxStringLength", "field_22074_i", "j");
+        if (reflectedInfo != null) {
+            final Pair<Boolean, Integer> integerData = StringUtils.getValidInteger(reflectedInfo);
+            return integerData.getFirst() ? integerData.getSecond() : 0;
+        }
+        return 0;
     }
 
     /**
@@ -179,7 +186,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's focus status
      */
     public boolean isControlFocused() {
-        return this.getIsFocused();
+        return this.isFocused;
     }
 
     /**
@@ -208,12 +215,8 @@ public class ExtendedTextControl extends GuiTextField {
      * @return Whether the event completed successfully
      */
     @Override
-    public boolean textboxKeyTyped(char typedChar, int keyCode) {
-        final boolean returnValue = super.textboxKeyTyped(typedChar, keyCode);
-        if (returnValue) {
-            onKeyTyped();
-        }
-
-        return returnValue;
+    public void textboxKeyTyped(char typedChar, int keyCode) {
+        super.textboxKeyTyped(typedChar, keyCode);
+        onKeyTyped();
     }
 }

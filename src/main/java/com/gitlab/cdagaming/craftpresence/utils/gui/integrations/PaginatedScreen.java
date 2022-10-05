@@ -34,7 +34,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.src.Gui;
 import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiTextField;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
@@ -184,11 +183,7 @@ public class PaginatedScreen extends ExtendedScreen {
                 ((ExtendedButtonControl) extendedControl).setControlEnabled(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
             }
             if (extendedControl instanceof ExtendedTextControl) {
-                StringUtils.updateField(GuiTextField.class, ((ExtendedTextControl) extendedControl),
-                        new Tuple("isEnabled", (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl)), null),
-                        new Tuple("field_50043_m", (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl)), null),
-                        new Tuple("m", (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl)), null)
-                );
+                ((ExtendedTextControl) extendedControl).isEnabled = (elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
             }
         }
         for (ScrollableListControl listControl : extendedLists) {
