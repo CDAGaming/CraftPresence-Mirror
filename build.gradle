@@ -3,9 +3,8 @@ plugins {
     id 'xyz.wagyourtail.unimined' version '0.1.5-SNAPSHOT'
     id "com.modrinth.minotaur" version "2.4.3"
     id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "org.cadixdev.licenser" version "0.6.1"
+    id "com.diffplug.spotless" version "6.5.1"
 }
-
 
 import groovy.io.FileType
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -34,20 +33,10 @@ allprojects {
     targetCompatibility = targetVersion
 }
 
-license {
-    // Exclude JUnixSocket Files
-    exclude "**/newsclub/**"
-    exclude "**/kohlschutter/**"
-    exclude "**/maven/com.kohlschutter**"
-    exclude "**/jni/**"
-    // Exclude Non-Parsable Files
-    exclude "**/*.lang"
-    exclude "**/*.info"
-    exclude "**/*.mcmeta"
-    exclude "**/*.properties"
-    // Exclude other External Sources
-    exclude "**/WinRegistry.java"
-    exclude "**/impl/guava/**"
+spotless {
+    java {
+        licenseHeaderFile(rootProject.file("HEADER"))
+    }
 }
 
 // CurseForge Compatibility Layer (For Modloader and Beta MC)
