@@ -16,6 +16,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Fixed rendering issues with text boxes in Paginated Screens on MC 1.3.2 and 1.2.5
 * Fixed `&SERVER:WORLDINFO:WORLDNAME&` not displaying properly on some versions
     * Now displays the Level Name in Integrated Server Environments, and prior behavior anywhere else
     * Also adds a fallback default translation to use for it, so Beta and Alpha MC can use it
