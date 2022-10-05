@@ -324,7 +324,7 @@ public class MainGui extends ExtendedScreen {
 
                                 CraftPresence.GUIS.configGUIOpened = false;
                                 if (mc.thePlayer != null) {
-                                    mc.thePlayer.closeScreen();
+                                    mc.thePlayer.func_20059_m();
                                 } else {
                                     CraftPresence.GUIS.openScreen(parentScreen);
                                 }

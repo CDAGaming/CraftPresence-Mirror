@@ -281,7 +281,7 @@ public class ServerUtils {
      */
     private void updateServerData() {
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
+        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
 
         try {
             String retrievedIP = (String) StringUtils.lookupObject(Minecraft.class, CraftPresence.instance, "serverName", "field_35361_c", "field_9234_V");
