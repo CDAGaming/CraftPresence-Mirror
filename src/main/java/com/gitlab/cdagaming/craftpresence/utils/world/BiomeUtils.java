@@ -137,7 +137,7 @@ public class BiomeUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateBiomeData() {
-        final BiomeGenBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().getBiomeGenAt((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
+        final BiomeGenBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
         final String newBiomeName = StringUtils.formatIdentifier(newBiome.biomeName, false, !CraftPresence.CONFIG.formatWords);
 
         final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.biomeName, true, !CraftPresence.CONFIG.formatWords);

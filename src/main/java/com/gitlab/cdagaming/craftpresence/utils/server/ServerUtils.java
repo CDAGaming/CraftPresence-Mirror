@@ -374,7 +374,7 @@ public class ServerUtils {
 
                     // &worldname& Argument = Current Name of the World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldname&")) {
-                        final String primaryWorldName = CraftPresence.player != null ? CraftPresence.player.worldObj.getWorldInfo().getWorldName() : "";
+                        final String primaryWorldName = CraftPresence.player != null ? CraftPresence.player.worldObj.func_22144_v().getWorldName() : "";
                         final String secondaryWorldName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
                         final String newWorldName = !StringUtils.isNullOrEmpty(primaryWorldName) ? primaryWorldName : secondaryWorldName;
                         if (!newWorldName.equals(currentWorldName)) {

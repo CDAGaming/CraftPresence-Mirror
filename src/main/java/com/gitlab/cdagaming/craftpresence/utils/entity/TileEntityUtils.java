@@ -365,7 +365,7 @@ public class TileEntityUtils {
         if (hasMainHandChanged) {
             CURRENT_MAIN_HAND_ITEM = NEW_CURRENT_MAIN_HAND_ITEM;
             CURRENT_MAIN_HAND_ITEM_TAG = !isEmpty(CURRENT_MAIN_HAND_ITEM) ? CURRENT_MAIN_HAND_ITEM.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_MAIN_HAND_ITEM_TAGS = CURRENT_MAIN_HAND_ITEM_TAG != null ? Lists.newArrayList(CURRENT_MAIN_HAND_ITEM_TAG.func_28110_c()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_MAIN_HAND_ITEM_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_MAIN_HAND_ITEM_TAGS.equals(CURRENT_MAIN_HAND_ITEM_TAGS)) {
                 CURRENT_MAIN_HAND_ITEM_TAGS = NEW_CURRENT_MAIN_HAND_ITEM_TAGS;
@@ -376,7 +376,7 @@ public class TileEntityUtils {
         if (hasHelmetChanged) {
             CURRENT_HELMET = NEW_CURRENT_HELMET;
             CURRENT_HELMET_TAG = !isEmpty(CURRENT_HELMET) ? CURRENT_HELMET.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_HELMET_TAGS = CURRENT_HELMET_TAG != null ? Lists.newArrayList(CURRENT_HELMET_TAG.func_28110_c()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_HELMET_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_HELMET_TAGS.equals(CURRENT_HELMET_TAGS)) {
                 CURRENT_HELMET_TAGS = NEW_CURRENT_HELMET_TAGS;
@@ -387,7 +387,7 @@ public class TileEntityUtils {
         if (hasChestChanged) {
             CURRENT_CHEST = NEW_CURRENT_CHEST;
             CURRENT_CHEST_TAG = !isEmpty(CURRENT_CHEST) ? CURRENT_CHEST.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_CHEST_TAGS = CURRENT_CHEST_TAG != null ? Lists.newArrayList(CURRENT_CHEST_TAG.func_28110_c()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_CHEST_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_CHEST_TAGS.equals(CURRENT_CHEST_TAGS)) {
                 CURRENT_CHEST_TAGS = NEW_CURRENT_CHEST_TAGS;
@@ -398,7 +398,7 @@ public class TileEntityUtils {
         if (hasLegsChanged) {
             CURRENT_LEGS = NEW_CURRENT_LEGS;
             CURRENT_LEGS_TAG = !isEmpty(CURRENT_LEGS) ? CURRENT_LEGS.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_LEGS_TAGS = CURRENT_LEGS_TAG != null ? Lists.newArrayList(CURRENT_LEGS_TAG.func_28110_c()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_LEGS_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_LEGS_TAGS.equals(CURRENT_LEGS_TAGS)) {
                 CURRENT_LEGS_TAGS = NEW_CURRENT_LEGS_TAGS;
@@ -409,7 +409,7 @@ public class TileEntityUtils {
         if (hasBootsChanged) {
             CURRENT_BOOTS = NEW_CURRENT_BOOTS;
             CURRENT_BOOTS_TAG = !isEmpty(CURRENT_BOOTS) ? CURRENT_BOOTS.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_BOOTS_TAGS = CURRENT_BOOTS_TAG != null ? Lists.newArrayList(CURRENT_BOOTS_TAG.func_28110_c()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_BOOTS_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_BOOTS_TAGS.equals(CURRENT_BOOTS_TAGS)) {
                 CURRENT_BOOTS_TAGS = NEW_CURRENT_BOOTS_TAGS;

@@ -194,7 +194,7 @@ public class EntityUtils {
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
             CURRENT_TARGET_TAG = CURRENT_TARGET != null ? new NBTTagCompound() : null;
-            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.func_28110_c()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_TARGET_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_TARGET_TAGS.equals(CURRENT_TARGET_TAGS)) {
                 CURRENT_TARGET_TAGS = NEW_CURRENT_TARGET_TAGS;
@@ -205,7 +205,7 @@ public class EntityUtils {
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
             CURRENT_RIDING_TAG = CURRENT_RIDING != null ? new NBTTagCompound() : null;
-            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.func_28110_c()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_RIDING_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_RIDING_TAGS.equals(CURRENT_RIDING_TAGS)) {
                 CURRENT_RIDING_TAGS = NEW_CURRENT_RIDING_TAGS;
