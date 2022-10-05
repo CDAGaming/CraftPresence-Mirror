@@ -105,7 +105,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return the Current X Position of this Control
      */
     public int getControlPosX() {
-        return x;
+        return xPosition;
     }
 
     /**
@@ -114,7 +114,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return the Current Y Position of this Control
      */
     public int getControlPosY() {
-        return y;
+        return yPosition;
     }
 
     /**

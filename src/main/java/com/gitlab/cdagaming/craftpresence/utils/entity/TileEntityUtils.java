@@ -336,8 +336,8 @@ public class TileEntityUtils {
     private boolean isEmpty(final ItemStack itemStack) {
         if (itemStack == null || itemStack.equals(EMPTY_STACK)) {
             return true;
-        } else if (itemStack.getItem() != EMPTY_ITEM && itemStack.getItem() != Items.AIR) {
-            if (itemStack.getCount() <= 0) {
+        } else if (itemStack.getItem() != EMPTY_ITEM) {
+            if (itemStack.stackSize <= 0) {
                 return true;
             } else {
                 return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
@@ -353,10 +353,10 @@ public class TileEntityUtils {
     private void updateEntityData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
         final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getHeldItemOffhand();
-        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory.get(3);
-        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory.get(2);
-        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory.get(1);
-        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory.get(0);
+        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory[3];
+        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory[2];
+        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory[1];
+        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory[0];
 
         final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
                 StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getDisplayName()) : "";

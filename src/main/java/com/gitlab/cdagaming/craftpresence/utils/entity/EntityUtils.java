@@ -382,10 +382,10 @@ public class EntityUtils {
      */
     public void getEntities() {
         if (!EntityList.getEntityNameList().isEmpty()) {
-            for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
+            for (String entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
-                    final String entityName = !StringUtils.isNullOrEmpty(EntityList.getTranslationName(entityLocation)) ? EntityList.getTranslationName(entityLocation) : "generic";
-                    final Class<?> entityClass = EntityList.getClass(entityLocation);
+                    final String entityName = !StringUtils.isNullOrEmpty(entityLocation) ? entityLocation : "generic";
+                    final Class<?> entityClass = EntityList.NAME_TO_CLASS.get(entityLocation);
                     if (entityClass != null) {
                         if (!ENTITY_NAMES.contains(entityName)) {
                             ENTITY_NAMES.add(entityName);

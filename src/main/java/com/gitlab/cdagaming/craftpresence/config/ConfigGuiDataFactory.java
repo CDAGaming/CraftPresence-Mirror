@@ -50,16 +50,6 @@ public class ConfigGuiDataFactory implements IModGuiFactory {
     }
 
     @Override
-    public boolean hasConfigGui() {
-        return true;
-    }
-
-    @Override
-    public GuiScreen createConfigGui(GuiScreen parentScreen) {
-        return new MainGui(parentScreen);
-    }
-
-    @Override
     public Class<? extends GuiScreen> mainConfigGuiClass() {
         return MainGui.class;
     }
