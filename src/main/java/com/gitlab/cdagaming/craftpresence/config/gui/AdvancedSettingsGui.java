@@ -608,9 +608,8 @@ public class AdvancedSettingsGui extends ExtendedScreen {
 
         final Pair<Boolean, Integer> refreshRateData = StringUtils.getValidInteger(refreshRate.getControlMessage());
         proceedButton.setControlEnabled(
-                !StringUtils.isNullOrEmpty(splitCharacter.getControlMessage()) && splitCharacter.getControlMessage().length() == 1 &&
-                        !splitCharacter.getControlMessage().matches(".*[a-z].*") && !splitCharacter.getControlMessage().matches(".*[A-Z].*") &&
-                        !splitCharacter.getControlMessage().matches(".*[0-9].*") && (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
+                !StringUtils.containsAlphaNumeric(splitCharacter.getControlMessage()) &&
+                        (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
         );
 
         guiMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.GUIS.enabled : guiMessagesButton.isControlEnabled());

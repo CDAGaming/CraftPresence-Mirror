@@ -73,6 +73,14 @@ public class StringUtils {
      * Regex Pattern for Brackets containing Digits
      */
     private static final Pattern BRACKET_PATTERN = Pattern.compile("\\([^0-9]*\\d+[^0-9]*\\)");
+    /**
+     * Regex Pattern for Whitespace characters within a string
+     */
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("(.*?)\\s(.*?)");
+    /**
+     * Regex Pattern for Alpha-numeric characters within a string
+     */
+    private static final Pattern ALPHANUMERIC_PATTERN = Pattern.compile(".*[a-zA-Z0-9].*");
 
     /**
      * Attempts to Convert a Hexadecimal String into a Valid interpretable Java Color
@@ -462,6 +470,26 @@ public class StringUtils {
         } else {
             return !returnPort ? "127.0.0.1" : "25565";
         }
+    }
+
+    /**
+     * Whether the specified string contains whitespace characters
+     *
+     * @param original The original String to evaluate
+     * @return the processed result
+     */
+    public static boolean containsWhitespace(final String original) {
+        return isNullOrEmpty(original) || WHITESPACE_PATTERN.matcher(original).find();
+    }
+
+    /**
+     * Whether the specified string contains alpha-numeric characters
+     *
+     * @param original The original String to evaluate
+     * @return the processed result
+     */
+    public static boolean containsAlphaNumeric(final String original) {
+        return !isNullOrEmpty(original) && ALPHANUMERIC_PATTERN.matcher(original).find();
     }
 
     /**

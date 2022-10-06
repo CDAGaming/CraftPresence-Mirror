@@ -349,7 +349,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The control's current display message
      */
     public String getDisplayMessage() {
-        String result = getControlMessage();
+        String result = getControlMessage().trim();
         if (result.contains(" ")) {
             String adjusted = result;
             for (String dataPart : result.split(" ")) {
