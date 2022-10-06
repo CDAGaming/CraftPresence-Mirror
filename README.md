@@ -144,9 +144,9 @@ They can also be customized at a deeper level via their sub-placeholders, where 
 * `&BRAND&` - The minecraft branding label, displayed as interpreted by minecraft.
 * `&MCVERSION&` - The minecraft version, displayed as interpreted by minecraft.
 * `&IGN&` - The non-world player info message.
-    * See `Status Messages::Player Outer Info` for sub-placeholders.
+    * See `Status Messages::Player Outer Info` for more info.
 * `&MODS&` - The message to display with your mod count.
-    * See `Status Messages::Mods Placeholder` for sub-placeholders.
+    * See `Status Messages::Mods Placeholder` for more info.
 
 ___
 
@@ -156,7 +156,7 @@ These placeholders translate to the `&BIOME&` Global Placeholder in the `Presenc
 
 You can configure these Sub-Placeholders throughout the `Biome Messages` area of the Config Gui.
 
-If you wish to use these placeholders on their own, you can do so via the `&BIOME:[placeholderName]` format.
+If you wish to use these placeholders on their own, you can do so via the `&BIOME:[placeholderName]&` format.
 
 Example: `&BIOME:BIOME&` == `&BIOME&`
 
@@ -172,7 +172,7 @@ Gui.
 
 You can configure these Sub-Placeholders throughout the `Dimension Messages` area of the Config Gui.
 
-If you wish to use these placeholders on their own, you can do so via the `&DIMENSION:[placeholderName]` format.
+If you wish to use these placeholders on their own, you can do so via the `&DIMENSION:[placeholderName]&` format.
 
 Example: `&DIMENSION:DIMENSION&` == `&DIMENSION&`
 
@@ -187,18 +187,19 @@ These placeholders translate to the `&SERVER&` Global Placeholder in the `Presen
 
 You can configure these Sub-Placeholders throughout the `Server Messages` area of the Config Gui.
 
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]` format.
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]&` format.
 
 Example: `&SERVER:IP&` == `&IP&`
 
 * `&PLAYERINFO&` - Your in-world player info message
-    * See `Status Messages::Player Inner Info` for sub-placeholders.
+    * See `Status Messages::Player Inner Info` for more info.
 * `&WORLDINFO&` - Your in-world game info message
-    * See `Status Messages::World Data Placeholder` for sub-placeholders.
+    * See `Status Messages::World Data Placeholder` for more info.
 * `&IP&` - The Current Server IP Address
 * `&NAME&` - The Current Server Name
 * `&MOTD&` - The Current Server MOTD (Message of The Day)
 * `&PLAYERS&` - The Current Player Count `(10 / 100 Players)`
+  * See `Status Messages::Player List Placeholder` for more info.
 * `&ICON&` - The Default Server Icon Name
 
 ___
@@ -209,14 +210,14 @@ These placeholders translate to the `&SERVER&` Global Placeholder in the `Presen
 
 You can configure these Sub-Placeholders within the `Status Messages::Singleplayer Message` setting.
 
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]` format.
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]&` format.
 
 Example: `&SERVER:IP&` == `&IP&`
 
 * `&PLAYERINFO&` - Your in-world player info message
-    * See `Status Messages::Player Inner Info` for sub-placeholders.
+    * See `Status Messages::Player Inner Info` for more info.
 * `&WORLDINFO&` - Your in-world game info message
-    * See `Status Messages::World Data Placeholder` for sub-placeholders.
+    * See `Status Messages::World Data Placeholder` for more info.
 
 ___
 
@@ -226,7 +227,7 @@ These placeholders translate to the `&SCREEN&` Global Placeholder in the `Presen
 
 You can configure these Sub-Placeholders throughout the `Advanced Settings::Gui Messages` area of the Config Gui.
 
-If you wish to use these placeholders on their own, you can do so via the `&SCREEN:[placeholderName]` format.
+If you wish to use these placeholders on their own, you can do so via the `&SCREEN:[placeholderName]&` format.
 
 Example: `&SCREEN:SCREEN&` == `&SCREEN&`
 
