@@ -199,7 +199,7 @@ Example: `&SERVER:IP&` == `&IP&`
 * `&NAME&` - The Current Server Name
 * `&MOTD&` - The Current Server MOTD (Message of The Day)
 * `&PLAYERS&` - The Current Player Count `(10 / 100 Players)`
-  * See `Status Messages::Player List Placeholder` for more info.
+    * See `Status Messages::Player List Placeholder` for more info.
 * `&ICON&` - The Default Server Icon Name
 
 ___
@@ -254,26 +254,30 @@ ___
 
 ### Inner Player Info Placeholders
 
-These placeholders translate to the `&PLAYERINFO&` Placeholder from the `Server Settings` menu (Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
+These placeholders translate to the `&PLAYERINFO&` Placeholder from the `Server Settings` menu (
+Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
 
 You can configure these Sub-Placeholders within the `Status Messages::Player Inner Info` setting.
 
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:[placeholderName]&` format.
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:[placeholderName]&`
+format.
 
 Example: `&SERVER:PLAYERINFO:COORDS&` == `&COORDS&`
 
 * `&COORDS&` - The player's coordinate placeholder message
-  * See `Status Messages:Player Coordinate Placeholder` for more info.
+    * See `Status Messages:Player Coordinate Placeholder` for more info.
 * `&HEALTH&` - The player's health placeholder message
-  * See `Status Messages:Player Health Placeholder` for more info.
+    * See `Status Messages:Player Health Placeholder` for more info.
 
 ___
 
 ### Player Coordinate Placeholders
 
-These placeholders translate to the `&COORDS&` Placeholder from the `Player Coordinate Placeholder` setting within the Config Gui.
+These placeholders translate to the `&COORDS&` Placeholder from the `Player Coordinate Placeholder` setting within the
+Config Gui.
 
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:COORDS:[placeholderName]&` format.
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:COORDS:[placeholderName]&`
+format.
 
 Example: `&SERVER:PLAYERINFO:COORDS:xPosition&` == `&xPosition&`
 
@@ -285,9 +289,11 @@ ___
 
 ### Player Health Placeholders
 
-These placeholders translate to the `&HEALTH&` Placeholder from the `Player Health Placeholder` setting within the Config Gui.
+These placeholders translate to the `&HEALTH&` Placeholder from the `Player Health Placeholder` setting within the
+Config Gui.
 
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:HEALTH:[placeholderName]&` format.
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:HEALTH:[placeholderName]&`
+format.
 
 Example: `&SERVER:PLAYERINFO:HEALTH:CURRENT&` == `&CURRENT&`
 
@@ -298,7 +304,8 @@ ___
 
 ### World Info Placeholders
 
-These placeholders translate to the `&WORLDINFO&` Placeholder from the `Server Settings` menu (Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
+These placeholders translate to the `&WORLDINFO&` Placeholder from the `Server Settings` menu (
+Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
 
 You can configure these Sub-Placeholders within the `Status Messages::World Data Placeholder` setting.
 
