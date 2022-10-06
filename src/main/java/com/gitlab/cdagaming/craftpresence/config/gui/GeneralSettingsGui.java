@@ -103,7 +103,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         buttonCalc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
-                        CraftPresence.CONFIG.NAME_partyPrivacyLevel.replaceAll("_", " ") + " => " + PartyPrivacy.from(currentPartyPrivacy).name(),
+                         "gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name(),
                         () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -260,7 +260,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
                         180, 20,
-                        CraftPresence.CONFIG.NAME_preferredClientLevel.replaceAll("_", " ") + " => " + DiscordBuild.from(currentPreferredClient).name(),
+                        "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
                         () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -372,8 +372,8 @@ public class GeneralSettingsGui extends ExtendedScreen {
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
         renderString(clientIdText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
-        partyPrivacyLevelButton.setControlMessage(CraftPresence.CONFIG.NAME_partyPrivacyLevel.replaceAll("_", " ") + " => " + PartyPrivacy.from(currentPartyPrivacy).name());
-        preferredClientLevelButton.setControlMessage(CraftPresence.CONFIG.NAME_preferredClientLevel.replaceAll("_", " ") + " => " + DiscordBuild.from(currentPreferredClient).name());
+        partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
+        preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(clientId.getControlMessage()) && clientId.getControlMessage().length() >= 18 && StringUtils.getValidLong(clientId.getControlMessage()).getFirst());
     }
 

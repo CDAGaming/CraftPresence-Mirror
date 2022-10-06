@@ -350,7 +350,15 @@ public class ExtendedButtonControl extends GuiButton {
      */
     public String getDisplayMessage() {
         String result = getControlMessage();
-        if (ModUtils.TRANSLATOR.hasTranslation(getControlMessage())) {
+        if (result.contains(" ")) {
+            String adjusted = result;
+            for (String dataPart : result.split(" ")) {
+                if (ModUtils.TRANSLATOR.hasTranslation(dataPart)) {
+                    adjusted = adjusted.replace(dataPart, ModUtils.TRANSLATOR.translate(dataPart));
+                }
+            }
+            result = adjusted;
+        } else if (ModUtils.TRANSLATOR.hasTranslation(getControlMessage())) {
             result = ModUtils.TRANSLATOR.translate(result);
         }
         return result;
