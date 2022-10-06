@@ -204,6 +204,21 @@ Example: `&SERVER:IP&` == `&IP&`
 
 ___
 
+### Server Player List Placeholders
+
+These placeholders translate to the `&PLAYERS&` Placeholder from the `Server Settings` menu within the Config Gui.
+
+You can configure these Sub-Placeholders within the `Status Messages::Player List Placeholder` setting.
+
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERS:[placeholderName]&` format.
+
+Example: `&SERVER:PLAYERS:CURRENT&` == `&CURRENT&`
+
+* `&CURRENT&` - Current player count
+* `&MAX&` - Maximum player count
+
+___
+
 ### Singleplayer Placeholders
 
 These placeholders translate to the `&SERVER&` Global Placeholder in the `Presence Settings` menu within the Config Gui.
@@ -221,7 +236,23 @@ Example: `&SERVER:IP&` == `&IP&`
 
 ___
 
-### Player Info Placeholders
+### Outer Player Info Placeholders
+
+These placeholders translate to the `&IGN&` Placeholder from the `Presence Settings` menu within the Config Gui.
+
+You can configure these Sub-Placeholders within the `Status Messages::Player Outer Info` setting.
+
+If you wish to use these placeholders on their own, you can do so via the `&IGN:[placeholderName]&` format.
+
+Example: `&IGN:NAME&` == `&NAME&`
+
+* `&NAME&` - Your username
+* `&UUID&` - Your UUID (Trimmed Format)
+* `&UUID_FULL&` - Your UUID (Full Format, if valid UUID)
+
+___
+
+### Inner Player Info Placeholders
 
 These placeholders translate to the `&PLAYERINFO&` Placeholder from the `Server Settings` menu (Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
 
@@ -235,6 +266,23 @@ Example: `&SERVER:PLAYERINFO:COORDS&` == `&COORDS&`
   * See `Status Messages:Player Coordinate Placeholder` for more info.
 * `&HEALTH&` - The player's health placeholder message
   * See `Status Messages:Player Health Placeholder` for more info.
+
+___
+
+### World Info Placeholders
+
+These placeholders translate to the `&WORLDINFO&` Placeholder from the `Server Settings` menu (Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
+
+You can configure these Sub-Placeholders within the `Status Messages::World Data Placeholder` setting.
+
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:WORLDINFO:[placeholderName]&` format.
+
+Example: `&SERVER:WORLDINFO:DIFFICULTY&` == `&DIFFICULTY&`
+
+* `&DIFFICULTY&` - The current world's difficulty
+* `&WORLDNAME&` - The name of the current world
+* `&WORLDTIME&` - The current world's in-game time
+* `&WORLDDAY&` - The current world's in-game day count
 
 ___
 
