@@ -146,26 +146,26 @@ public class ConfigUtils {
     @SuppressWarnings("ConstantConditions")
     public void setupInitialValues() {
         // GLOBAL (NON-USER-ADJUSTABLE)
-        NAME_schemaVersion = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.global.schema_version").replaceAll(" ", "_");
+        NAME_schemaVersion = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.global.schema_version").replaceAll(" ", "_");
         schemaVersion = Integer.toString(ModUtils.MOD_SCHEMA_VERSION);
-        NAME_lastMcVersionId = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.global.last_mc_version_id").replaceAll(" ", "_");
+        NAME_lastMcVersionId = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.global.last_mc_version_id").replaceAll(" ", "_");
         lastMcVersionId = Integer.toString(ModUtils.MCProtocolID);
         // GENERAL
-        NAME_detectCurseManifest = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.detect_curse_manifest").replaceAll(" ", "_");
-        NAME_detectMultiMCManifest = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.detect_multimc_manifest").replaceAll(" ", "_");
-        NAME_detectMCUpdaterInstance = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.detect_mcupdater_instance").replaceAll(" ", "_");
-        NAME_detectTechnicPack = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.detect_technic_pack").replaceAll(" ", "_");
-        NAME_showTime = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.show_time").replaceAll(" ", "_");
-        NAME_detectBiomeData = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.detect_biome_data").replaceAll(" ", "_");
-        NAME_detectDimensionData = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.detect_dimension_data").replaceAll(" ", "_");
-        NAME_detectWorldData = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.detect_world_data").replaceAll(" ", "_");
-        NAME_clientId = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.client_id").replaceAll(" ", "_");
-        NAME_defaultIcon = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.default_icon").replaceAll(" ", "_");
-        NAME_enableJoinRequest = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.enable_join_request").replaceAll(" ", "_");
-        NAME_partyPrivacyLevel = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.party_privacy").replaceAll(" ", "_");
-        NAME_preferredClientLevel = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.preferred_client").replaceAll(" ", "_");
-        NAME_resetTimeOnInit = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.reset_time_on_init").replaceAll(" ", "_");
-        NAME_autoRegister = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.general.auto_register").replaceAll(" ", "_");
+        NAME_detectCurseManifest = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.detect_curse_manifest").replaceAll(" ", "_");
+        NAME_detectMultiMCManifest = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.detect_multimc_manifest").replaceAll(" ", "_");
+        NAME_detectMCUpdaterInstance = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.detect_mcupdater_instance").replaceAll(" ", "_");
+        NAME_detectTechnicPack = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.detect_technic_pack").replaceAll(" ", "_");
+        NAME_showTime = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.show_time").replaceAll(" ", "_");
+        NAME_detectBiomeData = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.detect_biome_data").replaceAll(" ", "_");
+        NAME_detectDimensionData = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.detect_dimension_data").replaceAll(" ", "_");
+        NAME_detectWorldData = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.detect_world_data").replaceAll(" ", "_");
+        NAME_clientId = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.client_id").replaceAll(" ", "_");
+        NAME_defaultIcon = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.default_icon").replaceAll(" ", "_");
+        NAME_enableJoinRequest = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.enable_join_request").replaceAll(" ", "_");
+        NAME_partyPrivacyLevel = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.party_privacy").replaceAll(" ", "_");
+        NAME_preferredClientLevel = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.preferred_client").replaceAll(" ", "_");
+        NAME_resetTimeOnInit = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.reset_time_on_init").replaceAll(" ", "_");
+        NAME_autoRegister = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.general.auto_register").replaceAll(" ", "_");
         detectCurseManifest = true;
         detectMultiMCManifest = true;
         detectMCUpdaterInstance = true;
@@ -182,40 +182,40 @@ public class ConfigUtils {
         resetTimeOnInit = false;
         autoRegister = false;
         // BIOME MESSAGES
-        NAME_defaultBiomeIcon = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.biome_messages.biome_icon").replaceAll(" ", "_");
-        NAME_biomeMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.biome_messages.biome_messages").replaceAll(" ", "_");
+        NAME_defaultBiomeIcon = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.biome_messages.biome_icon").replaceAll(" ", "_");
+        NAME_biomeMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.biome_messages.biome_messages").replaceAll(" ", "_");
         defaultBiomeIcon = "unknown";
         biomeMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.biome_messages.biome_messages")};
         // DIMENSION MESSAGES
-        NAME_defaultDimensionIcon = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.dimension_messages.dimension_icon").replaceAll(" ", "_");
-        NAME_dimensionMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.dimension_messages.dimension_messages").replaceAll(" ", "_");
+        NAME_defaultDimensionIcon = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.dimension_messages.dimension_icon").replaceAll(" ", "_");
+        NAME_dimensionMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.dimension_messages.dimension_messages").replaceAll(" ", "_");
         defaultDimensionIcon = "unknown";
         dimensionMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.dimension_messages.dimension_messages")};
         // SERVER MESSAGES
-        NAME_defaultServerIcon = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_icon").replaceAll(" ", "_");
-        NAME_defaultServerName = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_name").replaceAll(" ", "_");
-        NAME_defaultServerMotd = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_motd").replaceAll(" ", "_");
-        NAME_serverMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.server_messages.server_messages").replaceAll(" ", "_");
+        NAME_defaultServerIcon = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.server_messages.server_icon").replaceAll(" ", "_");
+        NAME_defaultServerName = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.server_messages.server_name").replaceAll(" ", "_");
+        NAME_defaultServerMotd = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.server_messages.server_motd").replaceAll(" ", "_");
+        NAME_serverMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.server_messages.server_messages").replaceAll(" ", "_");
         defaultServerIcon = "default";
         defaultServerName = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_name");
         defaultServerMotd = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_motd");
         serverMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_messages")};
         // STATUS MESSAGES
-        NAME_mainMenuMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.main_menu_message").replaceAll(" ", "_");
-        NAME_loadingMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.loading_message").replaceAll(" ", "_");
-        NAME_lanMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.lan_message").replaceAll(" ", "_");
-        NAME_singlePlayerMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.single_player_message").replaceAll(" ", "_");
-        NAME_packPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.pack_message").replaceAll(" ", "_");
-        NAME_outerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.player_message.out").replaceAll(" ", "_");
-        NAME_innerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.player_message.in").replaceAll(" ", "_");
-        NAME_playerCoordinatePlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.player_coordinate_message").replaceAll(" ", "_");
-        NAME_playerHealthPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.player_health_message").replaceAll(" ", "_");
-        NAME_playerAmountPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.player_amount_message").replaceAll(" ", "_");
-        NAME_playerItemsPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.player_item_message").replaceAll(" ", "_");
-        NAME_worldPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.world_message").replaceAll(" ", "_");
-        NAME_modsPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.placeholder.mods_message").replaceAll(" ", "_");
-        NAME_vivecraftMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.special.vivecraft_message").replaceAll(" ", "_");
-        NAME_fallbackPackPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.status_messages.fallback.pack_placeholder_message").replaceAll(" ", "_");
+        NAME_mainMenuMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.main_menu_message").replaceAll(" ", "_");
+        NAME_loadingMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.loading_message").replaceAll(" ", "_");
+        NAME_lanMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.lan_message").replaceAll(" ", "_");
+        NAME_singlePlayerMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.single_player_message").replaceAll(" ", "_");
+        NAME_packPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.pack_message").replaceAll(" ", "_");
+        NAME_outerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.player_message.out").replaceAll(" ", "_");
+        NAME_innerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.player_message.in").replaceAll(" ", "_");
+        NAME_playerCoordinatePlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.player_coordinate_message").replaceAll(" ", "_");
+        NAME_playerHealthPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.player_health_message").replaceAll(" ", "_");
+        NAME_playerAmountPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.player_amount_message").replaceAll(" ", "_");
+        NAME_playerItemsPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.player_item_message").replaceAll(" ", "_");
+        NAME_worldPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.world_message").replaceAll(" ", "_");
+        NAME_modsPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.placeholder.mods_message").replaceAll(" ", "_");
+        NAME_vivecraftMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.special.vivecraft_message").replaceAll(" ", "_");
+        NAME_fallbackPackPlaceholderMessage = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.status_messages.fallback.pack_placeholder_message").replaceAll(" ", "_");
         mainMenuMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.main_menu");
         loadingMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.loading");
         lanMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.lan");
@@ -232,23 +232,23 @@ public class ConfigUtils {
         vivecraftMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.special.vivecraft");
         fallbackPackPlaceholderMessage = "";
         // ADVANCED
-        NAME_enableCommands = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.enable_commands").replaceAll(" ", "_");
-        NAME_enablePerGui = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.enable_per_gui").replaceAll(" ", "_");
-        NAME_enablePerItem = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.enable_per_item").replaceAll(" ", "_");
-        NAME_enablePerEntity = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.enable_per_entity").replaceAll(" ", "_");
-        NAME_renderTooltips = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.render_tooltips").replaceAll(" ", "_");
-        NAME_formatWords = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.format_words").replaceAll(" ", "_");
-        NAME_debugMode = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.debug_mode").replaceAll(" ", "_");
-        NAME_verboseMode = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.verbose_mode").replaceAll(" ", "_");
-        NAME_splitCharacter = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.split_character").replaceAll(" ", "_");
-        NAME_refreshRate = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.refresh_rate").replaceAll(" ", "_");
-        NAME_roundSize = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.round_size").replaceAll(" ", "_");
-        NAME_includeExtraGuiClasses = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.include_extra_gui_classes").replaceAll(" ", "_");
-        NAME_guiMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.gui_messages").replaceAll(" ", "_");
-        NAME_itemMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.item_messages").replaceAll(" ", "_");
-        NAME_entityTargetMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.entity_target_messages").replaceAll(" ", "_");
-        NAME_entityRidingMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.entity_riding_messages").replaceAll(" ", "_");
-        NAME_playerSkinEndpoint = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.advanced.player_skin_endpoint").replaceAll(" ", "_");
+        NAME_enableCommands = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.enable_commands").replaceAll(" ", "_");
+        NAME_enablePerGui = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.enable_per_gui").replaceAll(" ", "_");
+        NAME_enablePerItem = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.enable_per_item").replaceAll(" ", "_");
+        NAME_enablePerEntity = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.enable_per_entity").replaceAll(" ", "_");
+        NAME_renderTooltips = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.render_tooltips").replaceAll(" ", "_");
+        NAME_formatWords = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.format_words").replaceAll(" ", "_");
+        NAME_debugMode = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.debug_mode").replaceAll(" ", "_");
+        NAME_verboseMode = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.verbose_mode").replaceAll(" ", "_");
+        NAME_splitCharacter = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.split_character").replaceAll(" ", "_");
+        NAME_refreshRate = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.refresh_rate").replaceAll(" ", "_");
+        NAME_roundSize = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.round_size").replaceAll(" ", "_");
+        NAME_includeExtraGuiClasses = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.include_extra_gui_classes").replaceAll(" ", "_");
+        NAME_guiMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.gui_messages").replaceAll(" ", "_");
+        NAME_itemMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.item_messages").replaceAll(" ", "_");
+        NAME_entityTargetMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.entity_target_messages").replaceAll(" ", "_");
+        NAME_entityRidingMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.entity_riding_messages").replaceAll(" ", "_");
+        NAME_playerSkinEndpoint = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.player_skin_endpoint").replaceAll(" ", "_");
         enableCommands = true;
         enablePerGui = false;
         enablePerItem = false;
@@ -267,16 +267,16 @@ public class ConfigUtils {
         entityRidingMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages")};
         playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
         // ACCESSIBILITY
-        NAME_tooltipBackgroundColor = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.tooltip_background_color").replaceAll(" ", "_");
-        NAME_tooltipBorderColor = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.tooltip_border_color").replaceAll(" ", "_");
-        NAME_guiBackgroundColor = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.gui_background_color").replaceAll(" ", "_");
-        NAME_buttonBackgroundColor = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.button_background_color").replaceAll(" ", "_");
-        NAME_languageId = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.language_id").replaceAll(" ", "_");
-        NAME_showBackgroundAsDark = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.show_background_as_dark").replaceAll(" ", "_");
-        NAME_stripTranslationColors = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.strip_translation_colors").replaceAll(" ", "_");
-        NAME_showLoggingInChat = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.show_logging_in_chat").replaceAll(" ", "_");
-        NAME_stripExtraGuiElements = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.accessibility.strip_extra_gui_elements").replaceAll(" ", "_");
-        NAME_configKeyCode = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "key.craftpresence.config_keycode.name").replaceAll(" ", "_");
+        NAME_tooltipBackgroundColor = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.tooltip_background_color").replaceAll(" ", "_");
+        NAME_tooltipBorderColor = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.tooltip_border_color").replaceAll(" ", "_");
+        NAME_guiBackgroundColor = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.gui_background_color").replaceAll(" ", "_");
+        NAME_buttonBackgroundColor = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.button_background_color").replaceAll(" ", "_");
+        NAME_languageId = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.language_id").replaceAll(" ", "_");
+        NAME_showBackgroundAsDark = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.show_background_as_dark").replaceAll(" ", "_");
+        NAME_stripTranslationColors = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.strip_translation_colors").replaceAll(" ", "_");
+        NAME_showLoggingInChat = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.show_logging_in_chat").replaceAll(" ", "_");
+        NAME_stripExtraGuiElements = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.accessibility.strip_extra_gui_elements").replaceAll(" ", "_");
+        NAME_configKeyCode = ModUtils.TRANSLATOR.translateFrom(true, "key.craftpresence.config_keycode.name").replaceAll(" ", "_");
         tooltipBackgroundColor = "0xF0100010";
         tooltipBorderColor = "0x505000FF";
         guiBackgroundColor = "minecraft" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
@@ -288,14 +288,14 @@ public class ConfigUtils {
         stripExtraGuiElements = ModUtils.IS_LEGACY_HARD;
         configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
         // DISPLAY MESSAGES
-        NAME_gameStateMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.game_state_message").replaceAll(" ", "_");
-        NAME_detailsMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.details_message").replaceAll(" ", "_");
-        NAME_largeImageMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.large_image_message").replaceAll(" ", "_");
-        NAME_smallImageMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.small_image_message").replaceAll(" ", "_");
-        NAME_largeImageKey_FORMAT = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.large_image_key").replaceAll(" ", "_");
-        NAME_smallImageKey_FORMAT = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.small_image_key").replaceAll(" ", "_");
-        NAME_buttonMessages = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.button_messages").replaceAll(" ", "_");
-        NAME_dynamicIcons = ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.name.display.dynamic_icons").replaceAll(" ", "_");
+        NAME_gameStateMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.game_state_message").replaceAll(" ", "_");
+        NAME_detailsMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.details_message").replaceAll(" ", "_");
+        NAME_largeImageMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.large_image_message").replaceAll(" ", "_");
+        NAME_smallImageMessage_FORMAT = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.small_image_message").replaceAll(" ", "_");
+        NAME_largeImageKey_FORMAT = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.large_image_key").replaceAll(" ", "_");
+        NAME_smallImageKey_FORMAT = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.small_image_key").replaceAll(" ", "_");
+        NAME_buttonMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.button_messages").replaceAll(" ", "_");
+        NAME_dynamicIcons = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.dynamic_icons").replaceAll(" ", "_");
         gameStateMessage = "&SERVER& &PACK&";
         detailsMessage = "&MAINMENU&&DIMENSION&";
         largeImageMessage = "&MAINMENU&&DIMENSION&";
@@ -720,9 +720,9 @@ public class ConfigUtils {
             outputStream = Files.newOutputStream(configFile.toPath());
             configWriter = new OutputStreamWriter(outputStream, Charset.forName(encoding));
             properties.store(configWriter,
-                    ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.title") + "\n" +
-                            ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION) + "\n\n" +
-                            ModUtils.TRANSLATOR.translateFrom(ModUtils.TRANSLATOR.getDefaultLanguage(), true, "craftpresence.logger.info.config.notice")
+                    ModUtils.TRANSLATOR.translateFrom(true, "gui.config.title") + "\n" +
+                            ModUtils.TRANSLATOR.translateFrom(true, "gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION) + "\n\n" +
+                            ModUtils.TRANSLATOR.translateFrom(true, "craftpresence.logger.info.config.notice")
             );
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));

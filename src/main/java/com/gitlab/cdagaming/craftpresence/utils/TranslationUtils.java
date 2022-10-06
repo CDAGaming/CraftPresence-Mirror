@@ -479,6 +479,18 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
+     * Translates an Unlocalized String, based on the translations retrieved for the specified language
+     *
+     * @param stripColors    Whether to Remove Color and Formatting Codes
+     * @param translationKey The unLocalized String to translate
+     * @param parameters     Extra Formatting Arguments, if needed
+     * @return The Localized Translated String
+     */
+    public String translateFrom(final boolean stripColors, final String translationKey, final Object... parameters) {
+        return translateFrom(getDefaultLanguage(), stripColors, translationKey, parameters);
+    }
+
+    /**
      * Translates an Unlocalized String, based on the translations retrieved for the current language
      *
      * @param stripColors    Whether to Remove Color and Formatting Codes
@@ -500,6 +512,17 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      */
     public String translateFrom(final String languageId, final String translationKey, final Object... parameters) {
         return translateFrom(languageId, CraftPresence.CONFIG != null && CraftPresence.CONFIG.stripTranslationColors, translationKey, parameters);
+    }
+
+    /**
+     * Translates an Unlocalized String, based on the translations retrieved for the specified language
+     *
+     * @param translationKey The unLocalized String to translate
+     * @param parameters     Extra Formatting Arguments, if needed
+     * @return The Localized Translated String
+     */
+    public String translateFrom(final String translationKey, final Object... parameters) {
+        return translateFrom(getDefaultLanguage(), translationKey, parameters);
     }
 
     /**
