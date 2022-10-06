@@ -111,41 +111,42 @@ ___
 
 ### Presence Display / Global Placeholders
 
-These placeholders can be added within the `Presence Settings` menu within the Config Gui.
+These placeholders are used in the `Presence Settings` menu within the Config Gui.
 
-As these placeholders are global, they can be set in any of the RPC fields within `Presence Settings` and customized at
-a deeper level via their sub-placeholders.
-
-* `&MAINMENU&` - The message to display whilst in the main menu. (See `Status Messages::Main Menu Message` for
-  sub-placeholders)
-* `&BRAND&` - The minecraft branding label, displayed as interpreted by minecraft.
-* `&MCVERSION&` - The minecraft version, displayed as interpreted by minecraft.
-* `&IGN&` - The non-world player info message. (See `Status Messages::Player Outer Info` for sub-placeholders)
-* `&MODS&` - The message to display with your mod count. (See `Status Messages::Mods` for sub-placeholders)
-* `&PACK&` - The message to display whilst using a valid modpack. (See `Status Messages::Modpack Message` for
-  sub-placeholders)
-* `&DIMENSION&` - The Dimension Message, if in use. (See `Dimension Messages` for sub-placeholders)
-* `&BIOME&` - The Biome Message, if in use. (See `Biome Messages` for sub-placeholders)
-* `&SERVER&` - The Server/SinglePlayer Message, if in use. (See `Server Messages` for sub-placeholders)
-* `&SCREEN&` - The Gui Screen Message, if in use. (See `Advanced Settings::Gui Messages` for sub-placeholders)
-* `&TILEENTITY&` - The TileEntity (Block/Item) Message, if in use. (See `Advanced Settings::Item Messages` for
-  sub-placeholders)
-* `&TARGETENTITY&` - The Targeted Entity Message, if in use. (See `Advanced Settings :: Entity Target Messages` for
-  sub-placeholders)
-* `&RIDINGENTITY&` - The Riding Entity Message, if in use. (See `Advanced Settings :: Entity Riding Messages` for
-  sub-placeholders)
+* `&MAINMENU&` - The message to display whilst in the main menu.
+    * See `Status Messages::Main Menu Message` for more info.
+* `&PACK&` - The message to display whilst using a valid modpack.
+    * See `Status Messages::Modpack Message` for more info.
+* `&DIMENSION&` - The Dimension Message, if in use.
+    * See `Dimension Messages` for more info.
+* `&BIOME&` - The Biome Message, if in use.
+    * See `Biome Messages` for more info.
+* `&SERVER&` - The Server/SinglePlayer Message, if in use.
+    * See `Server Messages` (Or `Status Messages::Singleplayer Game Message`) for more info.
+* `&SCREEN&` - The Gui Screen Message, if in use.
+    * See `Advanced Settings::Gui Messages` for more info.
+* `&TILEENTITY&` - The TileEntity (Block/Item) Message, if in use.
+    * See `Advanced Settings::Item Messages` for more info.
+* `&TARGETENTITY&` - The Targeted Entity Message, if in use.
+    * See `Advanced Settings::Entity Target Messages` for more info.
+* `&RIDINGENTITY&` - The Riding Entity Message, if in use.
+    * See `Advanced Settings::Entity Riding Messages` for more info.
 
 ___
 
-### Main Menu Message Placeholders
+### General Placeholders
 
-These placeholders translate to the `&MAINMENU&` Global Placeholder in the `Presence Settings` menu within the Config
-Gui.
+As these placeholders are global, they can be set in any of the RPC fields within `Presence Settings` as well as
+anywhere else in the config, without needing any extra formatting.
 
-You can configure using these Sub-Placeholders within the `Status Messages::Main Menu Message` setting.
+They can also be customized at a deeper level via their sub-placeholders, where applicable.
 
-* `&IGN&` - Your Minecraft username
-* `&MODS&` - The number of mods currently in your mods folder
+* `&BRAND&` - The minecraft branding label, displayed as interpreted by minecraft.
+* `&MCVERSION&` - The minecraft version, displayed as interpreted by minecraft.
+* `&IGN&` - The non-world player info message.
+    * See `Status Messages::Player Outer Info` for sub-placeholders.
+* `&MODS&` - The message to display with your mod count.
+    * See `Status Messages::Mods` for sub-placeholders.
 
 ___
 
@@ -155,7 +156,12 @@ These placeholders translate to the `&BIOME&` Global Placeholder in the `Presenc
 
 You can configure these Sub-Placeholders throughout the `Biome Messages` area of the Config Gui.
 
+If you wish to use these placeholders on their own, you can do so via the `&BIOME:[placeholderName]` format.
+
+Example: `&BIOME:BIOME&` == `&BIOME&`
+
 * `&BIOME&` - The Current Biome Name
+* `&ICON&` - The Default Biome Icon Name
 
 ___
 
@@ -165,6 +171,10 @@ These placeholders translate to the `&DIMENSION&` Global Placeholder in the `Pre
 Gui.
 
 You can configure these Sub-Placeholders throughout the `Dimension Messages` area of the Config Gui.
+
+If you wish to use these placeholders on their own, you can do so via the `&DIMENSION:[placeholderName]` format.
+
+Example: `&DIMENSION:DIMENSION&` == `&DIMENSION&`
 
 * `&DIMENSION&` - The Current Dimension Name
 * `&ICON&` - The Default Dimension Icon Name
@@ -177,14 +187,17 @@ These placeholders translate to the `&SERVER&` Global Placeholder in the `Presen
 
 You can configure these Sub-Placeholders throughout the `Server Messages` area of the Config Gui.
 
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]` format.
+
+Example: `&SERVER:IP&` == `&IP&`
+
+* `&PLAYERINFO&` - Your in-world player info message
+* `&WORLDINFO&` - Your in-world game info message
 * `&IP&` - The Current Server IP Address
 * `&NAME&` - The Current Server Name
 * `&MOTD&` - The Current Server MOTD (Message of The Day)
-* `&ICON&` - The Default Server Icon Name
 * `&PLAYERS&` - The Current Player Count `(10 / 100 Players)`
-* `&IGN&` - Your Minecraft Username
-* `&TIME&` - The Current World Time
-* `&MODS&` - The Number of Mods currently in your Mods Folder
+* `&ICON&` - The Default Server Icon Name
 
 ___
 
@@ -194,9 +207,12 @@ These placeholders translate to the `&SERVER&` Global Placeholder in the `Presen
 
 You can configure these Sub-Placeholders within the `Status Messages::SinglePlayer Message` setting.
 
-* `&IGN&` - Your Minecraft Username
-* `&TIME&` - The Current World Time
-* `&MODS&` - The Number of Mods currently in your Mods Folder
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]` format.
+
+Example: `&SERVER:IP&` == `&IP&`
+
+* `&PLAYERINFO&` - Your in-world player info message
+* `&WORLDINFO&` - Your in-world game info message
 
 ___
 
@@ -206,8 +222,12 @@ These placeholders translate to the `&SCREEN&` Global Placeholder in the `Presen
 
 You can configure these Sub-Placeholders throughout the `Advanced Settings::Gui Messages` area of the Config Gui.
 
+If you wish to use these placeholders on their own, you can do so via the `&SCREEN:[placeholderName]` format.
+
+Example: `&SCREEN:SCREEN&` == `&SCREEN&`
+
 * `&SCREEN&` - The Current Gui Screen Name (Supports `Container` and `Screen` type interfaces)
-* `&CLASS&` - The Current Gui Class (Ex: `net.minecraft.xxx`)
+* `&CLASS&` - The Current Gui Class Name (Ex: The `xxx` part of `net.minecraft.xxx`)
 
 ___
 
@@ -234,6 +254,11 @@ the `Presence Settings` menu within the Config Gui.
 
 You can configure these Sub-Placeholders throughout the `Advanced Settings::Entity [Target,Riding] Messages`
 area of the Config Gui.
+
+If you wish to use these placeholders on their own, you can do so via
+the `&[TARGETENTITY|RIDINGENTITY]:[placeholderName]` format.
+
+Example: `&[TARGETENTITY|RIDINGENTITY]:ENTITY&` == `&ENTITY&`
 
 * `&ENTITY&` - The Entity Name
 

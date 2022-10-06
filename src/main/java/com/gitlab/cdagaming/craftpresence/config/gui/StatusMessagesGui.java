@@ -362,7 +362,10 @@ public class StatusMessagesGui extends PaginatedScreen {
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(mainMenuText), getFontHeight())) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message")
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
+                                        CraftPresence.CLIENT.generateArgumentMessage(null, null,
+                                                CraftPresence.CLIENT.generalArgs
+                                        ))
                         ), this, true
                 );
             }
@@ -498,7 +501,10 @@ public class StatusMessagesGui extends PaginatedScreen {
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(loadingText), getFontHeight())) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message")
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
+                                        CraftPresence.CLIENT.generateArgumentMessage(null, null,
+                                                CraftPresence.CLIENT.generalArgs
+                                        ))
                         ), this, true
                 );
             }
