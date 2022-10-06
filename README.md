@@ -109,7 +109,7 @@ Keep in mind the following:
 
 ___
 
-### Presence Display / Global Placeholders
+### Global Placeholders
 
 These placeholders are used in the `Presence Settings` menu within the Config Gui.
 
@@ -146,7 +146,7 @@ They can also be customized at a deeper level via their sub-placeholders, where 
 * `&IGN&` - The non-world player info message.
     * See `Status Messages::Player Outer Info` for sub-placeholders.
 * `&MODS&` - The message to display with your mod count.
-    * See `Status Messages::Mods` for sub-placeholders.
+    * See `Status Messages::Mods Placeholder` for sub-placeholders.
 
 ___
 
@@ -192,7 +192,9 @@ If you wish to use these placeholders on their own, you can do so via the `&SERV
 Example: `&SERVER:IP&` == `&IP&`
 
 * `&PLAYERINFO&` - Your in-world player info message
+    * See `Status Messages::Player Inner Info` for sub-placeholders.
 * `&WORLDINFO&` - Your in-world game info message
+    * See `Status Messages::World Data Placeholder` for sub-placeholders.
 * `&IP&` - The Current Server IP Address
 * `&NAME&` - The Current Server Name
 * `&MOTD&` - The Current Server MOTD (Message of The Day)
@@ -201,18 +203,20 @@ Example: `&SERVER:IP&` == `&IP&`
 
 ___
 
-### SinglePlayer Placeholders
+### Singleplayer Placeholders
 
 These placeholders translate to the `&SERVER&` Global Placeholder in the `Presence Settings` menu within the Config Gui.
 
-You can configure these Sub-Placeholders within the `Status Messages::SinglePlayer Message` setting.
+You can configure these Sub-Placeholders within the `Status Messages::Singleplayer Message` setting.
 
 If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]` format.
 
 Example: `&SERVER:IP&` == `&IP&`
 
 * `&PLAYERINFO&` - Your in-world player info message
+    * See `Status Messages::Player Inner Info` for sub-placeholders.
 * `&WORLDINFO&` - Your in-world game info message
+    * See `Status Messages::World Data Placeholder` for sub-placeholders.
 
 ___
 
