@@ -269,6 +269,33 @@ Example: `&SERVER:PLAYERINFO:COORDS&` == `&COORDS&`
 
 ___
 
+### Player Coordinate Placeholders
+
+These placeholders translate to the `&COORDS&` Placeholder from the `Player Coordinate Placeholder` setting within the Config Gui.
+
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:COORDS:[placeholderName]&` format.
+
+Example: `&SERVER:PLAYERINFO:COORDS:xPosition&` == `&xPosition&`
+
+* `&xPosition&` - Your current in-game X position
+* `&yPosition&` - Your current in-game Y position
+* `&zPosition&` - Your current in-game Z position
+
+___
+
+### Player Health Placeholders
+
+These placeholders translate to the `&HEALTH&` Placeholder from the `Player Health Placeholder` setting within the Config Gui.
+
+If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:HEALTH:[placeholderName]&` format.
+
+Example: `&SERVER:PLAYERINFO:HEALTH:CURRENT&` == `&CURRENT&`
+
+* `&CURRENT&` - Your current in-game health
+* `&MAX&` - Your current in-game maximum health
+
+___
+
 ### World Info Placeholders
 
 These placeholders translate to the `&WORLDINFO&` Placeholder from the `Server Settings` menu (Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
