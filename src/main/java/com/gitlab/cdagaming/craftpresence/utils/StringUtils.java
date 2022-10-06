@@ -503,11 +503,8 @@ public class StringUtils {
         if (isNullOrEmpty(formattedKey)) {
             return formattedKey;
         } else {
-            if (formattedKey.contains("\\s")) {
+            if (containsWhitespace(formattedKey)) {
                 formattedKey = formattedKey.replaceAll("\\s+", "");
-            }
-            if (formattedKey.contains(" ")) {
-                formattedKey = formattedKey.replaceAll(" ", "");
             }
             if (formattedKey.contains("'")) {
                 formattedKey = formattedKey.replaceAll("'", "");
@@ -839,7 +836,7 @@ public class StringUtils {
         if (isNullOrEmpty(formattedKey) || avoid) {
             return formattedKey;
         } else {
-            if (formattedKey.contains(" ")) {
+            if (containsWhitespace(formattedKey)) {
                 formattedKey = formattedKey.replaceAll("\\s+", " ");
             }
 
@@ -929,7 +926,7 @@ public class StringUtils {
                 formattedKey = new StringBuilder(formattedKey.toString().replace("MobSpawner", ""));
             }
 
-            if (formattedKey.toString().contains(" ")) {
+            if (containsWhitespace(formattedKey.toString())) {
                 formattedKey = new StringBuilder(formattedKey.toString().replaceAll("\\s+", " "));
             }
 
