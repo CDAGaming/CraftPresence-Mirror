@@ -562,15 +562,23 @@ public class StringUtils {
     }
 
     /**
-     * Converts a String into a UUID, presuming it is valid and not-null
+     * Converts a UUID into a String, presuming it is valid and not-null
      * <p>
      * Use {@link StringUtils#isValidUuid(String)} to ensure validity
      *
-     * @param input The original string
+     * @param input   The original string
+     * @param trimmed Whether to return the full or trimmed format of the UUID
      * @return the resulting UUID
      */
-    public static UUID getAsUuid(final String input) {
-        return UUID.fromString(UUID_PATTERN.matcher(input).replaceFirst("$1-$2-$3-$4-$5"));
+    public static String getFromUuid(final String input, final boolean trimmed) {
+        if (!StringUtils.isValidUuid(input)) {
+            return input;
+        }
+        if (trimmed) {
+            return input.replace("-", "");
+        } else {
+            return UUID_PATTERN.matcher(input).replaceFirst("$1-$2-$3-$4-$5");
+        }
     }
 
     /**
@@ -582,7 +590,7 @@ public class StringUtils {
      * @return the resulting UUID
      */
     public static String getFromUuid(final String input) {
-        return input.replace("-", "");
+        return getFromUuid(input, false);
     }
 
     /**
@@ -593,6 +601,18 @@ public class StringUtils {
      */
     public static String getFromUuid(final UUID input) {
         return getFromUuid(input.toString());
+    }
+
+    /**
+     * Converts a String into a UUID, presuming it is valid and not-null
+     * <p>
+     * Use {@link StringUtils#isValidUuid(String)} to ensure validity
+     *
+     * @param input The original string
+     * @return the resulting UUID
+     */
+    public static UUID getAsUuid(final String input) {
+        return UUID.fromString(getFromUuid(input, false));
     }
 
     /**

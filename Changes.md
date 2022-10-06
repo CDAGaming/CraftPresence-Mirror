@@ -7,6 +7,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Added `&UUID_FULL&` to `&IGN&`'s sub-placeholders, to allow having the dashed format or the trimmed format of UUIDs
 * Overhaul the way tooltips with placeholders are displayed, both for easier translating and for better readability
     * Aditionally, systems have been added to allow deeper levels of sub-placeholders, expanding on prior v1.9.x systems
     * Enabling `Debug Mode` will allow you to see previews of currently active placeholders within the tooltip (If the
