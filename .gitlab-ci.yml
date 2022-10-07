@@ -4,13 +4,16 @@ before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
 
 cache:
+  key:
+    files:
+      - gradle/wrapper/gradle-wrapper.properties
   paths:
      - .gradle/wrapper
      - .gradle/caches
 
 build:
   script:
-    - ./gradlew build
+    - ./gradlew --build-cache build
   rules:
     - if: $CI_COMMIT_BRANCH == "l10n_master" || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "l10n_master"
       when: never
@@ -22,8 +25,8 @@ build:
 
 deploy_all:
   script:
-    - ./gradlew build
-    - ./gradlew publishToModSites
+    - ./gradlew --build-cache build
+    - ./gradlew --build-cache publishToModSites
   artifacts:
     paths:
       - build/libs/*.jar
@@ -32,8 +35,8 @@ deploy_all:
 
 deploy_curseforge:
   script:
-    - ./gradlew build
-    - ./gradlew curseforge
+    - ./gradlew --build-cache build
+    - ./gradlew --build-cache curseforge
   artifacts:
     paths:
       - build/libs/*.jar
@@ -42,8 +45,8 @@ deploy_curseforge:
 
 deploy_modrinth:
   script:
-    - ./gradlew build
-    - ./gradlew modrinth
+    - ./gradlew --build-cache build
+    - ./gradlew --build-cache modrinth
   artifacts:
     paths:
       - build/libs/*.jar
