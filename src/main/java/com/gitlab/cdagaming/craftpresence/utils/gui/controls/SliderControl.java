@@ -205,7 +205,7 @@ public class SliderControl extends ExtendedButtonControl {
      * 2 if it IS hovering over this button.
      */
     @Override
-    protected int getHoverState(boolean mouseOver) {
+    public int getHoverState(boolean mouseOver) {
         return 0;
     }
 

@@ -303,7 +303,7 @@ public class CommandsGui extends ExtendedScreen {
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
                         if (executionCommandArgs[1].equalsIgnoreCase("items")) {
                             if (CraftPresence.TILE_ENTITIES.enabled) {
-                                CraftPresence.GUIS.openScreen(new SelectorGui(currentScreen, ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES, null, null, false, false, RenderType.ItemData, null, null));
+                                CraftPresence.GUIS.openScreen(new SelectorGui(currentScreen, ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES, null, null, false, false, RenderType.None, null, null));
                             } else {
                                 executionString = ModUtils.TRANSLATOR.translate("gui.config.message.hover.access", ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item"));
                             }

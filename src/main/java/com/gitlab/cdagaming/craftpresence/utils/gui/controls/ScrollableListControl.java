@@ -35,6 +35,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.Tessellator;
 
 import java.util.List;
 
@@ -144,15 +145,16 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * Renders the Slots for this Control
      *
-     * @param slotIndex    The Slot Identification Number
-     * @param xPos         The Starting X Position to render the Object at
-     * @param yPos         The Starting Y Position to render the Object at
-     * @param heightIn     The Height for the Object to render to
-     * @param mouseXIn     The Mouse's Current X Position
-     * @param mouseYIn     The Mouse's Current Y Position
+     * @param slotIndex     The Slot Identification Number
+     * @param xPos          The Starting X Position to render the Object at
+     * @param yPos          The Starting Y Position to render the Object at
+     * @param heightIn      The Height for the Object to render to
+     * @param tessellatorIn The tesselator for the Object to render with
+     * @param mouseXIn      The Mouse's Current X Position
+     * @param mouseYIn      The Mouse's Current Y Position
      */
     @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn) {
+    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn, int mouseXIn, int mouseYIn) {
         int xOffset = xPos;
         String displayName = getSelectedItem(slotIndex);
         if (!CraftPresence.CONFIG.stripExtraGuiElements &&
@@ -190,7 +192,7 @@ public class ScrollableListControl extends GuiSlot {
             // Note: 35 Added to xOffset to accommodate for Image Size
             xOffset += 35;
         }
-        getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+        getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2) - (getFontHeight() / 2)), 0xFFFFFF);
     }
 
     /**
@@ -213,7 +215,7 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Current Font Renderer for this Control
      */
     public FontRenderer getFontRenderer() {
-        return mc.fontRendererObj != null ? mc.fontRendererObj : GuiUtils.getDefaultFontRenderer();
+        return GuiUtils.getDefaultFontRenderer();
     }
 
     /**

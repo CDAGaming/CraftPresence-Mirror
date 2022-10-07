@@ -50,7 +50,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(int componentId, FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
-        super(componentId, fontRendererObj, x, y, widthIn, heightIn);
+        super(fontRendererObj, x, y, widthIn, heightIn);
     }
 
     /**

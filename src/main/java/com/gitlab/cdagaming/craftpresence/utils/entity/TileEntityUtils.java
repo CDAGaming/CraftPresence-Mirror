@@ -319,7 +319,7 @@ public class TileEntityUtils {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
+                return itemStack.getMetadata() < -32768 || itemStack.getMetadata() > 65535;
             }
         } else {
             return true;
@@ -644,7 +644,8 @@ public class TileEntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        for (Block block : Block.blockRegistry) {
+        for (Object blockObj : Block.blockRegistry) {
+            final Block block = Block.getBlockById(Block.blockRegistry.getIDForObject(blockObj));
             if (!isEmpty(block)) {
                 final String blockName = block.getLocalizedName();
                 if (!BLOCK_NAMES.contains(blockName)) {
@@ -653,26 +654,11 @@ public class TileEntityUtils {
                 if (!BLOCK_CLASSES.contains(block.getClass().getName())) {
                     BLOCK_CLASSES.add(block.getClass().getName());
                 }
-
-                if (!TILE_ENTITY_RESOURCES.containsKey(blockName)) {
-                    try {
-                        final ResourceLocation initialData = new ResourceLocation(
-                                CraftPresence.instance.getBlockRendererDispatcher().getModelFromBlockState(
-                                        block.getDefaultState(), null, null
-                                ).getParticleTexture().getIconName()
-                        );
-                        TILE_ENTITY_RESOURCES.put(blockName,
-                                new ResourceLocation(initialData.getResourceDomain(),
-                                        "textures/" + initialData.getResourcePath() + ".png"
-                                )
-                        );
-                    } catch (Exception ignored) {
-                    }
-                }
             }
         }
 
-        for (Item item : Item.itemRegistry) {
+        for (Object itemObj : Item.itemRegistry) {
+            final Item item = Item.getItemById(Item.itemRegistry.getIDForObject(itemObj));
             if (!isEmpty(item)) {
                 final String itemName = item.getItemStackDisplayName(getDefaultInstance(item));
                 if (!ITEM_NAMES.contains(itemName)) {
@@ -680,22 +666,6 @@ public class TileEntityUtils {
                 }
                 if (!ITEM_CLASSES.contains(item.getClass().getName())) {
                     ITEM_CLASSES.add(item.getClass().getName());
-                }
-
-                if (!TILE_ENTITY_RESOURCES.containsKey(itemName)) {
-                    try {
-                        final ResourceLocation initialData = new ResourceLocation(
-                                CraftPresence.instance.getRenderItem().getItemModelMesher().getItemModel(
-                                        getDefaultInstance(item)
-                                ).getParticleTexture().getIconName()
-                        );
-                        TILE_ENTITY_RESOURCES.put(itemName,
-                                new ResourceLocation(initialData.getResourceDomain(),
-                                        "textures/" + initialData.getResourcePath() + ".png"
-                                )
-                        );
-                    } catch (Exception ignored) {
-                    }
                 }
             }
         }

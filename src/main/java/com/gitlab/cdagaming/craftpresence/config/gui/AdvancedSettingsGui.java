@@ -158,7 +158,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.item"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
-                                        true, true, RenderType.ItemData,
+                                        true, true, RenderType.None,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
