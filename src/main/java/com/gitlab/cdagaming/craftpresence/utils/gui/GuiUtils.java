@@ -325,7 +325,7 @@ public class GuiUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enablePerGui : enabled;
-        isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.isFocused();
+        isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.getFocused() != null && CraftPresence.instance.currentScreen.getFocused().canFocus();
         final boolean needsUpdate = enabled && (GUI_NAMES.isEmpty() || GUI_CLASSES.isEmpty());
 
         if (needsUpdate) {

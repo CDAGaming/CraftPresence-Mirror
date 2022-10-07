@@ -38,7 +38,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Map;
@@ -125,11 +125,12 @@ public class ControlsGui extends PaginatedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
         if (entryData != null) {
             setKeyData(keyCode);
+            return true;
         } else {
-            super.keyTyped(typedChar, keyCode);
+            return super.keyPressed(keyCode, mouseX, mouseY);
         }
     }
 
@@ -187,7 +188,7 @@ public class ControlsGui extends PaginatedScreen {
                 final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
                         renderPosition + 20, CraftPresence.GUIS.getButtonY(currentAllocatedRow),
                         120, 20,
-                        CraftPresence.KEYBINDINGS.getKeyName(keyData.getFirst().getKeyCode()),
+                        CraftPresence.KEYBINDINGS.getKeyName(keyData.getFirst().getKey().getKeyCode()),
                         keyName
                 );
                 keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton));
@@ -234,7 +235,7 @@ public class ControlsGui extends PaginatedScreen {
 
         // Ensure a Valid KeyCode is entered
         if (!CraftPresence.KEYBINDINGS.isValidKeyCode(keyToSubmit) || CraftPresence.KEYBINDINGS.isValidClearCode(keyToSubmit)) {
-            keyToSubmit = Keyboard.KEY_NONE;
+            keyToSubmit = GLFW.GLFW_KEY_UNKNOWN;
         }
 
         final String formattedKey = CraftPresence.KEYBINDINGS.getKeyName(keyToSubmit);

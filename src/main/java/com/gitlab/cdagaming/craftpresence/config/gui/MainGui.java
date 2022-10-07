@@ -36,7 +36,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
@@ -340,8 +340,8 @@ public class MainGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == Keyboard.KEY_ESCAPE) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             if (CraftPresence.CONFIG.hasChanged || CraftPresence.CONFIG.hasClientPropertiesChanged || CraftPresence.CONFIG.flushClientProperties) {
                 CraftPresence.CONFIG.setupInitialValues();
                 CraftPresence.CONFIG.read(false, "UTF-8");
@@ -351,7 +351,7 @@ public class MainGui extends ExtendedScreen {
             }
             CraftPresence.GUIS.configGUIOpened = false;
         }
-        super.keyTyped(typedChar, keyCode);
+        return super.keyPressed(keyCode, mouseX, mouseY);
     }
 
     private void syncRenderStates() {

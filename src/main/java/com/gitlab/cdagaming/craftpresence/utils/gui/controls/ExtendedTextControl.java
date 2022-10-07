@@ -28,6 +28,8 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
+import javax.annotation.Nonnull;
+
 /**
  * Extended Gui Widget for a Text Field
  *
@@ -183,17 +185,22 @@ public class ExtendedTextControl extends GuiTextField {
     /**
      * The event to occur when a character is typed within this control
      *
-     * @param typedChar The typed character, if any
-     * @param keyCode   The keycode, if any
-     * @return Whether the event completed successfully
+     * @param textToWrite The text that's being written/replaced
      */
     @Override
-    public boolean textboxKeyTyped(char typedChar, int keyCode) {
-        final boolean returnValue = super.textboxKeyTyped(typedChar, keyCode);
-        if (returnValue) {
-            onKeyTyped();
-        }
+    public void writeText(@Nonnull String textToWrite) {
+        super.writeText(textToWrite);
+        onKeyTyped();
+    }
 
-        return returnValue;
+    /**
+     * The event to occur when a character is deleted within this control
+     *
+     * @param num The number of text that's being written/replaced
+     */
+    @Override
+    public void deleteFromCursor(int num) {
+        super.deleteFromCursor(num);
+        onKeyTyped();
     }
 }

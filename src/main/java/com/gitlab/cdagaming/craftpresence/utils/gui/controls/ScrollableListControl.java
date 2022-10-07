@@ -112,14 +112,19 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * The Event to Occur if a Slot/Element is Clicked within the List
      *
-     * @param slotIndex     The Slot Number that was Clicked
-     * @param isDoubleClick Whether the Click was a Double or Single Click
-     * @param mouseX        The Mouse's Current X Position
-     * @param mouseY        The Mouse's Current Y Position
+     * @param mouseX      The Mouse's Current X Position
+     * @param mouseZ      The Mouse's Current Y Position
+     * @param mouseButton Which Mouse Button was Clicked
      */
     @Override
-    public void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY) {
-        currentValue = getSelectedItem(slotIndex);
+    public boolean mouseClicked(double mouseX, double mouseZ, int mouseButton) {
+        if (isMouseInList(mouseX, mouseZ)) {
+            int scrollIndex = getEntryAt(mouseX, mouseZ);
+            if (scrollIndex != -1) {
+                currentValue = getSelectedItem(scrollIndex);
+            }
+        }
+        return super.mouseClicked(mouseX, mouseZ, mouseButton);
     }
 
     /**
@@ -224,6 +229,15 @@ public class ScrollableListControl extends GuiSlot {
      */
     public int getFontHeight() {
         return getFontRenderer().FONT_HEIGHT;
+    }
+
+    /**
+     * Setter for Visibility for this control
+     *
+     * @param value The new visibility value for this control
+     */
+    public void setVisible(boolean value) {
+        this.visible = value;
     }
 
     /**

@@ -56,7 +56,7 @@ import java.util.TimerTask;
  * @author CDAGaming
  */
 @SuppressWarnings("ConstantConditions")
-@Mod(modid = ModUtils.MOD_ID, name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = ModUtils.GUI_FACTORY, canBeDeactivated = true, updateJSON = ModUtils.UPDATE_JSON, acceptedMinecraftVersions = "*")
+@Mod(ModUtils.MOD_ID)
 public class CraftPresence {
     /**
      * Whether Pack Data was able to be Found and Parsed
@@ -242,7 +242,7 @@ public class CraftPresence {
      */
     private void clientTick() {
         if (!closing) {
-            instance = Minecraft.getMinecraft();
+            instance = Minecraft.getInstance();
             if (initialized) {
                 session = instance.getSession();
                 player = instance.player;

@@ -34,8 +34,8 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.minecraft.client.gui.GuiConnecting;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -289,7 +289,23 @@ public class ServerUtils {
         if (!joinInProgress) {
             final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? Lists.newArrayList(newConnection.getPlayerInfoMap()) : Lists.newArrayList();
             final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
-            final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
+
+            // 1.13+ Check for New Maximum Players
+            int newMaxPlayers;
+            if (newServerData != null) {
+                try {
+                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.populationInfo).split("/")[1]).getSecond();
+
+                    if (newMaxPlayers < newCurrentPlayers) {
+                        newMaxPlayers = newCurrentPlayers + 1;
+                    }
+                } catch (Exception ex) {
+                    newMaxPlayers = newCurrentPlayers + 1;
+                }
+            } else {
+                newMaxPlayers = newCurrentPlayers + 1;
+            }
+
             final boolean newLANStatus = (CraftPresence.instance.isSingleplayer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
@@ -361,7 +377,7 @@ public class ServerUtils {
                     // &difficulty& Argument = Current Difficulty of the World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&difficulty&")) {
                         final String newDifficulty = CraftPresence.player != null ?
-                                (CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : CraftPresence.player.world.getDifficulty().name()) :
+                                (CraftPresence.player.world.getWorldInfo().isHardcore() ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : CraftPresence.player.world.getDifficulty().name()) :
                                 "";
                         if (!newDifficulty.equals(currentDifficulty)) {
                             currentDifficulty = newDifficulty;
@@ -382,7 +398,7 @@ public class ServerUtils {
 
                     // &worldtime& Argument = Current Time in World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldtime&")) {
-                        final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.world.getWorldTime()) : null;
+                        final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.world.getDayTime()) : null;
                         if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString)) {
                             timeString = newGameTime;
                             queuedForUpdate = true;
@@ -391,7 +407,7 @@ public class ServerUtils {
 
                     // &worldday& Argument = Current Amount of Days in World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&worldday&")) {
-                        final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.world.getWorldTime() / 24000L) : null;
+                        final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.world.getDayTime() / 24000L) : null;
                         if (!StringUtils.isNullOrEmpty(newGameDay) && !newGameDay.equals(dayString)) {
                             dayString = newGameDay;
                             queuedForUpdate = true;

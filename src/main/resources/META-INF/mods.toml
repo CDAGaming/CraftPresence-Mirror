@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[25,)"
+issueTrackerURL="https://gitlab.com/CDAGaming/CraftPresence/issues"
+[[mods]]
+modId="craftpresence"
+version="${version}"
+displayName="CraftPresence"
+updateJSONURL="https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/craftpresence"
+logoFile="logo.png"
+credits=""
+authors="CDA_Gaming"
+description='''
+Completely Customize the way others see you play in Discord!
+'''
+
+[[dependencies.craftpresence]]
+    modId="forge"
+    mandatory=true
+    versionRange="[25,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.craftpresence]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[${mcversion}]"
+    ordering="NONE"
+    side="BOTH"

@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
-import net.minecraft.launchwrapper.Launch;
 
 import java.io.File;
 
@@ -149,7 +148,7 @@ public class ModUtils {
     /**
      * If this Application is running in a de-obfuscated or Developer environment
      */
-    public static boolean IS_VERBOSE = (Launch.blackboard != null && !Launch.blackboard.isEmpty() && Launch.blackboard.containsKey("fml.deobfuscatedEnvironment")) && (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    public static boolean IS_VERBOSE = false;
 
     static {
         NAME = "@MOD_NAME@";

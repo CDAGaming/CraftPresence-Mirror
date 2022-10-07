@@ -33,11 +33,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.registry.IRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -163,7 +163,7 @@ public class EntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY ? CraftPresence.instance.objectMouseOver.entityHit : null;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.type == RayTraceResult.Type.ENTITY ? CraftPresence.instance.objectMouseOver.entity : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
@@ -195,8 +195,8 @@ public class EntityUtils {
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
-            CURRENT_TARGET_TAG = CURRENT_TARGET != null ? CURRENT_TARGET.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.getKeySet()) : Lists.newArrayList();
+            CURRENT_TARGET_TAG = CURRENT_TARGET != null ? CURRENT_TARGET.writeWithoutTypeId(new NBTTagCompound()) : null;
+            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.keySet()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_TARGET_TAGS.equals(CURRENT_TARGET_TAGS)) {
                 CURRENT_TARGET_TAGS = NEW_CURRENT_TARGET_TAGS;
@@ -206,8 +206,8 @@ public class EntityUtils {
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
-            CURRENT_RIDING_TAG = CURRENT_RIDING != null ? CURRENT_RIDING.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.getKeySet()) : Lists.newArrayList();
+            CURRENT_RIDING_TAG = CURRENT_RIDING != null ? CURRENT_RIDING.writeWithoutTypeId(new NBTTagCompound()) : null;
+            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.keySet()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_RIDING_TAGS.equals(CURRENT_RIDING_TAGS)) {
                 CURRENT_RIDING_TAGS = NEW_CURRENT_RIDING_TAGS;
@@ -249,13 +249,13 @@ public class EntityUtils {
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_TARGET_TAGS) {
-                entityTargetArgs.add(new Pair<>("&" + tagName + "&", CURRENT_TARGET_TAG.getTag(tagName).toString()));
+                entityTargetArgs.add(new Pair<>("&" + tagName + "&", CURRENT_TARGET_TAG.get(tagName).toString()));
             }
         }
 
         if (!CURRENT_RIDING_TAGS.isEmpty()) {
             for (String tagName : CURRENT_RIDING_TAGS) {
-                entityRidingArgs.add(new Pair<>("&" + tagName + "&", CURRENT_RIDING_TAG.getTag(tagName).toString()));
+                entityRidingArgs.add(new Pair<>("&" + tagName + "&", CURRENT_RIDING_TAG.get(tagName).toString()));
             }
         }
 
@@ -321,7 +321,7 @@ public class EntityUtils {
      * @return The formatted entity display name to use
      */
     public String getEntityName(final Entity entity, final String original) {
-        return StringUtils.isValidUuid(original) ? entity.getName() : original;
+        return StringUtils.isValidUuid(original) ? entity.getName().getString() : original;
     }
 
     /**
@@ -354,8 +354,8 @@ public class EntityUtils {
                 if (addExtraData) {
                     // If specified, also append the Tag's value to the placeholder String
                     final String tagValue =
-                            tags.equals(CURRENT_TARGET_TAGS) ? CURRENT_TARGET_TAG.getTag(tagName).toString() :
-                                    tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.getTag(tagName).toString() : null;
+                            tags.equals(CURRENT_TARGET_TAGS) ? CURRENT_TARGET_TAG.get(tagName).toString() :
+                                    tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.get(tagName).toString() : null;
 
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
                         finalString.append(String.format(" (%s \"%s\")",
@@ -381,18 +381,18 @@ public class EntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        if (!EntityList.getEntityNameList().isEmpty()) {
-            for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
+        final List<EntityType<?>> defaultEntityTypes = Lists.newArrayList(IRegistry.ENTITY_TYPE.iterator());
+
+        if (!defaultEntityTypes.isEmpty()) {
+            for (EntityType<?> entityLocation : defaultEntityTypes) {
                 if (entityLocation != null) {
-                    final String entityName = !StringUtils.isNullOrEmpty(EntityList.getTranslationName(entityLocation)) ? EntityList.getTranslationName(entityLocation) : "generic";
-                    final Class<?> entityClass = EntityList.getClass(entityLocation);
-                    if (entityClass != null) {
-                        if (!ENTITY_NAMES.contains(entityName)) {
-                            ENTITY_NAMES.add(entityName);
-                        }
-                        if (!ENTITY_CLASSES.contains(entityClass.getName())) {
-                            ENTITY_CLASSES.add(entityClass.getName());
-                        }
+                    final String entityName = entityLocation.getName().getFormattedText();
+                    final Class<?> entityClass = entityLocation.getEntityClass();
+                    if (!ENTITY_NAMES.contains(entityName)) {
+                        ENTITY_NAMES.add(entityName);
+                    }
+                    if (!ENTITY_CLASSES.contains(entityClass.getName())) {
+                        ENTITY_CLASSES.add(entityClass.getName());
                     }
                 }
             }

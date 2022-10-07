@@ -26,9 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import net.minecraft.client.Minecraft;
-
-import javax.annotation.Nonnull;
 
 /**
  * Gui Widget for a Clickable Checkbox-Style Button
@@ -139,12 +136,11 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Draws this button to the screen.
      */
     @Override
-    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partial) {
-        setCurrentFontRender(mc.fontRenderer);
+    public void render(int mouseX, int mouseY, float partial) {
         if (visible) {
             hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
             CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, BUTTON_TEXTURES);
-            mouseDragged(mc, mouseX, mouseY);
+            renderBg(CraftPresence.instance, mouseX, mouseY);
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (is_Checked)
@@ -159,12 +155,10 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    public void onClick(double mouseX, double mouseY) {
         if (isControlEnabled() && visible && hovered) {
             is_Checked = !is_Checked;
-            return true;
         }
-        return false;
     }
 
     /**
