@@ -705,28 +705,47 @@ public class TileEntityUtils {
                 }
 
                 if (!TILE_ENTITY_RESOURCES.containsKey(block.getLocalizedName())) {
-                    final ResourceLocation initialData = Block.REGISTRY.getNameForObject(block);
-                    TILE_ENTITY_RESOURCES.put(block.getLocalizedName(),
-                            new ResourceLocation(initialData.getNamespace(),
-                                    (ModUtils.MCProtocolID > 340 ? "textures/block/" : "textures/blocks/") + initialData.getPath() + ".png"));
+                    try {
+                        final ResourceLocation initialData = new ResourceLocation(
+                                CraftPresence.instance.getBlockRendererDispatcher().getModelForState(
+                                        block.getDefaultState()
+                                ).getParticleTexture().getIconName()
+                        );
+                        TILE_ENTITY_RESOURCES.put(block.getLocalizedName(),
+                                new ResourceLocation(initialData.getNamespace(),
+                                        "textures/" + initialData.getPath() + ".png"
+                                )
+                        );
+                    } catch (Exception ignored) {
+                    }
                 }
             }
         }
 
         for (Item item : Item.REGISTRY) {
             if (!isEmpty(item)) {
-                if (!ITEM_NAMES.contains(item.getItemStackDisplayName(getDefaultInstance(item)))) {
-                    ITEM_NAMES.add(item.getItemStackDisplayName(getDefaultInstance(item)));
+                final String itemName = item.getItemStackDisplayName(getDefaultInstance(item));
+                if (!ITEM_NAMES.contains(itemName)) {
+                    ITEM_NAMES.add(itemName);
                 }
                 if (!ITEM_CLASSES.contains(item.getClass().getName())) {
                     ITEM_CLASSES.add(item.getClass().getName());
                 }
 
-                if (!TILE_ENTITY_RESOURCES.containsKey(item.getItemStackDisplayName(getDefaultInstance(item)))) {
-                    final ResourceLocation initialData = Item.REGISTRY.getNameForObject(item);
-                    TILE_ENTITY_RESOURCES.put(item.getItemStackDisplayName(getDefaultInstance(item)),
-                            new ResourceLocation(initialData.getNamespace(),
-                                    (ModUtils.MCProtocolID > 340 ? "textures/item/" : "textures/items/") + initialData.getPath() + ".png"));
+                if (!TILE_ENTITY_RESOURCES.containsKey(itemName)) {
+                    try {
+                        final ResourceLocation initialData = new ResourceLocation(
+                                CraftPresence.instance.getRenderItem().getItemModelMesher().getItemModel(
+                                        getDefaultInstance(item)
+                                ).getParticleTexture().getIconName()
+                        );
+                        TILE_ENTITY_RESOURCES.put(itemName,
+                                new ResourceLocation(initialData.getNamespace(),
+                                        "textures/" + initialData.getPath() + ".png"
+                                )
+                        );
+                    } catch (Exception ignored) {
+                    }
                 }
             }
         }
