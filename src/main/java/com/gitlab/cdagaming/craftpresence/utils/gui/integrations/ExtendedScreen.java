@@ -482,7 +482,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Height for this Screen
      */
     public int getFontHeight() {
-        return getFontRenderer().field_41063_b;
+        return 8;
     }
 
     /**

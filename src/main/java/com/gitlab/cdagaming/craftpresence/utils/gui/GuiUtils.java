@@ -126,7 +126,7 @@ public class GuiUtils {
      * @return The Default/Global Font Height for this Screen
      */
     public static int getDefaultFontHeight() {
-        return getDefaultFontRenderer().field_41063_b;
+        return 8;
     }
 
     /**

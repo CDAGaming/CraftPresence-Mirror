@@ -349,7 +349,7 @@ public class ServerUtils {
 
                     // &health& Argument = Current and Maximum Health of Player
                     if (CraftPresence.CONFIG.innerPlayerPlaceholderMessage.toLowerCase().contains("&health&")) {
-                        final Pair<Double, Double> newHealth = CraftPresence.player != null ? new Pair<>(StringUtils.roundDouble(CraftPresence.player.getEntityHealth(), 0), StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)) : new Pair<>(0.0D, 0.0D);
+                        final Pair<Double, Double> newHealth = CraftPresence.player != null ? new Pair<>(StringUtils.roundDouble(CraftPresence.player.health, 0), StringUtils.roundDouble(20.0D, 0)) : new Pair<>(0.0D, 0.0D);
                         if (!newHealth.equals(currentHealth)) {
                             currentHealth = newHealth;
                             queuedForUpdate = true;
@@ -364,7 +364,7 @@ public class ServerUtils {
                     // &difficulty& Argument = Current Difficulty of the World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&difficulty&")) {
                         final String newDifficulty = CraftPresence.player != null ?
-                                (CraftPresence.player.worldObj.getWorldInfo().isHardcoreModeEnabled() ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : Integer.toString(CraftPresence.player.worldObj.difficultySetting)) :
+                                (false ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : Integer.toString(CraftPresence.player.worldObj.difficultySetting)) :
                                 "";
                         if (!newDifficulty.equals(currentDifficulty)) {
                             currentDifficulty = newDifficulty;

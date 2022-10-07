@@ -465,31 +465,31 @@ public class TileEntityUtils {
         // Extend Argument Messages, if tags available
         if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
             for (String tagName : CURRENT_MAIN_HAND_ITEM_TAGS) {
-                mainItemMessage = StringUtils.replaceAnyCase(mainItemMessage, "&" + tagName + "&", CURRENT_MAIN_HAND_ITEM_TAG.func_40196_b(tagName).toString());
+                mainItemMessage = StringUtils.replaceAnyCase(mainItemMessage, "&" + tagName + "&", CURRENT_MAIN_HAND_ITEM_TAG.getCompoundTag(tagName).toString());
             }
         }
 
         if (!CURRENT_HELMET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_HELMET_TAGS) {
-                helmetMessage = StringUtils.replaceAnyCase(helmetMessage, "&" + tagName + "&", CURRENT_HELMET_TAG.func_40196_b(tagName).toString());
+                helmetMessage = StringUtils.replaceAnyCase(helmetMessage, "&" + tagName + "&", CURRENT_HELMET_TAG.getCompoundTag(tagName).toString());
             }
         }
 
         if (!CURRENT_CHEST_TAGS.isEmpty()) {
             for (String tagName : CURRENT_CHEST_TAGS) {
-                chestMessage = StringUtils.replaceAnyCase(chestMessage, "&" + tagName + "&", CURRENT_CHEST_TAG.func_40196_b(tagName).toString());
+                chestMessage = StringUtils.replaceAnyCase(chestMessage, "&" + tagName + "&", CURRENT_CHEST_TAG.getCompoundTag(tagName).toString());
             }
         }
 
         if (!CURRENT_LEGS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_LEGS_TAGS) {
-                legsMessage = StringUtils.replaceAnyCase(legsMessage, "&" + tagName + "&", CURRENT_LEGS_TAG.func_40196_b(tagName).toString());
+                legsMessage = StringUtils.replaceAnyCase(legsMessage, "&" + tagName + "&", CURRENT_LEGS_TAG.getCompoundTag(tagName).toString());
             }
         }
 
         if (!CURRENT_BOOTS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_BOOTS_TAGS) {
-                bootsMessage = StringUtils.replaceAnyCase(bootsMessage, "&" + tagName + "&", CURRENT_BOOTS_TAG.func_40196_b(tagName).toString());
+                bootsMessage = StringUtils.replaceAnyCase(bootsMessage, "&" + tagName + "&", CURRENT_BOOTS_TAG.getCompoundTag(tagName).toString());
             }
         }
 
@@ -613,11 +613,11 @@ public class TileEntityUtils {
                 if (addExtraData) {
                     // If specified, also append the Tag's value to the placeholder String
                     final String tagValue =
-                            tags.equals(CURRENT_MAIN_HAND_ITEM_TAGS) ? CURRENT_MAIN_HAND_ITEM_TAG.func_40196_b(tagName).toString() :
-                                    tags.equals(CURRENT_HELMET_TAGS) ? CURRENT_HELMET_TAG.func_40196_b(tagName).toString() :
-                                            tags.equals(CURRENT_CHEST_TAGS) ? CURRENT_CHEST_TAG.func_40196_b(tagName).toString() :
-                                                    tags.equals(CURRENT_LEGS_TAGS) ? CURRENT_LEGS_TAG.func_40196_b(tagName).toString() :
-                                                            tags.equals(CURRENT_BOOTS_TAGS) ? CURRENT_BOOTS_TAG.func_40196_b(tagName).toString() : null;
+                            tags.equals(CURRENT_MAIN_HAND_ITEM_TAGS) ? CURRENT_MAIN_HAND_ITEM_TAG.getCompoundTag(tagName).toString() :
+                                    tags.equals(CURRENT_HELMET_TAGS) ? CURRENT_HELMET_TAG.getCompoundTag(tagName).toString() :
+                                            tags.equals(CURRENT_CHEST_TAGS) ? CURRENT_CHEST_TAG.getCompoundTag(tagName).toString() :
+                                                    tags.equals(CURRENT_LEGS_TAGS) ? CURRENT_LEGS_TAG.getCompoundTag(tagName).toString() :
+                                                            tags.equals(CURRENT_BOOTS_TAGS) ? CURRENT_BOOTS_TAG.getCompoundTag(tagName).toString() : null;
 
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
                         finalString.append(String.format(" (%s \"%s\")",
@@ -657,7 +657,7 @@ public class TileEntityUtils {
 
         for (Item item : Item.itemsList) {
             if (!isEmpty(item)) {
-                final String itemName = item.func_40397_d(getDefaultInstance(item));
+                final String itemName = item.getItemNameIS(getDefaultInstance(item));
                 if (!ITEM_NAMES.contains(itemName)) {
                     ITEM_NAMES.add(itemName);
                 }

@@ -190,7 +190,7 @@ public class ExtendedButtonControl extends GuiButton {
     @Override
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         setCurrentFontRender(mc.fontRenderer);
-        if (drawButton) {
+        if (enabled2) {
             field_82253_i = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
             final int hoverState = getHoverState(field_82253_i);
 
@@ -298,7 +298,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Current Font Height for this Control
      */
     public int getFontHeight() {
-        return getFontRenderer().field_41063_b;
+        return 8;
     }
 
     /**
@@ -409,7 +409,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return Whether the control is currently visible
      */
     public boolean isControlVisible() {
-        return this.drawButton;
+        return this.enabled2;
     }
 
     /**
@@ -418,6 +418,6 @@ public class ExtendedButtonControl extends GuiButton {
      * @param isVisible The new visibility state for this control
      */
     public void setControlVisible(final boolean isVisible) {
-        this.drawButton = isVisible;
+        this.enabled2 = isVisible;
     }
 }

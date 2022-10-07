@@ -215,7 +215,7 @@ public class SliderControl extends ExtendedButtonControl {
      */
     @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (drawButton) {
+        if (enabled2) {
             if (dragging) {
                 sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
                 sliderValue = clamp(sliderValue, 0.0F, 1.0F);
