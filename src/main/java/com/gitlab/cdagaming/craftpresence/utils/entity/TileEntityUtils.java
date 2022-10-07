@@ -697,21 +697,22 @@ public class TileEntityUtils {
     public void getEntities() {
         for (Block block : Block.REGISTRY) {
             if (!isEmpty(block)) {
-                if (!BLOCK_NAMES.contains(block.getLocalizedName())) {
-                    BLOCK_NAMES.add(block.getLocalizedName());
+                final String blockName = block.getLocalizedName();
+                if (!BLOCK_NAMES.contains(blockName)) {
+                    BLOCK_NAMES.add(blockName);
                 }
                 if (!BLOCK_CLASSES.contains(block.getClass().getName())) {
                     BLOCK_CLASSES.add(block.getClass().getName());
                 }
 
-                if (!TILE_ENTITY_RESOURCES.containsKey(block.getLocalizedName())) {
+                if (!TILE_ENTITY_RESOURCES.containsKey(blockName)) {
                     try {
                         final ResourceLocation initialData = new ResourceLocation(
                                 CraftPresence.instance.getBlockRendererDispatcher().getModelForState(
                                         block.getDefaultState()
                                 ).getParticleTexture().getIconName()
                         );
-                        TILE_ENTITY_RESOURCES.put(block.getLocalizedName(),
+                        TILE_ENTITY_RESOURCES.put(blockName,
                                 new ResourceLocation(initialData.getNamespace(),
                                         "textures/" + initialData.getPath() + ".png"
                                 )
