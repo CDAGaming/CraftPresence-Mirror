@@ -284,7 +284,7 @@ public class ServerUtils {
      */
     private void updateServerData() {
         final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
+        final NetHandlerPlayClient newConnection = CraftPresence.instance.getNetHandler();
 
         if (!joinInProgress) {
             final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? Lists.newArrayList(newConnection.getPlayerInfoMap()) : Lists.newArrayList();

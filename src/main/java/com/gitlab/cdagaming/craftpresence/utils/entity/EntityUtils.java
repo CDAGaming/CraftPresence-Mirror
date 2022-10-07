@@ -36,8 +36,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
 
 import java.util.List;
 import java.util.Map;
@@ -163,8 +162,8 @@ public class EntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY ? CraftPresence.instance.objectMouseOver.entityHit : null;
-        final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY ? CraftPresence.instance.objectMouseOver.entityHit : null;
+        final Entity NEW_CURRENT_RIDING = CraftPresence.player.ridingEntity;
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
 
@@ -195,7 +194,7 @@ public class EntityUtils {
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
-            CURRENT_TARGET_TAG = CURRENT_TARGET != null ? CURRENT_TARGET.writeToNBT(new NBTTagCompound()) : null;
+            CURRENT_TARGET_TAG = CURRENT_TARGET != null ? CURRENT_TARGET.serializeNBT() : null;
             final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.getKeySet()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_TARGET_TAGS.equals(CURRENT_TARGET_TAGS)) {
@@ -206,7 +205,7 @@ public class EntityUtils {
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
-            CURRENT_RIDING_TAG = CURRENT_RIDING != null ? CURRENT_RIDING.writeToNBT(new NBTTagCompound()) : null;
+            CURRENT_RIDING_TAG = CURRENT_RIDING != null ? CURRENT_RIDING.serializeNBT() : null;
             final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.getKeySet()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_RIDING_TAGS.equals(CURRENT_RIDING_TAGS)) {
@@ -385,7 +384,7 @@ public class EntityUtils {
             for (String entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
                     final String entityName = !StringUtils.isNullOrEmpty(entityLocation) ? entityLocation : "generic";
-                    final Class<?> entityClass = EntityList.NAME_TO_CLASS.get(entityLocation);
+                    final Class<?> entityClass = EntityList.stringToClassMapping.get(entityLocation);
                     if (entityClass != null) {
                         if (!ENTITY_NAMES.contains(entityName)) {
                             ENTITY_NAMES.add(entityName);
