@@ -298,7 +298,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Current Font Height for this Control
      */
     public int getFontHeight() {
-        return getFontRenderer().FONT_HEIGHT;
+        return getFontRenderer().field_41063_b;
     }
 
     /**

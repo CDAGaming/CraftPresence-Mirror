@@ -194,7 +194,7 @@ public class EntityUtils {
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
             CURRENT_TARGET_TAG = CURRENT_TARGET != null ? new NBTTagCompound() : null;
-            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.getTags()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.func_28110_c()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_TARGET_TAGS.equals(CURRENT_TARGET_TAGS)) {
                 CURRENT_TARGET_TAGS = NEW_CURRENT_TARGET_TAGS;
@@ -205,7 +205,7 @@ public class EntityUtils {
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
             CURRENT_RIDING_TAG = CURRENT_RIDING != null ? new NBTTagCompound() : null;
-            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.getTags()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.func_28110_c()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_RIDING_TAGS.equals(CURRENT_RIDING_TAGS)) {
                 CURRENT_RIDING_TAGS = NEW_CURRENT_RIDING_TAGS;
@@ -247,13 +247,13 @@ public class EntityUtils {
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_TARGET_TAGS) {
-                entityTargetArgs.add(new Pair<>("&" + tagName + "&", CURRENT_TARGET_TAG.getTag(tagName).toString()));
+                entityTargetArgs.add(new Pair<>("&" + tagName + "&", CURRENT_TARGET_TAG.func_40196_b(tagName).toString()));
             }
         }
 
         if (!CURRENT_RIDING_TAGS.isEmpty()) {
             for (String tagName : CURRENT_RIDING_TAGS) {
-                entityRidingArgs.add(new Pair<>("&" + tagName + "&", CURRENT_RIDING_TAG.getTag(tagName).toString()));
+                entityRidingArgs.add(new Pair<>("&" + tagName + "&", CURRENT_RIDING_TAG.func_40196_b(tagName).toString()));
             }
         }
 
@@ -352,8 +352,8 @@ public class EntityUtils {
                 if (addExtraData) {
                     // If specified, also append the Tag's value to the placeholder String
                     final String tagValue =
-                            tags.equals(CURRENT_TARGET_TAGS) ? CURRENT_TARGET_TAG.getTag(tagName).toString() :
-                                    tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.getTag(tagName).toString() : null;
+                            tags.equals(CURRENT_TARGET_TAGS) ? CURRENT_TARGET_TAG.func_40196_b(tagName).toString() :
+                                    tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.func_40196_b(tagName).toString() : null;
 
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
                         finalString.append(String.format(" (%s \"%s\")",

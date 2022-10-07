@@ -223,7 +223,7 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Current Font Height for this Control
      */
     public int getFontHeight() {
-        return getFontRenderer().FONT_HEIGHT;
+        return getFontRenderer().field_41063_b;
     }
 
     /**
