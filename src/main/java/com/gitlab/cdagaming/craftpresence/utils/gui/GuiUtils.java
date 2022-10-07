@@ -771,7 +771,7 @@ public class GuiUtils {
     public void renderSlider(int x, int y, int u, int v, int width, int height, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.renderEngine.bindTexture(texLocation);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
             }
         } catch (Exception ignored) {
         }
@@ -795,7 +795,7 @@ public class GuiUtils {
     public void renderButton(int x, int y, int width, int height, int hoverState, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.renderEngine.bindTexture(texLocation);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
             }
         } catch (Exception ignored) {
         }
@@ -842,7 +842,7 @@ public class GuiUtils {
     public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, double widthDivider, double heightDivider, boolean shouldBeDark, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.renderEngine.bindTexture(texLocation);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
             }
         } catch (Exception ignored) {
         }
@@ -948,7 +948,7 @@ public class GuiUtils {
                                           Pair<Integer, Integer> verticalBorderData, Pair<Integer, Integer> sideBorderData, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.renderEngine.bindTexture(texLocation);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
             }
         } catch (Exception ignored) {
         }

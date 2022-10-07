@@ -129,7 +129,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void initGui() {
         // Clear Data before Initialization
-        buttonList.clear();
+        controlList.clear();
         extendedControls.clear();
         extendedLists.clear();
 
@@ -170,8 +170,8 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Nonnull
     protected <T extends Gui> T addControl(@Nonnull T buttonIn) {
-        if (buttonIn instanceof GuiButton && !buttonList.contains(buttonIn)) {
-            buttonList.add((GuiButton) buttonIn);
+        if (buttonIn instanceof GuiButton && !controlList.contains(buttonIn)) {
+            controlList.add((GuiButton) buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);

@@ -645,7 +645,7 @@ public class TileEntityUtils {
     public void getEntities() {
         for (Block block : Block.blocksList) {
             if (!isEmpty(block)) {
-                final String blockName = block.getLocalizedName();
+                final String blockName = block.getBlockName();
                 if (!BLOCK_NAMES.contains(blockName)) {
                     BLOCK_NAMES.add(blockName);
                 }

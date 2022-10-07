@@ -35,7 +35,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.NetClientHandler;
@@ -285,7 +284,7 @@ public class ServerUtils {
      */
     private void updateServerData() {
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.getNetHandler();
+        final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
             newServerData = (ServerData) StringUtils.lookupObject(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O");
@@ -521,7 +520,7 @@ public class ServerUtils {
                 CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.loadWorld(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
+            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData));
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
