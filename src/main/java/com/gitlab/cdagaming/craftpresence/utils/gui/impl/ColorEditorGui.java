@@ -36,7 +36,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 import java.io.File;
@@ -58,7 +57,7 @@ public class ColorEditorGui extends PaginatedScreen {
     private String currentConvertedTexturePath;
     private ExtendedTextControl textureText;
     private boolean isModified = false;
-    private ResourceLocation currentTexture;
+    private String currentTexture;
 
     public ColorEditorGui(GuiScreen parentScreen, String configValueName, PairConsumer<Integer, ColorEditorGui> onAdjustEntry, DataConsumer<ColorEditorGui> onInit) {
         super(parentScreen);
@@ -285,7 +284,7 @@ public class ColorEditorGui extends PaginatedScreen {
             backButton.setControlEnabled(!StringUtils.isNullOrEmpty(textureText.getControlMessage()));
 
             if (currentTexture == null) {
-                currentTexture = new ResourceLocation("");
+                currentTexture = "";
             }
 
             // Ensure the Texture is refreshed consistently, if an external texture
@@ -326,14 +325,14 @@ public class ColorEditorGui extends PaginatedScreen {
                 currentNormalHexValue = null;
                 currentConvertedHexValue = null;
                 currentConvertedTexturePath = null;
-                currentTexture = new ResourceLocation("");
+                currentTexture = "";
                 currentPage = startPage;
             } else if (StringUtils.isNullOrEmpty(textureText.getControlMessage()) && !StringUtils.isNullOrEmpty(startingTexturePath)) {
                 textureText.setControlMessage(startingTexturePath);
                 currentNormalHexValue = null;
                 currentConvertedHexValue = null;
                 currentConvertedTexturePath = null;
-                currentTexture = new ResourceLocation("");
+                currentTexture = "";
                 currentPage = startPage + 1;
             }
         }
@@ -432,9 +431,9 @@ public class ColorEditorGui extends PaginatedScreen {
                 if (!usingExternalTexture) {
                     if (currentConvertedTexturePath.contains(":")) {
                         final String[] splitInput = currentConvertedTexturePath.split(":", 2);
-                        currentTexture = new ResourceLocation(splitInput[0], splitInput[1]);
+                        currentTexture = splitInput[1];
                     } else {
-                        currentTexture = new ResourceLocation(currentConvertedTexturePath);
+                        currentTexture = currentConvertedTexturePath;
                     }
                 } else {
                     final String formattedConvertedName = currentConvertedTexturePath.replaceFirst("file://", "");
@@ -443,7 +442,7 @@ public class ColorEditorGui extends PaginatedScreen {
                     currentTexture = ImageUtils.getTextureFromUrl(textureName, currentConvertedTexturePath.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
                 }
             } else {
-                currentTexture = new ResourceLocation("");
+                currentTexture = "";
             }
             isModified = !StringUtils.isNullOrEmpty(startingTexturePath) && !textureText.getControlMessage().equals(startingTexturePath.replace(CraftPresence.CONFIG.splitCharacter, ":"));
         }

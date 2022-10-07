@@ -42,7 +42,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -557,7 +556,7 @@ public class GuiUtils {
 
                 final int zLevel = 300;
                 String backgroundColor, borderColor;
-                ResourceLocation backGroundTexture, borderTexture;
+                String backGroundTexture, borderTexture;
 
                 // Perform Checks for different Color Format Fixes
                 // Fix 1 Example: hexCodeHere -> #hexCodeHere
@@ -597,9 +596,9 @@ public class GuiUtils {
 
                         if (backgroundColor.contains(":")) {
                             String[] splitInput = backgroundColor.split(":", 2);
-                            backGroundTexture = new ResourceLocation(splitInput[0], splitInput[1]);
+                            backGroundTexture = splitInput[1];
                         } else {
-                            backGroundTexture = new ResourceLocation(backgroundColor);
+                            backGroundTexture = backgroundColor;
                         }
                     } else {
                         final String formattedConvertedName = CraftPresence.CONFIG.tooltipBackgroundColor.replaceFirst("file://", "");
@@ -647,9 +646,9 @@ public class GuiUtils {
 
                         if (borderColor.contains(":")) {
                             String[] splitInput = borderColor.split(":", 2);
-                            borderTexture = new ResourceLocation(splitInput[0], splitInput[1]);
+                            borderTexture = splitInput[1];
                         } else {
-                            borderTexture = new ResourceLocation(borderColor);
+                            borderTexture = borderColor;
                         }
                     } else {
                         final String formattedConvertedName = CraftPresence.CONFIG.tooltipBorderColor.replaceFirst("file://", "");
@@ -724,7 +723,7 @@ public class GuiUtils {
             drawGradientRect(300, 0, 0, width, height, "-1072689136", "-804253680");
         } else {
             String backgroundCode = CraftPresence.CONFIG.guiBackgroundColor;
-            ResourceLocation texLocation;
+            String texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
                 drawGradientRect(300, 0, 0, width, height, backgroundCode, backgroundCode);
@@ -738,9 +737,9 @@ public class GuiUtils {
 
                     if (backgroundCode.contains(":")) {
                         String[] splitInput = backgroundCode.split(":", 2);
-                        texLocation = new ResourceLocation(splitInput[0], splitInput[1]);
+                        texLocation = splitInput[1];
                     } else {
-                        texLocation = new ResourceLocation(backgroundCode);
+                        texLocation = backgroundCode;
                     }
                 } else {
                     final String formattedConvertedName = backgroundCode.replaceFirst("file://", "");
@@ -769,10 +768,10 @@ public class GuiUtils {
      * @param zLevel      The Z level position for the slider to render at
      * @param texLocation The game texture to render the slider as
      */
-    public void renderSlider(int x, int y, int u, int v, int width, int height, double zLevel, ResourceLocation texLocation) {
+    public void renderSlider(int x, int y, int u, int v, int width, int height, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.getTextureManager().bindTexture(texLocation);
+                CraftPresence.instance.renderEngine.bindTexture(texLocation);
             }
         } catch (Exception ignored) {
         }
@@ -793,10 +792,10 @@ public class GuiUtils {
      * @param zLevel      The Z level position for the button to render at
      * @param texLocation The game texture to render the button as
      */
-    public void renderButton(int x, int y, int width, int height, int hoverState, double zLevel, ResourceLocation texLocation) {
+    public void renderButton(int x, int y, int width, int height, int hoverState, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.getTextureManager().bindTexture(texLocation);
+                CraftPresence.instance.renderEngine.bindTexture(texLocation);
             }
         } catch (Exception ignored) {
         }
@@ -824,7 +823,7 @@ public class GuiUtils {
      * @param tint        The Tinting Level of the Object
      * @param texLocation The game texture to render the object as
      */
-    public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, ResourceLocation texLocation) {
+    public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, String texLocation) {
         drawTextureRect(zLevel, xPos, yPos, width, height, tint, 32.0D, 32.0D, false, texLocation);
     }
 
@@ -840,10 +839,10 @@ public class GuiUtils {
      * @param shouldBeDark Whether the Texture should display in a darker format
      * @param texLocation  The game texture to render the object as
      */
-    public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, double widthDivider, double heightDivider, boolean shouldBeDark, ResourceLocation texLocation) {
+    public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, double widthDivider, double heightDivider, boolean shouldBeDark, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.getTextureManager().bindTexture(texLocation);
+                CraftPresence.instance.renderEngine.bindTexture(texLocation);
             }
         } catch (Exception ignored) {
         }
@@ -946,10 +945,10 @@ public class GuiUtils {
      * @param texLocation        The game texture to render the object as
      */
     public void drawContinuousTexturedBox(Pair<Integer, Integer> positionData, Pair<Integer, Integer> uVLevels, Pair<Integer, Integer> screenDimensions, Pair<Integer, Integer> textureDimensions,
-                                          Pair<Integer, Integer> verticalBorderData, Pair<Integer, Integer> sideBorderData, double zLevel, ResourceLocation texLocation) {
+                                          Pair<Integer, Integer> verticalBorderData, Pair<Integer, Integer> sideBorderData, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                CraftPresence.instance.getTextureManager().bindTexture(texLocation);
+                CraftPresence.instance.renderEngine.bindTexture(texLocation);
             }
         } catch (Exception ignored) {
         }

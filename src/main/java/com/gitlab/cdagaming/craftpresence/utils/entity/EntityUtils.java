@@ -171,7 +171,7 @@ public class EntityUtils {
         // Users are still free to manually add Uuid's as they please for this module
         if (NEW_CURRENT_TARGET instanceof EntityPlayer) {
             final EntityPlayer NEW_CURRENT_PLAYER_TARGET = (EntityPlayer) NEW_CURRENT_TARGET;
-            NEW_CURRENT_TARGET_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_TARGET.getDisplayName());
+            NEW_CURRENT_TARGET_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_TARGET.getEntityName());
         } else {
             NEW_CURRENT_TARGET_NAME = NEW_CURRENT_TARGET != null ?
                     StringUtils.stripColors(NEW_CURRENT_TARGET.getEntityName()) : "";
@@ -179,7 +179,7 @@ public class EntityUtils {
 
         if (NEW_CURRENT_RIDING instanceof EntityPlayer) {
             final EntityPlayer NEW_CURRENT_PLAYER_RIDING = (EntityPlayer) NEW_CURRENT_RIDING;
-            NEW_CURRENT_RIDING_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_RIDING.getDisplayName());
+            NEW_CURRENT_RIDING_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_RIDING.getEntityName());
         } else {
             NEW_CURRENT_RIDING_NAME = NEW_CURRENT_RIDING != null ?
                     StringUtils.stripColors(NEW_CURRENT_RIDING.getEntityName()) : "";

@@ -32,8 +32,6 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
@@ -66,7 +64,7 @@ public class ImageUtils {
      * <p>
      * Format: textureName;[[textureInputType, textureObj], [textureIndex, imageData], textureData]
      */
-    private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = Maps.newHashMap();
+    private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<String>>> cachedImages = Maps.newHashMap();
     /**
      * The thread used for Url Image Events to take place within
      */
@@ -127,7 +125,7 @@ public class ImageUtils {
                                         bufferData.getSecond().add(new ImageFrame(ImageIO.read(streamData)));
                                     }
                                     cachedImages.get(request.getFirst()).setSecond(bufferData);
-                                    cachedImages.get(request.getFirst()).setThird(new ArrayList<ResourceLocation>(bufferData.getSecond().size()));
+                                    cachedImages.get(request.getFirst()).setThird(new ArrayList<String>(bufferData.getSecond().size()));
                                 }
                             } catch (Exception ex) {
                                 if (ModUtils.IS_VERBOSE) {
@@ -153,14 +151,14 @@ public class ImageUtils {
      * @param url         The url to retrieve the texture
      * @return The Resulting Texture Data
      */
-    public static ResourceLocation getTextureFromUrl(final String textureName, final String url) {
+    public static String getTextureFromUrl(final String textureName, final String url) {
         try {
             return getTextureFromUrl(textureName, new URL(url));
         } catch (Exception ex) {
             if (ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
             }
-            return new ResourceLocation("");
+            return "";
         }
     }
 
@@ -171,14 +169,14 @@ public class ImageUtils {
      * @param url         The url to retrieve the texture
      * @return The Resulting Texture Data
      */
-    public static ResourceLocation getTextureFromUrl(final String textureName, final URL url) {
+    public static String getTextureFromUrl(final String textureName, final URL url) {
         try {
             return getTextureFromUrl(textureName, new Pair<InputType, Object>(InputType.Url, url));
         } catch (Exception ex) {
             if (ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
             }
-            return new ResourceLocation("");
+            return "";
         }
     }
 
@@ -189,14 +187,14 @@ public class ImageUtils {
      * @param url         The url to retrieve the texture
      * @return The Resulting Texture Data
      */
-    public static ResourceLocation getTextureFromUrl(final String textureName, final File url) {
+    public static String getTextureFromUrl(final String textureName, final File url) {
         try {
             return getTextureFromUrl(textureName, new Pair<InputType, Object>(InputType.FileData, url));
         } catch (Exception ex) {
             if (ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
             }
-            return new ResourceLocation("");
+            return "";
         }
     }
 
@@ -207,7 +205,7 @@ public class ImageUtils {
      * @param url         The url to retrieve the texture
      * @return The Resulting Texture Data
      */
-    public static ResourceLocation getTextureFromUrl(final String textureName, final Object url) {
+    public static String getTextureFromUrl(final String textureName, final Object url) {
         if (url instanceof File) {
             return getTextureFromUrl(textureName, (File) url);
         } else if (url instanceof URL) {
@@ -231,14 +229,14 @@ public class ImageUtils {
      * @param stream      Streaming Data containing data to read later
      * @return The Resulting Texture Data
      */
-    public static ResourceLocation getTextureFromUrl(final String textureName, final Pair<InputType, Object> stream) {
+    public static String getTextureFromUrl(final String textureName, final Pair<InputType, Object> stream) {
         synchronized (cachedImages) {
             if (!cachedImages.containsKey(textureName) || !cachedImages.get(textureName).getFirst().equals(stream)) {
                 // Setup Initial data if not present (Or reset if the stream has changed)
                 //
                 // Note that the ResourceLocation needs to be
                 // initially null here for compatibility reasons
-                cachedImages.put(textureName, new Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>(stream, new Pair<Integer, List<ImageFrame>>(0, Lists.<ImageFrame>newArrayList()), null));
+                cachedImages.put(textureName, new Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<String>>(stream, new Pair<Integer, List<ImageFrame>>(0, Lists.<ImageFrame>newArrayList()), null));
                 try {
                     urlRequests.put(new Pair<>(textureName, stream));
                 } catch (Exception ex) {
@@ -251,14 +249,14 @@ public class ImageUtils {
             final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(textureName).getSecond();
 
             if (bufferData == null || bufferData.getSecond() == null || bufferData.getSecond().isEmpty()) {
-                return new ResourceLocation("");
+                return "";
             } else if (textureName != null) {
                 final boolean shouldRepeat = textureName.endsWith(".gif") || stream.getSecond().toString().contains("gif");
                 final boolean doesContinue = bufferData.getFirst() < bufferData.getSecond().size() - 1;
 
-                final List<ResourceLocation> resources = cachedImages.get(textureName).getThird();
+                final List<String> resources = cachedImages.get(textureName).getThird();
                 if (bufferData.getFirst() < resources.size()) {
-                    final ResourceLocation texLocation = resources.get(bufferData.getFirst());
+                    final String texLocation = resources.get(bufferData.getFirst());
                     if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
                         if (doesContinue) {
                             bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(System.currentTimeMillis());
@@ -268,28 +266,30 @@ public class ImageUtils {
                     }
                     return texLocation;
                 }
-                try {
-                    final DynamicTexture dynTexture = new DynamicTexture(bufferData.getSecond().get(bufferData.getFirst()).getImage());
-                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName + (textureName.endsWith(".gif") ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
-                    if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
-                        if (doesContinue) {
-                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(System.currentTimeMillis());
-                        } else if (shouldRepeat) {
-                            bufferData.setFirst(0);
-                        }
-                    }
-                    if (!resources.contains(cachedTexture)) {
-                        resources.add(cachedTexture);
-                    }
-                    return cachedTexture;
-                } catch (Exception ex) {
-                    if (ModUtils.IS_VERBOSE) {
-                        ex.printStackTrace();
-                    }
-                    return new ResourceLocation("");
-                }
+                // Not functional in MC 1.5.2 or below
+//                try {
+//                    final DynamicTexture dynTexture = new DynamicTexture(bufferData.getSecond().get(bufferData.getFirst()).getImage());
+//                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName + (textureName.endsWith(".gif") ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
+//                    if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
+//                        if (doesContinue) {
+//                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(System.currentTimeMillis());
+//                        } else if (shouldRepeat) {
+//                            bufferData.setFirst(0);
+//                        }
+//                    }
+//                    if (!resources.contains(cachedTexture)) {
+//                        resources.add(cachedTexture);
+//                    }
+//                    return cachedTexture;
+//                } catch (Exception ex) {
+//                    if (ModUtils.IS_VERBOSE) {
+//                        ex.printStackTrace();
+//                    }
+//                    return "";
+//                }
+                return "";
             } else {
-                return new ResourceLocation("");
+                return "";
             }
         }
     }
@@ -336,8 +336,8 @@ public class ImageUtils {
      * @param location The texture to parse
      * @return Whether the specified Texture lacks critical information
      */
-    public static boolean isTextureNull(final ResourceLocation location) {
-        return location == null || (StringUtils.isNullOrEmpty(location.getResourceDomain()) || StringUtils.isNullOrEmpty(location.getResourcePath()));
+    public static boolean isTextureNull(final String location) {
+        return location == null || StringUtils.isNullOrEmpty(location);
     }
 
     /**

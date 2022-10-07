@@ -35,7 +35,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -106,7 +105,7 @@ public class TileEntityUtils {
     /**
      * A List storing a mapping of Tile Entity textures, mapped as entityName:entityTexture
      */
-    public Map<String, ResourceLocation> TILE_ENTITY_RESOURCES = Maps.newHashMap();
+    public Map<String, String> TILE_ENTITY_RESOURCES = Maps.newHashMap();
     /**
      * The Player's Current Main Hand Item's Nbt Tags, if any
      */
@@ -658,7 +657,7 @@ public class TileEntityUtils {
 
         for (Item item : Item.itemsList) {
             if (!isEmpty(item)) {
-                final String itemName = item.getItemStackDisplayName(getDefaultInstance(item));
+                final String itemName = item.getItemDisplayName(getDefaultInstance(item));
                 if (!ITEM_NAMES.contains(itemName)) {
                     ITEM_NAMES.add(itemName);
                 }

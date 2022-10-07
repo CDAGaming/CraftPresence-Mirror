@@ -28,11 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.resources.Resource;
-import net.minecraft.client.resources.ResourceManager;
-import net.minecraft.client.resources.ResourceManagerReloadListener;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -47,7 +42,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings("deprecation")
-public class TranslationUtils implements ResourceManagerReloadListener {
+public class TranslationUtils {
     /**
      * The default/fallback Language ID to Locate and Retrieve Translations
      */
@@ -173,10 +168,6 @@ public class TranslationUtils implements ResourceManagerReloadListener {
                 (!hasTranslationsFrom(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty()));
         if (CraftPresence.SYSTEM.HAS_GAME_LOADED) {
             if (needsInit || needsSync) {
-                if (needsInit && CraftPresence.instance.getResourceManager() != null) {
-                    ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
-                }
-
                 // Sync All if we need to (Normally for initialization or reload purposes)
                 final List<String> requestedKeys = Lists.newArrayList(requestMap.keySet());
                 for (String key : requestedKeys) {
@@ -295,57 +286,44 @@ public class TranslationUtils implements ResourceManagerReloadListener {
      * Fetches a list of valid {@link InputStream}'s that can be used for the specified language
      *
      * @param languageId      The language ID to interpret
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @param ext             The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreamsFrom(final String languageId, final ResourceManager resourceManager, final String ext) {
+    private List<InputStream> getLocaleStreamsFrom(final String languageId, final String ext) {
         final String assetsPath = String.format("/assets/%s/", modId);
         final String langPath = String.format("lang/%s.%s", languageId, ext);
-        final List<InputStream> results = Lists.newArrayList(
+        return Lists.newArrayList(
                 FileUtils.getResourceAsStream(TranslationUtils.class, assetsPath + langPath)
         );
-
-        try {
-            List<Resource> resources = resourceManager.getAllResources(new ResourceLocation(modId, langPath));
-            for (Resource resource : resources) {
-                results.add(resource.getInputStream());
-            }
-        } catch (Exception ignored) {
-        }
-        return results;
     }
 
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the specified language
      *
      * @param languageId      The language ID to interpret
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreamsFrom(final String languageId, final ResourceManager resourceManager) {
-        return getLocaleStreamsFrom(languageId, resourceManager, (usingJson ? "json" : "lang"));
+    private List<InputStream> getLocaleStreamsFrom(final String languageId) {
+        return getLocaleStreamsFrom(languageId, (usingJson ? "json" : "lang"));
     }
 
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the current language
      *
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @param ext             The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreams(final ResourceManager resourceManager, final String ext) {
-        return getLocaleStreamsFrom(languageId, resourceManager, ext);
+    private List<InputStream> getLocaleStreams(final String ext) {
+        return getLocaleStreamsFrom(languageId, ext);
     }
 
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the current language
      *
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreams(final ResourceManager resourceManager) {
-        return getLocaleStreamsFrom(languageId, resourceManager);
+    private List<InputStream> getLocaleStreams() {
+        return getLocaleStreamsFrom(languageId);
     }
 
     /**
@@ -419,7 +397,7 @@ public class TranslationUtils implements ResourceManagerReloadListener {
      * @param encoding   The Charset Encoding (Default: UTF-8)
      */
     private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding) {
-        return getTranslationMapFrom(languageId, encoding, getLocaleStreamsFrom(languageId, CraftPresence.instance.getResourceManager()));
+        return getTranslationMapFrom(languageId, encoding, getLocaleStreamsFrom(languageId));
     }
 
     /**
@@ -593,11 +571,6 @@ public class TranslationUtils implements ResourceManagerReloadListener {
      */
     public String getTranslation(final String translationKey) {
         return getTranslationFrom(languageId, translationKey);
-    }
-
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-        syncTranslations();
     }
 
     /**

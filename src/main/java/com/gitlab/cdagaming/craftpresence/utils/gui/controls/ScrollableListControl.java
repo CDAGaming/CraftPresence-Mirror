@@ -33,7 +33,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
@@ -160,7 +159,7 @@ public class ScrollableListControl extends GuiSlot {
                 ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
                         (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
                         (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
-            ResourceLocation texture = new ResourceLocation("");
+            String texture = "";
             String assetUrl;
 
             // Note: Unavailable in MC 1.6.4 and below

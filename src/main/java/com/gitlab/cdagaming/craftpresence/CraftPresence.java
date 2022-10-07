@@ -247,7 +247,7 @@ public class CraftPresence {
         if (!closing) {
             instance = Minecraft.getMinecraft();
             if (initialized) {
-                session = instance.getSession();
+                session = instance.session;
                 player = instance.thePlayer;
                 // Synchronize Developer and Verbose Modes with Config Options, if they were not overridden pre-setup
                 ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.debugMode : ModUtils.IS_DEV;
@@ -281,7 +281,7 @@ public class CraftPresence {
                     }
                 }
             } else if (instance != null) {
-                session = instance.getSession();
+                session = instance.session;
                 if (session != null) {
                     init();
                 }

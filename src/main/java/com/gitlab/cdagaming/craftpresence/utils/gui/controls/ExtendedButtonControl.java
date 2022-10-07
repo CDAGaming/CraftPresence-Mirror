@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -60,6 +59,8 @@ public class ExtendedButtonControl extends GuiButton {
      * The current running Font Render Instance for this control
      */
     private FontRenderer currentFontRender = null;
+    
+    protected final String buttonTextures = "/gui/gui.png";
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -192,7 +193,7 @@ public class ExtendedButtonControl extends GuiButton {
             final int hoverState = getHoverState(field_82253_i);
 
             String backgroundCode = CraftPresence.CONFIG.buttonBackgroundColor;
-            ResourceLocation texLocation;
+            String texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
                 CraftPresence.GUIS.drawGradientRect(zLevel, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
@@ -206,9 +207,9 @@ public class ExtendedButtonControl extends GuiButton {
 
                     if (backgroundCode.contains(":")) {
                         String[] splitInput = backgroundCode.split(":", 2);
-                        texLocation = new ResourceLocation(splitInput[0], splitInput[1]);
+                        texLocation = splitInput[1];
                     } else {
-                        texLocation = new ResourceLocation(backgroundCode);
+                        texLocation = backgroundCode;
                     }
                 } else {
                     final String formattedConvertedName = backgroundCode.replaceFirst("file://", "");

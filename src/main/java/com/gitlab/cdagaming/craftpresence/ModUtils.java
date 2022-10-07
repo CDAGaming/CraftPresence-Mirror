@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
-import net.minecraft.launchwrapper.Launch;
 
 import java.io.File;
 
@@ -126,7 +125,7 @@ public class ModUtils {
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
      */
-    public final static boolean IS_LEGACY_HARD = IS_LEGACY_ALPHA || false;
+    public final static boolean IS_LEGACY_HARD = IS_LEGACY_ALPHA || true;
     /**
      * If this Application is within the Soft Floor of Legacy Mode
      * <p>This variable becomes true only on versions before 13w41a (When the protocol number was reset)
@@ -144,7 +143,7 @@ public class ModUtils {
     /**
      * If this Application is running in a de-obfuscated or Developer environment
      */
-    public static boolean IS_VERBOSE = (Launch.blackboard != null && !Launch.blackboard.isEmpty() && Launch.blackboard.containsKey("fml.deobfuscatedEnvironment")) && (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    public static boolean IS_VERBOSE = false;
 
     static {
         NAME = "@MOD_NAME@";
