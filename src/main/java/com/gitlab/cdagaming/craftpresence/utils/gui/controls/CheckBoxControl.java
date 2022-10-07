@@ -139,7 +139,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Draws this button to the screen.
      */
     @Override
-    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partial) {
+    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         setCurrentFontRender(mc.fontRenderer);
         if (visible) {
             hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);

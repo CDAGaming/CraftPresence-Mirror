@@ -29,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 public class ConfigGuiDataFactory implements IModGuiFactory {
@@ -42,6 +43,12 @@ public class ConfigGuiDataFactory implements IModGuiFactory {
         return null;
     }
 
+    @Nullable
+    @Override
+    public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
+        return null;
+    }
+
     @Override
     public boolean hasConfigGui() {
         return true;
@@ -50,5 +57,10 @@ public class ConfigGuiDataFactory implements IModGuiFactory {
     @Override
     public GuiScreen createConfigGui(GuiScreen parentScreen) {
         return new MainGui(parentScreen);
+    }
+
+    @Override
+    public Class<? extends GuiScreen> mainConfigGuiClass() {
+        return MainGui.class;
     }
 }

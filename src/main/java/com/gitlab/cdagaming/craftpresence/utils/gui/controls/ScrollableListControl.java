@@ -150,10 +150,9 @@ public class ScrollableListControl extends GuiSlot {
      * @param heightIn     The Height for the Object to render to
      * @param mouseXIn     The Mouse's Current X Position
      * @param mouseYIn     The Mouse's Current Y Position
-     * @param partialTicks The Current Partial Tick Ratio
      */
     @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks) {
+    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn) {
         int xOffset = xPos;
         String displayName = getSelectedItem(slotIndex);
         if (!CraftPresence.CONFIG.stripExtraGuiElements &&
