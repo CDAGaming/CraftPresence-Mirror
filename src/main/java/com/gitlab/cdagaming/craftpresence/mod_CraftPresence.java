@@ -34,11 +34,6 @@ import net.minecraft.src.BaseMod;
 public class mod_CraftPresence extends BaseMod {
 
     @Override
-    public String Version() {
-        return ModUtils.VERSION_ID;
-    }
-
-    @Override
     public void ModsLoaded() {
         // Initialize a New Instance of the Mod, triggering Ticking
         CraftPresence modInstance = new CraftPresence();

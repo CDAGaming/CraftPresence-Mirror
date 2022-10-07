@@ -26,8 +26,6 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
-import net.minecraft.src.ModLoader;
-
 import java.util.logging.Logger;
 
 /**
@@ -48,7 +46,7 @@ public class ModLogger {
 
     ModLogger(final String loggerName) {
         this.loggerName = loggerName;
-        this.logInstance = ModLoader.getLogger();
+        this.logInstance = Logger.getLogger(loggerName);
     }
 
     /**

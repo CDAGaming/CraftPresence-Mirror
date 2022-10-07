@@ -35,7 +35,6 @@ import net.minecraft.src.Entity;
 import net.minecraft.src.EntityList;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.EnumMovingObjectType;
 
 import java.util.List;
 import java.util.Map;
@@ -161,7 +160,7 @@ public class EntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == EnumMovingObjectType.ENTITY ? CraftPresence.instance.objectMouseOver.entityHit : null;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == 1 ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.ridingEntity;
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;

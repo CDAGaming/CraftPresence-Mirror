@@ -318,7 +318,7 @@ public class TileEntityUtils {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
+                return itemStack.itemDamage < -32768 || itemStack.itemDamage > 65535;
             }
         } else {
             return true;
@@ -336,15 +336,15 @@ public class TileEntityUtils {
         final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory[0];
 
         final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
-                StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getItem().getItemName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getItem().func_20009_a()) : "";
         final String NEW_CURRENT_HELMET_NAME = !isEmpty(NEW_CURRENT_HELMET) ?
-                StringUtils.stripColors(NEW_CURRENT_HELMET.getItem().getItemName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_HELMET.getItem().func_20009_a()) : "";
         final String NEW_CURRENT_CHEST_NAME = !isEmpty(NEW_CURRENT_CHEST) ?
-                StringUtils.stripColors(NEW_CURRENT_CHEST.getItem().getItemName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_CHEST.getItem().func_20009_a()) : "";
         final String NEW_CURRENT_LEGS_NAME = !isEmpty(NEW_CURRENT_LEGS) ?
-                StringUtils.stripColors(NEW_CURRENT_LEGS.getItem().getItemName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_LEGS.getItem().func_20009_a()) : "";
         final String NEW_CURRENT_BOOTS_NAME = !isEmpty(NEW_CURRENT_BOOTS) ?
-                StringUtils.stripColors(NEW_CURRENT_BOOTS.getItem().getItemName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_BOOTS.getItem().func_20009_a()) : "";
 
         final boolean hasMainHandChanged = (!isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) &&
                 !NEW_CURRENT_MAIN_HAND_ITEM.equals(CURRENT_MAIN_HAND_ITEM) || !NEW_CURRENT_MAIN_HAND_ITEM_NAME.equals(CURRENT_MAIN_HAND_ITEM_NAME)) ||
@@ -645,7 +645,7 @@ public class TileEntityUtils {
     public void getEntities() {
         for (Block block : Block.blocksList) {
             if (!isEmpty(block)) {
-                final String blockName = block.getBlockName();
+                final String blockName = block.func_20013_i();
                 if (!BLOCK_NAMES.contains(blockName)) {
                     BLOCK_NAMES.add(blockName);
                 }
@@ -657,7 +657,7 @@ public class TileEntityUtils {
 
         for (Item item : Item.itemsList) {
             if (!isEmpty(item)) {
-                final String itemName = item.getItemNameIS(getDefaultInstance(item));
+                final String itemName = item.func_20009_a();
                 if (!ITEM_NAMES.contains(itemName)) {
                     ITEM_NAMES.add(itemName);
                 }

@@ -84,7 +84,7 @@ public class GuiDisableButton extends Gui {
                 this.field_22075_h = this.field_22075_h.substring(0, this.field_22075_h.length() - 1);
             }
 
-            if (FontAllowedCharacters.allowedCharacters.indexOf(c) >= 0 && (this.field_22075_h.length() < this.field_22074_i || this.field_22074_i == 0)) {
+            if (FontAllowedCharacters.field_20157_a.indexOf(c) >= 0 && (this.field_22075_h.length() < this.field_22074_i || this.field_22074_i == 0)) {
                 this.field_22075_h = this.field_22075_h + c;
             }
 

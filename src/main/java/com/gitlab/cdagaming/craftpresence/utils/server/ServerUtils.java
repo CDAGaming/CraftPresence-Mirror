@@ -513,7 +513,7 @@ public class ServerUtils {
         try {
             if (CraftPresence.player != null) {
                 CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.changeWorld1(null);
+                CraftPresence.instance.func_6261_a(null);
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.getServerIP(), serverData.getServerPort()));
         } catch (Exception ex) {
