@@ -44,6 +44,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.Session;
+import net.minecraft.src.ThreadSleepForever;
+import net.minecraft.src.UnexpectedThrowable;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -244,9 +246,9 @@ public class CraftPresence {
      */
     private void clientTick() {
         if (!closing) {
-            instance = ModLoader.getMinecraftInstance();
+            instance = getMinecraftInstance();
             if (initialized) {
-                session = instance.session;
+                session = instance.field_6320_i;
                 player = instance.thePlayer;
                 // Synchronize Developer and Verbose Modes with Config Options, if they were not overridden pre-setup
                 ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.debugMode : ModUtils.IS_DEV;
@@ -280,7 +282,7 @@ public class CraftPresence {
                     }
                 }
             } else if (instance != null) {
-                session = instance.session;
+                session = instance.field_6320_i;
                 if (session != null) {
                     init();
                 }
@@ -288,5 +290,40 @@ public class CraftPresence {
 
             scheduleTick();
         }
+    }
+
+    private static void ThrowException(Throwable e) {
+        ThrowException("Exception occured in ModLoader", e);
+    }
+
+    public static void ThrowException(String message, Throwable e) {
+        Minecraft game = getMinecraftInstance();
+        if (game != null) {
+            game.handleEntityTeleport(new UnexpectedThrowable(message, e));
+        } else {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Minecraft getMinecraftInstance() {
+        if (instance == null) {
+            try {
+                ThreadGroup group = Thread.currentThread().getThreadGroup();
+                int count = group.activeCount();
+                Thread[] threads = new Thread[count];
+                group.enumerate(threads);
+
+                for(int i = 0; i < threads.length; ++i) {
+                    if (threads[i].getName().equals("Timer hack thread")) {
+                        instance = (Minecraft) StringUtils.lookupObject(ThreadSleepForever.class, threads[i], "mc", "field_1588_a", "a");
+                        break;
+                    }
+                }
+            } catch (Exception var4) {
+                ThrowException(var4);
+            }
+        }
+
+        return instance;
     }
 }

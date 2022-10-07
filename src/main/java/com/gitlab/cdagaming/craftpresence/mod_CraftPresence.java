@@ -33,8 +33,7 @@ import net.minecraft.src.BaseMod;
  */
 public class mod_CraftPresence extends BaseMod {
 
-    @Override
-    public void ModsLoaded() {
+    public mod_CraftPresence() {
         // Initialize a New Instance of the Mod, triggering Ticking
         CraftPresence modInstance = new CraftPresence();
     }

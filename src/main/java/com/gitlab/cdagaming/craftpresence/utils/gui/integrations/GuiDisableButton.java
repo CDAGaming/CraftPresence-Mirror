@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
-import net.minecraft.src.FontAllowedCharacters;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Gui;
 import net.minecraft.src.GuiScreen;
@@ -84,7 +83,7 @@ public class GuiDisableButton extends Gui {
                 this.field_22075_h = this.field_22075_h.substring(0, this.field_22075_h.length() - 1);
             }
 
-            if (FontAllowedCharacters.field_20157_a.indexOf(c) >= 0 && (this.field_22075_h.length() < this.field_22074_i || this.field_22074_i == 0)) {
+            if (" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø£Ø×ƒáíóúñÑªº¿®¬½¼¡«»".indexOf(c) >= 0 && (this.field_22075_h.length() < this.field_22074_i || this.field_22074_i == 0)) {
                 this.field_22075_h = this.field_22075_h + c;
             }
 

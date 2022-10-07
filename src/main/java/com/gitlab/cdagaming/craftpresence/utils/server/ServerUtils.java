@@ -37,6 +37,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiConnecting;
 import net.minecraft.src.NetClientHandler;
+import net.minecraft.src.WorldClient;
 
 import java.util.List;
 import java.util.Map;
@@ -280,8 +281,15 @@ public class ServerUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateServerData() {
+        NetClientHandler newConnection = null;
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
+        try {
+            if (CraftPresence.instance.theWorld instanceof WorldClient) {
+                newConnection = (NetClientHandler) StringUtils.lookupObject(WorldClient.class, ((WorldClient)CraftPresence.instance.theWorld), "sendQueue", "field_1052_A", "B");
+            }
+        } catch (Exception ex) {
+            newConnection = null;
+        }
 
         try {
             String retrievedIP = (String) StringUtils.lookupObject(Minecraft.class, CraftPresence.instance, "serverName", "field_35361_c", "field_9234_V");

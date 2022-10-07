@@ -244,7 +244,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Current Width of this Control
      */
     public int getControlWidth() {
-        return width;
+        return xCoord;
     }
 
     /**
@@ -253,7 +253,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Current Height of this Control
      */
     public int getControlHeight() {
-        return height;
+        return yCoord;
     }
 
     /**
