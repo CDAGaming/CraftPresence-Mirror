@@ -28,9 +28,9 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.client.resources.Resource;
+import net.minecraft.client.resources.ResourceManager;
+import net.minecraft.client.resources.ResourceManagerReloadListener;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -47,7 +47,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings("deprecation")
-public class TranslationUtils implements IResourceManagerReloadListener {
+public class TranslationUtils implements ResourceManagerReloadListener {
     /**
      * The default/fallback Language ID to Locate and Retrieve Translations
      */
@@ -299,7 +299,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param ext             The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager, final String ext) {
+    private List<InputStream> getLocaleStreamsFrom(final String languageId, final ResourceManager resourceManager, final String ext) {
         final String assetsPath = String.format("/assets/%s/", modId);
         final String langPath = String.format("lang/%s.%s", languageId, ext);
         final List<InputStream> results = Lists.newArrayList(
@@ -307,8 +307,8 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         );
 
         try {
-            List<IResource> resources = resourceManager.getAllResources(new ResourceLocation(modId, langPath));
-            for (IResource resource : resources) {
+            List<Resource> resources = resourceManager.getAllResources(new ResourceLocation(modId, langPath));
+            for (Resource resource : resources) {
                 results.add(resource.getInputStream());
             }
         } catch (Exception ignored) {
@@ -323,7 +323,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager) {
+    private List<InputStream> getLocaleStreamsFrom(final String languageId, final ResourceManager resourceManager) {
         return getLocaleStreamsFrom(languageId, resourceManager, (usingJson ? "json" : "lang"));
     }
 
@@ -334,7 +334,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param ext             The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager, final String ext) {
+    private List<InputStream> getLocaleStreams(final ResourceManager resourceManager, final String ext) {
         return getLocaleStreamsFrom(languageId, resourceManager, ext);
     }
 
@@ -344,7 +344,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager) {
+    private List<InputStream> getLocaleStreams(final ResourceManager resourceManager) {
         return getLocaleStreamsFrom(languageId, resourceManager);
     }
 
@@ -596,7 +596,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(ResourceManager resourceManager) {
         syncTranslations();
     }
 

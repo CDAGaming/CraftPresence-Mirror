@@ -204,8 +204,8 @@ public class BiomeUtils {
     private List<BiomeGenBase> getBiomeTypes() {
         List<BiomeGenBase> biomeTypes = Lists.newArrayList();
 
-        if (BiomeGenBase.getBiomeGenArray() != null) {
-            for (BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
+        if (BiomeGenBase.biomeList != null) {
+            for (BiomeGenBase biome : BiomeGenBase.biomeList) {
                 if (biome != null && !biomeTypes.contains(biome)) {
                     biomeTypes.add(biome);
                 }

@@ -69,11 +69,6 @@ public class ModUtils {
     public static final int MOD_SCHEMA_VERSION = 2;
 
     /**
-     * The Application's GUI Factory, if any
-     */
-    public static final String GUI_FACTORY = "com.gitlab.cdagaming.craftpresence.config.ConfigGuiDataFactory";
-
-    /**
      * The Detected Minecraft Version
      */
     public static final String MCVersion;
@@ -137,7 +132,7 @@ public class ModUtils {
      * <p>This variable becomes true only on versions before 13w41a (When the protocol number was reset)
      */
     @SuppressWarnings("PointlessBooleanExpression")
-    public final static boolean IS_LEGACY_SOFT = IS_LEGACY_HARD || false;
+    public final static boolean IS_LEGACY_SOFT = IS_LEGACY_HARD || true;
     /**
      * Whether to forcibly block any tooltips related to this Application from rendering
      */

@@ -45,7 +45,7 @@ public class MappingUtils {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, "/mappings.srg")));
                 try {
                     ModUtils.LOG.info("Loading Mappings...");
-                    Stopwatch stopwatch = Stopwatch.createStarted();
+                    Stopwatch stopwatch = new Stopwatch().start();
                     for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                         String[] parts = line.split(" ");
                         if (parts[0].equals("CL:")) {

@@ -51,6 +51,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
+import org.slf4j.impl.JDK14LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -260,6 +261,9 @@ public class DiscordUtils {
 
             // Create IPC Instance and Listener and Make a Connection if possible
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
+            ipcInstance.setForcedLogger(new JDK14LoggerFactory().getLogger(
+                    ModUtils.LOG.getLogInstance().getName()
+            ));
             ipcInstance.setListener(new ModIPCListener());
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
                 ipcInstance.connect(PREFERRED_CLIENT, DiscordBuild.ANY);
@@ -987,11 +991,6 @@ public class DiscordUtils {
         // Add Any Generalized Argument Data needed
         modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
         playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
-
-        // UUID Data
-        final String uniqueId = CraftPresence.session.getPlayerID();
-        playerInfoArgs.add(new Pair<>("&UUID&", StringUtils.getFromUuid(uniqueId, true)));
-        playerInfoArgs.add(new Pair<>("&UUID_FULL&", StringUtils.getFromUuid(uniqueId, false)));
 
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));

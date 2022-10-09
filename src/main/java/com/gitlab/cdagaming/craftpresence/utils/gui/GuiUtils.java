@@ -118,7 +118,7 @@ public class GuiUtils {
      * @return The Default/Global Font Renderer
      */
     public static FontRenderer getDefaultFontRenderer() {
-        return CraftPresence.instance.fontRendererObj;
+        return CraftPresence.instance.fontRenderer;
     }
 
     /**
@@ -352,12 +352,7 @@ public class GuiUtils {
      * @param targetScreen The target Gui Screen to display
      */
     public void openScreen(final GuiScreen targetScreen) {
-        CraftPresence.instance.addScheduledTask(new Runnable() {
-            @Override
-            public void run() {
-                CraftPresence.instance.displayGuiScreen(targetScreen);
-            }
-        });
+        CraftPresence.instance.displayGuiScreen(targetScreen);
     }
 
     /**

@@ -142,10 +142,10 @@ public class ControlsGui extends PaginatedScreen {
     private void sortMappings() {
         for (String keyName : keyMappings.keySet()) {
             final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
-            if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
-                categorizedNames.put(keyData.getFirst().getKeyCategory(), Lists.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
-                categorizedNames.get(keyData.getFirst().getKeyCategory()).add(keyName);
+            if (!categorizedNames.containsKey(keyData.getFirst().keyDescription)) {
+                categorizedNames.put(keyData.getFirst().keyDescription, Lists.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.getFirst().keyDescription).contains(keyName)) {
+                categorizedNames.get(keyData.getFirst().keyDescription).add(keyName);
             }
         }
     }
@@ -174,7 +174,7 @@ public class ControlsGui extends PaginatedScreen {
 
             for (String keyName : keyNames) {
                 final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
-                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().keyDescription, new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
                 if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                     preRenderQueue.put(currentAllocatedPage, Lists.newArrayList(positionData));
                 } else {
@@ -190,7 +190,7 @@ public class ControlsGui extends PaginatedScreen {
                 final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
                         renderPosition + 20, CraftPresence.GUIS.getButtonY(currentAllocatedRow),
                         120, 20,
-                        CraftPresence.KEYBINDINGS.getKeyName(keyData.getFirst().getKeyCode()),
+                        CraftPresence.KEYBINDINGS.getKeyName(keyData.getFirst().keyCode),
                         keyName
                 );
                 keyCodeButton.setOnClick(new Runnable() {

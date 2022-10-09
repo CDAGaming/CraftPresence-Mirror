@@ -238,7 +238,7 @@ public class ExtendedScreen extends GuiScreen {
             preRender();
 
             for (ScrollableListControl listControl : extendedLists) {
-                if (listControl.getEnabled()) {
+                if (listControl.isVisible()) {
                     listControl.drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
@@ -471,7 +471,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Renderer for this Screen
      */
     public FontRenderer getFontRenderer() {
-        return mc.fontRendererObj != null ? mc.fontRendererObj : GuiUtils.getDefaultFontRenderer();
+        return mc.fontRenderer != null ? mc.fontRenderer : GuiUtils.getDefaultFontRenderer();
     }
 
     /**

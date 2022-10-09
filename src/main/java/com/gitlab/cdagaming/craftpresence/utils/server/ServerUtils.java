@@ -34,12 +34,13 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.multiplayer.GuiConnecting;
+import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.client.network.NetHandlerPlayClient;
 
 import java.util.List;
 import java.util.Map;
@@ -179,7 +180,7 @@ public class ServerUtils {
     /**
      * The Player's Current Connection Data
      */
-    private NetHandlerPlayClient currentConnection;
+    private NetClientHandler currentConnection;
     /**
      * If the RPC needs to be Updated or Re-Synchronized<p>
      * Needed here for Multiple-Condition RPC Triggers
@@ -275,12 +276,7 @@ public class ServerUtils {
         }
 
         if (joinInProgress && requestedServerData != null) {
-            CraftPresence.instance.addScheduledTask(new Runnable() {
-                @Override
-                public void run() {
-                    ServerUtils.this.joinServer(requestedServerData);
-                }
-            });
+            joinServer(requestedServerData);
         }
     }
 
@@ -288,14 +284,20 @@ public class ServerUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateServerData() {
-        final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getNetHandler();
+        ServerData newServerData;
+        final NetClientHandler newConnection = CraftPresence.instance.getNetHandler();
+
+        try {
+            newServerData = (ServerData) StringUtils.lookupObject(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O");
+        } catch (Exception ex) {
+            newServerData = null;
+        }
 
         if (!joinInProgress) {
             final List<GuiPlayerInfo> newPlayerList = newConnection != null ? Lists.newArrayList(newConnection.playerInfoList) : Lists.newArrayList();
             final int newCurrentPlayers = newConnection != null ? newConnection.playerInfoList.size() : 1;
             final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
-            final boolean newLANStatus = (CraftPresence.instance.isSingleplayer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isLanServer());
+            final boolean newLANStatus = (CraftPresence.instance.isSingleplayer() && newCurrentPlayers > 1) || (CraftPresence.player != null && !CraftPresence.player.worldObj.isRemote);
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
             final String newServer_Name = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.defaultServerName;
@@ -366,7 +368,7 @@ public class ServerUtils {
                     // &difficulty& Argument = Current Difficulty of the World
                     if (CraftPresence.CONFIG.worldPlaceholderMessage.toLowerCase().contains("&difficulty&")) {
                         final String newDifficulty = CraftPresence.player != null ?
-                                (CraftPresence.player.worldObj.getWorldInfo().isHardcoreModeEnabled() ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : CraftPresence.player.worldObj.difficultySetting.name()) :
+                                (CraftPresence.player.worldObj.getWorldInfo().isHardcoreModeEnabled() ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : Integer.toString(CraftPresence.player.worldObj.difficultySetting)) :
                                 "";
                         if (!newDifficulty.equals(currentDifficulty)) {
                             currentDifficulty = newDifficulty;
@@ -499,7 +501,7 @@ public class ServerUtils {
 
         if (isValidSecret) {
             if (CraftPresence.CONFIG.enableJoinRequest) {
-                requestedServerData = new ServerData(serverName, serverIP, false);
+                requestedServerData = new ServerData(serverName, serverIP);
             } else {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.config.disabled.enable_join_request"));
             }

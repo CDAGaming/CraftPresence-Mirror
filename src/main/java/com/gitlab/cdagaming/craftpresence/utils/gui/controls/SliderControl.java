@@ -215,7 +215,7 @@ public class SliderControl extends ExtendedButtonControl {
      */
     @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (visible) {
+        if (drawButton) {
             if (dragging) {
                 sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
                 sliderValue = clamp(sliderValue, 0.0F, 1.0F);
@@ -225,7 +225,7 @@ public class SliderControl extends ExtendedButtonControl {
             }
 
             onSlide();
-            final int hoverValue = (hovered ? 2 : 1) * 20;
+            final int hoverValue = (field_82253_i ? 2 : 1) * 20;
             CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, zLevel, buttonTextures);
         }
     }

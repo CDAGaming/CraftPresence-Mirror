@@ -36,7 +36,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumMovingObjectType;
 
 import java.util.List;
 import java.util.Map;
@@ -162,7 +162,7 @@ public class EntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY ? CraftPresence.instance.objectMouseOver.entityHit : null;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == EnumMovingObjectType.ENTITY ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.ridingEntity;
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
@@ -171,18 +171,18 @@ public class EntityUtils {
         // Users are still free to manually add Uuid's as they please for this module
         if (NEW_CURRENT_TARGET instanceof EntityPlayer) {
             final EntityPlayer NEW_CURRENT_PLAYER_TARGET = (EntityPlayer) NEW_CURRENT_TARGET;
-            NEW_CURRENT_TARGET_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_TARGET.getGameProfile().getId().toString());
+            NEW_CURRENT_TARGET_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_TARGET.getDisplayName());
         } else {
             NEW_CURRENT_TARGET_NAME = NEW_CURRENT_TARGET != null ?
-                    StringUtils.stripColors(NEW_CURRENT_TARGET.getFormattedCommandSenderName().getFormattedText()) : "";
+                    StringUtils.stripColors(NEW_CURRENT_TARGET.getEntityName()) : "";
         }
 
         if (NEW_CURRENT_RIDING instanceof EntityPlayer) {
             final EntityPlayer NEW_CURRENT_PLAYER_RIDING = (EntityPlayer) NEW_CURRENT_RIDING;
-            NEW_CURRENT_RIDING_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_RIDING.getGameProfile().getId().toString());
+            NEW_CURRENT_RIDING_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_RIDING.getDisplayName());
         } else {
             NEW_CURRENT_RIDING_NAME = NEW_CURRENT_RIDING != null ?
-                    StringUtils.stripColors(NEW_CURRENT_RIDING.getFormattedCommandSenderName().getFormattedText()) : "";
+                    StringUtils.stripColors(NEW_CURRENT_RIDING.getEntityName()) : "";
         }
 
         final boolean hasTargetChanged = (NEW_CURRENT_TARGET != null &&
@@ -195,7 +195,7 @@ public class EntityUtils {
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
             CURRENT_TARGET_TAG = CURRENT_TARGET != null ? CURRENT_TARGET.getEntityData() : null;
-            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.getKeySet()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.getTags()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_TARGET_TAGS.equals(CURRENT_TARGET_TAGS)) {
                 CURRENT_TARGET_TAGS = NEW_CURRENT_TARGET_TAGS;
@@ -206,7 +206,7 @@ public class EntityUtils {
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
             CURRENT_RIDING_TAG = CURRENT_RIDING != null ? CURRENT_RIDING.getEntityData() : null;
-            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.getKeySet()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.getTags()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_RIDING_TAGS.equals(CURRENT_RIDING_TAGS)) {
                 CURRENT_RIDING_TAGS = NEW_CURRENT_RIDING_TAGS;
@@ -320,7 +320,7 @@ public class EntityUtils {
      * @return The formatted entity display name to use
      */
     public String getEntityName(final Entity entity, final String original) {
-        return StringUtils.isValidUuid(original) ? entity.getCommandSenderName() : original;
+        return StringUtils.isValidUuid(original) ? entity.getEntityName() : original;
     }
 
     /**
@@ -380,8 +380,8 @@ public class EntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        if (!EntityList.func_151515_b().isEmpty()) {
-            for (Object entityLocationObj : EntityList.func_151515_b()) {
+        if (!EntityList.classToStringMapping.values().isEmpty()) {
+            for (Object entityLocationObj : EntityList.classToStringMapping.values()) {
                 final String entityLocation = (String) entityLocationObj;
                 if (entityLocation != null) {
                     final String entityName = !StringUtils.isNullOrEmpty(entityLocation) ? entityLocation : "generic";

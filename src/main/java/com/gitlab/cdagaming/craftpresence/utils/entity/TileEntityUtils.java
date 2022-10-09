@@ -78,7 +78,7 @@ public class TileEntityUtils {
     /**
      * An Instance of an Empty ItemStack
      */
-    private final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
+    private final ItemStack EMPTY_STACK = (ItemStack) null;
     /**
      * The argument format to follow for Rich Presence Data
      */
@@ -293,7 +293,7 @@ public class TileEntityUtils {
      * @return {@code true} if the Block classifies as NULL or EMPTY
      */
     private boolean isEmpty(final Block block) {
-        return block == null || isEmpty(Item.getItemFromBlock(block));
+        return block == null;
     }
 
     /**
@@ -319,7 +319,7 @@ public class TileEntityUtils {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.getMetadata() < -32768 || itemStack.getMetadata() > 65535;
+                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
             }
         } else {
             return true;
@@ -366,7 +366,7 @@ public class TileEntityUtils {
         if (hasMainHandChanged) {
             CURRENT_MAIN_HAND_ITEM = NEW_CURRENT_MAIN_HAND_ITEM;
             CURRENT_MAIN_HAND_ITEM_TAG = !isEmpty(CURRENT_MAIN_HAND_ITEM) ? CURRENT_MAIN_HAND_ITEM.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_MAIN_HAND_ITEM_TAGS = CURRENT_MAIN_HAND_ITEM_TAG != null ? Lists.newArrayList(CURRENT_MAIN_HAND_ITEM_TAG.getKeySet()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_MAIN_HAND_ITEM_TAGS = CURRENT_MAIN_HAND_ITEM_TAG != null ? Lists.newArrayList(CURRENT_MAIN_HAND_ITEM_TAG.getTags()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_MAIN_HAND_ITEM_TAGS.equals(CURRENT_MAIN_HAND_ITEM_TAGS)) {
                 CURRENT_MAIN_HAND_ITEM_TAGS = NEW_CURRENT_MAIN_HAND_ITEM_TAGS;
@@ -377,7 +377,7 @@ public class TileEntityUtils {
         if (hasHelmetChanged) {
             CURRENT_HELMET = NEW_CURRENT_HELMET;
             CURRENT_HELMET_TAG = !isEmpty(CURRENT_HELMET) ? CURRENT_HELMET.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_HELMET_TAGS = CURRENT_HELMET_TAG != null ? Lists.newArrayList(CURRENT_HELMET_TAG.getKeySet()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_HELMET_TAGS = CURRENT_HELMET_TAG != null ? Lists.newArrayList(CURRENT_HELMET_TAG.getTags()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_HELMET_TAGS.equals(CURRENT_HELMET_TAGS)) {
                 CURRENT_HELMET_TAGS = NEW_CURRENT_HELMET_TAGS;
@@ -388,7 +388,7 @@ public class TileEntityUtils {
         if (hasChestChanged) {
             CURRENT_CHEST = NEW_CURRENT_CHEST;
             CURRENT_CHEST_TAG = !isEmpty(CURRENT_CHEST) ? CURRENT_CHEST.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_CHEST_TAGS = CURRENT_CHEST_TAG != null ? Lists.newArrayList(CURRENT_CHEST_TAG.getKeySet()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_CHEST_TAGS = CURRENT_CHEST_TAG != null ? Lists.newArrayList(CURRENT_CHEST_TAG.getTags()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_CHEST_TAGS.equals(CURRENT_CHEST_TAGS)) {
                 CURRENT_CHEST_TAGS = NEW_CURRENT_CHEST_TAGS;
@@ -399,7 +399,7 @@ public class TileEntityUtils {
         if (hasLegsChanged) {
             CURRENT_LEGS = NEW_CURRENT_LEGS;
             CURRENT_LEGS_TAG = !isEmpty(CURRENT_LEGS) ? CURRENT_LEGS.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_LEGS_TAGS = CURRENT_LEGS_TAG != null ? Lists.newArrayList(CURRENT_LEGS_TAG.getKeySet()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_LEGS_TAGS = CURRENT_LEGS_TAG != null ? Lists.newArrayList(CURRENT_LEGS_TAG.getTags()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_LEGS_TAGS.equals(CURRENT_LEGS_TAGS)) {
                 CURRENT_LEGS_TAGS = NEW_CURRENT_LEGS_TAGS;
@@ -410,7 +410,7 @@ public class TileEntityUtils {
         if (hasBootsChanged) {
             CURRENT_BOOTS = NEW_CURRENT_BOOTS;
             CURRENT_BOOTS_TAG = !isEmpty(CURRENT_BOOTS) ? CURRENT_BOOTS.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_BOOTS_TAGS = CURRENT_BOOTS_TAG != null ? Lists.newArrayList(CURRENT_BOOTS_TAG.getKeySet()) : Lists.newArrayList();
+            final List<String> NEW_CURRENT_BOOTS_TAGS = CURRENT_BOOTS_TAG != null ? Lists.newArrayList(CURRENT_BOOTS_TAG.getTags()) : Lists.newArrayList();
 
             if (!NEW_CURRENT_BOOTS_TAGS.equals(CURRENT_BOOTS_TAGS)) {
                 CURRENT_BOOTS_TAGS = NEW_CURRENT_BOOTS_TAGS;
@@ -644,8 +644,7 @@ public class TileEntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        for (Object blockObj : Block.blockRegistry) {
-            final Block block = Block.getBlockById(Block.blockRegistry.getIDForObject(blockObj));
+        for (Block block : Block.blocksList) {
             if (!isEmpty(block)) {
                 final String blockName = block.getLocalizedName();
                 if (!BLOCK_NAMES.contains(blockName)) {
@@ -657,8 +656,7 @@ public class TileEntityUtils {
             }
         }
 
-        for (Object itemObj : Item.itemRegistry) {
-            final Item item = Item.getItemById(Item.itemRegistry.getIDForObject(itemObj));
+        for (Item item : Item.itemsList) {
             if (!isEmpty(item)) {
                 final String itemName = item.getItemStackDisplayName(getDefaultInstance(item));
                 if (!ITEM_NAMES.contains(itemName)) {

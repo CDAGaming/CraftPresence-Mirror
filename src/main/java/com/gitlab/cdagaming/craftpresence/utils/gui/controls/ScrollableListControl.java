@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -33,9 +32,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
@@ -59,6 +57,11 @@ public class ScrollableListControl extends GuiSlot {
      * The Rendering Type to render the slots in
      */
     public RenderType renderType;
+
+    /**
+     * The visibility for this control
+     */
+    public boolean visible = true;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -115,11 +118,9 @@ public class ScrollableListControl extends GuiSlot {
      *
      * @param slotIndex     The Slot Number that was Clicked
      * @param isDoubleClick Whether the Click was a Double or Single Click
-     * @param mouseX        The Mouse's Current X Position
-     * @param mouseY        The Mouse's Current Y Position
      */
     @Override
-    public void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY) {
+    public void elementClicked(int slotIndex, boolean isDoubleClick) {
         currentValue = getSelectedItem(slotIndex);
     }
 
@@ -150,11 +151,9 @@ public class ScrollableListControl extends GuiSlot {
      * @param yPos          The Starting Y Position to render the Object at
      * @param heightIn      The Height for the Object to render to
      * @param tessellatorIn The tesselator for the Object to render with
-     * @param mouseXIn      The Mouse's Current X Position
-     * @param mouseYIn      The Mouse's Current Y Position
      */
     @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn, int mouseXIn, int mouseYIn) {
+    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn) {
         int xOffset = xPos;
         String displayName = getSelectedItem(slotIndex);
         if (!CraftPresence.CONFIG.stripExtraGuiElements &&
@@ -164,14 +163,15 @@ public class ScrollableListControl extends GuiSlot {
             ResourceLocation texture = new ResourceLocation("");
             String assetUrl;
 
-            if (renderType == RenderType.ServerData) {
+            // Note: Unavailable in MC 1.6.4 and below
+            /*if (renderType == RenderType.ServerData) {
                 final ServerData data = CraftPresence.SERVER.getDataFromName(displayName);
 
                 if (data != null) {
                     assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
                     texture = ImageUtils.getTextureFromUrl(displayName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
                 }
-            } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
+            } else */if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
                 assetUrl = DiscordAssetUtils.getUrl(
                         renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
                         displayName
@@ -232,5 +232,21 @@ public class ScrollableListControl extends GuiSlot {
      */
     public enum RenderType {
         DiscordAsset, CustomDiscordAsset, ServerData, EntityData, ItemData, None
+    }
+
+    /**
+     * Getter for Visibility for this control
+     */
+    public boolean isVisible() {
+        return this.visible;
+    }
+
+    /**
+     * Setter for Visibility for this control
+     *
+     * @param value The new visibility value for this control
+     */
+    public void setVisible(boolean value) {
+        this.visible = value;
     }
 }

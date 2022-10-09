@@ -38,6 +38,22 @@ public class ExtendedTextControl extends GuiTextField {
      * The event to occur when a key event occurs
      */
     private Runnable onKeyEvent;
+    /**
+     * The localized x position of this control
+     */
+    private final int localPosX;
+    /**
+     * The localized y position of this control
+     */
+    private final int localPosY;
+    /**
+     * The localized width of this control
+     */
+    private final int localWidth;
+    /**
+     * The localized height of this control
+     */
+    private final int localHeight;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -51,6 +67,10 @@ public class ExtendedTextControl extends GuiTextField {
      */
     public ExtendedTextControl(int componentId, FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
         super(fontRendererObj, x, y, widthIn, heightIn);
+        this.localWidth = widthIn;
+        this.localHeight = heightIn;
+        this.localPosX = x;
+        this.localPosY = y;
     }
 
     /**
@@ -87,7 +107,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The Current Width of this Control
      */
     public int getControlWidth() {
-        return width;
+        return localWidth;
     }
 
     /**
@@ -96,7 +116,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The Current Height of this Control
      */
     public int getControlHeight() {
-        return height;
+        return localHeight;
     }
 
     /**
@@ -105,7 +125,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return the Current X Position of this Control
      */
     public int getControlPosX() {
-        return xPosition;
+        return localPosX;
     }
 
     /**
@@ -114,7 +134,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return the Current Y Position of this Control
      */
     public int getControlPosY() {
-        return yPosition;
+        return localPosY;
     }
 
     /**

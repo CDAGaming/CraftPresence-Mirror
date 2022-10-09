@@ -87,7 +87,7 @@ public class KeyUtils {
         KEY_MAPPINGS.put(
                 "configKeyCode",
                 new Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>(
-                        new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.configKeyCode, "key.craftpresence.category"),
+                        new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.configKeyCode),
                         new Runnable() {
                             @Override
                             public void run() {
@@ -236,7 +236,7 @@ public class KeyUtils {
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
                     final KeyBinding keyBind = KEY_MAPPINGS.get(keyName).getFirst();
-                    final int currentBind = keyBind.getKeyCode();
+                    final int currentBind = keyBind.keyCode;
                     boolean hasBeenRun = false;
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
@@ -249,8 +249,8 @@ public class KeyUtils {
                                 if (keyData.getThird() != null) {
                                     keyData.getThird().accept(ex);
                                 } else {
-                                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
-                                    syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
+                                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.keyDescription));
+                                    syncKeyData(keyName, ImportMode.Specific, keyBind.keyCode);
                                 }
                             } finally {
                                 hasBeenRun = true;
@@ -287,12 +287,12 @@ public class KeyUtils {
         final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.containsKey(keyName) ? KEY_MAPPINGS.get(keyName) : null;
         if (keyData != null) {
             if (mode == ImportMode.Config) {
-                keyData.getFirst().setKeyCode(keyCode);
+                keyData.getFirst().keyCode = keyCode;
             } else if (mode == ImportMode.Vanilla) {
                 StringUtils.updateField(ConfigUtils.class, CraftPresence.CONFIG, new Tuple<>(keyName, keyCode, null));
                 CraftPresence.CONFIG.updateConfig(false);
             } else if (mode == ImportMode.Specific) {
-                syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
+                syncKeyData(keyData.getFirst().keyDescription, ImportMode.Config, keyCode);
                 syncKeyData(keyName, ImportMode.Vanilla, keyCode);
             } else {
                 if (ModUtils.IS_VERBOSE) {
@@ -320,8 +320,8 @@ public class KeyUtils {
             ) {
                 final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                 if (mode == FilterMode.None ||
-                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().getKeyCategory())) ||
-                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().getKeyDescription())) ||
+                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().keyDescription)) ||
+                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().keyDescription)) ||
                         mode == FilterMode.Name
                 ) {
                     filteredMappings.put(keyName, keyData);

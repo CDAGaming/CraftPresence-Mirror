@@ -186,7 +186,7 @@ public class PaginatedScreen extends ExtendedScreen {
             }
         }
         for (ScrollableListControl listControl : extendedLists) {
-            listControl.setEnabled(listsToRender.contains(listControl));
+            listControl.setVisible(listsToRender.contains(listControl));
         }
 
         previousPageButton.setControlEnabled(currentPage > startPage);

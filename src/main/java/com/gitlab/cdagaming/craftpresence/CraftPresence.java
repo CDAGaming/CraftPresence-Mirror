@@ -56,7 +56,7 @@ import java.util.TimerTask;
  * @author CDAGaming
  */
 @SuppressWarnings("ConstantConditions")
-@Mod(modid = ModUtils.MOD_ID, name = "@MOD_NAME@", version = "@VERSION_ID@", guiFactory = ModUtils.GUI_FACTORY, canBeDeactivated = true, acceptedMinecraftVersions = "*")
+@Mod(modid = ModUtils.MOD_ID, name = "@MOD_NAME@", version = "@VERSION_ID@", acceptedMinecraftVersions = "*")
 public class CraftPresence {
     /**
      * Whether Pack Data was able to be Found and Parsed
