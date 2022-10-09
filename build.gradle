@@ -4,6 +4,7 @@ plugins {
     id "com.modrinth.minotaur" version "2.4.4"
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.diffplug.spotless" version "6.11.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 import groovy.io.FileType
@@ -168,9 +169,10 @@ sourceSets {
     client
 }
 
-
 configurations {
-    shadow
+    shadeOnly
+    shade
+    implementation.extendsFrom shade
 }
 
 repositories {
@@ -199,35 +201,54 @@ dependencies {
     if ("${isLegacy}".toBoolean()) {
         int protocol = "${mc_protocol}".toInteger()
         if (protocol <= 78) { // MC 1.6.4 and below
-            shadow(implementation('commons-codec:commons-codec:1.15'))
+            shade('commons-codec:commons-codec:1.15')
         }
         if (protocol <= 61) { // MC 1.5.2 and below
-            shadow(implementation('org.apache.commons:commons-lang3:3.8.1'))
-            shadow(implementation('commons-io:commons-io:2.5'))
-            shadow(implementation('com.google.code.gson:gson:2.8.0'))
+            shade('org.apache.commons:commons-lang3:3.8.1')
+            shade('commons-io:commons-io:2.5')
         }
         if (protocol <= 51) { // MC 1.4.7 and below
-            shadow(implementation('com.google.guava:guava:14.0-rc3'))
+            shade('com.google.guava:guava:14.0-rc3')
         }
     }
-
-    // Java-Specific Dependencies
-    if (targetVersion.isJava8Compatible()) {
-        shadow(implementation('com.kohlschutter.junixsocket:junixsocket-common:2.5.1'))
-        shadow(implementation('com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1'))
-    } else {
-        shadow(implementation('com.kohlschutter.junixsocket:junixsocket-common:2.4.0'))
-        shadow(implementation('com.kohlschutter.junixsocket:junixsocket-native-common:2.4.0'))
-    }
     implementation "com.google.code.findbugs:jsr305:3.0.2"
-    shadow(implementation("local_mod:DiscordIPC:${ipc_version}"))
+    shade("local_mod:DiscordIPC:${ipc_version}") {
+        exclude group: 'org.slf4j', module: "slf4j-api"
+    }
+    // SLF4J Dependencies
+    shade('org.slf4j:slf4j-api:1.7.36')
+    if ("${isLegacy}".toBoolean()) {
+        shade('org.slf4j:slf4j-jdk14:1.7.36')
+    } else {
+        runtimeOnly('org.slf4j:slf4j-jdk14:1.7.36')
+        shadeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.15.0') {
+            exclude group: 'org.apache.logging.log4j', module: "log4j-api"
+            exclude group: 'org.apache.logging.log4j', module: "log4j-core"
+        }
+    }
 }
 
 jar {
     from sourceSets.main.output
 }
 
+shadowJar {
+    configurations = [project.configurations.shade, project.configurations.shadeOnly]
+    archiveClassifier.set('shadow-dev')
+}
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+    target = tasks.shadowJar
+    prefix = "external"
+}
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
+
 remapJar {
+    dependsOn(shadowJar)
+    mustRunAfter(shadowJar)
+    inputFile = shadowJar.archiveFile
     int forgeGradleVer = "${forgeGradleLevel}".toInteger()
     if (forgeGradleVer >= 2) {
         targetNamespace = "searge"
@@ -243,10 +264,6 @@ remapJar {
         }
     } else {
         fallbackFromNamespace = "searge"
-    }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from(configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }) {
-        exclude 'META-INF/versions/**'
     }
 }
 

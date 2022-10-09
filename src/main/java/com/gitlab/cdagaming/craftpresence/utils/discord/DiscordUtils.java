@@ -249,7 +249,6 @@ public class DiscordUtils {
 
             // Create IPC Instance and Listener and Make a Connection if possible
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
-            ipcInstance.setForcedLogger(ModUtils.LOG.getLogInstance());
             ipcInstance.setListener(new ModIPCListener());
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
                 ipcInstance.connect(PREFERRED_CLIENT, DiscordBuild.ANY);
