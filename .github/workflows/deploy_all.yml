@@ -3,6 +3,10 @@ name: Deploy All
 
 on: workflow_dispatch
 
+env:
+  CF_APIKEY: ${{ secrets.CF_APIKEY }}
+  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
