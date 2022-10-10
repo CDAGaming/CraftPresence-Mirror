@@ -216,7 +216,7 @@ dependencies {
     implementation "com.google.code.findbugs:jsr305:3.0.2"
 
     // DiscordIPC (Originally by jagrosh)
-    shade("local_mod:DiscordIPC:${ipc_version}") {
+    shade("io.github.CDAGaming:DiscordIPC:${ipc_version}") {
         exclude group: 'org.slf4j', module: "slf4j-api"
     }
     // SLF4J Dependencies
