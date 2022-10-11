@@ -79,7 +79,7 @@ curseforge {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "${mod_name}".toLowerCase()
-    versionNumber = "v${version}_${mc_version}-${loader_name}_${versionLabel}".replaceAll("\\s", "").toLowerCase()
+    versionNumber = "v${version}_${mc_version}-${loader_name}${versionLabel.equalsIgnoreCase("release") ? "" : "_${versionLabel}"}".replaceAll("\\s", "").toLowerCase()
     versionName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
     changelog = file("Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
