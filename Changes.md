@@ -1,36 +1,15 @@
 # CraftPresence Changes
 
-## v1.9.3 (10/11/2022)
+## v1.9.4 (10/25/2022)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.2...release%2Fv1.9.3)_
-
-### Changes
-
-* Rewritten the Item Preview Logic in the Tile Entity Module, to hopefully allow for better support + Mod Compatibility
-* Added `&UUID_FULL&` to `&IGN&`'s sub-placeholders, to allow having the dashed format or the trimmed format of UUIDs
-* Overhaul the way tooltips with placeholders are displayed, both for easier translating and for better readability
-    * Aditionally, systems have been added to allow deeper levels of sub-placeholders, expanding on prior v1.9.x systems
-    * Enabling `Debug Mode` will allow you to see previews of currently active placeholders within the tooltip (If the
-      preview is over 128 characters, it'll show `<...>` as an indicator that it is too large)
-* Added new translations for Default Config Options and for the individual placeholder descriptions
-* Updated existing translations in: `de_de`, `es_es`, `fr_fr`, and `ru_ru`
-* Backend Optimizations and Refactors applied to reduce Beta and Alpha MC changes as well as misc. performance
-  improvements
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.3...release%2Fv1.9.4)_
 
 ### Fixes
 
-* Fixed a regression from v1.9.0 that prevented Tag Placeholders in Per-Entity and Per-Items to display in some cases
-* Fixed rendering issues with text boxes in Paginated Screens on MC 1.3.2 and 1.2.5
-* Fixed `&SERVER:WORLDINFO:WORLDNAME&` not displaying properly on some versions
-    * Now displays the Level Name in Integrated Server Environments, and prior behavior anywhere else
-    * Also adds a fallback default translation to use for it, so Beta and Alpha MC can use it
-* Fixed a regression where some default options only used `en_us` localization, where it was meant to be the current
-  language
-* Backend: Fixed an issue preventing `Pair#equals` and `Tuple#equals` from working properly
-* Backend: Removed unnecesary data from the Discord `ArgumentType` enum (`Button` and `Invalid`)
-* Backend: Removed unnecesary code in the GUI Module, where an empty image argument was always assigned, when Images are
-  not supported for it
+* Fixed a NPE from `generateArgumentMessage` if it is fired before the IPC instance is initialized
+* Fixed possible NPEs within `ServerUtils` if `currentServerMessage` or `currentServerIcon` was null
+    * This also fixes compatibility with Replay Mod
 
 ___
 

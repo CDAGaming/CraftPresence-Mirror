@@ -126,11 +126,11 @@ public class ServerUtils {
     /**
      * The Current Server RPC Message being used, with Arguments
      */
-    private String currentServerMessage;
+    private String currentServerMessage = "";
     /**
      * The Current Server RPC Icon being used, with Arguments
      */
-    private String currentServerIcon;
+    private String currentServerIcon = "";
     /**
      * The Current Formatted World Time, as a String
      */
@@ -217,8 +217,8 @@ public class ServerUtils {
         currentHealth = new Pair<>(0.0D, 0.0D);
         currentDifficulty = null;
         currentWorldName = null;
-        currentServerMessage = null;
-        currentServerIcon = null;
+        currentServerMessage = "";
+        currentServerIcon = "";
         timeString = null;
         dayString = null;
         currentPlayers = 0;

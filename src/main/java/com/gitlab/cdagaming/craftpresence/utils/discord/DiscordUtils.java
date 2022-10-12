@@ -640,7 +640,7 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final List<Pair<String, String>> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, ipcInstance.isDebugMode(), args);
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, ipcInstance != null && ipcInstance.isDebugMode(), args);
     }
 
     /**
