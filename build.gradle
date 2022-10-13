@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'xyz.wagyourtail.unimined' version '0.1.6-SNAPSHOT'
     id "com.modrinth.minotaur" version "2.4.4"
-    id "io.github.CDAGaming.cursegradle" version "1.5.5"
+    id "io.github.CDAGaming.cursegradle" version "1.6.0"
     id "com.diffplug.spotless" version "6.11.0"
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
@@ -71,7 +71,7 @@ curseforge {
         }
 
         mainArtifact(remapJar) {
-            displayName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
+            it.displayName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
         }
     }
 }
