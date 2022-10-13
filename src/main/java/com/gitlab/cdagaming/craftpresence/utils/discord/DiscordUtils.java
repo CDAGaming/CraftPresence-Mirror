@@ -326,6 +326,39 @@ public class DiscordUtils {
     }
 
     /**
+     * Parses the Argument Operators and Placeholders within a message
+     *
+     * @param input The string to interpret
+     * @param typeList The list of {@link ArgumentType}'s to iterate through
+     * @return the parsed message
+     */
+    public String parseArgumentOperators(final String input, ArgumentType... typeList) {
+        String result = input;
+        final Pair<String, List<String>> OrOperations = StringUtils.getMatches("&[^&]*&[\\|]&[^&]*&", input);
+
+        if (!OrOperations.getSecond().isEmpty()) {
+            for (String match : OrOperations.getSecond()) {
+                boolean foundMatch = false;
+                String resultMatch = match;
+                for (String splitData : match.split("\\|")) {
+                    if (foundMatch) {
+                        break;
+                    }
+                    for (ArgumentType type : typeList) {
+                        if (!getArgumentEntries(type, splitData).isEmpty()) {
+                            foundMatch = true;
+                            resultMatch = splitData;
+                            break;
+                        }
+                    }
+                }
+                result = result.replace(match, resultMatch);
+            }
+        }
+        return StringUtils.sequentialReplaceAnyCase(result, getArgumentsFor(typeList));
+    }
+
+    /**
      * Updates the Starting Unix Timestamp, if allowed
      */
     public void updateTimestamp() {
@@ -434,7 +467,7 @@ public class DiscordUtils {
         if (presenceData.containsKey(type)) {
             for (Pair<String, String> entry : presenceData.get(type)) {
                 for (String format : args) {
-                    if (entry.getFirst().contains(format)) {
+                    if (entry.getFirst().contains(format) && !StringUtils.isNullOrEmpty(entry.getSecond())) {
                         list.add(entry);
                     }
                 }
@@ -937,19 +970,19 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence() {
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.detailsMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.gameStateMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.detailsMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.gameStateMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageKey, getArgumentsFor(ArgumentType.Image)));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageKey, getArgumentsFor(ArgumentType.Image)));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.largeImageKey, ArgumentType.Image));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.smallImageKey, ArgumentType.Image));
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                StringUtils.sequentialReplaceAnyCase(LARGE_IMAGE_ASSET.getUrl(), getArgumentsFor(ArgumentType.Text)) : LARGE_IMAGE_ASSET.getName()) : "";
+                parseArgumentOperators(LARGE_IMAGE_ASSET.getUrl(), ArgumentType.Text) : LARGE_IMAGE_ASSET.getName()) : "";
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                StringUtils.sequentialReplaceAnyCase(SMALL_IMAGE_ASSET.getUrl(), getArgumentsFor(ArgumentType.Text)) : SMALL_IMAGE_ASSET.getName()) : "";
+                parseArgumentOperators(SMALL_IMAGE_ASSET.getUrl(), ArgumentType.Text) : SMALL_IMAGE_ASSET.getName()) : "";
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.largeImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.smallImageMessage, getArgumentsFor(ArgumentType.Text)), !CraftPresence.CONFIG.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.largeImageMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.smallImageMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
@@ -959,11 +992,11 @@ public class DiscordUtils {
                 JsonObject buttonObj = new JsonObject();
                 if (part.length == 3 && !StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
                     String label = StringUtils.formatWord(
-                            StringUtils.sequentialReplaceAnyCase(part[1], getArgumentsFor(ArgumentType.Text)),
+                            parseArgumentOperators(part[1], ArgumentType.Text),
                             !CraftPresence.CONFIG.formatWords, true, 1
                     );
-                    String url = !StringUtils.isNullOrEmpty(part[2]) ? StringUtils.sequentialReplaceAnyCase(
-                            part[2], getArgumentsFor(ArgumentType.Text)
+                    String url = !StringUtils.isNullOrEmpty(part[2]) ? parseArgumentOperators(
+                            part[2], ArgumentType.Text
                     ) : "";
 
                     label = sanitizePlaceholders(label);

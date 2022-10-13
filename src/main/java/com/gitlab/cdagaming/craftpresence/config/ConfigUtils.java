@@ -297,11 +297,11 @@ public class ConfigUtils {
         NAME_buttonMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.button_messages").replaceAll(" ", "_");
         NAME_dynamicIcons = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.display.dynamic_icons").replaceAll(" ", "_");
         gameStateMessage = "&SERVER& &PACK&";
-        detailsMessage = "&MAINMENU&&DIMENSION&";
-        largeImageMessage = "&MAINMENU&&DIMENSION&";
+        detailsMessage = "&MAINMENU&|&DIMENSION&";
+        largeImageMessage = "&MAINMENU&|&DIMENSION&";
         smallImageMessage = "&SERVER& &PACK&";
-        largeImageKey = "&MAINMENU&&DIMENSION&";
-        smallImageKey = "&SERVER&&PACK&";
+        largeImageKey = "&MAINMENU&|&DIMENSION&";
+        smallImageKey = "&SERVER&|&PACK&";
         buttonMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label") + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")};
         dynamicIcons = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url")};
 

@@ -5,11 +5,26 @@
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.3...release%2Fv1.9.4)_
 
+### Changes
+
+* Added support for the `|` (OR) Operator in `Presence Settings` fields
+    * This change can be used to combine 2 placeholders, in which the mod will choose the first
+      non-null placeholder. One such example is that doing `&SERVER&|&PACK&` will show the pack message, if the server
+      message
+      is null, and will show the `&SERVER&` data if it is not null (Even if the `&PACK&` data is also not null)
+    * As a result of this change, the `detailsMessage`, `largeImageMessage`, `largeImageKey`, and `smallImageKey` have
+      been revised to include OR operators. Users can either manually use the OR operator or reset those fields to have
+      them automatically applied upon config regeneration.
+    * This can also be considered a fix for when using a server icon while a pack icon was also available, which is a
+      scenario that can happen under default behavior, and the reasoning for this addition.
+
 ### Fixes
 
-* Fixed a NPE from `generateArgumentMessage` if it is fired before the IPC instance is initialized
+* Backend: Fixed shadowed dependencies breaking Fabric and Forge Developer Environment functionality
+* Backend: Fixed an issue where `getArgumentsMatching` was able to return null entries, leading to unintended behavior
+* Backend: Fixed a NPE from `generateArgumentMessage` if it is fired before the IPC instance is initialized
 * Fixed possible NPEs within `ServerUtils` if `currentServerMessage` or `currentServerIcon` was null
-    * This also fixes compatibility with Replay Mod
+    * This also fixes compatibility with Replay Mod and similar mods
 
 ___
 

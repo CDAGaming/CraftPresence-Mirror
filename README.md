@@ -113,6 +113,11 @@ ___
 
 These placeholders are used in the `Presence Settings` menu within the Config Gui.
 
+In v1.9.4 and above, The `|` (Or) operator can be used to combine 2 placeholders, in which the mod will choose the first
+non-null placeholder. One such example is that doing `&SERVER&|&PACK&` will show the pack message, if the server message
+is null, and will show
+the `&SERVER&` data if it is not null (Even if the `&PACK&` data is also not null)
+
 * `&MAINMENU&` - The message to display whilst in the main menu.
     * See `Status Messages::Main Menu Message` for more info.
 * `&PACK&` - The message to display whilst using a valid modpack.
