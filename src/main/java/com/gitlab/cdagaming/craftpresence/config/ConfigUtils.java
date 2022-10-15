@@ -82,7 +82,8 @@ public class ConfigUtils {
             NAME_playerAmountPlaceholderMessage, NAME_playerItemsPlaceholderMessage, NAME_worldPlaceholderMessage, NAME_modsPlaceholderMessage, NAME_vivecraftMessage, NAME_fallbackPackPlaceholderMessage;
     // ADVANCED
     public String NAME_enableCommands, NAME_enablePerGui, NAME_enablePerItem, NAME_enablePerEntity, NAME_renderTooltips, NAME_formatWords, NAME_debugMode, NAME_verboseMode,
-            NAME_splitCharacter, NAME_refreshRate, NAME_roundSize, NAME_includeExtraGuiClasses, NAME_guiMessages, NAME_itemMessages, NAME_entityTargetMessages, NAME_entityRidingMessages, NAME_playerSkinEndpoint;
+            NAME_splitCharacter, NAME_refreshRate, NAME_roundSize, NAME_includeExtraGuiClasses, NAME_guiMessages, NAME_itemMessages, NAME_entityTargetMessages, NAME_entityRidingMessages, NAME_playerSkinEndpoint,
+            NAME_allowPlaceholderPreviews, NAME_allowPlaceholderOperators;
     // ACCESSIBILITY
     public String NAME_tooltipBackgroundColor, NAME_tooltipBorderColor, NAME_guiBackgroundColor, NAME_buttonBackgroundColor, NAME_showBackgroundAsDark, NAME_languageId, NAME_stripTranslationColors, NAME_showLoggingInChat, NAME_stripExtraGuiElements, NAME_configKeyCode;
     // DISPLAY MESSAGES
@@ -109,7 +110,9 @@ public class ConfigUtils {
             outerPlayerPlaceholderMessage, innerPlayerPlaceholderMessage, playerCoordinatePlaceholderMessage, playerHealthPlaceholderMessage,
             playerAmountPlaceholderMessage, playerItemsPlaceholderMessage, worldPlaceholderMessage, modsPlaceholderMessage, vivecraftMessage, fallbackPackPlaceholderMessage;
     // ADVANCED
-    public boolean enableCommands, enablePerGui, enablePerItem, enablePerEntity, renderTooltips, formatWords, debugMode, verboseMode, includeExtraGuiClasses;
+    public boolean enableCommands, enablePerGui, enablePerItem, enablePerEntity,
+            renderTooltips, formatWords, debugMode, verboseMode, includeExtraGuiClasses,
+            allowPlaceholderPreviews, allowPlaceholderOperators;
     public String splitCharacter, playerSkinEndpoint;
     public int refreshRate, roundSize;
     public String[] guiMessages, itemMessages, entityTargetMessages, entityRidingMessages;
@@ -244,6 +247,8 @@ public class ConfigUtils {
         NAME_refreshRate = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.refresh_rate").replaceAll(" ", "_");
         NAME_roundSize = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.round_size").replaceAll(" ", "_");
         NAME_includeExtraGuiClasses = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.include_extra_gui_classes").replaceAll(" ", "_");
+        NAME_allowPlaceholderPreviews = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.allow_placeholder_previews").replaceAll(" ", "_");
+        NAME_allowPlaceholderOperators = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.allow_placeholder_operators").replaceAll(" ", "_");
         NAME_guiMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.gui_messages").replaceAll(" ", "_");
         NAME_itemMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.item_messages").replaceAll(" ", "_");
         NAME_entityTargetMessages = ModUtils.TRANSLATOR.translateFrom(true, "gui.config.name.advanced.entity_target_messages").replaceAll(" ", "_");
@@ -261,6 +266,8 @@ public class ConfigUtils {
         refreshRate = 2;
         roundSize = 3;
         includeExtraGuiClasses = false;
+        allowPlaceholderPreviews = false;
+        allowPlaceholderOperators = true;
         guiMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.gui_messages")};
         itemMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.item_messages")};
         entityTargetMessages = new String[]{"default" + (!StringUtils.isNullOrEmpty(splitCharacter) ? splitCharacter : ";") + ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_target_messages")};

@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -40,8 +41,9 @@ import net.minecraft.client.gui.GuiScreen;
 
 public class AdvancedSettingsGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
-    private CheckBoxControl enableCommandsButton, enablePerGuiButton,
-            enablePerItemButton, enablePerEntityButton, renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton;
+    private CheckBoxControl enableCommandsButton, enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
+            renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
+            allowPlaceholderPreviewsButton, allowPlaceholderOperatorsButton;
     private ExtendedTextControl splitCharacter, refreshRate;
 
     AdvancedSettingsGui(GuiScreen parentScreen) {
@@ -524,6 +526,32 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         )
                 )
         );
+        allowPlaceholderPreviewsButton = addControl(
+                new CheckBoxControl(
+                        calc1, CraftPresence.GUIS.getButtonY(8, -40),
+                        "gui.config.name.advanced.allow_placeholder_previews",
+                        CraftPresence.CONFIG.allowPlaceholderPreviews,
+                        null,
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_placeholder_previews")
+                                ), this, true
+                        )
+                )
+        );
+        allowPlaceholderOperatorsButton = addControl(
+                new CheckBoxControl(
+                        calc2, CraftPresence.GUIS.getButtonY(8, -40),
+                        "gui.config.name.advanced.allow_placeholder_operators",
+                        CraftPresence.CONFIG.allowPlaceholderOperators,
+                        null,
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_placeholder_operators")
+                                ), this, true
+                        )
+                )
+        );
         proceedButton = addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
@@ -577,6 +605,15 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CraftPresence.CONFIG.verboseMode = verboseModeButton.isChecked();
                             }
+                            if (allowPlaceholderPreviewsButton.isChecked() != CraftPresence.CONFIG.allowPlaceholderPreviews) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CraftPresence.CONFIG.allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked();
+                            }
+                            if (allowPlaceholderOperatorsButton.isChecked() != CraftPresence.CONFIG.allowPlaceholderOperators) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.allowPlaceholderOperators = allowPlaceholderOperatorsButton.isChecked();
+                            }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },
                         () -> {
@@ -607,9 +644,9 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         renderString(refreshRateText, (getScreenWidth() / 2f) + 18, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         final Pair<Boolean, Integer> refreshRateData = StringUtils.getValidInteger(refreshRate.getControlMessage());
-        proceedButton.setControlEnabled(
-                !StringUtils.containsAlphaNumeric(splitCharacter.getControlMessage()) &&
-                        (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
+        proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(splitCharacter.getControlMessage()) &&
+                !StringUtils.containsAlphaNumeric(splitCharacter.getControlMessage()) && !DiscordUtils.validOperators.containsKey(splitCharacter.getControlMessage()) &&
+                (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
         );
 
         guiMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.GUIS.enabled : guiMessagesButton.isControlEnabled());

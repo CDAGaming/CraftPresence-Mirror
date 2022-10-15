@@ -40,6 +40,7 @@ import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
@@ -75,6 +76,9 @@ public class DiscordUtils {
             "&DEFAULT&", "&MAINMENU&", "&PACK&",
             "&DIMENSION&", "&BIOME&", "&SERVER&"
     );
+    public static final Map<String, Pair<String, String>> validOperators = ImmutableMap.<String, Pair<String, String>>builder()
+            .put("|", new Pair<>("\\|", "&[^&]*&[\\|]&[^&]*&"))
+            .build();
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
@@ -328,31 +332,36 @@ public class DiscordUtils {
     /**
      * Parses the Argument Operators and Placeholders within a message
      *
-     * @param input The string to interpret
+     * @param input    The string to interpret
      * @param typeList The list of {@link ArgumentType}'s to iterate through
      * @return the parsed message
      */
     public String parseArgumentOperators(final String input, ArgumentType... typeList) {
         String result = input;
-        final Pair<String, List<String>> OrOperations = StringUtils.getMatches("&[^&]*&[\\|]&[^&]*&", input);
+        if (CraftPresence.CONFIG.allowPlaceholderOperators) {
+            for (Map.Entry<String, Pair<String, String>> rawEntry : validOperators.entrySet()) {
+                final Pair<String, String> operatorEntry = rawEntry.getValue();
+                final Pair<String, List<String>> matches = StringUtils.getMatches(operatorEntry.getSecond(), result);
 
-        if (!OrOperations.getSecond().isEmpty()) {
-            for (String match : OrOperations.getSecond()) {
-                boolean foundMatch = false;
-                String resultMatch = match;
-                for (String splitData : match.split("\\|")) {
-                    if (foundMatch) {
-                        break;
-                    }
-                    for (ArgumentType type : typeList) {
-                        if (!getRawArgumentEntries(type, false, splitData).isEmpty()) {
-                            foundMatch = true;
-                            resultMatch = splitData;
-                            break;
+                if (!matches.getSecond().isEmpty()) {
+                    for (String match : matches.getSecond()) {
+                        boolean foundMatch = false;
+                        String resultMatch = match;
+                        for (String splitData : match.split(operatorEntry.getFirst())) {
+                            if (foundMatch) {
+                                break;
+                            }
+                            for (ArgumentType type : typeList) {
+                                if (!getRawArgumentEntries(type, false, splitData).isEmpty()) {
+                                    foundMatch = true;
+                                    resultMatch = splitData;
+                                    break;
+                                }
+                            }
                         }
+                        result = result.replace(match, foundMatch ? resultMatch : "");
                     }
                 }
-                result = result.replace(match, foundMatch ? resultMatch : "");
             }
         }
         return StringUtils.sequentialReplaceAnyCase(result, getArgumentsFor(typeList));
@@ -739,7 +748,7 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final List<Pair<String, String>> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, ipcInstance != null && ipcInstance.isDebugMode(), args);
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, CraftPresence.CONFIG.allowPlaceholderPreviews, args);
     }
 
     /**
