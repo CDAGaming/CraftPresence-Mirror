@@ -467,8 +467,9 @@ public class DiscordUtils {
     /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
-     * @param type The type the arguments should be retrieved from
-     * @param args The string formats to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final boolean allowNullEntries, final String... args) {
@@ -500,7 +501,8 @@ public class DiscordUtils {
     /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
-     * @param args The string formats to interpret
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<Pair<String, String>> getArgumentsMatching(final boolean allowNullEntries, final String... args) {
@@ -524,9 +526,10 @@ public class DiscordUtils {
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param type          The type the arguments should be retrieved from
-     * @param formatToLower Whether to lower-cases the resulting entries
-     * @param args          The string formats to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param formatToLower    Whether to lower-cases the resulting entries
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final boolean allowNullEntries, final String... args) {
@@ -553,8 +556,9 @@ public class DiscordUtils {
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param type The type the arguments should be retrieved from
-     * @param args The string formats to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<String> getRawArgumentEntries(final ArgumentType type, final boolean allowNullEntries, final String... args) {
@@ -575,8 +579,9 @@ public class DiscordUtils {
     /**
      * Determines whether there are any matching arguments within the specified type matching the specified string formats
      *
-     * @param type The type the arguments should be retrieved from
-     * @param args The string formats to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The string formats to interpret
      * @return Whether the resulting list has any matching entries
      */
     public boolean hasArgumentsMatching(final ArgumentType type, final boolean allowNullEntries, final String... args) {
@@ -661,7 +666,8 @@ public class DiscordUtils {
     /**
      * Generate a list of Arguments, depending on the Argument Types and String List
      *
-     * @param argumentData The data to interpret
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param argumentData     The data to interpret
      * @return the list of parsed arguments
      */
     public List<Pair<String, String>> generateArgumentList(final boolean allowNullEntries, final Map<ArgumentType, List<String>> argumentData) {
@@ -790,6 +796,8 @@ public class DiscordUtils {
      *
      * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param type              The type the arguments should be retrieved from
+     * @param allowNullEntries  Whether empty entry values should be interpreted
      * @param args              The data to interpret
      * @return the parsable string
      */
@@ -802,6 +810,7 @@ public class DiscordUtils {
      *
      * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param type              The type the arguments should be retrieved from
      * @param args              The data to interpret
      * @return the parsable string
      */
@@ -812,8 +821,10 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
-     * @param args           The data to interpret
+     * @param argumentFormat   The primary argument format to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final boolean allowNullEntries, final String... args) {
@@ -824,6 +835,7 @@ public class DiscordUtils {
      * Generate a parsable display string for the argument data provided
      *
      * @param argumentFormat The primary argument format to interpret
+     * @param type           The type the arguments should be retrieved from
      * @param args           The data to interpret
      * @return the parsable string
      */
@@ -836,6 +848,8 @@ public class DiscordUtils {
      *
      * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param type              The type the arguments should be retrieved from
+     * @param allowNullEntries  Whether empty entry values should be interpreted
      * @param args              The data to interpret
      * @return the parsable string
      */
@@ -848,6 +862,7 @@ public class DiscordUtils {
      *
      * @param argumentFormat    The primary argument format to interpret
      * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param type              The type the arguments should be retrieved from
      * @param args              The data to interpret
      * @return the parsable string
      */
@@ -858,8 +873,10 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
-     * @param args           The data to interpret
+     * @param argumentFormat   The primary argument format to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
@@ -870,6 +887,7 @@ public class DiscordUtils {
      * Generate a parsable display string for the argument data provided
      *
      * @param argumentFormat The primary argument format to interpret
+     * @param type           The type the arguments should be retrieved from
      * @param args           The data to interpret
      * @return the parsable string
      */
@@ -880,8 +898,9 @@ public class DiscordUtils {
     /**
      * Convert a list of strings into a valid argument list
      *
-     * @param type The type the arguments should be retrieved from
-     * @param args The string formats to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The string formats to interpret
      * @return the resulting list of argument entries
      */
     public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final boolean allowNullEntries, final String... args) {
@@ -915,8 +934,9 @@ public class DiscordUtils {
     /**
      * Convert a list of strings into a valid argument list
      *
-     * @param type The type the arguments should be retrieved from
-     * @param args The string formats to interpret
+     * @param type             The type the arguments should be retrieved from
+     * @param allowNullEntries Whether empty entry values should be interpreted
+     * @param args             The string formats to interpret
      * @return the resulting list of argument entries
      */
     public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
