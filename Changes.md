@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v1.9.4 (10/25/2022)
+## v1.9.4 (10/18/2022)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.3...release%2Fv1.9.4)_
@@ -21,7 +21,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 ### Fixes
 
 * Backend: Fixed shadowed dependencies breaking Fabric and Forge Developer Environment functionality
-* Backend: Fixed an issue where `getArgumentsMatching` was able to return null entries, leading to unintended behavior
+* Backend: Fixed an issue where `getArgumentsMatching` could sometimes lead to unintended behavior
 * Backend: Fixed a NPE from `generateArgumentMessage` if it is fired before the IPC instance is initialized
 * Fixed possible NPEs within `ServerUtils` if `currentServerMessage` or `currentServerIcon` was null
     * This also fixes compatibility with Replay Mod and similar mods

@@ -345,14 +345,14 @@ public class DiscordUtils {
                         break;
                     }
                     for (ArgumentType type : typeList) {
-                        if (!getArgumentEntries(type, splitData).isEmpty()) {
+                        if (!getRawArgumentEntries(type, false, splitData).isEmpty()) {
                             foundMatch = true;
                             resultMatch = splitData;
                             break;
                         }
                     }
                 }
-                result = result.replace(match, resultMatch);
+                result = result.replace(match, foundMatch ? resultMatch : "");
             }
         }
         return StringUtils.sequentialReplaceAnyCase(result, getArgumentsFor(typeList));
@@ -462,12 +462,13 @@ public class DiscordUtils {
      * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final String... args) {
+    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final boolean allowNullEntries, final String... args) {
         final List<Pair<String, String>> list = Lists.newArrayList();
         if (presenceData.containsKey(type)) {
             for (Pair<String, String> entry : presenceData.get(type)) {
+                final boolean isEntryValid = allowNullEntries || !StringUtils.isNullOrEmpty(entry.getSecond());
                 for (String format : args) {
-                    if (entry.getFirst().contains(format) && !StringUtils.isNullOrEmpty(entry.getSecond())) {
+                    if (entry.getFirst().contains(format) && isEntryValid) {
                         list.add(entry);
                     }
                 }
@@ -479,15 +480,53 @@ public class DiscordUtils {
     /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final String... args) {
+        return getArgumentsMatching(type, true, args);
+    }
+
+    /**
+     * Retrieves any arguments within the specified type that match the specified string formats
+     *
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<Pair<String, String>> getArgumentsMatching(final boolean allowNullEntries, final String... args) {
+        final List<Pair<String, String>> results = Lists.newArrayList();
+        for (ArgumentType type : ArgumentType.values()) {
+            StringUtils.addEntriesNotPresent(results, getArgumentsMatching(type, allowNullEntries, args));
+        }
+        return results;
+    }
+
+    /**
+     * Retrieves any arguments within the specified type that match the specified string formats
+     *
      * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<Pair<String, String>> getArgumentsMatching(final String... args) {
-        final List<Pair<String, String>> results = Lists.newArrayList();
-        for (ArgumentType type : ArgumentType.values()) {
-            StringUtils.addEntriesNotPresent(results, getArgumentsMatching(type, args));
+        return getArgumentsMatching(true, args);
+    }
+
+    /**
+     * Retrieves any argument entries within the specified type that match the specified string formats
+     *
+     * @param type          The type the arguments should be retrieved from
+     * @param formatToLower Whether to lower-cases the resulting entries
+     * @param args          The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final boolean allowNullEntries, final String... args) {
+        final List<Pair<String, String>> list = getArgumentsMatching(type, allowNullEntries, args);
+        final List<String> result = Lists.newArrayList();
+        for (Pair<String, String> entry : list) {
+            result.add(formatToLower ? entry.getFirst().toLowerCase() : entry.getFirst());
         }
-        return results;
+        return result;
     }
 
     /**
@@ -499,12 +538,7 @@ public class DiscordUtils {
      * @return A List of the entries that satisfy the method conditions
      */
     public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final String... args) {
-        final List<Pair<String, String>> list = getArgumentsMatching(type, args);
-        final List<String> result = Lists.newArrayList();
-        for (Pair<String, String> entry : list) {
-            result.add(formatToLower ? entry.getFirst().toLowerCase() : entry.getFirst());
-        }
-        return result;
+        return getArgumentEntries(type, formatToLower, true, args);
     }
 
     /**
@@ -514,8 +548,30 @@ public class DiscordUtils {
      * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getArgumentEntries(final ArgumentType type, final String... args) {
-        return getArgumentEntries(type, false, args);
+    public List<String> getRawArgumentEntries(final ArgumentType type, final boolean allowNullEntries, final String... args) {
+        return getArgumentEntries(type, false, allowNullEntries, args);
+    }
+
+    /**
+     * Retrieves any argument entries within the specified type that match the specified string formats
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return A List of the entries that satisfy the method conditions
+     */
+    public List<String> getRawArgumentEntries(final ArgumentType type, final String... args) {
+        return getRawArgumentEntries(type, true, args);
+    }
+
+    /**
+     * Determines whether there are any matching arguments within the specified type matching the specified string formats
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return Whether the resulting list has any matching entries
+     */
+    public boolean hasArgumentsMatching(final ArgumentType type, final boolean allowNullEntries, final String... args) {
+        return !getArgumentsMatching(type, allowNullEntries, args).isEmpty();
     }
 
     /**
@@ -526,7 +582,7 @@ public class DiscordUtils {
      * @return Whether the resulting list has any matching entries
      */
     public boolean hasArgumentsMatching(final ArgumentType type, final String... args) {
-        return !getArgumentsMatching(type, args).isEmpty();
+        return hasArgumentsMatching(type, true, args);
     }
 
     /**
@@ -599,15 +655,25 @@ public class DiscordUtils {
      * @param argumentData The data to interpret
      * @return the list of parsed arguments
      */
-    public List<Pair<String, String>> generateArgumentList(final Map<ArgumentType, List<String>> argumentData) {
+    public List<Pair<String, String>> generateArgumentList(final boolean allowNullEntries, final Map<ArgumentType, List<String>> argumentData) {
         final List<Pair<String, String>> results = Lists.newArrayList();
         for (Map.Entry<ArgumentType, List<String>> entry : argumentData.entrySet()) {
             StringUtils.addEntriesNotPresent(results,
                     data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                    convertToArgumentList(entry.getKey(), entry.getValue())
+                    convertToArgumentList(entry.getKey(), allowNullEntries, entry.getValue())
             );
         }
         return results;
+    }
+
+    /**
+     * Generate a list of Arguments, depending on the Argument Types and String List
+     *
+     * @param argumentData The data to interpret
+     * @return the list of parsed arguments
+     */
+    public List<Pair<String, String>> generateArgumentList(final Map<ArgumentType, List<String>> argumentData) {
+        return generateArgumentList(true, argumentData);
     }
 
     /**
@@ -718,8 +784,31 @@ public class DiscordUtils {
      * @param args              The data to interpret
      * @return the parsable string
      */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final boolean allowNullEntries, final String... args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, allowNullEntries, args));
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args              The data to interpret
+     * @return the parsable string
+     */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final String... args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, args));
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, type, true, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args           The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final boolean allowNullEntries, final String... args) {
+        return generateArgumentMessage(argumentFormat, null, type, allowNullEntries, args);
     }
 
     /**
@@ -730,7 +819,19 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final String... args) {
-        return generateArgumentMessage(argumentFormat, null, type, args);
+        return generateArgumentMessage(argumentFormat, type, true, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param args              The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, allowNullEntries, args));
     }
 
     /**
@@ -742,7 +843,18 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final List<String> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, args));
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, type, true, args);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat The primary argument format to interpret
+     * @param args           The data to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
+        return generateArgumentMessage(argumentFormat, null, type, allowNullEntries, args);
     }
 
     /**
@@ -753,7 +865,7 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final List<String> args) {
-        return generateArgumentMessage(argumentFormat, null, type, args);
+        return generateArgumentMessage(argumentFormat, type, true, args);
     }
 
     /**
@@ -763,9 +875,9 @@ public class DiscordUtils {
      * @param args The string formats to interpret
      * @return the resulting list of argument entries
      */
-    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final String... args) {
+    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final boolean allowNullEntries, final String... args) {
         final List<Pair<String, String>> result = Lists.newArrayList();
-        final List<Pair<String, String>> existingArgs = getArgumentsMatching(type, args);
+        final List<Pair<String, String>> existingArgs = getArgumentsMatching(type, allowNullEntries, args);
         for (String argumentName : args) {
             if (!existingArgs.isEmpty()) {
                 for (Pair<String, String> entry : existingArgs) {
@@ -787,8 +899,30 @@ public class DiscordUtils {
      * @param args The string formats to interpret
      * @return the resulting list of argument entries
      */
+    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final String... args) {
+        return convertToArgumentList(type, true, args);
+    }
+
+    /**
+     * Convert a list of strings into a valid argument list
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return the resulting list of argument entries
+     */
+    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
+        return convertToArgumentList(type, allowNullEntries, args.toArray(new String[0]));
+    }
+
+    /**
+     * Convert a list of strings into a valid argument list
+     *
+     * @param type The type the arguments should be retrieved from
+     * @param args The string formats to interpret
+     * @return the resulting list of argument entries
+     */
     public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final List<String> args) {
-        return convertToArgumentList(type, args.toArray(new String[0]));
+        return convertToArgumentList(type, true, args);
     }
 
     /**
