@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v1.9.4 (10/19/2022)
+## v1.9.4 (10/20/2022)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.3...release%2Fv1.9.4)_
@@ -21,7 +21,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
-* Beckend: Tile Entity Previews now refresh on GUI entering, to counter issues of them being loaded too early
+* Backend: Tile Entity Previews now refresh on GUI entering, to counter issues of them being loaded too early
 * Backend: Fixed shadowed dependencies breaking Fabric and Forge Developer Environment functionality
 * Backend: Fixed an issue where `getArgumentsMatching` could sometimes lead to unintended behavior
 * Backend: Fixed a NPE from `generateArgumentMessage` if it is fired before the IPC instance is initialized
