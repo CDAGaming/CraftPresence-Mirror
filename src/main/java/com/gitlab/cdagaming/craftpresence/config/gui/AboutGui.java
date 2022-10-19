@@ -50,7 +50,12 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.versionInfo",
-                        () -> CraftPresence.GUIS.openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER))
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER));
+                            }
+                        }
                 )
         );
 
@@ -60,7 +65,12 @@ public class AboutGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(parentScreen);
+                            }
+                        }
                 )
         );
 
@@ -70,7 +80,12 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
                         180, 20,
                         "gui.config.message.button.view_source",
-                        () -> UrlUtils.openUrl(SOURCE_URL)
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                UrlUtils.openUrl(SOURCE_URL);
+                            }
+                        }
                 )
         );
 

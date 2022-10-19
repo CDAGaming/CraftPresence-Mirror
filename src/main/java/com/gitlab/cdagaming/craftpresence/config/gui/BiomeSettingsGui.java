@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
+import com.gitlab.cdagaming.craftpresence.impl.TupleConsumer;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -63,104 +65,139 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.biome_messages.biome_messages",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,
-                                        null, null,
-                                        true, true, RenderType.None,
-                                        (attributeName, currentValue) -> {
-                                            final String defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                            final String currentMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new SelectorGui(
+                                                currentScreen,
+                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,
+                                                null, null,
+                                                true, true, RenderType.None,
+                                                new PairConsumer<String, String>() {
+                                                    @Override
+                                                    public void accept(String attributeName, String currentValue) {
+                                                        final String defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                        final String currentMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, null);
 
-                                            CraftPresence.CONFIG.hasChanged = true;
-                                            if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
-                                                CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage);
-                                            }
-                                            CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, currentValue);
-                                        },
-                                        (currentValue, parentScreen) -> {
-                                            // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
-                                                    new DynamicEditorGui(
-                                                            parentScreen, currentValue,
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing existing data
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
-                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
-                                                            },
-                                                            (screenInstance, attributeName, inputText) -> {
-                                                                // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
-                                                                if (!CraftPresence.BIOMES.BIOME_NAMES.contains(attributeName)) {
-                                                                    CraftPresence.BIOMES.BIOME_NAMES.add(attributeName);
-                                                                }
-                                                            },
-                                                            (screenInstance, attributeName, inputText) -> {
-                                                                // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.biomeMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.biomeMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
-                                                                CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when adding an attachment icon to set data
-                                                                final String defaultIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, CraftPresence.CONFIG.defaultBiomeIcon);
-                                                                final String specificIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, defaultIcon);
-                                                                CraftPresence.GUIS.openScreen(
-                                                                        new SelectorGui(
-                                                                                screenInstance,
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                                                                specificIcon, attributeName,
-                                                                                true, false, RenderType.DiscordAsset,
-                                                                                (innerAttributeName, innerCurrentValue) -> {
-                                                                                    // Inner-Event to occur when proceeding with adjusted data
-                                                                                    final String defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                                    final String currentMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, innerAttributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                        CraftPresence.CONFIG.hasChanged = true;
+                                                        if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
+                                                            CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage);
+                                                        }
+                                                        CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, currentValue);
+                                                    }
+                                                },
+                                                new PairConsumer<String, GuiScreen>() {
+                                                    @Override
+                                                    public void accept(String currentValue, GuiScreen parentScreen) {
+                                                        // Event to occur when Setting Dynamic/Specific Data
+                                                        CraftPresence.GUIS.openScreen(
+                                                                new DynamicEditorGui(
+                                                                        parentScreen, currentValue,
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when initializing new data
+                                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                            }
+                                                                        },
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when initializing existing data
+                                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
+                                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
+                                                                            }
+                                                                        },
+                                                                        new TupleConsumer<DynamicEditorGui, String, String>() {
+                                                                            @Override
+                                                                            public void accept(DynamicEditorGui screenInstance, String attributeName, String inputText) {
+                                                                                // Event to occur when adjusting set data
+                                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                                CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                                if (!CraftPresence.BIOMES.BIOME_NAMES.contains(attributeName)) {
+                                                                                    CraftPresence.BIOMES.BIOME_NAMES.add(attributeName);
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        new TupleConsumer<DynamicEditorGui, String, String>() {
+                                                                            @Override
+                                                                            public void accept(DynamicEditorGui screenInstance, String attributeName, String inputText) {
+                                                                                // Event to occur when removing set data
+                                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                                CraftPresence.CONFIG.biomeMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.biomeMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                                CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
+                                                                            }
+                                                                        },
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when adding an attachment icon to set data
+                                                                                final String defaultIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, CraftPresence.CONFIG.defaultBiomeIcon);
+                                                                                final String specificIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, defaultIcon);
+                                                                                CraftPresence.GUIS.openScreen(
+                                                                                        new SelectorGui(
+                                                                                                screenInstance,
+                                                                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                                specificIcon, attributeName,
+                                                                                                true, false, RenderType.DiscordAsset,
+                                                                                                new PairConsumer<String, String>() {
+                                                                                                    @Override
+                                                                                                    public void accept(String innerAttributeName, String innerCurrentValue) {
+                                                                                                        // Inner-Event to occur when proceeding with adjusted data
+                                                                                                        final String defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                                                        final String currentMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, innerAttributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, null);
 
-                                                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                                                    if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
-                                                                                        CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, innerAttributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage);
-                                                                                    }
-                                                                                    CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, innerAttributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, innerCurrentValue);
-                                                                                }, null
-                                                                        )
-                                                                );
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
-                                                                        StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                                                        CraftPresence.BIOMES.generateArgumentMessage())
-                                                                        ), screenInstance, true
-                                                                );
-                                                            }
-                                                    )
-                                            );
-                                        }
-                                )
-                        ),
-                        () -> {
-                            if (!biomeMessagesButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
-                                        ), this, true
+                                                                                                        CraftPresence.CONFIG.hasChanged = true;
+                                                                                                        if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
+                                                                                                            CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, innerAttributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage);
+                                                                                                        }
+                                                                                                        CraftPresence.CONFIG.biomeMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, innerAttributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, innerCurrentValue);
+                                                                                                    }
+                                                                                                }, null
+                                                                                        )
+                                                                                );
+                                                                            }
+                                                                        },
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when Hovering over Message Label
+                                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                                        StringUtils.splitTextByNewLine(
+                                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                                                                        CraftPresence.BIOMES.generateArgumentMessage())
+                                                                                        ), screenInstance, true
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                )
+                                                        );
+                                                    }
+                                                }
+                                        )
                                 );
-                            } else {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                        CraftPresence.BIOMES.generateArgumentMessage())
-                                        ), this, true
-                                );
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!biomeMessagesButton.isControlEnabled()) {
+                                    CraftPresence.GUIS.drawMultiLineString(
+                                            StringUtils.splitTextByNewLine(
+                                                    ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                            ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
+                                            ), BiomeSettingsGui.this, true
+                                    );
+                                } else {
+                                    CraftPresence.GUIS.drawMultiLineString(
+                                            StringUtils.splitTextByNewLine(
+                                                    ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                            CraftPresence.BIOMES.generateArgumentMessage())
+                                            ), BiomeSettingsGui.this, true
+                                    );
+                                }
                             }
                         }
                 )
@@ -171,24 +208,37 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.name.biome_messages.biome_icon",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        CraftPresence.CONFIG.defaultBiomeIcon, null,
-                                        true, false, RenderType.DiscordAsset,
-                                        (attributeName, currentValue) -> {
-                                            CraftPresence.CONFIG.hasChanged = true;
-                                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                            CraftPresence.CONFIG.defaultBiomeIcon = currentValue;
-                                        }, null
-                                )
-                        ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new SelectorGui(
+                                                currentScreen,
+                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                CraftPresence.CONFIG.defaultBiomeIcon, null,
+                                                true, false, RenderType.DiscordAsset,
+                                                new PairConsumer<String, String>() {
+                                                    @Override
+                                                    public void accept(String attributeName, String currentValue) {
+                                                        CraftPresence.CONFIG.hasChanged = true;
+                                                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                                        CraftPresence.CONFIG.defaultBiomeIcon = currentValue;
+                                                    }
+                                                }, null
+                                        )
+                                );
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
+                                        ), BiomeSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         proceedButton = addControl(
@@ -196,21 +246,27 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
-                        () -> {
-                            if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage.getControlMessage());
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    StringUtils.setConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage.getControlMessage());
+                                }
+                                CraftPresence.GUIS.openScreen(parentScreen);
                             }
-                            CraftPresence.GUIS.openScreen(parentScreen);
                         },
-                        () -> {
-                            if (!proceedButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ), this, true
-                                );
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!proceedButton.isControlEnabled()) {
+                                    CraftPresence.GUIS.drawMultiLineString(
+                                            StringUtils.splitTextByNewLine(
+                                                    ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                            ), BiomeSettingsGui.this, true
+                                    );
+                                }
                             }
                         }
                 )

@@ -127,7 +127,7 @@ public class ImageUtils {
                                         bufferData.getSecond().add(new ImageFrame(ImageIO.read(streamData)));
                                     }
                                     cachedImages.get(request.getFirst()).setSecond(bufferData);
-                                    cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
+                                    cachedImages.get(request.getFirst()).setThird(new ArrayList<ResourceLocation>(bufferData.getSecond().size()));
                                 }
                             } catch (Exception ex) {
                                 if (ModUtils.IS_VERBOSE) {
@@ -173,7 +173,7 @@ public class ImageUtils {
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final URL url) {
         try {
-            return getTextureFromUrl(textureName, new Pair<>(InputType.Url, url));
+            return getTextureFromUrl(textureName, new Pair<InputType, Object>(InputType.Url, url));
         } catch (Exception ex) {
             if (ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
@@ -191,7 +191,7 @@ public class ImageUtils {
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final File url) {
         try {
-            return getTextureFromUrl(textureName, new Pair<>(InputType.FileData, url));
+            return getTextureFromUrl(textureName, new Pair<InputType, Object>(InputType.FileData, url));
         } catch (Exception ex) {
             if (ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
@@ -218,7 +218,7 @@ public class ImageUtils {
             } else {
                 return getTextureFromUrl(
                         textureName,
-                        new Pair<>(StringUtils.isBase64(url.toString()).getFirst() ? InputType.ByteStream : InputType.FileStream, url.toString())
+                        new Pair<InputType, Object>(StringUtils.isBase64(url.toString()).getFirst() ? InputType.ByteStream : InputType.FileStream, url.toString())
                 );
             }
         }
@@ -238,7 +238,7 @@ public class ImageUtils {
                 //
                 // Note that the ResourceLocation needs to be
                 // initially null here for compatibility reasons
-                cachedImages.put(textureName, new Tuple<>(stream, new Pair<>(0, Lists.newArrayList()), null));
+                cachedImages.put(textureName, new Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>(stream, new Pair<Integer, List<ImageFrame>>(0, Lists.<ImageFrame>newArrayList()), null));
                 try {
                     urlRequests.put(new Pair<>(textureName, stream));
                 } catch (Exception ex) {

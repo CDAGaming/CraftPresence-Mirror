@@ -48,7 +48,12 @@ public class MessageGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(parentScreen);
+                            }
+                        }
                 )
         );
 

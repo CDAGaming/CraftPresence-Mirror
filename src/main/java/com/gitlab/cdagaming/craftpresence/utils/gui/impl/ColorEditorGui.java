@@ -94,11 +94,25 @@ public class ColorEditorGui extends PaginatedScreen {
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         redTitle,
-                        new Tuple<>(
-                                this::syncValues,
-                                () -> {
+                        new Tuple<Runnable, Runnable, Runnable>(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
                                 },
-                                this::syncValues
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // N/A
+                                    }
+                                },
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
+                                }
                         )
                 ), startPage
         );
@@ -109,11 +123,25 @@ public class ColorEditorGui extends PaginatedScreen {
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         greenTitle,
-                        new Tuple<>(
-                                this::syncValues,
-                                () -> {
+                        new Tuple<Runnable, Runnable, Runnable>(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
                                 },
-                                this::syncValues
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // N/A
+                                    }
+                                },
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
+                                }
                         )
                 ), startPage
         );
@@ -124,11 +152,25 @@ public class ColorEditorGui extends PaginatedScreen {
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         blueTitle,
-                        new Tuple<>(
-                                this::syncValues,
-                                () -> {
+                        new Tuple<Runnable, Runnable, Runnable>(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
                                 },
-                                this::syncValues
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // N/A
+                                    }
+                                },
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
+                                }
                         )
                 ), startPage
         );
@@ -139,11 +181,25 @@ public class ColorEditorGui extends PaginatedScreen {
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         alphaTitle,
-                        new Tuple<>(
-                                this::syncValues,
-                                () -> {
+                        new Tuple<Runnable, Runnable, Runnable>(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
                                 },
-                                this::syncValues
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // N/A
+                                    }
+                                },
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ColorEditorGui.this.syncValues();
+                                    }
+                                }
                         )
                 ), startPage
         );
@@ -154,7 +210,12 @@ public class ColorEditorGui extends PaginatedScreen {
                         getFontRenderer(),
                         calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        this::syncValues
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                ColorEditorGui.this.syncValues();
+                            }
+                        }
                 ), startPage + 1
         );
         textureText.setControlMaxLength(32767);
@@ -164,18 +225,24 @@ public class ColorEditorGui extends PaginatedScreen {
         super.initializeUi();
 
         backButton.setOnClick(
-                () -> {
-                    syncValues();
-                    if (isModified && onAdjustEntry != null) {
-                        onAdjustEntry.accept(currentPage, this);
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        ColorEditorGui.this.syncValues();
+                        if (isModified && onAdjustEntry != null) {
+                            onAdjustEntry.accept(currentPage, ColorEditorGui.this);
+                        }
+                        CraftPresence.GUIS.openScreen(parentScreen);
                     }
-                    CraftPresence.GUIS.openScreen(parentScreen);
                 }
         );
         setOnPageChange(
-                () -> {
-                    initValues();
-                    syncValues();
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        ColorEditorGui.this.initValues();
+                        ColorEditorGui.this.syncValues();
+                    }
                 }
         );
     }

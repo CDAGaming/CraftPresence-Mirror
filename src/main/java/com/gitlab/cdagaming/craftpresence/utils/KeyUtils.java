@@ -86,13 +86,22 @@ public class KeyUtils {
 
         KEY_MAPPINGS.put(
                 "configKeyCode",
-                new Tuple<>(
+                new Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>(
                         new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.configKeyCode, "key.craftpresence.category"),
-                        () -> {
-                            if (!CraftPresence.GUIS.isFocused && !CraftPresence.GUIS.configGUIOpened) {
-                                CraftPresence.GUIS.openScreen(new MainGui(CraftPresence.instance.currentScreen));
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!CraftPresence.GUIS.isFocused && !CraftPresence.GUIS.configGUIOpened) {
+                                    CraftPresence.GUIS.openScreen(new MainGui(CraftPresence.instance.currentScreen));
+                                }
                             }
-                        }, null
+                        },
+                        new DataConsumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) {
+                                // N/A
+                            }
+                        }
                 )
         );
     }
@@ -275,18 +284,20 @@ public class KeyUtils {
      * @param keyCode The new keycode to synchronize
      */
     private void syncKeyData(final String keyName, final ImportMode mode, final int keyCode) {
-        final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
-        if (mode == ImportMode.Config) {
-            keyData.getFirst().setKeyCode(keyCode);
-        } else if (mode == ImportMode.Vanilla) {
-            StringUtils.updateField(ConfigUtils.class, CraftPresence.CONFIG, new Tuple<>(keyName, keyCode, null));
-            CraftPresence.CONFIG.updateConfig(false);
-        } else if (mode == ImportMode.Specific) {
-            syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
-            syncKeyData(keyName, ImportMode.Vanilla, keyCode);
-        } else {
-            if (ModUtils.IS_VERBOSE) {
-                ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
+        final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.containsKey(keyName) ? KEY_MAPPINGS.get(keyName) : null;
+        if (keyData != null) {
+            if (mode == ImportMode.Config) {
+                keyData.getFirst().setKeyCode(keyCode);
+            } else if (mode == ImportMode.Vanilla) {
+                StringUtils.updateField(ConfigUtils.class, CraftPresence.CONFIG, new Tuple<>(keyName, keyCode, null));
+                CraftPresence.CONFIG.updateConfig(false);
+            } else if (mode == ImportMode.Specific) {
+                syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
+                syncKeyData(keyName, ImportMode.Vanilla, keyCode);
+            } else {
+                if (ModUtils.IS_VERBOSE) {
+                    ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
+                }
             }
         }
     }
@@ -326,7 +337,7 @@ public class KeyUtils {
      * @return The filtered key mappings
      */
     public Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> getKeyMappings() {
-        return getKeyMappings(FilterMode.None, Lists.newArrayList());
+        return getKeyMappings(FilterMode.None, Lists.<String>newArrayList());
     }
 
     /**

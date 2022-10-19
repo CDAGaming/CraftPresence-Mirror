@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -78,24 +79,37 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         buttonCalc1, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.general.default_icon",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        CraftPresence.CONFIG.defaultIcon, null,
-                                        true, false, RenderType.DiscordAsset,
-                                        (attributeName, currentValue) -> {
-                                            CraftPresence.CONFIG.hasChanged = true;
-                                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                            CraftPresence.CONFIG.defaultIcon = currentValue;
-                                        }, null
-                                )
-                        ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.default_icon")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new SelectorGui(
+                                                currentScreen,
+                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                CraftPresence.CONFIG.defaultIcon, null,
+                                                true, false, RenderType.DiscordAsset,
+                                                new PairConsumer<String, String>() {
+                                                    @Override
+                                                    public void accept(String attributeName, String currentValue) {
+                                                        CraftPresence.CONFIG.hasChanged = true;
+                                                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                                        CraftPresence.CONFIG.defaultIcon = currentValue;
+                                                    }
+                                                }, null
+                                        )
+                                );
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.default_icon")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         currentPartyPrivacy = CraftPresence.CONFIG.partyPrivacyLevel;
@@ -104,12 +118,22 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         buttonCalc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name(),
-                        () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length;
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         detectCurseManifestButton = addControl(
@@ -118,11 +142,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.detect_curse_manifest",
                         CraftPresence.CONFIG.detectCurseManifest,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_curse_manifest")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_curse_manifest")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         detectMultiMCManifestButton = addControl(
@@ -131,11 +160,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.detect_multimc_manifest",
                         CraftPresence.CONFIG.detectMultiMCManifest,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_multimc_manifest")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_multimc_manifest")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         detectMCUpdaterInstanceButton = addControl(
@@ -144,11 +178,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.detect_mcupdater_instance",
                         CraftPresence.CONFIG.detectMCUpdaterInstance,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_mcupdater_instance")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_mcupdater_instance")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         detectTechnicPackButton = addControl(
@@ -157,11 +196,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.detect_technic_pack",
                         CraftPresence.CONFIG.detectTechnicPack,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_technic_pack")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_technic_pack")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         showTimeButton = addControl(
@@ -170,11 +214,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.show_time",
                         CraftPresence.CONFIG.showTime,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.show_time")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.show_time")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         detectBiomeDataButton = addControl(
@@ -183,11 +232,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.detect_biome_data",
                         CraftPresence.CONFIG.detectBiomeData,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         detectDimensionDataButton = addControl(
@@ -196,11 +250,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.detect_dimension_data",
                         CraftPresence.CONFIG.detectDimensionData,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         detectWorldDataButton = addControl(
@@ -209,11 +268,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.detect_world_data",
                         CraftPresence.CONFIG.detectWorldData,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         enableJoinRequestButton = addControl(
@@ -222,11 +286,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.enable_join_request",
                         CraftPresence.CONFIG.enableJoinRequest,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         resetTimeOnInitButton = addControl(
@@ -235,11 +304,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.reset_time_on_init",
                         CraftPresence.CONFIG.resetTimeOnInit,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         autoRegisterButton = addControl(
@@ -248,11 +322,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         "gui.config.name.general.auto_register",
                         CraftPresence.CONFIG.autoRegister,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.auto_register")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.auto_register")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         currentPreferredClient = CraftPresence.CONFIG.preferredClientLevel;
@@ -261,12 +340,22 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
                         180, 20,
                         "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
-                        () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length;
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
+                                        ), GeneralSettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         proceedButton = addControl(
@@ -274,86 +363,92 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
-                        () -> {
-                            if (!clientId.getControlMessage().equals(CraftPresence.CONFIG.clientId)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.clientId = clientId.getControlMessage();
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!clientId.getControlMessage().equals(CraftPresence.CONFIG.clientId)) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.clientId = clientId.getControlMessage();
+                                }
+                                if (currentPartyPrivacy != CraftPresence.CONFIG.partyPrivacyLevel) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.partyPrivacyLevel = currentPartyPrivacy;
+                                }
+                                if (currentPreferredClient != CraftPresence.CONFIG.preferredClientLevel) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.preferredClientLevel = currentPreferredClient;
+                                }
+                                if (detectCurseManifestButton.isChecked() != CraftPresence.CONFIG.detectCurseManifest) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.detectCurseManifest = detectCurseManifestButton.isChecked();
+                                }
+                                if (detectMultiMCManifestButton.isChecked() != CraftPresence.CONFIG.detectMultiMCManifest) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.detectMultiMCManifest = detectMultiMCManifestButton.isChecked();
+                                }
+                                if (detectMCUpdaterInstanceButton.isChecked() != CraftPresence.CONFIG.detectMCUpdaterInstance) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.detectMCUpdaterInstance = detectMCUpdaterInstanceButton.isChecked();
+                                }
+                                if (detectTechnicPackButton.isChecked() != CraftPresence.CONFIG.detectTechnicPack) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.detectTechnicPack = detectTechnicPackButton.isChecked();
+                                }
+                                if (showTimeButton.isChecked() != CraftPresence.CONFIG.showTime) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.showTime = showTimeButton.isChecked();
+                                }
+                                if (detectBiomeDataButton.isChecked() != CraftPresence.CONFIG.detectBiomeData) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.detectBiomeData = detectBiomeDataButton.isChecked();
+                                }
+                                if (detectDimensionDataButton.isChecked() != CraftPresence.CONFIG.detectDimensionData) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.detectDimensionData = detectDimensionDataButton.isChecked();
+                                }
+                                if (detectWorldDataButton.isChecked() != CraftPresence.CONFIG.detectWorldData) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.detectWorldData = detectWorldDataButton.isChecked();
+                                }
+                                if (enableJoinRequestButton.isChecked() != CraftPresence.CONFIG.enableJoinRequest) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.enableJoinRequest = enableJoinRequestButton.isChecked();
+                                }
+                                if (resetTimeOnInitButton.isChecked() != CraftPresence.CONFIG.resetTimeOnInit) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.resetTimeOnInit = resetTimeOnInitButton.isChecked();
+                                }
+                                if (autoRegisterButton.isChecked() != CraftPresence.CONFIG.autoRegister) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                    CraftPresence.CONFIG.autoRegister = autoRegisterButton.isChecked();
+                                }
+                                CraftPresence.GUIS.openScreen(parentScreen);
                             }
-                            if (currentPartyPrivacy != CraftPresence.CONFIG.partyPrivacyLevel) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.partyPrivacyLevel = currentPartyPrivacy;
-                            }
-                            if (currentPreferredClient != CraftPresence.CONFIG.preferredClientLevel) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.preferredClientLevel = currentPreferredClient;
-                            }
-                            if (detectCurseManifestButton.isChecked() != CraftPresence.CONFIG.detectCurseManifest) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.detectCurseManifest = detectCurseManifestButton.isChecked();
-                            }
-                            if (detectMultiMCManifestButton.isChecked() != CraftPresence.CONFIG.detectMultiMCManifest) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.detectMultiMCManifest = detectMultiMCManifestButton.isChecked();
-                            }
-                            if (detectMCUpdaterInstanceButton.isChecked() != CraftPresence.CONFIG.detectMCUpdaterInstance) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.detectMCUpdaterInstance = detectMCUpdaterInstanceButton.isChecked();
-                            }
-                            if (detectTechnicPackButton.isChecked() != CraftPresence.CONFIG.detectTechnicPack) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.detectTechnicPack = detectTechnicPackButton.isChecked();
-                            }
-                            if (showTimeButton.isChecked() != CraftPresence.CONFIG.showTime) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.showTime = showTimeButton.isChecked();
-                            }
-                            if (detectBiomeDataButton.isChecked() != CraftPresence.CONFIG.detectBiomeData) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.detectBiomeData = detectBiomeDataButton.isChecked();
-                            }
-                            if (detectDimensionDataButton.isChecked() != CraftPresence.CONFIG.detectDimensionData) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.detectDimensionData = detectDimensionDataButton.isChecked();
-                            }
-                            if (detectWorldDataButton.isChecked() != CraftPresence.CONFIG.detectWorldData) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.detectWorldData = detectWorldDataButton.isChecked();
-                            }
-                            if (enableJoinRequestButton.isChecked() != CraftPresence.CONFIG.enableJoinRequest) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.enableJoinRequest = enableJoinRequestButton.isChecked();
-                            }
-                            if (resetTimeOnInitButton.isChecked() != CraftPresence.CONFIG.resetTimeOnInit) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.resetTimeOnInit = resetTimeOnInitButton.isChecked();
-                            }
-                            if (autoRegisterButton.isChecked() != CraftPresence.CONFIG.autoRegister) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.autoRegister = autoRegisterButton.isChecked();
-                            }
-                            CraftPresence.GUIS.openScreen(parentScreen);
                         },
-                        () -> {
-                            if (!proceedButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ), this, true
-                                );
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!proceedButton.isControlEnabled()) {
+                                    CraftPresence.GUIS.drawMultiLineString(
+                                            StringUtils.splitTextByNewLine(
+                                                    ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                            ), GeneralSettingsGui.this, true
+                                    );
+                                }
                             }
                         }
                 )

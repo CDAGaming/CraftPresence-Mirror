@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
+import com.gitlab.cdagaming.craftpresence.impl.TupleConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
@@ -114,70 +116,96 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.name.display.button_messages",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(),
-                                        null, null,
-                                        true, true, ScrollableListControl.RenderType.None,
-                                        null,
-                                        (currentValue, parentScreen) -> {
-                                            // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
-                                                    new DynamicEditorGui(
-                                                            parentScreen, currentValue,
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing new data
-                                                                screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList().size();
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing existing data
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                screenInstance.overrideSecondaryRender = true;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
-                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
-                                                                screenInstance.secondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, screenInstance.originalSecondaryMessage);
-                                                            },
-                                                            (screenInstance, secondaryText, inputText) -> {
-                                                                // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
-                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, secondaryText);
-                                                            },
-                                                            (screenInstance, secondaryText, inputText) -> {
-                                                                // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, CraftPresence.CONFIG.splitCharacter);
-                                                            }, null,
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when Hovering over Primary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
-                                                                        StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                                                        ), screenInstance, true
-                                                                );
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when Hovering over Secondary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
-                                                                        StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                                                        ), screenInstance, true
-                                                                );
-                                                            }
-                                                    )
-                                            );
-                                        }
-                                )
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new SelectorGui(
+                                                currentScreen,
+                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(),
+                                                null, null,
+                                                true, true, ScrollableListControl.RenderType.None,
+                                                null,
+                                                new PairConsumer<String, GuiScreen>() {
+                                                    @Override
+                                                    public void accept(String currentValue, GuiScreen parentScreen) {
+                                                        // Event to occur when Setting Dynamic/Specific Data
+                                                        CraftPresence.GUIS.openScreen(
+                                                                new DynamicEditorGui(
+                                                                        parentScreen, currentValue,
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when initializing new data
+                                                                                screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList().size();
+                                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
+                                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
+                                                                            }
+                                                                        },
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when initializing existing data
+                                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                                screenInstance.overrideSecondaryRender = true;
+                                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
+                                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                                screenInstance.originalSecondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, null);
+                                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
+                                                                                screenInstance.secondaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.buttonMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, screenInstance.originalSecondaryMessage);
+                                                                            }
+                                                                        },
+                                                                        new TupleConsumer<DynamicEditorGui, String, String>() {
+                                                                            @Override
+                                                                            public void accept(DynamicEditorGui screenInstance, String secondaryText, String inputText) {
+                                                                                // Event to occur when adjusting set data
+                                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, secondaryText);
+                                                                            }
+                                                                        },
+                                                                        new TupleConsumer<DynamicEditorGui, String, String>() {
+                                                                            @Override
+                                                                            public void accept(DynamicEditorGui screenInstance, String secondaryText, String inputText) {
+                                                                                // Event to occur when removing set data
+                                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                                CraftPresence.CONFIG.buttonMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.buttonMessages, screenInstance.attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                            }
+                                                                        }, null,
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when Hovering over Primary Label
+                                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                                        StringUtils.splitTextByNewLine(
+                                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                                                                        ), screenInstance, true
+                                                                                );
+                                                                            }
+                                                                        },
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when Hovering over Secondary Label
+                                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                                        StringUtils.splitTextByNewLine(
+                                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                                                                        ), screenInstance, true
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                )
+                                                        );
+                                                    }
+                                                }
+                                        )
+                                );
+                            }
+                        }
                 ), startPage + 1
         );
 
@@ -187,127 +215,156 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         calc2, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.name.display.dynamic_icons",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
-                                        null, null,
-                                        true, true, ScrollableListControl.RenderType.CustomDiscordAsset,
-                                        null,
-                                        (currentValue, parentScreen) -> {
-                                            // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
-                                                    new DynamicEditorGui(
-                                                            parentScreen, currentValue,
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing new data
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                screenInstance.maxPrimaryLength = 32767;
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
-                                                                screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when initializing existing data
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                screenInstance.maxPrimaryLength = 32767;
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
-                                                                screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
-                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
-                                                            },
-                                                            (screenInstance, attributeName, inputText) -> {
-                                                                // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                                                CraftPresence.CONFIG.flushClientProperties = true;
-                                                                CraftPresence.CONFIG.dynamicIcons = StringUtils.setConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
-                                                                final DiscordAsset asset = new DiscordAsset()
-                                                                        .setName(attributeName)
-                                                                        .setUrl(inputText)
-                                                                        .setType(DiscordAsset.AssetType.CUSTOM);
-                                                                if (!DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
-                                                                    DiscordAssetUtils.CUSTOM_ASSET_LIST.put(asset.getName(), asset);
-                                                                }
-                                                                // If a Discord Icon exists with the same name, give priority to the custom one
-                                                                // Unless the icon is the default template, in which we don't add it at all
-                                                                if (!asset.getName().equalsIgnoreCase("default")) {
-                                                                    DiscordAssetUtils.ASSET_LIST.put(asset.getName(), asset);
-                                                                }
-                                                            },
-                                                            (screenInstance, attributeName, inputText) -> {
-                                                                // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                                                CraftPresence.CONFIG.flushClientProperties = true;
-                                                                CraftPresence.CONFIG.dynamicIcons = StringUtils.removeFromArray(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
-                                                                if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
-                                                                    DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
-                                                                    if (!attributeName.equalsIgnoreCase("default")) {
-                                                                        DiscordAssetUtils.ASSET_LIST.remove(attributeName);
-                                                                    }
-                                                                }
-                                                            }, null,
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when Hovering over Primary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
-                                                                        StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                                                        ), screenInstance, true
-                                                                );
-                                                            },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when Hovering over Secondary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
-                                                                        StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                                                        ), screenInstance, true
-                                                                );
-                                                            }
-                                                    )
-                                            );
-                                        }
-                                )
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new SelectorGui(
+                                                currentScreen,
+                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
+                                                null, null,
+                                                true, true, ScrollableListControl.RenderType.CustomDiscordAsset,
+                                                null,
+                                                new PairConsumer<String, GuiScreen>() {
+                                                    @Override
+                                                    public void accept(String currentValue, GuiScreen parentScreen) {
+                                                        // Event to occur when Setting Dynamic/Specific Data
+                                                        CraftPresence.GUIS.openScreen(
+                                                                new DynamicEditorGui(
+                                                                        parentScreen, currentValue,
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when initializing new data
+                                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                                screenInstance.maxPrimaryLength = 32767;
+                                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                                screenInstance.maxSecondaryLength = 32;
+                                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                            }
+                                                                        },
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when initializing existing data
+                                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                                screenInstance.maxPrimaryLength = 32767;
+                                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                                screenInstance.maxSecondaryLength = 32;
+                                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
+                                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
+                                                                            }
+                                                                        },
+                                                                        new TupleConsumer<DynamicEditorGui, String, String>() {
+                                                                            @Override
+                                                                            public void accept(DynamicEditorGui screenInstance, String attributeName, String inputText) {
+                                                                                // Event to occur when adjusting set data
+                                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                                                                CraftPresence.CONFIG.flushClientProperties = true;
+                                                                                CraftPresence.CONFIG.dynamicIcons = StringUtils.setConfigPart(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                                final DiscordAsset asset = new DiscordAsset()
+                                                                                        .setName(attributeName)
+                                                                                        .setUrl(inputText)
+                                                                                        .setType(DiscordAsset.AssetType.CUSTOM);
+                                                                                if (!DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
+                                                                                    DiscordAssetUtils.CUSTOM_ASSET_LIST.put(asset.getName(), asset);
+                                                                                }
+                                                                                // If a Discord Icon exists with the same name, give priority to the custom one
+                                                                                // Unless the icon is the default template, in which we don't add it at all
+                                                                                if (!asset.getName().equalsIgnoreCase("default")) {
+                                                                                    DiscordAssetUtils.ASSET_LIST.put(asset.getName(), asset);
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        new TupleConsumer<DynamicEditorGui, String, String>() {
+                                                                            @Override
+                                                                            public void accept(DynamicEditorGui screenInstance, String attributeName, String inputText) {
+                                                                                // Event to occur when removing set data
+                                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                                                                CraftPresence.CONFIG.flushClientProperties = true;
+                                                                                CraftPresence.CONFIG.dynamicIcons = StringUtils.removeFromArray(CraftPresence.CONFIG.dynamicIcons, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                                if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
+                                                                                    DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
+                                                                                    if (!attributeName.equalsIgnoreCase("default")) {
+                                                                                        DiscordAssetUtils.ASSET_LIST.remove(attributeName);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }, null,
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when Hovering over Primary Label
+                                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                                        StringUtils.splitTextByNewLine(
+                                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                                                                        ), screenInstance, true
+                                                                                );
+                                                                            }
+                                                                        },
+                                                                        new PairConsumer<String, DynamicEditorGui>() {
+                                                                            @Override
+                                                                            public void accept(String attributeName, DynamicEditorGui screenInstance) {
+                                                                                // Event to occur when Hovering over Secondary Label
+                                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                                        StringUtils.splitTextByNewLine(
+                                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                                                                        ), screenInstance, true
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                )
+                                                        );
+                                                    }
+                                                }
+                                        )
+                                );
+                            }
+                        }
                 ), startPage + 1
         );
 
         super.initializeUi();
 
         backButton.setOnClick(
-                () -> {
-                    if (!detailsFormat.getControlMessage().equals(CraftPresence.CONFIG.detailsMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.detailsMessage = detailsFormat.getControlMessage();
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!detailsFormat.getControlMessage().equals(CraftPresence.CONFIG.detailsMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.detailsMessage = detailsFormat.getControlMessage();
+                        }
+                        if (!gameStateFormat.getControlMessage().equals(CraftPresence.CONFIG.gameStateMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.gameStateMessage = gameStateFormat.getControlMessage();
+                        }
+                        if (!largeImageFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.largeImageMessage = largeImageFormat.getControlMessage();
+                        }
+                        if (!smallImageFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.smallImageMessage = smallImageFormat.getControlMessage();
+                        }
+                        if (!largeImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageKey)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.largeImageKey = largeImageKeyFormat.getControlMessage();
+                        }
+                        if (!smallImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageKey)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.smallImageKey = smallImageKeyFormat.getControlMessage();
+                        }
+                        CraftPresence.GUIS.openScreen(parentScreen);
                     }
-                    if (!gameStateFormat.getControlMessage().equals(CraftPresence.CONFIG.gameStateMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.gameStateMessage = gameStateFormat.getControlMessage();
-                    }
-                    if (!largeImageFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageMessage = largeImageFormat.getControlMessage();
-                    }
-                    if (!smallImageFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageMessage = smallImageFormat.getControlMessage();
-                    }
-                    if (!largeImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageKey)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageKey = largeImageKeyFormat.getControlMessage();
-                    }
-                    if (!smallImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageKey)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageKey = smallImageKeyFormat.getControlMessage();
-                    }
-                    CraftPresence.GUIS.openScreen(parentScreen);
                 }
         );
     }

@@ -27,7 +27,7 @@ version = "${versionId}"
 group = "com.gitlab.cdagaming"
 archivesBaseName = "${archive_name}-${mc_version}-${deploymentType}"
 
-JavaVersion targetVersion = JavaVersion.VERSION_1_8
+JavaVersion targetVersion = JavaVersion.VERSION_1_7
 
 allprojects {
     sourceCompatibility = targetVersion

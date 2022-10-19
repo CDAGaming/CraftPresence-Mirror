@@ -171,17 +171,20 @@ public class CraftPresence {
         ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", SYSTEM.OS_NAME, SYSTEM.OS_ARCH, SYSTEM.IS_64_BIT));
 
         // Check for Updates before continuing
-        ModUtils.UPDATER.checkForUpdates(() -> {
-            if (ModUtils.UPDATER.isInvalidVersion) {
-                // If the Updater found our version to be an invalid one
-                // Then replace the Version ID, Name, and Type
-                StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_ID", "v" + ModUtils.UPDATER.targetVersion, ~Modifier.FINAL));
-                StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_TYPE", ModUtils.UPDATER.currentState.getDisplayName(), ~Modifier.FINAL));
-                StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_LABEL", ModUtils.UPDATER.currentState.getDisplayName(), ~Modifier.FINAL));
-                StringUtils.updateField(ModUtils.class, null, new Tuple<>("NAME", CraftPresence.class.getSimpleName(), ~Modifier.FINAL));
+        ModUtils.UPDATER.checkForUpdates(new Runnable() {
+            @Override
+            public void run() {
+                if (ModUtils.UPDATER.isInvalidVersion) {
+                    // If the Updater found our version to be an invalid one
+                    // Then replace the Version ID, Name, and Type
+                    StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_ID", "v" + ModUtils.UPDATER.targetVersion, ~Modifier.FINAL));
+                    StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_TYPE", ModUtils.UPDATER.currentState.getDisplayName(), ~Modifier.FINAL));
+                    StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_LABEL", ModUtils.UPDATER.currentState.getDisplayName(), ~Modifier.FINAL));
+                    StringUtils.updateField(ModUtils.class, null, new Tuple<>("NAME", CraftPresence.class.getSimpleName(), ~Modifier.FINAL));
 
-                ModUtils.UPDATER.currentVersion = ModUtils.UPDATER.targetVersion;
-                ModUtils.UPDATER.isInvalidVersion = false;
+                    ModUtils.UPDATER.currentVersion = ModUtils.UPDATER.targetVersion;
+                    ModUtils.UPDATER.isInvalidVersion = false;
+                }
             }
         });
 

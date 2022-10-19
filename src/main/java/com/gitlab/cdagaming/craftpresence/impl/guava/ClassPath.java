@@ -62,7 +62,12 @@ public final class ClassPath {
     private static final Logger logger = Logger.getLogger(ClassPath.class.getName());
 
     private static final Predicate<ClassInfo> IS_TOP_LEVEL =
-            info -> info.className.indexOf('$') == -1;
+            new Predicate<ClassInfo>() {
+                @Override
+                public boolean test(ClassInfo info) {
+                    return info.className.indexOf('$') == -1;
+                }
+            };
 
     /**
      * Separator for the Class-Path manifest attribute value in jar files.

@@ -143,7 +143,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      */
     public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString) {
-        this(CraftPresence.GUIS.getNextIndex(), positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<>());
+        this(CraftPresence.GUIS.getNextIndex(), positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<Runnable, Runnable>());
     }
 
     /**

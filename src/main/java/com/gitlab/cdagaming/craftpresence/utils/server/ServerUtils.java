@@ -275,7 +275,12 @@ public class ServerUtils {
         }
 
         if (joinInProgress && requestedServerData != null) {
-            CraftPresence.instance.addScheduledTask(() -> joinServer(requestedServerData));
+            CraftPresence.instance.addScheduledTask(new Runnable() {
+                @Override
+                public void run() {
+                    ServerUtils.this.joinServer(requestedServerData);
+                }
+            });
         }
     }
 
@@ -696,7 +701,7 @@ public class ServerUtils {
      * @return Server data for the specified address, if available
      */
     public ServerData getDataFromName(final String serverAddress) {
-        return knownServerData.getOrDefault(serverAddress, null);
+        return knownServerData.containsKey(serverAddress) ? knownServerData.get(serverAddress) : null;
     }
 
     /**

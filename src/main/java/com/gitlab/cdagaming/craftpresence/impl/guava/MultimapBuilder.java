@@ -335,8 +335,8 @@ public abstract class MultimapBuilder<K0, V0> {
                 @Override
                 public <K extends K0, V> ListMultimap<K, V> build() {
                     return Multimaps.newListMultimap(
-                            MultimapBuilderWithKeys.this.createMap(),
-                            new ArrayListSupplier<>(expectedValuesPerKey));
+                            MultimapBuilderWithKeys.this.<K, V>createMap(),
+                            new ArrayListSupplier<V>(expectedValuesPerKey));
                 }
             };
         }
@@ -349,7 +349,7 @@ public abstract class MultimapBuilder<K0, V0> {
                 @Override
                 public <K extends K0, V> ListMultimap<K, V> build() {
                     return Multimaps.newListMultimap(
-                            MultimapBuilderWithKeys.this.createMap(), LinkedListSupplier.instance());
+                            MultimapBuilderWithKeys.this.<K, V>createMap(), LinkedListSupplier.<V>instance());
                 }
             };
         }
@@ -373,8 +373,8 @@ public abstract class MultimapBuilder<K0, V0> {
                 @Override
                 public <K extends K0, V> SetMultimap<K, V> build() {
                     return Multimaps.newSetMultimap(
-                            MultimapBuilderWithKeys.this.createMap(),
-                            new HashSetSupplier<>(expectedValuesPerKey));
+                            MultimapBuilderWithKeys.this.<K, V>createMap(),
+                            new HashSetSupplier<V>(expectedValuesPerKey));
                 }
             };
         }
@@ -398,8 +398,8 @@ public abstract class MultimapBuilder<K0, V0> {
                 @Override
                 public <K extends K0, V> SetMultimap<K, V> build() {
                     return Multimaps.newSetMultimap(
-                            MultimapBuilderWithKeys.this.createMap(),
-                            new LinkedHashSetSupplier<>(expectedValuesPerKey));
+                            MultimapBuilderWithKeys.this.<K, V>createMap(),
+                            new LinkedHashSetSupplier<V>(expectedValuesPerKey));
                 }
             };
         }
@@ -424,7 +424,7 @@ public abstract class MultimapBuilder<K0, V0> {
                 @Override
                 public <K extends K0, V extends V0> SortedSetMultimap<K, V> build() {
                     return Multimaps.newSortedSetMultimap(
-                            MultimapBuilderWithKeys.this.createMap(), new TreeSetSupplier<>(comparator));
+                            MultimapBuilderWithKeys.this.<K, V>createMap(), new TreeSetSupplier<V>(comparator));
                 }
             };
         }
@@ -442,7 +442,7 @@ public abstract class MultimapBuilder<K0, V0> {
                     // (their subclasses are inaccessible)
                     @SuppressWarnings("rawtypes")
                     Supplier<Set<V>> factory = (Supplier) new EnumSetSupplier<V0>(valueClass);
-                    return Multimaps.newSetMultimap(MultimapBuilderWithKeys.this.createMap(), factory);
+                    return Multimaps.newSetMultimap(MultimapBuilderWithKeys.this.<K, V>createMap(), factory);
                 }
             };
         }

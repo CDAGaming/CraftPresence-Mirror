@@ -179,98 +179,104 @@ public class StatusMessagesGui extends PaginatedScreen {
         super.initializeUi();
 
         backButton.setOnClick(
-                () -> {
-                    // Page 1 Saving
-                    if (!mainMenuMessage.getControlMessage().equals(CraftPresence.CONFIG.mainMenuMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.mainMenuMessage = mainMenuMessage.getControlMessage();
-                    }
-                    if (!lanMessage.getControlMessage().equals(CraftPresence.CONFIG.lanMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.lanMessage = lanMessage.getControlMessage();
-                    }
-                    if (!singlePlayerMessage.getControlMessage().equals(CraftPresence.CONFIG.singlePlayerMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.singlePlayerMessage = singlePlayerMessage.getControlMessage();
-                    }
-                    if (!packMessage.getControlMessage().equals(CraftPresence.CONFIG.packPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.packPlaceholderMessage = packMessage.getControlMessage();
-                    }
-                    if (!modsMessage.getControlMessage().equals(CraftPresence.CONFIG.modsPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.modsPlaceholderMessage = modsMessage.getControlMessage();
-                    }
-                    if (!viveCraftMessage.getControlMessage().equals(CraftPresence.CONFIG.vivecraftMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.vivecraftMessage = viveCraftMessage.getControlMessage();
-                    }
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        // Page 1 Saving
+                        if (!mainMenuMessage.getControlMessage().equals(CraftPresence.CONFIG.mainMenuMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.mainMenuMessage = mainMenuMessage.getControlMessage();
+                        }
+                        if (!lanMessage.getControlMessage().equals(CraftPresence.CONFIG.lanMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.lanMessage = lanMessage.getControlMessage();
+                        }
+                        if (!singlePlayerMessage.getControlMessage().equals(CraftPresence.CONFIG.singlePlayerMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.singlePlayerMessage = singlePlayerMessage.getControlMessage();
+                        }
+                        if (!packMessage.getControlMessage().equals(CraftPresence.CONFIG.packPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.packPlaceholderMessage = packMessage.getControlMessage();
+                        }
+                        if (!modsMessage.getControlMessage().equals(CraftPresence.CONFIG.modsPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.modsPlaceholderMessage = modsMessage.getControlMessage();
+                        }
+                        if (!viveCraftMessage.getControlMessage().equals(CraftPresence.CONFIG.vivecraftMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.vivecraftMessage = viveCraftMessage.getControlMessage();
+                        }
 
-                    // Page 2 Saving
-                    if (!outerPlayerMessage.getControlMessage().equals(CraftPresence.CONFIG.outerPlayerPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.outerPlayerPlaceholderMessage = outerPlayerMessage.getControlMessage();
-                    }
-                    if (!innerPlayerMessage.getControlMessage().equals(CraftPresence.CONFIG.innerPlayerPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.innerPlayerPlaceholderMessage = innerPlayerMessage.getControlMessage();
-                    }
-                    if (!playerCoordsMessage.getControlMessage().equals(CraftPresence.CONFIG.playerCoordinatePlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.playerCoordinatePlaceholderMessage = playerCoordsMessage.getControlMessage();
-                    }
-                    if (!playerHealthMessage.getControlMessage().equals(CraftPresence.CONFIG.playerHealthPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.playerHealthPlaceholderMessage = playerHealthMessage.getControlMessage();
-                    }
-                    if (!playerAmountMessage.getControlMessage().equals(CraftPresence.CONFIG.playerAmountPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.playerAmountPlaceholderMessage = playerAmountMessage.getControlMessage();
-                    }
-                    if (!worldMessage.getControlMessage().equals(CraftPresence.CONFIG.worldPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.worldPlaceholderMessage = worldMessage.getControlMessage();
-                    }
+                        // Page 2 Saving
+                        if (!outerPlayerMessage.getControlMessage().equals(CraftPresence.CONFIG.outerPlayerPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.outerPlayerPlaceholderMessage = outerPlayerMessage.getControlMessage();
+                        }
+                        if (!innerPlayerMessage.getControlMessage().equals(CraftPresence.CONFIG.innerPlayerPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.innerPlayerPlaceholderMessage = innerPlayerMessage.getControlMessage();
+                        }
+                        if (!playerCoordsMessage.getControlMessage().equals(CraftPresence.CONFIG.playerCoordinatePlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.playerCoordinatePlaceholderMessage = playerCoordsMessage.getControlMessage();
+                        }
+                        if (!playerHealthMessage.getControlMessage().equals(CraftPresence.CONFIG.playerHealthPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.playerHealthPlaceholderMessage = playerHealthMessage.getControlMessage();
+                        }
+                        if (!playerAmountMessage.getControlMessage().equals(CraftPresence.CONFIG.playerAmountPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.playerAmountPlaceholderMessage = playerAmountMessage.getControlMessage();
+                        }
+                        if (!worldMessage.getControlMessage().equals(CraftPresence.CONFIG.worldPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.worldPlaceholderMessage = worldMessage.getControlMessage();
+                        }
 
-                    // Page 3 Saving
-                    if (!loadingMessage.getControlMessage().equals(CraftPresence.CONFIG.loadingMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.loadingMessage = loadingMessage.getControlMessage();
+                        // Page 3 Saving
+                        if (!loadingMessage.getControlMessage().equals(CraftPresence.CONFIG.loadingMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.loadingMessage = loadingMessage.getControlMessage();
+                        }
+                        if (!playerItemsMessage.getControlMessage().equals(CraftPresence.CONFIG.playerItemsPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.playerItemsPlaceholderMessage = playerItemsMessage.getControlMessage();
+                        }
+                        if (!fallbackPackPlaceholderMessage.getControlMessage().equals(CraftPresence.CONFIG.fallbackPackPlaceholderMessage)) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            CraftPresence.CONFIG.fallbackPackPlaceholderMessage = fallbackPackPlaceholderMessage.getControlMessage();
+                        }
+                        CraftPresence.GUIS.openScreen(parentScreen);
                     }
-                    if (!playerItemsMessage.getControlMessage().equals(CraftPresence.CONFIG.playerItemsPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.playerItemsPlaceholderMessage = playerItemsMessage.getControlMessage();
-                    }
-                    if (!fallbackPackPlaceholderMessage.getControlMessage().equals(CraftPresence.CONFIG.fallbackPackPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.fallbackPackPlaceholderMessage = fallbackPackPlaceholderMessage.getControlMessage();
-                    }
-                    CraftPresence.GUIS.openScreen(parentScreen);
                 }
         );
         backButton.setOnHover(
-                () -> {
-                    if (!backButton.isControlEnabled()) {
-                        CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                ), this, true
-                        );
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!backButton.isControlEnabled()) {
+                            CraftPresence.GUIS.drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                    ), StatusMessagesGui.this, true
+                            );
+                        }
                     }
                 }
         );

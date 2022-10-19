@@ -235,7 +235,7 @@ public class FileUtils {
                 }
             } finally {
                 if (found && !candidateClasses.isEmpty()) {
-                    Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, Lists.newArrayList());
+                    Pair<Boolean, List<Class<?>>> subClassData = new Pair<Boolean, List<Class<?>>>(false, Lists.<Class<?>>newArrayList());
 
                     for (Class<?> loadedInstance : candidateClasses) {
                         for (Class<?> searchClass : searchList) {
@@ -257,7 +257,7 @@ public class FileUtils {
                                 break;
                             } else {
                                 // If no superclass data found, reset for next data
-                                subClassData = new Pair<>(false, Lists.newArrayList());
+                                subClassData = new Pair<Boolean, List<Class<?>>>(false, Lists.<Class<?>>newArrayList());
                             }
                         }
                     }
@@ -305,7 +305,7 @@ public class FileUtils {
      * @return The List of found classes from the search
      */
     public static List<Class<?>> getClassNamesMatchingSuperType(final Class<?> searchTarget, final boolean includeExtraClasses, final String... sourcePackages) {
-        return getClassNamesMatchingSuperType(Lists.newArrayList(searchTarget), includeExtraClasses, sourcePackages);
+        return getClassNamesMatchingSuperType(Lists.<Class<?>>newArrayList(searchTarget), includeExtraClasses, sourcePackages);
     }
 
     /**

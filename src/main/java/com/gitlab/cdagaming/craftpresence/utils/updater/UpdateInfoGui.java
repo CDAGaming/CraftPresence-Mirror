@@ -52,20 +52,27 @@ public class UpdateInfoGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.checkForUpdates",
-                        () ->
-                                modUpdater.checkForUpdates(() -> {
-                                    if (modUpdater.isInvalidVersion) {
-                                        // If the Updater found our version to be an invalid one
-                                        // Then replace the Version ID, Name, and Type
-                                        StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_ID", "v" + modUpdater.targetVersion, ~Modifier.FINAL));
-                                        StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_TYPE", modUpdater.currentState.getDisplayName(), ~Modifier.FINAL));
-                                        StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_LABEL", modUpdater.currentState.getDisplayName(), ~Modifier.FINAL));
-                                        StringUtils.updateField(ModUtils.class, null, new Tuple<>("NAME", CraftPresence.class.getSimpleName(), ~Modifier.FINAL));
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                modUpdater.checkForUpdates(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (modUpdater.isInvalidVersion) {
+                                            // If the Updater found our version to be an invalid one
+                                            // Then replace the Version ID, Name, and Type
+                                            StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_ID", "v" + modUpdater.targetVersion, ~Modifier.FINAL));
+                                            StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_TYPE", modUpdater.currentState.getDisplayName(), ~Modifier.FINAL));
+                                            StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_LABEL", modUpdater.currentState.getDisplayName(), ~Modifier.FINAL));
+                                            StringUtils.updateField(ModUtils.class, null, new Tuple<>("NAME", CraftPresence.class.getSimpleName(), ~Modifier.FINAL));
 
-                                        modUpdater.currentVersion = modUpdater.targetVersion;
-                                        modUpdater.isInvalidVersion = false;
+                                            modUpdater.currentVersion = modUpdater.targetVersion;
+                                            modUpdater.isInvalidVersion = false;
+                                        }
                                     }
-                                })
+                                });
+                            }
+                        }
                 )
         );
         // Adding Back Button
@@ -74,7 +81,12 @@ public class UpdateInfoGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(parentScreen);
+                            }
+                        }
                 )
         );
         downloadButton = addControl(
@@ -82,7 +94,12 @@ public class UpdateInfoGui extends ExtendedScreen {
                         (getScreenWidth() - 105), (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.download",
-                        () -> UrlUtils.openUrl(modUpdater.downloadUrl)
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                UrlUtils.openUrl(modUpdater.downloadUrl);
+                            }
+                        }
                 )
         );
 

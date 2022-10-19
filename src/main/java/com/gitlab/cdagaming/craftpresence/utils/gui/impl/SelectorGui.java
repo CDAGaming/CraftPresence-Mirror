@@ -93,28 +93,31 @@ public class SelectorGui extends ExtendedScreen {
                             (getScreenWidth() - 100), (getScreenHeight() - 30),
                             90, 20,
                             "gui.config.message.button.back",
-                            () -> {
-                                if (allowContinuing && scrollList.currentValue != null) {
-                                    if (originalValue != null) {
-                                        if (!scrollList.currentValue.equals(originalValue)) {
-                                            if (onUpdatedCallback != null) {
-                                                onUpdatedCallback.accept(attributeName, scrollList.currentValue);
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (allowContinuing && scrollList.currentValue != null) {
+                                        if (originalValue != null) {
+                                            if (!scrollList.currentValue.equals(originalValue)) {
+                                                if (onUpdatedCallback != null) {
+                                                    onUpdatedCallback.accept(attributeName, scrollList.currentValue);
+                                                    CraftPresence.GUIS.openScreen(parentScreen);
+                                                } else {
+                                                    CraftPresence.GUIS.openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
+                                                }
+                                            } else {
                                                 CraftPresence.GUIS.openScreen(parentScreen);
+                                            }
+                                        } else {
+                                            if (allowDynamicEditing && onAdjustDynamicEntry != null) {
+                                                onAdjustDynamicEntry.accept(scrollList.currentValue, parentScreen);
                                             } else {
                                                 CraftPresence.GUIS.openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
                                             }
-                                        } else {
-                                            CraftPresence.GUIS.openScreen(parentScreen);
                                         }
                                     } else {
-                                        if (allowDynamicEditing && onAdjustDynamicEntry != null) {
-                                            onAdjustDynamicEntry.accept(scrollList.currentValue, parentScreen);
-                                        } else {
-                                            CraftPresence.GUIS.openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
-                                        }
+                                        CraftPresence.GUIS.openScreen(parentScreen);
                                     }
-                                } else {
-                                    CraftPresence.GUIS.openScreen(parentScreen);
                                 }
                             }
                     )
@@ -144,7 +147,12 @@ public class SelectorGui extends ExtendedScreen {
                                 (getScreenWidth() - 195), (getScreenHeight() - 30),
                                 90, 20,
                                 "gui.config.message.button.add.new",
-                                () -> onAdjustDynamicEntry.accept(null, parentScreen)
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        onAdjustDynamicEntry.accept(null, parentScreen);
+                                    }
+                                }
                         )
                 );
             }

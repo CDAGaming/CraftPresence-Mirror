@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
@@ -432,7 +433,7 @@ public class DiscordUtils {
         List<Pair<String, String>> result = Lists.newArrayList();
         for (ArgumentType type : typeList) {
             if (!presenceData.containsKey(type)) {
-                presenceData.put(type, Lists.newArrayList());
+                presenceData.put(type, Lists.<Pair<String, String>>newArrayList());
             }
             StringUtils.addEntriesNotPresent(result, presenceData.get(type));
         }
@@ -623,7 +624,12 @@ public class DiscordUtils {
      */
     public void setArgumentsFor(final ArgumentType type, final Pair<String, String> data) {
         final List<Pair<String, String>> list = getArgumentsFor(type);
-        StringUtils.removeIf(list, e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
+        StringUtils.removeIf(list, new Predicate<Pair<String, String>>() {
+            @Override
+            public boolean test(Pair<String, String> e) {
+                return e.getFirst().equalsIgnoreCase(data.getFirst());
+            }
+        });
         list.add(data);
         setArgumentsFor(type, list);
     }
@@ -680,7 +686,17 @@ public class DiscordUtils {
         final List<Pair<String, String>> results = Lists.newArrayList();
         for (Map.Entry<ArgumentType, List<String>> entry : argumentData.entrySet()) {
             StringUtils.addEntriesNotPresent(results,
-                    data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
+                    new Predicate<Pair<String, String>>() {
+                        @Override
+                        public boolean test(final Pair<String, String> data) {
+                            return StringUtils.filter(Lists.newArrayList(results), new Predicate<Pair<String, String>>() {
+                                @Override
+                                public boolean test(Pair<String, String> e) {
+                                    return e.getFirst().equalsIgnoreCase(data.getFirst());
+                                }
+                            }).isEmpty();
+                        }
+                    },
                     convertToArgumentList(entry.getKey(), allowNullEntries, entry.getValue())
             );
         }

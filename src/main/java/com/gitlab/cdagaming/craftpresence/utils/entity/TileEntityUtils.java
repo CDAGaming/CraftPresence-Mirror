@@ -593,7 +593,7 @@ public class TileEntityUtils {
                 : name.equalsIgnoreCase(CURRENT_HELMET_NAME) ? CURRENT_HELMET_TAGS
                 : name.equalsIgnoreCase(CURRENT_CHEST_NAME) ? CURRENT_CHEST_TAGS
                 : name.equalsIgnoreCase(CURRENT_LEGS_NAME) ? CURRENT_LEGS_TAGS
-                : name.equalsIgnoreCase(CURRENT_BOOTS_NAME) ? CURRENT_BOOTS_TAGS : Lists.newArrayList();
+                : name.equalsIgnoreCase(CURRENT_BOOTS_NAME) ? CURRENT_BOOTS_TAGS : Lists.<String>newArrayList();
     }
 
     /**

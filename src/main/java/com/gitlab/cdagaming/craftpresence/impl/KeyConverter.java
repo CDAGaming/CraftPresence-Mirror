@@ -329,9 +329,9 @@ public class KeyConverter {
 
         if (fromGlfw.containsKey(originalKey) || toGlfw.containsKey(originalKey)) {
             if (mode == ConversionMode.Lwjgl2 || (mode == ConversionMode.None && fromGlfw.containsKey(originalKey) && toGlfw.containsValue(new Pair<>(originalKey, fromGlfw.get(originalKey).getSecond())) && ModUtils.MCProtocolID <= 340)) {
-                resultKey = fromGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+                resultKey = (fromGlfw.containsKey(originalKey) ? fromGlfw.get(originalKey) : unknownKeyData).getFirst();
             } else if (mode == ConversionMode.Lwjgl3 || (mode == ConversionMode.None && toGlfw.containsKey(originalKey) && fromGlfw.containsValue(new Pair<>(originalKey, toGlfw.get(originalKey).getSecond())) && ModUtils.MCProtocolID > 340)) {
-                resultKey = toGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+                resultKey = (toGlfw.containsKey(originalKey) ? toGlfw.get(originalKey) : unknownKeyData).getFirst();
             }
         }
 

@@ -184,7 +184,7 @@ public class ScrollableListControl extends GuiSlot {
                     texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.playerSkinEndpoint, displayName));
                 }
             } else if (renderType == RenderType.ItemData) {
-                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(displayName, texture);
+                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.containsKey(displayName) ? CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.get(displayName) : texture;
             }
             if (!ImageUtils.isTextureNull(texture)) {
                 CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);

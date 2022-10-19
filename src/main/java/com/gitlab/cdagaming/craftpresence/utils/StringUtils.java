@@ -180,7 +180,7 @@ public class StringUtils {
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final Object original) {
-        return original != null ? getMatches(regexValue, original.toString()) : new Pair<>("", Lists.newArrayList());
+        return original != null ? getMatches(regexValue, original.toString()) : new Pair<String, List<String>>("", Lists.<String>newArrayList());
     }
 
     /**
@@ -1219,7 +1219,12 @@ public class StringUtils {
      * @return whether the specified class contains the specified field name
      */
     public static boolean doesClassContainField(Class<?> classToAccess, final String fieldName) {
-        return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
+        return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), new Predicate<Field>() {
+            @Override
+            public boolean test(Field f) {
+                return f.getName().equals(fieldName);
+            }
+        }).isEmpty();
     }
 
     /**

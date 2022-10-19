@@ -60,21 +60,29 @@ public class DynamicEditorGui extends ExtendedScreen {
     }
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
-        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
+        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, new PairConsumer<String, DynamicEditorGui>() {
+            @Override
+            public void accept(String name, DynamicEditorGui screenInstance) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")
                         ), screenInstance, true
-                ));
+                );
+            }
+        });
     }
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback) {
-        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
+        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, new PairConsumer<String, DynamicEditorGui>() {
+            @Override
+            public void accept(String name, DynamicEditorGui screenInstance) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.message")
                         ), screenInstance, true
-                ));
+                );
+            }
+        });
     }
 
     @Override
@@ -123,7 +131,12 @@ public class DynamicEditorGui extends ExtendedScreen {
                             (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
                             180, 20,
                             "gui.config.message.button.icon.change",
-                            () -> onSpecificCallback.accept(attributeName, this)
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    onSpecificCallback.accept(attributeName, DynamicEditorGui.this);
+                                }
+                            }
                     )
             );
         }
@@ -148,29 +161,35 @@ public class DynamicEditorGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
                         180, 20,
                         "gui.config.message.button.back",
-                        () -> {
-                            if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
-                                attributeName = secondaryInput.getControlMessage();
-                            }
-                            if (isAdjusting()) {
-                                if (onAdjustEntry != null) {
-                                    onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
+                                    attributeName = secondaryInput.getControlMessage();
                                 }
-                            }
-                            if (isRemoving()) {
-                                if (onRemoveEntry != null) {
-                                    onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
+                                if (DynamicEditorGui.this.isAdjusting()) {
+                                    if (onAdjustEntry != null) {
+                                        onAdjustEntry.accept(DynamicEditorGui.this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
+                                    }
                                 }
+                                if (DynamicEditorGui.this.isRemoving()) {
+                                    if (onRemoveEntry != null) {
+                                        onRemoveEntry.accept(DynamicEditorGui.this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
+                                    }
+                                }
+                                CraftPresence.GUIS.openScreen(parentScreen);
                             }
-                            CraftPresence.GUIS.openScreen(parentScreen);
                         },
-                        () -> {
-                            if (!proceedButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ), this, true
-                                );
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!proceedButton.isControlEnabled()) {
+                                    CraftPresence.GUIS.drawMultiLineString(
+                                            StringUtils.splitTextByNewLine(
+                                                    ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                            ), DynamicEditorGui.this, true
+                                    );
+                                }
                             }
                         }
                 )

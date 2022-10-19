@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
+import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -55,35 +57,51 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         calc1, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.name.accessibility.tooltip_background_color",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.tooltipBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                CraftPresence.CONFIG.tooltipBackgroundColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1) {
-                                                final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.tooltipBackgroundColor : CraftPresence.CONFIG.tooltipBackgroundColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                                                if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
-                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                    CraftPresence.CONFIG.tooltipBackgroundColor = adjustValue;
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new ColorEditorGui(
+                                                currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
+                                                new PairConsumer<Integer, ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(Integer pageNumber, ColorEditorGui screenInstance) {
+                                                        if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.tooltipBackgroundColor)) {
+                                                            CraftPresence.CONFIG.hasChanged = true;
+                                                            CraftPresence.CONFIG.tooltipBackgroundColor = screenInstance.currentNormalHexValue;
+                                                        } else if (pageNumber == 1) {
+                                                            final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.tooltipBackgroundColor : CraftPresence.CONFIG.tooltipBackgroundColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
+                                                            if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
+                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.tooltipBackgroundColor = adjustValue;
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                new DataConsumer<ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(ColorEditorGui screenInstance) {
+                                                        if (StringUtils.isValidColorCode(CraftPresence.CONFIG.tooltipBackgroundColor)) {
+                                                            screenInstance.startingHexValue = CraftPresence.CONFIG.tooltipBackgroundColor;
+                                                        } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.tooltipBackgroundColor)) {
+                                                            screenInstance.startingTexturePath = CraftPresence.CONFIG.tooltipBackgroundColor;
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(CraftPresence.CONFIG.tooltipBackgroundColor)) {
-                                                screenInstance.startingHexValue = CraftPresence.CONFIG.tooltipBackgroundColor;
-                                            } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.tooltipBackgroundColor)) {
-                                                screenInstance.startingTexturePath = CraftPresence.CONFIG.tooltipBackgroundColor;
-                                            }
-                                        }
-                                )
-                        ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_background_color")
-                                ), this, true
-                        )
+                                        )
+                                );
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_background_color")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         // Adding Tooltip Border Color Button
@@ -92,35 +110,51 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.name.accessibility.tooltip_border_color",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.tooltipBorderColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                CraftPresence.CONFIG.tooltipBorderColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1) {
-                                                final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.tooltipBorderColor : CraftPresence.CONFIG.tooltipBorderColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                                                if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
-                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                    CraftPresence.CONFIG.tooltipBorderColor = adjustValue;
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new ColorEditorGui(
+                                                currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
+                                                new PairConsumer<Integer, ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(Integer pageNumber, ColorEditorGui screenInstance) {
+                                                        if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.tooltipBorderColor)) {
+                                                            CraftPresence.CONFIG.hasChanged = true;
+                                                            CraftPresence.CONFIG.tooltipBorderColor = screenInstance.currentNormalHexValue;
+                                                        } else if (pageNumber == 1) {
+                                                            final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.tooltipBorderColor : CraftPresence.CONFIG.tooltipBorderColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
+                                                            if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
+                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.tooltipBorderColor = adjustValue;
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                new DataConsumer<ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(ColorEditorGui screenInstance) {
+                                                        if (StringUtils.isValidColorCode(CraftPresence.CONFIG.tooltipBorderColor)) {
+                                                            screenInstance.startingHexValue = CraftPresence.CONFIG.tooltipBorderColor;
+                                                        } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.tooltipBorderColor)) {
+                                                            screenInstance.startingTexturePath = CraftPresence.CONFIG.tooltipBorderColor;
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(CraftPresence.CONFIG.tooltipBorderColor)) {
-                                                screenInstance.startingHexValue = CraftPresence.CONFIG.tooltipBorderColor;
-                                            } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.tooltipBorderColor)) {
-                                                screenInstance.startingTexturePath = CraftPresence.CONFIG.tooltipBorderColor;
-                                            }
-                                        }
-                                )
-                        ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_border_color")
-                                ), this, true
-                        )
+                                        )
+                                );
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_border_color")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         // Adding Gui Background Color Button
@@ -129,35 +163,51 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         calc1, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.accessibility.gui_background_color",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.guiBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                CraftPresence.CONFIG.guiBackgroundColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1) {
-                                                final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.guiBackgroundColor : CraftPresence.CONFIG.guiBackgroundColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                                                if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
-                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                    CraftPresence.CONFIG.guiBackgroundColor = adjustValue;
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new ColorEditorGui(
+                                                currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
+                                                new PairConsumer<Integer, ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(Integer pageNumber, ColorEditorGui screenInstance) {
+                                                        if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.guiBackgroundColor)) {
+                                                            CraftPresence.CONFIG.hasChanged = true;
+                                                            CraftPresence.CONFIG.guiBackgroundColor = screenInstance.currentNormalHexValue;
+                                                        } else if (pageNumber == 1) {
+                                                            final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.guiBackgroundColor : CraftPresence.CONFIG.guiBackgroundColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
+                                                            if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
+                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.guiBackgroundColor = adjustValue;
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                new DataConsumer<ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(ColorEditorGui screenInstance) {
+                                                        if (StringUtils.isValidColorCode(CraftPresence.CONFIG.guiBackgroundColor)) {
+                                                            screenInstance.startingHexValue = CraftPresence.CONFIG.guiBackgroundColor;
+                                                        } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.guiBackgroundColor)) {
+                                                            screenInstance.startingTexturePath = CraftPresence.CONFIG.guiBackgroundColor;
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(CraftPresence.CONFIG.guiBackgroundColor)) {
-                                                screenInstance.startingHexValue = CraftPresence.CONFIG.guiBackgroundColor;
-                                            } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.guiBackgroundColor)) {
-                                                screenInstance.startingTexturePath = CraftPresence.CONFIG.guiBackgroundColor;
-                                            }
-                                        }
-                                )
-                        ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
-                                ), this, true
-                        )
+                                        )
+                                );
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         // Adding Button Background Color Button
@@ -166,35 +216,51 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         calc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.accessibility.button_background_color",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.buttonBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                CraftPresence.CONFIG.buttonBackgroundColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1) {
-                                                final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.buttonBackgroundColor : CraftPresence.CONFIG.buttonBackgroundColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                                                if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
-                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                    CraftPresence.CONFIG.buttonBackgroundColor = adjustValue;
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.openScreen(
+                                        new ColorEditorGui(
+                                                currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
+                                                new PairConsumer<Integer, ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(Integer pageNumber, ColorEditorGui screenInstance) {
+                                                        if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(CraftPresence.CONFIG.buttonBackgroundColor)) {
+                                                            CraftPresence.CONFIG.hasChanged = true;
+                                                            CraftPresence.CONFIG.buttonBackgroundColor = screenInstance.currentNormalHexValue;
+                                                        } else if (pageNumber == 1) {
+                                                            final String adjustValue = screenInstance.usingExternalTexture ? CraftPresence.CONFIG.buttonBackgroundColor : CraftPresence.CONFIG.buttonBackgroundColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
+                                                            if (!screenInstance.currentNormalTexturePath.equals(adjustValue)) {
+                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                CraftPresence.CONFIG.buttonBackgroundColor = adjustValue;
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                new DataConsumer<ColorEditorGui>() {
+                                                    @Override
+                                                    public void accept(ColorEditorGui screenInstance) {
+                                                        if (StringUtils.isValidColorCode(CraftPresence.CONFIG.buttonBackgroundColor)) {
+                                                            screenInstance.startingHexValue = CraftPresence.CONFIG.buttonBackgroundColor;
+                                                        } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.buttonBackgroundColor)) {
+                                                            screenInstance.startingTexturePath = CraftPresence.CONFIG.buttonBackgroundColor;
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(CraftPresence.CONFIG.buttonBackgroundColor)) {
-                                                screenInstance.startingHexValue = CraftPresence.CONFIG.buttonBackgroundColor;
-                                            } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.buttonBackgroundColor)) {
-                                                screenInstance.startingTexturePath = CraftPresence.CONFIG.buttonBackgroundColor;
-                                            }
-                                        }
-                                )
-                        ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.button_background_color")
-                                ), this, true
-                        )
+                                        )
+                                );
+                            }
+                        },
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.button_background_color")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
 
@@ -213,11 +279,16 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         "gui.config.name.accessibility.show_background_as_dark",
                         CraftPresence.CONFIG.showBackgroundAsDark,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_background_as_dark")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_background_as_dark")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         stripTranslationColorsButton = addControl(
@@ -226,11 +297,16 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         "gui.config.name.accessibility.strip_translation_colors",
                         CraftPresence.CONFIG.stripTranslationColors,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         showLoggingInChatButton = addControl(
@@ -239,11 +315,16 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         "gui.config.name.accessibility.show_logging_in_chat",
                         CraftPresence.CONFIG.showLoggingInChat,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_logging_in_chat")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_logging_in_chat")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         stripExtraGuiElementsButton = addControl(
@@ -252,11 +333,16 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         "gui.config.name.accessibility.strip_extra_gui_elements",
                         CraftPresence.CONFIG.stripExtraGuiElements,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_extra_gui_elements")
-                                ), this, true
-                        )
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_extra_gui_elements")
+                                        ), AccessibilitySettingsGui.this, true
+                                );
+                            }
+                        }
                 )
         );
         proceedButton = addControl(
@@ -264,28 +350,31 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> {
-                            if (!languageIdText.getControlMessage().equals(CraftPresence.CONFIG.languageId)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.languageId = languageIdText.getControlMessage();
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!languageIdText.getControlMessage().equals(CraftPresence.CONFIG.languageId)) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.languageId = languageIdText.getControlMessage();
+                                }
+                                if (showBackgroundAsDarkButton.isChecked() != CraftPresence.CONFIG.showBackgroundAsDark) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.showBackgroundAsDark = showBackgroundAsDarkButton.isChecked();
+                                }
+                                if (stripTranslationColorsButton.isChecked() != CraftPresence.CONFIG.stripTranslationColors) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.stripTranslationColors = stripTranslationColorsButton.isChecked();
+                                }
+                                if (showLoggingInChatButton.isChecked() != CraftPresence.CONFIG.showLoggingInChat) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.showLoggingInChat = showLoggingInChatButton.isChecked();
+                                }
+                                if (stripExtraGuiElementsButton.isChecked() != CraftPresence.CONFIG.stripExtraGuiElements) {
+                                    CraftPresence.CONFIG.hasChanged = true;
+                                    CraftPresence.CONFIG.stripExtraGuiElements = stripExtraGuiElementsButton.isChecked();
+                                }
+                                CraftPresence.GUIS.openScreen(parentScreen);
                             }
-                            if (showBackgroundAsDarkButton.isChecked() != CraftPresence.CONFIG.showBackgroundAsDark) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.showBackgroundAsDark = showBackgroundAsDarkButton.isChecked();
-                            }
-                            if (stripTranslationColorsButton.isChecked() != CraftPresence.CONFIG.stripTranslationColors) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.stripTranslationColors = stripTranslationColorsButton.isChecked();
-                            }
-                            if (showLoggingInChatButton.isChecked() != CraftPresence.CONFIG.showLoggingInChat) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.showLoggingInChat = showLoggingInChatButton.isChecked();
-                            }
-                            if (stripExtraGuiElementsButton.isChecked() != CraftPresence.CONFIG.stripExtraGuiElements) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.stripExtraGuiElements = stripExtraGuiElementsButton.isChecked();
-                            }
-                            CraftPresence.GUIS.openScreen(parentScreen);
                         }
                 )
         );

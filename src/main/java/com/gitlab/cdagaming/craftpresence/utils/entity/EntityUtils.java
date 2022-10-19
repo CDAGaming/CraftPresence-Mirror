@@ -332,7 +332,7 @@ public class EntityUtils {
     public List<String> getListFromName(String name) {
         name = !StringUtils.isNullOrEmpty(name) ? name : "";
         return name.equalsIgnoreCase(CURRENT_TARGET_NAME) ? CURRENT_TARGET_TAGS
-                : name.equalsIgnoreCase(CURRENT_RIDING_NAME) ? CURRENT_RIDING_TAGS : Lists.newArrayList();
+                : name.equalsIgnoreCase(CURRENT_RIDING_NAME) ? CURRENT_RIDING_TAGS : Lists.<String>newArrayList();
     }
 
     /**
