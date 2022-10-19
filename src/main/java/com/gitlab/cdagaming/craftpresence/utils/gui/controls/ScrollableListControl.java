@@ -93,6 +93,10 @@ public class ScrollableListControl extends GuiSlot {
         this.itemList = itemList;
         this.currentValue = currentValue;
         this.renderType = renderType;
+
+        if (renderType == RenderType.ItemData) {
+            CraftPresence.TILE_ENTITIES.getEntities();
+        }
     }
 
     /**
@@ -179,7 +183,6 @@ public class ScrollableListControl extends GuiSlot {
                     texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.playerSkinEndpoint, displayName));
                 }
             } else if (renderType == RenderType.ItemData) {
-                CraftPresence.TILE_ENTITIES.getEntities();
                 texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(displayName, texture);
             }
             if (!ImageUtils.isTextureNull(texture)) {
