@@ -35,6 +35,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -307,6 +309,11 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
          */
         private void onPressed() {
             ScrollableListControl.this.setSelected(this);
+        }
+
+        @Override
+        public Component getNarration() {
+            return new TranslatableComponent("narrator.select", this.displayName);
         }
     }
 }

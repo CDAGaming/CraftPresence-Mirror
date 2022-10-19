@@ -354,10 +354,10 @@ public class TileEntityUtils {
     private void updateEntityData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getMainHandItem();
         final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getOffhandItem();
-        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armor.get(3);
-        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armor.get(2);
-        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armor.get(1);
-        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armor.get(0);
+        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.getInventory().armor.get(3);
+        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.getInventory().armor.get(2);
+        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.getInventory().armor.get(1);
+        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.getInventory().armor.get(0);
 
         final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
                 StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getHoverName().getString()) : "";

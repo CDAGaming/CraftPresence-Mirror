@@ -34,8 +34,9 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.glfw.GLFW;
@@ -136,8 +137,7 @@ public class ExtendedScreen extends Screen {
     @Override
     public void init() {
         // Clear Data before Initialization
-        buttons.clear();
-        children.clear();
+        clearWidgets();
         extendedControls.clear();
         extendedLists.clear();
 
@@ -170,19 +170,6 @@ public class ExtendedScreen extends Screen {
     }
 
     /**
-     * Adds a Compatible Button to this Screen with specified type
-     *
-     * @param buttonIn The Button to add to this Screen
-     * @param <T>      The Button's Class Type
-     * @return The added button with attached class type
-     */
-    @Nonnull
-    @Override
-    protected <T extends AbstractWidget> T addButton(@Nonnull T buttonIn) {
-        return addControl(buttonIn);
-    }
-
-    /**
      * Adds a Compatible Control to this Screen with specified type
      *
      * @param buttonIn The Control to add to this Screen
@@ -190,9 +177,9 @@ public class ExtendedScreen extends Screen {
      * @return The added control with attached class type
      */
     @Nonnull
-    protected <T extends GuiEventListener> T addControl(@Nonnull T buttonIn) {
-        if (buttonIn instanceof AbstractWidget && !buttons.contains(buttonIn)) {
-            buttons.add((AbstractWidget) buttonIn);
+    protected <T extends GuiEventListener & Widget & NarratableEntry> T addControl(@Nonnull T buttonIn) {
+        if (buttonIn instanceof Widget) {
+            addRenderableOnly(buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
