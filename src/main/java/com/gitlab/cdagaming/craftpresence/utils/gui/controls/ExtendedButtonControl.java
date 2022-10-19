@@ -29,12 +29,14 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -73,7 +75,7 @@ public class ExtendedButtonControl extends Button {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
-        super(x, y, widthIn, heightIn, buttonText, (button) -> {
+        super(x, y, widthIn, heightIn, new TextComponent(buttonText), (button) -> {
         });
 
         this.optionalArgs = optionalArgs;
@@ -125,7 +127,7 @@ public class ExtendedButtonControl extends Button {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
-        super(x, y, widthIn, heightIn, buttonText, (button) -> {
+        super(x, y, widthIn, heightIn, new TextComponent(buttonText), (button) -> {
         });
         this.optionalArgs = optionalArgs;
     }
@@ -187,7 +189,7 @@ public class ExtendedButtonControl extends Button {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             isHovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
             final int hoverState = getYImage(isHovered);
@@ -221,7 +223,7 @@ public class ExtendedButtonControl extends Button {
                 CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, getBlitOffset(), texLocation);
             }
 
-            renderBg(CraftPresence.instance, mouseX, mouseY);
+            renderBg(matrixStack, CraftPresence.instance, mouseX, mouseY);
             final int color;
 
             if (!active) {
@@ -232,7 +234,7 @@ public class ExtendedButtonControl extends Button {
                 color = 14737632;
             }
 
-            drawCenteredString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
+            drawCenteredString(matrixStack, getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
         }
     }
 
@@ -362,7 +364,7 @@ public class ExtendedButtonControl extends Button {
      * @return The control's current raw display message
      */
     public Component getControlRawMessage() {
-        return new TextComponent(this.getMessage());
+        return this.getMessage();
     }
 
     /**
@@ -371,7 +373,7 @@ public class ExtendedButtonControl extends Button {
      * @param newMessage The new raw display message for this control
      */
     public void setControlRawMessage(final Component newMessage) {
-        this.setMessage(newMessage.getString());
+        this.setMessage(newMessage);
     }
 
     /**

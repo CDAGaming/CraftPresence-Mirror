@@ -27,7 +27,9 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.TextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -91,7 +93,7 @@ public class SliderControl extends ExtendedButtonControl {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.valueStep = valueStep;
-        this.setMessage(displayString + ": " + denormalizedSlideValue);
+        this.setMessage(new TextComponent(displayString + ": " + denormalizedSlideValue));
         this.windowTitle = displayString;
     }
 
@@ -214,7 +216,7 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void renderBg(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull PoseStack matrixStack, @Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (visible) {
             if (dragging) {
                 sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);

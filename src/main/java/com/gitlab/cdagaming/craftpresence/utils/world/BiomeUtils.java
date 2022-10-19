@@ -25,19 +25,20 @@
 package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Biome Utilities used to Parse Biome Data and handle related RPC Events
@@ -48,7 +49,7 @@ public class BiomeUtils {
     /**
      * A List of the detected Biome Type's
      */
-    private final List<Biome> BIOME_TYPES = Lists.newArrayList();
+    private final List<ResourceLocation> BIOME_TYPES = Lists.newArrayList();
     /**
      * The argument format to follow for Rich Presence Data
      */
@@ -138,10 +139,11 @@ public class BiomeUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateBiomeData() {
-        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.getCommandSenderBlockPosition());
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getName().getString(), false, !CraftPresence.CONFIG.formatWords);
+        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition());
+        final ResourceLocation newIdentifier = CraftPresence.player.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(newBiome);
+        final String newBiomeName = newIdentifier != null ? StringUtils.formatIdentifier(newIdentifier.toString(), false, !CraftPresence.CONFIG.formatWords) : "Plains";
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getName().getString(), true, !CraftPresence.CONFIG.formatWords);
+        final String newBiome_primaryIdentifier = newIdentifier != null ? StringUtils.formatIdentifier(newIdentifier.toString(), true, !CraftPresence.CONFIG.formatWords) : "plains";
         final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.formatWords);
         final String newBiome_Identifier = !StringUtils.isNullOrEmpty(newBiome_primaryIdentifier) ? newBiome_primaryIdentifier : newBiome_alternativeIdentifier;
 
@@ -152,8 +154,8 @@ public class BiomeUtils {
             if (!BIOME_NAMES.contains(newBiome_Identifier)) {
                 BIOME_NAMES.add(newBiome_Identifier);
             }
-            if (!BIOME_TYPES.contains(newBiome)) {
-                BIOME_TYPES.add(newBiome);
+            if (!BIOME_TYPES.contains(newIdentifier)) {
+                BIOME_TYPES.add(newIdentifier);
             }
 
             updateBiomePresence();
@@ -202,31 +204,17 @@ public class BiomeUtils {
      *
      * @return The detected Biome Types found
      */
-    private List<Biome> getBiomeTypes() {
-        List<Biome> biomeTypes = Lists.newArrayList();
-        List<Biome> defaultBiomeTypes = Lists.newArrayList(Registry.BIOME.iterator());
+    private List<ResourceLocation> getBiomeTypes() {
+        List<ResourceLocation> biomeTypes = Lists.newArrayList();
+        Optional<? extends Registry<Biome>> biomeRegistry = RegistryAccess.builtin().registry(Registry.BIOME_REGISTRY);
 
-        if (!defaultBiomeTypes.isEmpty()) {
-            for (Biome biome : defaultBiomeTypes) {
-                if (biome != null && !biomeTypes.contains(biome)) {
-                    biomeTypes.add(biome);
-                }
-            }
-        }
+        if (biomeRegistry.isPresent()) {
+            List<ResourceLocation> defaultBiomeTypes = Lists.newArrayList(biomeRegistry.get().keySet());
 
-        if (biomeTypes.isEmpty()) {
-            // Fallback: Use Manual Class Lookup
-            for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Biome.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
-                if (classObj != null) {
-                    try {
-                        Biome biomeObj = (Biome) classObj.getDeclaredConstructor().newInstance();
-                        if (!biomeTypes.contains(biomeObj)) {
-                            biomeTypes.add(biomeObj);
-                        }
-                    } catch (Exception | Error ex) {
-                        if (ModUtils.IS_VERBOSE) {
-                            ex.printStackTrace();
-                        }
+            if (!defaultBiomeTypes.isEmpty()) {
+                for (ResourceLocation type : defaultBiomeTypes) {
+                    if (type != null) {
+                        biomeTypes.add(type);
                     }
                 }
             }
@@ -239,15 +227,14 @@ public class BiomeUtils {
      * Updates and Initializes Module Data, based on found Information
      */
     public void getBiomes() {
-        for (Biome biome : getBiomeTypes()) {
-            if (biome != null) {
-                String biomeName = !StringUtils.isNullOrEmpty(biome.getName().getString()) ? biome.getName().getString() : MappingUtils.getClassName(biome);
-                String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.formatWords);
+        for (ResourceLocation TYPE : getBiomeTypes()) {
+            if (TYPE != null) {
+                String name = StringUtils.formatIdentifier(TYPE.toString(), true, !CraftPresence.CONFIG.formatWords);
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);
                 }
-                if (!BIOME_TYPES.contains(biome)) {
-                    BIOME_TYPES.add(biome);
+                if (!BIOME_TYPES.contains(TYPE)) {
+                    BIOME_TYPES.add(TYPE);
                 }
             }
         }

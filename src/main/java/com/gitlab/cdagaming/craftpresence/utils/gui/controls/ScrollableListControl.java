@@ -30,12 +30,14 @@ import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -127,7 +129,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
      * Renders the Background for this Control
      */
     @Override
-    protected void renderBackground() {
+    protected void renderBackground(@Nonnull PoseStack matrixStack) {
         if (getItemCount() != children().size()) {
             clearEntries();
             updateEntries();
@@ -230,6 +232,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
         /**
          * Renders this Entry to the List
          *
+         * @param matrices    The Matrix Stack, used for Rendering
          * @param index       The Index of the Entry within the List
          * @param yPos        The Y Coordinate to render at
          * @param xPos        The X Coordinate to render at
@@ -241,7 +244,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
          * @param tickDelta   The Rendering Tick Rate
          */
         @Override
-        public void render(int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(@Nonnull PoseStack matrices, int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             int xOffset = xPos;
             if (!CraftPresence.CONFIG.stripExtraGuiElements &&
                     ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
@@ -278,7 +281,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
                 // Note: 35 Added to xOffset to accommodate for Image Size
                 xOffset += 35;
             }
-            getFontRenderer().drawShadow(displayName, xOffset, yPos + ((entryHeight / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+            getFontRenderer().drawShadow(matrices, displayName, xOffset, yPos + ((entryHeight / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
         }
 
         /**
