@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.ArrayUtils;
@@ -1083,7 +1083,7 @@ public class StringUtils {
             final List<String> lines = splitTextByNewLine(message);
             if (!lines.isEmpty()) {
                 for (String line : lines) {
-                    player.displayClientMessage(new TextComponent(line), false);
+                    player.displayClientMessage(Component.literal(line), false);
                 }
             }
         }

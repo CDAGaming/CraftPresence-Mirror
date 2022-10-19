@@ -38,7 +38,7 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -98,7 +98,7 @@ public class ExtendedScreen extends Screen {
      * @param parentScreen The Parent Screen for this Instance
      */
     public ExtendedScreen(Screen parentScreen) {
-        super(new TextComponent(""));
+        super(Component.literal(""));
         minecraft = CraftPresence.instance;
         currentScreen = this;
         this.parentScreen = parentScreen;

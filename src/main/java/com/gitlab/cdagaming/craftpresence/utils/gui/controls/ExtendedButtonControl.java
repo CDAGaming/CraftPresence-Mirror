@@ -33,7 +33,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -75,7 +74,7 @@ public class ExtendedButtonControl extends Button {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
-        super(x, y, widthIn, heightIn, new TextComponent(buttonText), (button) -> {
+        super(x, y, widthIn, heightIn, Component.literal(buttonText), (button) -> {
         });
 
         this.optionalArgs = optionalArgs;
@@ -127,7 +126,7 @@ public class ExtendedButtonControl extends Button {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
-        super(x, y, widthIn, heightIn, new TextComponent(buttonText), (button) -> {
+        super(x, y, widthIn, heightIn, Component.literal(buttonText), (button) -> {
         });
         this.optionalArgs = optionalArgs;
     }
@@ -412,7 +411,7 @@ public class ExtendedButtonControl extends Button {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        setControlRawMessage(new TextComponent(newMessage));
+        setControlRawMessage(Component.literal(newMessage));
     }
 
     /**

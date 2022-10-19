@@ -307,9 +307,9 @@ public class TranslationUtils implements ResourceManagerReloadListener {
         );
 
         try {
-            List<Resource> resources = resourceManager.getResources(new ResourceLocation(modId, langPath));
+            List<Resource> resources = resourceManager.getResourceStack(new ResourceLocation(modId, langPath));
             for (Resource resource : resources) {
-                results.add(resource.getInputStream());
+                results.add(resource.open());
             }
         } catch (Exception ignored) {
         }

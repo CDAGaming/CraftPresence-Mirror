@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nonnull;
 
@@ -93,7 +93,7 @@ public class SliderControl extends ExtendedButtonControl {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.valueStep = valueStep;
-        this.setMessage(new TextComponent(displayString + ": " + denormalizedSlideValue));
+        this.setMessage(Component.literal(displayString + ": " + denormalizedSlideValue));
         this.windowTitle = displayString;
     }
 
