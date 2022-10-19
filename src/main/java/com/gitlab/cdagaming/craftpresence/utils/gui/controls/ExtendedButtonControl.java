@@ -192,7 +192,7 @@ public class ExtendedButtonControl extends Button {
     public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             isHovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            final int hoverState = getYImage(isHovered());
+            final int hoverState = getYImage(isHoveredOrFocused());
 
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
             ResourceLocation texLocation;
@@ -224,7 +224,7 @@ public class ExtendedButtonControl extends Button {
 
             if (!active) {
                 color = 10526880;
-            } else if (isHovered()) {
+            } else if (isHoveredOrFocused()) {
                 color = 16777120;
             } else {
                 color = 14737632;

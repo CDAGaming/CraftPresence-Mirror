@@ -159,7 +159,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      */
     @Override
     public void onPress() {
-        if (isControlEnabled() && visible && isHovered()) {
+        if (isControlEnabled() && visible && isHoveredOrFocused()) {
             is_Checked = !is_Checked;
         }
     }
