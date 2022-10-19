@@ -29,11 +29,11 @@ repositories {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     // Required for loading translation data
-    modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
-    include(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
+    //modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
+    //include(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
 
     // Mod Menu API Implementation
-    modImplementation "${rootProject.modmenu_group}:modmenu:${rootProject.modmenu_version}"
+    //modImplementation "${rootProject.modmenu_group}:modmenu:${rootProject.modmenu_version}"
 
     common(project(path: ":common", configuration: "namedElements")) {
         transitive false

@@ -18,14 +18,10 @@
   "entrypoints": {
     "client": [
       "com.gitlab.cdagaming.craftpresence.fabric.CraftPresenceFabric"
-    ],
-    "modmenu": [
-      "com.gitlab.cdagaming.craftpresence.fabric.impl.ModMenuImpl"
     ]
   },
   "depends": {
     "fabricloader": ">=0.14.10",
-    "fabric-resource-loader-v0": "*",
     "minecraft": "${mcversion}",
     "java": ">=17"
   }

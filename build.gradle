@@ -1,7 +1,7 @@
 plugins {
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'dev.architectury.loom' version '0.12.0-SNAPSHOT' apply false
-    id "io.github.pacifistmc.forgix" version "1.2.6"
+    //id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
 architectury {
@@ -46,21 +46,21 @@ subprojects {
     }
 }
 
-def fileFormat = "${rootProject.mod_name}-${rootProject.mc_version}-${rootProject.deploymentType}-${rootProject.versionId}"
+// def fileFormat = "${rootProject.mod_name}-${rootProject.mc_version}-${rootProject.deploymentType}-${rootProject.versionId}"
 
-forgix {
-    group = rootProject.group
-    mergedJarName = "${fileFormat}-universal.jar"
-    outputDir = "build/libs"
+// forgix {
+//     group = rootProject.group
+//     mergedJarName = "${fileFormat}-universal.jar"
+//     outputDir = "build/libs"
 
-    forge {
-        jarLocation = "build/libs/${fileFormat}-forge.jar"
-    }
+//    forge {
+//        jarLocation = "build/libs/${fileFormat}-forge.jar"
+//    }
 
-    fabric {
-        jarLocation = "build/libs/${fileFormat}-fabric.jar"
-    }
-}
+//     fabric {
+//         jarLocation = "build/libs/${fileFormat}-fabric.jar"
+//     }
+// }
 
 allprojects {
     apply plugin: "architectury-plugin"

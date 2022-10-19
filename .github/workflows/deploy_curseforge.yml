@@ -32,10 +32,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew --build-cache build
-
-      - name: Merge Jars with Gradle
-        run: ./gradlew --build-cache mergeJars
+        run: ./gradlew --build-cache :fabric:build
 
       - name: Deploy with Gradle
         run: ./gradlew --build-cache :universal:curseforge
@@ -43,7 +40,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: artifacts
-          path: build/libs/*.jar
+          path: fabric/build/libs/*.jar
 
       - name: stop daemon
         run: ./gradlew --stop

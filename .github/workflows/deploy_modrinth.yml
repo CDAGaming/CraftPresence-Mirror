@@ -34,16 +34,13 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew --build-cache build
 
-      - name: Merge Jars with Gradle
-        run: ./gradlew --build-cache mergeJars
-
       - name: Deploy with Gradle
         run: ./gradlew --build-cache :universal:modrinth
 
       - uses: actions/upload-artifact@v3
         with:
           name: artifacts
-          path: build/libs/*.jar
+          path: fabric/build/libs/*.jar
 
       - name: stop daemon
         run: ./gradlew --stop

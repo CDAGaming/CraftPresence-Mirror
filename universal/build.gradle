@@ -13,12 +13,12 @@ curseforge {
         changelog = file("$rootDir/Changes.md")
         changelogType = "markdown"
         releaseType = "${deploymentType}".toLowerCase()
-        addGameVersion "${mc_version}"
+        addGameVersion "1.19.3"
         for (String loaderName : rootProject.enabled_platforms.split(",")) {
             addGameVersion loaderName.capitalize()
         }
 
-        mainArtifact(file("$rootDir/build/libs/${fileFormat}-universal.jar")) {
+        mainArtifact(file("$rootDir/fabric/build/libs/${fileFormat}-fabric.jar")) {
             it.displayName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
         }
     }
@@ -31,7 +31,7 @@ modrinth {
     versionName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
     changelog = file("$rootDir/Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
-    uploadFile = file("$rootDir/build/libs/${fileFormat}-universal.jar")
+    uploadFile = file("$rootDir/fabric/build/libs/${fileFormat}-fabric.jar")
     gameVersions = ["${mc_version}"]
     loaders = rootProject.enabled_platforms.split(",").toList()
     dependencies = []
