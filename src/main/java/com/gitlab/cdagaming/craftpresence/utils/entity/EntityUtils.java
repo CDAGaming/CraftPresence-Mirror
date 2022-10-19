@@ -32,7 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -394,7 +394,7 @@ public class EntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        final List<EntityType<?>> defaultEntityTypes = Lists.newArrayList(Registry.ENTITY_TYPE.iterator());
+        final List<EntityType<?>> defaultEntityTypes = Lists.newArrayList(BuiltInRegistries.ENTITY_TYPE.iterator());
 
         if (!defaultEntityTypes.isEmpty()) {
             for (EntityType<?> entityLocation : defaultEntityTypes) {

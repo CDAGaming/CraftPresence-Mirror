@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
@@ -121,7 +121,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @return The added control with attached class type
      */
     @Nonnull
-    protected <T extends GuiEventListener & Widget & NarratableEntry> T addControl(@Nonnull T buttonIn, final int renderTarget) {
+    protected <T extends GuiEventListener & Renderable & NarratableEntry> T addControl(@Nonnull T buttonIn, final int renderTarget) {
         if (!paginatedControls.containsKey(renderTarget)) {
             paginatedControls.put(renderTarget, Lists.newArrayList(buttonIn));
             if (renderTarget > maxPages) {

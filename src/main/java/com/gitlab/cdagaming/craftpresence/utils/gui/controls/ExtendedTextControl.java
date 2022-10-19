@@ -108,7 +108,7 @@ public class ExtendedTextControl extends EditBox {
      * @return the Current X Position of this Control
      */
     public int getControlPosX() {
-        return x;
+        return getX();
     }
 
     /**
@@ -117,7 +117,7 @@ public class ExtendedTextControl extends EditBox {
      * @return the Current Y Position of this Control
      */
     public int getControlPosY() {
-        return y;
+        return getY();
     }
 
     /**

@@ -31,8 +31,10 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.dimension.DimensionType;
 
@@ -205,15 +207,15 @@ public class DimensionUtils {
      */
     private List<ResourceLocation> getDimensionTypes() {
         List<ResourceLocation> dimensionTypes = Lists.newArrayList();
-        Optional<? extends Registry<DimensionType>> dimensionRegistry = RegistryAccess.builtinCopy().registry(Registry.DIMENSION_TYPE_REGISTRY);
+        Optional<HolderLookup.RegistryLookup<DimensionType>> dimensionRegistry = VanillaRegistries.createLookup().lookup(Registries.DIMENSION_TYPE);
 
         if (dimensionRegistry.isPresent()) {
-            List<ResourceLocation> defaultDimensionTypes = Lists.newArrayList(dimensionRegistry.get().keySet());
+            List<Holder.Reference<DimensionType>> defaultDimensionTypes = dimensionRegistry.get().listElements().toList();
 
             if (!defaultDimensionTypes.isEmpty()) {
-                for (ResourceLocation type : defaultDimensionTypes) {
+                for (Holder.Reference<DimensionType> type : defaultDimensionTypes) {
                     if (type != null) {
-                        dimensionTypes.add(type);
+                        dimensionTypes.add(type.key().location());
                     }
                 }
             }

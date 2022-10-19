@@ -75,7 +75,7 @@ public class ExtendedButtonControl extends Button {
      */
     public ExtendedButtonControl(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
         super(x, y, widthIn, heightIn, Component.literal(buttonText), (button) -> {
-        });
+        }, Button.DEFAULT_NARRATION);
 
         this.optionalArgs = optionalArgs;
     }
@@ -127,7 +127,7 @@ public class ExtendedButtonControl extends Button {
      */
     public ExtendedButtonControl(int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
         super(x, y, widthIn, heightIn, Component.literal(buttonText), (button) -> {
-        });
+        }, Button.DEFAULT_NARRATION);
         this.optionalArgs = optionalArgs;
     }
 
@@ -261,7 +261,7 @@ public class ExtendedButtonControl extends Button {
      * @return the Current X Position of this Control
      */
     public int getControlPosX() {
-        return x;
+        return getX();
     }
 
     /**
@@ -270,7 +270,7 @@ public class ExtendedButtonControl extends Button {
      * @return the Current Y Position of this Control
      */
     public int getControlPosY() {
-        return y;
+        return getY();
     }
 
     /**

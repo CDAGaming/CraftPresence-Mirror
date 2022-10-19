@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -696,8 +696,8 @@ public class TileEntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        final List<Block> defaultBlocks = Lists.newArrayList(Registry.BLOCK.iterator());
-        final List<Item> defaultItems = Lists.newArrayList(Registry.ITEM.iterator());
+        final List<Block> defaultBlocks = Lists.newArrayList(BuiltInRegistries.BLOCK.iterator());
+        final List<Item> defaultItems = Lists.newArrayList(BuiltInRegistries.ITEM.iterator());
 
         for (Block block : defaultBlocks) {
             if (!isEmpty(block)) {
@@ -714,7 +714,7 @@ public class TileEntityUtils {
                         final ResourceLocation initialData =
                                 CraftPresence.instance.getBlockRenderer().getBlockModel(
                                         block.defaultBlockState()
-                                ).getParticleIcon().getName();
+                                ).getParticleIcon().contents().name();
                         TILE_ENTITY_RESOURCES.put(blockName,
                                 new ResourceLocation(initialData.getNamespace(),
                                         "textures/" + initialData.getPath() + ".png"
@@ -741,7 +741,7 @@ public class TileEntityUtils {
                         final ResourceLocation initialData =
                                 CraftPresence.instance.getItemRenderer().getItemModelShaper().getItemModel(
                                         getDefaultInstance(item)
-                                ).getParticleIcon().getName();
+                                ).getParticleIcon().contents().name();
                         TILE_ENTITY_RESOURCES.put(itemName,
                                 new ResourceLocation(initialData.getNamespace(),
                                         "textures/" + initialData.getPath() + ".png"
