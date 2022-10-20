@@ -21,6 +21,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Backend: Adjusted the SLF4j to Log4J Binding, used for IPC Logging, to resolve `ClassNotFound` issues in select MC versions
 * Backend: Tile Entity Previews now refresh on GUI entering, to counter issues of them being loaded too early
 * Backend: Fixed shadowed dependencies breaking Fabric and Forge Developer Environment functionality
 * Backend: Fixed an issue where `getArgumentsMatching` could sometimes lead to unintended behavior

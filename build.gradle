@@ -225,7 +225,7 @@ dependencies {
         shade('org.slf4j:slf4j-jdk14:1.7.36')
     } else {
         runtimeOnly('org.slf4j:slf4j-jdk14:1.7.36')
-        shadeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.15.0') {
+        shadeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.0') {
             exclude group: 'org.apache.logging.log4j', module: "log4j-api"
             exclude group: 'org.apache.logging.log4j', module: "log4j-core"
         }
