@@ -267,7 +267,7 @@ public class ServerUtils {
             if (CraftPresence.player != null && !joinInProgress) {
                 isInUse = true;
                 updateServerData();
-            } else {
+            } else if (isInUse) {
                 clearClientData();
             }
         } else {
