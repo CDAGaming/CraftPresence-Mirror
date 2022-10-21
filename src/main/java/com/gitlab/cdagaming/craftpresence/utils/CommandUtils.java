@@ -162,7 +162,7 @@ public class CommandUtils {
         CraftPresence.CLIENT.clearPartyData(true, false);
 
         CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.loadingMessage, loadingArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf(CraftPresence.CONFIG.defaultIcon, "", false), ArgumentType.Image);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.defaultIcon, ""), ArgumentType.Image);
 
         isLoadingGame = true;
     }
@@ -188,7 +188,7 @@ public class CommandUtils {
         }
 
         CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.mainMenuMessage, mainMenuArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf(CraftPresence.CONFIG.defaultIcon, "", false), ArgumentType.Image);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.defaultIcon, ""), ArgumentType.Image);
 
         isInMainMenu = true;
     }

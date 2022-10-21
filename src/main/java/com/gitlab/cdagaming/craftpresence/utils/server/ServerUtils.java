@@ -647,7 +647,7 @@ public class ServerUtils {
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, StringUtils.sequentialReplaceAnyCase(currentServerMessage, serverArgs), ArgumentType.Text);
         if (!StringUtils.isNullOrEmpty(currentServerIcon)) {
-            CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(currentServerIcon, CraftPresence.CONFIG.defaultServerIcon, true), ArgumentType.Image);
+            CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, currentServerIcon, CraftPresence.CONFIG.defaultServerIcon), ArgumentType.Image);
         } else {
             CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
         }

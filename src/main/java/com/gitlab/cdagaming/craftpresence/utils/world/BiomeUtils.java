@@ -193,7 +193,7 @@ public class BiomeUtils {
         final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentBiomeMessage, biomeArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_BIOME_MESSAGE, ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon, true), ArgumentType.Image);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon), ArgumentType.Image);
     }
 
     /**

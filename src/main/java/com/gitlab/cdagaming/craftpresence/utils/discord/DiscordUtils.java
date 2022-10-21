@@ -1012,31 +1012,37 @@ public class DiscordUtils {
     /**
      * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
      *
-     * @param evalString        The Specified Icon Key to search for from the {@link DiscordUtils#CLIENT_ID} Assets
-     * @param alternativeString The Alternative Icon Key to use if unable to locate the Original Icon Key
-     * @param allowNull         If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
+     * @param allowNull   If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
+     * @param showLogging Whether or not to display logging for this function
+     * @param evalStrings The Specified Icon Key(s) to search for from the {@link DiscordUtils#CLIENT_ID} Assets
      * @return The found or alternative matching Icon Key
      */
-    public String imageOf(final String evalString, final String alternativeString, final boolean allowNull) {
+    public String imageOf(final boolean allowNull, final boolean showLogging, final String... evalStrings) {
         // Ensures Assets were fully synced from the Client ID before running
-        if (DiscordAssetUtils.syncCompleted) {
-            if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equalsIgnoreCase(evalString)) {
-                final String defaultIcon = DiscordAssetUtils.contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : DiscordAssetUtils.getRandomAssetName();
-                lastRequestedImageData.setFirst(evalString);
+        if (DiscordAssetUtils.syncCompleted && !StringUtils.isNullOrEmpty(evalStrings[0])) {
+            final String primaryKey = evalStrings[0];
+            if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equalsIgnoreCase(primaryKey)) {
+                lastRequestedImageData.setFirst(primaryKey);
 
-                String finalKey = evalString;
-
-                if (!DiscordAssetUtils.contains(finalKey)) {
-                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.fallback", evalString, alternativeString));
-                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", evalString));
-                    if (DiscordAssetUtils.contains(alternativeString)) {
-                        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.fallback", evalString, alternativeString));
-                        finalKey = alternativeString;
+                final String defaultIcon = allowNull ? "" : (DiscordAssetUtils.contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : DiscordAssetUtils.getRandomAssetName());
+                String finalKey = defaultIcon;
+                for (int i = 0; i < evalStrings.length; ) {
+                    final String evalString = evalStrings[i];
+                    if (DiscordAssetUtils.contains(evalString)) {
+                        finalKey = evalString;
+                        break;
                     } else {
-                        if (allowNull) {
-                            finalKey = "";
+                        if (i++ < evalStrings.length) {
+                            if (showLogging) {
+                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.fallback", evalString, evalStrings[i]));
+                                if (evalString.equals(primaryKey)) {
+                                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", evalString));
+                                }
+                            }
                         } else {
-                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.default", evalString, defaultIcon));
+                            if (showLogging) {
+                                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.default", primaryKey, defaultIcon));
+                            }
                             finalKey = defaultIcon;
                         }
                     }
@@ -1050,6 +1056,46 @@ public class DiscordUtils {
         } else {
             return "";
         }
+    }
+
+    /**
+     * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
+     *
+     * @param argumentName The Specified Argument to interpret
+     * @param allowNull    If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
+     * @param evalStrings  The Specified Icon Key(s) to search for from the {@link DiscordUtils#CLIENT_ID} Assets
+     * @return The found or alternative matching Icon Key
+     */
+    public String imageOf(final String argumentName, final boolean allowNull, final String... evalStrings) {
+        return imageOf(allowNull, isImageInUse(argumentName) || isImageInUse(evalStrings), evalStrings);
+    }
+
+    /**
+     * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
+     *
+     * @param allowNull   If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
+     * @param evalStrings The Specified Icon Key(s) to search for from the {@link DiscordUtils#CLIENT_ID} Assets
+     * @return The found or alternative matching Icon Key
+     */
+    public String imageOf(final boolean allowNull, final String... evalStrings) {
+        return imageOf(allowNull, true, evalStrings);
+    }
+
+    /**
+     * Determine whether any of the specified strings are currently being used as an RPC image
+     *
+     * @param evalStrings The specified Icon Key(s) to interpret
+     * @return whether any of the inputs are currently being used as an RPC image
+     */
+    public boolean isImageInUse(final String... evalStrings) {
+        for (String evalString : evalStrings) {
+            if (CraftPresence.CONFIG.largeImageKey.contains(evalString) ||
+                    CraftPresence.CONFIG.smallImageKey.contains(evalString)
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
