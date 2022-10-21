@@ -7,8 +7,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import groovy.io.FileType
 import org.apache.tools.ant.filters.ReplaceTokens
 
@@ -238,14 +236,10 @@ jar {
 
 shadowJar {
     configurations = [project.configurations.shade, project.configurations.shadeOnly]
+    relocate 'org.slf4j', 'logging.org.slf4j'
+    relocate 'org.apache.logging.slf4j', 'logging.org.apache.logging.slf4j'
     archiveClassifier.set('shadow-dev')
 }
-
-task relocateShadowJar(type: ConfigureShadowRelocation) {
-    target = tasks.shadowJar
-    prefix = "external"
-}
-tasks.shadowJar.dependsOn tasks.relocateShadowJar
 
 remapJar {
     dependsOn(shadowJar)

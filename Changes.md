@@ -1,34 +1,14 @@
 # CraftPresence Changes
 
-## v1.9.4 (10/20/2022)
+## v1.9.5 (11/03/2022)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.3...release%2Fv1.9.4)_
-
-### Changes
-
-* Added support for the `|` (OR) Operator in `Presence Settings` fields, if `allowPlaceholderOperators` is true
-    * This change can be used to combine 2 placeholders, in which the mod will choose the first
-      non-null placeholder. One such example is that doing `&SERVER&|&PACK&` will show the pack message, if the server
-      message
-      is null, and will show the `&SERVER&` data if it is not null (Even if the `&PACK&` data is also not null)
-    * As a result of this change, the `detailsMessage`, `largeImageMessage`, `largeImageKey`, and `smallImageKey` have
-      been revised to include OR operators. Users can either manually use the OR operator or reset those fields to have
-      them automatically applied upon config regeneration.
-    * This can also be considered a fix for when using a server icon while a pack icon was also available, which is a
-      scenario that can happen under default behavior, and the reasoning for this addition.
-* Added `allowPlaceholderPreviews` as an Advanced Setting to replace needing `Debug Mode` for placeholder previews
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.4...release%2Fv1.9.5)_
 
 ### Fixes
 
-* Backend: Adjusted the SLF4j to Log4J Binding, used for IPC Logging, to resolve `ClassNotFound` issues in select MC versions
-* Backend: Tile Entity Previews now refresh on GUI entering, to counter issues of them being loaded too early
-* Backend: Fixed shadowed dependencies breaking Fabric and Forge Developer Environment functionality
-* Backend: Fixed an issue where `getArgumentsMatching` could sometimes lead to unintended behavior
-* Backend: Fixed a NPE from `generateArgumentMessage` if it is fired before the IPC instance is initialized
-* Fixed an regression causing null characters to be considered valid for the `splitCharacter` setting
-* Fixed possible NPEs within `ServerUtils` if `currentServerMessage` or `currentServerIcon` was null
-    * This also fixes compatibility with Replay Mod and similar mods
+* Backend: Adjusted Shadowed Dependency relocations in buildscript, to resolve class issues
+    * Mostly present with `JUnixSocket` and Unix Systems
 
 ___
 
