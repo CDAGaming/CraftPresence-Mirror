@@ -154,7 +154,7 @@ public class EntityUtils {
             } else if (isInUse) {
                 clearClientData();
             }
-        } else {
+        } else if (isInUse) {
             emptyData();
         }
     }

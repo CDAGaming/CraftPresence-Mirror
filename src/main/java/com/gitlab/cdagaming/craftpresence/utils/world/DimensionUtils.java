@@ -129,7 +129,7 @@ public class DimensionUtils {
             } else if (isInUse) {
                 clearClientData();
             }
-        } else {
+        } else if (isInUse) {
             emptyData();
         }
     }

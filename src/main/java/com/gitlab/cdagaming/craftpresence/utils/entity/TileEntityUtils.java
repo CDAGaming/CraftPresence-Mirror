@@ -292,7 +292,7 @@ public class TileEntityUtils {
             } else if (isInUse) {
                 clearClientData();
             }
-        } else {
+        } else if (isInUse) {
             emptyData();
         }
     }

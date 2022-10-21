@@ -128,7 +128,7 @@ public class BiomeUtils {
             } else if (isInUse) {
                 clearClientData();
             }
-        } else {
+        } else if (isInUse) {
             emptyData();
         }
     }

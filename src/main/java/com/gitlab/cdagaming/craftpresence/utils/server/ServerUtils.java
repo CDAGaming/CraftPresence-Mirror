@@ -270,7 +270,7 @@ public class ServerUtils {
             } else if (isInUse) {
                 clearClientData();
             }
-        } else {
+        } else if (isInUse) {
             emptyData();
         }
 

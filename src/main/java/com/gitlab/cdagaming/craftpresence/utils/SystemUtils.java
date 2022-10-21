@@ -155,7 +155,6 @@ public class SystemUtils {
                 if (HAS_LOADED && !HAS_GAME_LOADED && CraftPresence.instance.currentScreen != null) {
                     HAS_GAME_LOADED = true;
                 }
-                CraftPresence.CLIENT.syncPlaceholders();
                 CraftPresence.CLIENT.updatePresence(CraftPresence.CLIENT.buildRichPresence());
                 refreshedCallbacks = true;
             }
