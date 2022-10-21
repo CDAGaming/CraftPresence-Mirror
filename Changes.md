@@ -5,6 +5,14 @@
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.4...release%2Fv1.9.5)_
 
+### Changes
+
+* Performance Improvements have been made for the following areas of the mod:
+  * Discord Asset Retrieval and Caching (Also addresses cases of log spam from assets not currently in use)
+  * Tick Rates of Module Clear Functions (No longer run on every tick, instead only when in use, and is no longer active or enabled)
+  * Tick Rates of Immutable (Non-changing) Placeholder syncing (No longer runs on every tick, only on RPC initialization)
+
+
 ### Fixes
 
 * Backend: Adjusted Shadowed Dependency relocations in buildscript, to resolve class issues

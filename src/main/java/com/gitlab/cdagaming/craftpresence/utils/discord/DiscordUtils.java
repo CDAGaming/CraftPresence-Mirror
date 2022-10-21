@@ -213,7 +213,7 @@ public class DiscordUtils {
      * <p>Used to prevent sending duplicate packets and cache data for repeated images in other areas
      * <p>Format: lastAttemptedKey, lastResultingKey
      */
-    private Pair<String, String> lastRequestedImageData = new Pair<>();
+    private final Map<String, String> cachedImageData = Maps.newHashMap();
     /**
      * An Instance containing the Current Rich Presence Data
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
@@ -1021,9 +1021,7 @@ public class DiscordUtils {
         // Ensures Assets were fully synced from the Client ID before running
         if (DiscordAssetUtils.syncCompleted && !StringUtils.isNullOrEmpty(evalStrings[0])) {
             final String primaryKey = evalStrings[0];
-            if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equalsIgnoreCase(primaryKey)) {
-                lastRequestedImageData.setFirst(primaryKey);
-
+            if (!cachedImageData.containsKey(primaryKey)) {
                 final String defaultIcon = allowNull ? "" : (DiscordAssetUtils.contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : DiscordAssetUtils.getRandomAssetName());
                 String finalKey = defaultIcon;
                 for (int i = 0; i < evalStrings.length; ) {
@@ -1048,10 +1046,10 @@ public class DiscordUtils {
                     }
                 }
 
-                lastRequestedImageData.setSecond(finalKey);
+                cachedImageData.put(primaryKey, finalKey);
                 return finalKey;
             } else {
-                return lastRequestedImageData.getSecond();
+                return cachedImageData.get(primaryKey);
             }
         } else {
             return "";
@@ -1158,7 +1156,7 @@ public class DiscordUtils {
             clearPresenceData(new Tuple<>(true, true, false));
 
             CURRENT_USER = null;
-            lastRequestedImageData = new Pair<>();
+            cachedImageData.clear();
 
             CraftPresence.DIMENSIONS.clearClientData();
             CraftPresence.TILE_ENTITIES.clearClientData();
