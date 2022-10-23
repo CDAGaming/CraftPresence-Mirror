@@ -2,19 +2,23 @@ pluginManagement {
     repositories {
         maven {
             name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+            url = "https://maven.fabricmc.net/"
         }
         maven {
             name = 'Architectury'
-            url "https://maven.architectury.dev/"
+            url = "https://maven.architectury.dev/"
         }
         maven {
             name = 'Forge'
-            url "https://files.minecraftforge.net/maven/"
+            url = "https://files.minecraftforge.net/maven/"
         }
         maven {
             name = 'WagYourTail'
-            url "https://maven.wagyourtail.xyz/snapshots"
+            url = "https://maven.wagyourtail.xyz/snapshots"
+        }
+        maven {
+            name = 'OSS SonaType'
+            url = "https://s01.oss.sonatype.org/content/repositories/releases"
         }
         gradlePluginPortal()
     }

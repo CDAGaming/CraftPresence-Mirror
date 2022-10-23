@@ -212,13 +212,19 @@ dependencies {
             shade('com.google.guava:guava:14.0-rc3')
         }
     }
+
+    // Java-Specific Dependencies
+    if (targetVersion.isJava8Compatible()) {
+        shade('com.kohlschutter.junixsocket:junixsocket-common:2.5.1')
+        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1')
+    } else {
+        shade('com.kohlschutter.junixsocket:junixsocket-common:2.4.0')
+        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.4.0')
+    }
     implementation "com.google.code.findbugs:jsr305:3.0.2"
 
     // DiscordIPC (Originally by jagrosh)
-    shade("io.github.CDAGaming:DiscordIPC:${ipc_version}") {
-        exclude group: 'org.slf4j', module: "slf4j-api"
-        exclude group: 'com.google.code.gson', module: "gson"
-    }
+    shade("io.github.CDAGaming:DiscordIPC:${ipc_version}")
     // SLF4J Dependencies
     shade('org.slf4j:slf4j-api:1.7.36')
     if ("${isLegacy}".toBoolean()) {
@@ -238,9 +244,20 @@ jar {
 
 shadowJar {
     configurations = [project.configurations.shade, project.configurations.shadeOnly]
-    relocate 'org.slf4j', 'logging.org.slf4j'
-    relocate 'org.apache.logging.slf4j', 'logging.org.apache.logging.slf4j'
+
+    // Meta Exclusions
+    exclude '**/DEPENDENCIES*'
+    exclude '**/LICENSE*'
+    exclude '**/Log4J*'
+    exclude 'META-INF/NOTICE*'
+    exclude 'META-INF/versions/**'
+    // Package Relocations
+    relocate 'com.jagrosh', 'external.com.jagrosh'
+    relocate 'org.slf4j', 'external.org.slf4j'
+    relocate 'org.apache', 'external.org.apache'
+
     archiveClassifier.set('shadow-dev')
+    minimize()
 }
 
 remapJar {
