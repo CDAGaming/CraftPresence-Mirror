@@ -254,7 +254,7 @@ shadowJar {
     // Package Relocations
     relocate 'com.jagrosh', 'external.com.jagrosh'
     relocate 'org.slf4j', 'external.org.slf4j'
-    relocate 'org.apache', 'external.org.apache'
+    relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'
 
     archiveClassifier.set('shadow-dev')
     minimize()
