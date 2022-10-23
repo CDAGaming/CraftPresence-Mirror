@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v1.9.5 (11/03/2022)
+## v1.9.5 (10/27/2022)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.4...release%2Fv1.9.5)_
@@ -16,7 +16,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 ### Fixes
 
 * Backend: Adjusted Shadowed Dependency relocations in buildscript, to resolve class issues
-    * Mostly present with `JUnixSocket` and Unix Systems
+    * Mostly present with `JUnixSocket`, `GSON` and Unix Systems
 
 ___
 

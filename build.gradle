@@ -206,6 +206,7 @@ dependencies {
         if (protocol <= 61) { // MC 1.5.2 and below
             shade('org.apache.commons:commons-lang3:3.8.1')
             shade('commons-io:commons-io:2.5')
+            shade('com.google.code.gson:gson:2.8.0')
         }
         if (protocol <= 51) { // MC 1.4.7 and below
             shade('com.google.guava:guava:14.0-rc3')
@@ -216,6 +217,7 @@ dependencies {
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${ipc_version}") {
         exclude group: 'org.slf4j', module: "slf4j-api"
+        exclude group: 'com.google.code.gson', module: "gson"
     }
     // SLF4J Dependencies
     shade('org.slf4j:slf4j-api:1.7.36')
