@@ -409,6 +409,7 @@
   "craftpresence.logger.error.discord.join": "Запрос на присоедениние отклонен, так как введен недопустимый ключ присоеденения: %1$s",
   "craftpresence.logger.error.discord.assets.load": "Не удается получить значки с Discord, возможно, что-то не работает...",
   "craftpresence.logger.error.discord.assets.fallback": "Значок с именем \"%1$s\" не существует, попытка использовать альтернативный значок \"%2$s\"...",
+  "craftpresence.logger.error.discord.assets.cached": "Название значка \"%1$s\" не существует, используем кэшированный значок \"%2$s\"...",
   "craftpresence.logger.error.discord.assets.default": "Не удается назначить альтернативный значок для имени ресурса \"%1$s\", используем стандартный/случайный значок \"%2$s\"...",
   "craftpresence.logger.warning.config.disabled.enablejoinrequest": "Поддержка игровых приглашений отключена в вашей конфигурации. Пожалуйста, включите его, чтобы принимать и отправлять запросы на присоединение в Discord!",
   "craftpresence.logger.warning.config.empty.client_id": "Ваш ID клиента пуст, возможно, что-то не работает...",
