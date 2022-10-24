@@ -257,7 +257,6 @@ shadowJar {
     relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'
 
     archiveClassifier.set('shadow-dev')
-    minimize()
 }
 
 remapJar {
