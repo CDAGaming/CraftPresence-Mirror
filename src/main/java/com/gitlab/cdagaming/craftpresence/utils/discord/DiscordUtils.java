@@ -96,6 +96,12 @@ public class DiscordUtils {
      */
     private final List<Pair<String, String>> packArgs = Lists.newArrayList();
     /**
+     * A Mapping of the Last Requested Image Data
+     * <p>Used to cache data for repeated images in other areas
+     * <p>Format: evalKey, resultingKey
+     */
+    private final Map<String, String> cachedImageData = Maps.newHashMap();
+    /**
      * The Current User, tied to the Rich Presence
      */
     public User CURRENT_USER;
@@ -214,12 +220,6 @@ public class DiscordUtils {
      * <p>Format: lastAttemptedKey, lastResultingKey
      */
     private Pair<String, String> lastRequestedImageData = new Pair<>();
-    /**
-     * A Mapping of the Last Requested Image Data
-     * <p>Used to cache data for repeated images in other areas
-     * <p>Format: evalKey, resultingKey
-     */
-    private final Map<String, String> cachedImageData = Maps.newHashMap();
     /**
      * An Instance containing the Current Rich Presence Data
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
