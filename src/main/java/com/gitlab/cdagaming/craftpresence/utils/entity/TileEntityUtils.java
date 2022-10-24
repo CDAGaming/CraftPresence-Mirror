@@ -314,11 +314,11 @@ public class TileEntityUtils {
     private boolean isEmpty(final ItemStack itemStack) {
         if (itemStack == null || itemStack.equals(EMPTY_STACK)) {
             return true;
-        } else if (itemStack.getItem() != EMPTY_ITEM) {
-            if (itemStack.stackSize <= 0) {
+        } else if (itemStack.func_1091_a() != EMPTY_ITEM) {
+            if (itemStack.field_1615_a <= 0) {
                 return true;
             } else {
-                return itemStack.itemDamage < -32768 || itemStack.itemDamage > 65535;
+                return itemStack.field_1616_d < -32768 || itemStack.field_1616_d > 65535;
             }
         } else {
             return true;
@@ -329,22 +329,22 @@ public class TileEntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItem();
-        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory[3];
-        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory[2];
-        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory[1];
-        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory[0];
+        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.func_442_t();
+        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.field_778_b.field_842_b[3];
+        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.field_778_b.field_842_b[2];
+        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.field_778_b.field_842_b[1];
+        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.field_778_b.field_842_b[0];
 
         final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
-                StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getItem().getClass().getSimpleName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.func_1091_a().getClass().getSimpleName()) : "";
         final String NEW_CURRENT_HELMET_NAME = !isEmpty(NEW_CURRENT_HELMET) ?
-                StringUtils.stripColors(NEW_CURRENT_HELMET.getItem().getClass().getSimpleName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_HELMET.func_1091_a().getClass().getSimpleName()) : "";
         final String NEW_CURRENT_CHEST_NAME = !isEmpty(NEW_CURRENT_CHEST) ?
-                StringUtils.stripColors(NEW_CURRENT_CHEST.getItem().getClass().getSimpleName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_CHEST.func_1091_a().getClass().getSimpleName()) : "";
         final String NEW_CURRENT_LEGS_NAME = !isEmpty(NEW_CURRENT_LEGS) ?
-                StringUtils.stripColors(NEW_CURRENT_LEGS.getItem().getClass().getSimpleName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_LEGS.func_1091_a().getClass().getSimpleName()) : "";
         final String NEW_CURRENT_BOOTS_NAME = !isEmpty(NEW_CURRENT_BOOTS) ?
-                StringUtils.stripColors(NEW_CURRENT_BOOTS.getItem().getClass().getSimpleName()) : "";
+                StringUtils.stripColors(NEW_CURRENT_BOOTS.func_1091_a().getClass().getSimpleName()) : "";
 
         final boolean hasMainHandChanged = (!isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) &&
                 !NEW_CURRENT_MAIN_HAND_ITEM.equals(CURRENT_MAIN_HAND_ITEM) || !NEW_CURRENT_MAIN_HAND_ITEM_NAME.equals(CURRENT_MAIN_HAND_ITEM_NAME)) ||
@@ -364,7 +364,7 @@ public class TileEntityUtils {
 
         if (hasMainHandChanged) {
             CURRENT_MAIN_HAND_ITEM = NEW_CURRENT_MAIN_HAND_ITEM;
-            CURRENT_MAIN_HAND_ITEM_TAG = !isEmpty(CURRENT_MAIN_HAND_ITEM) ? CURRENT_MAIN_HAND_ITEM.writeToNBT(new NBTTagCompound()) : null;
+            CURRENT_MAIN_HAND_ITEM_TAG = !isEmpty(CURRENT_MAIN_HAND_ITEM) ? CURRENT_MAIN_HAND_ITEM.func_1086_a(new NBTTagCompound()) : null;
             final List<String> NEW_CURRENT_MAIN_HAND_ITEM_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_MAIN_HAND_ITEM_TAGS.equals(CURRENT_MAIN_HAND_ITEM_TAGS)) {
@@ -375,7 +375,7 @@ public class TileEntityUtils {
 
         if (hasHelmetChanged) {
             CURRENT_HELMET = NEW_CURRENT_HELMET;
-            CURRENT_HELMET_TAG = !isEmpty(CURRENT_HELMET) ? CURRENT_HELMET.writeToNBT(new NBTTagCompound()) : null;
+            CURRENT_HELMET_TAG = !isEmpty(CURRENT_HELMET) ? CURRENT_HELMET.func_1086_a(new NBTTagCompound()) : null;
             final List<String> NEW_CURRENT_HELMET_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_HELMET_TAGS.equals(CURRENT_HELMET_TAGS)) {
@@ -386,7 +386,7 @@ public class TileEntityUtils {
 
         if (hasChestChanged) {
             CURRENT_CHEST = NEW_CURRENT_CHEST;
-            CURRENT_CHEST_TAG = !isEmpty(CURRENT_CHEST) ? CURRENT_CHEST.writeToNBT(new NBTTagCompound()) : null;
+            CURRENT_CHEST_TAG = !isEmpty(CURRENT_CHEST) ? CURRENT_CHEST.func_1086_a(new NBTTagCompound()) : null;
             final List<String> NEW_CURRENT_CHEST_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_CHEST_TAGS.equals(CURRENT_CHEST_TAGS)) {
@@ -397,7 +397,7 @@ public class TileEntityUtils {
 
         if (hasLegsChanged) {
             CURRENT_LEGS = NEW_CURRENT_LEGS;
-            CURRENT_LEGS_TAG = !isEmpty(CURRENT_LEGS) ? CURRENT_LEGS.writeToNBT(new NBTTagCompound()) : null;
+            CURRENT_LEGS_TAG = !isEmpty(CURRENT_LEGS) ? CURRENT_LEGS.func_1086_a(new NBTTagCompound()) : null;
             final List<String> NEW_CURRENT_LEGS_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_LEGS_TAGS.equals(CURRENT_LEGS_TAGS)) {
@@ -408,7 +408,7 @@ public class TileEntityUtils {
 
         if (hasBootsChanged) {
             CURRENT_BOOTS = NEW_CURRENT_BOOTS;
-            CURRENT_BOOTS_TAG = !isEmpty(CURRENT_BOOTS) ? CURRENT_BOOTS.writeToNBT(new NBTTagCompound()) : null;
+            CURRENT_BOOTS_TAG = !isEmpty(CURRENT_BOOTS) ? CURRENT_BOOTS.func_1086_a(new NBTTagCompound()) : null;
             final List<String> NEW_CURRENT_BOOTS_TAGS = Lists.newArrayList();
 
             if (!NEW_CURRENT_BOOTS_TAGS.equals(CURRENT_BOOTS_TAGS)) {
@@ -465,31 +465,31 @@ public class TileEntityUtils {
         // Extend Argument Messages, if tags available
         if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
             for (String tagName : CURRENT_MAIN_HAND_ITEM_TAGS) {
-                mainItemMessage = StringUtils.replaceAnyCase(mainItemMessage, "&" + tagName + "&", CURRENT_MAIN_HAND_ITEM_TAG.getCompoundTag(tagName).toString());
+                mainItemMessage = StringUtils.replaceAnyCase(mainItemMessage, "&" + tagName + "&", CURRENT_MAIN_HAND_ITEM_TAG.func_743_k(tagName).toString());
             }
         }
 
         if (!CURRENT_HELMET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_HELMET_TAGS) {
-                helmetMessage = StringUtils.replaceAnyCase(helmetMessage, "&" + tagName + "&", CURRENT_HELMET_TAG.getCompoundTag(tagName).toString());
+                helmetMessage = StringUtils.replaceAnyCase(helmetMessage, "&" + tagName + "&", CURRENT_HELMET_TAG.func_743_k(tagName).toString());
             }
         }
 
         if (!CURRENT_CHEST_TAGS.isEmpty()) {
             for (String tagName : CURRENT_CHEST_TAGS) {
-                chestMessage = StringUtils.replaceAnyCase(chestMessage, "&" + tagName + "&", CURRENT_CHEST_TAG.getCompoundTag(tagName).toString());
+                chestMessage = StringUtils.replaceAnyCase(chestMessage, "&" + tagName + "&", CURRENT_CHEST_TAG.func_743_k(tagName).toString());
             }
         }
 
         if (!CURRENT_LEGS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_LEGS_TAGS) {
-                legsMessage = StringUtils.replaceAnyCase(legsMessage, "&" + tagName + "&", CURRENT_LEGS_TAG.getCompoundTag(tagName).toString());
+                legsMessage = StringUtils.replaceAnyCase(legsMessage, "&" + tagName + "&", CURRENT_LEGS_TAG.func_743_k(tagName).toString());
             }
         }
 
         if (!CURRENT_BOOTS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_BOOTS_TAGS) {
-                bootsMessage = StringUtils.replaceAnyCase(bootsMessage, "&" + tagName + "&", CURRENT_BOOTS_TAG.getCompoundTag(tagName).toString());
+                bootsMessage = StringUtils.replaceAnyCase(bootsMessage, "&" + tagName + "&", CURRENT_BOOTS_TAG.func_743_k(tagName).toString());
             }
         }
 
@@ -613,11 +613,11 @@ public class TileEntityUtils {
                 if (addExtraData) {
                     // If specified, also append the Tag's value to the placeholder String
                     final String tagValue =
-                            tags.equals(CURRENT_MAIN_HAND_ITEM_TAGS) ? CURRENT_MAIN_HAND_ITEM_TAG.getCompoundTag(tagName).toString() :
-                                    tags.equals(CURRENT_HELMET_TAGS) ? CURRENT_HELMET_TAG.getCompoundTag(tagName).toString() :
-                                            tags.equals(CURRENT_CHEST_TAGS) ? CURRENT_CHEST_TAG.getCompoundTag(tagName).toString() :
-                                                    tags.equals(CURRENT_LEGS_TAGS) ? CURRENT_LEGS_TAG.getCompoundTag(tagName).toString() :
-                                                            tags.equals(CURRENT_BOOTS_TAGS) ? CURRENT_BOOTS_TAG.getCompoundTag(tagName).toString() : null;
+                            tags.equals(CURRENT_MAIN_HAND_ITEM_TAGS) ? CURRENT_MAIN_HAND_ITEM_TAG.func_743_k(tagName).toString() :
+                                    tags.equals(CURRENT_HELMET_TAGS) ? CURRENT_HELMET_TAG.func_743_k(tagName).toString() :
+                                            tags.equals(CURRENT_CHEST_TAGS) ? CURRENT_CHEST_TAG.func_743_k(tagName).toString() :
+                                                    tags.equals(CURRENT_LEGS_TAGS) ? CURRENT_LEGS_TAG.func_743_k(tagName).toString() :
+                                                            tags.equals(CURRENT_BOOTS_TAGS) ? CURRENT_BOOTS_TAG.func_743_k(tagName).toString() : null;
 
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
                         finalString.append(String.format(" (%s \"%s\")",
@@ -643,7 +643,7 @@ public class TileEntityUtils {
      * Retrieves and Synchronizes detected Entities
      */
     public void getEntities() {
-        for (Block block : Block.blocksList) {
+        for (Block block : Block.field_345_n) {
             if (!isEmpty(block)) {
                 final String blockName = block.getClass().getSimpleName();
                 if (!BLOCK_NAMES.contains(blockName)) {
@@ -655,7 +655,7 @@ public class TileEntityUtils {
             }
         }
 
-        for (Item item : Item.itemsList) {
+        for (Item item : Item.field_233_c) {
             if (!isEmpty(item)) {
                 final String itemName = item.getClass().getSimpleName();
                 if (!ITEM_NAMES.contains(itemName)) {

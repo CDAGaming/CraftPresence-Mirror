@@ -1082,7 +1082,7 @@ public class StringUtils {
             final List<String> lines = splitTextByNewLine(message);
             if (!lines.isEmpty()) {
                 for (String line : lines) {
-                    player.sendChatMessage(line);
+                    player.func_461_a(line);
                 }
             }
         }

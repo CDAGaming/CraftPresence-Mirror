@@ -990,7 +990,7 @@ public class DiscordUtils {
 
         // Add Any Generalized Argument Data needed
         modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
-        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.inventory));
+        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.field_1666_b));
 
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
@@ -1193,10 +1193,8 @@ public class DiscordUtils {
             lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
-            CraftPresence.DIMENSIONS.clearClientData();
             CraftPresence.TILE_ENTITIES.clearClientData();
             CraftPresence.ENTITIES.clearClientData();
-            CraftPresence.BIOMES.clearClientData();
             CraftPresence.SERVER.clearClientData();
             CraftPresence.GUIS.clearClientData();
 

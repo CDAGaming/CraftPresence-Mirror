@@ -66,17 +66,12 @@ public class CommandUtils {
         CraftPresence.GUIS.onTick();
 
         if (CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED) {
-            CraftPresence.BIOMES.onTick();
-            CraftPresence.DIMENSIONS.onTick();
             CraftPresence.TILE_ENTITIES.onTick();
             CraftPresence.ENTITIES.onTick();
             CraftPresence.SERVER.onTick();
 
             if (forceUpdateRPC) {
                 ModUtils.TRANSLATOR.syncTranslations();
-                if (CraftPresence.DIMENSIONS.isInUse) {
-                    CraftPresence.DIMENSIONS.updateDimensionPresence();
-                }
                 if (CraftPresence.GUIS.isInUse) {
                     CraftPresence.GUIS.updateGUIPresence();
                 }
@@ -88,9 +83,6 @@ public class CommandUtils {
                 }
                 if (CraftPresence.SERVER.isInUse) {
                     CraftPresence.SERVER.updateServerPresence();
-                }
-                if (CraftPresence.BIOMES.isInUse) {
-                    CraftPresence.BIOMES.updateBiomePresence();
                 }
             }
         }

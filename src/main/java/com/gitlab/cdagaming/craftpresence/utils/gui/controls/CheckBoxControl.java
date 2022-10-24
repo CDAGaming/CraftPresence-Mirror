@@ -59,8 +59,8 @@ public class CheckBoxControl extends ExtendedButtonControl {
         super(id, xPos, yPos, displayString);
         is_Checked = isChecked;
         boxWidth = 11;
-        yCoord = 11;
-        xCoord = boxWidth + 2 + getFontRenderer().getStringWidth(getDisplayMessage());
+        field_934_b = 11;
+        field_935_a = boxWidth + 2 + getFontRenderer().func_871_a(getDisplayMessage());
     }
 
     /**
@@ -139,18 +139,18 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Draws this button to the screen.
      */
     @Override
-    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        setCurrentFontRender(mc.fontRenderer);
-        if (enabled2) {
+    public void func_561_a(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        setCurrentFontRender(mc.field_170_o);
+        if (field_936_h) {
             field_82253_i = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, buttonTextures);
-            mouseDragged(mc, mouseX, mouseY);
+            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), field_923_k, buttonTextures);
+            func_560_b(mc, mouseX, mouseY);
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (is_Checked)
-                drawCenteredString(getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
+                func_548_a(getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
 
-            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
+            func_547_b(getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
         }
     }
 
@@ -159,8 +159,8 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (isControlEnabled() && enabled2 && field_82253_i) {
+    public boolean func_562_c(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        if (isControlEnabled() && field_936_h && field_82253_i) {
             is_Checked = !is_Checked;
             return true;
         }

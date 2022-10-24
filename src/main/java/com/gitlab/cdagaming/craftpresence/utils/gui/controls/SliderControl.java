@@ -91,7 +91,7 @@ public class SliderControl extends ExtendedButtonControl {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.valueStep = valueStep;
-        this.displayString = displayString + ": " + denormalizedSlideValue;
+        this.field_939_e = displayString + ": " + denormalizedSlideValue;
         this.windowTitle = displayString;
     }
 
@@ -205,7 +205,7 @@ public class SliderControl extends ExtendedButtonControl {
      * 2 if it IS hovering over this button.
      */
     @Override
-    public int getHoverState(boolean mouseOver) {
+    public int func_558_a(boolean mouseOver) {
         return 0;
     }
 
@@ -214,8 +214,8 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (enabled2) {
+    protected void func_560_b(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        if (field_936_h) {
             if (dragging) {
                 sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
                 sliderValue = clamp(sliderValue, 0.0F, 1.0F);
@@ -226,7 +226,7 @@ public class SliderControl extends ExtendedButtonControl {
 
             onSlide();
             final int hoverValue = (field_82253_i ? 2 : 1) * 20;
-            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, zLevel, buttonTextures);
+            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, field_923_k, buttonTextures);
         }
     }
 
@@ -235,8 +235,8 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (super.mousePressed(mc, mouseX, mouseY)) {
+    public boolean func_562_c(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        if (super.func_562_c(mc, mouseX, mouseY)) {
             sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
             sliderValue = clamp(sliderValue, 0.0F, 1.0F);
             denormalizedSlideValue = denormalizeValue(sliderValue);
@@ -343,7 +343,7 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseReleased(MouseEvent e).
      */
     @Override
-    public void mouseReleased(int mouseX, int mouseY) {
+    public void func_559_a(int mouseX, int mouseY) {
         dragging = false;
     }
 

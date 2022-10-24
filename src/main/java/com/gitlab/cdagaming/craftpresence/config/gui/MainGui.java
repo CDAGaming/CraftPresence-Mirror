@@ -33,6 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.commands.CommandsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.MessageGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import net.minecraft.src.GuiScreen;
@@ -86,7 +87,7 @@ public class MainGui extends ExtendedScreen {
                         new Runnable() {
                             @Override
                             public void run() {
-                                CraftPresence.GUIS.openScreen(new BiomeSettingsGui(currentScreen));
+                                CraftPresence.GUIS.openScreen(new MessageGui(currentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("craftpresence.message.unsupported"))));
                             }
                         },
                         new Runnable() {
@@ -97,13 +98,6 @@ public class MainGui extends ExtendedScreen {
                                             StringUtils.splitTextByNewLine(
                                                     ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                             ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
-                                            ), MainGui.this, true
-                                    );
-                                } else {
-                                    CraftPresence.GUIS.drawMultiLineString(
-                                            StringUtils.splitTextByNewLine(
-                                                    ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                            CraftPresence.BIOMES.generateArgumentMessage())
                                             ), MainGui.this, true
                                     );
                                 }
@@ -119,7 +113,7 @@ public class MainGui extends ExtendedScreen {
                         new Runnable() {
                             @Override
                             public void run() {
-                                CraftPresence.GUIS.openScreen(new DimensionSettingsGui(currentScreen));
+                                CraftPresence.GUIS.openScreen(new MessageGui(currentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("craftpresence.message.unsupported"))));
                             }
                         },
                         new Runnable() {
@@ -130,13 +124,6 @@ public class MainGui extends ExtendedScreen {
                                             StringUtils.splitTextByNewLine(
                                                     ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                             ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
-                                            ), MainGui.this, true
-                                    );
-                                } else {
-                                    CraftPresence.GUIS.drawMultiLineString(
-                                            StringUtils.splitTextByNewLine(
-                                                    ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                                            CraftPresence.DIMENSIONS.generateArgumentMessage())
                                             ), MainGui.this, true
                                     );
                                 }
@@ -323,9 +310,9 @@ public class MainGui extends ExtendedScreen {
                                 }
 
                                 CraftPresence.GUIS.configGUIOpened = false;
-                                if (mc.thePlayer != null) {
+                                if (field_945_b.field_178_g != null) {
                                     CraftPresence.GUIS.openScreen((GuiScreen)null);
-                                    mc.func_6259_e();
+                                    field_945_b.func_123_e();
                                 } else {
                                     CraftPresence.GUIS.openScreen(parentScreen);
                                 }
@@ -444,7 +431,7 @@ public class MainGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    protected void func_580_a(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             if (CraftPresence.CONFIG.hasChanged || CraftPresence.CONFIG.hasClientPropertiesChanged || CraftPresence.CONFIG.flushClientProperties) {
                 CraftPresence.CONFIG.setupInitialValues();
@@ -455,7 +442,7 @@ public class MainGui extends ExtendedScreen {
             }
             CraftPresence.GUIS.configGUIOpened = false;
         }
-        super.keyTyped(typedChar, keyCode);
+        super.func_580_a(typedChar, keyCode);
     }
 
     private void syncRenderStates() {

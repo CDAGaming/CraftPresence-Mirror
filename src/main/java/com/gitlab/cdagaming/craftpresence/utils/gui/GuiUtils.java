@@ -117,7 +117,7 @@ public class GuiUtils {
      * @return The Default/Global Font Renderer
      */
     public static FontRenderer getDefaultFontRenderer() {
-        return CraftPresence.instance.fontRenderer;
+        return CraftPresence.instance.field_170_o;
     }
 
     /**
@@ -185,7 +185,7 @@ public class GuiUtils {
                         StringUtils.STRIP_COLOR_PATTERN.matcher(stringOfCharacter).find());
             }
 
-            charWidth += fontRenderer.getStringWidth(stringOfCharacter);
+            charWidth += fontRenderer.func_871_a(stringOfCharacter);
             if (flag) {
                 ++charWidth;
             }
@@ -214,14 +214,14 @@ public class GuiUtils {
         final float uScale = 1f / 0x100;
         final float vScale = 1f / 0x100;
 
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x, y + height, zLevel, u * uScale, ((v + height) * vScale));
-        tessellator.addVertexWithUV(x + width, y + height, zLevel, (u + width) * uScale, ((v + height) * vScale));
-        tessellator.addVertexWithUV(x + width, y, zLevel, (u + width) * uScale, (v * vScale));
-        tessellator.addVertexWithUV(x, y, zLevel, u * uScale, (v * vScale));
+        Tessellator tessellator = Tessellator.field_1512_a;
+        tessellator.func_977_b();
+        tessellator.func_983_a(x, y + height, zLevel, u * uScale, ((v + height) * vScale));
+        tessellator.func_983_a(x + width, y + height, zLevel, (u + width) * uScale, ((v + height) * vScale));
+        tessellator.func_983_a(x + width, y, zLevel, (u + width) * uScale, (v * vScale));
+        tessellator.func_983_a(x, y, zLevel, u * uScale, (v * vScale));
         GL11.glEnable(GL11.GL_ALPHA_TEST);
-        tessellator.draw();
+        tessellator.func_982_a();
     }
 
     /**
@@ -320,7 +320,7 @@ public class GuiUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enablePerGui : enabled;
-        isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.field_6289_L;
+        isFocused = CraftPresence.instance.field_169_p != null && CraftPresence.instance.field_150_I;
         final boolean needsUpdate = enabled && (GUI_NAMES.isEmpty() || GUI_CLASSES.isEmpty());
 
         if (needsUpdate) {
@@ -328,7 +328,7 @@ public class GuiUtils {
         }
 
         if (enabled) {
-            if (CraftPresence.instance.currentScreen != null) {
+            if (CraftPresence.instance.field_169_p != null) {
                 isInUse = true;
                 updateGUIData();
             } else if (isInUse) {
@@ -340,7 +340,7 @@ public class GuiUtils {
 
         // Fallback Switch for Config Gui, used for situations where the Gui is forced closed
         // Example: This can occur during server transitions where you transition to a different world
-        if (configGUIOpened && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
+        if (configGUIOpened && !(CraftPresence.instance.field_169_p instanceof ExtendedScreen)) {
             configGUIOpened = false;
         }
     }
@@ -351,17 +351,17 @@ public class GuiUtils {
      * @param targetScreen The target Gui Screen to display
      */
     public void openScreen(final GuiScreen targetScreen) {
-        CraftPresence.instance.displayGuiScreen(targetScreen);
+        CraftPresence.instance.func_128_a(targetScreen);
     }
 
     /**
      * Synchronizes Data related to this module, if needed
      */
     private void updateGUIData() {
-        if (CraftPresence.instance.currentScreen == null) {
+        if (CraftPresence.instance.field_169_p == null) {
             clearClientData();
         } else {
-            final GuiScreen newScreen = CraftPresence.instance.currentScreen;
+            final GuiScreen newScreen = CraftPresence.instance.field_169_p;
             final Class<?> newScreenClass = newScreen.getClass();
             final String newScreenName = MappingUtils.getClassName(newScreen);
 
@@ -478,7 +478,7 @@ public class GuiUtils {
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
-                int textLineWidth = fontRenderer.getStringWidth(textLine);
+                int textLineWidth = fontRenderer.func_871_a(textLine);
 
                 if (textLineWidth > tooltipTextWidth) {
                     tooltipTextWidth = textLineWidth;
@@ -518,7 +518,7 @@ public class GuiUtils {
                     }
 
                     for (String line : wrappedLine) {
-                        int lineWidth = fontRenderer.getStringWidth(line);
+                        int lineWidth = fontRenderer.func_871_a(line);
                         if (lineWidth > wrappedTooltipWidth) {
                             wrappedTooltipWidth = lineWidth;
                         }
@@ -666,7 +666,7 @@ public class GuiUtils {
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 String line = textLines.get(lineNumber);
-                fontRenderer.drawStringWithShadow(line, tooltipX, tooltipY, -1);
+                fontRenderer.func_874_a(line, tooltipX, tooltipY, -1);
 
                 if (lineNumber + 1 == titleLinesCount) {
                     tooltipY += 2;
@@ -719,7 +719,7 @@ public class GuiUtils {
      */
     public void drawBackground(final double width, final double height) {
         double widthDivider = 32.0D, heightDivider = 32.0D;
-        if (CraftPresence.instance.theWorld != null) {
+        if (CraftPresence.instance.field_180_e != null) {
             drawGradientRect(300, 0, 0, width, height, "-1072689136", "-804253680");
         } else {
             String backgroundCode = CraftPresence.CONFIG.guiBackgroundColor;
@@ -771,7 +771,7 @@ public class GuiUtils {
     public void renderSlider(int x, int y, int u, int v, int width, int height, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.field_171_n.func_1070_a(texLocation));
             }
         } catch (Exception ignored) {
         }
@@ -795,7 +795,7 @@ public class GuiUtils {
     public void renderButton(int x, int y, int width, int height, int hoverState, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.field_171_n.func_1070_a(texLocation));
             }
         } catch (Exception ignored) {
         }
@@ -842,7 +842,7 @@ public class GuiUtils {
     public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, double widthDivider, double heightDivider, boolean shouldBeDark, String texLocation) {
         try {
             if (texLocation != null) {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.field_171_n.func_1070_a(texLocation));
             }
         } catch (Exception ignored) {
         }
@@ -851,14 +851,14 @@ public class GuiUtils {
         GL11.glDisable(GL11.GL_FOG);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.setColorOpaque_I(shouldBeDark ? 4210752 : 16777215);
-        tessellator.addVertexWithUV(xPos, yPos + height, zLevel, 0.0D, (height / heightDivider + tint));
-        tessellator.addVertexWithUV(xPos + width, yPos + height, zLevel, (width / widthDivider), (height / heightDivider + tint));
-        tessellator.addVertexWithUV(xPos + width, yPos, zLevel, (width / widthDivider), tint);
-        tessellator.addVertexWithUV(xPos, yPos, zLevel, 0.0D, tint);
-        tessellator.draw();
+        Tessellator tessellator = Tessellator.field_1512_a;
+        tessellator.func_977_b();
+        tessellator.func_990_b(shouldBeDark ? 4210752 : 16777215);
+        tessellator.func_983_a(xPos, yPos + height, zLevel, 0.0D, (height / heightDivider + tint));
+        tessellator.func_983_a(xPos + width, yPos + height, zLevel, (width / widthDivider), (height / heightDivider + tint));
+        tessellator.func_983_a(xPos + width, yPos, zLevel, (width / widthDivider), tint);
+        tessellator.func_983_a(xPos, yPos, zLevel, 0.0D, tint);
+        tessellator.func_982_a();
     }
 
     /**
@@ -915,15 +915,15 @@ public class GuiUtils {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glShadeModel(GL11.GL_SMOOTH);
 
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.setColorRGBA_F(startRed, startGreen, startBlue, startAlpha);
-        tessellator.addVertex(right, top, zLevel);
-        tessellator.addVertex(left, top, zLevel);
-        tessellator.setColorRGBA_F(endRed, endGreen, endBlue, endAlpha);
-        tessellator.addVertex(left, bottom, zLevel);
-        tessellator.addVertex(right, bottom, zLevel);
-        tessellator.draw();
+        Tessellator tessellator = Tessellator.field_1512_a;
+        tessellator.func_977_b();
+        tessellator.func_986_a(startRed, startGreen, startBlue, startAlpha);
+        tessellator.func_991_a(right, top, zLevel);
+        tessellator.func_991_a(left, top, zLevel);
+        tessellator.func_986_a(endRed, endGreen, endBlue, endAlpha);
+        tessellator.func_991_a(left, bottom, zLevel);
+        tessellator.func_991_a(right, bottom, zLevel);
+        tessellator.func_982_a();
 
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glDisable(GL11.GL_BLEND);
@@ -948,7 +948,7 @@ public class GuiUtils {
                                           Pair<Integer, Integer> verticalBorderData, Pair<Integer, Integer> sideBorderData, double zLevel, String texLocation) {
         try {
             if (texLocation != null) {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.renderEngine.getTexture(texLocation));
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, CraftPresence.instance.field_171_n.func_1070_a(texLocation));
             }
         } catch (Exception ignored) {
         }

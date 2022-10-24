@@ -188,17 +188,17 @@ public class ExtendedButtonControl extends GuiButton {
     }
 
     @Override
-    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        setCurrentFontRender(mc.fontRenderer);
-        if (enabled2) {
+    public void func_561_a(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        setCurrentFontRender(mc.field_170_o);
+        if (field_936_h) {
             field_82253_i = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            final int hoverState = getHoverState(field_82253_i);
+            final int hoverState = func_558_a(field_82253_i);
 
             String backgroundCode = CraftPresence.CONFIG.buttonBackgroundColor;
             String texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                CraftPresence.GUIS.drawGradientRect(zLevel, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
+                CraftPresence.GUIS.drawGradientRect(field_923_k, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
             } else {
                 final boolean usingExternalTexture = ImageUtils.isExternalImage(backgroundCode);
 
@@ -220,13 +220,13 @@ public class ExtendedButtonControl extends GuiButton {
                     texLocation = ImageUtils.getTextureFromUrl(textureName, backgroundCode.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
                 }
 
-                CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
+                CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, field_923_k, texLocation);
             }
 
-            mouseDragged(mc, mouseX, mouseY);
+            func_560_b(mc, mouseX, mouseY);
             final int color;
 
-            if (!enabled) {
+            if (!field_937_g) {
                 color = 10526880;
             } else if (field_82253_i) {
                 color = 16777120;
@@ -234,7 +234,7 @@ public class ExtendedButtonControl extends GuiButton {
                 color = 14737632;
             }
 
-            drawCenteredString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
+            func_548_a(getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
         }
     }
 
@@ -244,7 +244,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Current Width of this Control
      */
     public int getControlWidth() {
-        return xCoord;
+        return field_935_a;
     }
 
     /**
@@ -253,7 +253,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Current Height of this Control
      */
     public int getControlHeight() {
-        return yCoord;
+        return field_934_b;
     }
 
     /**
@@ -262,7 +262,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return the Current X Position of this Control
      */
     public int getControlPosX() {
-        return xPosition;
+        return field_941_c;
     }
 
     /**
@@ -271,7 +271,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return the Current Y Position of this Control
      */
     public int getControlPosY() {
-        return yPosition;
+        return field_940_d;
     }
 
     /**
@@ -373,7 +373,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The control's current text contents
      */
     public String getControlMessage() {
-        return this.displayString;
+        return this.field_939_e;
     }
 
     /**
@@ -382,7 +382,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        this.displayString = newMessage;
+        this.field_939_e = newMessage;
     }
 
     /**
@@ -391,7 +391,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return Whether the control is currently active or enabled
      */
     public boolean isControlEnabled() {
-        return this.enabled;
+        return this.field_937_g;
     }
 
     /**
@@ -400,7 +400,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @param isEnabled The new enable state for this control
      */
     public void setControlEnabled(final boolean isEnabled) {
-        this.enabled = isEnabled;
+        this.field_937_g = isEnabled;
     }
 
     /**
@@ -409,7 +409,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return Whether the control is currently visible
      */
     public boolean isControlVisible() {
-        return this.enabled2;
+        return this.field_936_h;
     }
 
     /**
@@ -418,6 +418,6 @@ public class ExtendedButtonControl extends GuiButton {
      * @param isVisible The new visibility state for this control
      */
     public void setControlVisible(final boolean isVisible) {
-        this.enabled2 = isVisible;
+        this.field_936_h = isVisible;
     }
 }

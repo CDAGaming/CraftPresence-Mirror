@@ -195,7 +195,7 @@ public class PaginatedScreen extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    protected void func_580_a(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_UP && currentPage > startPage) {
             currentPage--;
         }
@@ -204,7 +204,7 @@ public class PaginatedScreen extends ExtendedScreen {
             currentPage++;
         }
 
-        super.keyTyped(typedChar, keyCode);
+        super.func_580_a(typedChar, keyCode);
     }
 
     /**
@@ -218,7 +218,7 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     public void renderString(String text, float xPos, float yPos, int color, int renderTarget) {
         if (renderTarget == currentPage) {
-            getFontRenderer().drawStringWithShadow(text, Math.round(xPos), Math.round(yPos), color);
+            getFontRenderer().func_874_a(text, Math.round(xPos), Math.round(yPos), color);
         }
     }
 

@@ -91,7 +91,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param parentScreen The Parent Screen for this Instance
      */
     public ExtendedScreen(GuiScreen parentScreen) {
-        mc = CraftPresence.instance;
+        field_945_b = CraftPresence.instance;
         currentScreen = this;
         this.parentScreen = parentScreen;
         setDebugMode(ModUtils.IS_DEV);
@@ -127,15 +127,15 @@ public class ExtendedScreen extends GuiScreen {
      * Responsible for Setting preliminary data
      */
     @Override
-    public void initGui() {
+    public void func_575_a() {
         // Clear Data before Initialization
-        controlList.clear();
+        field_949_e.clear();
         extendedControls.clear();
         extendedLists.clear();
 
         Keyboard.enableRepeatEvents(true);
         initializeUi();
-        super.initGui();
+        super.func_575_a();
         initialized = true;
     }
 
@@ -156,9 +156,9 @@ public class ExtendedScreen extends GuiScreen {
      * @param h    The New Screen Height
      */
     @Override
-    public void setWorldAndResolution(@Nonnull Minecraft mcIn, int w, int h) {
+    public void func_563_a(@Nonnull Minecraft mcIn, int w, int h) {
         initialized = false;
-        super.setWorldAndResolution(mcIn, w, h);
+        super.func_563_a(mcIn, w, h);
     }
 
     /**
@@ -170,8 +170,8 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Nonnull
     protected <T extends Gui> T addControl(@Nonnull T buttonIn) {
-        if (buttonIn instanceof GuiButton && !controlList.contains(buttonIn)) {
-            controlList.add((GuiButton) buttonIn);
+        if (buttonIn instanceof GuiButton && !field_949_e.contains(buttonIn)) {
+            field_949_e.add((GuiButton) buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
@@ -231,7 +231,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param partialTicks The Rendering Tick Rate
      */
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void func_571_a(int mouseX, int mouseY, float partialTicks) {
         // Ensures initialization events have run first, preventing an NPE
         if (initialized) {
             renderCriticalData();
@@ -252,7 +252,7 @@ public class ExtendedScreen extends GuiScreen {
                 }
             }
 
-            super.drawScreen(mouseX, mouseY, partialTicks);
+            super.func_571_a(mouseX, mouseY, partialTicks);
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
@@ -274,9 +274,9 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon Mouse Input
      */
     @Override
-    public void handleMouseInput() {
+    public void func_566_e() {
         if (initialized) {
-            super.handleMouseInput();
+            super.func_566_e();
         }
     }
 
@@ -286,11 +286,11 @@ public class ExtendedScreen extends GuiScreen {
      * @param button The Button to trigger upon
      */
     @Override
-    protected void actionPerformed(@Nonnull GuiButton button) {
+    protected void func_572_a(@Nonnull GuiButton button) {
         if (button instanceof ExtendedButtonControl) {
             ((ExtendedButtonControl) button).onClick();
         }
-        super.actionPerformed(button);
+        super.func_572_a(button);
     }
 
     /**
@@ -300,7 +300,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param keyCode   The KeyCode entered, if any
      */
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    protected void func_580_a(char typedChar, int keyCode) {
         if (initialized) {
             if (keyCode == Keyboard.KEY_ESCAPE) {
                 CraftPresence.GUIS.openScreen(parentScreen);
@@ -324,7 +324,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param mouseButton The Event Mouse Button Clicked
      */
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    protected void func_565_a(int mouseX, int mouseY, int mouseButton) {
         if (initialized) {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
@@ -332,7 +332,7 @@ public class ExtendedScreen extends GuiScreen {
                     textField.func_22069_a(mouseX, mouseY, mouseButton);
                 }
             }
-            super.mouseClicked(mouseX, mouseY, mouseButton);
+            super.func_565_a(mouseX, mouseY, mouseButton);
         }
     }
 
@@ -340,7 +340,7 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger on each tick
      */
     @Override
-    public void updateScreen() {
+    public void func_570_g() {
         if (initialized) {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
@@ -355,7 +355,7 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon exiting the Gui
      */
     @Override
-    public void onGuiClosed() {
+    public void func_576_h() {
         initialized = false;
         CraftPresence.GUIS.resetIndex();
         Keyboard.enableRepeatEvents(false);
@@ -408,7 +408,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param color The color to render the text in
      */
     public void renderString(String text, float xPos, float yPos, int color) {
-        getFontRenderer().drawStringWithShadow(text, Math.round(xPos), Math.round(yPos), color);
+        getFontRenderer().func_874_a(text, Math.round(xPos), Math.round(yPos), color);
     }
 
     /**
@@ -418,7 +418,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the string's width from the font renderer
      */
     public int getStringWidth(final String string) {
-        return getFontRenderer().getStringWidth(string);
+        return getFontRenderer().func_871_a(string);
     }
 
     /**
@@ -455,7 +455,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the width of the screen
      */
     public int getScreenWidth() {
-        return width;
+        return field_951_c;
     }
 
     /**
@@ -464,7 +464,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the height of the screen
      */
     public int getScreenHeight() {
-        return height;
+        return field_950_d;
     }
 
     /**
@@ -473,7 +473,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Renderer for this Screen
      */
     public FontRenderer getFontRenderer() {
-        return mc.fontRenderer != null ? mc.fontRenderer : GuiUtils.getDefaultFontRenderer();
+        return field_945_b.field_170_o != null ? field_945_b.field_170_o : GuiUtils.getDefaultFontRenderer();
     }
 
     /**

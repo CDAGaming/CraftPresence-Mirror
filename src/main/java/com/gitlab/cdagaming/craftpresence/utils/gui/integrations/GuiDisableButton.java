@@ -64,7 +64,7 @@ public class GuiDisableButton extends Gui {
     public void func_22072_a(char c, int i) {
         if (this.field_22081_b && this.field_22082_a) {
             if (c == 22) {
-                String var3 = GuiScreen.getClipboardString();
+                String var3 = GuiScreen.func_574_c();
                 if (var3 == null) {
                     var3 = "";
                 }
@@ -100,13 +100,13 @@ public class GuiDisableButton extends Gui {
     }
 
     public void func_22067_c() {
-        this.drawRect(this.field_22079_d - 1, this.field_22078_e - 1, this.field_22079_d + this.field_22077_f + 1, this.field_22078_e + this.field_22076_g + 1, -6250336);
-        this.drawRect(this.field_22079_d, this.field_22078_e, this.field_22079_d + this.field_22077_f, this.field_22078_e + this.field_22076_g, -16777216);
+        this.func_551_a(this.field_22079_d - 1, this.field_22078_e - 1, this.field_22079_d + this.field_22077_f + 1, this.field_22078_e + this.field_22076_g + 1, -6250336);
+        this.func_551_a(this.field_22079_d, this.field_22078_e, this.field_22079_d + this.field_22077_f, this.field_22078_e + this.field_22076_g, -16777216);
         if (this.field_22081_b) {
             boolean var1 = this.field_22082_a && this.field_22073_k / 6 % 2 == 0;
-            this.drawString(this.field_22080_c, this.field_22075_h + (var1 ? "_" : ""), this.field_22079_d + 4, this.field_22078_e + (this.field_22076_g - 8) / 2, 14737632);
+            this.func_547_b(this.field_22080_c, this.field_22075_h + (var1 ? "_" : ""), this.field_22079_d + 4, this.field_22078_e + (this.field_22076_g - 8) / 2, 14737632);
         } else {
-            this.drawString(this.field_22080_c, this.field_22075_h, this.field_22079_d + 4, this.field_22078_e + (this.field_22076_g - 8) / 2, 7368816);
+            this.func_547_b(this.field_22080_c, this.field_22075_h, this.field_22079_d + 4, this.field_22078_e + (this.field_22076_g - 8) / 2, 7368816);
         }
 
     }

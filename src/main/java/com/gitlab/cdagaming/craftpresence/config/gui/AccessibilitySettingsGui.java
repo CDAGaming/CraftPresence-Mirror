@@ -415,7 +415,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
-        super.keyTyped(typedChar, keyCode);
+    protected void func_580_a(char typedChar, int keyCode) {
+        super.func_580_a(typedChar, keyCode);
     }
 }

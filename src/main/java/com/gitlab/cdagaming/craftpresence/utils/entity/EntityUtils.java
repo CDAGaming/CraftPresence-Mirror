@@ -160,8 +160,8 @@ public class EntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == 1 ? CraftPresence.instance.objectMouseOver.entityHit : null;
-        final Entity NEW_CURRENT_RIDING = CraftPresence.player.ridingEntity;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.field_161_x != null && CraftPresence.instance.field_161_x.field_1167_a == 1 ? CraftPresence.instance.field_161_x.field_1168_g : null;
+        final Entity NEW_CURRENT_RIDING = CraftPresence.player.field_616_af;
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
 
@@ -246,13 +246,13 @@ public class EntityUtils {
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_TARGET_TAGS) {
-                entityTargetArgs.add(new Pair<>("&" + tagName + "&", CURRENT_TARGET_TAG.getCompoundTag(tagName).toString()));
+                entityTargetArgs.add(new Pair<>("&" + tagName + "&", CURRENT_TARGET_TAG.func_743_k(tagName).toString()));
             }
         }
 
         if (!CURRENT_RIDING_TAGS.isEmpty()) {
             for (String tagName : CURRENT_RIDING_TAGS) {
-                entityRidingArgs.add(new Pair<>("&" + tagName + "&", CURRENT_RIDING_TAG.getCompoundTag(tagName).toString()));
+                entityRidingArgs.add(new Pair<>("&" + tagName + "&", CURRENT_RIDING_TAG.func_743_k(tagName).toString()));
             }
         }
 
@@ -351,8 +351,8 @@ public class EntityUtils {
                 if (addExtraData) {
                     // If specified, also append the Tag's value to the placeholder String
                     final String tagValue =
-                            tags.equals(CURRENT_TARGET_TAGS) ? CURRENT_TARGET_TAG.getCompoundTag(tagName).toString() :
-                                    tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.getCompoundTag(tagName).toString() : null;
+                            tags.equals(CURRENT_TARGET_TAGS) ? CURRENT_TARGET_TAG.func_743_k(tagName).toString() :
+                                    tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.func_743_k(tagName).toString() : null;
 
                     if (!StringUtils.isNullOrEmpty(tagValue)) {
                         finalString.append(String.format(" (%s \"%s\")",

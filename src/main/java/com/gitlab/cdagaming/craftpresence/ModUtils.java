@@ -119,7 +119,7 @@ public class ModUtils {
      * If this Application is in the Alpha Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
      */
-    public final static boolean IS_LEGACY_ALPHA = false;
+    public final static boolean IS_LEGACY_ALPHA = true;
     /**
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)

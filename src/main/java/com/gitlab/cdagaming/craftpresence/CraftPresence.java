@@ -37,8 +37,6 @@ import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
-import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
-import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
@@ -113,16 +111,6 @@ public class CraftPresence {
      * The {@link ServerUtils} Instance for this Mod
      */
     public static ServerUtils SERVER = new ServerUtils();
-
-    /**
-     * The {@link BiomeUtils} Instance for this Mod
-     */
-    public static BiomeUtils BIOMES = new BiomeUtils();
-
-    /**
-     * The {@link DimensionUtils} Instance for this Mod
-     */
-    public static DimensionUtils DIMENSIONS = new DimensionUtils();
 
     /**
      * The {@link EntityUtils} Instance for this Mod
@@ -248,8 +236,8 @@ public class CraftPresence {
         if (!closing) {
             instance = getMinecraftInstance();
             if (initialized) {
-                session = instance.field_6320_i;
-                player = instance.thePlayer;
+                session = instance.field_176_i;
+                player = instance.field_178_g;
                 // Synchronize Developer and Verbose Modes with Config Options, if they were not overridden pre-setup
                 ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.debugMode : ModUtils.IS_DEV;
                 ModUtils.IS_VERBOSE = !isVerboseStatusOverridden ? CONFIG.verboseMode : ModUtils.IS_VERBOSE;
@@ -260,7 +248,7 @@ public class CraftPresence {
                     if (!SYSTEM.HAS_LOADED) {
                         // Ensure Loading Presence has already passed, before any other type of presence displays
                         CommandUtils.setLoadingPresence();
-                    } else if (!CommandUtils.isInMainMenu && (!DIMENSIONS.isInUse && !BIOMES.isInUse && !TILE_ENTITIES.isInUse && !ENTITIES.isInUse && !SERVER.isInUse)) {
+                    } else if (!CommandUtils.isInMainMenu && (!TILE_ENTITIES.isInUse && !ENTITIES.isInUse && !SERVER.isInUse)) {
                         CommandUtils.setMainMenuPresence();
                     } else if (player != null && (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu)) {
                         CommandUtils.isInMainMenu = false;
@@ -282,7 +270,7 @@ public class CraftPresence {
                     }
                 }
             } else if (instance != null) {
-                session = instance.field_6320_i;
+                session = instance.field_176_i;
                 if (session != null) {
                     init();
                 }
@@ -299,7 +287,7 @@ public class CraftPresence {
     public static void ThrowException(String message, Throwable e) {
         Minecraft game = getMinecraftInstance();
         if (game != null) {
-            game.handleEntityTeleport(new UnexpectedThrowable(message, e));
+            game.func_110_a(new UnexpectedThrowable(message, e));
         } else {
             throw new RuntimeException(e);
         }

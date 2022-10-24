@@ -125,7 +125,7 @@ public class SelectorGui extends ExtendedScreen {
 
             scrollList = addList(
                     new ScrollableListControl(
-                            mc,
+                            field_945_b,
                             getScreenWidth(), getScreenHeight(),
                             32, getScreenHeight() - 45, renderType != RenderType.None && !CraftPresence.CONFIG.stripExtraGuiElements ? 45 : 18,
                             itemList, originalValue,
