@@ -1061,14 +1061,14 @@ public class DiscordUtils {
             } else {
                 result = cachedImageData.get(primaryKey);
                 if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
-                    lastRequestedImageData.setFirst(primaryKey);
                     if (showLogging && !result.equals(primaryKey)) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
                         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
                     }
-                    lastRequestedImageData.setSecond(result);
                 }
             }
+            lastRequestedImageData.setFirst(primaryKey);
+            lastRequestedImageData.setSecond(result);
         } else {
             result = "";
         }
