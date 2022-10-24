@@ -209,9 +209,15 @@ public class DiscordUtils {
      */
     public List<Pair<String, String>> generalArgs = Lists.newArrayList();
     /**
-     * A Mapping of the Last Requested Image Data
-     * <p>Used to prevent sending duplicate packets and cache data for repeated images in other areas
+     * A Mapping of the Last Requested Image Cache Data
+     * <p>Used to prevent sending duplicate packets
      * <p>Format: lastAttemptedKey, lastResultingKey
+     */
+    private Pair<String, String> lastRequestedImageData = new Pair<>();
+    /**
+     * A Mapping of the Last Requested Image Data
+     * <p>Used to cache data for repeated images in other areas
+     * <p>Format: evalKey, resultingKey
      */
     private final Map<String, String> cachedImageData = Maps.newHashMap();
     /**
@@ -1054,6 +1060,14 @@ public class DiscordUtils {
                 result = finalKey;
             } else {
                 result = cachedImageData.get(primaryKey);
+                if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
+                    lastRequestedImageData.setFirst(primaryKey);
+                    if (showLogging && !result.equals(primaryKey)) {
+                        ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
+                        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
+                    }
+                    lastRequestedImageData.setSecond(result);
+                }
             }
         } else {
             result = "";
@@ -1161,6 +1175,7 @@ public class DiscordUtils {
             clearPresenceData(new Tuple<>(true, true, false));
 
             CURRENT_USER = null;
+            lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
             CraftPresence.DIMENSIONS.clearClientData();
