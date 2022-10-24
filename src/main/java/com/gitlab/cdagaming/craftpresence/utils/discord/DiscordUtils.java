@@ -1019,6 +1019,7 @@ public class DiscordUtils {
      */
     public String imageOf(final boolean allowNull, final boolean showLogging, final String... evalStrings) {
         // Ensures Assets were fully synced from the Client ID before running
+        String result;
         if (DiscordAssetUtils.syncCompleted && !StringUtils.isNullOrEmpty(evalStrings[0])) {
             final String primaryKey = evalStrings[0];
             if (!cachedImageData.containsKey(primaryKey)) {
@@ -1027,6 +1028,9 @@ public class DiscordUtils {
                 for (int i = 0; i < evalStrings.length; ) {
                     final String evalString = evalStrings[i];
                     if (DiscordAssetUtils.contains(evalString)) {
+                        if (showLogging && !evalString.equals(primaryKey)) {
+                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.fallback", primaryKey, evalString));
+                        }
                         finalKey = evalString;
                         break;
                     } else {
@@ -1047,13 +1051,14 @@ public class DiscordUtils {
                 }
 
                 cachedImageData.put(primaryKey, finalKey);
-                return finalKey;
+                result = finalKey;
             } else {
-                return cachedImageData.get(primaryKey);
+                result = cachedImageData.get(primaryKey);
             }
         } else {
-            return "";
+            result = "";
         }
+        return result;
     }
 
     /**
