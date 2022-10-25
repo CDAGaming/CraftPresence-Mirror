@@ -26,18 +26,66 @@ package com.gitlab.cdagaming.craftpresence.config.migrators;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+@SuppressWarnings("ConstantConditions")
 public class Legacy2Modern implements DataMigrator {
     private final File configFile;
     private final String encoding;
     private final Properties properties = new Properties();
+    private final String translationPrefix = "gui.config.name.";
+
+    // oldName -> newName
+    private final Map<String, String> configNameMappings = ImmutableMap.<String, String>builder()
+            .put("preferredClient", "preferredClientLevel")
+            .put("enablePerGuiSystem", "enablePerGui")
+            .put("gameStateMessageFormat", "gameStateMessage")
+            .put("enablePerEntitySystem", "enablePerEntity")
+            .put("enablePerItemSystem", "enablePerItem")
+            .put("playerCoordinatePlaceholder", "playerCoordinatePlaceholderMessage")
+            .put("configGuiKeybind", "configKeyCode")
+            .put("largeImageTextFormat", "largeImageMessage")
+            .put("playerInnerInfoPlaceholder", "innerPlayerPlaceholderMessage")
+            .put("detectMcupdaterInstance", "detectMCUpdaterInstance") // Corrected casing due to camel-case side-effect
+            .put("singleplayerGameMessage", "singlePlayerMessage")
+            .put("playerOuterInfoPlaceholder", "outerPlayerPlaceholderMessage")
+            .put("smallImageKeyFormat", "smallImageKey")
+            .put("showElapsedTime", "showTime")
+            .put("playerHealthPlaceholder", "playerHealthPlaceholderMessage")
+            .put("worldDataPlaceholder", "worldPlaceholderMessage")
+            .put("detectMultimcInstance", "detectMultiMCManifest")
+            .put("playerListPlaceholder", "playerAmountPlaceholderMessage")
+            .put("lanGameMessage", "lanMessage")
+            .put("fallbackPackPlaceholder", "fallbackPackPlaceholderMessage")
+            .put("playerItemsPlaceholder", "playerItemsPlaceholderMessage")
+            .put("modsPlaceholder", "modsPlaceholderMessage")
+            .put("roundingSize", "roundSize")
+            .put("partyPrivacy", "partyPrivacyLevel")
+            .put("extraButtonMessages", "buttonMessages")
+            .put("detailsMessageFormat", "detailsMessage")
+            .put("reducedBackgroundTint", "showBackgroundAsDark")
+            .put("largeImageKeyFormat", "largeImageKey")
+            .put("modpackMessage", "packPlaceholderMessage")
+            .put("smallImageTextFormat", "smallImageMessage")
+            .build();
+    private final List<String> excludedOptions = Lists.newArrayList(
+            "schemaVersion", "splitCharacter",
+            "guiBackgroundColor", "buttonBackgroundColor", "tooltipBackgroundColor", "tooltipBorderColor"
+    );
 
     public Legacy2Modern(File configFile, String encoding) {
         this.configFile = configFile;
@@ -45,8 +93,7 @@ public class Legacy2Modern implements DataMigrator {
     }
 
     @Override
-    public Config apply(Config instance, Object... args) {
-        // TODO
+    public Config apply(Config instance, JsonElement rawJson, Object... args) {
         Reader configReader = null;
         FileInputStream inputStream = null;
 
@@ -58,7 +105,58 @@ public class Legacy2Modern implements DataMigrator {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
             ex.printStackTrace();
         } finally {
-            //
+            String originalName, newName;
+            Object originalValue, currentValue, newValue;
+            Class<?> expectedClass;
+
+            final String splitCharacter = properties.getProperty("splitCharacter", ";");
+            for (String property : properties.stringPropertyNames()) {
+                originalName = StringUtils.formatToCamel(property);
+                if (!excludedOptions.contains(originalName)) {
+                    newName = configNameMappings.getOrDefault(originalName, originalName);
+                    originalValue = properties.get(property);
+                    newValue = currentValue = StringUtils.lookupObject(Config.class, instance, newName);
+
+                    if (currentValue != null) {
+                        expectedClass = currentValue.getClass();
+                        if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
+                                StringUtils.isValidBoolean(originalValue)) {
+                            newValue = Boolean.parseBoolean(originalValue.toString());
+                        } else if ((expectedClass == int.class || expectedClass == Integer.class) &&
+                                StringUtils.getValidInteger(originalValue).getFirst()) {
+                            final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(originalValue);
+                            if (boolData.getFirst()) {
+                                newValue = boolData.getSecond();
+                            }
+                        } else if (currentValue instanceof Map) {
+                            final String convertedString = StringUtils.removeMatches(StringUtils.getMatches("\\[([^\\s]+?)\\]", originalValue), null, 1);
+                            final String[] oldArray;
+
+                            if (!StringUtils.isNullOrEmpty(convertedString) &&
+                                    (convertedString.startsWith("[") && convertedString.endsWith("]"))) {
+                                // If Valid, interpret into formatted Array
+                                final String preArrayString = convertedString.replaceAll("\\[", "").replaceAll("]", "");
+                                if (preArrayString.contains(", ")) {
+                                    oldArray = preArrayString.split(", ");
+                                } else if (preArrayString.contains(",")) {
+                                    oldArray = preArrayString.split(",");
+                                } else {
+                                    oldArray = new String[]{preArrayString};
+                                }
+                            }
+
+                            // TODO: Convert from Array to Map
+                        } else {
+                            newValue = originalValue.toString();
+                        }
+
+                        if (!currentValue.equals(newValue)) {
+                            ModUtils.LOG.info("Migrating modified legacy property " + originalName + " to JSON property " + newName);
+                            StringUtils.updateField(Config.class, instance, new Tuple<>(newName, newValue, null));
+                        }
+                    }
+                }
+            }
         }
 
         try {

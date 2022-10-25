@@ -25,7 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.config.migrators;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
+import com.google.gson.JsonElement;
 
 public interface DataMigrator {
-    Config apply(Config instance, Object... args);
+    Config apply(Config instance, JsonElement rawJson, Object... args);
 }

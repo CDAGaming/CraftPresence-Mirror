@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.io.*;
@@ -193,28 +194,28 @@ public final class Config implements Serializable {
         isNewFile = false;
     }
 
-    public void handleMigrations(final int oldVer, final int newVer) {
+    public void handleMigrations(final JsonElement rawJson, final int oldVer, final int newVer) {
         // TODO
         if (isNewFile && getLegacyFile().exists()) {
-            new Legacy2Modern(getLegacyFile(), "UTF-8").apply(this);
+            new Legacy2Modern(getLegacyFile(), "UTF-8").apply(this, rawJson);
         }
     }
 
-    public void handleVersionChange(final int oldVer, final int newVer) {
+    public void handleVersionChange(final JsonElement rawJson, final int oldVer, final int newVer) {
         if (!isNewFile) {
             // TODO
         }
     }
 
-    public void handleSync() {
+    public void handleSync(final JsonElement rawJson) {
         if (_schemaVersion != VERSION) {
             int oldVer = _schemaVersion;
-            handleMigrations(oldVer, VERSION);
+            handleMigrations(rawJson, oldVer, VERSION);
             _schemaVersion = VERSION;
         }
         if (_lastMCVersionId != MC_VERSION) {
             int oldVer = _lastMCVersionId;
-            handleVersionChange(oldVer, MC_VERSION);
+            handleVersionChange(rawJson, oldVer, MC_VERSION);
             _lastMCVersionId = MC_VERSION;
         }
     }
@@ -259,6 +260,7 @@ public final class Config implements Serializable {
         Reader configReader = null;
         InputStream inputStream = null;
         Config config = null;
+        JsonElement rawJson = null;
 
         // Ensure critical data is setup
         MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
@@ -270,14 +272,15 @@ public final class Config implements Serializable {
             GsonBuilder builder = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting();
             Gson gson = builder.create();
             config = gson.fromJson(configReader, Config.class);
+            rawJson = gson.toJsonTree(config);
             boolean isNew = (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
             if (forceCreate || isNew) {
                 config = new Config();
                 config.isNewFile = isNew;
-                config.handleSync();
+                config.handleSync(rawJson);
                 config.save();
             } else {
-                config.handleSync();
+                config.handleSync(rawJson);
             }
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
@@ -298,7 +301,7 @@ public final class Config implements Serializable {
             if (config == null) {
                 config = new Config();
                 config.isNewFile = true;
-                config.handleSync();
+                config.handleSync(null);
                 config.save();
             }
         }
