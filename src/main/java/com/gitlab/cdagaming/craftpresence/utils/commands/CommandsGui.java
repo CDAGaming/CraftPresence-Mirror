@@ -152,7 +152,7 @@ public class CommandsGui extends ExtendedScreen {
                 if (executionCommandArgs[0].equalsIgnoreCase("request")) {
                     if (executionCommandArgs.length == 1) {
                         if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
-                            if (CraftPresence.CONFIG.enableJoinRequest) {
+                            if (CraftPresence.CONFIG.enableJoinRequests) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.info", CraftPresence.CLIENT.REQUESTER_USER.getName(), CraftPresence.SYSTEM.TIMER);
                                 CraftPresence.CLIENT.awaitingReply = true;
                             } else {
@@ -166,7 +166,7 @@ public class CommandsGui extends ExtendedScreen {
                             CraftPresence.CLIENT.awaitingReply = false;
                         }
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
-                        if (CraftPresence.CLIENT.awaitingReply && CraftPresence.CONFIG.enableJoinRequest) {
+                        if (CraftPresence.CLIENT.awaitingReply && CraftPresence.CONFIG.enableJoinRequests) {
                             if (executionCommandArgs[1].equalsIgnoreCase("accept")) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.accept", CraftPresence.CLIENT.REQUESTER_USER.getName());
                                 CraftPresence.CLIENT.ipcInstance.respondToJoinRequest(CraftPresence.CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.ACCEPT);

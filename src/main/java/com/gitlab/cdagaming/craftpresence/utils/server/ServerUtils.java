@@ -402,7 +402,7 @@ public class ServerUtils {
                 // &players& Argument = Current and Maximum Allowed Players in Server/World
                 item = "&players&";
                 subItem = subArgumentFormat + item.substring(1);
-                if ((currentServerMessage.toLowerCase().contains(item) || matchingArgs.contains(subItem.toLowerCase()) || CraftPresence.CONFIG.enableJoinRequest) && (newCurrentPlayers != currentPlayers || newMaxPlayers != maxPlayers)) {
+                if ((currentServerMessage.toLowerCase().contains(item) || matchingArgs.contains(subItem.toLowerCase()) || CraftPresence.CONFIG.enableJoinRequests) && (newCurrentPlayers != currentPlayers || newMaxPlayers != maxPlayers)) {
                     currentPlayers = newCurrentPlayers;
                     maxPlayers = newMaxPlayers;
                     queuedForUpdate = true;
@@ -493,7 +493,7 @@ public class ServerUtils {
         boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            if (CraftPresence.CONFIG.enableJoinRequest) {
+            if (CraftPresence.CONFIG.enableJoinRequests) {
                 requestedServerData = new ServerData(serverName, serverIP, false);
             } else {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.config.disabled.enable_join_request"));
@@ -602,7 +602,7 @@ public class ServerUtils {
                 //
                 // Note: The party privacy level is appended by modulus division to prevent
                 // it being anything other then valid privacy levels
-                if (CraftPresence.CONFIG.enableJoinRequest) {
+                if (CraftPresence.CONFIG.enableJoinRequests) {
                     if (!StringUtils.isNullOrEmpty(currentServer_Name) && !currentServer_Name.equalsIgnoreCase(CraftPresence.CONFIG.defaultServerName)) {
                         CraftPresence.CLIENT.PARTY_ID = "Join Server: " + currentServer_Name;
                     } else {

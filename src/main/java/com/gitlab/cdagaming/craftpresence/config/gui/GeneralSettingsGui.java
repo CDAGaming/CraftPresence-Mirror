@@ -220,7 +220,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(7, -40),
                         "gui.config.name.general.enable_join_request",
-                        CraftPresence.CONFIG.enableJoinRequest,
+                        CraftPresence.CONFIG.enableJoinRequests,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -330,10 +330,10 @@ public class GeneralSettingsGui extends ExtendedScreen {
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CraftPresence.CONFIG.detectWorldData = detectWorldDataButton.isChecked();
                             }
-                            if (enableJoinRequestButton.isChecked() != CraftPresence.CONFIG.enableJoinRequest) {
+                            if (enableJoinRequestButton.isChecked() != CraftPresence.CONFIG.enableJoinRequests) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.enableJoinRequest = enableJoinRequestButton.isChecked();
+                                CraftPresence.CONFIG.enableJoinRequests = enableJoinRequestButton.isChecked();
                             }
                             if (resetTimeOnInitButton.isChecked() != CraftPresence.CONFIG.resetTimeOnInit) {
                                 CraftPresence.CONFIG.hasChanged = true;

@@ -70,7 +70,7 @@ public final class Config implements Serializable {
     public boolean detectWorldData = true;
     public String clientId = "450485984333660181";
     public String defaultIcon = "grass";
-    public boolean enableJoinRequest = false;
+    public boolean enableJoinRequests = false;
     public int partyPrivacyLevel = PartyPrivacy.Public.ordinal();
     public int preferredClientLevel = DiscordBuild.ANY.ordinal();
     public boolean resetTimeOnInit = false;
