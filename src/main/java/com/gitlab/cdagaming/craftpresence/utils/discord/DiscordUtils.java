@@ -76,6 +76,9 @@ public class DiscordUtils {
             "&DEFAULT&", "&MAINMENU&", "&PACK&",
             "&DIMENSION&", "&BIOME&", "&SERVER&"
     );
+    /**
+     * A list of the valid operators for this application
+     */
     public static final Map<String, Pair<String, String>> validOperators = ImmutableMap.<String, Pair<String, String>>builder()
             .put("|", new Pair<>("\\|", "&[^&]*&[\\|]&[^&]*&"))
             .build();
