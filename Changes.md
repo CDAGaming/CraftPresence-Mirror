@@ -1,39 +1,25 @@
 # CraftPresence Changes
 
-## v1.9.5 (10/25/2022)
+## v2.0.0 (??/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.4...release%2Fv1.9.5)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.5...release%2Fv2.0.0)_
 
 ### Changes
 
-* Performance Improvements have been made for the following areas of the mod:
-    * Discord Asset Retrieval and Caching (Also addresses cases of log spam from assets not currently in use)
-    * Tick Rates of Module Clear Functions (No longer run on every tick, instead only when in use, and is no longer
-      active or enabled)
-    * Tick Rates of Immutable (Non-changing) Placeholder syncing (No longer runs on every tick, only on RPC
-      initialization)
+* TBD
 
 ### Fixes
 
-* Backend: Adjusted Shadowed Dependency relocations in buildscript, to resolve class issues
-    * Mostly present with `JUnixSocket`, `GSON` and Unix Systems
+* TBD
 
 ___
 
 ### More Information
 
-#### v1.9.0 Upgrade Info
+#### v2.0.0 Upgrade Info
 
-v1.9.0 of CraftPresence is the next major feature and technical update after the v1.8.x pipeline.
-It is a culmination of long-standing requests and fixes that have been sent in over the last few months.
-It also is the first incubation period for the Beta MC ports, and their acheivements!
-
-While no config migrations are necessary at this time for updating to v1.9.x, this can change as time goes on in the
-v1.8.x Pipeline, and will be noted here as such when and if these types of changes occur.
-
-More features will additionally be planned and added for later in the v1.9.x Pipeline as further releases arrive (and as
-they are requested).
+TBD
 
 #### 1.13.x Build Info
 
