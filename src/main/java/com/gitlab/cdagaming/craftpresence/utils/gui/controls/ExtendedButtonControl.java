@@ -200,10 +200,6 @@ public class ExtendedButtonControl extends GuiButton {
                 final boolean usingExternalTexture = ImageUtils.isExternalImage(backgroundCode);
 
                 if (!usingExternalTexture) {
-                    if (backgroundCode.contains(CraftPresence.CONFIG.splitCharacter)) {
-                        backgroundCode = backgroundCode.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                    }
-
                     if (backgroundCode.contains(":")) {
                         String[] splitInput = backgroundCode.split(":", 2);
                         texLocation = new ResourceLocation(splitInput[0], splitInput[1]);

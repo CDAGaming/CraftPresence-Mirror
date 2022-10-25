@@ -469,30 +469,16 @@ public class TileEntityUtils {
      */
     public void updateEntityPresence() {
         // Retrieve Messages
-        final String defaultItemMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.itemMessages,
-                "default", 0, 1, CraftPresence.CONFIG.splitCharacter,
-                null);
+        final String defaultItemMessage = CraftPresence.CONFIG.itemMessages.getOrDefault("default", "");
         final String placeholderItemMessage = CraftPresence.CONFIG.playerItemsPlaceholderMessage;
 
-        String offHandItemMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.itemMessages,
-                CURRENT_OFFHAND_ITEM_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                CURRENT_OFFHAND_ITEM_NAME);
-        String mainItemMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.itemMessages,
-                CURRENT_MAIN_HAND_ITEM_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                defaultItemMessage);
+        String offHandItemMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME);
+        String mainItemMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, defaultItemMessage);
 
-        String helmetMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.itemMessages,
-                CURRENT_HELMET_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                CURRENT_HELMET_NAME);
-        String chestMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.itemMessages,
-                CURRENT_CHEST_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                CURRENT_CHEST_NAME);
-        String legsMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.itemMessages,
-                CURRENT_LEGS_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                CURRENT_LEGS_NAME);
-        String bootsMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.itemMessages,
-                CURRENT_BOOTS_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                CURRENT_BOOTS_NAME);
+        String helmetMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_HELMET_NAME, CURRENT_HELMET_NAME);
+        String chestMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_CHEST_NAME, CURRENT_CHEST_NAME);
+        String legsMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_LEGS_NAME, CURRENT_LEGS_NAME);
+        String bootsMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME);
 
         // Form Entity/Item Argument List
         tileEntityArgs.clear();
@@ -751,16 +737,13 @@ public class TileEntityUtils {
             }
         }
 
-        for (String itemMessage : CraftPresence.CONFIG.itemMessages) {
-            if (!StringUtils.isNullOrEmpty(itemMessage)) {
-                final String[] part = itemMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0])) {
-                    if (!ITEM_NAMES.contains(part[0])) {
-                        ITEM_NAMES.add(part[0]);
-                    }
-                    if (!BLOCK_NAMES.contains(part[0])) {
-                        BLOCK_NAMES.add(part[0]);
-                    }
+        for (String itemEntry : CraftPresence.CONFIG.itemMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(itemEntry)) {
+                if (!ITEM_NAMES.contains(itemEntry)) {
+                    ITEM_NAMES.add(itemEntry);
+                }
+                if (!BLOCK_NAMES.contains(itemEntry)) {
+                    BLOCK_NAMES.add(itemEntry);
                 }
             }
         }

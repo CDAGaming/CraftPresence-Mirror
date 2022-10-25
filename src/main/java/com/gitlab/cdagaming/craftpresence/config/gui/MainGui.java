@@ -26,8 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.commands.CommandsGui;
@@ -230,15 +229,7 @@ public class MainGui extends ExtendedScreen {
                         "gui.config.message.button.back",
                         () -> {
                             if (CraftPresence.CONFIG.hasChanged) {
-                                CraftPresence.CONFIG.updateConfig(false);
-                                CraftPresence.CONFIG.read(false, "UTF-8");
-                                if (CraftPresence.CONFIG.hasClientPropertiesChanged) {
-                                    CommandUtils.rebootRPC(CraftPresence.CONFIG.flushClientProperties);
-                                    CraftPresence.CONFIG.hasClientPropertiesChanged = false;
-                                }
-                                CommandUtils.reloadData(true);
-                                CraftPresence.CONFIG.flushClientProperties = false;
-                                CraftPresence.CONFIG.hasChanged = false;
+                                CraftPresence.CONFIG.save();
                             }
 
                             CraftPresence.GUIS.configGUIOpened = false;
@@ -274,11 +265,7 @@ public class MainGui extends ExtendedScreen {
                         95, 20,
                         "gui.config.message.button.reset",
                         () -> {
-                            CraftPresence.CONFIG.setupInitialValues();
-                            CraftPresence.CONFIG.hasChanged = true;
-                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                            CraftPresence.CONFIG.flushClientProperties = true;
-                            syncRenderStates();
+                            CraftPresence.CONFIG = Config.loadOrCreate(true);
                         }
                 )
         );
@@ -289,16 +276,7 @@ public class MainGui extends ExtendedScreen {
                         95, 20,
                         "gui.config.message.button.sync.config",
                         () -> {
-                            final List<Pair<String, Object>> currentConfigDataMappings = CraftPresence.CONFIG.configDataMappings;
-                            CraftPresence.CONFIG.read(false, "UTF-8");
-
-                            // Only Mark to Save if there have been Changes in the File
-                            if (!CraftPresence.CONFIG.configDataMappings.equals(currentConfigDataMappings)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.flushClientProperties = true;
-                                syncRenderStates();
-                            }
+                            CraftPresence.CONFIG = Config.loadOrCreate();
                         },
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -342,13 +320,7 @@ public class MainGui extends ExtendedScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
-            if (CraftPresence.CONFIG.hasChanged || CraftPresence.CONFIG.hasClientPropertiesChanged || CraftPresence.CONFIG.flushClientProperties) {
-                CraftPresence.CONFIG.setupInitialValues();
-                CraftPresence.CONFIG.read(false, "UTF-8");
-                CraftPresence.CONFIG.hasChanged = false;
-                CraftPresence.CONFIG.hasClientPropertiesChanged = false;
-                CraftPresence.CONFIG.flushClientProperties = false;
-            }
+            CraftPresence.CONFIG = Config.loadOrCreate();
             CraftPresence.GUIS.configGUIOpened = false;
         }
         super.keyTyped(typedChar, keyCode);

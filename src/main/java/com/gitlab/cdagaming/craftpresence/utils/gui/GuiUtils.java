@@ -406,12 +406,9 @@ public class GuiUtils {
             }
         }
 
-        for (String guiMessage : CraftPresence.CONFIG.guiMessages) {
-            if (!StringUtils.isNullOrEmpty(guiMessage)) {
-                final String[] part = guiMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0]) && !GUI_NAMES.contains(part[0])) {
-                    GUI_NAMES.add(part[0]);
-                }
+        for (String guiEntry : CraftPresence.CONFIG.guiMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(guiEntry) && !GUI_NAMES.contains(guiEntry)) {
+                GUI_NAMES.add(guiEntry);
             }
         }
     }
@@ -436,10 +433,10 @@ public class GuiUtils {
             StringUtils.addEntriesNotPresent(guiArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        final String defaultGuiMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.guiMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-        final String currentGuiMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.guiMessages, CURRENT_GUI_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultGuiMessage);
+        final String defaultMessage = CraftPresence.CONFIG.guiMessages.getOrDefault("default", "");
+        final String currentMessage = CraftPresence.CONFIG.guiMessages.getOrDefault(CURRENT_GUI_NAME, defaultMessage);
 
-        final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentGuiMessage, guiArgs);
+        final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, guiArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_GUI_MESSAGE, ArgumentType.Text);
     }
@@ -589,9 +586,7 @@ public class GuiUtils {
                     double widthDivider = 32.0D, heightDivider = 32.0D;
 
                     if (!usingExternalTexture) {
-                        if (CraftPresence.CONFIG.tooltipBackgroundColor.contains(CraftPresence.CONFIG.splitCharacter)) {
-                            backgroundColor = CraftPresence.CONFIG.tooltipBackgroundColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                        } else if (CraftPresence.CONFIG.tooltipBackgroundColor.contains(":") && !CraftPresence.CONFIG.tooltipBackgroundColor.startsWith(":")) {
+                        if (CraftPresence.CONFIG.tooltipBackgroundColor.contains(":") && !CraftPresence.CONFIG.tooltipBackgroundColor.startsWith(":")) {
                             backgroundColor = CraftPresence.CONFIG.tooltipBackgroundColor;
                         } else if (CraftPresence.CONFIG.tooltipBackgroundColor.startsWith(":")) {
                             backgroundColor = CraftPresence.CONFIG.tooltipBackgroundColor.substring(1);
@@ -639,9 +634,7 @@ public class GuiUtils {
                     final boolean usingExternalTexture = ImageUtils.isExternalImage(CraftPresence.CONFIG.tooltipBorderColor);
 
                     if (!usingExternalTexture) {
-                        if (CraftPresence.CONFIG.tooltipBorderColor.contains(CraftPresence.CONFIG.splitCharacter)) {
-                            borderColor = CraftPresence.CONFIG.tooltipBorderColor.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                        } else if (CraftPresence.CONFIG.tooltipBorderColor.contains(":") && !CraftPresence.CONFIG.tooltipBorderColor.startsWith(":")) {
+                        if (CraftPresence.CONFIG.tooltipBorderColor.contains(":") && !CraftPresence.CONFIG.tooltipBorderColor.startsWith(":")) {
                             borderColor = CraftPresence.CONFIG.tooltipBorderColor;
                         } else if (CraftPresence.CONFIG.tooltipBorderColor.startsWith(":")) {
                             borderColor = CraftPresence.CONFIG.tooltipBorderColor.substring(1);
@@ -736,10 +729,6 @@ public class GuiUtils {
                 final boolean usingExternalTexture = ImageUtils.isExternalImage(backgroundCode);
 
                 if (!usingExternalTexture) {
-                    if (backgroundCode.contains(CraftPresence.CONFIG.splitCharacter)) {
-                        backgroundCode = backgroundCode.replace(CraftPresence.CONFIG.splitCharacter, ":");
-                    }
-
                     if (backgroundCode.contains(":")) {
                         String[] splitInput = backgroundCode.split(":", 2);
                         texLocation = new ResourceLocation(splitInput[0], splitInput[1]);

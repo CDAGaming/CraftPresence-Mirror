@@ -225,19 +225,11 @@ public class EntityUtils {
      */
     public void updateEntityPresence() {
         // Retrieve Messages
-        final String defaultEntityTargetMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.entityTargetMessages,
-                "default", 0, 1, CraftPresence.CONFIG.splitCharacter,
-                null);
-        final String defaultEntityRidingMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.entityRidingMessages,
-                "default", 0, 1, CraftPresence.CONFIG.splitCharacter,
-                null);
+        final String defaultEntityTargetMessage = CraftPresence.CONFIG.entityTargetMessages.getOrDefault("default", "");
+        final String defaultEntityRidingMessage = CraftPresence.CONFIG.entityRidingMessages.getOrDefault("default", "");
 
-        final String targetEntityMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.entityTargetMessages,
-                CURRENT_TARGET_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                defaultEntityTargetMessage);
-        final String ridingEntityMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.entityRidingMessages,
-                CURRENT_RIDING_NAME, 0, 1, CraftPresence.CONFIG.splitCharacter,
-                defaultEntityRidingMessage);
+        final String targetEntityMessage = CraftPresence.CONFIG.entityTargetMessages.getOrDefault(CURRENT_TARGET_NAME, defaultEntityTargetMessage);
+        final String ridingEntityMessage = CraftPresence.CONFIG.entityRidingMessages.getOrDefault(CURRENT_RIDING_NAME, defaultEntityRidingMessage);
 
         // Form Entity Argument List
         entityTargetArgs.clear();
@@ -408,21 +400,15 @@ public class EntityUtils {
             }
         }
 
-        for (String entityTargetMessage : CraftPresence.CONFIG.entityTargetMessages) {
-            if (!StringUtils.isNullOrEmpty(entityTargetMessage)) {
-                final String[] part = entityTargetMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0]) && !ENTITY_NAMES.contains(part[0])) {
-                    ENTITY_NAMES.add(part[0]);
-                }
+        for (String entityTargetEntry : CraftPresence.CONFIG.entityTargetMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(entityTargetEntry) && !ENTITY_NAMES.contains(entityTargetEntry)) {
+                ENTITY_NAMES.add(entityTargetEntry);
             }
         }
 
-        for (String entityRidingMessage : CraftPresence.CONFIG.entityRidingMessages) {
-            if (!StringUtils.isNullOrEmpty(entityRidingMessage)) {
-                final String[] part = entityRidingMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0]) && !ENTITY_NAMES.contains(part[0])) {
-                    ENTITY_NAMES.add(part[0]);
-                }
+        for (String entityRidingEntry : CraftPresence.CONFIG.entityRidingMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(entityRidingEntry) && !ENTITY_NAMES.contains(entityRidingEntry)) {
+                ENTITY_NAMES.add(entityRidingEntry);
             }
         }
 

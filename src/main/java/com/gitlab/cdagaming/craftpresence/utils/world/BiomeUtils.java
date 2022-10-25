@@ -167,10 +167,13 @@ public class BiomeUtils {
         biomeArgs.clear();
         iconArgs.clear();
 
-        final String defaultBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-        final String currentBiomeMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultBiomeMessage);
-        final String currentBiomeIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.biomeMessages, CURRENT_BIOME_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_BIOME_IDENTIFIER);
-        final String formattedIconKey = StringUtils.formatAsIcon(currentBiomeIcon.replace(" ", "_"));
+        final Pair<String, String> defaultData = CraftPresence.CONFIG.biomeMessages.get("default");
+        final Pair<String, String> currentData = CraftPresence.CONFIG.biomeMessages.get(CURRENT_BIOME_IDENTIFIER);
+
+        final String defaultMessage = defaultData != null ? defaultData.getFirst() : "";
+        final String currentMessage = currentData != null ? currentData.getFirst() : defaultMessage;
+        final String currentIcon = currentData != null ? currentData.getSecond() : CURRENT_BIOME_IDENTIFIER;
+        final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
         biomeArgs.add(new Pair<>("&BIOME&", CURRENT_BIOME_NAME));
 
@@ -189,8 +192,8 @@ public class BiomeUtils {
             StringUtils.addEntriesNotPresent(biomeArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        final String CURRENT_BIOME_ICON = StringUtils.sequentialReplaceAnyCase(formattedIconKey, iconArgs);
-        final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentBiomeMessage, biomeArgs);
+        final String CURRENT_BIOME_ICON = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
+        final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, biomeArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_BIOME_MESSAGE, ArgumentType.Text);
         CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon), ArgumentType.Image);
@@ -250,14 +253,11 @@ public class BiomeUtils {
             }
         }
 
-        for (String biomeMessage : CraftPresence.CONFIG.biomeMessages) {
-            if (!StringUtils.isNullOrEmpty(biomeMessage)) {
-                final String[] part = biomeMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0])) {
-                    String name = StringUtils.formatIdentifier(part[0], true, !CraftPresence.CONFIG.formatWords);
-                    if (!BIOME_NAMES.contains(name)) {
-                        BIOME_NAMES.add(name);
-                    }
+        for (String biomeEntry : CraftPresence.CONFIG.biomeMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(biomeEntry)) {
+                String name = StringUtils.formatIdentifier(biomeEntry, true, !CraftPresence.CONFIG.formatWords);
+                if (!BIOME_NAMES.contains(name)) {
+                    BIOME_NAMES.add(name);
                 }
             }
         }

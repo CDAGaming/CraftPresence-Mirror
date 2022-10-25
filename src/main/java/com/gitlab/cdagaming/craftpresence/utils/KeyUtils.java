@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.ConfigUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
@@ -62,14 +62,13 @@ public class KeyUtils {
      * Allowed KeyCode Start Limit and Individual Filters
      */
     private final List<Integer> invalidKeys = Lists.newArrayList();
-
     /**
      * Key Mappings for Vanilla MC KeyBind Schema
      * <p>
      * Format: rawKeyField:[keyBindInstance:runEvent:errorCallback]
      */
     private final Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
-
+    public Map<String, Integer> keySyncQueue = Maps.newHashMap();
     /**
      * Determines whether KeyBindings have been fully registered and attached to needed systems.
      */
@@ -251,10 +250,10 @@ public class KeyUtils {
 
                     // Only check for Keyboard updates if the key is not active but is in queue for a sync
                     if (!hasBeenRun && !CraftPresence.CONFIG.hasChanged) {
-                        if (CraftPresence.CONFIG.keySyncQueue.containsKey(keyName)) {
-                            syncKeyData(keyName, ImportMode.Config, CraftPresence.CONFIG.keySyncQueue.get(keyName));
-                            CraftPresence.CONFIG.keySyncQueue.remove(keyName);
-                        } else if (currentBind != StringUtils.getValidInteger(StringUtils.lookupObject(ConfigUtils.class, CraftPresence.CONFIG, keyName)).getSecond()) {
+                        if (keySyncQueue.containsKey(keyName)) {
+                            syncKeyData(keyName, ImportMode.Config, keySyncQueue.get(keyName));
+                            keySyncQueue.remove(keyName);
+                        } else if (currentBind != StringUtils.getValidInteger(StringUtils.lookupObject(Config.class, CraftPresence.CONFIG, keyName)).getSecond()) {
                             syncKeyData(keyName, ImportMode.Vanilla, currentBind);
                         }
                     }
@@ -279,8 +278,8 @@ public class KeyUtils {
         if (mode == ImportMode.Config) {
             keyData.getFirst().setKeyCode(keyCode);
         } else if (mode == ImportMode.Vanilla) {
-            StringUtils.updateField(ConfigUtils.class, CraftPresence.CONFIG, new Tuple<>(keyName, keyCode, null));
-            CraftPresence.CONFIG.updateConfig(false);
+            StringUtils.updateField(Config.class, CraftPresence.CONFIG, new Tuple<>(keyName, keyCode, null));
+            CraftPresence.CONFIG.save();
         } else if (mode == ImportMode.Specific) {
             syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);

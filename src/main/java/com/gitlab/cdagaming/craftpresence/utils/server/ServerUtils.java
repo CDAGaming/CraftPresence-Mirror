@@ -319,7 +319,7 @@ public class ServerUtils {
 
                 final ServerList serverList = new ServerList(CraftPresence.instance);
                 serverList.loadServerList();
-                if (serverList.countServers() != serverIndex || CraftPresence.CONFIG.serverMessages.length != serverIndex) {
+                if (serverList.countServers() != serverIndex || CraftPresence.CONFIG.serverMessages.size() != serverIndex) {
                     getServerAddresses();
                 }
             }
@@ -578,25 +578,24 @@ public class ServerUtils {
             serverArgs.add(new Pair<>("&MOTD&", currentServer_MOTD));
             serverArgs.add(new Pair<>("&PLAYERS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.playerAmountPlaceholderMessage, playerAmountArgs)));
 
+            final Pair<String, String> defaultData = CraftPresence.CONFIG.serverMessages.get("default");
+            final Pair<String, String> alternateData = CraftPresence.CONFIG.serverMessages.get(currentServer_Name);
+            final Pair<String, String> primaryData = CraftPresence.CONFIG.serverMessages.get(StringUtils.formatAddress(currentServer_IP, false));
+
+            final String alternateIcon = alternateData != null ? alternateData.getSecond() : currentServer_Name;
+            final String currentIcon = primaryData != null ? primaryData.getSecond() : alternateIcon;
+            final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
+
+            currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
+
             if (isOnLAN) {
                 // NOTE: LAN-Only Presence Updates
-                final String alternateServerIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, currentServer_Name, 0, 2, CraftPresence.CONFIG.splitCharacter, currentServer_Name);
-                final String primaryServerIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, StringUtils.formatAddress(currentServer_IP, false), 0, 2, CraftPresence.CONFIG.splitCharacter, alternateServerIcon);
-                final String formattedServerIconKey = StringUtils.formatAsIcon(primaryServerIcon.replace(" ", "_"));
-
-                currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedServerIconKey, iconArgs);
                 currentServerMessage = CraftPresence.CONFIG.lanMessage;
             } else {
                 // NOTE: Server-Only Presence Updates
-                final String defaultServerMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                final String alternateServerMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, currentServer_Name, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultServerMessage);
-                final String alternateServerIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, currentServer_Name, 0, 2, CraftPresence.CONFIG.splitCharacter, currentServer_Name);
-
-                currentServerMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, StringUtils.formatAddress(currentServer_IP, false), 0, 1, CraftPresence.CONFIG.splitCharacter, alternateServerMessage);
-                final String primaryServerIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.serverMessages, StringUtils.formatAddress(currentServer_IP, false), 0, 2, CraftPresence.CONFIG.splitCharacter, alternateServerIcon);
-                final String formattedServerIconKey = StringUtils.formatAsIcon(primaryServerIcon.replace(" ", "_"));
-
-                currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedServerIconKey, iconArgs);
+                final String defaultMessage = defaultData != null ? defaultData.getFirst() : "";
+                final String alternateMessage = alternateData != null ? alternateData.getFirst() : defaultMessage;
+                currentServerMessage = primaryData != null ? primaryData.getFirst() : alternateIcon;
 
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.
@@ -679,12 +678,9 @@ public class ServerUtils {
             }
         }
 
-        for (String serverMessage : CraftPresence.CONFIG.serverMessages) {
-            if (!StringUtils.isNullOrEmpty(serverMessage)) {
-                final String[] part = serverMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0]) && !knownAddresses.contains(part[0])) {
-                    knownAddresses.add(part[0]);
-                }
+        for (String serverEntry : CraftPresence.CONFIG.serverMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(serverEntry) && !knownAddresses.contains(serverEntry)) {
+                knownAddresses.add(serverEntry);
             }
         }
     }

@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence;
 
-import com.gitlab.cdagaming.craftpresence.config.ConfigUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
@@ -45,7 +45,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
 import net.minecraftforge.fml.common.Mod;
 
-import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -89,9 +88,9 @@ public class CraftPresence {
     public static EntityPlayer player;
 
     /**
-     * The {@link ConfigUtils} Instance for this Mod
+     * The {@link Config} Instance for this Mod
      */
-    public static ConfigUtils CONFIG;
+    public static Config CONFIG;
 
     /**
      * The {@link SystemUtils} Instance for this Mod
@@ -186,8 +185,7 @@ public class CraftPresence {
         });
 
         SYSTEM = new SystemUtils();
-        CONFIG = new ConfigUtils(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".properties");
-        CONFIG.initialize();
+        CONFIG = Config.getInstance();
 
         CommandUtils.init();
 

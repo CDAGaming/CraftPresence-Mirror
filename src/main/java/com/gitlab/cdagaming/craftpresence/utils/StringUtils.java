@@ -32,7 +32,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -682,131 +681,6 @@ public class StringUtils {
      */
     public static <T> List<T> addEntriesNotPresent(List<T> original, T[] newList) {
         return addEntriesNotPresent(original, Arrays.asList(newList));
-    }
-
-    /**
-     * Expands or Contracts an Array, depending on Conditions
-     *
-     * @param theArray The original Array to adjust
-     * @param adjustBy The value to either expand (Positive Number) or contract (Negative Number)
-     * @return The evaluated and adjusted array
-     */
-    public static String[] adjustArraySize(final String[] theArray, final int adjustBy) {
-        int currentSize = theArray.length;
-        int newSize = currentSize + adjustBy;
-
-        String[] newArray = new String[newSize];
-        System.arraycopy(theArray, 0, newArray, 0, theArray.length);
-        return newArray;
-    }
-
-    /**
-     * Adds the Specified message to the defined index in the target Array
-     *
-     * @param array   The original Array to evaluate
-     * @param index   The index to add at
-     * @param message The String Message to input at the index of the array
-     * @return The evaluated array
-     */
-    public static String[] addToArray(final String[] array, final int index, final String message) {
-        if (array.length <= index) {
-            int extendNum = index - array.length;
-            String[] newArray = adjustArraySize(array, extendNum + 1);
-            newArray[index] = message;
-            return newArray;
-        } else {
-            array[index] = message;
-            return array;
-        }
-    }
-
-    /**
-     * Removes specified search term at specified index of an array
-     *
-     * @param originalArray  The original array
-     * @param searchTerm     The search term to look for
-     * @param searchIndex    The index to remove at
-     * @param splitCharacter The delimiter to split parts of the array at (Optional)
-     * @return The evaluated array
-     */
-    public static String[] removeFromArray(final String[] originalArray, final String searchTerm, final int searchIndex, final String splitCharacter) {
-        String[] resultArray = originalArray;
-        if (originalArray.length > 0) {
-            for (int indexNumber = 0; indexNumber < originalArray.length; indexNumber++) {
-                String part = originalArray[indexNumber];
-                String[] splitPart = part.split(splitCharacter);
-                if (!StringUtils.isNullOrEmpty(splitPart[searchIndex]) && splitPart[searchIndex].equalsIgnoreCase(searchTerm)) {
-                    resultArray = ArrayUtils.remove(originalArray, indexNumber);
-                    break;
-                }
-            }
-        }
-        return resultArray;
-    }
-
-    /**
-     * Retrieves a config entry from an Array, following the specified Search Terms
-     * <p><b>Internal Use Only</b>
-     *
-     * @param original           The original Array to interpret formatted as: firstArg[splitChar]secondArg[splitChar]thirdArgOptional
-     * @param searchTerm         The search term to locate
-     * @param searchIndex        The expected index to locate the search term at within an Array Element
-     * @param resultIndex        The part of the found Array Element index to retrieve
-     * @param splitCharacter     The delimiter being expected to separate chunks of an Array Element
-     * @param alternativeMessage The alternative value to return if no matches found in the target Array Element Index
-     * @return The found or Alternative value from the search within the Array
-     */
-    public static String getConfigPart(final String[] original, final String searchTerm, final int searchIndex, final int resultIndex, final String splitCharacter, final String alternativeMessage) {
-        String formattedKey = "";
-        boolean matched = false;
-        for (String part : original) {
-            String[] splitPart = part.split(splitCharacter);
-            if (splitPart[searchIndex].equalsIgnoreCase(searchTerm) && elementExists(splitPart, resultIndex)) {
-                formattedKey = splitPart[resultIndex];
-                matched = true;
-                break;
-            }
-        }
-        return !matched && !isNullOrEmpty(alternativeMessage) ? alternativeMessage : formattedKey;
-    }
-
-    /**
-     * Sets new config Entry for Array Data Types with delimiter
-     * <p><b>Internal Use Only</b>
-     *
-     * @param original       The original Array to interpret formatted as: firstArg[splitChar]secondArg[splitChar]thirdArgOptional
-     * @param searchTerm     The search term to locate
-     * @param searchIndex    The expected index to locate the search term at within an Array Element
-     * @param resultIndex    The part of the found Array Element index to modify
-     * @param splitCharacter The delimiter being expected to separate chunks of an Array Element
-     * @param newMessage     The new value to insert into the target Array Element Index
-     * @return The modified Array from the original
-     */
-    public static String[] setConfigPart(final String[] original, final String searchTerm, final int searchIndex, final int resultIndex, final String splitCharacter, final String newMessage) {
-        int indexNumber = -1;
-        boolean replacing = false;
-        String[] formatted = original;
-
-        if (!isNullOrEmpty(Arrays.toString(formatted))) {
-            for (String part : formatted) {
-                indexNumber++;
-                String[] splitPart = part.split(splitCharacter);
-                if (splitPart[searchIndex].equalsIgnoreCase(searchTerm)) {
-                    replacing = true;
-                    if (elementExists(splitPart, resultIndex)) {
-                        final String formattedText = part.replace(splitPart[resultIndex], newMessage);
-                        formatted[indexNumber] = formattedText;
-                    } else {
-                        formatted[indexNumber] = part + splitCharacter + newMessage;
-                    }
-                    break;
-                }
-            }
-            if (!replacing) {
-                formatted = addToArray(original, indexNumber + 1, searchTerm + splitCharacter + newMessage);
-            }
-        }
-        return formatted;
     }
 
     /**

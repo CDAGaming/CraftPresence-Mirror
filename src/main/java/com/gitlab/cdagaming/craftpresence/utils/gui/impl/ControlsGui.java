@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.ConfigUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
@@ -241,8 +241,8 @@ public class ControlsGui extends PaginatedScreen {
 
         // If KeyCode Field to modify is not null or empty, attempt to queue change
         try {
-            StringUtils.updateField(ConfigUtils.class, CraftPresence.CONFIG, new Tuple<>(entryData.getSecond(), keyToSubmit, null));
-            CraftPresence.CONFIG.keySyncQueue.put(entryData.getSecond(), keyToSubmit);
+            StringUtils.updateField(Config.class, CraftPresence.CONFIG, new Tuple<>(entryData.getSecond(), keyToSubmit, null));
+            CraftPresence.KEYBINDINGS.keySyncQueue.put(entryData.getSecond(), keyToSubmit);
             CraftPresence.CONFIG.hasChanged = true;
 
             entryData.getFirst().setControlMessage(formattedKey);

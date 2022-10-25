@@ -314,12 +314,9 @@ public class DiscordUtils {
      */
     public List<String> createButtonsList() {
         final List<String> result = Lists.newArrayList();
-        for (String buttonElement : CraftPresence.CONFIG.buttonMessages) {
-            if (!StringUtils.isNullOrEmpty(buttonElement)) {
-                final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0])) {
-                    result.add(part[0]);
-                }
+        for (String buttonEntry : CraftPresence.CONFIG.buttonMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(buttonEntry)) {
+                result.add(buttonEntry);
             }
         }
         return result;
@@ -1213,26 +1210,25 @@ public class DiscordUtils {
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
-        for (String buttonElement : CraftPresence.CONFIG.buttonMessages) {
-            if (!StringUtils.isNullOrEmpty(buttonElement)) {
-                final String[] part = buttonElement.split(CraftPresence.CONFIG.splitCharacter);
-                JsonObject buttonObj = new JsonObject();
-                if (part.length == 3 && !StringUtils.isNullOrEmpty(part[0]) && !part[0].equalsIgnoreCase("default") && !StringUtils.isNullOrEmpty(part[1])) {
-                    String label = StringUtils.formatWord(
-                            parseArgumentOperators(part[1], ArgumentType.Text),
-                            !CraftPresence.CONFIG.formatWords, true, 1
-                    );
-                    String url = !StringUtils.isNullOrEmpty(part[2]) ? parseArgumentOperators(
-                            part[2], ArgumentType.Text
-                    ) : "";
+        for (Map.Entry<String, Pair<String, String>> buttonElement : CraftPresence.CONFIG.buttonMessages.entrySet()) {
+            JsonObject buttonObj = new JsonObject();
+            if (!StringUtils.isNullOrEmpty(buttonElement.getKey()) &&
+                    !buttonElement.getKey().equalsIgnoreCase("default") &&
+                    !StringUtils.isNullOrEmpty(buttonElement.getValue().getFirst())) {
+                String label = StringUtils.formatWord(
+                        parseArgumentOperators(buttonElement.getValue().getFirst(), ArgumentType.Text),
+                        !CraftPresence.CONFIG.formatWords, true, 1
+                );
+                String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().getSecond()) ? parseArgumentOperators(
+                        buttonElement.getValue().getSecond(), ArgumentType.Text
+                ) : "";
 
-                    label = sanitizePlaceholders(label);
-                    url = sanitizePlaceholders(url);
-                    if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
-                        buttonObj.addProperty("label", label);
-                        buttonObj.addProperty("url", url);
-                        BUTTONS.add(buttonObj);
-                    }
+                label = sanitizePlaceholders(label);
+                url = sanitizePlaceholders(url);
+                if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
+                    buttonObj.addProperty("label", label);
+                    buttonObj.addProperty("url", url);
+                    BUTTONS.add(buttonObj);
                 }
             }
         }

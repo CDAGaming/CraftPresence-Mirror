@@ -340,10 +340,6 @@ public class ColorEditorGui extends PaginatedScreen {
                 // Only Perform Texture Conversion Steps if not an external Url
                 // As an external Url should be parsed as-is in most use cases
                 if (!usingExternalTexture) {
-                    if (textureText.getControlMessage().contains(CraftPresence.CONFIG.splitCharacter)) {
-                        textureText.setControlMessage(textureText.getControlMessage().replace(CraftPresence.CONFIG.splitCharacter, ":"));
-                    }
-
                     if (textureText.getControlMessage().contains(":") && !textureText.getControlMessage().startsWith(":")) {
                         currentNormalTexturePath = textureText.getControlMessage();
                     } else if (textureText.getControlMessage().startsWith(":")) {
@@ -378,7 +374,7 @@ public class ColorEditorGui extends PaginatedScreen {
             } else {
                 currentTexture = new ResourceLocation("");
             }
-            isModified = !StringUtils.isNullOrEmpty(startingTexturePath) && !textureText.getControlMessage().equals(startingTexturePath.replace(CraftPresence.CONFIG.splitCharacter, ":"));
+            isModified = !StringUtils.isNullOrEmpty(startingTexturePath) && !textureText.getControlMessage().equals(startingTexturePath);
         }
     }
 }

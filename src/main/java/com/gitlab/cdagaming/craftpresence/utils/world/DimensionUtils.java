@@ -169,10 +169,13 @@ public class DimensionUtils {
         dimensionArgs.clear();
         iconArgs.clear();
 
-        final String defaultDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-        final String currentDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultDimensionMessage);
-        final String currentDimensionIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, CURRENT_DIMENSION_IDENTIFIER, 0, 2, CraftPresence.CONFIG.splitCharacter, CURRENT_DIMENSION_IDENTIFIER);
-        final String formattedIconKey = StringUtils.formatAsIcon(currentDimensionIcon.replace(" ", "_"));
+        final Pair<String, String> defaultData = CraftPresence.CONFIG.dimensionMessages.get("default");
+        final Pair<String, String> currentData = CraftPresence.CONFIG.dimensionMessages.get(CURRENT_DIMENSION_IDENTIFIER);
+
+        final String defaultMessage = defaultData != null ? defaultData.getFirst() : "";
+        final String currentMessage = currentData != null ? currentData.getFirst() : defaultMessage;
+        final String currentIcon = currentData != null ? currentData.getSecond() : CURRENT_DIMENSION_IDENTIFIER;
+        final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
         dimensionArgs.add(new Pair<>("&DIMENSION&", CURRENT_DIMENSION_NAME));
 
@@ -191,8 +194,8 @@ public class DimensionUtils {
             StringUtils.addEntriesNotPresent(dimensionArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        final String CURRENT_DIMENSION_ICON = StringUtils.sequentialReplaceAnyCase(formattedIconKey, iconArgs);
-        final String CURRENT_DIMENSION_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentDimensionMessage, dimensionArgs);
+        final String CURRENT_DIMENSION_ICON = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
+        final String CURRENT_DIMENSION_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, dimensionArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_DIMENSION_MESSAGE, ArgumentType.Text);
         CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_DIMENSION_ICON, CraftPresence.CONFIG.defaultDimensionIcon), ArgumentType.Image);
@@ -258,14 +261,11 @@ public class DimensionUtils {
             }
         }
 
-        for (String dimensionMessage : CraftPresence.CONFIG.dimensionMessages) {
-            if (!StringUtils.isNullOrEmpty(dimensionMessage)) {
-                final String[] part = dimensionMessage.split(CraftPresence.CONFIG.splitCharacter);
-                if (!StringUtils.isNullOrEmpty(part[0])) {
-                    String name = StringUtils.formatIdentifier(part[0], true, !CraftPresence.CONFIG.formatWords);
-                    if (!DIMENSION_NAMES.contains(name)) {
-                        DIMENSION_NAMES.add(name);
-                    }
+        for (String dimensionEntry : CraftPresence.CONFIG.dimensionMessages.keySet()) {
+            if (!StringUtils.isNullOrEmpty(dimensionEntry)) {
+                String name = StringUtils.formatIdentifier(dimensionEntry, true, !CraftPresence.CONFIG.formatWords);
+                if (!DIMENSION_NAMES.contains(name)) {
+                    DIMENSION_NAMES.add(name);
                 }
             }
         }

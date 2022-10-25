@@ -326,22 +326,19 @@ public class DiscordAssetUtils {
                     }
                 }
 
-                for (String iconData : CraftPresence.CONFIG.dynamicIcons) {
-                    if (!StringUtils.isNullOrEmpty(iconData)) {
-                        final String[] part = iconData.split(CraftPresence.CONFIG.splitCharacter);
-                        if (!StringUtils.isNullOrEmpty(part[0]) && !StringUtils.isNullOrEmpty(part[1])) {
-                            final DiscordAsset asset = new DiscordAsset()
-                                    .setName(part[0])
-                                    .setUrl(part[1])
-                                    .setType(DiscordAsset.AssetType.CUSTOM);
-                            if (!CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
-                                CUSTOM_ASSET_LIST.put(asset.getName(), asset);
-                            }
-                            // If a Discord Icon exists with the same name, give priority to the custom one
-                            // Unless the icon is the default template, in which we don't add it at all
-                            if (!asset.getName().equalsIgnoreCase("default")) {
-                                ASSET_LIST.put(asset.getName(), asset);
-                            }
+                for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.dynamicIcons.entrySet()) {
+                    if (!StringUtils.isNullOrEmpty(iconData.getKey()) && !StringUtils.isNullOrEmpty(iconData.getValue())) {
+                        final DiscordAsset asset = new DiscordAsset()
+                                .setName(iconData.getKey())
+                                .setUrl(iconData.getValue())
+                                .setType(DiscordAsset.AssetType.CUSTOM);
+                        if (!CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
+                            CUSTOM_ASSET_LIST.put(asset.getName(), asset);
+                        }
+                        // If a Discord Icon exists with the same name, give priority to the custom one
+                        // Unless the icon is the default template, in which we don't add it at all
+                        if (!asset.getName().equalsIgnoreCase("default")) {
+                            ASSET_LIST.put(asset.getName(), asset);
                         }
                     }
                 }
@@ -353,30 +350,8 @@ public class DiscordAssetUtils {
 
             return null;
         } finally {
-            verifyConfigAssets();
             syncCompleted = true;
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.detected", String.valueOf(ASSET_LIST.size())));
-        }
-    }
-
-    /**
-     * Ensures any Default Icons in the Config exist within the Client ID
-     */
-    private static void verifyConfigAssets() {
-        boolean needsFullUpdate = false;
-        for (String property : CraftPresence.CONFIG.properties.stringPropertyNames()) {
-            if ((property.equals(CraftPresence.CONFIG.NAME_defaultIcon) || property.equals(CraftPresence.CONFIG.NAME_defaultDimensionIcon) || property.equals(CraftPresence.CONFIG.NAME_defaultServerIcon)) && !contains(CraftPresence.CONFIG.properties.getProperty(property))) {
-                final String newAsset = contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : getRandomAssetName();
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.pre", CraftPresence.CONFIG.properties.getProperty(property), property));
-                CraftPresence.CONFIG.properties.setProperty(property, newAsset);
-                needsFullUpdate = true;
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.post", property, newAsset));
-            }
-        }
-
-        if (needsFullUpdate) {
-            CraftPresence.CONFIG.save("UTF-8");
-            CraftPresence.CONFIG.read(false, "UTF-8");
         }
     }
 }

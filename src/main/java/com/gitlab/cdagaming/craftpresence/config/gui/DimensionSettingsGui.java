@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -47,7 +48,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
 
     @Override
     public void initializeUi() {
-        final String defaultDimensionMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+        final Pair<String, String> defaultData = CraftPresence.CONFIG.dimensionMessages.get("default");
+        final String defaultDimensionMessage = defaultData != null ? defaultData.getFirst() : "";
 
         defaultMessage = addControl(
                 new ExtendedTextControl(
@@ -71,14 +73,18 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
                                             // Event to Occur when proceeding with adjusted data
-                                            final String defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                            final String currentMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                            final Pair<String, String> defaultDimensionData = CraftPresence.CONFIG.dimensionMessages.get("default");
+                                            final Pair<String, String> currentDimensionData = CraftPresence.CONFIG.dimensionMessages.get(attributeName);
+                                            final String defaultMessage = defaultDimensionData != null ? defaultDimensionData.getFirst() : "";
+                                            final String currentMessage = currentDimensionData != null ? currentDimensionData.getFirst() : "";
 
                                             CraftPresence.CONFIG.hasChanged = true;
+                                            final Pair<String, String> newData = new Pair<>();
                                             if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
-                                                CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage);
+                                                newData.setFirst(defaultMessage);
                                             }
-                                            CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, currentValue);
+                                            newData.setSecond(currentValue);
+                                            CraftPresence.CONFIG.dimensionMessages.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -87,18 +93,23 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                final Pair<String, String> defaultDimensionData = CraftPresence.CONFIG.dimensionMessages.get("default");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = defaultDimensionData != null ? defaultDimensionData.getFirst() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                final Pair<String, String> defaultDimensionData = CraftPresence.CONFIG.dimensionMessages.get("default");
+                                                                final Pair<String, String> currentDimensionData = CraftPresence.CONFIG.dimensionMessages.get(attributeName);
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
-                                                                screenInstance.originalPrimaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                screenInstance.primaryMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = defaultDimensionData != null ? defaultDimensionData.getFirst() : "";
+                                                                screenInstance.primaryMessage = currentDimensionData != null ? currentDimensionData.getFirst() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
+                                                                final Pair<String, String> currentDimensionData = CraftPresence.CONFIG.dimensionMessages.get(attributeName);
+                                                                currentDimensionData.setFirst(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, inputText);
+                                                                CraftPresence.CONFIG.dimensionMessages.put(attributeName, currentDimensionData);
                                                                 if (!CraftPresence.DIMENSIONS.DIMENSION_NAMES.contains(attributeName)) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.add(attributeName);
                                                                 }
@@ -106,13 +117,15 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.dimensionMessages = StringUtils.removeFromArray(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, CraftPresence.CONFIG.splitCharacter);
+                                                                CraftPresence.CONFIG.dimensionMessages.remove(attributeName);
                                                                 CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding an attachment icon to set data
-                                                                final String defaultIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 2, CraftPresence.CONFIG.splitCharacter, CraftPresence.CONFIG.defaultDimensionIcon);
-                                                                final String specificIcon = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, attributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, defaultIcon);
+                                                                final Pair<String, String> defaultDimensionData = CraftPresence.CONFIG.dimensionMessages.get("default");
+                                                                final Pair<String, String> currentDimensionData = CraftPresence.CONFIG.dimensionMessages.get(attributeName);
+                                                                final String defaultIcon = defaultDimensionData != null ? defaultDimensionData.getSecond() : CraftPresence.CONFIG.defaultDimensionIcon;
+                                                                final String specificIcon = currentDimensionData != null ? currentDimensionData.getSecond() : defaultIcon;
                                                                 CraftPresence.GUIS.openScreen(
                                                                         new SelectorGui(
                                                                                 screenInstance,
@@ -121,14 +134,18 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                                 true, false, RenderType.DiscordAsset,
                                                                                 (innerAttributeName, innerCurrentValue) -> {
                                                                                     // Inner-Event to occur when proceeding with adjusted data
-                                                                                    final String defaultMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, null);
-                                                                                    final String currentMessage = StringUtils.getConfigPart(CraftPresence.CONFIG.dimensionMessages, innerAttributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, null);
+                                                                                    final Pair<String, String> defaultInnerDimensionData = CraftPresence.CONFIG.dimensionMessages.get("default");
+                                                                                    final Pair<String, String> currentInnerDimensionData = CraftPresence.CONFIG.dimensionMessages.get(innerAttributeName);
+                                                                                    final String defaultMessage = defaultInnerDimensionData != null ? defaultInnerDimensionData.getFirst() : "";
+                                                                                    final String currentMessage = currentInnerDimensionData != null ? currentInnerDimensionData.getFirst() : "";
 
                                                                                     CraftPresence.CONFIG.hasChanged = true;
+                                                                                    final Pair<String, String> newData = new Pair<>();
                                                                                     if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
-                                                                                        CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, innerAttributeName, 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage);
+                                                                                        newData.setFirst(defaultMessage);
                                                                                     }
-                                                                                    CraftPresence.CONFIG.dimensionMessages = StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, innerAttributeName, 0, 2, CraftPresence.CONFIG.splitCharacter, innerCurrentValue);
+                                                                                    newData.setSecond(innerCurrentValue);
+                                                                                    CraftPresence.CONFIG.dimensionMessages.put(innerAttributeName, newData);
                                                                                 }, null
                                                                         )
                                                                 );
@@ -201,7 +218,9 @@ public class DimensionSettingsGui extends ExtendedScreen {
                             if (!defaultMessage.getControlMessage().equals(defaultDimensionMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                StringUtils.setConfigPart(CraftPresence.CONFIG.dimensionMessages, "default", 0, 1, CraftPresence.CONFIG.splitCharacter, defaultMessage.getControlMessage());
+                                final Pair<String, String> defaultDimensionData = CraftPresence.CONFIG.dimensionMessages.getOrDefault("default", new Pair<>());
+                                defaultDimensionData.setFirst(defaultMessage.getControlMessage());
+                                CraftPresence.CONFIG.dimensionMessages.put("default", defaultDimensionData);
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },
