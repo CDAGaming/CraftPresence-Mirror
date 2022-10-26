@@ -241,7 +241,7 @@ public class ControlsGui extends PaginatedScreen {
 
         // If KeyCode Field to modify is not null or empty, attempt to queue change
         try {
-            StringUtils.updateField(Config.class, CraftPresence.CONFIG, new Tuple<>(entryData.getSecond(), keyToSubmit, null));
+            Config.setProperty(CraftPresence.CONFIG, entryData.getSecond(), keyToSubmit);
             CraftPresence.KEYBINDINGS.keySyncQueue.put(entryData.getSecond(), keyToSubmit);
             CraftPresence.CONFIG.hasChanged = true;
 

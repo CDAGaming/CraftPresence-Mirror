@@ -116,7 +116,7 @@ public class Legacy2Modern implements DataMigrator {
                 if (!excludedOptions.contains(originalName)) {
                     newName = configNameMappings.getOrDefault(originalName, originalName);
                     originalValue = properties.get(property);
-                    newValue = currentValue = StringUtils.lookupObject(Config.class, instance, newName);
+                    newValue = currentValue = Config.getProperty(instance, newName);
 
                     if (currentValue != null) {
                         expectedClass = currentValue.getClass();
@@ -182,7 +182,7 @@ public class Legacy2Modern implements DataMigrator {
 
                         if (!currentValue.equals(newValue)) {
                             ModUtils.LOG.info("Migrating modified legacy property " + originalName + " to JSON property " + newName);
-                            StringUtils.updateField(Config.class, instance, new Tuple<>(newName, newValue, null));
+                            Config.setProperty(instance, newName, newValue);
                         }
                     }
                 }

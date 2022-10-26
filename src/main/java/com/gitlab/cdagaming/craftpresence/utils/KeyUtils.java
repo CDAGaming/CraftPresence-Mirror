@@ -253,7 +253,7 @@ public class KeyUtils {
                         if (keySyncQueue.containsKey(keyName)) {
                             syncKeyData(keyName, ImportMode.Config, keySyncQueue.get(keyName));
                             keySyncQueue.remove(keyName);
-                        } else if (currentBind != StringUtils.getValidInteger(StringUtils.lookupObject(Config.class, CraftPresence.CONFIG, keyName)).getSecond()) {
+                        } else if (currentBind != StringUtils.getValidInteger(Config.getProperty(CraftPresence.CONFIG, keyName)).getSecond()) {
                             syncKeyData(keyName, ImportMode.Vanilla, currentBind);
                         }
                     }
@@ -278,7 +278,7 @@ public class KeyUtils {
         if (mode == ImportMode.Config) {
             keyData.getFirst().setKeyCode(keyCode);
         } else if (mode == ImportMode.Vanilla) {
-            StringUtils.updateField(Config.class, CraftPresence.CONFIG, new Tuple<>(keyName, keyCode, null));
+            Config.setProperty(CraftPresence.CONFIG, keyName, keyCode);
             CraftPresence.CONFIG.save();
         } else if (mode == ImportMode.Specific) {
             syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);

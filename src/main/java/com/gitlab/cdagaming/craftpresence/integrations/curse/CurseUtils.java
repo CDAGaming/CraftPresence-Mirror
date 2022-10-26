@@ -60,7 +60,7 @@ public class CurseUtils {
             // This will typically work on released/exported/imported packs
             // But will fail with Custom/User-Created Packs
             // Note: This additionally works in the same way for GDLauncher packs of the same nature
-            manifest = FileUtils.getJSONFromFile(new File("manifest.json"), Manifest.class);
+            manifest = FileUtils.getJsonData(new File("manifest.json"), Manifest.class);
         } catch (Exception ex) {
             try {
                 // If it fails to get the information from the manifest.json
@@ -72,7 +72,7 @@ public class CurseUtils {
                     ex.printStackTrace();
                 }
 
-                instance = FileUtils.getJSONFromFile(new File("minecraftinstance.json"), CurseInstance.class);
+                instance = FileUtils.getJsonData(new File("minecraftinstance.json"), CurseInstance.class);
             } catch (Exception ex2) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.file.manifest"));
 

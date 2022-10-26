@@ -27,27 +27,32 @@ package com.gitlab.cdagaming.craftpresence.config;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.migrators.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 public final class Config implements Serializable {
     private static final long serialVersionUID = -4853238501768086595L;
     private static final Config INSTANCE = loadOrCreate();
-    private static final Config DEFAULT = new Config();
+    private static Config DEFAULT;
 
     public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
 
     public static Config getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Config();
+        }
         return DEFAULT;
     }
 
@@ -216,8 +221,42 @@ public final class Config implements Serializable {
 
     public void handleVerification(final JsonElement rawJson) {
         // TODO
-        // - Verify Type Safety, reset value if anything is null
+        // - Verify Type Safety, reset value if anything is null or invalid for it's type
         // - If the field name contains a known keyCode trigger, ensure it is a valid keycode (Otherwise reset)
+        if (rawJson != null) {
+            final List<String> propsToReset = Lists.newArrayList();
+            for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
+                final String rawName = entry.getKey();
+                final JsonElement rawValue = entry.getValue();
+                final Object defaultValue = getProperty(getDefaults(), rawName);
+                boolean shouldReset = false;
+
+                if (defaultValue == null) {
+                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
+                } else {
+                    final Object currentValue = getProperty(this, rawName);
+                    if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
+                        shouldReset = true;
+                    } else {
+                        final Class<?> expectedClass = currentValue.getClass();
+                        // TODO: Per-Type validation
+                        if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
+                                !StringUtils.isValidBoolean(rawValue.getAsString())) {
+                            shouldReset = true;
+                        }
+                    }
+
+                    if (shouldReset) {
+                        ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.empty", rawName));
+                        propsToReset.add(rawName);
+                    }
+                }
+            }
+
+            for (String propertyName : propsToReset) {
+                resetProperty(this, propertyName);
+            }
+        }
     }
 
     public void handleSync(final JsonElement rawJson) {
@@ -234,45 +273,26 @@ public final class Config implements Serializable {
         handleVerification(rawJson);
     }
 
-    public void save(final String encoding) {
-        Writer configWriter = null;
-        OutputStream outputStream = null;
-
+    public void save() {
         // Ensure Critical Data is setup
         applyData();
-
-        try {
-            outputStream = Files.newOutputStream(getConfigFile().toPath());
-            configWriter = new OutputStreamWriter(outputStream, Charset.forName(encoding));
-
-            GsonBuilder builder = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting();
-            Gson gson = builder.create();
-            gson.toJson(this, configWriter);
-        } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-            ex.printStackTrace();
-        }
-
-        try {
-            if (configWriter != null) {
-                configWriter.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
-            ex.printStackTrace();
-        }
+        FileUtils.writeJsonData(this, getConfigFile(), "UTF-8",
+                FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
     }
 
-    public void save() {
-        save("UTF-8");
+    public static Object getProperty(final Config instance, final String name) {
+        return StringUtils.lookupObject(Config.class, instance, name);
     }
 
-    public static Config loadOrCreate(final boolean forceCreate, final String encoding) {
-        Reader configReader = null;
-        InputStream inputStream = null;
+    public static void setProperty(final Config instance, final String name, final Object value) {
+        StringUtils.updateField(Config.class, instance, new Tuple<>(name, value, null));
+    }
+
+    public static void resetProperty(final Config instance, final String name) {
+        setProperty(instance, name, getProperty(getDefaults(), name));
+    }
+
+    public static Config loadOrCreate(final boolean forceCreate) {
         Config config = null;
         JsonElement rawJson = null;
 
@@ -280,57 +300,29 @@ public final class Config implements Serializable {
         MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
 
         try {
-            inputStream = Files.newInputStream(getConfigFile().toPath());
-            configReader = new InputStreamReader(inputStream, Charset.forName(encoding));
-
-            GsonBuilder builder = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting();
-            Gson gson = builder.create();
-            config = gson.fromJson(configReader, Config.class);
-            rawJson = gson.toJsonTree(config);
+            config = FileUtils.getJsonData(getConfigFile(), Config.class,
+                    FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
+            rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
             boolean isNew = (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
             if (forceCreate || isNew) {
                 config = new Config();
                 config.isNewFile = isNew;
-                config.handleSync(rawJson);
-                config.save();
-            } else {
-                config.handleSync(rawJson);
             }
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
             ex.printStackTrace();
         }
 
-        try {
-            if (configReader != null) {
-                configReader.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
-            ex.printStackTrace();
-        } finally {
-            if (config == null) {
-                config = new Config();
-                config.isNewFile = true;
-                config.handleSync(null);
-                config.save();
-            }
+        if (config == null) {
+            config = new Config();
+            config.isNewFile = true;
         }
+        config.handleSync(rawJson);
+        config.save();
         return config;
     }
 
-    public static Config loadOrCreate(final boolean forceCreate) {
-        return loadOrCreate(forceCreate, "UTF-8");
-    }
-
-    public static Config loadOrCreate(final String encoding) {
-        return loadOrCreate(false, encoding);
-    }
-
     public static Config loadOrCreate() {
-        return loadOrCreate("UTF-8");
+        return loadOrCreate(false);
     }
 }

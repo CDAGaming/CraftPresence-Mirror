@@ -50,7 +50,7 @@ public class MCUpdaterUtils {
         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.mcupdater.init"));
 
         try {
-            instance = FileUtils.getJSONFromFile(new File("instance.json"), MCUpdaterInstance.class);
+            instance = FileUtils.getJsonData(new File("instance.json"), MCUpdaterInstance.class);
 
             if (instance != null && !StringUtils.isNullOrEmpty(instance.getPackName())) {
                 CraftPresence.packFound = true;

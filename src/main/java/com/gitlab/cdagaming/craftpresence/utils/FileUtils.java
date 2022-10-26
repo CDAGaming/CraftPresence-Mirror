@@ -33,10 +33,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
@@ -52,31 +52,67 @@ public class FileUtils {
     /**
      * A GSON Json Builder Instance
      */
-    private static final Gson GSON = new GsonBuilder().create();
+    private static final GsonBuilder GSON_BUILDER = new GsonBuilder();
 
     /**
-     * Retrieves File Data and Converts it into a Parsed Json Syntax
+     * Retrieves Raw Data and Converts it into a Parsed Json Syntax
      *
-     * @param file     The File to access
+     * @param data     The File to access
      * @param classObj The target class to base the output on
      * @param <T>      The Result and Class Type
      * @return The Parsed Json as the Class Type's Syntax
      * @throws Exception If Unable to read the File
      */
-    public static <T> T getJSONFromFile(File file, Class<T> classObj) throws Exception {
-        return getJSONFromFile(fileToString(file, "UTF-8"), classObj);
+    public static <T> T getJsonData(File data, Class<T> classObj, Modifiers... args) throws Exception {
+        return getJsonData(fileToString(data, "UTF-8"), classObj, args);
     }
 
     /**
-     * Retrieves File Data and Converts it into a Parsed Json Syntax
+     * Retrieves Raw Data and Converts it into a Parsed Json Syntax
      *
-     * @param file     The file data to access, as a string
+     * @param data     The json string to access
      * @param classObj The target class to base the output on
      * @param <T>      The Result and Class Type
      * @return The Parsed Json as the Class Type's Syntax
      */
-    public static <T> T getJSONFromFile(String file, Class<T> classObj) {
-        return GSON.fromJson(file, classObj);
+    public static <T> T getJsonData(String data, Class<T> classObj, Modifiers... args) {
+        final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
+        return builder.create().fromJson(data, classObj);
+    }
+
+    /**
+     * TODO
+     * @param json
+     * @param file
+     * @param encoding
+     * @param args
+     */
+    public static void writeJsonData(Object json, File file, String encoding, Modifiers... args) {
+        final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
+        Writer writer = null;
+        OutputStream outputStream = null;
+
+        try {
+            outputStream = Files.newOutputStream(file.toPath());
+            writer = new OutputStreamWriter(outputStream, Charset.forName(encoding));
+            builder.create().toJson(json, writer);
+        } catch (Exception ex) {
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
+        }
+
+        try {
+            if (writer != null) {
+                writer.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        } catch (Exception ex) {
+            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -366,5 +402,28 @@ public class FileUtils {
             in = fallbackClass.getResourceAsStream(pathToSearch);
         }
         return in;
+    }
+
+    public static GsonBuilder applyModifiers(final GsonBuilder instance, Modifiers... args) {
+        for (Modifiers param : args) {
+            switch (param) {
+                case DISABLE_ESCAPES:
+                    instance.disableHtmlEscaping();
+                    break;
+                case FORCE_LENIENT:
+                    instance.setLenient();
+                    break;
+                case PRETTY_PRINT:
+                    instance.setPrettyPrinting();
+                    break;
+                default:
+                    break;
+            }
+        }
+        return instance;
+    }
+
+    public enum Modifiers {
+        DISABLE_ESCAPES, PRETTY_PRINT, FORCE_LENIENT
     }
 }

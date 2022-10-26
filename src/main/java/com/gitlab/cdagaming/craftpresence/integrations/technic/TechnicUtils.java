@@ -56,7 +56,7 @@ public class TechnicUtils {
 
         try {
             final File installedPacks = new File(CraftPresence.SYSTEM.USER_DIR + File.separator + ".." + File.separator + ".." + File.separator + "installedPacks");
-            final TechnicPack technicPack = FileUtils.getJSONFromFile(installedPacks, TechnicPack.class);
+            final TechnicPack technicPack = FileUtils.getJsonData(installedPacks, TechnicPack.class);
 
             if (technicPack != null) {
                 if (CraftPresence.SYSTEM.USER_DIR.contains(technicPack.selected)) {
