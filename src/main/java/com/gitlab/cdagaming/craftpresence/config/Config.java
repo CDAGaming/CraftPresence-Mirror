@@ -43,8 +43,13 @@ import java.util.Map;
 public final class Config implements Serializable {
     private static final long serialVersionUID = -4853238501768086595L;
     private static final Config INSTANCE = loadOrCreate();
+    private static final Config DEFAULT = new Config();
 
     public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
+
+    public static Config getDefaults() {
+        return DEFAULT;
+    }
 
     public static Config getInstance() {
         return INSTANCE;
@@ -195,7 +200,6 @@ public final class Config implements Serializable {
     }
 
     public void handleMigrations(final JsonElement rawJson, final int oldVer, final int newVer) {
-        // TODO
         if (isNewFile && getLegacyFile().exists()) {
             new Legacy2Modern(getLegacyFile(), "UTF-8").apply(this, rawJson);
         }
@@ -204,7 +208,16 @@ public final class Config implements Serializable {
     public void handleVersionChange(final JsonElement rawJson, final int oldVer, final int newVer) {
         if (!isNewFile) {
             // TODO
+            // If we transition between LWJGL versions, reset all keyCode triggers to their defaults (Which should have checks to assign depending on version)
+            // This is better then the old format, where we'd migrate other's keyCodes, which in most cases failed
+            // If we transition between Pack Format Versions, we want to ensure any language settings are reset to their defaults
         }
+    }
+
+    public void handleVerification(final JsonElement rawJson) {
+        // TODO
+        // - Verify Type Safety, reset value if anything is null
+        // - If the field name contains a known keyCode trigger, ensure it is a valid keycode (Otherwise reset)
     }
 
     public void handleSync(final JsonElement rawJson) {
@@ -218,6 +231,7 @@ public final class Config implements Serializable {
             handleVersionChange(rawJson, oldVer, MC_VERSION);
             _lastMCVersionId = MC_VERSION;
         }
+        handleVerification(rawJson);
     }
 
     public void save(final String encoding) {
