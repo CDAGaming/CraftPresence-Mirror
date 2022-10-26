@@ -38,11 +38,12 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public class Legacy2Modern implements DataMigrator {
     private final File configFile;
     private final String encoding;
@@ -132,6 +133,9 @@ public class Legacy2Modern implements DataMigrator {
                             final String convertedString = StringUtils.removeMatches(StringUtils.getMatches("\\[([^\\s]+?)\\]", originalValue), null, 1);
                             final String[] oldArray;
 
+                            final Map newData = new HashMap((Map) currentValue);
+                            final Class<?> expectedSecondaryClass = newData.get("default").getClass();
+
                             if (!StringUtils.isNullOrEmpty(convertedString) &&
                                     (convertedString.startsWith("[") && convertedString.endsWith("]"))) {
                                 // If Valid, interpret into formatted Array
@@ -143,9 +147,35 @@ public class Legacy2Modern implements DataMigrator {
                                 } else {
                                     oldArray = new String[]{preArrayString};
                                 }
+                            } else {
+                                oldArray = null;
                             }
 
-                            // TODO: Convert from Array to Map
+                            if (oldArray != null) {
+                                newData.clear();
+                                for (String entry : oldArray) {
+                                    if (!StringUtils.isNullOrEmpty(entry)) {
+                                        final String[] part = entry.split(splitCharacter);
+                                        if (!StringUtils.isNullOrEmpty(part[0])) {
+                                            if (expectedSecondaryClass == Pair.class) {
+                                                newData.put(part[0], new Pair<>(
+                                                        part.length >= 2 ? part[1] : "",
+                                                        part.length >= 3 ? part[2] : ""
+                                                ));
+                                            } else if (expectedSecondaryClass == Tuple.class) {
+                                                newData.put(part[0], new Tuple<>(
+                                                        part.length >= 2 ? part[1] : "",
+                                                        part.length >= 3 ? part[2] : "",
+                                                        part.length >= 4 ? part[3] : ""
+                                                ));
+                                            } else {
+                                                newData.put(part[0], part.length >= 2 ? part[1] : "");
+                                            }
+                                        }
+                                    }
+                                }
+                                newValue = newData;
+                            }
                         } else {
                             newValue = originalValue.toString();
                         }
@@ -170,7 +200,9 @@ public class Legacy2Modern implements DataMigrator {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
             ex.printStackTrace();
         } finally {
-            // TODO: Delete the legacy file
+            if (!configFile.delete()) {
+                ModUtils.LOG.error("Failed to remove: " + configFile.getName());
+            }
         }
         return instance;
     }
