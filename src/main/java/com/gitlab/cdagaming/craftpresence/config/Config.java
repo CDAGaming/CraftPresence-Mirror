@@ -243,6 +243,15 @@ public final class Config implements Serializable {
                         if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
                                 !StringUtils.isValidBoolean(rawValue.getAsString())) {
                             shouldReset = true;
+                        } else if ((expectedClass == int.class || expectedClass == Integer.class)) {
+                            final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(rawValue.getAsString());
+                            if (boolData.getFirst()) {
+                                // TODO: Keycode Validation
+                            } else {
+                                shouldReset = true;
+                            }
+                        } else if (expectedClass == Map.class) {
+                            // TODO: Map Type Validation
                         }
                     }
 
