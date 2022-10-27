@@ -219,6 +219,8 @@ public final class Config implements Serializable {
 
     public JsonElement handleVerification(JsonElement rawJson, final int currentProtocol, final int defaultProtocol) {
         // Sync Migration Data for later usage
+        final List<String> keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
+        final List<String> languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
         final KeyConverter.ConversionMode keyCodeMigrationId;
         final TranslationUtils.ConversionMode languageMigrationId;
 
@@ -256,11 +258,12 @@ public final class Config implements Serializable {
             languageMigrationId = TranslationUtils.ConversionMode.Unknown;
         }
 
+        ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.add", keyCodeTriggers.toString(), keyCodeMigrationId, keyCodeMigrationId.equals(KeyConverter.ConversionMode.None) ? "Verification" : "Setting Change"));
+        ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.add", languageTriggers.toString(), languageMigrationId, languageMigrationId.equals(TranslationUtils.ConversionMode.None) ? "Verification" : "Setting Change"));
+
         // Verify Type Safety, reset value if anything is null or invalid for it's type
         if (rawJson != null) {
             final List<String> propsToReset = Lists.newArrayList();
-            final List<String> keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
-            final List<String> languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
                 final String rawName = entry.getKey();
                 final JsonElement rawValue = entry.getValue();
@@ -287,10 +290,12 @@ public final class Config implements Serializable {
                                     if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
                                         if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
                                             shouldReset = true;
-                                        } else if (keyCodeMigrationId != KeyConverter.ConversionMode.None && keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
-                                            final int migratedKeybindId = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
-                                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeybindId));
-                                            setProperty(rawName, migratedKeybindId);
+                                        } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
+                                            final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
+                                            if (migratedKeyCode != boolData.getSecond()) {
+                                                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
+                                                setProperty(rawName, migratedKeyCode);
+                                            }
                                         }
                                         break;
                                     }
@@ -302,6 +307,7 @@ public final class Config implements Serializable {
                             final Map newData = new HashMap((Map) currentValue);
                             final Map defaultData = new HashMap((Map) defaultValue);
                             if (!newData.containsKey("default")) {
+                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", rawName));
                                 newData.putAll(defaultData);
                                 setProperty(rawName, newData);
                             }
@@ -311,10 +317,12 @@ public final class Config implements Serializable {
                             // If the Property Name contains these values, move onwards
                             for (String langTrigger : languageTriggers) {
                                 if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
-                                    if (languageMigrationId != TranslationUtils.ConversionMode.None && languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
+                                    if (languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
                                         final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
-                                        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
-                                        setProperty(rawName, migratedLanguageId);
+                                        if (!migratedLanguageId.equals(rawStringValue)) {
+                                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
+                                            setProperty(rawName, migratedLanguageId);
+                                        }
                                     }
                                     break;
                                 }
@@ -395,6 +403,11 @@ public final class Config implements Serializable {
         }
         config.handleSync(rawJson);
         config.save();
+        if (config.isNewFile) {
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.new"));
+        } else {
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
+        }
         return config;
     }
 
