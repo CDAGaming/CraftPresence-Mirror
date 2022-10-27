@@ -23,9 +23,11 @@ sourceSets {
     }
 }
 
+def versionFileLabel = "${versionLabel.equalsIgnoreCase("release") ? "" : "+${versionLabel}"}"
+
 version = "${versionId}"
 group = "com.gitlab.cdagaming"
-archivesBaseName = "${archive_name}-${mc_version}-${deploymentType}"
+archivesBaseName = "${archive_name}-${mc_version}${versionFileLabel.replaceAll("\\s", ".")}"
 
 JavaVersion targetVersion = JavaVersion.VERSION_1_8
 
@@ -77,7 +79,7 @@ curseforge {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "${mod_name}".toLowerCase()
-    versionNumber = "v${version}_${mc_version}-${loader_name}${versionLabel.equalsIgnoreCase("release") ? "" : "_${versionLabel}"}".replaceAll("\\s", "").toLowerCase()
+    versionNumber = "v${version}_${mc_version}-${loader_name}${versionFileLabel}".replaceAll("\\s", "").toLowerCase()
     versionName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
     changelog = file("Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
