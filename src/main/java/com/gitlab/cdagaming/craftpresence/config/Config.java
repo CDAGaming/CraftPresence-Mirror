@@ -38,9 +38,11 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public final class Config implements Serializable {
     private static final long serialVersionUID = -4853238501768086595L;
     private static final Config INSTANCE = loadOrCreate();
@@ -296,8 +298,13 @@ public final class Config implements Serializable {
                             } else {
                                 shouldReset = true;
                             }
-                        } else if (expectedClass == Map.class) {
-                            // TODO: Map Type Validation
+                        } else if (currentValue instanceof Map) {
+                            final Map newData = new HashMap((Map) currentValue);
+                            final Map defaultData = new HashMap((Map) defaultValue);
+                            if (!newData.containsKey("default")) {
+                                newData.putAll(defaultData);
+                                setProperty(rawName, newData);
+                            }
                         } else if (rawValue.isJsonPrimitive()) {
                             final String rawStringValue = rawValue.getAsString();
                             // This check will trigger if the Field Name contains Language Identifier Triggers
