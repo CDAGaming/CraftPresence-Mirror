@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.guava.ClassPath;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -60,6 +59,7 @@ public class FileUtils {
      * @param data     The File to access
      * @param classObj The target class to base the output on
      * @param <T>      The Result and Class Type
+     * @param args     The Command Arguments to parse
      * @return The Parsed Json as the Class Type's Syntax
      * @throws Exception If Unable to read the File
      */
@@ -73,6 +73,7 @@ public class FileUtils {
      * @param data     The json string to access
      * @param classObj The target class to base the output on
      * @param <T>      The Result and Class Type
+     * @param args     The Command Arguments to parse
      * @return The Parsed Json as the Class Type's Syntax
      */
     public static <T> T getJsonData(String data, Class<T> classObj, Modifiers... args) {
@@ -81,11 +82,12 @@ public class FileUtils {
     }
 
     /**
-     * TODO
-     * @param json
-     * @param file
-     * @param encoding
-     * @param args
+     * Writes Raw Json Data Objects to the specified file
+     *
+     * @param json     The json data to access
+     * @param file     The resulting file to output to
+     * @param encoding The encoding to parse the output as
+     * @param args     The Command Arguments to parse
      */
     public static void writeJsonData(Object json, File file, String encoding, Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
@@ -404,6 +406,13 @@ public class FileUtils {
         return in;
     }
 
+    /**
+     * Applies the specified {@link Modifiers} to a {@link GsonBuilder} instance
+     *
+     * @param instance The {@link GsonBuilder} to interpret
+     * @param args     The Command Arguments to parse
+     * @return The modified {@link GsonBuilder} instance
+     */
     public static GsonBuilder applyModifiers(final GsonBuilder instance, Modifiers... args) {
         for (Modifiers param : args) {
             switch (param) {
@@ -423,7 +432,22 @@ public class FileUtils {
         return instance;
     }
 
+    /**
+     * Constants representing various {@link GsonBuilder} togges,
+     * such as Disabling Escape Characters, Forcing Lenient, and Pretty Print
+     */
     public enum Modifiers {
-        DISABLE_ESCAPES, PRETTY_PRINT, FORCE_LENIENT
+        /**
+         * Constant for the "Disable Escapes" Modifier.
+         */
+        DISABLE_ESCAPES,
+        /**
+         * Constant for the "Pretty Print" Modifier.
+         */
+        PRETTY_PRINT,
+        /**
+         * Constant for the "Force Lenient" Modifier.
+         */
+        FORCE_LENIENT
     }
 }
