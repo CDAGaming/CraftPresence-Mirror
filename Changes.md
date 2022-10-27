@@ -1,17 +1,29 @@
 # CraftPresence Changes
 
-## v2.0.0 (??/??/2023)
+## v2.0.0 Alpha 1 (11/29/2022)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.5...release%2Fv2.0.0)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.5...release%2Fv2.0.0+Alpha.1)_
 
 ### Changes
 
-* TBD
+* Migrated the Config Systems from `Properties` to `GSON`
+  * A one-time migration layer has been put into place to migrate your v1.x settings over to the v2.x format
+  * The logic behind data validation has been condensed to be more performant, and this change allows config settings to be more easily migrated across major updates
+  * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also removed, since we don't use Arrays in this new system
 
 ### Fixes
 
 * TBD
+
+### Translations
+
+The following changes have been made for translations:
+
+* Removed:
+  * `craftpresence.logger.error.config.adjust.global`
+  * `craftpresence.logger.info.config.notice`
+  * `craftpresence.exception.config.prop.null`
 
 ___
 
