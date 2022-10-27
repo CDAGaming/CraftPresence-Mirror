@@ -166,12 +166,12 @@ public final class Config implements Serializable {
     public boolean stripExtraGuiElements = ModUtils.IS_LEGACY_HARD;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
     // Display Settings
-    public String gameStateMessage = "&SERVER& &PACK&";
-    public String detailsMessage = "&MAINMENU&|&DIMENSION&";
-    public String largeImageMessage = "&MAINMENU&|&DIMENSION&";
-    public String smallImageMessage = "&SERVER& &PACK&";
-    public String largeImageKey = "&MAINMENU&|&DIMENSION&";
-    public String smallImageKey = "&SERVER&|&PACK&";
+    public String gameStateTextFormat = "&SERVER& &PACK&";
+    public String detailsTextFormat = "&MAINMENU&|&DIMENSION&";
+    public String largeImageTextFormat = "&MAINMENU&|&DIMENSION&";
+    public String smallImageTextFormat = "&SERVER& &PACK&";
+    public String largeImageKeyFormat = "&MAINMENU&|&DIMENSION&";
+    public String smallImageKeyFormat = "&SERVER&|&PACK&";
     public Map<String, Pair<String, String>> buttonMessages = ImmutableMap.<String, Pair<String, String>>builder()
             .put("default", new Pair<>(
                     ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
@@ -267,7 +267,7 @@ public final class Config implements Serializable {
 
                 if (defaultValue == null) {
                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
-                } else {
+                } else if (!rawName.endsWith("Format")) { // Avoidance Filter
                     final Object currentValue = getProperty(rawName);
                     if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
                         shouldReset = true;

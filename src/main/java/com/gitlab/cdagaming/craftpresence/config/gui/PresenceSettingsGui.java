@@ -85,10 +85,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage
         );
 
-        detailsFormat.setControlMessage(CraftPresence.CONFIG.detailsMessage);
-        gameStateFormat.setControlMessage(CraftPresence.CONFIG.gameStateMessage);
-        largeImageFormat.setControlMessage(CraftPresence.CONFIG.largeImageMessage);
-        smallImageFormat.setControlMessage(CraftPresence.CONFIG.smallImageMessage);
+        detailsFormat.setControlMessage(CraftPresence.CONFIG.detailsTextFormat);
+        gameStateFormat.setControlMessage(CraftPresence.CONFIG.gameStateTextFormat);
+        largeImageFormat.setControlMessage(CraftPresence.CONFIG.largeImageTextFormat);
+        smallImageFormat.setControlMessage(CraftPresence.CONFIG.smallImageTextFormat);
 
         // Page 2 Items
         smallImageKeyFormat = addControl(
@@ -106,8 +106,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
-        smallImageKeyFormat.setControlMessage(CraftPresence.CONFIG.smallImageKey);
-        largeImageKeyFormat.setControlMessage(CraftPresence.CONFIG.largeImageKey);
+        smallImageKeyFormat.setControlMessage(CraftPresence.CONFIG.smallImageKeyFormat);
+        largeImageKeyFormat.setControlMessage(CraftPresence.CONFIG.largeImageKeyFormat);
 
         // Button Messages Button
         buttonMessagesButton = addControl(
@@ -280,35 +280,35 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
         backButton.setOnClick(
                 () -> {
-                    if (!detailsFormat.getControlMessage().equals(CraftPresence.CONFIG.detailsMessage)) {
+                    if (!detailsFormat.getControlMessage().equals(CraftPresence.CONFIG.detailsTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.detailsMessage = detailsFormat.getControlMessage();
+                        CraftPresence.CONFIG.detailsTextFormat = detailsFormat.getControlMessage();
                     }
-                    if (!gameStateFormat.getControlMessage().equals(CraftPresence.CONFIG.gameStateMessage)) {
+                    if (!gameStateFormat.getControlMessage().equals(CraftPresence.CONFIG.gameStateTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.gameStateMessage = gameStateFormat.getControlMessage();
+                        CraftPresence.CONFIG.gameStateTextFormat = gameStateFormat.getControlMessage();
                     }
-                    if (!largeImageFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageMessage)) {
+                    if (!largeImageFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageMessage = largeImageFormat.getControlMessage();
+                        CraftPresence.CONFIG.largeImageTextFormat = largeImageFormat.getControlMessage();
                     }
-                    if (!smallImageFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageMessage)) {
+                    if (!smallImageFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageMessage = smallImageFormat.getControlMessage();
+                        CraftPresence.CONFIG.smallImageTextFormat = smallImageFormat.getControlMessage();
                     }
-                    if (!largeImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageKey)) {
+                    if (!largeImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageKeyFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageKey = largeImageKeyFormat.getControlMessage();
+                        CraftPresence.CONFIG.largeImageKeyFormat = largeImageKeyFormat.getControlMessage();
                     }
-                    if (!smallImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageKey)) {
+                    if (!smallImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageKeyFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageKey = smallImageKeyFormat.getControlMessage();
+                        CraftPresence.CONFIG.smallImageKeyFormat = smallImageKeyFormat.getControlMessage();
                     }
                     CraftPresence.GUIS.openScreen(parentScreen);
                 }

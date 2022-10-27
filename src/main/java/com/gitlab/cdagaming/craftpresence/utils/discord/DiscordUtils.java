@@ -1106,8 +1106,8 @@ public class DiscordUtils {
      */
     public boolean isImageInUse(final String... evalStrings) {
         for (String evalString : evalStrings) {
-            if (CraftPresence.CONFIG.largeImageKey.contains(evalString) ||
-                    CraftPresence.CONFIG.smallImageKey.contains(evalString)
+            if (CraftPresence.CONFIG.largeImageKeyFormat.contains(evalString) ||
+                    CraftPresence.CONFIG.smallImageKeyFormat.contains(evalString)
             ) {
                 return true;
             }
@@ -1197,19 +1197,19 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence() {
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.detailsMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.gameStateMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.detailsTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.gameStateTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.largeImageKey, ArgumentType.Image));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.smallImageKey, ArgumentType.Image));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.largeImageKeyFormat, ArgumentType.Image));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.smallImageKeyFormat, ArgumentType.Image));
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(LARGE_IMAGE_ASSET.getUrl(), ArgumentType.Text) : LARGE_IMAGE_ASSET.getName()) : "";
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(SMALL_IMAGE_ASSET.getUrl(), ArgumentType.Text) : SMALL_IMAGE_ASSET.getName()) : "";
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.largeImageMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.smallImageMessage, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.largeImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.smallImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
