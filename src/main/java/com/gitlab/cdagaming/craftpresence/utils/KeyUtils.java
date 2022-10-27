@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
@@ -75,33 +74,6 @@ public class KeyUtils {
     private boolean keysRegistered = false;
 
     /**
-     * Registers KeyBindings and critical KeyCode information to MC's KeyCode systems
-     * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
-     */
-    void register() {
-        KEY_MAPPINGS.put(
-                "configKeyCode",
-                new Tuple<>(
-                        new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.configKeyCode, "key.craftpresence.category"),
-                        () -> {
-                            if (!CraftPresence.GUIS.isFocused && !CraftPresence.GUIS.configGUIOpened) {
-                                CraftPresence.GUIS.openScreen(new MainGui(CraftPresence.instance.currentScreen));
-                            }
-                        }, null
-                )
-        );
-    }
-
-    /**
-     * Retrieve if the keybindings are successfully registered to necessary systems
-     *
-     * @return {@code true} if and only if the keybindings are successfully registered
-     */
-    public boolean areKeysRegistered() {
-        return keysRegistered;
-    }
-
-    /**
      * Determine if the Source KeyCode fulfills the following conditions
      * <p>
      * 1) Is Not Contained or Listed within {@link KeyUtils#invalidKeys}
@@ -128,40 +100,6 @@ public class KeyUtils {
             clearKeys.add(ModUtils.MCProtocolID > 340 ? 256 : 1); // ESC
         }
         return clearKeys.contains(sourceKeyCode);
-    }
-
-    /**
-     * Retrieves the unfiltered Key Mappings for Vanilla MC KeyBind Schema
-     * <p>
-     * Format: rawKeyField:[keyBindInstance:runEvent:errorCallback]
-     *
-     * @return The unfiltered key mappings
-     */
-    public Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> getRawKeyMappings() {
-        return KEY_MAPPINGS;
-    }
-
-    /**
-     * Determine the LWJGL KeyCode Name for the inputted KeyCode
-     *
-     * @param original A KeyCode, converted to String
-     * @return Either an LWJGL KeyCode Name or the KeyCode if none can be found
-     */
-    public String getKeyName(final String original) {
-        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0)).getSecond();
-        if (!StringUtils.isNullOrEmpty(original)) {
-            final Pair<Boolean, Integer> integerData = StringUtils.getValidInteger(original);
-
-            if (integerData.getFirst()) {
-                return getKeyName(integerData.getSecond());
-            } else {
-                // If Not a Valid Integer, return the appropriate Unknown Keycode
-                return unknownKeyName;
-            }
-        } else {
-            // If input is a Null Value, return the appropriate Unknown Keycode
-            return unknownKeyName;
-        }
     }
 
     /**
@@ -200,6 +138,67 @@ public class KeyUtils {
             }
         } else {
             // If Not a Valid KeyCode, return the appropriate Unknown Keycode
+            return unknownKeyName;
+        }
+    }
+
+    /**
+     * Registers KeyBindings and critical KeyCode information to MC's KeyCode systems
+     * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
+     */
+    void register() {
+        KEY_MAPPINGS.put(
+                "configKeyCode",
+                new Tuple<>(
+                        new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.configKeyCode, "key.craftpresence.category"),
+                        () -> {
+                            if (!CraftPresence.GUIS.isFocused && !CraftPresence.GUIS.configGUIOpened) {
+                                CraftPresence.GUIS.openScreen(new MainGui(CraftPresence.instance.currentScreen));
+                            }
+                        }, null
+                )
+        );
+    }
+
+    /**
+     * Retrieve if the keybindings are successfully registered to necessary systems
+     *
+     * @return {@code true} if and only if the keybindings are successfully registered
+     */
+    public boolean areKeysRegistered() {
+        return keysRegistered;
+    }
+
+    /**
+     * Retrieves the unfiltered Key Mappings for Vanilla MC KeyBind Schema
+     * <p>
+     * Format: rawKeyField:[keyBindInstance:runEvent:errorCallback]
+     *
+     * @return The unfiltered key mappings
+     */
+    public Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> getRawKeyMappings() {
+        return KEY_MAPPINGS;
+    }
+
+    /**
+     * Determine the LWJGL KeyCode Name for the inputted KeyCode
+     *
+     * @param original A KeyCode, converted to String
+     * @return Either an LWJGL KeyCode Name or the KeyCode if none can be found
+     */
+    public String getKeyName(final String original) {
+        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0)).getSecond();
+        if (!StringUtils.isNullOrEmpty(original)) {
+            final Pair<Boolean, Integer> integerData = StringUtils.getValidInteger(original);
+
+            if (integerData.getFirst()) {
+                return getKeyName(integerData.getSecond());
+            } else {
+                // If Not a Valid Integer, return the appropriate Unknown Keycode
+                return unknownKeyName;
+            }
+        } else {
+            // If input is a Null Value, return the appropriate Unknown Keycode
             return unknownKeyName;
         }
     }
@@ -254,7 +253,7 @@ public class KeyUtils {
                         if (keySyncQueue.containsKey(keyName)) {
                             syncKeyData(keyName, ImportMode.Config, keySyncQueue.get(keyName));
                             keySyncQueue.remove(keyName);
-                        } else if (currentBind != StringUtils.getValidInteger(Config.getProperty(CraftPresence.CONFIG, keyName)).getSecond()) {
+                        } else if (currentBind != StringUtils.getValidInteger(CraftPresence.CONFIG.getProperty(keyName)).getSecond()) {
                             syncKeyData(keyName, ImportMode.Vanilla, currentBind);
                         }
                     }
@@ -279,7 +278,7 @@ public class KeyUtils {
         if (mode == ImportMode.Config) {
             keyData.getFirst().setKeyCode(keyCode);
         } else if (mode == ImportMode.Vanilla) {
-            Config.setProperty(CraftPresence.CONFIG, keyName, keyCode);
+            CraftPresence.CONFIG.setProperty(keyName, keyCode);
             CraftPresence.CONFIG.save();
         } else if (mode == ImportMode.Specific) {
             syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);

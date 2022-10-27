@@ -44,8 +44,6 @@ import java.util.Map;
 public final class Config implements Serializable {
     private static final long serialVersionUID = -4853238501768086595L;
     private static final Config INSTANCE = loadOrCreate();
-    private static List<String> keyCodeTriggers;
-    private static List<String> languageTriggers;
     private static Config DEFAULT;
 
     public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
@@ -55,20 +53,6 @@ public final class Config implements Serializable {
             DEFAULT = new Config();
         }
         return DEFAULT;
-    }
-
-    public static List<String> getKeyCodeTriggers() {
-        if (keyCodeTriggers == null) {
-            keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
-        }
-        return keyCodeTriggers;
-    }
-
-    public static List<String> getLanguageTriggers() {
-        if (languageTriggers == null) {
-            languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
-        }
-        return languageTriggers;
     }
 
     public static Config getInstance() {
@@ -202,10 +186,6 @@ public final class Config implements Serializable {
         return new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".json");
     }
 
-    public static File getLegacyFile() {
-        return new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".properties");
-    }
-
     public void applyData() {
         if (hasChanged) {
             if (hasClientPropertiesChanged) {
@@ -220,15 +200,17 @@ public final class Config implements Serializable {
     }
 
     public JsonElement handleMigrations(JsonElement rawJson, int oldVer, final int newVer) {
-        if (isNewFile && getLegacyFile().exists()) {
-            new Legacy2Modern(getLegacyFile(), "UTF-8").apply(this, rawJson);
-            try {
-                rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
-            } catch (Exception ex) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                ex.printStackTrace();
+        if (isNewFile) {
+            final File legacyFile = new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".properties");
+            if (legacyFile.exists()) {
+                new Legacy2Modern(legacyFile, "UTF-8").apply(this, rawJson);
+                try {
+                    rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
+                } catch (Exception ex) {
+                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+                    ex.printStackTrace();
+                }
             }
-            isNewFile = false;
         }
         return rawJson;
     }
@@ -275,16 +257,18 @@ public final class Config implements Serializable {
         // Verify Type Safety, reset value if anything is null or invalid for it's type
         if (rawJson != null) {
             final List<String> propsToReset = Lists.newArrayList();
+            final List<String> keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
+            final List<String> languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
                 final String rawName = entry.getKey();
                 final JsonElement rawValue = entry.getValue();
-                final Object defaultValue = getProperty(getDefaults(), rawName);
+                final Object defaultValue = getDefaults().getProperty(rawName);
                 boolean shouldReset = false;
 
                 if (defaultValue == null) {
                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
                 } else {
-                    final Object currentValue = getProperty(this, rawName);
+                    final Object currentValue = getProperty(rawName);
                     if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
                         shouldReset = true;
                     } else {
@@ -297,14 +281,14 @@ public final class Config implements Serializable {
                             if (boolData.getFirst()) {
                                 // This check will trigger if the Field Name contains KeyCode Triggers
                                 // If the Property Name contains these values, move onwards
-                                for (String keyTrigger : getKeyCodeTriggers()) {
+                                for (String keyTrigger : keyCodeTriggers) {
                                     if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
                                         if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
                                             shouldReset = true;
                                         } else if (keyCodeMigrationId != KeyConverter.ConversionMode.None && keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
                                             final int migratedKeybindId = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
                                             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeybindId));
-                                            setProperty(this, rawName, migratedKeybindId);
+                                            setProperty(rawName, migratedKeybindId);
                                         }
                                         break;
                                     }
@@ -318,12 +302,12 @@ public final class Config implements Serializable {
                             final String rawStringValue = rawValue.getAsString();
                             // This check will trigger if the Field Name contains Language Identifier Triggers
                             // If the Property Name contains these values, move onwards
-                            for (String langTrigger : getLanguageTriggers()) {
+                            for (String langTrigger : languageTriggers) {
                                 if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
                                     if (languageMigrationId != TranslationUtils.ConversionMode.None && languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
                                         final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
                                         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
-                                        setProperty(this, rawName, migratedLanguageId);
+                                        setProperty(rawName, migratedLanguageId);
                                     }
                                     break;
                                 }
@@ -339,7 +323,7 @@ public final class Config implements Serializable {
             }
 
             for (String propertyName : propsToReset) {
-                resetProperty(this, propertyName);
+                resetProperty(propertyName);
             }
         }
         return rawJson;
@@ -365,16 +349,16 @@ public final class Config implements Serializable {
                 FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
     }
 
-    public static Object getProperty(final Config instance, final String name) {
-        return StringUtils.lookupObject(Config.class, instance, name);
+    public Object getProperty(final String name) {
+        return StringUtils.lookupObject(Config.class, this, name);
     }
 
-    public static void setProperty(final Config instance, final String name, final Object value) {
-        StringUtils.updateField(Config.class, instance, new Tuple<>(name, value, null));
+    public void setProperty(final String name, final Object value) {
+        StringUtils.updateField(Config.class, this, new Tuple<>(name, value, null));
     }
 
-    public static void resetProperty(final Config instance, final String name) {
-        setProperty(instance, name, getProperty(getDefaults(), name));
+    public void resetProperty(final String name) {
+        setProperty(name, getDefaults().getProperty(name));
     }
 
     public static Config loadOrCreate(final boolean forceCreate) {
