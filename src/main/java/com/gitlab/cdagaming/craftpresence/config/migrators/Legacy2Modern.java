@@ -82,6 +82,7 @@ public class Legacy2Modern implements DataMigrator {
             .put("largeImageKeyFormat", "largeImageKey")
             .put("modpackMessage", "packPlaceholderMessage")
             .put("smallImageTextFormat", "smallImageMessage")
+            .put("lastMcVersionId", "_lastMCVersionId")
             .build();
     private final List<String> excludedOptions = Lists.newArrayList(
             "schemaVersion", "splitCharacter",
@@ -203,6 +204,7 @@ public class Legacy2Modern implements DataMigrator {
             if (!configFile.delete()) {
                 ModUtils.LOG.error("Failed to remove: " + configFile.getName());
             }
+            instance.save();
         }
         return instance;
     }

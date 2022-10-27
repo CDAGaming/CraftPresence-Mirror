@@ -219,13 +219,21 @@ public final class Config implements Serializable {
         isNewFile = false;
     }
 
-    public void handleMigrations(final JsonElement rawJson, final int oldVer, final int newVer) {
+    public JsonElement handleMigrations(JsonElement rawJson, int oldVer, final int newVer) {
         if (isNewFile && getLegacyFile().exists()) {
             new Legacy2Modern(getLegacyFile(), "UTF-8").apply(this, rawJson);
+            try {
+                rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
+            } catch (Exception ex) {
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+                ex.printStackTrace();
+            }
+            isNewFile = false;
         }
+        return rawJson;
     }
 
-    public void handleVerification(final JsonElement rawJson, final int currentProtocol, final int defaultProtocol) {
+    public JsonElement handleVerification(JsonElement rawJson, final int currentProtocol, final int defaultProtocol) {
         // Sync Migration Data for later usage
         final KeyConverter.ConversionMode keyCodeMigrationId;
         final TranslationUtils.ConversionMode languageMigrationId;
@@ -310,7 +318,7 @@ public final class Config implements Serializable {
                             final String rawStringValue = rawValue.getAsString();
                             // This check will trigger if the Field Name contains Language Identifier Triggers
                             // If the Property Name contains these values, move onwards
-                            for (String langTrigger : languageTriggers) {
+                            for (String langTrigger : getLanguageTriggers()) {
                                 if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
                                     if (languageMigrationId != TranslationUtils.ConversionMode.None && languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
                                         final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
@@ -334,21 +342,20 @@ public final class Config implements Serializable {
                 resetProperty(this, propertyName);
             }
         }
+        return rawJson;
     }
 
-    public void handleSync(final JsonElement rawJson) {
-        int oldMCVer = _lastMCVersionId;
+    public JsonElement handleSync(JsonElement rawJson) {
         if (_schemaVersion != VERSION) {
             int oldVer = _schemaVersion;
-            handleMigrations(rawJson, oldVer, VERSION);
+            rawJson = handleMigrations(rawJson, oldVer, VERSION);
             _schemaVersion = VERSION;
         }
+        int oldMCVer = _lastMCVersionId;
         if (_lastMCVersionId != MC_VERSION) {
             _lastMCVersionId = MC_VERSION;
         }
-        if (!isNewFile) {
-            handleVerification(rawJson, oldMCVer, MC_VERSION);
-        }
+        return !isNewFile ? handleVerification(rawJson, oldMCVer, MC_VERSION) : rawJson;
     }
 
     public void save() {
