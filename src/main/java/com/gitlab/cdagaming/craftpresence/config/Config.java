@@ -26,12 +26,11 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.migrators.Legacy2Modern;
+import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -45,6 +44,8 @@ import java.util.Map;
 public final class Config implements Serializable {
     private static final long serialVersionUID = -4853238501768086595L;
     private static final Config INSTANCE = loadOrCreate();
+    private static List<String> keyCodeTriggers;
+    private static List<String> languageTriggers;
     private static Config DEFAULT;
 
     public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
@@ -54,6 +55,20 @@ public final class Config implements Serializable {
             DEFAULT = new Config();
         }
         return DEFAULT;
+    }
+
+    public static List<String> getKeyCodeTriggers() {
+        if (keyCodeTriggers == null) {
+            keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
+        }
+        return keyCodeTriggers;
+    }
+
+    public static List<String> getLanguageTriggers() {
+        if (languageTriggers == null) {
+            languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
+        }
+        return languageTriggers;
     }
 
     public static Config getInstance() {
@@ -210,19 +225,46 @@ public final class Config implements Serializable {
         }
     }
 
-    public void handleVersionChange(final JsonElement rawJson, final int oldVer, final int newVer) {
-        if (!isNewFile) {
-            // TODO
-            // If we transition between LWJGL versions, reset all keyCode triggers to their defaults (Which should have checks to assign depending on version)
-            // This is better then the old format, where we'd migrate other's keyCodes, which in most cases failed
-            // If we transition between Pack Format Versions, we want to ensure any language settings are reset to their defaults
-        }
-    }
+    public void handleVerification(final JsonElement rawJson, final int currentProtocol, final int defaultProtocol) {
+        // Sync Migration Data for later usage
+        final KeyConverter.ConversionMode keyCodeMigrationId;
+        final TranslationUtils.ConversionMode languageMigrationId;
 
-    public void handleVerification(final JsonElement rawJson) {
-        // TODO
-        // - Verify Type Safety, reset value if anything is null or invalid for it's type
-        // - If the field name contains a known keyCode trigger, ensure it is a valid keycode (Otherwise reset)
+        // Global Case 1 Notes (KeyCode):
+        // In this situation, if the currently parsed protocol version differs and
+        // is a newer version then 1.12.2 (340), then
+        // we need to ensure any keycode assignments are in an LWJGL 3 format
+        // Otherwise, if using a config from above 1.12.2 (340) on it or anything lower,
+        // we need to ensure any keycode assignments are in an LWJGL 2 format.
+        // If neither is true, then we mark the migration data as None, and it will be verified
+        if (currentProtocol <= 340 && defaultProtocol > 340) {
+            keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl3;
+        } else if (currentProtocol > 340 && defaultProtocol <= 340) {
+            keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl2;
+        } else if (currentProtocol >= 0 && defaultProtocol >= 0) {
+            keyCodeMigrationId = KeyConverter.ConversionMode.None;
+        } else {
+            keyCodeMigrationId = KeyConverter.ConversionMode.Unknown;
+        }
+
+        // Normal Case 1 Notes (Language ID):
+        // In this situation, if the currently parsed protocol version differs and
+        // is a newer version then or exactly 1.11 (315), then
+        // we need to ensure any Language Locale's are complying with Pack Format 3 and above
+        // Otherwise, if using a config from anything less then 1.11 (315),
+        // we need to ensure any Language Locale's are complying with Pack Format 2 and below
+        // If neither is true, then we mark the migration data as None, and it will be verified
+        if (currentProtocol < 315 && defaultProtocol >= 315) {
+            languageMigrationId = TranslationUtils.ConversionMode.PackFormat3;
+        } else if (currentProtocol >= 315 && defaultProtocol < 315) {
+            languageMigrationId = TranslationUtils.ConversionMode.PackFormat2;
+        } else if (currentProtocol >= 0 && defaultProtocol >= 0) {
+            languageMigrationId = TranslationUtils.ConversionMode.None;
+        } else {
+            languageMigrationId = TranslationUtils.ConversionMode.Unknown;
+        }
+
+        // Verify Type Safety, reset value if anything is null or invalid for it's type
         if (rawJson != null) {
             final List<String> propsToReset = Lists.newArrayList();
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
@@ -239,19 +281,45 @@ public final class Config implements Serializable {
                         shouldReset = true;
                     } else {
                         final Class<?> expectedClass = currentValue.getClass();
-                        // TODO: Per-Type validation
                         if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
                                 !StringUtils.isValidBoolean(rawValue.getAsString())) {
                             shouldReset = true;
                         } else if ((expectedClass == int.class || expectedClass == Integer.class)) {
                             final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(rawValue.getAsString());
                             if (boolData.getFirst()) {
-                                // TODO: Keycode Validation
+                                // This check will trigger if the Field Name contains KeyCode Triggers
+                                // If the Property Name contains these values, move onwards
+                                for (String keyTrigger : getKeyCodeTriggers()) {
+                                    if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
+                                        if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
+                                            shouldReset = true;
+                                        } else if (keyCodeMigrationId != KeyConverter.ConversionMode.None && keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
+                                            final int migratedKeybindId = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
+                                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeybindId));
+                                            setProperty(this, rawName, migratedKeybindId);
+                                        }
+                                        break;
+                                    }
+                                }
                             } else {
                                 shouldReset = true;
                             }
                         } else if (expectedClass == Map.class) {
                             // TODO: Map Type Validation
+                        } else if (rawValue.isJsonPrimitive()) {
+                            final String rawStringValue = rawValue.getAsString();
+                            // This check will trigger if the Field Name contains Language Identifier Triggers
+                            // If the Property Name contains these values, move onwards
+                            for (String langTrigger : languageTriggers) {
+                                if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
+                                    if (languageMigrationId != TranslationUtils.ConversionMode.None && languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
+                                        final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
+                                        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
+                                        setProperty(this, rawName, migratedLanguageId);
+                                    }
+                                    break;
+                                }
+                            }
                         }
                     }
 
@@ -269,17 +337,18 @@ public final class Config implements Serializable {
     }
 
     public void handleSync(final JsonElement rawJson) {
+        int oldMCVer = _lastMCVersionId;
         if (_schemaVersion != VERSION) {
             int oldVer = _schemaVersion;
             handleMigrations(rawJson, oldVer, VERSION);
             _schemaVersion = VERSION;
         }
         if (_lastMCVersionId != MC_VERSION) {
-            int oldVer = _lastMCVersionId;
-            handleVersionChange(rawJson, oldVer, MC_VERSION);
             _lastMCVersionId = MC_VERSION;
         }
-        handleVerification(rawJson);
+        if (!isNewFile) {
+            handleVerification(rawJson, oldMCVer, MC_VERSION);
+        }
     }
 
     public void save() {

@@ -56,12 +56,12 @@ public class KeyUtils {
      * LWJGL 2: ESC = 0x01
      * LWJGL 3: ESC = 256
      */
-    private final List<Integer> clearKeys = Lists.newArrayList();
+    private static final List<Integer> clearKeys = Lists.newArrayList();
 
     /**
      * Allowed KeyCode Start Limit and Individual Filters
      */
-    private final List<Integer> invalidKeys = Lists.newArrayList();
+    private static final List<Integer> invalidKeys = Lists.newArrayList();
     /**
      * Key Mappings for Vanilla MC KeyBind Schema
      * <p>
@@ -79,10 +79,6 @@ public class KeyUtils {
      * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
      */
     void register() {
-        // Register Invalid Keys, dependent on protocol version
-        // - These keys will identify as NONE within the game
-        clearKeys.add(ModUtils.MCProtocolID > 340 ? 256 : 1); // ESC
-
         KEY_MAPPINGS.put(
                 "configKeyCode",
                 new Tuple<>(
@@ -113,7 +109,7 @@ public class KeyUtils {
      * @param sourceKeyCode The Source KeyCode to Check
      * @return {@code true} if and only if a Valid KeyCode
      */
-    public boolean isValidKeyCode(int sourceKeyCode) {
+    public static boolean isValidKeyCode(int sourceKeyCode) {
         return !invalidKeys.contains(sourceKeyCode);
     }
 
@@ -125,7 +121,12 @@ public class KeyUtils {
      * @param sourceKeyCode The Source KeyCode to Check
      * @return {@code true} if and only if a Valid KeyCode
      */
-    public boolean isValidClearCode(int sourceKeyCode) {
+    public static boolean isValidClearCode(int sourceKeyCode) {
+        if (clearKeys.isEmpty()) {
+            // Register Invalid Keys, dependent on protocol version
+            // - These keys will identify as NONE within the game
+            clearKeys.add(ModUtils.MCProtocolID > 340 ? 256 : 1); // ESC
+        }
         return clearKeys.contains(sourceKeyCode);
     }
 
@@ -169,7 +170,7 @@ public class KeyUtils {
      * @param original A KeyCode, in Integer Form
      * @return Either an LWJGL KeyCode Name or the KeyCode if none can be found
      */
-    public String getKeyName(final int original) {
+    public static String getKeyName(final int original) {
         final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
         final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
         if (isValidKeyCode(original)) {

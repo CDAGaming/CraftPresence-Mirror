@@ -187,7 +187,7 @@ public class ControlsGui extends PaginatedScreen {
                 final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
                         renderPosition + 20, CraftPresence.GUIS.getButtonY(currentAllocatedRow),
                         120, 20,
-                        CraftPresence.KEYBINDINGS.getKeyName(keyData.getFirst().getKeyCode()),
+                        KeyUtils.getKeyName(keyData.getFirst().getKeyCode()),
                         keyName
                 );
                 keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton));
@@ -233,11 +233,11 @@ public class ControlsGui extends PaginatedScreen {
         int keyToSubmit = keyCode;
 
         // Ensure a Valid KeyCode is entered
-        if (!CraftPresence.KEYBINDINGS.isValidKeyCode(keyToSubmit) || CraftPresence.KEYBINDINGS.isValidClearCode(keyToSubmit)) {
+        if (!KeyUtils.isValidKeyCode(keyToSubmit) || KeyUtils.isValidClearCode(keyToSubmit)) {
             keyToSubmit = Keyboard.KEY_NONE;
         }
 
-        final String formattedKey = CraftPresence.KEYBINDINGS.getKeyName(keyToSubmit);
+        final String formattedKey = KeyUtils.getKeyName(keyToSubmit);
 
         // If KeyCode Field to modify is not null or empty, attempt to queue change
         try {
