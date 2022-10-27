@@ -8,22 +8,25 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 ### Changes
 
 * Migrated the Config Systems from `Properties` to `GSON`
-  * A one-time migration layer has been put into place to migrate your v1.x settings over to the v2.x format
-  * The logic behind data validation has been condensed to be more performant, and this change allows config settings to be more easily migrated across major updates
-  * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also removed, since we don't use Arrays in this new system
+    * A one-time migration layer has been put into place to migrate your v1.x settings over to the v2.x format
+    * The logic behind data validation has been condensed to be more performant, and this change allows config settings
+      to be more easily migrated across major updates
+    * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also
+      removed, since we don't use Arrays in this new system
 
 ### Fixes
 
-* TBD
+* Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
+  the `buttonBackgroundColor` setting
 
 ### Translations
 
 The following changes have been made for translations:
 
 * Removed:
-  * `craftpresence.logger.error.config.adjust.global`
-  * `craftpresence.logger.info.config.notice`
-  * `craftpresence.exception.config.prop.null`
+    * `craftpresence.logger.error.config.adjust.global`
+    * `craftpresence.logger.info.config.notice`
+    * `craftpresence.exception.config.prop.null`
 
 ___
 
