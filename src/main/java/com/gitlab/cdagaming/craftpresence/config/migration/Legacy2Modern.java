@@ -79,6 +79,12 @@ public class Legacy2Modern implements DataMigrator {
             .put("reducedBackgroundTint", "showBackgroundAsDark")
             .put("modpackMessage", "packPlaceholderMessage")
             .put("lastMcVersionId", "_lastMCVersionId")
+            .put("defaultBiomeIcon", "fallbackBiomeIcon")
+            .put("biomeMessages", "biomeData")
+            .put("defaultDimensionIcon", "fallbackDimensionIcon")
+            .put("dimensionMessages", "dimensionData")
+            .put("defaultServerIcon", "fallbackServerIcon")
+            .put("serverMessages", "serverData")
             .build();
     private final List<String> excludedOptions = Lists.newArrayList(
             "schemaVersion", "splitCharacter",
