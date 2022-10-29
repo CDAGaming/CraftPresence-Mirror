@@ -1136,11 +1136,12 @@ public class StringUtils {
         return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
     }
 
-    public static void updateInnerObject(List<Field> fields, Object instance, Tuple<?, ?, ?> fieldData) {
+    public static boolean updateInnerObject(List<Field> fields, Object instance, Tuple<?, ?, ?> fieldData) {
         for (Field f : fields) {
             try {
                 if (doesClassContainField(f.getType(), fieldData.getFirst().toString())) {
                     updateField(f.getType(), f.get(instance), fieldData);
+                    return true;
                 }
             } catch (Exception | Error ex) {
                 if (ModUtils.IS_VERBOSE) {
@@ -1148,6 +1149,7 @@ public class StringUtils {
                 }
             }
         }
+        return false;
     }
 
     /**
