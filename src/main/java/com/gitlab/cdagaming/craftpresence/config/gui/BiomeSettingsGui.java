@@ -40,9 +40,9 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class BiomeSettingsGui extends ExtendedScreen {
+    private final Biome CONFIG;
     private ExtendedButtonControl proceedButton, biomeMessagesButton;
     private ExtendedTextControl defaultMessage;
-    private final Biome CONFIG;
 
     BiomeSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

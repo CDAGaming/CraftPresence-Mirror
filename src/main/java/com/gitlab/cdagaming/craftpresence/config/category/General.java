@@ -35,14 +35,6 @@ import java.io.Serializable;
 public class General extends Module implements Serializable {
     private static final long serialVersionUID = 1796294737844339558L;
     private static General DEFAULT;
-
-    public static General getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new General();
-        }
-        return DEFAULT;
-    }
-
     public boolean detectCurseManifest = true;
     public boolean detectMultiMCManifest = true;
     public boolean detectMCUpdaterInstance = true;
@@ -58,6 +50,13 @@ public class General extends Module implements Serializable {
     public int preferredClientLevel = DiscordBuild.ANY.ordinal();
     public boolean resetTimeOnInit = false;
     public boolean autoRegister = false;
+
+    public static General getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new General();
+        }
+        return DEFAULT;
+    }
 
     @Override
     public Object getProperty(final String name) {

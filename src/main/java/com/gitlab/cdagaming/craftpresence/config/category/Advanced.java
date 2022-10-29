@@ -36,14 +36,6 @@ import java.util.Map;
 public class Advanced extends Module implements Serializable {
     private static final long serialVersionUID = 6035241954568785784L;
     private static Advanced DEFAULT;
-
-    public static Advanced getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Advanced();
-        }
-        return DEFAULT;
-    }
-
     public boolean enableCommands = true;
     public boolean enablePerGui = false;
     public boolean enablePerItem = false;
@@ -70,6 +62,13 @@ public class Advanced extends Module implements Serializable {
             .put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages"))
             .build();
     public String playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
+
+    public static Advanced getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Advanced();
+        }
+        return DEFAULT;
+    }
 
     @Override
     public Object getProperty(final String name) {

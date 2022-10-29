@@ -37,14 +37,6 @@ import java.util.Map;
 public class Biome extends Module implements Serializable {
     private static final long serialVersionUID = 7528869687150995557L;
     private static Biome DEFAULT;
-
-    public static Biome getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Biome();
-        }
-        return DEFAULT;
-    }
-
     public String fallbackBiomeIcon = "unknown";
     public Map<String, Pair<String, String>> biomeData = ImmutableMap.<String, Pair<String, String>>builder()
             .put("default", new Pair<>(
@@ -52,6 +44,13 @@ public class Biome extends Module implements Serializable {
                     "" // Defaults to the Biome Name if nothing is supplied
             ))
             .build();
+
+    public static Biome getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Biome();
+        }
+        return DEFAULT;
+    }
 
     @Override
     public Object getProperty(final String name) {

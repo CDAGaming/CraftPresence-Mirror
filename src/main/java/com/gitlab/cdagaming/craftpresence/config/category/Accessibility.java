@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -35,14 +34,6 @@ import java.io.Serializable;
 public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
     private static Accessibility DEFAULT;
-
-    public static Accessibility getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Accessibility();
-        }
-        return DEFAULT;
-    }
-
     public String tooltipBackgroundColor = "0xF0100010";
     public String tooltipBorderColor = "0x505000FF";
     public String guiBackgroundColor = "minecraft:" + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
@@ -53,6 +44,13 @@ public class Accessibility extends Module implements Serializable {
     public boolean showLoggingInChat = false;
     public boolean stripExtraGuiElements = ModUtils.IS_LEGACY_HARD;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
+
+    public static Accessibility getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Accessibility();
+        }
+        return DEFAULT;
+    }
 
     @Override
     public Object getProperty(final String name) {

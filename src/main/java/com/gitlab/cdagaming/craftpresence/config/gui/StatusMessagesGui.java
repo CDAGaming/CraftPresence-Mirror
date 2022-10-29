@@ -35,10 +35,10 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class StatusMessagesGui extends PaginatedScreen {
+    private final Status CONFIG;
     private ExtendedTextControl mainMenuMessage, loadingMessage, lanMessage, singlePlayerMessage, packMessage,
             outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
             playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, viveCraftMessage, fallbackPackPlaceholderMessage;
-    private final Status CONFIG;
 
     StatusMessagesGui(GuiScreen parentScreen) {
         super(parentScreen);

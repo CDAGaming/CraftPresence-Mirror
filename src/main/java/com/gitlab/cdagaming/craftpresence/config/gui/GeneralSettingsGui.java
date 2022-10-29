@@ -41,16 +41,15 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ExtendedScreen {
+    private final General CONFIG;
     private ExtendedButtonControl proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
             detectMCUpdaterInstanceButton, detectTechnicPackButton, showTimeButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
             enableJoinRequestButton, resetTimeOnInitButton, autoRegisterButton;
     private ExtendedTextControl clientId;
-
     private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
     private int currentPreferredClient = DiscordBuild.ANY.ordinal();
-    private final General CONFIG;
 
     GeneralSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

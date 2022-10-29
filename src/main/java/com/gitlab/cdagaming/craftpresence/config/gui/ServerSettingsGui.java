@@ -40,9 +40,9 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class ServerSettingsGui extends ExtendedScreen {
+    private final Server CONFIG;
     private ExtendedButtonControl proceedButton, serverMessagesButton;
     private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
-    private final Server CONFIG;
 
     ServerSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

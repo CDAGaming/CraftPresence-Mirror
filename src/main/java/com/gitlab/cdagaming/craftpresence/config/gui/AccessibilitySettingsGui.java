@@ -37,10 +37,10 @@ import net.minecraft.client.gui.GuiScreen;
 
 public class AccessibilitySettingsGui extends ExtendedScreen {
 
+    private final Accessibility CONFIG;
     private ExtendedTextControl languageIdText;
     private CheckBoxControl showBackgroundAsDarkButton, stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
     private ExtendedButtonControl proceedButton;
-    private final Accessibility CONFIG;
 
     AccessibilitySettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

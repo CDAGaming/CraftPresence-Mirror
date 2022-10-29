@@ -37,14 +37,6 @@ import java.util.Map;
 public class Display extends Module implements Serializable {
     private static final long serialVersionUID = -3302764075156017733L;
     private static Display DEFAULT;
-
-    public static Display getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Display();
-        }
-        return DEFAULT;
-    }
-
     public String gameStateTextFormat = "&SERVER& &PACK&";
     public String detailsTextFormat = "&MAINMENU&|&DIMENSION&";
     public String largeImageTextFormat = "&MAINMENU&|&DIMENSION&";
@@ -60,6 +52,13 @@ public class Display extends Module implements Serializable {
     public Map<String, String> dynamicIcons = ImmutableMap.<String, String>builder()
             .put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"))
             .build();
+
+    public static Display getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Display();
+        }
+        return DEFAULT;
+    }
 
     @Override
     public Object getProperty(final String name) {

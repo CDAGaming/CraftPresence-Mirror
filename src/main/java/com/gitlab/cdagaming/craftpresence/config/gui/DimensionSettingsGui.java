@@ -40,9 +40,9 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ExtendedScreen {
+    private final Dimension CONFIG;
     private ExtendedButtonControl proceedButton, dimensionMessagesButton;
     private ExtendedTextControl defaultMessage;
-    private final Dimension CONFIG;
 
     DimensionSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

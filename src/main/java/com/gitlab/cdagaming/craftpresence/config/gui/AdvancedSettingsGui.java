@@ -40,12 +40,12 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
 public class AdvancedSettingsGui extends ExtendedScreen {
+    private final Advanced CONFIG;
     private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enableCommandsButton, enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowPlaceholderOperatorsButton;
     private ExtendedTextControl splitCharacter, refreshRate;
-    private final Advanced CONFIG;
 
     AdvancedSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

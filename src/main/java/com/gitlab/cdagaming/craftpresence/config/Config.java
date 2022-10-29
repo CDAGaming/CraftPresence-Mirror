@@ -44,28 +44,14 @@ import java.util.Map;
 
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public final class Config implements Serializable {
-    private static final long serialVersionUID = -4853238501768086595L;
-    private static final Config INSTANCE = loadOrCreate();
-    private static final List<Field> CATEGORIES = getCategoryList();
-    private static Config DEFAULT;
-
-    public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
-
-    public static Config getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Config();
-        }
-        return DEFAULT;
-    }
-
-    public static Config getInstance() {
-        return INSTANCE;
-    }
-
     // Constants
     public static final int VERSION = 1;
+    private static final long serialVersionUID = -4853238501768086595L;
+    private static final List<Field> CATEGORIES = getCategoryList();
     public static int MC_VERSION;
-
+    private static final Config INSTANCE = loadOrCreate();
+    private static Config DEFAULT;
+    public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
     // Global Settings
     public String _README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
     public int _schemaVersion = 0;
@@ -80,8 +66,68 @@ public final class Config implements Serializable {
     public Accessibility accessibilitySettings = Accessibility.getDefaults();
     public Display displaySettings = new Display();
 
+    public static Config getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Config();
+        }
+        return DEFAULT;
+    }
+
+    public static Config getInstance() {
+        return INSTANCE;
+    }
+
     public static File getConfigFile() {
         return new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".json");
+    }
+
+    public static Config loadOrCreate(final boolean forceCreate) {
+        Config config = null;
+        JsonElement rawJson = null;
+
+        // Ensure critical data is setup
+        MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
+
+        try {
+            config = FileUtils.getJsonData(getConfigFile(), Config.class,
+                    FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
+            rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
+            boolean isNew = (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
+            if (forceCreate || isNew) {
+                config = new Config();
+                config.isNewFile = isNew;
+            }
+        } catch (Exception ex) {
+            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+            ex.printStackTrace();
+        }
+
+        if (config == null) {
+            config = new Config();
+            config.isNewFile = true;
+        }
+        config.handleSync(rawJson);
+        config.save();
+        if (config.isNewFile) {
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.new"));
+        } else {
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
+        }
+        return config;
+    }
+
+    public static Config loadOrCreate() {
+        return loadOrCreate(false);
+    }
+
+    public static List<Field> getCategoryList() {
+        final List<Field> results = Lists.newArrayList();
+        for (Field f : Config.class.getDeclaredFields()) {
+            if (Modifier.isPublic(f.getModifiers()) && Module.class.isAssignableFrom(f.getType())) {
+                results.add(f);
+            }
+        }
+        return results;
     }
 
     public void applyData() {
@@ -290,54 +336,5 @@ public final class Config implements Serializable {
 
     public void resetProperty(final String name) {
         resetProperty(name, false);
-    }
-
-    public static Config loadOrCreate(final boolean forceCreate) {
-        Config config = null;
-        JsonElement rawJson = null;
-
-        // Ensure critical data is setup
-        MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
-
-        try {
-            config = FileUtils.getJsonData(getConfigFile(), Config.class,
-                    FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
-            rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
-            boolean isNew = (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
-            if (forceCreate || isNew) {
-                config = new Config();
-                config.isNewFile = isNew;
-            }
-        } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-            ex.printStackTrace();
-        }
-
-        if (config == null) {
-            config = new Config();
-            config.isNewFile = true;
-        }
-        config.handleSync(rawJson);
-        config.save();
-        if (config.isNewFile) {
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.new"));
-        } else {
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
-        }
-        return config;
-    }
-
-    public static Config loadOrCreate() {
-        return loadOrCreate(false);
-    }
-
-    public static List<Field> getCategoryList() {
-        final List<Field> results = Lists.newArrayList();
-        for (Field f : Config.class.getDeclaredFields()) {
-            if (Modifier.isPublic(f.getModifiers()) && Module.class.isAssignableFrom(f.getType())) {
-                results.add(f);
-            }
-        }
-        return results;
     }
 }

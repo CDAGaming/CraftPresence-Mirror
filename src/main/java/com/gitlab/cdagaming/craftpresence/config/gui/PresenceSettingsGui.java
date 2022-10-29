@@ -43,10 +43,10 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
+    private final Display CONFIG;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
     private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
-    private final Display CONFIG;
 
     PresenceSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);

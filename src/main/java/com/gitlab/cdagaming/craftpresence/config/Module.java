@@ -29,6 +29,9 @@ public class Module {
         return null;
     }
 
-    public void setProperty(final String name, final Object value) {}
-    public void resetProperty(final String name) {}
+    public void setProperty(final String name, final Object value) {
+    }
+
+    public void resetProperty(final String name) {
+    }
 }

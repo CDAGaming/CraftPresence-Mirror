@@ -34,14 +34,6 @@ import java.io.Serializable;
 public class Status extends Module implements Serializable {
     private static final long serialVersionUID = 3055410101315942491L;
     private static Status DEFAULT;
-
-    public static Status getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Status();
-        }
-        return DEFAULT;
-    }
-
     public String mainMenuMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.main_menu");
     public String loadingMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.loading");
     public String lanMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.lan");
@@ -57,6 +49,13 @@ public class Status extends Module implements Serializable {
     public String modsPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.mods");
     public String vivecraftMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.special.vivecraft");
     public String fallbackPackPlaceholderMessage = "";
+
+    public static Status getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Status();
+        }
+        return DEFAULT;
+    }
 
     @Override
     public Object getProperty(final String name) {
