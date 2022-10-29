@@ -230,7 +230,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         if (CraftPresence.instance.gameSettings != null) {
             result = CraftPresence.instance.gameSettings.language;
         } else if (CraftPresence.CONFIG != null) {
-            result = CraftPresence.CONFIG.languageId;
+            result = CraftPresence.CONFIG.accessibilitySettings.languageId;
         } else {
             result = defaultLanguageId;
         }
@@ -511,7 +511,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @return The Localized Translated String
      */
     public String translateFrom(final String languageId, final String translationKey, final Object... parameters) {
-        return translateFrom(languageId, CraftPresence.CONFIG != null && CraftPresence.CONFIG.stripTranslationColors, translationKey, parameters);
+        return translateFrom(languageId, CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors, translationKey, parameters);
     }
 
     /**

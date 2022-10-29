@@ -277,7 +277,7 @@ public class DiscordAssetUtils {
      * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
      */
     public static String getDiscordAssetUrl(final String clientId, final String keyId) {
-        return getDiscordAssetUrl(clientId, keyId, clientId.equals(CraftPresence.CONFIG.clientId));
+        return getDiscordAssetUrl(clientId, keyId, clientId.equals(CraftPresence.CONFIG.generalSettings.clientId));
     }
 
     /**
@@ -289,7 +289,7 @@ public class DiscordAssetUtils {
      * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
      */
     public static String getDiscordAssetUrl(final String keyId) {
-        return getDiscordAssetUrl(CraftPresence.CONFIG.clientId, keyId);
+        return getDiscordAssetUrl(CraftPresence.CONFIG.generalSettings.clientId, keyId);
     }
 
     /**
@@ -326,7 +326,7 @@ public class DiscordAssetUtils {
                     }
                 }
 
-                for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.dynamicIcons.entrySet()) {
+                for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.displaySettings.dynamicIcons.entrySet()) {
                     if (!StringUtils.isNullOrEmpty(iconData.getKey()) && !StringUtils.isNullOrEmpty(iconData.getValue())) {
                         final DiscordAsset asset = new DiscordAsset()
                                 .setName(iconData.getKey())

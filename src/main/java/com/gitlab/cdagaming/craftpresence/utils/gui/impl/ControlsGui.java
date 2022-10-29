@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -45,7 +46,7 @@ import java.util.Map;
 public class ControlsGui extends PaginatedScreen {
 
     // Format: See KeyUtils#KEY_MAPPINGS
-    private final Map<String, Tuple<KeyBinding, Runnable, DataConsumer<Throwable>>> keyMappings;
+    private final Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = Maps.newHashMap();
     // Format: pageNumber:[elementText:[xPos:yPos]:color]
@@ -137,7 +138,7 @@ public class ControlsGui extends PaginatedScreen {
      */
     private void sortMappings() {
         for (String keyName : keyMappings.keySet()) {
-            final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
+            final Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
             if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
                 categorizedNames.put(keyData.getFirst().getKeyCategory(), Lists.newArrayList(keyName));
             } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
@@ -169,7 +170,7 @@ public class ControlsGui extends PaginatedScreen {
             currentAllocatedRow++;
 
             for (String keyName : keyNames) {
-                final Tuple<KeyBinding, Runnable, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
+                final Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
                 final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
                 if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                     preRenderQueue.put(currentAllocatedPage, Lists.newArrayList(positionData));

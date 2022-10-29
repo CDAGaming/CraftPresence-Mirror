@@ -1085,6 +1085,21 @@ public class StringUtils {
         return collection;
     }
 
+    public static Object lookupInnerObject(List<Field> fields, Object instance, String name) {
+        for (Field f : fields) {
+            try {
+                if (doesClassContainField(f.getType(), name)) {
+                    return lookupObject(f.getType(), f.get(instance), name);
+                }
+            } catch (Exception | Error ex) {
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Retrieves the Specified Field(s) via Reflection
      *
@@ -1119,6 +1134,20 @@ public class StringUtils {
      */
     public static boolean doesClassContainField(Class<?> classToAccess, final String fieldName) {
         return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
+    }
+
+    public static void updateInnerObject(List<Field> fields, Object instance, Tuple<?, ?, ?> fieldData) {
+        for (Field f : fields) {
+            try {
+                if (doesClassContainField(f.getType(), fieldData.getFirst().toString())) {
+                    updateField(f.getType(), f.get(instance), fieldData);
+                }
+            } catch (Exception | Error ex) {
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
     /**

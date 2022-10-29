@@ -156,7 +156,7 @@ public class ScrollableListControl extends GuiSlot {
     protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks) {
         int xOffset = xPos;
         String displayName = getSelectedItem(slotIndex);
-        if (!CraftPresence.CONFIG.stripExtraGuiElements &&
+        if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
                 ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
                         (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
                         (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
@@ -180,7 +180,7 @@ public class ScrollableListControl extends GuiSlot {
                 if (StringUtils.isValidUuid(displayName)) {
                     // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
                     displayName = StringUtils.getFromUuid(displayName);
-                    texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.playerSkinEndpoint, displayName));
+                    texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, displayName));
                 }
             } else if (renderType == RenderType.ItemData) {
                 texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(displayName, texture);

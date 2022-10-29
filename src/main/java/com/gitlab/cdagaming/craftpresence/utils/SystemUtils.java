@@ -169,7 +169,7 @@ public class SystemUtils {
      * @return the current refresh rate
      */
     private int getRefreshRate() {
-        int result = CraftPresence.CONFIG.refreshRate;
+        int result = CraftPresence.CONFIG.advancedSettings.refreshRate;
         if (result < MINIMUM_REFRESH_RATE) {
             result = MINIMUM_REFRESH_RATE;
         }

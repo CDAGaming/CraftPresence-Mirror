@@ -22,11 +22,13 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config.migrators;
+package com.gitlab.cdagaming.craftpresence.config;
 
-import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.google.gson.JsonElement;
+public class Module {
+    public Object getProperty(final String name) {
+        return null;
+    }
 
-public interface DataMigrator {
-    Config apply(Config instance, JsonElement rawJson, Object... args);
+    public void setProperty(final String name, final Object value) {}
+    public void resetProperty(final String name) {}
 }

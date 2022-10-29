@@ -191,7 +191,7 @@ public class ExtendedButtonControl extends GuiButton {
             hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
             final int hoverState = getHoverState(hovered);
 
-            String backgroundCode = CraftPresence.CONFIG.buttonBackgroundColor;
+            String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
             ResourceLocation texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {

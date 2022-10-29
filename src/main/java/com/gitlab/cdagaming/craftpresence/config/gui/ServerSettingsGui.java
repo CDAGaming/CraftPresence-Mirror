@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.category.Server;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -41,14 +42,16 @@ import net.minecraft.client.gui.GuiScreen;
 public class ServerSettingsGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton, serverMessagesButton;
     private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
+    private final Server CONFIG;
 
     ServerSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
+        CONFIG = CraftPresence.CONFIG.serverSettings;
     }
 
     @Override
     public void initializeUi() {
-        final Pair<String, String> defaultData = CraftPresence.CONFIG.serverMessages.get("default");
+        final Pair<String, String> defaultData = CONFIG.serverData.get("default");
         final String defaultServerMessage = defaultData != null ? defaultData.getFirst() : "";
 
         defaultName = addControl(
@@ -58,7 +61,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultName.setControlMessage(CraftPresence.CONFIG.defaultServerName);
+        defaultName.setControlMessage(CONFIG.defaultServerName);
         defaultMOTD = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -66,7 +69,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultMOTD.setControlMessage(CraftPresence.CONFIG.defaultServerMotd);
+        defaultMOTD.setControlMessage(CONFIG.defaultServerMotd);
         defaultMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -88,8 +91,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                         null, null,
                                         true, true, RenderType.ServerData,
                                         (attributeName, currentValue) -> {
-                                            final Pair<String, String> defaultServerData = CraftPresence.CONFIG.serverMessages.get("default");
-                                            final Pair<String, String> currentServerData = CraftPresence.CONFIG.serverMessages.get(attributeName);
+                                            final Pair<String, String> defaultServerData = CONFIG.serverData.get("default");
+                                            final Pair<String, String> currentServerData = CONFIG.serverData.get(attributeName);
                                             final String defaultMessage = defaultServerData != null ? defaultServerData.getFirst() : "";
                                             final String currentMessage = currentServerData != null ? currentServerData.getFirst() : "";
 
@@ -99,7 +102,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                 newData.setFirst(defaultMessage);
                                             }
                                             newData.setSecond(currentValue);
-                                            CraftPresence.CONFIG.serverMessages.put(attributeName, newData);
+                                            CONFIG.serverData.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -108,23 +111,23 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                final Pair<String, String> defaultServerData = CraftPresence.CONFIG.serverMessages.get("default");
+                                                                final Pair<String, String> defaultServerData = CONFIG.serverData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = defaultServerData != null ? defaultServerData.getFirst() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                final Pair<String, String> defaultServerData = CraftPresence.CONFIG.serverMessages.get("default");
-                                                                final Pair<String, String> currentServerData = CraftPresence.CONFIG.serverMessages.get(attributeName);
+                                                                final Pair<String, String> defaultServerData = CONFIG.serverData.get("default");
+                                                                final Pair<String, String> currentServerData = CONFIG.serverData.get(attributeName);
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName);
                                                                 screenInstance.originalPrimaryMessage = defaultServerData != null ? defaultServerData.getFirst() : "";
                                                                 screenInstance.primaryMessage = currentServerData != null ? currentServerData.getFirst() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final Pair<String, String> currentServerData = CraftPresence.CONFIG.serverMessages.get(attributeName);
+                                                                final Pair<String, String> currentServerData = CONFIG.serverData.get(attributeName);
                                                                 currentServerData.setFirst(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.serverMessages.put(attributeName, currentServerData);
+                                                                CONFIG.serverData.put(attributeName, currentServerData);
                                                                 if (!CraftPresence.SERVER.knownAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.add(attributeName);
                                                                 }
@@ -132,14 +135,14 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.serverMessages.remove(attributeName);
+                                                                CONFIG.serverData.remove(attributeName);
                                                                 CraftPresence.SERVER.knownAddresses.remove(attributeName);
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding an attachment icon to set data
-                                                                final Pair<String, String> defaultServerData = CraftPresence.CONFIG.serverMessages.get("default");
-                                                                final Pair<String, String> currentServerData = CraftPresence.CONFIG.serverMessages.get(attributeName);
-                                                                final String defaultIcon = defaultServerData != null ? defaultServerData.getSecond() : CraftPresence.CONFIG.defaultServerIcon;
+                                                                final Pair<String, String> defaultServerData = CONFIG.serverData.get("default");
+                                                                final Pair<String, String> currentServerData = CONFIG.serverData.get(attributeName);
+                                                                final String defaultIcon = defaultServerData != null ? defaultServerData.getSecond() : CONFIG.fallbackServerIcon;
                                                                 final String specificIcon = currentServerData != null ? currentServerData.getSecond() : defaultIcon;
                                                                 CraftPresence.GUIS.openScreen(
                                                                         new SelectorGui(
@@ -149,8 +152,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                                 true, false, RenderType.DiscordAsset,
                                                                                 (innerAttributeName, innerCurrentValue) -> {
                                                                                     // Inner-Event to occur when proceeding with adjusted data
-                                                                                    final Pair<String, String> defaultInnerServerData = CraftPresence.CONFIG.serverMessages.get("default");
-                                                                                    final Pair<String, String> currentInnerServerData = CraftPresence.CONFIG.serverMessages.get(innerAttributeName);
+                                                                                    final Pair<String, String> defaultInnerServerData = CONFIG.serverData.get("default");
+                                                                                    final Pair<String, String> currentInnerServerData = CONFIG.serverData.get(innerAttributeName);
                                                                                     final String defaultMessage = defaultInnerServerData != null ? defaultInnerServerData.getFirst() : "";
                                                                                     final String currentMessage = currentInnerServerData != null ? currentInnerServerData.getFirst() : "";
 
@@ -160,7 +163,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                                         newData.setFirst(defaultMessage);
                                                                                     }
                                                                                     newData.setSecond(innerCurrentValue);
-                                                                                    CraftPresence.CONFIG.serverMessages.put(innerAttributeName, newData);
+                                                                                    CONFIG.serverData.put(innerAttributeName, newData);
                                                                                 }, null
                                                                         )
                                                                 );
@@ -208,12 +211,12 @@ public class ServerSettingsGui extends ExtendedScreen {
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        CraftPresence.CONFIG.defaultServerIcon, null,
+                                        CONFIG.fallbackServerIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
                                             CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                            CraftPresence.CONFIG.defaultServerIcon = currentValue;
+                                            CONFIG.fallbackServerIcon = currentValue;
                                         }, null
                                 )
                         ),
@@ -230,22 +233,22 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (!defaultName.getControlMessage().equals(CraftPresence.CONFIG.defaultServerName)) {
+                            if (!defaultName.getControlMessage().equals(CONFIG.defaultServerName)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.defaultServerName = defaultName.getControlMessage();
+                                CONFIG.defaultServerName = defaultName.getControlMessage();
                             }
-                            if (!defaultMOTD.getControlMessage().equals(CraftPresence.CONFIG.defaultServerMotd)) {
+                            if (!defaultMOTD.getControlMessage().equals(CONFIG.defaultServerMotd)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.defaultServerMotd = defaultMOTD.getControlMessage();
+                                CONFIG.defaultServerMotd = defaultMOTD.getControlMessage();
                             }
                             if (!defaultMessage.getControlMessage().equals(defaultServerMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                final Pair<String, String> defaultServerData = CraftPresence.CONFIG.serverMessages.getOrDefault("default", new Pair<>());
+                                final Pair<String, String> defaultServerData = CONFIG.serverData.getOrDefault("default", new Pair<>());
                                 defaultServerData.setFirst(defaultMessage.getControlMessage());
-                                CraftPresence.CONFIG.serverMessages.put("default", defaultServerData);
+                                CONFIG.serverData.put("default", defaultServerData);
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },

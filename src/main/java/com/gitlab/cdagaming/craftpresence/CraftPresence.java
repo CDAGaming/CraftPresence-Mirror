@@ -192,20 +192,20 @@ public class CraftPresence {
         // Synchronize Developer and Verbose Modes with Config Options, if they were not already true
         // If it is true (IE Modified from their Default Value), set the overridden flag to remember later
         if (!ModUtils.IS_DEV) {
-            ModUtils.IS_DEV = CONFIG.debugMode || ModUtils.IS_VERBOSE;
+            ModUtils.IS_DEV = CONFIG.advancedSettings.debugMode || ModUtils.IS_VERBOSE;
         } else {
             isDevStatusOverridden = true;
         }
 
         if (!ModUtils.IS_VERBOSE) {
-            ModUtils.IS_VERBOSE = CONFIG.verboseMode;
+            ModUtils.IS_VERBOSE = CONFIG.advancedSettings.verboseMode;
         } else {
             isVerboseStatusOverridden = true;
         }
 
         try {
-            CLIENT.CLIENT_ID = CONFIG.clientId;
-            CLIENT.AUTO_REGISTER = CONFIG.autoRegister;
+            CLIENT.CLIENT_ID = CONFIG.generalSettings.clientId;
+            CLIENT.AUTO_REGISTER = CONFIG.generalSettings.autoRegister;
             CLIENT.setup();
             CLIENT.init(true);
         } catch (Exception ex) {
@@ -245,8 +245,8 @@ public class CraftPresence {
                 session = instance.getSession();
                 player = instance.player;
                 // Synchronize Developer and Verbose Modes with Config Options, if they were not overridden pre-setup
-                ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.debugMode : ModUtils.IS_DEV;
-                ModUtils.IS_VERBOSE = !isVerboseStatusOverridden ? CONFIG.verboseMode : ModUtils.IS_VERBOSE;
+                ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.advancedSettings.debugMode : ModUtils.IS_DEV;
+                ModUtils.IS_VERBOSE = !isVerboseStatusOverridden ? CONFIG.advancedSettings.verboseMode : ModUtils.IS_VERBOSE;
 
                 CommandUtils.reloadData(false);
 

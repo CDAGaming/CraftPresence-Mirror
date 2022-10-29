@@ -102,20 +102,22 @@ public class CommandUtils {
      * @param flushOverride Whether to refresh RPC assets
      */
     public static void rebootRPC(boolean flushOverride) {
-        flushOverride = flushOverride || !CraftPresence.CLIENT.CLIENT_ID.equals(CraftPresence.CONFIG.clientId);
+        flushOverride = flushOverride || !CraftPresence.CLIENT.CLIENT_ID.equals(
+                CraftPresence.CONFIG.generalSettings.clientId
+        );
         CraftPresence.CLIENT.shutDown();
 
         if (flushOverride) {
             DiscordAssetUtils.emptyData();
-            CraftPresence.CLIENT.CLIENT_ID = CraftPresence.CONFIG.clientId;
+            CraftPresence.CLIENT.CLIENT_ID = CraftPresence.CONFIG.generalSettings.clientId;
         } else {
             DiscordAssetUtils.clearClientData();
         }
-        if (!CraftPresence.CLIENT.PREFERRED_CLIENT.equals(DiscordBuild.from(CraftPresence.CONFIG.preferredClientLevel))) {
-            CraftPresence.CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.preferredClientLevel);
+        if (!CraftPresence.CLIENT.PREFERRED_CLIENT.equals(DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel))) {
+            CraftPresence.CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
         }
-        DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.clientId, true);
-        CraftPresence.CLIENT.init(CraftPresence.CONFIG.resetTimeOnInit);
+        DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.generalSettings.clientId, true);
+        CraftPresence.CLIENT.init(CraftPresence.CONFIG.generalSettings.resetTimeOnInit);
     }
 
     /**
@@ -130,19 +132,19 @@ public class CommandUtils {
      * (In this case, Pack Data and Available RPC Icons)
      */
     public static void init() {
-        if (CraftPresence.CONFIG.detectCurseManifest && !CraftPresence.packFound) {
+        if (CraftPresence.CONFIG.generalSettings.detectCurseManifest && !CraftPresence.packFound) {
             CurseUtils.loadManifest();
         }
-        if (CraftPresence.CONFIG.detectMultiMCManifest && !CraftPresence.packFound) {
+        if (CraftPresence.CONFIG.generalSettings.detectMultiMCManifest && !CraftPresence.packFound) {
             MultiMCUtils.loadInstance();
         }
-        if (CraftPresence.CONFIG.detectMCUpdaterInstance && !CraftPresence.packFound) {
+        if (CraftPresence.CONFIG.generalSettings.detectMCUpdaterInstance && !CraftPresence.packFound) {
             MCUpdaterUtils.loadInstance();
         }
-        if (CraftPresence.CONFIG.detectTechnicPack && !CraftPresence.packFound) {
+        if (CraftPresence.CONFIG.generalSettings.detectTechnicPack && !CraftPresence.packFound) {
             TechnicUtils.loadPack();
         }
-        DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.clientId, true);
+        DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.generalSettings.clientId, true);
 
         CraftPresence.KEYBINDINGS.register();
     }
@@ -161,8 +163,8 @@ public class CommandUtils {
 
         CraftPresence.CLIENT.clearPartyData(true, false);
 
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.loadingMessage, loadingArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.defaultIcon, ""), ArgumentType.Image);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.loadingMessage, loadingArgs), ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.generalSettings.defaultIcon, ""), ArgumentType.Image);
 
         isLoadingGame = true;
     }
@@ -187,8 +189,8 @@ public class CommandUtils {
             isLoadingGame = false;
         }
 
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.mainMenuMessage, mainMenuArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.defaultIcon, ""), ArgumentType.Image);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.mainMenuMessage, mainMenuArgs), ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.generalSettings.defaultIcon, ""), ArgumentType.Image);
 
         isInMainMenu = true;
     }

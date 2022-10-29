@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
@@ -44,9 +45,11 @@ public class AdvancedSettingsGui extends ExtendedScreen {
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowPlaceholderOperatorsButton;
     private ExtendedTextControl splitCharacter, refreshRate;
+    private final Advanced CONFIG;
 
     AdvancedSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
+        CONFIG = CraftPresence.CONFIG.advancedSettings;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
 //                        45, 20
 //                )
 //        );
-//        splitCharacter.setControlMessage(CraftPresence.CONFIG.splitCharacter);
+//        splitCharacter.setControlMessage(CONFIG.splitCharacter);
 //        splitCharacter.setControlMaxLength(1);
 
         refreshRate = addControl(
@@ -68,7 +71,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         45, 20
                 )
         );
-        refreshRate.setControlMessage(Integer.toString(CraftPresence.CONFIG.refreshRate));
+        refreshRate.setControlMessage(Integer.toString(CONFIG.refreshRate));
         refreshRate.setControlMaxLength(3);
 
         final int calc1 = (getScreenWidth() / 2) - 160;
@@ -93,18 +96,18 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.guiMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.guiMessages.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.guiMessages.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CraftPresence.CONFIG.guiMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = CONFIG.guiMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = CONFIG.guiMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.guiMessages.put(attributeName, inputText);
+                                                                CONFIG.guiMessages.put(attributeName, inputText);
                                                                 if (!CraftPresence.GUIS.GUI_NAMES.contains(attributeName)) {
                                                                     CraftPresence.GUIS.GUI_NAMES.add(attributeName);
                                                                 }
@@ -112,7 +115,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.guiMessages.remove(attributeName);
+                                                                CONFIG.guiMessages.remove(attributeName);
                                                                 CraftPresence.GUIS.GUI_NAMES.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -166,18 +169,18 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.itemMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.itemMessages.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.itemMessages.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = CONFIG.itemMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = CONFIG.itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.itemMessages.put(attributeName, inputText);
+                                                                CONFIG.itemMessages.put(attributeName, inputText);
                                                                 if (!CraftPresence.TILE_ENTITIES.ITEM_NAMES.contains(attributeName)) {
                                                                     CraftPresence.TILE_ENTITIES.ITEM_NAMES.add(attributeName);
                                                                 }
@@ -190,7 +193,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.itemMessages.remove(attributeName);
+                                                                CONFIG.itemMessages.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.ITEM_NAMES.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.BLOCK_NAMES.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES.remove(attributeName);
@@ -261,18 +264,18 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.entityTargetMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.entityTargetMessages.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.entityTargetMessages.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CraftPresence.CONFIG.entityTargetMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = CONFIG.entityTargetMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = CONFIG.entityTargetMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.entityTargetMessages.put(attributeName, inputText);
+                                                                CONFIG.entityTargetMessages.put(attributeName, inputText);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
                                                                 }
@@ -280,7 +283,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.entityTargetMessages.remove(attributeName);
+                                                                CONFIG.entityTargetMessages.remove(attributeName);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -350,18 +353,18 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.entityRidingMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.entityRidingMessages.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.entityRidingMessages.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CraftPresence.CONFIG.entityRidingMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = CONFIG.entityRidingMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = CONFIG.entityRidingMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.entityRidingMessages.put(attributeName, inputText);
+                                                                CONFIG.entityRidingMessages.put(attributeName, inputText);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
                                                                 }
@@ -369,7 +372,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.entityRidingMessages.remove(attributeName);
+                                                                CONFIG.entityRidingMessages.remove(attributeName);
                                                                 CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -425,7 +428,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(4),
                         "gui.config.name.advanced.enable_commands",
-                        CraftPresence.CONFIG.enableCommands,
+                        CONFIG.enableCommands,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -438,7 +441,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(4),
                         "gui.config.name.advanced.enable_per_gui",
-                        CraftPresence.CONFIG.enablePerGui,
+                        CONFIG.enablePerGui,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -451,7 +454,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(5, -10),
                         "gui.config.name.advanced.enable_per_item",
-                        CraftPresence.CONFIG.enablePerItem,
+                        CONFIG.enablePerItem,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -464,7 +467,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(5, -10),
                         "gui.config.name.advanced.enable_per_entity",
-                        CraftPresence.CONFIG.enablePerEntity,
+                        CONFIG.enablePerEntity,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -477,7 +480,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(6, -20),
                         "gui.config.name.advanced.render_tooltips",
-                        CraftPresence.CONFIG.renderTooltips,
+                        CONFIG.renderTooltips,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -490,7 +493,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(6, -20),
                         "gui.config.name.advanced.format_words",
-                        CraftPresence.CONFIG.formatWords,
+                        CONFIG.formatWords,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -503,7 +506,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(7, -30),
                         "gui.config.name.advanced.debug_mode",
-                        CraftPresence.CONFIG.debugMode,
+                        CONFIG.debugMode,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -516,7 +519,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(7, -30),
                         "gui.config.name.advanced.verbose_mode",
-                        CraftPresence.CONFIG.verboseMode,
+                        CONFIG.verboseMode,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -529,7 +532,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc1, CraftPresence.GUIS.getButtonY(8, -40),
                         "gui.config.name.advanced.allow_placeholder_previews",
-                        CraftPresence.CONFIG.allowPlaceholderPreviews,
+                        CONFIG.allowPlaceholderPreviews,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -542,7 +545,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 new CheckBoxControl(
                         calc2, CraftPresence.GUIS.getButtonY(8, -40),
                         "gui.config.name.advanced.allow_placeholder_operators",
-                        CraftPresence.CONFIG.allowPlaceholderOperators,
+                        CONFIG.allowPlaceholderOperators,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -557,56 +560,56 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (!refreshRate.getControlMessage().equals(Integer.toString(CraftPresence.CONFIG.refreshRate))) {
+                            if (!refreshRate.getControlMessage().equals(Integer.toString(CONFIG.refreshRate))) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
+                                CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
                             }
-                            if (enableCommandsButton.isChecked() != CraftPresence.CONFIG.enableCommands) {
+                            if (enableCommandsButton.isChecked() != CONFIG.enableCommands) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.enableCommands = enableCommandsButton.isChecked();
+                                CONFIG.enableCommands = enableCommandsButton.isChecked();
                             }
-                            if (enablePerGuiButton.isChecked() != CraftPresence.CONFIG.enablePerGui) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.enablePerGui = enablePerGuiButton.isChecked();
-                            }
-                            if (enablePerItemButton.isChecked() != CraftPresence.CONFIG.enablePerItem) {
+                            if (enablePerGuiButton.isChecked() != CONFIG.enablePerGui) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.enablePerItem = enablePerItemButton.isChecked();
+                                CONFIG.enablePerGui = enablePerGuiButton.isChecked();
                             }
-                            if (enablePerEntityButton.isChecked() != CraftPresence.CONFIG.enablePerEntity) {
+                            if (enablePerItemButton.isChecked() != CONFIG.enablePerItem) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.enablePerEntity = enablePerEntityButton.isChecked();
+                                CONFIG.enablePerItem = enablePerItemButton.isChecked();
                             }
-                            if (renderTooltipsButton.isChecked() != CraftPresence.CONFIG.renderTooltips) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.renderTooltips = renderTooltipsButton.isChecked();
-                            }
-                            if (formatWordsButton.isChecked() != CraftPresence.CONFIG.formatWords) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.formatWords = formatWordsButton.isChecked();
-                            }
-                            if (debugModeButton.isChecked() != CraftPresence.CONFIG.debugMode) {
+                            if (enablePerEntityButton.isChecked() != CONFIG.enablePerEntity) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.debugMode = debugModeButton.isChecked();
+                                CONFIG.enablePerEntity = enablePerEntityButton.isChecked();
                             }
-                            if (verboseModeButton.isChecked() != CraftPresence.CONFIG.verboseMode) {
+                            if (renderTooltipsButton.isChecked() != CONFIG.renderTooltips) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CONFIG.renderTooltips = renderTooltipsButton.isChecked();
+                            }
+                            if (formatWordsButton.isChecked() != CONFIG.formatWords) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CONFIG.formatWords = formatWordsButton.isChecked();
+                            }
+                            if (debugModeButton.isChecked() != CONFIG.debugMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.verboseMode = verboseModeButton.isChecked();
+                                CONFIG.debugMode = debugModeButton.isChecked();
                             }
-                            if (allowPlaceholderPreviewsButton.isChecked() != CraftPresence.CONFIG.allowPlaceholderPreviews) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked();
-                            }
-                            if (allowPlaceholderOperatorsButton.isChecked() != CraftPresence.CONFIG.allowPlaceholderOperators) {
+                            if (verboseModeButton.isChecked() != CONFIG.verboseMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.allowPlaceholderOperators = allowPlaceholderOperatorsButton.isChecked();
+                                CONFIG.verboseMode = verboseModeButton.isChecked();
+                            }
+                            if (allowPlaceholderPreviewsButton.isChecked() != CONFIG.allowPlaceholderPreviews) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CONFIG.allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked();
+                            }
+                            if (allowPlaceholderOperatorsButton.isChecked() != CONFIG.allowPlaceholderOperators) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CONFIG.allowPlaceholderOperators = allowPlaceholderOperatorsButton.isChecked();
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },

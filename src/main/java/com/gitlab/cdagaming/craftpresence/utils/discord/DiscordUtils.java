@@ -317,7 +317,7 @@ public class DiscordUtils {
      */
     public List<String> createButtonsList() {
         final List<String> result = Lists.newArrayList();
-        for (String buttonEntry : CraftPresence.CONFIG.buttonMessages.keySet()) {
+        for (String buttonEntry : CraftPresence.CONFIG.displaySettings.buttonMessages.keySet()) {
             if (!StringUtils.isNullOrEmpty(buttonEntry)) {
                 result.add(buttonEntry);
             }
@@ -344,7 +344,7 @@ public class DiscordUtils {
      */
     public String parseArgumentOperators(final String input, ArgumentType... typeList) {
         String result = input;
-        if (CraftPresence.CONFIG.allowPlaceholderOperators) {
+        if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderOperators) {
             for (Map.Entry<String, Pair<String, String>> rawEntry : validOperators.entrySet()) {
                 final Pair<String, String> operatorEntry = rawEntry.getValue();
                 final Pair<String, List<String>> matches = StringUtils.getMatches(operatorEntry.getSecond(), result);
@@ -377,7 +377,7 @@ public class DiscordUtils {
      * Updates the Starting Unix Timestamp, if allowed
      */
     public void updateTimestamp() {
-        if (CraftPresence.CONFIG.showTime) {
+        if (CraftPresence.CONFIG.generalSettings.showTime) {
             START_TIMESTAMP = System.currentTimeMillis() / 1000L;
         }
     }
@@ -639,7 +639,7 @@ public class DiscordUtils {
         if (ModUtils.BRAND.contains("vivecraft")) {
             CraftPresence.packFound = true;
 
-            foundPackName = CraftPresence.CONFIG.vivecraftMessage;
+            foundPackName = CraftPresence.CONFIG.statusMessages.vivecraftMessage;
             foundPackIcon = "vivecraft";
         } else if (!StringUtils.isNullOrEmpty(CurseUtils.INSTANCE_NAME)) {
             foundPackName = CurseUtils.INSTANCE_NAME;
@@ -653,8 +653,8 @@ public class DiscordUtils {
         } else if (!StringUtils.isNullOrEmpty(TechnicUtils.PACK_NAME)) {
             foundPackName = TechnicUtils.PACK_NAME;
             foundPackIcon = TechnicUtils.ICON_NAME;
-        } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.fallbackPackPlaceholderMessage)) {
-            foundPackName = CraftPresence.CONFIG.fallbackPackPlaceholderMessage;
+        } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.statusMessages.fallbackPackPlaceholderMessage)) {
+            foundPackName = CraftPresence.CONFIG.statusMessages.fallbackPackPlaceholderMessage;
             foundPackIcon = foundPackName;
         }
 
@@ -665,7 +665,7 @@ public class DiscordUtils {
             syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
         }
 
-        syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.packPlaceholderMessage, packArgs), ArgumentType.Text);
+        syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.packPlaceholderMessage, packArgs), ArgumentType.Text);
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
     }
 
@@ -760,7 +760,7 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final List<Pair<String, String>> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, CraftPresence.CONFIG.allowPlaceholderPreviews, args);
+        return generateArgumentMessage(argumentFormat, subArgumentFormat, CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews, args);
     }
 
     /**
@@ -979,8 +979,8 @@ public class DiscordUtils {
 
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
-        generalArgs.add(new Pair<>("&MODS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.modsPlaceholderMessage, modsArgs)));
-        generalArgs.add(new Pair<>("&IGN&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.outerPlayerPlaceholderMessage, playerInfoArgs)));
+        generalArgs.add(new Pair<>("&MODS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.modsPlaceholderMessage, modsArgs)));
+        generalArgs.add(new Pair<>("&IGN&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.outerPlayerPlaceholderMessage, playerInfoArgs)));
 
         for (Pair<String, String> generalArgument : generalArgs) {
             // For each General (Can be used Anywhere) Argument
@@ -997,7 +997,7 @@ public class DiscordUtils {
         }
 
         // Sync the Default Icon Argument
-        syncArgument("&DEFAULT&", CraftPresence.CONFIG.defaultIcon, ArgumentType.Image);
+        syncArgument("&DEFAULT&", CraftPresence.CONFIG.generalSettings.defaultIcon, ArgumentType.Image);
         syncPackArguments();
     }
 
@@ -1029,7 +1029,7 @@ public class DiscordUtils {
         if (DiscordAssetUtils.syncCompleted && !StringUtils.isNullOrEmpty(evalStrings[0])) {
             final String primaryKey = evalStrings[0];
             if (!cachedImageData.containsKey(primaryKey)) {
-                final String defaultIcon = allowNull ? "" : (DiscordAssetUtils.contains(CraftPresence.CONFIG.defaultIcon) ? CraftPresence.CONFIG.defaultIcon : DiscordAssetUtils.getRandomAssetName());
+                final String defaultIcon = allowNull ? "" : (DiscordAssetUtils.contains(CraftPresence.CONFIG.generalSettings.defaultIcon) ? CraftPresence.CONFIG.generalSettings.defaultIcon : DiscordAssetUtils.getRandomAssetName());
                 String finalKey = defaultIcon;
                 for (int i = 0; i < evalStrings.length; ) {
                     final String evalString = evalStrings[i];
@@ -1106,8 +1106,8 @@ public class DiscordUtils {
      */
     public boolean isImageInUse(final String... evalStrings) {
         for (String evalString : evalStrings) {
-            if (CraftPresence.CONFIG.largeImageKeyFormat.contains(evalString) ||
-                    CraftPresence.CONFIG.smallImageKeyFormat.contains(evalString)
+            if (CraftPresence.CONFIG.displaySettings.largeImageKeyFormat.contains(evalString) ||
+                    CraftPresence.CONFIG.displaySettings.smallImageKeyFormat.contains(evalString)
             ) {
                 return true;
             }
@@ -1197,30 +1197,30 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence() {
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.detailsTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.gameStateTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.detailsTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.gameStateTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.largeImageKeyFormat, ArgumentType.Image));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.smallImageKeyFormat, ArgumentType.Image));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.largeImageKeyFormat, ArgumentType.Image));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.smallImageKeyFormat, ArgumentType.Image));
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(LARGE_IMAGE_ASSET.getUrl(), ArgumentType.Text) : LARGE_IMAGE_ASSET.getName()) : "";
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(SMALL_IMAGE_ASSET.getUrl(), ArgumentType.Text) : SMALL_IMAGE_ASSET.getName()) : "";
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.largeImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.smallImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.largeImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.smallImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
-        for (Map.Entry<String, Pair<String, String>> buttonElement : CraftPresence.CONFIG.buttonMessages.entrySet()) {
+        for (Map.Entry<String, Pair<String, String>> buttonElement : CraftPresence.CONFIG.displaySettings.buttonMessages.entrySet()) {
             JsonObject buttonObj = new JsonObject();
             if (!StringUtils.isNullOrEmpty(buttonElement.getKey()) &&
                     !buttonElement.getKey().equalsIgnoreCase("default") &&
                     !StringUtils.isNullOrEmpty(buttonElement.getValue().getFirst())) {
                 String label = StringUtils.formatWord(
                         parseArgumentOperators(buttonElement.getValue().getFirst(), ArgumentType.Text),
-                        !CraftPresence.CONFIG.formatWords, true, 1
+                        !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
                 );
                 String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().getSecond()) ? parseArgumentOperators(
                         buttonElement.getValue().getSecond(), ArgumentType.Text

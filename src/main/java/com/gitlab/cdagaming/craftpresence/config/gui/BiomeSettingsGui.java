@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.category.Biome;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -41,14 +42,16 @@ import net.minecraft.client.gui.GuiScreen;
 public class BiomeSettingsGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton, biomeMessagesButton;
     private ExtendedTextControl defaultMessage;
+    private final Biome CONFIG;
 
     BiomeSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
+        CONFIG = CraftPresence.CONFIG.biomeSettings;
     }
 
     @Override
     public void initializeUi() {
-        final Pair<String, String> defaultData = CraftPresence.CONFIG.biomeMessages.get("default");
+        final Pair<String, String> defaultData = CONFIG.biomeData.get("default");
         final String defaultBiomeMessage = defaultData != null ? defaultData.getFirst() : "";
 
         defaultMessage = addControl(
@@ -72,8 +75,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                         null, null,
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
-                                            final Pair<String, String> defaultBiomeData = CraftPresence.CONFIG.biomeMessages.get("default");
-                                            final Pair<String, String> currentBiomeData = CraftPresence.CONFIG.biomeMessages.get(attributeName);
+                                            final Pair<String, String> defaultBiomeData = CONFIG.biomeData.get("default");
+                                            final Pair<String, String> currentBiomeData = CONFIG.biomeData.get(attributeName);
                                             final String defaultMessage = defaultBiomeData != null ? defaultBiomeData.getFirst() : "";
                                             final String currentMessage = currentBiomeData != null ? currentBiomeData.getFirst() : "";
 
@@ -83,7 +86,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                 newData.setFirst(defaultMessage);
                                             }
                                             newData.setSecond(currentValue);
-                                            CraftPresence.CONFIG.biomeMessages.put(attributeName, newData);
+                                            CONFIG.biomeData.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -92,23 +95,23 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                final Pair<String, String> defaultBiomeData = CraftPresence.CONFIG.biomeMessages.get("default");
+                                                                final Pair<String, String> defaultBiomeData = CONFIG.biomeData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = defaultBiomeData != null ? defaultBiomeData.getFirst() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                final Pair<String, String> defaultBiomeData = CraftPresence.CONFIG.biomeMessages.get("default");
-                                                                final Pair<String, String> currentBiomeData = CraftPresence.CONFIG.biomeMessages.get(attributeName);
+                                                                final Pair<String, String> defaultBiomeData = CONFIG.biomeData.get("default");
+                                                                final Pair<String, String> currentBiomeData = CONFIG.biomeData.get(attributeName);
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
                                                                 screenInstance.originalPrimaryMessage = defaultBiomeData != null ? defaultBiomeData.getFirst() : "";
                                                                 screenInstance.primaryMessage = currentBiomeData != null ? currentBiomeData.getFirst() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final Pair<String, String> currentBiomeData = CraftPresence.CONFIG.biomeMessages.get(attributeName);
+                                                                final Pair<String, String> currentBiomeData = CONFIG.biomeData.get(attributeName);
                                                                 currentBiomeData.setFirst(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.biomeMessages.put(attributeName, currentBiomeData);
+                                                                CONFIG.biomeData.put(attributeName, currentBiomeData);
                                                                 if (!CraftPresence.BIOMES.BIOME_NAMES.contains(attributeName)) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.add(attributeName);
                                                                 }
@@ -116,14 +119,14 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.biomeMessages.remove(attributeName);
+                                                                CONFIG.biomeData.remove(attributeName);
                                                                 CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding an attachment icon to set data
-                                                                final Pair<String, String> defaultBiomeData = CraftPresence.CONFIG.biomeMessages.get("default");
-                                                                final Pair<String, String> currentBiomeData = CraftPresence.CONFIG.biomeMessages.get(attributeName);
-                                                                final String defaultIcon = defaultBiomeData != null ? defaultBiomeData.getSecond() : CraftPresence.CONFIG.defaultBiomeIcon;
+                                                                final Pair<String, String> defaultBiomeData = CONFIG.biomeData.get("default");
+                                                                final Pair<String, String> currentBiomeData = CONFIG.biomeData.get(attributeName);
+                                                                final String defaultIcon = defaultBiomeData != null ? defaultBiomeData.getSecond() : CONFIG.fallbackBiomeIcon;
                                                                 final String specificIcon = currentBiomeData != null ? currentBiomeData.getSecond() : defaultIcon;
                                                                 CraftPresence.GUIS.openScreen(
                                                                         new SelectorGui(
@@ -133,8 +136,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                                 true, false, RenderType.DiscordAsset,
                                                                                 (innerAttributeName, innerCurrentValue) -> {
                                                                                     // Inner-Event to occur when proceeding with adjusted data
-                                                                                    final Pair<String, String> defaultInnerBiomeData = CraftPresence.CONFIG.biomeMessages.get("default");
-                                                                                    final Pair<String, String> currentInnerBiomeData = CraftPresence.CONFIG.biomeMessages.get(innerAttributeName);
+                                                                                    final Pair<String, String> defaultInnerBiomeData = CONFIG.biomeData.get("default");
+                                                                                    final Pair<String, String> currentInnerBiomeData = CONFIG.biomeData.get(innerAttributeName);
                                                                                     final String defaultMessage = defaultInnerBiomeData != null ? defaultInnerBiomeData.getFirst() : "";
                                                                                     final String currentMessage = currentInnerBiomeData != null ? currentInnerBiomeData.getFirst() : "";
 
@@ -144,7 +147,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                                         newData.setFirst(defaultMessage);
                                                                                     }
                                                                                     newData.setSecond(innerCurrentValue);
-                                                                                    CraftPresence.CONFIG.biomeMessages.put(innerAttributeName, newData);
+                                                                                    CONFIG.biomeData.put(innerAttributeName, newData);
                                                                                 }, null
                                                                         )
                                                                 );
@@ -192,12 +195,12 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        CraftPresence.CONFIG.defaultBiomeIcon, null,
+                                        CONFIG.fallbackBiomeIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
                                             CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                            CraftPresence.CONFIG.defaultBiomeIcon = currentValue;
+                                            CONFIG.fallbackBiomeIcon = currentValue;
                                         }, null
                                 )
                         ),
@@ -217,9 +220,9 @@ public class BiomeSettingsGui extends ExtendedScreen {
                             if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                final Pair<String, String> defaultBiomeData = CraftPresence.CONFIG.biomeMessages.getOrDefault("default", new Pair<>());
+                                final Pair<String, String> defaultBiomeData = CONFIG.biomeData.getOrDefault("default", new Pair<>());
                                 defaultBiomeData.setFirst(defaultMessage.getControlMessage());
-                                CraftPresence.CONFIG.biomeMessages.put("default", defaultBiomeData);
+                                CONFIG.biomeData.put("default", defaultBiomeData);
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },

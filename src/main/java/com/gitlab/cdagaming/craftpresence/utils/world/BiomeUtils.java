@@ -112,7 +112,7 @@ public class BiomeUtils {
      * Module Event to Occur on each tick within the Application
      */
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectBiomeData : enabled;
+        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : enabled;
         final boolean needsUpdate = enabled && (
                 BIOME_NAMES.isEmpty() || BIOME_TYPES.isEmpty()
         );
@@ -138,10 +138,10 @@ public class BiomeUtils {
      */
     private void updateBiomeData() {
         final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.formatWords);
+        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.formatWords);
-        final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.formatWords);
+        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_Identifier = !StringUtils.isNullOrEmpty(newBiome_primaryIdentifier) ? newBiome_primaryIdentifier : newBiome_alternativeIdentifier;
 
         if (!newBiomeName.equals(CURRENT_BIOME_NAME) || !newBiome_Identifier.equals(CURRENT_BIOME_IDENTIFIER)) {
@@ -167,8 +167,8 @@ public class BiomeUtils {
         biomeArgs.clear();
         iconArgs.clear();
 
-        final Pair<String, String> defaultData = CraftPresence.CONFIG.biomeMessages.get("default");
-        final Pair<String, String> currentData = CraftPresence.CONFIG.biomeMessages.get(CURRENT_BIOME_IDENTIFIER);
+        final Pair<String, String> defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
+        final Pair<String, String> currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
 
         final String defaultMessage = defaultData != null ? defaultData.getFirst() : "";
         final String currentMessage = currentData != null ? currentData.getFirst() : defaultMessage;
@@ -177,7 +177,7 @@ public class BiomeUtils {
 
         biomeArgs.add(new Pair<>("&BIOME&", CURRENT_BIOME_NAME));
 
-        iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.defaultBiomeIcon));
+        iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon));
 
         // Add applicable args as sub-placeholders
         for (Pair<String, String> argumentData : biomeArgs) {
@@ -196,7 +196,7 @@ public class BiomeUtils {
         final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, biomeArgs);
 
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_BIOME_MESSAGE, ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_BIOME_ICON, CraftPresence.CONFIG.defaultBiomeIcon), ArgumentType.Image);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_BIOME_ICON, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon), ArgumentType.Image);
     }
 
     /**
@@ -243,7 +243,7 @@ public class BiomeUtils {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
                 String biomeName = !StringUtils.isNullOrEmpty(biome.getBiomeName()) ? biome.getBiomeName() : MappingUtils.getClassName(biome);
-                String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.formatWords);
+                String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);
                 }
@@ -253,9 +253,9 @@ public class BiomeUtils {
             }
         }
 
-        for (String biomeEntry : CraftPresence.CONFIG.biomeMessages.keySet()) {
+        for (String biomeEntry : CraftPresence.CONFIG.biomeSettings.biomeData.keySet()) {
             if (!StringUtils.isNullOrEmpty(biomeEntry)) {
-                String name = StringUtils.formatIdentifier(biomeEntry, true, !CraftPresence.CONFIG.formatWords);
+                String name = StringUtils.formatIdentifier(biomeEntry, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);
                 }

@@ -278,7 +278,7 @@ public class TileEntityUtils {
      * Module Event to Occur on each tick within the Application
      */
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enablePerItem : enabled;
+        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : enabled;
         final boolean needsUpdate = enabled && (TILE_ENTITY_NAMES.isEmpty() || TILE_ENTITY_CLASSES.isEmpty());
 
         if (needsUpdate) {
@@ -469,16 +469,16 @@ public class TileEntityUtils {
      */
     public void updateEntityPresence() {
         // Retrieve Messages
-        final String defaultItemMessage = CraftPresence.CONFIG.itemMessages.getOrDefault("default", "");
-        final String placeholderItemMessage = CraftPresence.CONFIG.playerItemsPlaceholderMessage;
+        final String defaultItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault("default", "");
+        final String placeholderItemMessage = CraftPresence.CONFIG.statusMessages.playerItemsPlaceholderMessage;
 
-        String offHandItemMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME);
-        String mainItemMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, defaultItemMessage);
+        String offHandItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME);
+        String mainItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, defaultItemMessage);
 
-        String helmetMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_HELMET_NAME, CURRENT_HELMET_NAME);
-        String chestMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_CHEST_NAME, CURRENT_CHEST_NAME);
-        String legsMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_LEGS_NAME, CURRENT_LEGS_NAME);
-        String bootsMessage = CraftPresence.CONFIG.itemMessages.getOrDefault(CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME);
+        String helmetMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_HELMET_NAME, CURRENT_HELMET_NAME);
+        String chestMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_CHEST_NAME, CURRENT_CHEST_NAME);
+        String legsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_LEGS_NAME, CURRENT_LEGS_NAME);
+        String bootsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME);
 
         // Form Entity/Item Argument List
         tileEntityArgs.clear();
@@ -737,7 +737,7 @@ public class TileEntityUtils {
             }
         }
 
-        for (String itemEntry : CraftPresence.CONFIG.itemMessages.keySet()) {
+        for (String itemEntry : CraftPresence.CONFIG.advancedSettings.itemMessages.keySet()) {
             if (!StringUtils.isNullOrEmpty(itemEntry)) {
                 if (!ITEM_NAMES.contains(itemEntry)) {
                     ITEM_NAMES.add(itemEntry);

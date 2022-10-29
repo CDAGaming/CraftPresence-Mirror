@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -45,9 +46,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
     private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
+    private final Display CONFIG;
 
     PresenceSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
+        CONFIG = CraftPresence.CONFIG.displaySettings;
     }
 
     @Override
@@ -85,10 +88,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage
         );
 
-        detailsFormat.setControlMessage(CraftPresence.CONFIG.detailsTextFormat);
-        gameStateFormat.setControlMessage(CraftPresence.CONFIG.gameStateTextFormat);
-        largeImageFormat.setControlMessage(CraftPresence.CONFIG.largeImageTextFormat);
-        smallImageFormat.setControlMessage(CraftPresence.CONFIG.smallImageTextFormat);
+        detailsFormat.setControlMessage(CONFIG.detailsTextFormat);
+        gameStateFormat.setControlMessage(CONFIG.gameStateTextFormat);
+        largeImageFormat.setControlMessage(CONFIG.largeImageTextFormat);
+        smallImageFormat.setControlMessage(CONFIG.smallImageTextFormat);
 
         // Page 2 Items
         smallImageKeyFormat = addControl(
@@ -106,8 +109,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
-        smallImageKeyFormat.setControlMessage(CraftPresence.CONFIG.smallImageKeyFormat);
-        largeImageKeyFormat.setControlMessage(CraftPresence.CONFIG.largeImageKeyFormat);
+        smallImageKeyFormat.setControlMessage(CONFIG.smallImageKeyFormat);
+        largeImageKeyFormat.setControlMessage(CONFIG.largeImageKeyFormat);
 
         // Button Messages Button
         buttonMessagesButton = addControl(
@@ -133,7 +136,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
                                                                 screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                final Pair<String, String> defaultData = CraftPresence.CONFIG.buttonMessages.get("default");
+                                                                final Pair<String, String> defaultData = CONFIG.buttonMessages.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.getFirst() : "";
                                                                 screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.getSecond() : "";
                                                             },
@@ -143,8 +146,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.overrideSecondaryRender = true;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
-                                                                final Pair<String, String> defaultData = CraftPresence.CONFIG.buttonMessages.get("default");
-                                                                final Pair<String, String> currentData = CraftPresence.CONFIG.buttonMessages.get(attributeName);
+                                                                final Pair<String, String> defaultData = CONFIG.buttonMessages.get("default");
+                                                                final Pair<String, String> currentData = CONFIG.buttonMessages.get(attributeName);
                                                                 screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.getFirst() : "";
                                                                 screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.getSecond() : "";
                                                                 screenInstance.primaryMessage = currentData != null ? currentData.getFirst() : screenInstance.originalPrimaryMessage;
@@ -153,12 +156,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.buttonMessages.put(screenInstance.attributeName, new Pair<>(inputText, secondaryText));
+                                                                CONFIG.buttonMessages.put(screenInstance.attributeName, new Pair<>(inputText, secondaryText));
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.buttonMessages.remove(screenInstance.attributeName);
+                                                                CONFIG.buttonMessages.remove(screenInstance.attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
@@ -208,7 +211,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.dynamicIcons.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.dynamicIcons.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -217,15 +220,15 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CraftPresence.CONFIG.dynamicIcons.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CraftPresence.CONFIG.dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = CONFIG.dynamicIcons.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = CONFIG.dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                                                 CraftPresence.CONFIG.flushClientProperties = true;
-                                                                CraftPresence.CONFIG.dynamicIcons.put(attributeName, inputText);
+                                                                CONFIG.dynamicIcons.put(attributeName, inputText);
                                                                 final DiscordAsset asset = new DiscordAsset()
                                                                         .setName(attributeName)
                                                                         .setUrl(inputText)
@@ -244,7 +247,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                                                 CraftPresence.CONFIG.flushClientProperties = true;
-                                                                CraftPresence.CONFIG.dynamicIcons.remove(attributeName);
+                                                                CONFIG.dynamicIcons.remove(attributeName);
                                                                 if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
                                                                     DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
                                                                     if (!attributeName.equalsIgnoreCase("default")) {
@@ -280,35 +283,35 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
         backButton.setOnClick(
                 () -> {
-                    if (!detailsFormat.getControlMessage().equals(CraftPresence.CONFIG.detailsTextFormat)) {
+                    if (!detailsFormat.getControlMessage().equals(CONFIG.detailsTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.detailsTextFormat = detailsFormat.getControlMessage();
+                        CONFIG.detailsTextFormat = detailsFormat.getControlMessage();
                     }
-                    if (!gameStateFormat.getControlMessage().equals(CraftPresence.CONFIG.gameStateTextFormat)) {
+                    if (!gameStateFormat.getControlMessage().equals(CONFIG.gameStateTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.gameStateTextFormat = gameStateFormat.getControlMessage();
+                        CONFIG.gameStateTextFormat = gameStateFormat.getControlMessage();
                     }
-                    if (!largeImageFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageTextFormat)) {
+                    if (!largeImageFormat.getControlMessage().equals(CONFIG.largeImageTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageTextFormat = largeImageFormat.getControlMessage();
+                        CONFIG.largeImageTextFormat = largeImageFormat.getControlMessage();
                     }
-                    if (!smallImageFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageTextFormat)) {
+                    if (!smallImageFormat.getControlMessage().equals(CONFIG.smallImageTextFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageTextFormat = smallImageFormat.getControlMessage();
+                        CONFIG.smallImageTextFormat = smallImageFormat.getControlMessage();
                     }
-                    if (!largeImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.largeImageKeyFormat)) {
+                    if (!largeImageKeyFormat.getControlMessage().equals(CONFIG.largeImageKeyFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.largeImageKeyFormat = largeImageKeyFormat.getControlMessage();
+                        CONFIG.largeImageKeyFormat = largeImageKeyFormat.getControlMessage();
                     }
-                    if (!smallImageKeyFormat.getControlMessage().equals(CraftPresence.CONFIG.smallImageKeyFormat)) {
+                    if (!smallImageKeyFormat.getControlMessage().equals(CONFIG.smallImageKeyFormat)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CraftPresence.CONFIG.smallImageKeyFormat = smallImageKeyFormat.getControlMessage();
+                        CONFIG.smallImageKeyFormat = smallImageKeyFormat.getControlMessage();
                     }
                     CraftPresence.GUIS.openScreen(parentScreen);
                 }

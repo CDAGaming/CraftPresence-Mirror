@@ -324,7 +324,7 @@ public class GuiUtils {
      * Module Event to Occur on each tick within the Application
      */
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enablePerGui : enabled;
+        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
         isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.isFocused();
         final boolean needsUpdate = enabled && (GUI_NAMES.isEmpty() || GUI_CLASSES.isEmpty());
 
@@ -396,7 +396,7 @@ public class GuiUtils {
                 GuiScreen.class, GuiContainer.class
         };
 
-        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Arrays.asList(searchClasses), CraftPresence.CONFIG.includeExtraGuiClasses, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
+        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Arrays.asList(searchClasses), CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
             String screenName = MappingUtils.getClassName(classObj);
             if (!GUI_NAMES.contains(screenName)) {
                 GUI_NAMES.add(screenName);
@@ -406,7 +406,7 @@ public class GuiUtils {
             }
         }
 
-        for (String guiEntry : CraftPresence.CONFIG.guiMessages.keySet()) {
+        for (String guiEntry : CraftPresence.CONFIG.advancedSettings.guiMessages.keySet()) {
             if (!StringUtils.isNullOrEmpty(guiEntry) && !GUI_NAMES.contains(guiEntry)) {
                 GUI_NAMES.add(guiEntry);
             }
@@ -433,8 +433,8 @@ public class GuiUtils {
             StringUtils.addEntriesNotPresent(guiArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        final String defaultMessage = CraftPresence.CONFIG.guiMessages.getOrDefault("default", "");
-        final String currentMessage = CraftPresence.CONFIG.guiMessages.getOrDefault(CURRENT_GUI_NAME, defaultMessage);
+        final String defaultMessage = CraftPresence.CONFIG.advancedSettings.guiMessages.getOrDefault("default", "");
+        final String currentMessage = CraftPresence.CONFIG.advancedSettings.guiMessages.getOrDefault(CURRENT_GUI_NAME, defaultMessage);
 
         final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, guiArgs);
 
@@ -475,7 +475,7 @@ public class GuiUtils {
      * @param withBackground Whether a background should display around and under the String, like a tooltip
      */
     public void drawMultiLineString(final List<String> textToInput, int posX, int posY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer fontRenderer, boolean withBackground) {
-        if (CraftPresence.CONFIG.renderTooltips && !ModUtils.forceBlockTooltipRendering && !textToInput.isEmpty() && fontRenderer != null) {
+        if (CraftPresence.CONFIG.advancedSettings.renderTooltips && !ModUtils.forceBlockTooltipRendering && !textToInput.isEmpty() && fontRenderer != null) {
             List<String> textLines = textToInput;
             int tooltipTextWidth = 0;
 
@@ -566,13 +566,13 @@ public class GuiUtils {
                 //
                 // Also Ensure (if using MC Textures) that they annotate with nameHere:textureHere
 
-                if (StringUtils.isValidColorCode(CraftPresence.CONFIG.tooltipBackgroundColor)) {
-                    if (CraftPresence.CONFIG.tooltipBackgroundColor.length() == 6) {
-                        backgroundColor = "#" + CraftPresence.CONFIG.tooltipBackgroundColor;
-                    } else if (CraftPresence.CONFIG.tooltipBackgroundColor.startsWith("0x")) {
-                        backgroundColor = Long.toString(Long.decode(CraftPresence.CONFIG.tooltipBackgroundColor).intValue());
+                if (StringUtils.isValidColorCode(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor)) {
+                    if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.length() == 6) {
+                        backgroundColor = "#" + CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
+                    } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.startsWith("0x")) {
+                        backgroundColor = Long.toString(Long.decode(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor).intValue());
                     } else {
-                        backgroundColor = CraftPresence.CONFIG.tooltipBackgroundColor;
+                        backgroundColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
                     }
 
                     // Draw with Colors
@@ -582,16 +582,16 @@ public class GuiUtils {
                     drawGradientRect(zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
                     drawGradientRect(zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
                 } else {
-                    final boolean usingExternalTexture = ImageUtils.isExternalImage(CraftPresence.CONFIG.tooltipBackgroundColor);
+                    final boolean usingExternalTexture = ImageUtils.isExternalImage(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor);
                     double widthDivider = 32.0D, heightDivider = 32.0D;
 
                     if (!usingExternalTexture) {
-                        if (CraftPresence.CONFIG.tooltipBackgroundColor.contains(":") && !CraftPresence.CONFIG.tooltipBackgroundColor.startsWith(":")) {
-                            backgroundColor = CraftPresence.CONFIG.tooltipBackgroundColor;
-                        } else if (CraftPresence.CONFIG.tooltipBackgroundColor.startsWith(":")) {
-                            backgroundColor = CraftPresence.CONFIG.tooltipBackgroundColor.substring(1);
+                        if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.contains(":") && !CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.startsWith(":")) {
+                            backgroundColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
+                        } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.startsWith(":")) {
+                            backgroundColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.substring(1);
                         } else {
-                            backgroundColor = "minecraft:" + CraftPresence.CONFIG.tooltipBackgroundColor;
+                            backgroundColor = "minecraft:" + CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
                         }
 
                         if (backgroundColor.contains(":")) {
@@ -601,10 +601,10 @@ public class GuiUtils {
                             backGroundTexture = new ResourceLocation(backgroundColor);
                         }
                     } else {
-                        final String formattedConvertedName = CraftPresence.CONFIG.tooltipBackgroundColor.replaceFirst("file://", "");
+                        final String formattedConvertedName = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.replaceFirst("file://", "");
                         final String[] urlBits = formattedConvertedName.trim().split("/");
                         final String textureName = urlBits[urlBits.length - 1].trim();
-                        backGroundTexture = ImageUtils.getTextureFromUrl(textureName, CraftPresence.CONFIG.tooltipBackgroundColor.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
+                        backGroundTexture = ImageUtils.getTextureFromUrl(textureName, CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
 
                         widthDivider = tooltipTextWidth + 8;
                         heightDivider = tooltipHeight + 8;
@@ -613,13 +613,13 @@ public class GuiUtils {
                     drawTextureRect(zLevel, tooltipX - 4, tooltipY - 4, tooltipTextWidth + 8, tooltipHeight + 8, 0, widthDivider, heightDivider, false, backGroundTexture);
                 }
 
-                if (StringUtils.isValidColorCode(CraftPresence.CONFIG.tooltipBorderColor)) {
-                    if (CraftPresence.CONFIG.tooltipBorderColor.length() == 6) {
-                        borderColor = "#" + CraftPresence.CONFIG.tooltipBorderColor;
-                    } else if (CraftPresence.CONFIG.tooltipBorderColor.startsWith("0x")) {
-                        borderColor = Long.toString(Long.decode(CraftPresence.CONFIG.tooltipBorderColor).intValue());
+                if (StringUtils.isValidColorCode(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor)) {
+                    if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.length() == 6) {
+                        borderColor = "#" + CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
+                    } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.startsWith("0x")) {
+                        borderColor = Long.toString(Long.decode(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor).intValue());
                     } else {
-                        borderColor = CraftPresence.CONFIG.tooltipBorderColor;
+                        borderColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
                     }
 
                     // Draw with Colors
@@ -631,15 +631,15 @@ public class GuiUtils {
                     drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColor, borderColor);
                     drawGradientRect(zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
                 } else {
-                    final boolean usingExternalTexture = ImageUtils.isExternalImage(CraftPresence.CONFIG.tooltipBorderColor);
+                    final boolean usingExternalTexture = ImageUtils.isExternalImage(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor);
 
                     if (!usingExternalTexture) {
-                        if (CraftPresence.CONFIG.tooltipBorderColor.contains(":") && !CraftPresence.CONFIG.tooltipBorderColor.startsWith(":")) {
-                            borderColor = CraftPresence.CONFIG.tooltipBorderColor;
-                        } else if (CraftPresence.CONFIG.tooltipBorderColor.startsWith(":")) {
-                            borderColor = CraftPresence.CONFIG.tooltipBorderColor.substring(1);
+                        if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.contains(":") && !CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.startsWith(":")) {
+                            borderColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
+                        } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.startsWith(":")) {
+                            borderColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.substring(1);
                         } else {
-                            borderColor = "minecraft:" + CraftPresence.CONFIG.tooltipBorderColor;
+                            borderColor = "minecraft:" + CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
                         }
 
                         if (borderColor.contains(":")) {
@@ -649,10 +649,10 @@ public class GuiUtils {
                             borderTexture = new ResourceLocation(borderColor);
                         }
                     } else {
-                        final String formattedConvertedName = CraftPresence.CONFIG.tooltipBorderColor.replaceFirst("file://", "");
+                        final String formattedConvertedName = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.replaceFirst("file://", "");
                         final String[] urlBits = formattedConvertedName.trim().split("/");
                         final String textureName = urlBits[urlBits.length - 1].trim();
-                        borderTexture = ImageUtils.getTextureFromUrl(textureName, CraftPresence.CONFIG.tooltipBorderColor.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
+                        borderTexture = ImageUtils.getTextureFromUrl(textureName, CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
                     }
 
                     drawTextureRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipTextWidth + 5, 1, 0, (usingExternalTexture ? tooltipTextWidth + 5 : 32.0D), (usingExternalTexture ? 1 : 32.0D), false, borderTexture); // Top Border
@@ -720,7 +720,7 @@ public class GuiUtils {
         if (CraftPresence.instance.world != null) {
             drawGradientRect(300, 0, 0, width, height, "-1072689136", "-804253680");
         } else {
-            String backgroundCode = CraftPresence.CONFIG.guiBackgroundColor;
+            String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
             ResourceLocation texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
@@ -745,7 +745,7 @@ public class GuiUtils {
                     heightDivider = height;
                 }
 
-                drawTextureRect(0.0D, 0.0D, 0.0D, width, height, 0, widthDivider, heightDivider, CraftPresence.CONFIG.showBackgroundAsDark, texLocation);
+                drawTextureRect(0.0D, 0.0D, 0.0D, width, height, 0, widthDivider, heightDivider, CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark, texLocation);
             }
         }
     }

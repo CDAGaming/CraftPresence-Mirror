@@ -311,7 +311,7 @@ public class MainGui extends ExtendedScreen {
         if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, getStringWidth(mainTitle), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, ModUtils.MOD_SCHEMA_VERSION)
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
                     ), this, true
             );
         }
@@ -327,10 +327,10 @@ public class MainGui extends ExtendedScreen {
     }
 
     private void syncRenderStates() {
-        biomeSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectBiomeData : biomeSet.isControlEnabled());
-        dimensionSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectDimensionData : dimensionSet.isControlEnabled());
-        serverSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.detectWorldData : serverSet.isControlEnabled());
-        commandGUIButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enableCommands : commandGUIButton.isControlEnabled());
+        biomeSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : biomeSet.isControlEnabled());
+        dimensionSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectDimensionData : dimensionSet.isControlEnabled());
+        serverSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : serverSet.isControlEnabled());
+        commandGUIButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enableCommands : commandGUIButton.isControlEnabled());
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
 
         proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");

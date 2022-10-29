@@ -60,7 +60,7 @@ public class TechnicUtils {
 
             if (technicPack != null) {
                 if (CraftPresence.SYSTEM.USER_DIR.contains(technicPack.selected)) {
-                    PACK_NAME = StringUtils.formatWord(technicPack.selected, !CraftPresence.CONFIG.formatWords);
+                    PACK_NAME = StringUtils.formatWord(technicPack.selected, !CraftPresence.CONFIG.advancedSettings.formatWords);
                     ICON_NAME = StringUtils.formatAsIcon(technicPack.selected);
                     CraftPresence.packFound = true;
 

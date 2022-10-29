@@ -140,7 +140,7 @@ public class EntityUtils {
      * Module Event to Occur on each tick within the Application
      */
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.enablePerEntity : enabled;
+        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : enabled;
         final boolean needsUpdate = enabled && (ENTITY_NAMES.isEmpty() || ENTITY_CLASSES.isEmpty());
 
         if (needsUpdate) {
@@ -225,11 +225,11 @@ public class EntityUtils {
      */
     public void updateEntityPresence() {
         // Retrieve Messages
-        final String defaultEntityTargetMessage = CraftPresence.CONFIG.entityTargetMessages.getOrDefault("default", "");
-        final String defaultEntityRidingMessage = CraftPresence.CONFIG.entityRidingMessages.getOrDefault("default", "");
+        final String defaultEntityTargetMessage = CraftPresence.CONFIG.advancedSettings.entityTargetMessages.getOrDefault("default", "");
+        final String defaultEntityRidingMessage = CraftPresence.CONFIG.advancedSettings.entityRidingMessages.getOrDefault("default", "");
 
-        final String targetEntityMessage = CraftPresence.CONFIG.entityTargetMessages.getOrDefault(CURRENT_TARGET_NAME, defaultEntityTargetMessage);
-        final String ridingEntityMessage = CraftPresence.CONFIG.entityRidingMessages.getOrDefault(CURRENT_RIDING_NAME, defaultEntityRidingMessage);
+        final String targetEntityMessage = CraftPresence.CONFIG.advancedSettings.entityTargetMessages.getOrDefault(CURRENT_TARGET_NAME, defaultEntityTargetMessage);
+        final String ridingEntityMessage = CraftPresence.CONFIG.advancedSettings.entityRidingMessages.getOrDefault(CURRENT_RIDING_NAME, defaultEntityRidingMessage);
 
         // Form Entity Argument List
         entityTargetArgs.clear();
@@ -400,13 +400,13 @@ public class EntityUtils {
             }
         }
 
-        for (String entityTargetEntry : CraftPresence.CONFIG.entityTargetMessages.keySet()) {
+        for (String entityTargetEntry : CraftPresence.CONFIG.advancedSettings.entityTargetMessages.keySet()) {
             if (!StringUtils.isNullOrEmpty(entityTargetEntry) && !ENTITY_NAMES.contains(entityTargetEntry)) {
                 ENTITY_NAMES.add(entityTargetEntry);
             }
         }
 
-        for (String entityRidingEntry : CraftPresence.CONFIG.entityRidingMessages.keySet()) {
+        for (String entityRidingEntry : CraftPresence.CONFIG.advancedSettings.entityRidingMessages.keySet()) {
             if (!StringUtils.isNullOrEmpty(entityRidingEntry) && !ENTITY_NAMES.contains(entityRidingEntry)) {
                 ENTITY_NAMES.add(entityRidingEntry);
             }
