@@ -64,6 +64,9 @@ public class KeyUtils {
      * Format: rawKeyField:[keyBindInstance:(runEvent,updatePredicate):errorCallback]
      */
     private final Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
+    /**
+     * List of Keys that are in queue for later syncing operations
+     */
     public Map<String, Integer> keySyncQueue = Maps.newHashMap();
     /**
      * Determines whether KeyBindings have been fully registered and attached to needed systems.

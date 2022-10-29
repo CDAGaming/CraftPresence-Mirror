@@ -47,11 +47,11 @@ public final class Config implements Serializable {
     // Constants
     public static final int VERSION = 1;
     private static final long serialVersionUID = -4853238501768086595L;
-    private static final List<Field> CATEGORIES = getCategoryList();
     public static int MC_VERSION;
-    private static final Config INSTANCE = loadOrCreate();
     private static List<String> keyCodeTriggers;
     private static List<String> languageTriggers;
+    private static final List<Field> CATEGORIES = getCategoryList();
+    private static final Config INSTANCE = loadOrCreate();
     private static Config DEFAULT;
     public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
     // Global Settings

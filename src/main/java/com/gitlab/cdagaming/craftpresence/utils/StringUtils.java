@@ -1085,6 +1085,14 @@ public class StringUtils {
         return collection;
     }
 
+    /**
+     * Retrieves the Specified Inner Object from a List of Fields via Reflection
+     *
+     * @param fields   The field(s) to interpret
+     * @param instance An Instance of the root class, if needed
+     * @param name     The field name to search for
+     * @return {@link true} if the operation succeeded
+     */
     public static Object lookupInnerObject(List<Field> fields, Object instance, String name) {
         for (Field f : fields) {
             try {
@@ -1136,6 +1144,14 @@ public class StringUtils {
         return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
     }
 
+    /**
+     * Adjusts the specified Inner Object from a List of Fields via Reflection
+     *
+     * @param fields    The field(s) to interpret
+     * @param instance  An Instance of the root class, if needed
+     * @param fieldData A Pair with the format of fieldName:valueToSet:modifierData
+     * @return {@link true} if the operation succeeded
+     */
     public static boolean updateInnerObject(List<Field> fields, Object instance, Tuple<?, ?, ?> fieldData) {
         for (Field f : fields) {
             try {
