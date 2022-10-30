@@ -61,7 +61,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultName.setControlMessage(CONFIG.defaultServerName);
+        defaultName.setControlMessage(CONFIG.fallbackServerName);
         defaultMOTD = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -69,7 +69,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultMOTD.setControlMessage(CONFIG.defaultServerMotd);
+        defaultMOTD.setControlMessage(CONFIG.fallbackServerMotd);
         defaultMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -233,15 +233,15 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (!defaultName.getControlMessage().equals(CONFIG.defaultServerName)) {
+                            if (!defaultName.getControlMessage().equals(CONFIG.fallbackServerName)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CONFIG.defaultServerName = defaultName.getControlMessage();
+                                CONFIG.fallbackServerName = defaultName.getControlMessage();
                             }
-                            if (!defaultMOTD.getControlMessage().equals(CONFIG.defaultServerMotd)) {
+                            if (!defaultMOTD.getControlMessage().equals(CONFIG.fallbackServerMotd)) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CONFIG.defaultServerMotd = defaultMOTD.getControlMessage();
+                                CONFIG.fallbackServerMotd = defaultMOTD.getControlMessage();
                             }
                             if (!defaultMessage.getControlMessage().equals(defaultServerMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;

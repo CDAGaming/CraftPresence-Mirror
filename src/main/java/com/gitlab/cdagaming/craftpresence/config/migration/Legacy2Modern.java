@@ -77,6 +77,8 @@ public class Legacy2Modern implements DataMigrator {
             .put("dimensionMessages", "dimensionSettings.dimensionData")
             //
             .put("defaultServerIcon", "serverSettings.fallbackServerIcon")
+            .put("defaultServerName", "serverSettings.fallbackServerName")
+            .put("defaultServerMotd", "serverSettings.fallbackServerMotd")
             .put("serverMessages", "serverSettings.serverData")
             //
             .put("mainMenuMessage", "statusMessages.mainMenuMessage")

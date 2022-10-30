@@ -38,8 +38,8 @@ public class Server extends Module implements Serializable {
     private static final long serialVersionUID = -3687928791637101400L;
     private static Server DEFAULT;
     public String fallbackServerIcon = "default";
-    public String defaultServerName = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_name");
-    public String defaultServerMotd = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_motd");
+    public String fallbackServerName = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_name");
+    public String fallbackServerMotd = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_motd");
     public Map<String, Pair<String, String>> serverData = ImmutableMap.<String, Pair<String, String>>builder()
             .put("default", new Pair<>(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_messages"),
