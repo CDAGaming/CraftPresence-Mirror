@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,11 +164,16 @@ public final class Config implements Serializable {
         return rawJson;
     }
 
-    public JsonElement handleVerification(final JsonElement rawJson, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationUtils.ConversionMode languageMigrationId) {
+    public JsonElement handleVerification(final JsonElement rawJson, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationUtils.ConversionMode languageMigrationId, final String... path) {
         // Verify Type Safety, reset value if anything is null or invalid for it's type
+        String pathPrefix = StringUtils.join(".", Arrays.asList(path));
+        if (!StringUtils.isNullOrEmpty(pathPrefix)) {
+            pathPrefix += ".";
+        }
+
         if (rawJson != null) {
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
-                final String rawName = entry.getKey();
+                final String rawName = pathPrefix + entry.getKey();
                 final JsonElement rawValue = entry.getValue();
                 final Object defaultValue = getDefaults().getProperty(rawName);
                 boolean shouldReset = false;
@@ -175,7 +181,9 @@ public final class Config implements Serializable {
                 if (defaultValue == null) {
                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
                 } else if (Module.class.isAssignableFrom(defaultValue.getClass())) {
-                    handleVerification(entry.getValue(), keyCodeMigrationId, languageMigrationId);
+                    final List<String> paths = Lists.newArrayList(path);
+                    paths.add(entry.getKey());
+                    handleVerification(entry.getValue(), keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
                 } else if (!rawName.endsWith("Format")) { // Avoidance Filter
                     final Object currentValue = getProperty(rawName);
                     if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
@@ -305,40 +313,52 @@ public final class Config implements Serializable {
                 FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
     }
 
-    public Object getProperty(final String name, final boolean ignoreCategories) {
+    public Pair<Object, Tuple<Class<?>, Object, String>> lookupProperty(final String... path) {
+        Class<?> classObj = Config.class;
+        Object instance = this;
         Object result = null;
-        if (!ignoreCategories) {
-            result = StringUtils.lookupInnerObject(CATEGORIES, this, name);
+
+        String name = null;
+        for (int i = 0; i < path.length; i++) {
+            name = path[i];
+            result = StringUtils.lookupObject(classObj, instance, name);
+            if (result != null) {
+                if (i < path.length - 1) {
+                    classObj = result.getClass();
+                    instance = result;
+                }
+            } else {
+                break;
+            }
         }
-        if (result == null) {
-            result = StringUtils.lookupObject(Config.class, this, name);
-        }
-        return result;
+        return new Pair<>(result, new Tuple<>(classObj, instance, name));
+    }
+
+    public Object getProperty(final String... path) {
+        return lookupProperty(path).getFirst();
     }
 
     public Object getProperty(final String name) {
-        return getProperty(name, false);
+        return getProperty(name.split("\\."));
     }
 
-    public void setProperty(final String name, final Object value, final boolean ignoreCategories) {
-        boolean result = false;
-        if (!ignoreCategories) {
-            result = StringUtils.updateInnerObject(CATEGORIES, this, new Tuple<>(name, value, null));
-        }
-        if (!result) {
-            StringUtils.updateField(Config.class, this, new Tuple<>(name, value, null));
+    public void setProperty(final Object value, final String... path) {
+        final Pair<Object, Tuple<Class<?>, Object, String>> propertyData = lookupProperty(path);
+        if (propertyData.getFirst() != null) {
+            final Tuple<Class<?>, Object, String> fieldData = propertyData.getSecond();
+            StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Tuple<>(fieldData.getThird(), value, null));
         }
     }
 
     public void setProperty(final String name, final Object value) {
-        setProperty(name, value, false);
+        setProperty(value, name.split("\\."));
     }
 
-    public void resetProperty(final String name, final boolean ignoreCategories) {
-        setProperty(name, getDefaults().getProperty(name), ignoreCategories);
+    public void resetProperty(final String... path) {
+        setProperty(getDefaults().getProperty(path), path);
     }
 
     public void resetProperty(final String name) {
-        resetProperty(name, false);
+        resetProperty(name.split("\\."));
     }
 }
