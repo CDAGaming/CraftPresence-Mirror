@@ -36,8 +36,6 @@ import com.google.gson.JsonElement;
 
 import java.io.File;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +49,6 @@ public final class Config implements Serializable {
     public static int MC_VERSION;
     private static List<String> keyCodeTriggers;
     private static List<String> languageTriggers;
-    private static final List<Field> CATEGORIES = getCategoryList();
     private static final Config INSTANCE = loadOrCreate();
     private static Config DEFAULT;
     public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
@@ -87,6 +84,7 @@ public final class Config implements Serializable {
     public static Config loadOrCreate(final boolean forceCreate) {
         Config config = null;
         JsonElement rawJson = null;
+        setupCriticalData();
 
         try {
             config = FileUtils.getJsonData(getConfigFile(), Config.class,
@@ -120,19 +118,11 @@ public final class Config implements Serializable {
         return loadOrCreate(false);
     }
 
-    public static List<Field> getCategoryList() {
+    public static void setupCriticalData() {
         // Setup other critical data
         MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
         keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
         languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
-
-        final List<Field> results = Lists.newArrayList();
-        for (Field f : Config.class.getDeclaredFields()) {
-            if (Modifier.isPublic(f.getModifiers()) && Module.class.isAssignableFrom(f.getType())) {
-                results.add(f);
-            }
-        }
-        return results;
     }
 
     public void applyData() {
