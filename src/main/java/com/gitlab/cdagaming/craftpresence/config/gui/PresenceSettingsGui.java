@@ -27,7 +27,8 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.Display;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
@@ -44,6 +45,7 @@ import net.minecraft.client.gui.GuiScreen;
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
     private final Display CONFIG;
+    private final PresenceData PRESENCE;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
     private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
@@ -51,6 +53,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
     PresenceSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.displaySettings;
+        PRESENCE = CONFIG.presenceData;
     }
 
     @Override
@@ -88,10 +91,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage
         );
 
-        detailsFormat.setControlMessage(CONFIG.detailsTextFormat);
-        gameStateFormat.setControlMessage(CONFIG.gameStateTextFormat);
-        largeImageFormat.setControlMessage(CONFIG.largeImageTextFormat);
-        smallImageFormat.setControlMessage(CONFIG.smallImageTextFormat);
+        detailsFormat.setControlMessage(PRESENCE.details);
+        gameStateFormat.setControlMessage(PRESENCE.gameState);
+        largeImageFormat.setControlMessage(PRESENCE.largeImageText);
+        smallImageFormat.setControlMessage(PRESENCE.smallImageText);
 
         // Page 2 Items
         smallImageKeyFormat = addControl(
@@ -109,8 +112,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
-        smallImageKeyFormat.setControlMessage(CONFIG.smallImageKeyFormat);
-        largeImageKeyFormat.setControlMessage(CONFIG.largeImageKeyFormat);
+        smallImageKeyFormat.setControlMessage(PRESENCE.smallImageKey);
+        largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
 
         // Button Messages Button
         buttonMessagesButton = addControl(
@@ -136,9 +139,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
                                                                 screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                final Pair<String, String> defaultData = CONFIG.buttonMessages.get("default");
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.getFirst() : "";
-                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.getSecond() : "";
+                                                                final Button defaultData = CONFIG.buttonMessages.get("default");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.label : "";
+                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.url : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -146,17 +149,17 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.overrideSecondaryRender = true;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
-                                                                final Pair<String, String> defaultData = CONFIG.buttonMessages.get("default");
-                                                                final Pair<String, String> currentData = CONFIG.buttonMessages.get(attributeName);
-                                                                screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.getFirst() : "";
-                                                                screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.getSecond() : "";
-                                                                screenInstance.primaryMessage = currentData != null ? currentData.getFirst() : screenInstance.originalPrimaryMessage;
-                                                                screenInstance.secondaryMessage = currentData != null ? currentData.getSecond() : screenInstance.originalSecondaryMessage;
+                                                                final Button defaultData = CONFIG.buttonMessages.get("default");
+                                                                final Button currentData = CONFIG.buttonMessages.get(attributeName);
+                                                                screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.label : "";
+                                                                screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.url : "";
+                                                                screenInstance.primaryMessage = currentData != null ? currentData.label : screenInstance.originalPrimaryMessage;
+                                                                screenInstance.secondaryMessage = currentData != null ? currentData.url : screenInstance.originalSecondaryMessage;
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.buttonMessages.put(screenInstance.attributeName, new Pair<>(inputText, secondaryText));
+                                                                CONFIG.buttonMessages.put(screenInstance.attributeName, new Button(inputText, secondaryText));
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when removing set data
@@ -283,35 +286,35 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
         backButton.setOnClick(
                 () -> {
-                    if (!detailsFormat.getControlMessage().equals(CONFIG.detailsTextFormat)) {
+                    if (!detailsFormat.getControlMessage().equals(PRESENCE.details)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.detailsTextFormat = detailsFormat.getControlMessage();
+                        PRESENCE.details = detailsFormat.getControlMessage();
                     }
-                    if (!gameStateFormat.getControlMessage().equals(CONFIG.gameStateTextFormat)) {
+                    if (!gameStateFormat.getControlMessage().equals(PRESENCE.gameState)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.gameStateTextFormat = gameStateFormat.getControlMessage();
+                        PRESENCE.gameState = gameStateFormat.getControlMessage();
                     }
-                    if (!largeImageFormat.getControlMessage().equals(CONFIG.largeImageTextFormat)) {
+                    if (!largeImageFormat.getControlMessage().equals(PRESENCE.largeImageText)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.largeImageTextFormat = largeImageFormat.getControlMessage();
+                        PRESENCE.largeImageText = largeImageFormat.getControlMessage();
                     }
-                    if (!smallImageFormat.getControlMessage().equals(CONFIG.smallImageTextFormat)) {
+                    if (!smallImageFormat.getControlMessage().equals(PRESENCE.smallImageText)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.smallImageTextFormat = smallImageFormat.getControlMessage();
+                        PRESENCE.smallImageText = smallImageFormat.getControlMessage();
                     }
-                    if (!largeImageKeyFormat.getControlMessage().equals(CONFIG.largeImageKeyFormat)) {
+                    if (!largeImageKeyFormat.getControlMessage().equals(PRESENCE.largeImageKey)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.largeImageKeyFormat = largeImageKeyFormat.getControlMessage();
+                        PRESENCE.largeImageKey = largeImageKeyFormat.getControlMessage();
                     }
-                    if (!smallImageKeyFormat.getControlMessage().equals(CONFIG.smallImageKeyFormat)) {
+                    if (!smallImageKeyFormat.getControlMessage().equals(PRESENCE.smallImageKey)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.smallImageKeyFormat = smallImageKeyFormat.getControlMessage();
+                        PRESENCE.smallImageKey = smallImageKeyFormat.getControlMessage();
                     }
                     CraftPresence.GUIS.openScreen(parentScreen);
                 }

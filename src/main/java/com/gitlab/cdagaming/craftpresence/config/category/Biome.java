@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -38,8 +39,8 @@ public class Biome extends Module implements Serializable {
     private static final long serialVersionUID = 7528869687150995557L;
     private static Biome DEFAULT;
     public String fallbackBiomeIcon = "unknown";
-    public Map<String, Pair<String, String>> biomeData = ImmutableMap.<String, Pair<String, String>>builder()
-            .put("default", new Pair<>(
+    public Map<String, ModuleData> biomeData = ImmutableMap.<String, ModuleData>builder()
+            .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.biome_messages.biome_messages"),
                     "" // Defaults to the Biome Name if nothing is supplied
             ))

@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.server;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
@@ -578,12 +579,12 @@ public class ServerUtils {
             serverArgs.add(new Pair<>("&MOTD&", currentServer_MOTD));
             serverArgs.add(new Pair<>("&PLAYERS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.playerAmountPlaceholderMessage, playerAmountArgs)));
 
-            final Pair<String, String> defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
-            final Pair<String, String> alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
-            final Pair<String, String> primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(StringUtils.formatAddress(currentServer_IP, false));
+            final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
+            final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
+            final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(StringUtils.formatAddress(currentServer_IP, false));
 
-            final String alternateIcon = alternateData != null ? alternateData.getSecond() : currentServer_Name;
-            final String currentIcon = primaryData != null ? primaryData.getSecond() : alternateIcon;
+            final String alternateIcon = alternateData != null ? alternateData.getIconOverride() : currentServer_Name;
+            final String currentIcon = primaryData != null ? primaryData.getIconOverride() : alternateIcon;
             final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
             currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
@@ -593,9 +594,9 @@ public class ServerUtils {
                 currentServerMessage = CraftPresence.CONFIG.statusMessages.lanMessage;
             } else {
                 // NOTE: Server-Only Presence Updates
-                final String defaultMessage = defaultData != null ? defaultData.getFirst() : "";
-                final String alternateMessage = alternateData != null ? alternateData.getFirst() : defaultMessage;
-                currentServerMessage = primaryData != null ? primaryData.getFirst() : alternateIcon;
+                final String defaultMessage = defaultData != null ? defaultData.getTextOverride() : "";
+                final String alternateMessage = alternateData != null ? alternateData.getTextOverride() : defaultMessage;
+                currentServerMessage = primaryData != null ? primaryData.getTextOverride() : alternateIcon;
 
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.

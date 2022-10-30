@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
@@ -167,12 +168,12 @@ public class BiomeUtils {
         biomeArgs.clear();
         iconArgs.clear();
 
-        final Pair<String, String> defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
-        final Pair<String, String> currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
+        final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
+        final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
 
-        final String defaultMessage = defaultData != null ? defaultData.getFirst() : "";
-        final String currentMessage = currentData != null ? currentData.getFirst() : defaultMessage;
-        final String currentIcon = currentData != null ? currentData.getSecond() : CURRENT_BIOME_IDENTIFIER;
+        final String defaultMessage = defaultData != null ? defaultData.getTextOverride() : "";
+        final String currentMessage = currentData != null ? currentData.getTextOverride() : defaultMessage;
+        final String currentIcon = currentData != null ? currentData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
         final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
         biomeArgs.add(new Pair<>("&BIOME&", CURRENT_BIOME_NAME));

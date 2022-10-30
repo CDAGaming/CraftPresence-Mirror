@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -37,14 +39,13 @@ import java.util.Map;
 public class Display extends Module implements Serializable {
     private static final long serialVersionUID = -3302764075156017733L;
     private static Display DEFAULT;
-    public String gameStateTextFormat = "&SERVER& &PACK&";
-    public String detailsTextFormat = "&MAINMENU&|&DIMENSION&";
-    public String largeImageTextFormat = "&MAINMENU&|&DIMENSION&";
-    public String smallImageTextFormat = "&SERVER& &PACK&";
-    public String largeImageKeyFormat = "&MAINMENU&|&DIMENSION&";
-    public String smallImageKeyFormat = "&SERVER&|&PACK&";
-    public Map<String, Pair<String, String>> buttonMessages = ImmutableMap.<String, Pair<String, String>>builder()
-            .put("default", new Pair<>(
+    public PresenceData presenceData = new PresenceData()
+            .setGameState("&SERVER& &PACK&")
+            .setDetails("&MAINMENU&|&DIMENSION&")
+            .setLargeImage("&MAINMENU&|&DIMENSION&", "&MAINMENU&|&DIMENSION&")
+            .setSmallImage("&SERVER&|&PACK&", "&SERVER& &PACK&");
+    public Map<String, Button> buttonMessages = ImmutableMap.<String, Button>builder()
+            .put("default", new Button(
                     ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
                     ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
             ))

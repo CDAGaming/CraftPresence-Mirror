@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -38,8 +39,8 @@ public class Dimension extends Module implements Serializable {
     private static final long serialVersionUID = 2779211521643527744L;
     private static Dimension DEFAULT;
     public String fallbackDimensionIcon = "unknown";
-    public Map<String, Pair<String, String>> dimensionData = ImmutableMap.<String, Pair<String, String>>builder()
-            .put("default", new Pair<>(
+    public Map<String, ModuleData> dimensionData = ImmutableMap.<String, ModuleData>builder()
+            .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.dimension_messages.dimension_messages"),
                     "" // Defaults to the Dimension Name if nothing is supplied
             ))

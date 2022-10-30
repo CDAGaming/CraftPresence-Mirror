@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -40,8 +41,8 @@ public class Server extends Module implements Serializable {
     public String fallbackServerIcon = "default";
     public String fallbackServerName = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_name");
     public String fallbackServerMotd = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_motd");
-    public Map<String, Pair<String, String>> serverData = ImmutableMap.<String, Pair<String, String>>builder()
-            .put("default", new Pair<>(
+    public Map<String, ModuleData> serverData = ImmutableMap.<String, ModuleData>builder()
+            .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_messages"),
                     "" // Defaults to the Server Name if nothing is supplied
             ))

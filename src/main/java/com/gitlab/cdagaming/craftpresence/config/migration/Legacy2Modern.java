@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.migration;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -216,6 +217,11 @@ public class Legacy2Modern implements DataMigrator {
                                                         part.length >= 2 ? part[1] : "",
                                                         part.length >= 3 ? part[2] : "",
                                                         part.length >= 4 ? part[3] : ""
+                                                ));
+                                            } else if (expectedSecondaryClass == ModuleData.class) {
+                                                newData.put(part[0], new ModuleData(
+                                                        part.length >= 2 ? part[1] : "",
+                                                        part.length >= 3 ? part[2] : ""
                                                 ));
                                             } else {
                                                 newData.put(part[0], part.length >= 2 ? part[1] : "");

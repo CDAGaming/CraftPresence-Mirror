@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
@@ -1105,9 +1107,10 @@ public class DiscordUtils {
      * @return whether any of the inputs are currently being used as an RPC image
      */
     public boolean isImageInUse(final String... evalStrings) {
+        final PresenceData configData = CraftPresence.CONFIG.displaySettings.presenceData;
         for (String evalString : evalStrings) {
-            if (CraftPresence.CONFIG.displaySettings.largeImageKeyFormat.contains(evalString) ||
-                    CraftPresence.CONFIG.displaySettings.smallImageKeyFormat.contains(evalString)
+            if (configData.largeImageKey.contains(evalString) ||
+                    configData.smallImageKey.contains(evalString)
             ) {
                 return true;
             }
@@ -1197,33 +1200,34 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence() {
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.detailsTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.gameStateTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        final PresenceData configData = CraftPresence.CONFIG.displaySettings.presenceData;
+        DETAILS = StringUtils.formatWord(parseArgumentOperators(configData.details, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(configData.gameState, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.largeImageKeyFormat, ArgumentType.Image));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.smallImageKeyFormat, ArgumentType.Image));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.largeImageKey, ArgumentType.Image));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.smallImageKey, ArgumentType.Image));
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(LARGE_IMAGE_ASSET.getUrl(), ArgumentType.Text) : LARGE_IMAGE_ASSET.getName()) : "";
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(SMALL_IMAGE_ASSET.getUrl(), ArgumentType.Text) : SMALL_IMAGE_ASSET.getName()) : "";
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.largeImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(CraftPresence.CONFIG.displaySettings.smallImageTextFormat, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.largeImageText, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.smallImageText, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
-        for (Map.Entry<String, Pair<String, String>> buttonElement : CraftPresence.CONFIG.displaySettings.buttonMessages.entrySet()) {
+        for (Map.Entry<String, Button> buttonElement : CraftPresence.CONFIG.displaySettings.buttonMessages.entrySet()) {
             JsonObject buttonObj = new JsonObject();
             if (!StringUtils.isNullOrEmpty(buttonElement.getKey()) &&
                     !buttonElement.getKey().equalsIgnoreCase("default") &&
-                    !StringUtils.isNullOrEmpty(buttonElement.getValue().getFirst())) {
+                    !StringUtils.isNullOrEmpty(buttonElement.getValue().label)) {
                 String label = StringUtils.formatWord(
-                        parseArgumentOperators(buttonElement.getValue().getFirst(), ArgumentType.Text),
+                        parseArgumentOperators(buttonElement.getValue().label, ArgumentType.Text),
                         !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
                 );
-                String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().getSecond()) ? parseArgumentOperators(
-                        buttonElement.getValue().getSecond(), ArgumentType.Text
+                String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().url) ? parseArgumentOperators(
+                        buttonElement.getValue().url, ArgumentType.Text
                 ) : "";
 
                 label = sanitizePlaceholders(label);
