@@ -974,7 +974,7 @@ public class StringUtils {
      * Joins a set of strings together by the specified separator
      *
      * @param separator The string the list should be linked together by
-     * @param input The list of data to interpret
+     * @param input     The list of data to interpret
      * @return The resulting string
      */
     public static String join(final String separator, final List<String> input) {
