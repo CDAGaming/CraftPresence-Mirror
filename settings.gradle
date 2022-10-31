@@ -21,11 +21,7 @@ pluginManagement {
             url = "https://s01.oss.sonatype.org/content/repositories/releases"
         }
         mavenCentral()
-        gradlePluginPortal() {
-            content {
-                excludeGroup "org.apache.logging.log4j"
-            }
-        }
+        gradlePluginPortal()
     }
 }
 
