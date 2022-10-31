@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.migration;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
+import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
@@ -124,12 +125,12 @@ public class Legacy2Modern implements DataMigrator {
             .put("stripExtraGuiElements", "accessibilitySettings.stripExtraGuiElements")
             .put("configGuiKeybind", "accessibilitySettings.configKeyCode")
             //
-            .put("gameStateMessageFormat", "displaySettings.gameStateTextFormat")
-            .put("detailsMessageFormat", "displaySettings.detailsTextFormat")
-            .put("largeImageTextFormat", "displaySettings.largeImageTextFormat")
-            .put("smallImageTextFormat", "displaySettings.smallImageTextFormat")
-            .put("largeImageKeyFormat", "displaySettings.largeImageKeyFormat")
-            .put("smallImageKeyFormat", "displaySettings.smallImageKeyFormat")
+            .put("gameStateMessageFormat", "displaySettings.presenceData.gameStateTextFormat")
+            .put("detailsMessageFormat", "displaySettings.presenceData.detailsTextFormat")
+            .put("largeImageTextFormat", "displaySettings.presenceData.largeImageTextFormat")
+            .put("smallImageTextFormat", "displaySettings.presenceData.smallImageTextFormat")
+            .put("largeImageKeyFormat", "displaySettings.presenceData.largeImageKeyFormat")
+            .put("smallImageKeyFormat", "displaySettings.presenceData.smallImageKeyFormat")
             .put("extraButtonMessages", "displaySettings.buttonMessages")
             .put("dynamicIcons", "displaySettings.dynamicIcons")
             .build();
@@ -220,6 +221,11 @@ public class Legacy2Modern implements DataMigrator {
                                                 ));
                                             } else if (expectedSecondaryClass == ModuleData.class) {
                                                 newData.put(part[0], new ModuleData(
+                                                        part.length >= 2 ? part[1] : "",
+                                                        part.length >= 3 ? part[2] : ""
+                                                ));
+                                            } else if (expectedSecondaryClass == Button.class) {
+                                                newData.put(part[0], new Button(
                                                         part.length >= 2 ? part[1] : "",
                                                         part.length >= 3 ? part[2] : ""
                                                 ));
