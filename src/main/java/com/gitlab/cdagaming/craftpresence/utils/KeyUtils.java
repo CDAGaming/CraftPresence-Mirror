@@ -61,9 +61,9 @@ public class KeyUtils {
     /**
      * Key Mappings for Vanilla MC KeyBind Schema
      * <p>
-     * Format: rawKeyField:[keyBindInstance:(runEvent,updatePredicate):errorCallback]
+     * Format: rawKeyField:[keyBindInstance:(runEvent,configEvent,vanillaPredicate):errorCallback]
      */
-    private final Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
+    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
     /**
      * List of Keys that are in queue for later syncing operations
      */
@@ -151,10 +151,16 @@ public class KeyUtils {
                 "configKeyCode",
                 new Tuple<>(
                         new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.accessibilitySettings.configKeyCode, "key.craftpresence.category"),
-                        new Pair<>(
+                        new Tuple<>(
                                 () -> {
                                     if (!CraftPresence.GUIS.isFocused && !CraftPresence.GUIS.configGUIOpened) {
                                         CraftPresence.GUIS.openScreen(new MainGui(CraftPresence.instance.currentScreen));
+                                    }
+                                },
+                                (keyCode, shouldSave) -> {
+                                    CraftPresence.CONFIG.accessibilitySettings.configKeyCode = keyCode;
+                                    if (shouldSave) {
+                                        CraftPresence.CONFIG.save();
                                     }
                                 },
                                 vanillaBind -> vanillaBind != CraftPresence.CONFIG.accessibilitySettings.configKeyCode
@@ -175,11 +181,11 @@ public class KeyUtils {
     /**
      * Retrieves the unfiltered Key Mappings for Vanilla MC KeyBind Schema
      * <p>
-     * Format: rawKeyField:[keyBindInstance:(runEvent,updatePredicate):errorCallback]
+     * Format: rawKeyField:[keyBindInstance:(runEvent,configEvent,updatePredicate):errorCallback]
      *
      * @return The unfiltered key mappings
      */
-    public Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> getRawKeyMappings() {
+    public Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> getRawKeyMappings() {
         return KEY_MAPPINGS;
     }
 
@@ -228,9 +234,9 @@ public class KeyUtils {
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
-                    final Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
+                    final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                     final KeyBinding keyBind = keyData.getFirst();
-                    final Pair<Runnable, Predicate<Integer>> callbackData = keyData.getSecond();
+                    final Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
                     final int currentBind = keyBind.getKeyCode();
                     boolean hasBeenRun = false;
 
@@ -257,7 +263,7 @@ public class KeyUtils {
                         if (keySyncQueue.containsKey(keyName)) {
                             syncKeyData(keyName, ImportMode.Config, keySyncQueue.get(keyName));
                             keySyncQueue.remove(keyName);
-                        } else if (callbackData.getSecond().test(currentBind)) {
+                        } else if (callbackData.getThird().test(currentBind)) {
                             syncKeyData(keyName, ImportMode.Vanilla, currentBind);
                         }
                     }
@@ -278,12 +284,11 @@ public class KeyUtils {
      * @param keyCode The new keycode to synchronize
      */
     private void syncKeyData(final String keyName, final ImportMode mode, final int keyCode) {
-        final Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
+        final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
         if (mode == ImportMode.Config) {
             keyData.getFirst().setKeyCode(keyCode);
         } else if (mode == ImportMode.Vanilla) {
-            CraftPresence.CONFIG.setProperty(keyName, keyCode);
-            CraftPresence.CONFIG.save();
+            keyData.getSecond().getSecond().accept(keyCode, true);
         } else if (mode == ImportMode.Specific) {
             syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
@@ -301,8 +306,8 @@ public class KeyUtils {
      * @param filterData The filter data to attach to the filter mode
      * @return The filtered key mappings
      */
-    public Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> getKeyMappings(final FilterMode mode, final List<String> filterData) {
-        final Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> filteredMappings = Maps.newHashMap();
+    public Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> getKeyMappings(final FilterMode mode, final List<String> filterData) {
+        final Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> filteredMappings = Maps.newHashMap();
 
         for (String keyName : KEY_MAPPINGS.keySet()) {
             if (mode == FilterMode.None ||
@@ -310,7 +315,7 @@ public class KeyUtils {
                     mode == FilterMode.Id ||
                     (mode == FilterMode.Name && filterData.contains(keyName))
             ) {
-                final Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
+                final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                 if (mode == FilterMode.None ||
                         (mode == FilterMode.Category && filterData.contains(keyData.getFirst().getKeyCategory())) ||
                         (mode == FilterMode.Id && filterData.contains(keyData.getFirst().getKeyDescription())) ||
@@ -328,7 +333,7 @@ public class KeyUtils {
      *
      * @return The filtered key mappings
      */
-    public Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> getKeyMappings() {
+    public Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> getKeyMappings() {
         return getKeyMappings(FilterMode.None, Lists.newArrayList());
     }
 

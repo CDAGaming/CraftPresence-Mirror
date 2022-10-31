@@ -26,10 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Predicate;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.impl.*;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -46,7 +43,7 @@ import java.util.Map;
 public class ControlsGui extends PaginatedScreen {
 
     // Format: See KeyUtils#KEY_MAPPINGS
-    private final Map<String, Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>>> keyMappings;
+    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = Maps.newHashMap();
     // Format: pageNumber:[elementText:[xPos:yPos]:color]
@@ -55,7 +52,7 @@ public class ControlsGui extends PaginatedScreen {
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
-    private Pair<ExtendedButtonControl, String> entryData = null;
+    private Tuple<ExtendedButtonControl, String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> entryData = null;
     private int currentAllocatedRow = startRow, currentAllocatedPage = startPage;
 
     public ControlsGui(GuiScreen parentScreen) {
@@ -138,7 +135,7 @@ public class ControlsGui extends PaginatedScreen {
      */
     private void sortMappings() {
         for (String keyName : keyMappings.keySet()) {
-            final Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
+            final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
             if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
                 categorizedNames.put(keyData.getFirst().getKeyCategory(), Lists.newArrayList(keyName));
             } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
@@ -170,7 +167,7 @@ public class ControlsGui extends PaginatedScreen {
             currentAllocatedRow++;
 
             for (String keyName : keyNames) {
-                final Tuple<KeyBinding, Pair<Runnable, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
+                final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
                 final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
                 if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                     preRenderQueue.put(currentAllocatedPage, Lists.newArrayList(positionData));
@@ -190,7 +187,7 @@ public class ControlsGui extends PaginatedScreen {
                         KeyUtils.getKeyName(keyData.getFirst().getKeyCode()),
                         keyName
                 );
-                keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton));
+                keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton, keyData));
 
                 addControl(keyCodeButton, currentAllocatedPage);
                 currentAllocatedRow++;
@@ -212,11 +209,12 @@ public class ControlsGui extends PaginatedScreen {
     /**
      * Setup for Key Entry and Save Backup of Prior Setting, if a valid Key Button
      *
-     * @param button The Pressed upon KeyCode Button
+     * @param button  The Pressed upon KeyCode Button
+     * @param keyData The key data attached to the entry
      */
-    private void setupEntryData(final ExtendedButtonControl button) {
+    private void setupEntryData(final ExtendedButtonControl button, final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
-            entryData = new Pair<>(button, button.getOptionalArgs()[0]);
+            entryData = new Tuple<>(button, button.getOptionalArgs()[0], keyData);
 
             backupKeyString = button.getControlMessage();
             button.setControlMessage("gui.config.message.editor.enter_key");
@@ -241,7 +239,7 @@ public class ControlsGui extends PaginatedScreen {
 
         // If KeyCode Field to modify is not null or empty, attempt to queue change
         try {
-            CraftPresence.CONFIG.setProperty(entryData.getSecond(), keyToSubmit);
+            entryData.getThird().getSecond().getSecond().accept(keyToSubmit, false);
             CraftPresence.KEYBINDINGS.keySyncQueue.put(entryData.getSecond(), keyToSubmit);
             CraftPresence.CONFIG.hasChanged = true;
 
