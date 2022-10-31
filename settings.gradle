@@ -20,7 +20,12 @@ pluginManagement {
             name = 'OSS SonaType'
             url = "https://s01.oss.sonatype.org/content/repositories/releases"
         }
-        gradlePluginPortal()
+        mavenCentral()
+        gradlePluginPortal() {
+            content {
+                excludeGroup "org.apache.logging.log4j"
+            }
+        }
     }
 }
 
