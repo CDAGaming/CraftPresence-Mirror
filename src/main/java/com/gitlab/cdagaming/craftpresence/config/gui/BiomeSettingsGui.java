@@ -102,13 +102,14 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when initializing existing data
                                                                 final ModuleData defaultBiomeData = CONFIG.biomeData.get("default");
                                                                 final ModuleData currentBiomeData = CONFIG.biomeData.get(attributeName);
+                                                                screenInstance.isPreliminaryData = currentBiomeData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
                                                                 screenInstance.originalPrimaryMessage = defaultBiomeData != null ? defaultBiomeData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = currentBiomeData != null ? currentBiomeData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final ModuleData currentBiomeData = CONFIG.biomeData.get(attributeName);
+                                                                final ModuleData currentBiomeData = CONFIG.biomeData.getOrDefault(attributeName, ModuleData.getDefaults());
                                                                 currentBiomeData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CONFIG.biomeData.put(attributeName, currentBiomeData);

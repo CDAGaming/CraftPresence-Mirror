@@ -151,6 +151,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
                                                                 final Button defaultData = CONFIG.buttonMessages.get("default");
                                                                 final Button currentData = CONFIG.buttonMessages.get(attributeName);
+                                                                screenInstance.isPreliminaryData = currentData == null;
                                                                 screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.label : "";
                                                                 screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.url : "";
                                                                 screenInstance.primaryMessage = currentData != null ? currentData.label : screenInstance.originalPrimaryMessage;

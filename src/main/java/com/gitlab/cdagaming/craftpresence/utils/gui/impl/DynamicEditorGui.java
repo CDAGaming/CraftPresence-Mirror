@@ -38,7 +38,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private final TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, onRemoveEntry;
     private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onSpecificCallback, onHoverPrimaryCallback, onHoverSecondaryCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
-    public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, overrideSecondaryRender = false;
+    public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
@@ -116,7 +116,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             primaryInput.setControlMessage(primaryMessage);
         }
 
-        if (onSpecificCallback != null && !isNewValue) {
+        if (onSpecificCallback != null && !isNewValue && !isPreliminaryData) {
             // Adding Specific Icon Button
             addControl(
                     new ExtendedButtonControl(
@@ -187,7 +187,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             renderString(secondaryText, (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
         }
 
-        if (!isNewValue && !isDefaultValue) {
+        if (!isNewValue && !isPreliminaryData && !isDefaultValue) {
             renderString(removeMessage, (getScreenWidth() / 2f) - (getStringWidth(removeMessage) / 2f), (getScreenHeight() - 45), 0xFFFFFF);
         }
 
@@ -244,7 +244,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
         final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
 
-        if (!isDefaultValue && !isNewValue) {
+        if (!isDefaultValue && !isPreliminaryData && !isNewValue) {
             return isPrimaryEmpty || (
                     primaryText.equalsIgnoreCase(originalPrimaryMessage) && !primaryMessage.equals(originalPrimaryMessage)
             );

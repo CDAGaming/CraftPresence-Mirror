@@ -103,13 +103,14 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when initializing existing data
                                                                 final ModuleData defaultDimensionData = CONFIG.dimensionData.get("default");
                                                                 final ModuleData currentDimensionData = CONFIG.dimensionData.get(attributeName);
+                                                                screenInstance.isPreliminaryData = currentDimensionData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
                                                                 screenInstance.originalPrimaryMessage = defaultDimensionData != null ? defaultDimensionData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = currentDimensionData != null ? currentDimensionData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final ModuleData currentDimensionData = CONFIG.dimensionData.get(attributeName);
+                                                                final ModuleData currentDimensionData = CONFIG.dimensionData.getOrDefault(attributeName, ModuleData.getDefaults());
                                                                 currentDimensionData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CONFIG.dimensionData.put(attributeName, currentDimensionData);

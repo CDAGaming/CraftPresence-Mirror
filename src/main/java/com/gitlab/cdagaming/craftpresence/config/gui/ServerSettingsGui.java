@@ -118,13 +118,14 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when initializing existing data
                                                                 final ModuleData defaultServerData = CONFIG.serverData.get("default");
                                                                 final ModuleData currentServerData = CONFIG.serverData.get(attributeName);
+                                                                screenInstance.isPreliminaryData = currentServerData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName);
                                                                 screenInstance.originalPrimaryMessage = defaultServerData != null ? defaultServerData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = currentServerData != null ? currentServerData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final ModuleData currentServerData = CONFIG.serverData.get(attributeName);
+                                                                final ModuleData currentServerData = CONFIG.serverData.getOrDefault(attributeName, ModuleData.getDefaults());
                                                                 currentServerData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CONFIG.serverData.put(attributeName, currentServerData);
