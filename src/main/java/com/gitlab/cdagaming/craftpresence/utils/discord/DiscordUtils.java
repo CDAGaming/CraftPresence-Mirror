@@ -351,20 +351,7 @@ public class DiscordUtils {
      */
     public String parseArgumentOperators(final String input, final String overrideId, ArgumentType... typeList) {
         String result = input;
-        if (!StringUtils.isNullOrEmpty(overrideId)) {
-            final Pair<String, List<String>> matches = StringUtils.getMatches("&[^&]*&", input);
-            if (!matches.getSecond().isEmpty()) {
-                for (String match : matches.getSecond()) {
-                    if (overrideData.containsKey(match)) {
-                        // TODO: Make PresenceData Module-compatible
-                        final Object overrideResult = StringUtils.lookupObject(PresenceData.class, overrideData.get(match).getData(), overrideId);
-                        if (overrideResult != null) {
-                            result = result.replaceAll(match, (String) overrideResult);
-                        }
-                    }
-                }
-            }
-        }
+        // Phase 1: Do Operators, if allowed
         if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderOperators) {
             for (Map.Entry<String, Pair<String, String>> rawEntry : validOperators.entrySet()) {
                 final Pair<String, String> operatorEntry = rawEntry.getValue();
@@ -387,6 +374,20 @@ public class DiscordUtils {
                             }
                         }
                         result = result.replace(match, foundMatch ? resultMatch : "");
+                    }
+                }
+            }
+        }
+        // Phase 2: Do Overrides, if found
+        if (!StringUtils.isNullOrEmpty(overrideId)) {
+            final Pair<String, List<String>> matches = StringUtils.getMatches("&[^&]*&", input);
+            if (!matches.getSecond().isEmpty()) {
+                for (String match : matches.getSecond()) {
+                    if (overrideData.containsKey(match)) {
+                        final Object overrideResult = overrideData.get(match).getData().getProperty(overrideId);
+                        if (overrideResult != null) {
+                            result = result.replaceAll(match, (String) overrideResult);
+                        }
                     }
                 }
             }
@@ -1243,18 +1244,18 @@ public class DiscordUtils {
         // Format Presence based on Arguments available in argumentData
         final PresenceData configData = CraftPresence.CONFIG.displaySettings.presenceData;
         DETAILS = StringUtils.formatWord(parseArgumentOperators(configData.details, "details", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(configData.gameState, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(configData.gameState, "gameState", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.largeImageKey, ArgumentType.Image));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.smallImageKey, ArgumentType.Image));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.largeImageKey, "largeImageKey", ArgumentType.Image));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.smallImageKey, "smallImageKey", ArgumentType.Image));
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(LARGE_IMAGE_ASSET.getUrl(), ArgumentType.Text) : LARGE_IMAGE_ASSET.getName()) : "";
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 parseArgumentOperators(SMALL_IMAGE_ASSET.getUrl(), ArgumentType.Text) : SMALL_IMAGE_ASSET.getName()) : "";
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.largeImageText, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.smallImageText, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.largeImageText, "largeImageText", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.smallImageText, "smallImageText", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
