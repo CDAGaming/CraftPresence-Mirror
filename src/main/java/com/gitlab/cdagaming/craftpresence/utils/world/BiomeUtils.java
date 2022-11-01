@@ -196,6 +196,7 @@ public class BiomeUtils {
         final String CURRENT_BIOME_ICON = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
         final String CURRENT_BIOME_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, biomeArgs);
 
+        CraftPresence.CLIENT.syncOverride(argumentFormat, currentData != null ? currentData : defaultData);
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_BIOME_MESSAGE, ArgumentType.Text);
         CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_BIOME_ICON, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon), ArgumentType.Image);
     }

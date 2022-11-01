@@ -589,6 +589,10 @@ public class ServerUtils {
 
             currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
 
+            CraftPresence.CLIENT.syncOverride(argumentFormat, primaryData != null ? primaryData :
+                    (alternateData != null ? alternateData : defaultData)
+            );
+
             if (isOnLAN) {
                 // NOTE: LAN-Only Presence Updates
                 currentServerMessage = CraftPresence.CONFIG.statusMessages.lanMessage;

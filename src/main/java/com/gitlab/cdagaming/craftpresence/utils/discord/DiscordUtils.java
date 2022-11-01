@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
@@ -84,6 +85,10 @@ public class DiscordUtils {
     public static final Map<String, Pair<String, String>> validOperators = ImmutableMap.<String, Pair<String, String>>builder()
             .put("|", new Pair<>("\\|", "&[^&]*&[\\|]&[^&]*&"))
             .build();
+    /**
+     * TODO
+     */
+    private final Map<String, ModuleData> overrideData = Maps.newHashMap();
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
@@ -344,8 +349,22 @@ public class DiscordUtils {
      * @param typeList The list of {@link ArgumentType}'s to iterate through
      * @return the parsed message
      */
-    public String parseArgumentOperators(final String input, ArgumentType... typeList) {
+    public String parseArgumentOperators(final String input, final String overrideId, ArgumentType... typeList) {
         String result = input;
+        if (!StringUtils.isNullOrEmpty(overrideId)) {
+            final Pair<String, List<String>> matches = StringUtils.getMatches("&[^&]*&", input);
+            if (!matches.getSecond().isEmpty()) {
+                for (String match : matches.getSecond()) {
+                    if (overrideData.containsKey(match)) {
+                        // TODO: Make PresenceData Module-compatible
+                        final Object overrideResult = StringUtils.lookupObject(PresenceData.class, overrideData.get(match).getData(), overrideId);
+                        if (overrideResult != null) {
+                            result = result.replaceAll(match, (String) overrideResult);
+                        }
+                    }
+                }
+            }
+        }
         if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderOperators) {
             for (Map.Entry<String, Pair<String, String>> rawEntry : validOperators.entrySet()) {
                 final Pair<String, String> operatorEntry = rawEntry.getValue();
@@ -376,11 +395,33 @@ public class DiscordUtils {
     }
 
     /**
+     * Parses the Argument Operators and Placeholders within a message
+     *
+     * @param input    The string to interpret
+     * @param typeList The list of {@link ArgumentType}'s to iterate through
+     * @return the parsed message
+     */
+    public String parseArgumentOperators(final String input, ArgumentType... typeList) {
+        return parseArgumentOperators(input, null, typeList);
+    }
+
+    /**
      * Updates the Starting Unix Timestamp, if allowed
      */
     public void updateTimestamp() {
         if (CraftPresence.CONFIG.generalSettings.showTime) {
             START_TIMESTAMP = System.currentTimeMillis() / 1000L;
+        }
+    }
+
+    /**
+     * TODO
+     * @param argumentName
+     * @param data
+     */
+    public void syncOverride(String argumentName, ModuleData data) {
+        if (!StringUtils.isNullOrEmpty(argumentName)) {
+            overrideData.put(argumentName, data);
         }
     }
 
@@ -1201,7 +1242,7 @@ public class DiscordUtils {
     public RichPresence buildRichPresence() {
         // Format Presence based on Arguments available in argumentData
         final PresenceData configData = CraftPresence.CONFIG.displaySettings.presenceData;
-        DETAILS = StringUtils.formatWord(parseArgumentOperators(configData.details, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(parseArgumentOperators(configData.details, "details", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
         GAME_STATE = StringUtils.formatWord(parseArgumentOperators(configData.gameState, ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
         LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.largeImageKey, ArgumentType.Image));

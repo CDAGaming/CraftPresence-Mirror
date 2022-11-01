@@ -9,9 +9,14 @@ public class ModuleData implements Serializable {
     private String iconOverride;
     private PresenceData data;
 
-    public ModuleData(String textOverride, String iconOverride) {
+    public ModuleData(String textOverride, String iconOverride, PresenceData data) {
         this.textOverride = textOverride;
         this.iconOverride = iconOverride;
+        this.data = data;
+    }
+
+    public ModuleData(String textOverride, String iconOverride) {
+        this(textOverride, iconOverride, new PresenceData());
     }
 
     public ModuleData() {
@@ -38,5 +43,9 @@ public class ModuleData implements Serializable {
 
     public PresenceData getData() {
         return data;
+    }
+
+    public void setData(PresenceData data) {
+        this.data = data;
     }
 }

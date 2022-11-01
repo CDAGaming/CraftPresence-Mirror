@@ -198,6 +198,7 @@ public class DimensionUtils {
         final String CURRENT_DIMENSION_ICON = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
         final String CURRENT_DIMENSION_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, dimensionArgs);
 
+        CraftPresence.CLIENT.syncOverride(argumentFormat, currentData != null ? currentData : defaultData);
         CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_DIMENSION_MESSAGE, ArgumentType.Text);
         CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_DIMENSION_ICON, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon), ArgumentType.Image);
     }
