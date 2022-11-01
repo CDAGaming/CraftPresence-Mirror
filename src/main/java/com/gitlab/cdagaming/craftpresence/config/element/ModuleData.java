@@ -28,6 +28,13 @@ public class ModuleData extends Module implements Serializable {
         this("", "");
     }
 
+    public static ModuleData getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new ModuleData();
+        }
+        return DEFAULT;
+    }
+
     public String getTextOverride() {
         return textOverride;
     }
@@ -52,13 +59,6 @@ public class ModuleData extends Module implements Serializable {
 
     public void setData(PresenceData data) {
         this.data = data;
-    }
-
-    public static ModuleData getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new ModuleData();
-        }
-        return DEFAULT;
     }
 
     @Override

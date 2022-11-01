@@ -1,7 +1,6 @@
 package com.gitlab.cdagaming.craftpresence.config.element;
 
 import com.gitlab.cdagaming.craftpresence.config.Module;
-import com.gitlab.cdagaming.craftpresence.config.category.Status;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 

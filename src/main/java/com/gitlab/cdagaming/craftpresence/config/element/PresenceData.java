@@ -19,6 +19,13 @@ public class PresenceData extends Module implements Serializable {
     public String smallImageText;
     public List<Button> buttons;
 
+    public static PresenceData getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new PresenceData();
+        }
+        return DEFAULT;
+    }
+
     public PresenceData setDetails(String details) {
         this.details = details;
         return this;
@@ -49,13 +56,6 @@ public class PresenceData extends Module implements Serializable {
     public PresenceData removeButton(Button button) {
         this.buttons.remove(button);
         return this;
-    }
-
-    public static PresenceData getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new PresenceData();
-        }
-        return DEFAULT;
     }
 
     @Override
