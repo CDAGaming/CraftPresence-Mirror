@@ -210,27 +210,27 @@ public class Legacy2Modern implements DataMigrator {
                                         if (!StringUtils.isNullOrEmpty(part[0])) {
                                             if (expectedSecondaryClass == Pair.class) {
                                                 newData.put(part[0], new Pair<>(
-                                                        part.length >= 2 ? part[1] : "",
-                                                        part.length >= 3 ? part[2] : ""
+                                                        part.length >= 2 ? part[1] : null,
+                                                        part.length >= 3 ? part[2] : null
                                                 ));
                                             } else if (expectedSecondaryClass == Tuple.class) {
                                                 newData.put(part[0], new Tuple<>(
-                                                        part.length >= 2 ? part[1] : "",
-                                                        part.length >= 3 ? part[2] : "",
-                                                        part.length >= 4 ? part[3] : ""
+                                                        part.length >= 2 ? part[1] : null,
+                                                        part.length >= 3 ? part[2] : null,
+                                                        part.length >= 4 ? part[3] : null
                                                 ));
                                             } else if (expectedSecondaryClass == ModuleData.class) {
                                                 newData.put(part[0], new ModuleData(
-                                                        part.length >= 2 ? part[1] : "",
-                                                        part.length >= 3 ? part[2] : ""
+                                                        part.length >= 2 ? part[1] : null,
+                                                        part.length >= 3 ? part[2] : null
                                                 ));
                                             } else if (expectedSecondaryClass == Button.class) {
                                                 newData.put(part[0], new Button(
-                                                        part.length >= 2 ? part[1] : "",
-                                                        part.length >= 3 ? part[2] : ""
+                                                        part.length >= 2 ? part[1] : null,
+                                                        part.length >= 3 ? part[2] : null
                                                 ));
                                             } else {
-                                                newData.put(part[0], part.length >= 2 ? part[1] : "");
+                                                newData.put(part[0], part.length >= 2 ? part[1] : null);
                                             }
                                         }
                                     }

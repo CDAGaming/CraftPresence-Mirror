@@ -41,7 +41,7 @@ public class Biome extends Module implements Serializable {
     public Map<String, ModuleData> biomeData = ImmutableMap.<String, ModuleData>builder()
             .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.biome_messages.biome_messages"),
-                    "" // Defaults to the Biome Name if nothing is supplied
+                    null // Defaults to the Biome Name if nothing is supplied
             ))
             .build();
 

@@ -43,7 +43,7 @@ public class Server extends Module implements Serializable {
     public Map<String, ModuleData> serverData = ImmutableMap.<String, ModuleData>builder()
             .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_messages"),
-                    "" // Defaults to the Server Name if nothing is supplied
+                    null // Defaults to the Server Name if nothing is supplied
             ))
             .build();
 

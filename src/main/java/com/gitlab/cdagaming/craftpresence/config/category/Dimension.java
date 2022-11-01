@@ -41,7 +41,7 @@ public class Dimension extends Module implements Serializable {
     public Map<String, ModuleData> dimensionData = ImmutableMap.<String, ModuleData>builder()
             .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.dimension_messages.dimension_messages"),
-                    "" // Defaults to the Dimension Name if nothing is supplied
+                    null // Defaults to the Dimension Name if nothing is supplied
             ))
             .build();
 

@@ -45,11 +45,11 @@ public class ModuleData extends Module implements Serializable {
     }
 
     public ModuleData(String textOverride, String iconOverride) {
-        this(textOverride, iconOverride, new PresenceData());
+        this(textOverride, iconOverride, null);
     }
 
     public ModuleData() {
-        this("", "");
+        this(null, null);
     }
 
     public static ModuleData getDefaults() {
