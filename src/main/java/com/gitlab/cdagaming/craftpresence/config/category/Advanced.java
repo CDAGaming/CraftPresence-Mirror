@@ -61,6 +61,7 @@ public class Advanced extends Module implements Serializable {
     public Map<String, String> entityRidingMessages = ImmutableMap.<String, String>builder()
             .put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages"))
             .build();
+    public String serverIconEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.server_icon_endpoint");
     public String playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
 
     @Override

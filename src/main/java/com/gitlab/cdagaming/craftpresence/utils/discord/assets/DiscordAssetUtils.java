@@ -312,7 +312,6 @@ public class DiscordAssetUtils {
             if (filterToMain) {
                 // Setup Data
                 ASSET_LIST = Maps.newHashMap();
-                CUSTOM_ASSET_LIST = Maps.newHashMap();
                 if (assets != null) {
                     for (DiscordAsset asset : assets) {
                         // Ensure URL is set before-hand for non-custom Assets
@@ -325,23 +324,7 @@ public class DiscordAssetUtils {
                         }
                     }
                 }
-
-                for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.displaySettings.dynamicIcons.entrySet()) {
-                    if (!StringUtils.isNullOrEmpty(iconData.getKey()) && !StringUtils.isNullOrEmpty(iconData.getValue())) {
-                        final DiscordAsset asset = new DiscordAsset()
-                                .setName(iconData.getKey())
-                                .setUrl(iconData.getValue())
-                                .setType(DiscordAsset.AssetType.CUSTOM);
-                        if (!CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
-                            CUSTOM_ASSET_LIST.put(asset.getName(), asset);
-                        }
-                        // If a Discord Icon exists with the same name, give priority to the custom one
-                        // Unless the icon is the default template, in which we don't add it at all
-                        if (!asset.getName().equalsIgnoreCase("default")) {
-                            ASSET_LIST.put(asset.getName(), asset);
-                        }
-                    }
-                }
+                syncCustomAssets();
             }
             return assets;
         } catch (Exception ex) {
@@ -352,6 +335,26 @@ public class DiscordAssetUtils {
         } finally {
             syncCompleted = true;
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.detected", String.valueOf(ASSET_LIST.size())));
+        }
+    }
+
+    public static void syncCustomAssets() {
+        CUSTOM_ASSET_LIST = Maps.newHashMap();
+        for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.displaySettings.dynamicIcons.entrySet()) {
+            if (!StringUtils.isNullOrEmpty(iconData.getKey()) && !StringUtils.isNullOrEmpty(iconData.getValue())) {
+                final DiscordAsset asset = new DiscordAsset()
+                        .setName(iconData.getKey())
+                        .setUrl(iconData.getValue())
+                        .setType(DiscordAsset.AssetType.CUSTOM);
+                if (!CUSTOM_ASSET_LIST.containsKey(asset.getName())) {
+                    CUSTOM_ASSET_LIST.put(asset.getName(), asset);
+                }
+                // If a Discord Icon exists with the same name, give priority to the custom one
+                // Unless the icon is the default template, in which we don't add it at all
+                if (!asset.getName().equalsIgnoreCase("default")) {
+                    ASSET_LIST.put(asset.getName(), asset);
+                }
+            }
         }
     }
 }
