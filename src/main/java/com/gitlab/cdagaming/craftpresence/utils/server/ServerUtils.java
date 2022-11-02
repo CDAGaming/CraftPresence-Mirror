@@ -315,8 +315,11 @@ public class ServerUtils {
                 isOnLAN = newLANStatus;
                 queuedForUpdate = true;
 
-                if (!StringUtils.isNullOrEmpty(currentServer_IP) && !knownAddresses.contains(currentServer_IP.contains(":") ? currentServer_IP : StringUtils.formatAddress(currentServer_IP, false))) {
-                    knownAddresses.add(currentServer_IP.contains(":") ? currentServer_IP : StringUtils.formatAddress(currentServer_IP, false));
+                if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
+                    final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
+                    if (!knownAddresses.contains(formattedIP)) {
+                        knownAddresses.add(formattedIP);
+                    }
                 }
 
                 final ServerList serverList = new ServerList(CraftPresence.instance);
@@ -575,14 +578,15 @@ public class ServerUtils {
             playerAmountArgs.add(new Pair<>("&MAX&", Integer.toString(maxPlayers)));
 
             // Server Data Arguments (Multiplayer)
-            serverArgs.add(new Pair<>("&IP&", StringUtils.formatAddress(currentServer_IP, false)));
+            final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
+            serverArgs.add(new Pair<>("&IP&", formattedIP));
             serverArgs.add(new Pair<>("&NAME&", currentServer_Name));
             serverArgs.add(new Pair<>("&MOTD&", currentServer_MOTD));
             serverArgs.add(new Pair<>("&PLAYERS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.playerAmountPlaceholderMessage, playerAmountArgs)));
 
             final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
             final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
-            final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(StringUtils.formatAddress(currentServer_IP, false));
+            final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedIP);
 
             final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : currentServer_Name;
             final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
@@ -670,8 +674,11 @@ public class ServerUtils {
 
             for (int currentIndex = 0; currentIndex < serverIndex; currentIndex++) {
                 final ServerData data = serverList.getServerData(currentIndex);
-                if (!StringUtils.isNullOrEmpty(data.serverIP) && !knownAddresses.contains(data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP)) {
-                    knownAddresses.add(data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP);
+                if (!StringUtils.isNullOrEmpty(data.serverIP)) {
+                    final String formattedIP = data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP;
+                    if (!knownAddresses.contains(formattedIP)) {
+                        knownAddresses.add(formattedIP);
+                    }
                 }
 
                 if (!StringUtils.isNullOrEmpty(data.serverIP) && !knownServerData.containsKey(data.serverIP)) {
