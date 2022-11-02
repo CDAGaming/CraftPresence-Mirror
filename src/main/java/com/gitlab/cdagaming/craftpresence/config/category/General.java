@@ -51,7 +51,8 @@ public class General extends Module implements Serializable {
     public boolean resetTimeOnInit = false;
     public boolean autoRegister = false;
 
-    public static General getDefaults() {
+    @Override
+    public General getDefaults() {
         if (DEFAULT == null) {
             DEFAULT = new General();
         }
@@ -66,10 +67,5 @@ public class General extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(General.class, this, new Tuple<>(name, value, null));
-    }
-
-    @Override
-    public void resetProperty(final String name) {
-        setProperty(name, getDefaults().getProperty(name));
     }
 }

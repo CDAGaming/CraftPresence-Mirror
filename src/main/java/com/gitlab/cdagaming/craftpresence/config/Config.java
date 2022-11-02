@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
-public final class Config implements Serializable {
+public final class Config extends Module implements Serializable {
     // Constants
     public static final int VERSION = 1;
     private static final long serialVersionUID = -4853238501768086595L;
@@ -63,15 +64,8 @@ public final class Config implements Serializable {
     public Server serverSettings = new Server();
     public Status statusMessages = new Status();
     public Advanced advancedSettings = new Advanced();
-    public Accessibility accessibilitySettings = Accessibility.getDefaults();
+    public Accessibility accessibilitySettings = new Accessibility();
     public Display displaySettings = new Display();
-
-    public static Config getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Config();
-        }
-        return DEFAULT;
-    }
 
     public static Config getInstance() {
         return INSTANCE;
@@ -123,6 +117,34 @@ public final class Config implements Serializable {
         MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
         keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
         languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
+    }
+
+    public static boolean isValidProperty(final Config instance, final String... path) {
+        if (instance == null) {
+            return false;
+        }
+        final Object property = instance.getProperty(path);
+        return property != null && !StringUtils.isNullOrEmpty(property.toString());
+    }
+
+    public static boolean isValidProperty(final Config instance, final String name) {
+        return isValidProperty(instance, name.split("\\."));
+    }
+
+    public static boolean isValidProperty(final ModuleData instance, final String name) {
+        if (instance == null) {
+            return false;
+        }
+        final Object property = instance.getProperty(name);
+        return property != null && !StringUtils.isNullOrEmpty(property.toString());
+    }
+
+    @Override
+    public Config getDefaults() {
+        if (DEFAULT == null) {
+            DEFAULT = new Config();
+        }
+        return DEFAULT;
     }
 
     public void applyData() {
@@ -328,6 +350,7 @@ public final class Config implements Serializable {
         return lookupProperty(path).getFirst();
     }
 
+    @Override
     public Object getProperty(final String name) {
         return getProperty(name.split("\\."));
     }
@@ -340,6 +363,7 @@ public final class Config implements Serializable {
         }
     }
 
+    @Override
     public void setProperty(final String name, final Object value) {
         setProperty(value, name.split("\\."));
     }
@@ -348,6 +372,7 @@ public final class Config implements Serializable {
         setProperty(getDefaults().getProperty(path), path);
     }
 
+    @Override
     public void resetProperty(final String name) {
         resetProperty(name.split("\\."));
     }

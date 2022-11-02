@@ -24,14 +24,14 @@
 
 package com.gitlab.cdagaming.craftpresence.config;
 
-public class Module {
-    public Object getProperty(final String name) {
-        return null;
-    }
+public abstract class Module {
+    protected abstract Module getDefaults();
 
-    public void setProperty(final String name, final Object value) {
-    }
+    protected abstract Object getProperty(final String name);
+
+    protected abstract void setProperty(final String name, final Object value);
 
     public void resetProperty(final String name) {
+        setProperty(name, getDefaults().getProperty(name));
     }
 }

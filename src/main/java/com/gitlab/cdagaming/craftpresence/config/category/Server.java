@@ -47,7 +47,8 @@ public class Server extends Module implements Serializable {
             ))
             .build();
 
-    public static Server getDefaults() {
+    @Override
+    public Server getDefaults() {
         if (DEFAULT == null) {
             DEFAULT = new Server();
         }
@@ -62,10 +63,5 @@ public class Server extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Server.class, this, new Tuple<>(name, value, null));
-    }
-
-    @Override
-    public void resetProperty(final String name) {
-        setProperty(name, getDefaults().getProperty(name));
     }
 }

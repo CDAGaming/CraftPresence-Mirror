@@ -53,7 +53,8 @@ public class Display extends Module implements Serializable {
             .put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"))
             .build();
 
-    public static Display getDefaults() {
+    @Override
+    public Display getDefaults() {
         if (DEFAULT == null) {
             DEFAULT = new Display();
         }
@@ -68,10 +69,5 @@ public class Display extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Display.class, this, new Tuple<>(name, value, null));
-    }
-
-    @Override
-    public void resetProperty(final String name) {
-        setProperty(name, getDefaults().getProperty(name));
     }
 }

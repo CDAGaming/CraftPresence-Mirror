@@ -45,7 +45,8 @@ public class Accessibility extends Module implements Serializable {
     public boolean stripExtraGuiElements = ModUtils.IS_LEGACY_HARD;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
 
-    public static Accessibility getDefaults() {
+    @Override
+    public Accessibility getDefaults() {
         if (DEFAULT == null) {
             DEFAULT = new Accessibility();
         }
@@ -60,10 +61,5 @@ public class Accessibility extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Accessibility.class, this, new Tuple<>(name, value, null));
-    }
-
-    @Override
-    public void resetProperty(final String name) {
-        setProperty(name, getDefaults().getProperty(name));
     }
 }

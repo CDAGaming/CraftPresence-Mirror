@@ -50,7 +50,8 @@ public class Status extends Module implements Serializable {
     public String vivecraftMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.special.vivecraft");
     public String fallbackPackPlaceholderMessage = "";
 
-    public static Status getDefaults() {
+    @Override
+    public Status getDefaults() {
         if (DEFAULT == null) {
             DEFAULT = new Status();
         }
@@ -65,10 +66,5 @@ public class Status extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Status.class, this, new Tuple<>(name, value, null));
-    }
-
-    @Override
-    public void resetProperty(final String name) {
-        setProperty(name, getDefaults().getProperty(name));
     }
 }

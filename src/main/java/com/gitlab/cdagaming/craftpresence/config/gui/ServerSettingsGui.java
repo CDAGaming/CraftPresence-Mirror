@@ -125,7 +125,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final ModuleData currentServerData = CONFIG.serverData.getOrDefault(attributeName, ModuleData.getDefaults());
+                                                                final ModuleData defaultServerData = CONFIG.serverData.get("default");
+                                                                final ModuleData currentServerData = CONFIG.serverData.getOrDefault(attributeName, defaultServerData);
                                                                 currentServerData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CONFIG.serverData.put(attributeName, currentServerData);
