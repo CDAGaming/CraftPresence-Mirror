@@ -77,6 +77,7 @@ public class Advanced extends Module implements Serializable {
             put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages"));
         }
     };
+    public boolean allowEndpointIcons = true;
     public String serverIconEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.server_icon_endpoint");
     public String playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
 
