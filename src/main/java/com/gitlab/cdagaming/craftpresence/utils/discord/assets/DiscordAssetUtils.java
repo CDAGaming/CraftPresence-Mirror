@@ -96,8 +96,8 @@ public class DiscordAssetUtils {
     public static DiscordAsset get(final Map<String, DiscordAsset> list, final String key) {
         String formattedKey = key;
         if (!StringUtils.isNullOrEmpty(formattedKey)) {
-            if (!list.equals(CUSTOM_ASSET_LIST)) {
-                formattedKey = StringUtils.formatAsIcon(key.replace(" ", "_"));
+            if (!list.equals(CUSTOM_ASSET_LIST) && !contains(CUSTOM_ASSET_LIST, formattedKey)) {
+                formattedKey = StringUtils.formatAsIcon(formattedKey.replace(" ", "_"));
             }
 
             if (contains(list, formattedKey)) {
