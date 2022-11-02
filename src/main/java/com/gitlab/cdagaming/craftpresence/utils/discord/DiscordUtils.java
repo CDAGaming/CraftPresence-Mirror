@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
@@ -384,9 +385,12 @@ public class DiscordUtils {
             if (!matches.getSecond().isEmpty()) {
                 for (String match : matches.getSecond()) {
                     if (overrideData.containsKey(match)) {
-                        final Object overrideResult = overrideData.get(match).getData().getProperty(overrideId);
-                        if (overrideResult != null) {
-                            result = result.replaceAll(match, (String) overrideResult);
+                        final ModuleData data = overrideData.get(match);
+                        if (Config.isValidProperty(data, "data")) {
+                            final Object overrideResult = overrideData.get(match).getData().getProperty(overrideId);
+                            if (overrideResult != null) {
+                                result = result.replaceAll(match, (String) overrideResult);
+                            }
                         }
                     }
                 }
