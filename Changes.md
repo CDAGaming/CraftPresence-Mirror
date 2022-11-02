@@ -16,6 +16,10 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Fixes
 
+* Fixed improper options being available in the Dynamic Editor Screen when adding data that was preliminary-supplied
+  from other modules
+* Fixed interpreting Dynamic Icons with Spaces in them (`formatAsIcon` is now ignored for Custom Assets, but null checks
+  do remain)
 * Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
   the `buttonBackgroundColor` setting
 

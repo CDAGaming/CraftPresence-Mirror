@@ -72,9 +72,7 @@ public class DiscordAssetUtils {
      * @return {@code true} if the Icon Key is present and able to be used
      */
     public static boolean contains(final Map<String, DiscordAsset> list, final String key) {
-        final String formattedKey = StringUtils.isNullOrEmpty(key) ? ""
-                : StringUtils.formatAsIcon(key.replace(" ", "_"));
-        return list.containsKey(formattedKey);
+        return !StringUtils.isNullOrEmpty(key) && list.containsKey(key);
     }
 
     /**
@@ -96,9 +94,17 @@ public class DiscordAssetUtils {
      * @return The {@link DiscordAsset} data for this Icon Key
      */
     public static DiscordAsset get(final Map<String, DiscordAsset> list, final String key) {
-        final String formattedKey = StringUtils.isNullOrEmpty(key) ? ""
-                : StringUtils.formatAsIcon(key.replace(" ", "_"));
-        return contains(formattedKey) ? list.get(formattedKey) : null;
+        String formattedKey = key;
+        if (!StringUtils.isNullOrEmpty(formattedKey)) {
+            if (!list.equals(CUSTOM_ASSET_LIST)) {
+                formattedKey = StringUtils.formatAsIcon(key.replace(" ", "_"));
+            }
+
+            if (contains(list, formattedKey)) {
+                return list.get(formattedKey);
+            }
+        }
+        return null;
     }
 
     /**
