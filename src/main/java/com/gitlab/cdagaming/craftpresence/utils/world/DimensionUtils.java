@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
@@ -173,9 +174,9 @@ public class DimensionUtils {
         final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
 
-        final String defaultMessage = defaultData != null ? defaultData.getTextOverride() : "";
-        final String currentMessage = currentData != null ? currentData.getTextOverride() : defaultMessage;
-        final String currentIcon = currentData != null ? currentData.getIconOverride() : CURRENT_DIMENSION_IDENTIFIER;
+        final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CURRENT_DIMENSION_IDENTIFIER;
         final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
         dimensionArgs.add(new Pair<>("&DIMENSION&", CURRENT_DIMENSION_NAME));

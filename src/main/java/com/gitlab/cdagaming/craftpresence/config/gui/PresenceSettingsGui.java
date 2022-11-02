@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
@@ -140,8 +141,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 final Button defaultData = CONFIG.buttonMessages.get("default");
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.label : "";
-                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.url : "";
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultData, "label") ? defaultData.label : "";
+                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = Config.isValidProperty(defaultData, "url") ? defaultData.url : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -152,10 +153,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 final Button defaultData = CONFIG.buttonMessages.get("default");
                                                                 final Button currentData = CONFIG.buttonMessages.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentData == null;
-                                                                screenInstance.originalPrimaryMessage = defaultData != null ? defaultData.label : "";
-                                                                screenInstance.originalSecondaryMessage = defaultData != null ? defaultData.url : "";
-                                                                screenInstance.primaryMessage = currentData != null ? currentData.label : screenInstance.originalPrimaryMessage;
-                                                                screenInstance.secondaryMessage = currentData != null ? currentData.url : screenInstance.originalSecondaryMessage;
+                                                                screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultData, "label") ? defaultData.label : "";
+                                                                screenInstance.originalSecondaryMessage = Config.isValidProperty(defaultData, "url") ? defaultData.url : "";
+                                                                screenInstance.primaryMessage = Config.isValidProperty(currentData, "label") ? currentData.label : screenInstance.originalPrimaryMessage;
+                                                                screenInstance.secondaryMessage = Config.isValidProperty(currentData, "url") ? currentData.url : screenInstance.originalSecondaryMessage;
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when adjusting set data

@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.server;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
@@ -583,8 +584,8 @@ public class ServerUtils {
             final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
             final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(StringUtils.formatAddress(currentServer_IP, false));
 
-            final String alternateIcon = alternateData != null ? alternateData.getIconOverride() : currentServer_Name;
-            final String currentIcon = primaryData != null ? primaryData.getIconOverride() : alternateIcon;
+            final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : currentServer_Name;
+            final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
             final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
             currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
@@ -598,9 +599,9 @@ public class ServerUtils {
                 currentServerMessage = CraftPresence.CONFIG.statusMessages.lanMessage;
             } else {
                 // NOTE: Server-Only Presence Updates
-                final String defaultMessage = defaultData != null ? defaultData.getTextOverride() : "";
-                final String alternateMessage = alternateData != null ? alternateData.getTextOverride() : defaultMessage;
-                currentServerMessage = primaryData != null ? primaryData.getTextOverride() : alternateIcon;
+                final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+                final String alternateMessage = Config.isValidProperty(alternateData, "textOverride") ? alternateData.getTextOverride() : defaultMessage;
+                currentServerMessage = Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : alternateIcon;
 
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.

@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
@@ -131,7 +130,7 @@ public final class Config extends Module implements Serializable {
         return isValidProperty(instance, name.split("\\."));
     }
 
-    public static boolean isValidProperty(final ModuleData instance, final String name) {
+    public static boolean isValidProperty(final Module instance, final String name) {
         if (instance == null) {
             return false;
         }
