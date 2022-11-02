@@ -30,9 +30,9 @@ import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.ImmutableMap;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Display extends Module implements Serializable {
@@ -43,15 +43,23 @@ public class Display extends Module implements Serializable {
             .setDetails("&MAINMENU&|&DIMENSION&")
             .setLargeImage("&MAINMENU&|&DIMENSION&", "&MAINMENU&|&DIMENSION&")
             .setSmallImage("&SERVER&|&PACK&", "&SERVER& &PACK&");
-    public Map<String, Button> buttonMessages = ImmutableMap.<String, Button>builder()
-            .put("default", new Button(
+    public Map<String, Button> buttonMessages = new HashMap<String, Button>() {
+        private static final long serialVersionUID = -1738414795267027009L;
+
+        {
+            put("default", new Button(
                     ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
                     ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
-            ))
-            .build();
-    public Map<String, String> dynamicIcons = ImmutableMap.<String, String>builder()
-            .put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"))
-            .build();
+            ));
+        }
+    };
+    public Map<String, String> dynamicIcons = new HashMap<String, String>() {
+        private static final long serialVersionUID = 4900744874595923346L;
+
+        {
+            put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"));
+        }
+    };
 
     @Override
     public Display getDefaults() {
