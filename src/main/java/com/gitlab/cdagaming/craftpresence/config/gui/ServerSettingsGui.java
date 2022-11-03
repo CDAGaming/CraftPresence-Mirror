@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Server;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -140,35 +141,49 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 CONFIG.serverData.remove(attributeName);
                                                                 CraftPresence.SERVER.knownAddresses.remove(attributeName);
                                                             },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when adding an attachment icon to set data
+                                                            (attributeName, screenInstance, isPresenceButton) -> {
+                                                                // Event to occur when adding specific info to set data
                                                                 final ModuleData defaultServerData = CONFIG.serverData.get("default");
                                                                 final ModuleData currentServerData = CONFIG.serverData.get(attributeName);
-                                                                final String defaultIcon = Config.isValidProperty(defaultServerData, "iconOverride") ? defaultServerData.getIconOverride() : CONFIG.fallbackServerIcon;
-                                                                final String specificIcon = Config.isValidProperty(currentServerData, "iconOverride") ? currentServerData.getIconOverride() : defaultIcon;
-                                                                CraftPresence.GUIS.openScreen(
-                                                                        new SelectorGui(
-                                                                                screenInstance,
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                                                                specificIcon, attributeName,
-                                                                                true, false, RenderType.DiscordAsset,
-                                                                                (innerAttributeName, innerCurrentValue) -> {
-                                                                                    // Inner-Event to occur when proceeding with adjusted data
-                                                                                    final ModuleData defaultInnerServerData = CONFIG.serverData.get("default");
-                                                                                    final ModuleData currentInnerServerData = CONFIG.serverData.get(innerAttributeName);
-                                                                                    final String defaultMessage = Config.isValidProperty(defaultInnerServerData, "textOverride") ? defaultInnerServerData.getTextOverride() : "";
-                                                                                    final String currentMessage = Config.isValidProperty(currentInnerServerData, "textOverride") ? currentInnerServerData.getTextOverride() : "";
-
-                                                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                                                    final ModuleData newData = new ModuleData();
-                                                                                    if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
-                                                                                        newData.setTextOverride(defaultMessage);
+                                                                if (isPresenceButton) {
+                                                                    final PresenceData defaultPresenceData = Config.isValidProperty(defaultServerData, "data") ? defaultServerData.getData() : new PresenceData();
+                                                                    final PresenceData currentPresenceData = Config.isValidProperty(currentServerData, "data") ? currentServerData.getData() : defaultPresenceData;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new PresenceSettingsGui(
+                                                                                    screenInstance, currentPresenceData,
+                                                                                    (output) -> {
+                                                                                        currentServerData.setData(output);
+                                                                                        CONFIG.serverData.put(attributeName, currentServerData);
                                                                                     }
-                                                                                    newData.setIconOverride(innerCurrentValue);
-                                                                                    CONFIG.serverData.put(innerAttributeName, newData);
-                                                                                }, null
-                                                                        )
-                                                                );
+                                                                            )
+                                                                    );
+                                                                } else {
+                                                                    final String defaultIcon = Config.isValidProperty(defaultServerData, "iconOverride") ? defaultServerData.getIconOverride() : CONFIG.fallbackServerIcon;
+                                                                    final String specificIcon = Config.isValidProperty(currentServerData, "iconOverride") ? currentServerData.getIconOverride() : defaultIcon;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new SelectorGui(
+                                                                                    screenInstance,
+                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    specificIcon, attributeName,
+                                                                                    true, false, RenderType.DiscordAsset,
+                                                                                    (innerAttributeName, innerCurrentValue) -> {
+                                                                                        // Inner-Event to occur when proceeding with adjusted data
+                                                                                        final ModuleData defaultInnerServerData = CONFIG.serverData.get("default");
+                                                                                        final ModuleData currentInnerServerData = CONFIG.serverData.get(innerAttributeName);
+                                                                                        final String defaultMessage = Config.isValidProperty(defaultInnerServerData, "textOverride") ? defaultInnerServerData.getTextOverride() : "";
+                                                                                        final String currentMessage = Config.isValidProperty(currentInnerServerData, "textOverride") ? currentInnerServerData.getTextOverride() : "";
+
+                                                                                        CraftPresence.CONFIG.hasChanged = true;
+                                                                                        final ModuleData newData = new ModuleData();
+                                                                                        if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
+                                                                                            newData.setTextOverride(defaultMessage);
+                                                                                        }
+                                                                                        newData.setIconOverride(innerCurrentValue);
+                                                                                        CONFIG.serverData.put(innerAttributeName, newData);
+                                                                                    }, null
+                                                                            )
+                                                                    );
+                                                                }
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label

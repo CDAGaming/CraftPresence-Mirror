@@ -36,7 +36,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 public class DynamicEditorGui extends ExtendedScreen {
     private final TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, onRemoveEntry;
-    private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onSpecificCallback, onHoverPrimaryCallback, onHoverSecondaryCallback;
+    private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
+    private final TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
     public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
@@ -44,7 +45,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private ExtendedTextControl primaryInput, secondaryInput;
     private String removeMessage;
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, PairConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
+    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, PairConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super(parentScreen);
         this.attributeName = attributeName;
         this.isNewValue = StringUtils.isNullOrEmpty(attributeName);
@@ -59,7 +60,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         this.onHoverSecondaryCallback = onHoverSecondaryCallback;
     }
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
+    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
@@ -68,7 +69,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 ));
     }
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, PairConsumer<String, DynamicEditorGui> onSpecificCallback) {
+    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback) {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
@@ -116,16 +117,27 @@ public class DynamicEditorGui extends ExtendedScreen {
             primaryInput.setControlMessage(primaryMessage);
         }
 
-        if (onSpecificCallback != null && !isNewValue && !isPreliminaryData) {
-            // Adding Specific Icon Button
-            addControl(
-                    new ExtendedButtonControl(
-                            (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
-                            180, 20,
-                            "gui.config.message.button.icon.change",
-                            () -> onSpecificCallback.accept(attributeName, this)
-                    )
-            );
+        if (!isNewValue && !isPreliminaryData) {
+            if (onSpecificCallback != null) {
+                // Adding Specific Icon Button
+                addControl(
+                        new ExtendedButtonControl(
+                                (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
+                                180, 20,
+                                "gui.config.message.button.icon.change",
+                                () -> onSpecificCallback.accept(attributeName, this, false)
+                        )
+                );
+                // Adding Presence Settings Button
+                addControl(
+                        new ExtendedButtonControl(
+                                (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
+                                180, 20,
+                                "gui.config.title.presence_settings",
+                                () -> onSpecificCallback.accept(attributeName, this, true)
+                        )
+                );
+            }
         }
         if (willRenderSecondaryInput) {
             secondaryInput = addControl(

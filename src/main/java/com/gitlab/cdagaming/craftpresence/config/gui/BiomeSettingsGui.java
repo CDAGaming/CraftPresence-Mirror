@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Biome;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -124,35 +125,49 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 CONFIG.biomeData.remove(attributeName);
                                                                 CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
                                                             },
-                                                            (attributeName, screenInstance) -> {
-                                                                // Event to occur when adding an attachment icon to set data
+                                                            (attributeName, screenInstance, isPresenceButton) -> {
+                                                                // Event to occur when adding specific info to set data
                                                                 final ModuleData defaultBiomeData = CONFIG.biomeData.get("default");
                                                                 final ModuleData currentBiomeData = CONFIG.biomeData.get(attributeName);
-                                                                final String defaultIcon = Config.isValidProperty(defaultBiomeData, "iconOverride") ? defaultBiomeData.getIconOverride() : CONFIG.fallbackBiomeIcon;
-                                                                final String specificIcon = Config.isValidProperty(currentBiomeData, "iconOverride") ? currentBiomeData.getIconOverride() : defaultIcon;
-                                                                CraftPresence.GUIS.openScreen(
-                                                                        new SelectorGui(
-                                                                                screenInstance,
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                                                                specificIcon, attributeName,
-                                                                                true, false, RenderType.DiscordAsset,
-                                                                                (innerAttributeName, innerCurrentValue) -> {
-                                                                                    // Inner-Event to occur when proceeding with adjusted data
-                                                                                    final ModuleData defaultInnerBiomeData = CONFIG.biomeData.get("default");
-                                                                                    final ModuleData currentInnerBiomeData = CONFIG.biomeData.get(innerAttributeName);
-                                                                                    final String defaultMessage = Config.isValidProperty(defaultInnerBiomeData, "textOverride") ? defaultInnerBiomeData.getTextOverride() : "";
-                                                                                    final String currentMessage = Config.isValidProperty(currentInnerBiomeData, "textOverride") ? currentInnerBiomeData.getTextOverride() : "";
-
-                                                                                    CraftPresence.CONFIG.hasChanged = true;
-                                                                                    final ModuleData newData = new ModuleData();
-                                                                                    if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
-                                                                                        newData.setTextOverride(defaultMessage);
+                                                                if (isPresenceButton) {
+                                                                    final PresenceData defaultPresenceData = Config.isValidProperty(defaultBiomeData, "data") ? defaultBiomeData.getData() : new PresenceData();
+                                                                    final PresenceData currentPresenceData = Config.isValidProperty(currentBiomeData, "data") ? currentBiomeData.getData() : defaultPresenceData;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new PresenceSettingsGui(
+                                                                                    screenInstance, currentPresenceData,
+                                                                                    (output) -> {
+                                                                                        currentBiomeData.setData(output);
+                                                                                        CONFIG.biomeData.put(attributeName, currentBiomeData);
                                                                                     }
-                                                                                    newData.setIconOverride(innerCurrentValue);
-                                                                                    CONFIG.biomeData.put(innerAttributeName, newData);
-                                                                                }, null
-                                                                        )
-                                                                );
+                                                                            )
+                                                                    );
+                                                                } else {
+                                                                    final String defaultIcon = Config.isValidProperty(defaultBiomeData, "iconOverride") ? defaultBiomeData.getIconOverride() : CONFIG.fallbackBiomeIcon;
+                                                                    final String specificIcon = Config.isValidProperty(currentBiomeData, "iconOverride") ? currentBiomeData.getIconOverride() : defaultIcon;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new SelectorGui(
+                                                                                    screenInstance,
+                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    specificIcon, attributeName,
+                                                                                    true, false, RenderType.DiscordAsset,
+                                                                                    (innerAttributeName, innerCurrentValue) -> {
+                                                                                        // Inner-Event to occur when proceeding with adjusted data
+                                                                                        final ModuleData defaultInnerBiomeData = CONFIG.biomeData.get("default");
+                                                                                        final ModuleData currentInnerBiomeData = CONFIG.biomeData.get(innerAttributeName);
+                                                                                        final String defaultMessage = Config.isValidProperty(defaultInnerBiomeData, "textOverride") ? defaultInnerBiomeData.getTextOverride() : "";
+                                                                                        final String currentMessage = Config.isValidProperty(currentInnerBiomeData, "textOverride") ? currentInnerBiomeData.getTextOverride() : "";
+
+                                                                                        CraftPresence.CONFIG.hasChanged = true;
+                                                                                        final ModuleData newData = new ModuleData();
+                                                                                        if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
+                                                                                            newData.setTextOverride(defaultMessage);
+                                                                                        }
+                                                                                        newData.setIconOverride(innerCurrentValue);
+                                                                                        CONFIG.biomeData.put(innerAttributeName, newData);
+                                                                                    }, null
+                                                                            )
+                                                                    );
+                                                                }
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label

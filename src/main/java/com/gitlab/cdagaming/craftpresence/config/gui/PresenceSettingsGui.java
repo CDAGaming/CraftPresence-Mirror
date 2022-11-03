@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
@@ -47,14 +48,24 @@ import net.minecraft.client.gui.GuiScreen;
 public class PresenceSettingsGui extends PaginatedScreen {
     private final Display CONFIG;
     private final PresenceData PRESENCE;
+    private final boolean isDefaultModule;
+    private final DataConsumer<PresenceData> onChangedCallback;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
     private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
 
-    PresenceSettingsGui(GuiScreen parentScreen) {
+    PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, DataConsumer<PresenceData> changedCallback) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.displaySettings;
-        PRESENCE = CONFIG.presenceData;
+        PRESENCE = moduleData != null ? moduleData : CONFIG.presenceData;
+        isDefaultModule = moduleData != null && moduleData.equals(CONFIG.presenceData);
+        onChangedCallback = changedCallback;
+    }
+
+    PresenceSettingsGui(GuiScreen parentScreen) {
+        this(parentScreen, CraftPresence.CONFIG.displaySettings.presenceData, (output) ->
+                CraftPresence.CONFIG.displaySettings.presenceData = output
+        );
     }
 
     @Override
@@ -117,6 +128,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
 
         // Button Messages Button
+        // TODO: Allow per-module access (v2.0)
         buttonMessagesButton = addControl(
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(3),
@@ -318,6 +330,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.smallImageKey = smallImageKeyFormat.getControlMessage();
                     }
+                    if (onChangedCallback != null) {
+                        onChangedCallback.accept(PRESENCE);
+                    }
                     CraftPresence.GUIS.openScreen(parentScreen);
                 }
         );
@@ -344,6 +359,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
         renderString(smallImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 1);
         renderString(largeImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
+
+        // TODO: Remove when aforementioned todo is done (Keep dynamicIcons as is)
+        buttonMessagesButton.setControlEnabled(isDefaultModule);
+        dynamicIconsButton.setControlEnabled(isDefaultModule);
 
         super.preRender();
     }
