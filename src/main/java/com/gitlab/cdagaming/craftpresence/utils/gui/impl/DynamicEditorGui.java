@@ -43,7 +43,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
-    private String removeMessage;
+    private String additionalNote;
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, PairConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super(parentScreen);
@@ -101,7 +101,14 @@ public class DynamicEditorGui extends ExtendedScreen {
             secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.value.name");
         }
 
-        removeMessage = ModUtils.TRANSLATOR.translate("gui.config.message.remove", primaryText.replaceAll("[^a-zA-Z0-9]", ""));
+        if (isNewValue || isPreliminaryData) {
+            if (isPreliminaryData && !StringUtils.isNullOrEmpty(attributeName)) {
+                mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
+            }
+            additionalNote = ModUtils.TRANSLATOR.translate("gui.config.message.partial");
+        } else if (!isDefaultValue) {
+            additionalNote = ModUtils.TRANSLATOR.translate("gui.config.message.remove", primaryText.replaceAll("[^a-zA-Z0-9]", ""));
+        }
 
         primaryInput = addControl(
                 new ExtendedTextControl(
@@ -199,8 +206,8 @@ public class DynamicEditorGui extends ExtendedScreen {
             renderString(secondaryText, (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
         }
 
-        if (!isNewValue && !isPreliminaryData && !isDefaultValue) {
-            renderString(removeMessage, (getScreenWidth() / 2f) - (getStringWidth(removeMessage) / 2f), (getScreenHeight() - 45), 0xFFFFFF);
+        if (!StringUtils.isNullOrEmpty(additionalNote)) {
+            renderString(additionalNote, (getScreenWidth() / 2f) - (getStringWidth(additionalNote) / 2f), (getScreenHeight() - 45), 0xFFFFFF);
         }
 
         proceedButton.setControlMessage(

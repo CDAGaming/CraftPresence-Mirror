@@ -28,6 +28,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 The following changes have been made for translations:
 
+* Added:
+    * `gui.config.message.partial` (Used when Adding a New or Prelimary Element using the Dynamic Editor)
 * Removed:
     * `craftpresence.logger.error.config.adjust.global`
     * `craftpresence.logger.info.config.notice`

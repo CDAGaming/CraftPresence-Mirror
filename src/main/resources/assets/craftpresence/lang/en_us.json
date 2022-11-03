@@ -84,6 +84,7 @@
   "gui.config.message.credits": "This Configuration Gui was made from scratch by\\n Jonathing, and will continue to be maintained by\\n CDAGaming. A lot of effort went into making this\\n custom Gui, so show him some support! Thanks.\\n\\n Feel free to learn from this Gui's code on\\n the CraftPresence GitLab repository.",
   "gui.config.message.tentative": "§4§lTentative Release (%1$s), functionality may change",
   "gui.config.message.changelog": "Changes in %1$s:\\n\\n%2$s",
+  "gui.config.message.partial": "**Some info may be unavailable until post-creation**",
   "gui.config.message.remove": "**Remove %1$s text to remove this value**",
   "gui.config.message.null": "This area is not implemented just yet!\\n\\nPlease check back later...",
   "gui.config.message.empty.list": "This list is empty and cannot be displayed!\\n\\nPlease try again...",
@@ -360,7 +361,6 @@
   "craftpresence.logger.info.updater.receive.changelog": "Received changelog: %1$s",
   "craftpresence.logger.info.updater.receive.status": "Received update status for %1$s -> %2$s (Target version: v%3$s)",
   "craftpresence.logger.info.config.new": "New configuration data for CraftPresence has been created successfully!",
-  "craftpresence.logger.info.config.notice": "Last synchronized:",
   "craftpresence.logger.info.config.save": "Configuration settings have been saved and reloaded successfully!",
   "craftpresence.logger.info.update.dynamic": "Dynamically updated data -> %1$s in %2$s",
   "craftpresence.logger.info.migration.add": "Adding migration data for data matching %1$s with action identifier %2$s (Reason: %3$s)!",
@@ -397,7 +397,6 @@
   "craftpresence.logger.error.config.invalid.icon.pre": "Invalid icon \"%1$s\" in property \"%2$s\", selecting a randomized valid icon...",
   "craftpresence.logger.error.config.invalid.icon.post": "Successfully set icon in property \"%1$s\" to \"%2$s\"",
   "craftpresence.logger.error.config.prop.empty": "Empty or non-convertable property detected (\"%1$s\"), setting property as default...",
-  "craftpresence.logger.error.config.adjust.global": "Global property adjustment detected (\"%1$s\"), checking for migration data and setting property to new value...",
   "craftpresence.logger.error.config.prop.invalid": "Invalid property detected (\"%1$s\"), removing property...",
   "craftpresence.logger.error.config.missing.default": "Default value is missing for property \"%1$s\", adding to property...",
   "craftpresence.logger.error.file.manifest": "Unable to get Curse manifest data (ignore if not using a Twitch/CursePack)",
@@ -419,6 +418,5 @@
   "craftpresence.logger.warning.updater.homepage": "Unable to locate homepage for this application...",
   "craftpresence.logger.warning.updater.incompatible.json": "Json segment \"%1$s\" is of an incompatible format...",
   "craftpresence.logger.warning.updater.data.missing": "Missing critical metadata for Mod \"%1$s\", supplying dummy data... (Ignore if in Deobfuscated Environment)",
-  "craftpresence.logger.warning.convert.invalid": "Data conversion for object \"%1$s\" has returned an unknown, invalidated, or skippable result. Caution is advised... (Mode Attempted: %2$s)...",
-  "craftpresence.exception.config.prop.null": "Property value for \"%1$s\" cannot be null"
+  "craftpresence.logger.warning.convert.invalid": "Data conversion for object \"%1$s\" has returned an unknown, invalidated, or skippable result. Caution is advised... (Mode Attempted: %2$s)..."
 }
