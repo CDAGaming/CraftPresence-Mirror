@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
-import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -43,16 +42,6 @@ public class Display extends Module implements Serializable {
             .setDetails("&MAINMENU&|&DIMENSION&")
             .setLargeImage("&MAINMENU&|&DIMENSION&", "&MAINMENU&|&DIMENSION&")
             .setSmallImage("&SERVER&|&PACK&", "&SERVER& &PACK&");
-    public Map<String, Button> buttonMessages = new HashMap<String, Button>() {
-        private static final long serialVersionUID = -1738414795267027009L;
-
-        {
-            put("default", new Button(
-                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
-                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
-            ));
-        }
-    };
     public Map<String, String> dynamicIcons = new HashMap<String, String>() {
         private static final long serialVersionUID = 4900744874595923346L;
 

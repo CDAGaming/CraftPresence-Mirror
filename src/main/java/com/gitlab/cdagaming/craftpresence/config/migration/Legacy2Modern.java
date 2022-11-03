@@ -125,13 +125,13 @@ public class Legacy2Modern implements DataMigrator {
             .put("stripExtraGuiElements", "accessibilitySettings.stripExtraGuiElements")
             .put("configGuiKeybind", "accessibilitySettings.configKeyCode")
             //
-            .put("gameStateMessageFormat", "displaySettings.presenceData.gameStateTextFormat")
-            .put("detailsMessageFormat", "displaySettings.presenceData.detailsTextFormat")
-            .put("largeImageTextFormat", "displaySettings.presenceData.largeImageTextFormat")
-            .put("smallImageTextFormat", "displaySettings.presenceData.smallImageTextFormat")
-            .put("largeImageKeyFormat", "displaySettings.presenceData.largeImageKeyFormat")
-            .put("smallImageKeyFormat", "displaySettings.presenceData.smallImageKeyFormat")
-            .put("extraButtonMessages", "displaySettings.buttonMessages")
+            .put("gameStateMessageFormat", "displaySettings.presenceData.gameStateText")
+            .put("detailsMessageFormat", "displaySettings.presenceData.detailsText")
+            .put("largeImageTextFormat", "displaySettings.presenceData.largeImageText")
+            .put("smallImageTextFormat", "displaySettings.presenceData.smallImageText")
+            .put("largeImageKeyFormat", "displaySettings.presenceData.largeImageKey")
+            .put("smallImageKeyFormat", "displaySettings.presenceData.smallImageKey")
+            .put("extraButtonMessages", "displaySettings.presenceData.buttons")
             .put("dynamicIcons", "displaySettings.dynamicIcons")
             .build();
     private final List<String> excludedOptions = Lists.newArrayList(

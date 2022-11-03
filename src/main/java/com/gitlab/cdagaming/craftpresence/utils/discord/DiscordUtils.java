@@ -321,16 +321,26 @@ public class DiscordUtils {
     /**
      * Creates a string-based representation of the button-list, from config values
      *
+     * @param list The list to interpret
      * @return the output list
      */
-    public List<String> createButtonsList() {
+    public List<String> createButtonsList(final Map<String, Button> list) {
         final List<String> result = Lists.newArrayList();
-        for (String buttonEntry : CraftPresence.CONFIG.displaySettings.buttonMessages.keySet()) {
+        for (String buttonEntry : list.keySet()) {
             if (!StringUtils.isNullOrEmpty(buttonEntry)) {
                 result.add(buttonEntry);
             }
         }
         return result;
+    }
+
+    /**
+     * Creates a string-based representation of the button-list, from config values
+     *
+     * @return the output list
+     */
+    public List<String> createButtonsList() {
+        return createButtonsList(CraftPresence.CONFIG.displaySettings.presenceData.buttons);
     }
 
     /**
@@ -388,8 +398,8 @@ public class DiscordUtils {
                         final ModuleData data = overrideData.get(match);
                         if (Config.isValidProperty(data, "data")) {
                             final Object overrideResult = overrideData.get(match).getData().getProperty(overrideId);
-                            if (overrideResult != null) {
-                                result = result.replaceAll(match, (String) overrideResult);
+                            if (overrideResult != null && !StringUtils.isNullOrEmpty(overrideResult.toString())) {
+                                result = result.replaceAll(match, overrideResult.toString());
                             }
                         }
                     }
@@ -1264,7 +1274,7 @@ public class DiscordUtils {
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
-        for (Map.Entry<String, Button> buttonElement : CraftPresence.CONFIG.displaySettings.buttonMessages.entrySet()) {
+        for (Map.Entry<String, Button> buttonElement : CraftPresence.CONFIG.displaySettings.presenceData.buttons.entrySet()) {
             JsonObject buttonObj = new JsonObject();
             if (!StringUtils.isNullOrEmpty(buttonElement.getKey()) &&
                     !buttonElement.getKey().equalsIgnoreCase("default") &&

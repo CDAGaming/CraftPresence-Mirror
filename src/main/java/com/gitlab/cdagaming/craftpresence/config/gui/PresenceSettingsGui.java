@@ -48,6 +48,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class PresenceSettingsGui extends PaginatedScreen {
     private final Display CONFIG;
     private final PresenceData PRESENCE;
+    private final Button DEFAULT_BUTTON;
     private final boolean isDefaultModule;
     private final DataConsumer<PresenceData> onChangedCallback;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
@@ -58,6 +59,10 @@ public class PresenceSettingsGui extends PaginatedScreen {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.displaySettings;
         PRESENCE = moduleData != null ? moduleData : CONFIG.presenceData;
+        if (PRESENCE.buttons.isEmpty()) {
+            PRESENCE.buttons.put("default", new Button(CONFIG.presenceData.buttons.get("default")));
+        }
+        DEFAULT_BUTTON = PRESENCE.buttons.get("default");
         isDefaultModule = moduleData != null && moduleData.equals(CONFIG.presenceData);
         onChangedCallback = changedCallback;
     }
@@ -128,7 +133,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
         largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
 
         // Button Messages Button
-        // TODO: Allow per-module access (v2.0)
         buttonMessagesButton = addControl(
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(3),
@@ -137,7 +141,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(),
+                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(PRESENCE.buttons),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.None,
                                         null,
@@ -148,11 +152,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList().size();
+                                                                screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList(PRESENCE.buttons).size();
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
                                                                 screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                final Button defaultData = CONFIG.buttonMessages.get("default");
+                                                                final Button defaultData = DEFAULT_BUTTON;
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultData, "label") ? defaultData.label : "";
                                                                 screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = Config.isValidProperty(defaultData, "url") ? defaultData.url : "";
                                                             },
@@ -162,8 +166,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.overrideSecondaryRender = true;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
-                                                                final Button defaultData = CONFIG.buttonMessages.get("default");
-                                                                final Button currentData = CONFIG.buttonMessages.get(attributeName);
+                                                                final Button defaultData = DEFAULT_BUTTON;
+                                                                final Button currentData = PRESENCE.buttons.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentData == null;
                                                                 screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultData, "label") ? defaultData.label : "";
                                                                 screenInstance.originalSecondaryMessage = Config.isValidProperty(defaultData, "url") ? defaultData.url : "";
@@ -173,12 +177,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.buttonMessages.put(screenInstance.attributeName, new Button(inputText, secondaryText));
+                                                                PRESENCE.buttons.put(screenInstance.attributeName, new Button(inputText, secondaryText));
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.buttonMessages.remove(screenInstance.attributeName);
+                                                                PRESENCE.buttons.remove(screenInstance.attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
@@ -360,10 +364,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
         renderString(smallImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 1);
         renderString(largeImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
 
-        // TODO: Remove when aforementioned todo is done (Keep dynamicIcons as is)
-        buttonMessagesButton.setControlEnabled(isDefaultModule);
-        dynamicIconsButton.setControlEnabled(isDefaultModule);
-
         super.preRender();
     }
 
@@ -381,7 +381,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
             final boolean hoveringOverLargeImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(largeImageFormatTitle), getFontHeight());
             final boolean hoveringOverSmallImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), getStringWidth(smallImageFormatTitle), getFontHeight());
 
-            if (hoveringOverDetails || hoveringOverGameState || hoveringOverLargeImageFormat || hoveringOverSmallImageFormat) {
+            if (isDefaultModule && (hoveringOverDetails || hoveringOverGameState || hoveringOverLargeImageFormat || hoveringOverSmallImageFormat)) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
@@ -397,7 +397,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         if (currentPage == (startPage + 1)) {
             final boolean hoveringOverSmallImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(smallImageKeyFormatTitle), getFontHeight());
             final boolean hoveringOverLargeImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(largeImageKeyFormatTitle), getFontHeight());
-            if (hoveringOverSmallImageFormat || hoveringOverLargeImageFormat) {
+            if (isDefaultModule && (hoveringOverSmallImageFormat || hoveringOverLargeImageFormat)) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",

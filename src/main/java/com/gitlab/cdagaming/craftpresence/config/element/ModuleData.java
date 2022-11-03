@@ -44,6 +44,10 @@ public class ModuleData extends Module implements Serializable {
         this.data = data;
     }
 
+    public ModuleData(ModuleData other) {
+        this(other.textOverride, other.iconOverride, other.data);
+    }
+
     public ModuleData(String textOverride, String iconOverride) {
         this(textOverride, iconOverride, null);
     }

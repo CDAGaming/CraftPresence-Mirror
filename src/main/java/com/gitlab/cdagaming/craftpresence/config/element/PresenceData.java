@@ -24,12 +24,14 @@
 
 package com.gitlab.cdagaming.craftpresence.config.element;
 
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PresenceData extends Module implements Serializable {
     private static final long serialVersionUID = -7560029890988753870L;
@@ -41,7 +43,16 @@ public class PresenceData extends Module implements Serializable {
     public String largeImageText;
     public String smallImageKey;
     public String smallImageText;
-    public List<Button> buttons;
+    public Map<String, Button> buttons = new HashMap<String, Button>() {
+        private static final long serialVersionUID = -1738414795267027009L;
+
+        {
+            put("default", new Button(
+                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
+                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
+            ));
+        }
+    };
 
     @Override
     public PresenceData getDefaults() {
@@ -73,13 +84,13 @@ public class PresenceData extends Module implements Serializable {
         return this;
     }
 
-    public PresenceData addButton(Button button) {
-        this.buttons.add(button);
+    public PresenceData addButton(String name, Button button) {
+        this.buttons.put(name, button);
         return this;
     }
 
-    public PresenceData removeButton(Button button) {
-        this.buttons.remove(button);
+    public PresenceData removeButton(String name) {
+        this.buttons.remove(name);
         return this;
     }
 

@@ -195,7 +195,7 @@ public final class Config extends Module implements Serializable {
                     final List<String> paths = Lists.newArrayList(path);
                     paths.add(entry.getKey());
                     handleVerification(entry.getValue(), keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
-                } else if (!rawName.endsWith("Format")) { // Avoidance Filter
+                } else if (!rawName.contains("presence")) { // Avoidance Filter
                     final Object currentValue = getProperty(rawName);
                     if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
                         shouldReset = true;

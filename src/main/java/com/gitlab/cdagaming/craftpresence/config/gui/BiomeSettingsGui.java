@@ -111,7 +111,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final ModuleData currentBiomeData = CONFIG.biomeData.getOrDefault(attributeName, new ModuleData());
+                                                                final ModuleData defaultBiomeData = CONFIG.biomeData.get("default");
+                                                                final ModuleData currentBiomeData = CONFIG.biomeData.getOrDefault(attributeName, new ModuleData(defaultBiomeData));
                                                                 currentBiomeData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CONFIG.biomeData.put(attributeName, currentBiomeData);

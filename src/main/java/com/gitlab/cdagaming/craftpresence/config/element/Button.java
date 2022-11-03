@@ -42,6 +42,10 @@ public class Button extends Module implements Serializable {
         this.url = url;
     }
 
+    public Button(Button other) {
+        this(other.label, other.url);
+    }
+
     @Override
     public Button getDefaults() {
         if (DEFAULT == null) {

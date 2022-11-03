@@ -112,7 +112,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                final ModuleData currentDimensionData = CONFIG.dimensionData.getOrDefault(attributeName, new ModuleData());
+                                                                final ModuleData defaultDimensionData = CONFIG.dimensionData.get("default");
+                                                                final ModuleData currentDimensionData = CONFIG.dimensionData.getOrDefault(attributeName, new ModuleData(defaultDimensionData));
                                                                 currentDimensionData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 CONFIG.dimensionData.put(attributeName, currentDimensionData);
