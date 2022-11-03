@@ -22,6 +22,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
   do remain)
 * Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
   the `buttonBackgroundColor` setting
+* Fixed issues that could occur when `setControlMessage` was fired with a null argument
 
 ### Translations
 

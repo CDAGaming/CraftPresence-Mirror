@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -132,7 +133,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        this.setText(newMessage);
+        this.setText(!StringUtils.isNullOrEmpty(newMessage) ? newMessage : "");
     }
 
     /**
