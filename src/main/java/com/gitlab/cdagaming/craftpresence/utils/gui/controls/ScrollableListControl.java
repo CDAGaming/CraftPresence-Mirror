@@ -169,7 +169,7 @@ public class ScrollableListControl extends GuiSlot {
                 if (data != null) {
                     assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
                     texture = ImageUtils.getTextureFromUrl(displayName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
-                } else {
+                } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
                     texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint, displayName));
                 }
             } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
@@ -182,7 +182,9 @@ public class ScrollableListControl extends GuiSlot {
                 if (StringUtils.isValidUuid(displayName)) {
                     // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
                     displayName = StringUtils.getFromUuid(displayName);
-                    texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, displayName));
+                    if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                        texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, displayName));
+                    }
                 }
             } else if (renderType == RenderType.ItemData) {
                 texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(displayName, texture);
