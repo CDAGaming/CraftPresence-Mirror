@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -99,7 +100,7 @@ public class MultiMCUtils {
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.file.instance"));
 
-            if (ex.getClass() != FileNotFoundException.class || ModUtils.IS_VERBOSE) {
+            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) || ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
             }
         }
