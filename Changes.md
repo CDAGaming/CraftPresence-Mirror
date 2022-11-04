@@ -30,6 +30,8 @@ The following changes have been made for translations:
 
 * Added:
     * `gui.config.message.partial` (Used when Adding a New or Prelimary Element using the Dynamic Editor)
+* Modified:
+    * `gui.config.comment.button.sync.config` (Modified for new config file name)
 * Removed:
     * `craftpresence.logger.error.config.adjust.global`
     * `craftpresence.logger.info.config.notice`

@@ -93,7 +93,7 @@
   "gui.config.message.hover.value.name": "Name to identify this value",
   "gui.config.message.hover.value.message": "Message data to attach with this value",
   "gui.config.message.tags": "Current tag placeholders -> %1$s",
-  "gui.config.comment.button.sync.config": "Synchronize any live changes made from craftpresence.properties\\nWarning: This will overwrite any changes made in here if unsaved!",
+  "gui.config.comment.button.sync.config": "Synchronize any live changes made from the local config file\\nWarning: This will overwrite any changes made in here if unsaved!",
   "gui.config.name.global.schema_version": "Schema Version",
   "gui.config.name.global.last_mc_version_id": "Last MC Version ID",
   "gui.config.name.general.client_id": "Client ID",
