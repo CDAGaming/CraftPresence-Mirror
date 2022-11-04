@@ -1033,8 +1033,14 @@ public class DiscordUtils {
 
         // UUID Data
         final String uniqueId = CraftPresence.session.getPlayerID();
-        playerInfoArgs.add(new Pair<>("&UUID&", StringUtils.getFromUuid(uniqueId, true)));
-        playerInfoArgs.add(new Pair<>("&UUID_FULL&", StringUtils.getFromUuid(uniqueId, false)));
+        if (StringUtils.isValidUuid(uniqueId)) {
+            playerInfoArgs.add(new Pair<>("&UUID&", StringUtils.getFromUuid(uniqueId, true)));
+            playerInfoArgs.add(new Pair<>("&UUID_FULL&", StringUtils.getFromUuid(uniqueId, false)));
+
+            if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                playerInfoArgs.add(new Pair<>("&ICON&", String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, uniqueId)));
+            }
+        }
 
         generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
         generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));

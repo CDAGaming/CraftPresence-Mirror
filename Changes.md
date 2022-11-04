@@ -13,6 +13,17 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       to be more easily migrated across major updates
     * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also
       removed, since we don't use Arrays in this new system
+* Added the ability for placeholders to be interpreted differently depending on the RPC field
+    * An example of this would be being able to make `&DIMENSION&` equal `this` if it is used in the `Details` Presence
+      Field, while equaling `that` if used in the `Game State` Presence Field
+* Added more flexibility and usage to endpoint icons, including the addition of the `allowEndpointIcons`
+    * For users, the new usages also include fetching the server icon in the Server Settings Scroll Lists, if the Base64
+      icon is unavailable
+    * It also allows for fetching a dynamic server icon if the icon's the module is looking for do not exist within the
+      Discord Asset List
+* Added placeholders:
+    * `&IGN:ICON&` = Only present if `allowEndpointIcons` is enabled, equals your Player's head icon, using
+      the `playerSkinEndpoint` setting
 
 ### Fixes
 
@@ -23,6 +34,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
   the `buttonBackgroundColor` setting
 * Fixed issues that could occur when `setControlMessage` was fired with a null argument
+* Fixed the UUID placeholders in `&IGN&` being available, even if it wasn't a valid UUID
 
 ### Translations
 

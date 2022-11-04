@@ -282,6 +282,7 @@
   "craftpresence.placeholders.IGN.NAME.description": "Your username",
   "craftpresence.placeholders.IGN.UUID.description": "Your UUID (Trimmed Format)",
   "craftpresence.placeholders.IGN.UUID_FULL.description": "Your UUID (Full Format, if valid UUID)",
+  "craftpresence.placeholders.IGN.ICON.description": "Your player head icon, if applicable",
   "craftpresence.placeholders.MODS.description": "The message displaying your mod count",
   "craftpresence.placeholders.MODS.MODCOUNT.description": "The amount of mods currently in your mods folder",
   "craftpresence.placeholders.PACK.description": "The pack's display data, if using a valid pack format",
