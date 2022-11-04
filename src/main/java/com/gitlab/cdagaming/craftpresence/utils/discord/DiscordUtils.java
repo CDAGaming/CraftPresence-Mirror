@@ -391,13 +391,24 @@ public class DiscordUtils {
         }
         // Phase 2: Do Overrides, if found
         if (!StringUtils.isNullOrEmpty(overrideId)) {
+            final String[] overridePath = overrideId.split("\\.");
             final Pair<String, List<String>> matches = StringUtils.getMatches("&[^&]*&", input);
             if (!matches.getSecond().isEmpty()) {
                 for (String match : matches.getSecond()) {
                     if (overrideData.containsKey(match)) {
                         final ModuleData data = overrideData.get(match);
                         if (Config.isValidProperty(data, "data")) {
-                            final Object overrideResult = overrideData.get(match).getData().getProperty(overrideId);
+                            Object overrideResult = null;
+                            if (overridePath.length == 2 && overridePath[0].startsWith("buttons_")) {
+                                final Map<String, Button> buttons = data.getData().buttons;
+                                if (!buttons.isEmpty() && buttons.containsKey(overridePath[0])) {
+                                    overrideResult = buttons.get(overridePath[0]).getProperty(overridePath[1]);
+                                }
+                            }
+
+                            if (overrideResult == null) {
+                                overrideResult = data.getData().getProperty(overrideId);
+                            }
                             if (overrideResult != null && !StringUtils.isNullOrEmpty(overrideResult.toString())) {
                                 result = result.replaceAll(match, overrideResult.toString());
                             }
@@ -1282,15 +1293,16 @@ public class DiscordUtils {
         BUTTONS = new JsonArray();
         for (Map.Entry<String, Button> buttonElement : CraftPresence.CONFIG.displaySettings.presenceData.buttons.entrySet()) {
             JsonObject buttonObj = new JsonObject();
+            String overrideId = "button_" + (BUTTONS.size() + 1);
             if (!StringUtils.isNullOrEmpty(buttonElement.getKey()) &&
                     !buttonElement.getKey().equalsIgnoreCase("default") &&
                     !StringUtils.isNullOrEmpty(buttonElement.getValue().label)) {
                 String label = StringUtils.formatWord(
-                        parseArgumentOperators(buttonElement.getValue().label, ArgumentType.Text),
+                        parseArgumentOperators(buttonElement.getValue().label, overrideId + ".label", ArgumentType.Text),
                         !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
                 );
                 String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().url) ? parseArgumentOperators(
-                        buttonElement.getValue().url, ArgumentType.Text
+                        buttonElement.getValue().url, overrideId + ".url", ArgumentType.Text
                 ) : "";
 
                 label = sanitizePlaceholders(label);
