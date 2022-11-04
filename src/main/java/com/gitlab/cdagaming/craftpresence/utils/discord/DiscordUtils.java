@@ -1039,8 +1039,9 @@ public class DiscordUtils {
         playerInfoArgs.clear();
 
         // Add Any Generalized Argument Data needed
+        final String playerName = CraftPresence.session.getUsername();
         modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
-        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
+        playerInfoArgs.add(new Pair<>("&NAME&", playerName));
 
         // UUID Data
         final String uniqueId = CraftPresence.session.getPlayerID();
@@ -1049,7 +1050,12 @@ public class DiscordUtils {
             playerInfoArgs.add(new Pair<>("&UUID_FULL&", StringUtils.getFromUuid(uniqueId, false)));
 
             if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                playerInfoArgs.add(new Pair<>("&ICON&", String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, uniqueId)));
+                final String playerIcon = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, uniqueId);
+                if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(playerName)) {
+                    CraftPresence.CONFIG.displaySettings.dynamicIcons.put(playerName, playerIcon);
+                    DiscordAssetUtils.syncCustomAssets();
+                    CraftPresence.CONFIG.save();
+                }
             }
         }
 

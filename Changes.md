@@ -20,10 +20,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * For users, the new usages also include fetching the server icon in the Server Settings Scroll Lists, if the Base64
       icon is unavailable
     * It also allows for fetching a dynamic server icon if the icon's the module is looking for do not exist within the
-      Discord Asset List
+      Discord Asset List, and doing similar activity for the player's head icon.
 * Added placeholders:
-    * `&IGN:ICON&` = Only present if `allowEndpointIcons` is enabled, equals your Player's head icon, using
-      the `playerSkinEndpoint` setting
+    * TBD
 
 ### Fixes
 
