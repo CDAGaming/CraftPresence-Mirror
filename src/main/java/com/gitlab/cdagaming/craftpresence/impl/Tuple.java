@@ -79,6 +79,7 @@ public class Tuple<T, U, V> {
      * Sets the first element of this {@link Tuple} to the given value.
      *
      * @param first the first element to be applied
+     * @return the resulting first element
      */
     public T setFirst(final T first) {
         this.first = first;
@@ -98,6 +99,7 @@ public class Tuple<T, U, V> {
      * Sets the second element of this {@link Tuple} to the given value.
      *
      * @param second the second element to be applied
+     * @return the resulting second element
      */
     public U setSecond(final U second) {
         this.second = second;
@@ -117,6 +119,7 @@ public class Tuple<T, U, V> {
      * Sets the third element of this {@link Tuple} to the given value.
      *
      * @param third the third element to be applied
+     * @return the resulting third element
      */
     public V setThird(final V third) {
         this.third = third;

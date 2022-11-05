@@ -359,6 +359,25 @@ public class ImageUtils {
      * Unknown: Unknown property, experience can be iffy using this
      */
     public enum InputType {
-        FileData, FileStream, ByteStream, Url, Unknown
+        /**
+         * Constant for the "File (Raw)" Input Type.
+         */
+        FileData,
+        /**
+         * Constant for the "File (Stream)" Input Mode.
+         */
+        FileStream,
+        /**
+         * Constant for the "Byte Stream" Input Mode.
+         */
+        ByteStream,
+        /**
+         * Constant for the "URL" Input Mode.
+         */
+        Url,
+        /**
+         * Constant for the "Unknown" Input Mode.
+         */
+        Unknown
     }
 }

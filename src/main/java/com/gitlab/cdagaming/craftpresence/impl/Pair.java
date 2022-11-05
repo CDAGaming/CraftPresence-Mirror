@@ -72,6 +72,7 @@ public class Pair<U, V> {
      * Sets the first element of this {@link Pair} to the given value.
      *
      * @param first the first element to be applied
+     * @return the resulting first element
      */
     public U setFirst(final U first) {
         this.first = first;
@@ -91,6 +92,7 @@ public class Pair<U, V> {
      * Sets the second element of this {@link Pair} to the given value.
      *
      * @param second the second element to be applied
+     * @return the resulting second element
      */
     public V setSecond(final V second) {
         this.second = second;

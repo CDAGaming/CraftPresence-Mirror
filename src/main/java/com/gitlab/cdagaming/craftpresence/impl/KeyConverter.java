@@ -346,7 +346,22 @@ public class KeyConverter {
      * A Mapping storing the possible Conversion Modes for this module
      */
     public enum ConversionMode {
-        Lwjgl2, Lwjgl3, None, Unknown
+        /**
+         * Constant for the "LWJGL2" Conversion Mode.
+         */
+        Lwjgl2,
+        /**
+         * Constant for the "LWJGL3" Conversion Mode.
+         */
+        Lwjgl3,
+        /**
+         * Constant for the "None" Conversion Mode.
+         */
+        None,
+        /**
+         * Constant for the "Unknown" Conversion Mode.
+         */
+        Unknown
     }
 
 }

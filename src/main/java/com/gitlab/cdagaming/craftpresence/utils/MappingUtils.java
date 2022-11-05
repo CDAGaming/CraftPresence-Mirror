@@ -34,9 +34,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Mapping Utilities used to convert between different Mojang Mapping Types
+ *
+ * @author CDAGaming, wagyourtail
+ */
 public class MappingUtils {
     private static Map<String, String> classMap = null;
 
+    /**
+     * Retrieve a mapping for class names from the Searge Data
+     *
+     * @return the resulting mappings
+     */
     public static Map<String, String> getClassMap() {
         if (classMap == null) {
             Map<String, String> cm = new HashMap<String, String>();
@@ -66,6 +76,12 @@ public class MappingUtils {
         return classMap;
     }
 
+    /**
+     * Retrieve a list of unmapped class names matching the specified argument
+     *
+     * @param start The string to interpret
+     * @return the resulting list of unmapped class names
+     */
     public static Set<String> getUnmappedClassesMatching(String start) {
         final Set<String> matches = new HashSet<>();
         start = start.replace(".", "/");
@@ -79,6 +95,12 @@ public class MappingUtils {
         return matches;
     }
 
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object The class object to interpret
+     * @return the mapped class name
+     */
     public static String getClassName(Class<?> object) {
         String result = getClassMap().get(
                 object.getCanonicalName().replace(".", "/")
@@ -91,6 +113,12 @@ public class MappingUtils {
         return result;
     }
 
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object The object to interpret
+     * @return the mapped class name
+     */
     public static String getClassName(Object object) {
         return getClassName(object.getClass());
     }

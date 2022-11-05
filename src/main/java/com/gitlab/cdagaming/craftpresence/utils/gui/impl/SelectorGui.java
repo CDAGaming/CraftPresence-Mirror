@@ -39,6 +39,9 @@ import net.minecraft.client.gui.GuiScreen;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The Selector Gui Screen
+ */
 public class SelectorGui extends ExtendedScreen {
     private final String mainTitle, attributeName, originalValue;
     private final List<String> originalList;
@@ -52,6 +55,20 @@ public class SelectorGui extends ExtendedScreen {
     private String searchTerm;
     private List<String> itemList;
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen         The Parent Screen for this Instance
+     * @param mainTitle            The Main Screen Title
+     * @param list                 The list to interpret
+     * @param currentValue         The initial value to select within the list
+     * @param attributeName        The attribute name to interpret following selection
+     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowDynamicEditing  Whether to allow adding new entries to the list
+     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param onUpdatedCallback    The callback to trigger when continuing following selection
+     * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
+     */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, String> onUpdatedCallback, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         super(parentScreen);
         itemList = originalList = list;
@@ -65,22 +82,86 @@ public class SelectorGui extends ExtendedScreen {
         this.onAdjustDynamicEntry = onAdjustDynamicEntry;
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen         The Parent Screen for this Instance
+     * @param mainTitle            The Main Screen Title
+     * @param list                 The list to interpret
+     * @param currentValue         The initial value to select within the list
+     * @param attributeName        The attribute name to interpret following selection
+     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowDynamicEditing  Whether to allow adding new entries to the list
+     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param onUpdatedCallback    The callback to trigger when continuing following selection
+     * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
+     */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, String> onUpdatedCallback, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, Lists.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen         The Parent Screen for this Instance
+     * @param mainTitle            The Main Screen Title
+     * @param list                 The list to interpret
+     * @param currentValue         The initial value to select within the list
+     * @param attributeName        The attribute name to interpret following selection
+     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowDynamicEditing  Whether to allow adding new entries to the list
+     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
+     */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen         The Parent Screen for this Instance
+     * @param mainTitle            The Main Screen Title
+     * @param list                 The list to interpret
+     * @param currentValue         The initial value to select within the list
+     * @param attributeName        The attribute name to interpret following selection
+     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowDynamicEditing  Whether to allow adding new entries to the list
+     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
+     */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen         The Parent Screen for this Instance
+     * @param mainTitle            The Main Screen Title
+     * @param list                 The list to interpret
+     * @param currentValue         The initial value to select within the list
+     * @param attributeName        The attribute name to interpret following selection
+     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowDynamicEditing  Whether to allow adding new entries to the list
+     * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
+     */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen         The Parent Screen for this Instance
+     * @param mainTitle            The Main Screen Title
+     * @param list                 The list to interpret
+     * @param currentValue         The initial value to select within the list
+     * @param attributeName        The attribute name to interpret following selection
+     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowDynamicEditing  Whether to allow adding new entries to the list
+     * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
+     */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
     }

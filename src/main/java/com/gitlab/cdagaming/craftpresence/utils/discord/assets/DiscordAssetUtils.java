@@ -187,7 +187,8 @@ public class DiscordAssetUtils {
     /**
      * Retrieves the Parsed Image Url from the specified key, if present
      *
-     * @param key The Specified Key to gain info for
+     * @param list The list to iterate through
+     * @param key  The Specified Key to gain info for
      * @return The Parsed Image Url from the {@link DiscordAsset} data
      */
     public static String getUrl(final Map<String, DiscordAsset> list, final String key) {
@@ -344,6 +345,9 @@ public class DiscordAssetUtils {
         }
     }
 
+    /**
+     * Synchronize and detect any dynamic assets available for this instance
+     */
     public static void syncCustomAssets() {
         CUSTOM_ASSET_LIST = Maps.newHashMap();
         for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.displaySettings.dynamicIcons.entrySet()) {

@@ -1053,6 +1053,7 @@ public class StringUtils {
      * <p>
      * This is a stubbed function from {@link Collection#removeIf} for older java versions
      *
+     * @param <E>        The type of the collection to interpret
      * @param collection the collection to interpret
      * @param filter     a predicate which returns {@code true} for elements to be
      *                   removed
@@ -1088,6 +1089,7 @@ public class StringUtils {
      * <p>
      * This is a stubbed function from Stream#filter for older java versions
      *
+     * @param <E>        The type of the collection to interpret
      * @param collection the collection to interpret
      * @param filter     a predicate which returns {@code true} for elements to be
      *                   removed
@@ -1115,7 +1117,7 @@ public class StringUtils {
      * @param fields   The field(s) to interpret
      * @param instance An Instance of the root class, if needed
      * @param name     The field name to search for
-     * @return {@link true} if the operation succeeded
+     * @return The Found Field Data, if any
      */
     public static Object lookupInnerObject(List<Field> fields, Object instance, String name) {
         for (Field f : fields) {
@@ -1174,7 +1176,7 @@ public class StringUtils {
      * @param fields    The field(s) to interpret
      * @param instance  An Instance of the root class, if needed
      * @param fieldData A Pair with the format of fieldName:valueToSet:modifierData
-     * @return {@link true} if the operation succeeded
+     * @return {@link Boolean#TRUE} if the operation succeeded
      */
     public static boolean updateInnerObject(List<Field> fields, Object instance, Tuple<?, ?, ?> fieldData) {
         for (Field f : fields) {

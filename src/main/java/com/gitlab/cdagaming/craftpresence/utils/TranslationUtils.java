@@ -604,6 +604,21 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * A Mapping storing the possible Conversion Modes for this module
      */
     public enum ConversionMode {
-        PackFormat2, PackFormat3, None, Unknown
+        /**
+         * Constant for the "Pack Format 2" Conversion Mode.
+         */
+        PackFormat2,
+        /**
+         * Constant for the "Pack Format 3" Conversion Mode.
+         */
+        PackFormat3,
+        /**
+         * Constant for the "None or Verification" Conversion Mode.
+         */
+        None,
+        /**
+         * Constant for the "Unknown" Conversion Mode.
+         */
+        Unknown
     }
 }

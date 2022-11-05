@@ -92,6 +92,11 @@ public enum DiscordStatus {
         return Invalid;
     }
 
+    /**
+     * Retrieves the display name for the specified {@link DiscordStatus}
+     *
+     * @return The display name corresponding to the {@link DiscordStatus}
+     */
     public String getDisplayName() {
         return displayName;
     }

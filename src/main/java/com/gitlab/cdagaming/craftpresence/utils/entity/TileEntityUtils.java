@@ -574,7 +574,9 @@ public class TileEntityUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param types The argument types to interpret
+     * @param argumentFormat    The primary argument format to interpret
+     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
+     * @param types             The argument types to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(String argumentFormat, String subArgumentFormat, ArgumentType... types) {

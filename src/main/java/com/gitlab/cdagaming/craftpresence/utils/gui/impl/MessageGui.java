@@ -32,9 +32,18 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 
+/**
+ * The Message Gui Screen Implementation
+ */
 public class MessageGui extends ExtendedScreen {
     private final List<String> messageData;
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     * @param messageData  The message to display for this Instance
+     */
     public MessageGui(GuiScreen parentScreen, List<String> messageData) {
         super(parentScreen);
         this.messageData = messageData;

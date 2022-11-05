@@ -236,7 +236,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     /**
      * Whether the inputs in this screen classify as being adjusted
      *
-     * @return {@link true} if we are doing an adjustment
+     * @return {@link Boolean#TRUE} if we are doing an adjustment
      */
     private boolean isAdjusting() {
         final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
@@ -257,7 +257,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     /**
      * Whether the inputs in this screen classify as being removed
      *
-     * @return {@link true} if we are doing an removal
+     * @return {@link Boolean#TRUE} if we are doing an removal
      */
     private boolean isRemoving() {
         final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
@@ -275,7 +275,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     /**
      * Determines whether the inputs are considered valid
      *
-     * @return {@link true} if inputs are valid
+     * @return {@link Boolean#TRUE} if inputs are valid
      */
     private boolean isValidEntries() {
         final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";

@@ -36,10 +36,19 @@ import net.minecraft.client.gui.GuiScreen;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+/**
+ * The Update Info Gui Screen
+ */
 public class UpdateInfoGui extends ExtendedScreen {
     private final ModUpdaterUtils modUpdater;
     private ExtendedButtonControl downloadButton, checkButton;
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     * @param modUpdater   An instance of the {@link ModUpdaterUtils}
+     */
     public UpdateInfoGui(GuiScreen parentScreen, ModUpdaterUtils modUpdater) {
         super(parentScreen);
         this.modUpdater = modUpdater;

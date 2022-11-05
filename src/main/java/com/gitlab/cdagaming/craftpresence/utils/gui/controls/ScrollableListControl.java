@@ -234,6 +234,29 @@ public class ScrollableListControl extends GuiSlot {
      * The Rendering Type for this Scroll List
      */
     public enum RenderType {
-        DiscordAsset, CustomDiscordAsset, ServerData, EntityData, ItemData, None
+        /**
+         * Constant for the "Discord Asset" Rendering Mode.
+         */
+        DiscordAsset,
+        /**
+         * Constant for the "Discord Asset (Custom)" Rendering Mode.
+         */
+        CustomDiscordAsset,
+        /**
+         * Constant for the "Server" Rendering Mode.
+         */
+        ServerData,
+        /**
+         * Constant for the "Entity" Rendering Mode.
+         */
+        EntityData,
+        /**
+         * Constant for the "Item" Rendering Mode.
+         */
+        ItemData,
+        /**
+         * Constant for the "Text Only" Rendering Mode.
+         */
+        None
     }
 }

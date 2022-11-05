@@ -348,10 +348,39 @@ public class KeyUtils {
      * - Specific: Signals Client to force both the controls menu and config value to a specific value
      */
     public enum ImportMode {
-        Config, Vanilla, Specific
+        /**
+         * Constant for the "Config" Import Mode.
+         */
+        Config,
+        /**
+         * Constant for the "Vanilla" Import Mode.
+         */
+        Vanilla,
+        /**
+         * Constant for the "Specific" Import Mode.
+         */
+        Specific
     }
 
+    /**
+     * Constants representing various Filter Mode Types
+     */
     public enum FilterMode {
-        Category, Name, Id, None
+        /**
+         * Constant for the "Category" Filter Mode.
+         */
+        Category,
+        /**
+         * Constant for the "Name" Filter Mode.
+         */
+        Name,
+        /**
+         * Constant for the "Id" Filter Mode.
+         */
+        Id,
+        /**
+         * Constant for the "None" Filter Mode.
+         */
+        None
     }
 }

@@ -73,6 +73,7 @@ public class DiscordAsset {
     /**
      * Sets the {@link AssetType} for this Asset
      *
+     * @param type The new {@link AssetType} to assign
      * @return The parsed {@link DiscordAsset}
      */
     public DiscordAsset setType(AssetType type) {
@@ -92,6 +93,7 @@ public class DiscordAsset {
     /**
      * Sets the Parsed ID for this Asset
      *
+     * @param id The new identifier to assign
      * @return The parsed {@link DiscordAsset}
      */
     public DiscordAsset setId(String id) {
@@ -111,6 +113,7 @@ public class DiscordAsset {
     /**
      * Sets the Parsed Name for this Asset
      *
+     * @param name The new name to assign
      * @return The parsed {@link DiscordAsset}
      */
     public DiscordAsset setName(String name) {
@@ -130,6 +133,7 @@ public class DiscordAsset {
     /**
      * Sets the URL for this Asset
      *
+     * @param url The new url to assign
      * @return The parsed {@link DiscordAsset}
      */
     public DiscordAsset setUrl(String url) {

@@ -304,11 +304,29 @@ public class ModUpdaterUtils {
      * <p>PENDING: The version checker has not completed at this time
      */
     public enum UpdateState {
+        /**
+         * The CFU State representing a "Failed" status
+         */
         FAILED,
+        /**
+         * The CFU State representing an "Up to Date" status
+         */
         UP_TO_DATE("Release"),
+        /**
+         * The CFU State representing an "Outdated" status
+         */
         OUTDATED,
+        /**
+         * The CFU State representing an "Outdated Beta" status
+         */
         BETA_OUTDATED("Beta (Outdated)"),
+        /**
+         * The CFU State representing a "Beta" status
+         */
         BETA,
+        /**
+         * The CFU State representing a "Pending" status
+         */
         PENDING;
 
         final String displayName;
@@ -321,6 +339,11 @@ public class ModUpdaterUtils {
             this.displayName = displayName;
         }
 
+        /**
+         * Retrieves the display name for the specified {@link UpdateState}
+         *
+         * @return The display name corresponding to the {@link UpdateState}
+         */
         public String getDisplayName() {
             return displayName;
         }

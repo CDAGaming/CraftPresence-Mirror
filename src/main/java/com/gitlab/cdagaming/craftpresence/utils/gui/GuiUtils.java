@@ -137,8 +137,9 @@ public class GuiUtils {
      * Wraps a String based on the specified target width per line<p>
      * Separated by newline characters, as needed
      *
-     * @param stringInput The original String to wrap
-     * @param wrapWidth   The target width per line, to wrap the input around
+     * @param fontRenderer The Font Renderer Instance
+     * @param stringInput  The original String to wrap
+     * @param wrapWidth    The target width per line, to wrap the input around
      * @return The converted and wrapped version of the original input
      */
     public static String wrapFormattedStringToWidth(final FontRenderer fontRenderer, String stringInput, int wrapWidth) {
@@ -158,8 +159,9 @@ public class GuiUtils {
     /**
      * Returns the Wrapped Width of a String, defined by the target wrapWidth
      *
-     * @param stringEntry The original String to evaluate
-     * @param wrapWidth   The target width to wrap within
+     * @param fontRenderer The Font Renderer Instance
+     * @param stringEntry  The original String to evaluate
+     * @param wrapWidth    The target width to wrap within
      * @return The expected wrapped width the String should be
      */
     public static int sizeStringToWidth(final FontRenderer fontRenderer, String stringEntry, int wrapWidth) {
@@ -824,14 +826,16 @@ public class GuiUtils {
     /**
      * Draws a Textured Rectangle, following the defined arguments
      *
-     * @param zLevel       The Z Level Position of the Object
-     * @param xPos         The Starting X Position of the Object
-     * @param yPos         The Starting Y Position of the Object
-     * @param width        The Width of the Object
-     * @param height       The Height of the Object
-     * @param tint         The Tinting Level of the Object
-     * @param shouldBeDark Whether the Texture should display in a darker format
-     * @param texLocation  The game texture to render the object as
+     * @param zLevel        The Z Level Position of the Object
+     * @param xPos          The Starting X Position of the Object
+     * @param yPos          The Starting Y Position of the Object
+     * @param width         The Width of the Object
+     * @param height        The Height of the Object
+     * @param tint          The Tinting Level of the Object
+     * @param widthDivider  The number to divide the width by when rendering
+     * @param heightDivider The number to divide the height by when rendering
+     * @param shouldBeDark  Whether the Texture should display in a darker format
+     * @param texLocation   The game texture to render the object as
      */
     public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, double widthDivider, double heightDivider, boolean shouldBeDark, ResourceLocation texLocation) {
         try {

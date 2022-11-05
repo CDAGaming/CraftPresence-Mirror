@@ -38,23 +38,64 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The Paginated Gui Screen Implementation
+ */
 public class PaginatedScreen extends ExtendedScreen {
     private final Map<Integer, List<Gui>> paginatedControls = Maps.newHashMap();
     private final Map<Integer, List<ScrollableListControl>> paginatedLists = Maps.newHashMap();
-    protected ExtendedButtonControl nextPageButton, previousPageButton, backButton;
+    /**
+     * The "Next Page" Button
+     */
+    protected ExtendedButtonControl nextPageButton;
+    /**
+     * The "Previous Page" Button
+     */
+    protected ExtendedButtonControl previousPageButton;
+    /**
+     * The Back Button, normally binded to the parent screen
+     */
+    protected ExtendedButtonControl backButton;
+    /**
+     * The starting page to open this screen on
+     */
     protected int startPage = 0;
+    /**
+     * The currently displayed page
+     */
     protected int currentPage = startPage;
+    /**
+     * The maximum pages that can be displayed
+     */
     protected int maxPages = startPage;
     private Runnable onPageChange;
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     */
     public PaginatedScreen(GuiScreen parentScreen) {
         super(parentScreen);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     * @param debugMode    Whether debug mode should be enabled for this screen
+     */
     public PaginatedScreen(GuiScreen parentScreen, boolean debugMode) {
         super(parentScreen, debugMode);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     * @param debugMode    Whether debug mode should be enabled for this screen
+     * @param verboseMode  Whether verbose mode should be enabled for this screen
+     */
     public PaginatedScreen(GuiScreen parentScreen, boolean debugMode, boolean verboseMode) {
         super(parentScreen, debugMode, verboseMode);
     }

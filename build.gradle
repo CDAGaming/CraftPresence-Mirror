@@ -23,10 +23,12 @@ sourceSets {
     }
 }
 
-def versionFileLabel = "${versionLabel.equalsIgnoreCase("release") ? "" : "+${versionLabel}"}"
-
 version = "${versionId}"
 group = "com.gitlab.cdagaming"
+
+def versionFileLabel = "${versionLabel.equalsIgnoreCase("release") ? "" : "+${versionLabel}"}"
+def classPath = "${group}".replace(".", "/") + "/${mod_name}".toLowerCase()
+
 archivesBaseName = "${archive_name}-${mc_version}${versionFileLabel.replaceAll("\\s", ".")}"
 
 JavaVersion targetVersion = JavaVersion.VERSION_1_8
@@ -34,6 +36,18 @@ JavaVersion targetVersion = JavaVersion.VERSION_1_8
 allprojects {
     sourceCompatibility = targetVersion
     targetCompatibility = targetVersion
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(Javadoc) {
+        options.addStringOption("Xmaxwarns", "65536")
+
+        exclude "${classPath}/config/category/**"
+        exclude "${classPath}/config/element/**"
+        exclude "${classPath}/config/gui/**"
+        exclude "${classPath}/integrations/**"
+        exclude "${classPath}/impl/guava/**"
+    }
 }
 
 spotless {
@@ -143,12 +157,12 @@ mappings {
     getStub("COMBINED").withMappings(["searge", "named"]) {
         c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
         c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
+        c("mod_${mod_name}", classPath + "/mod_${mod_name}", classPath + "/mod_${mod_name}")
     }
     getStub("CLIENT").withMappings(["searge", "named"]) {
         c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
         c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}", "${group}".replace(".", "/") + "/${mod_name}".toLowerCase() + "/mod_${mod_name}")
+        c("mod_${mod_name}", classPath + "/mod_${mod_name}", classPath + "/mod_${mod_name}")
     }
 
     addExport("CLIENT") {

@@ -87,7 +87,7 @@ public class DiscordUtils {
             .put("|", new Pair<>("\\|", "&[^&]*&[\\|]&[^&]*&"))
             .build();
     /**
-     * TODO
+     * A mapping of the arguments that have overriden module data
      */
     private final Map<String, ModuleData> overrideData = Maps.newHashMap();
     /**
@@ -356,8 +356,9 @@ public class DiscordUtils {
     /**
      * Parses the Argument Operators and Placeholders within a message
      *
-     * @param input    The string to interpret
-     * @param typeList The list of {@link ArgumentType}'s to iterate through
+     * @param input      The string to interpret
+     * @param overrideId The override identifier to interpret
+     * @param typeList   The list of {@link ArgumentType}'s to iterate through
      * @return the parsed message
      */
     public String parseArgumentOperators(final String input, final String overrideId, ArgumentType... typeList) {
@@ -441,10 +442,10 @@ public class DiscordUtils {
     }
 
     /**
-     * TODO
+     * Sync {@link ModuleData} overrides for the specified placeholder
      *
-     * @param argumentName
-     * @param data
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the specified argument
      */
     public void syncOverride(String argumentName, ModuleData data) {
         if (!StringUtils.isNullOrEmpty(argumentName)) {
