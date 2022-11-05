@@ -162,12 +162,21 @@ public class DiscordAsset {
      * A Mapping for the Parsed Asset Type for this Asset
      */
     public enum AssetType {
+        /**
+         * Constant for a "Small" Discord RPC Asset Type.
+         */
         @SerializedName("1")
         @Expose
         SMALL,
+        /**
+         * Constant for a "Large" Discord RPC Asset Type.
+         */
         @SerializedName("2")
         @Expose
         LARGE,
+        /**
+         * Constant for a "Custom" Discord RPC Asset Type.
+         */
         @SerializedName("-999")
         @Expose
         CUSTOM
