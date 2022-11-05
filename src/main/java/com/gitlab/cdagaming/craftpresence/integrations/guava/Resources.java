@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl.guava;
+package com.gitlab.cdagaming.craftpresence.integrations.guava;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;

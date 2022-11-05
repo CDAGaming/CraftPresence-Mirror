@@ -46,7 +46,6 @@ gradle.projectsEvaluated {
         exclude "${classPath}/config/element/**"
         exclude "${classPath}/config/gui/**"
         exclude "${classPath}/integrations/**"
-        exclude "${classPath}/impl/guava/**"
     }
 }
 

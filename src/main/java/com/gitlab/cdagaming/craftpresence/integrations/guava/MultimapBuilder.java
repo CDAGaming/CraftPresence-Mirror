@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl.guava;
+package com.gitlab.cdagaming.craftpresence.integrations.guava;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.*;
@@ -30,7 +30,7 @@ import com.google.common.collect.*;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.gitlab.cdagaming.craftpresence.impl.guava.CollectPreconditions.checkNonnegative;
+import static com.gitlab.cdagaming.craftpresence.integrations.guava.CollectPreconditions.checkNonnegative;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

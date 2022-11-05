@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl.guava;
+package com.gitlab.cdagaming.craftpresence.integrations.guava;
 
 import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
