@@ -26,6 +26,9 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
+import com.gitlab.cdagaming.craftpresence.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
@@ -183,79 +186,99 @@ public final class Config extends Module implements Serializable {
         }
 
         if (rawJson != null) {
+            final Object parentValue = getProperty(path);
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
                 final String rawName = pathPrefix + entry.getKey();
                 final JsonElement rawValue = entry.getValue();
-                final Object defaultValue = getDefaults().getProperty(rawName);
-                boolean shouldReset = false;
+                Object defaultValue = getDefaults().getProperty(rawName);
+                Object currentValue = getProperty(rawName);
+                boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
-                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
-                } else if (Module.class.isAssignableFrom(defaultValue.getClass())) {
-                    final List<String> paths = Lists.newArrayList(path);
-                    paths.add(entry.getKey());
-                    handleVerification(entry.getValue(), keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
-                } else if (!rawName.contains("presence")) { // Avoidance Filter
-                    final Object currentValue = getProperty(rawName);
-                    if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
-                        shouldReset = true;
+                    if (!(parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
+                        ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
+                        shouldContinue = false;
                     } else {
-                        final Class<?> expectedClass = currentValue.getClass();
-                        if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
-                                !StringUtils.isValidBoolean(rawValue.getAsString())) {
+                        defaultValue = currentValue;
+                    }
+                }
+
+                if (shouldContinue) {
+                    if (Module.class.isAssignableFrom(defaultValue.getClass())) {
+                        final List<String> paths = Lists.newArrayList(path);
+                        paths.add(entry.getKey());
+                        handleVerification(entry.getValue(), keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
+                    } else if (!rawName.contains("presence")) { // Avoidance Filter
+                        if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
                             shouldReset = true;
-                        } else if ((expectedClass == int.class || expectedClass == Integer.class)) {
-                            final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(rawValue.getAsString());
-                            if (boolData.getFirst()) {
-                                // This check will trigger if the Field Name contains KeyCode Triggers
+                        } else {
+                            final Class<?> expectedClass = currentValue.getClass();
+                            if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
+                                    !StringUtils.isValidBoolean(rawValue.getAsString())) {
+                                shouldReset = true;
+                            } else if ((expectedClass == int.class || expectedClass == Integer.class)) {
+                                final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(rawValue.getAsString());
+                                if (boolData.getFirst()) {
+                                    // This check will trigger if the Field Name contains KeyCode Triggers
+                                    // If the Property Name contains these values, move onwards
+                                    for (String keyTrigger : keyCodeTriggers) {
+                                        if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
+                                            if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
+                                                shouldReset = true;
+                                            } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
+                                                final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
+                                                if (migratedKeyCode != boolData.getSecond()) {
+                                                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
+                                                    setProperty(rawName, migratedKeyCode);
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    shouldReset = true;
+                                }
+                            } else if (currentValue instanceof Map) {
+                                final Map newData = new HashMap((Map) currentValue);
+                                final Map defaultData = new HashMap((Map) defaultValue);
+                                if (!newData.containsKey("default")) {
+                                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", rawName));
+                                    newData.putAll(defaultData);
+                                    setProperty(rawName, newData);
+                                } else if (entry.getValue().isJsonObject()) {
+                                    for (Object dataEntry : newData.keySet()) {
+                                        final List<String> paths = Lists.newArrayList(path);
+                                        paths.add(entry.getKey());
+                                        paths.add(dataEntry.toString());
+                                        final JsonElement dataValue = entry.getValue().getAsJsonObject().get(dataEntry.toString());
+                                        if (dataValue.isJsonObject()) {
+                                            handleVerification(dataValue, keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
+                                        }
+                                    }
+                                }
+                            } else if (rawValue.isJsonPrimitive()) {
+                                final String rawStringValue = rawValue.getAsString();
+                                // This check will trigger if the Field Name contains Language Identifier Triggers
                                 // If the Property Name contains these values, move onwards
-                                for (String keyTrigger : keyCodeTriggers) {
-                                    if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
-                                        if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
-                                            shouldReset = true;
-                                        } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
-                                            final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
-                                            if (migratedKeyCode != boolData.getSecond()) {
-                                                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
-                                                setProperty(rawName, migratedKeyCode);
+                                for (String langTrigger : languageTriggers) {
+                                    if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
+                                        if (languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
+                                            final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
+                                            if (!migratedLanguageId.equals(rawStringValue)) {
+                                                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
+                                                setProperty(rawName, migratedLanguageId);
                                             }
                                         }
                                         break;
                                     }
                                 }
-                            } else {
-                                shouldReset = true;
-                            }
-                        } else if (currentValue instanceof Map) {
-                            final Map newData = new HashMap((Map) currentValue);
-                            final Map defaultData = new HashMap((Map) defaultValue);
-                            if (!newData.containsKey("default")) {
-                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", rawName));
-                                newData.putAll(defaultData);
-                                setProperty(rawName, newData);
-                            }
-                        } else if (rawValue.isJsonPrimitive()) {
-                            final String rawStringValue = rawValue.getAsString();
-                            // This check will trigger if the Field Name contains Language Identifier Triggers
-                            // If the Property Name contains these values, move onwards
-                            for (String langTrigger : languageTriggers) {
-                                if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
-                                    if (languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
-                                        final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
-                                        if (!migratedLanguageId.equals(rawStringValue)) {
-                                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
-                                            setProperty(rawName, migratedLanguageId);
-                                        }
-                                    }
-                                    break;
-                                }
                             }
                         }
-                    }
 
-                    if (shouldReset) {
-                        ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.empty", rawName));
-                        resetProperty(rawName);
+                        if (shouldReset) {
+                            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.empty", rawName));
+                            resetProperty(rawName);
+                        }
                     }
                 }
             }
@@ -332,7 +355,11 @@ public final class Config extends Module implements Serializable {
         String name = null;
         for (int i = 0; i < path.length; i++) {
             name = path[i];
-            result = StringUtils.lookupObject(classObj, instance, name);
+            if (instance instanceof Map) {
+                result = new HashMap((Map) instance).get(name);
+            } else {
+                result = StringUtils.lookupObject(classObj, instance, name);
+            }
             if (result != null) {
                 if (i < path.length - 1) {
                     classObj = result.getClass();

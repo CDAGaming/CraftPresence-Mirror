@@ -34,7 +34,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
   the `buttonBackgroundColor` setting
 * Fixed issues that could occur when `setControlMessage` was fired with a null argument
 * Fixed the UUID placeholders in `&IGN&` being available, even if it wasn't a valid UUID
-* Fixed a regression in MultiMC-type instance detection from `v1.9.0` that caused a normal error to not be suppressed properly
+* Fixed a regression in MultiMC-type instance detection from `v1.9.0` that caused a normal error to not be suppressed
+  properly
 
 ### Translations
 
