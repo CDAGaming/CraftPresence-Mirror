@@ -46,7 +46,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 The following changes have been made for translations:
 
 * Added:
-    * `gui.config.message.partial` (Used when Adding a New or Prelimary Element using the Dynamic Editor)
+    * `gui.config.message.button.remove`
 * Modified:
     * `gui.config.comment.button.sync.config` (Modified for new config file name)
 * Removed:
