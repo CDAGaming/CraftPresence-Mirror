@@ -105,17 +105,14 @@ public class DynamicEditorGui extends ExtendedScreen {
             secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.value.name");
         }
 
-        if (isNewValue || isPreliminaryData) {
-            if (isPreliminaryData) {
-                if (!StringUtils.isNullOrEmpty(attributeName)) {
-                    mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
-                }
-                if (defaultData != null && currentData == null) {
-                    currentData = new ModuleData(defaultData);
-                }
+        if (isPreliminaryData) {
+            if (!StringUtils.isNullOrEmpty(attributeName)) {
+                mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
             }
-            additionalNote = ModUtils.TRANSLATOR.translate("gui.config.message.partial");
-        } else if (!isDefaultValue) {
+            if (defaultData != null && currentData == null) {
+                currentData = new ModuleData(defaultData);
+            }
+        } else if (!isNewValue || !isDefaultValue) {
             // Adding Reset Button
             addControl(
                     new ExtendedButtonControl(
