@@ -38,17 +38,6 @@ allprojects {
     targetCompatibility = targetVersion
 }
 
-gradle.projectsEvaluated {
-    tasks.withType(Javadoc) {
-        options.addStringOption("Xmaxwarns", "65536")
-
-        exclude "${classPath}/config/category/**"
-        exclude "${classPath}/config/element/**"
-        exclude "${classPath}/config/gui/**"
-        exclude "${classPath}/integrations/**"
-    }
-}
-
 spotless {
     java {
         licenseHeaderFile(rootProject.file("HEADER"))
@@ -309,6 +298,13 @@ tasks.withType(JavaCompile).configureEach {
     if (targetVersion.isJava9Compatible()) {
         it.options.release = Integer.parseInt(targetVersion.getMajorVersion())
     }
+}
+
+tasks.withType(Javadoc) {
+    exclude "${classPath}/config/category/**"
+    exclude "${classPath}/config/element/**"
+    exclude "${classPath}/config/gui/**"
+    exclude "${classPath}/integrations/**"
 }
 
 task generateMyResources {

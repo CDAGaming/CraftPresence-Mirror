@@ -37,9 +37,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Fixed a regression in MultiMC-type instance detection from `v1.9.0` that caused a normal error to not be suppressed
   properly
 * Fixed multiple issues preventing the ability to hide placeholder output depending on a per-module value
-  * IE You can set the `textOverride` to be an empty string in the frontend, and the mod will respect that
+    * IE You can set the `textOverride` to be an empty string in the frontend, and the mod will respect that
 * Fixed preliminary-supplied data being able to be removed via the Dynamic Editor Screen
-  * Only the config entry should have been effected, not the actual module data list
+    * Only the config entry should have been effected, not the actual module data list
 
 ### Translations
 
