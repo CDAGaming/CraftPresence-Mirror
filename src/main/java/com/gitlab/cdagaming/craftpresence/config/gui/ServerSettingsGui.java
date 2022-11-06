@@ -54,7 +54,7 @@ public class ServerSettingsGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         final ModuleData defaultData = CONFIG.serverData.get("default");
-        final String defaultServerMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+        final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultName = addControl(
                 new ExtendedTextControl(
@@ -95,8 +95,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                         (attributeName, currentValue) -> {
                                             final ModuleData defaultServerData = CONFIG.serverData.get("default");
                                             final ModuleData currentServerData = CONFIG.serverData.get(attributeName);
-                                            final String defaultMessage = Config.isValidProperty(defaultServerData, "textOverride") ? defaultServerData.getTextOverride() : "";
-                                            final String currentMessage = Config.isValidProperty(currentServerData, "textOverride") ? currentServerData.getTextOverride() : "";
+                                            final String defaultMessage = Config.getProperty(defaultServerData, "textOverride") != null ? defaultServerData.getTextOverride() : "";
+                                            final String currentMessage = Config.getProperty(currentServerData, "textOverride") != null ? currentServerData.getTextOverride() : "";
 
                                             CraftPresence.CONFIG.hasChanged = true;
                                             final ModuleData newData = new ModuleData();
@@ -114,7 +114,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 final ModuleData defaultServerData = CONFIG.serverData.get("default");
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultServerData, "textOverride") ? defaultServerData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(defaultServerData, "textOverride") != null ? defaultServerData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -122,8 +122,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 final ModuleData currentServerData = CONFIG.serverData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentServerData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName);
-                                                                screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultServerData, "textOverride") ? defaultServerData.getTextOverride() : "";
-                                                                screenInstance.primaryMessage = Config.isValidProperty(currentServerData, "textOverride") ? currentServerData.getTextOverride() : screenInstance.originalPrimaryMessage;
+                                                                screenInstance.originalPrimaryMessage = Config.getProperty(defaultServerData, "textOverride") != null ? defaultServerData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = Config.getProperty(currentServerData, "textOverride") != null ? currentServerData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
@@ -147,8 +147,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 final ModuleData defaultServerData = CONFIG.serverData.get("default");
                                                                 final ModuleData currentServerData = CONFIG.serverData.get(attributeName);
                                                                 if (isPresenceButton) {
-                                                                    final PresenceData defaultPresenceData = Config.isValidProperty(defaultServerData, "data") ? defaultServerData.getData() : new PresenceData();
-                                                                    final PresenceData currentPresenceData = Config.isValidProperty(currentServerData, "data") ? currentServerData.getData() : defaultPresenceData;
+                                                                    final PresenceData defaultPresenceData = Config.getProperty(defaultServerData, "data") != null ? defaultServerData.getData() : new PresenceData();
+                                                                    final PresenceData currentPresenceData = Config.getProperty(currentServerData, "data") != null ? currentServerData.getData() : defaultPresenceData;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new PresenceSettingsGui(
                                                                                     screenInstance, currentPresenceData,
@@ -159,8 +159,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.isValidProperty(defaultServerData, "iconOverride") ? defaultServerData.getIconOverride() : CONFIG.fallbackServerIcon;
-                                                                    final String specificIcon = Config.isValidProperty(currentServerData, "iconOverride") ? currentServerData.getIconOverride() : defaultIcon;
+                                                                    final String defaultIcon = Config.getProperty(defaultServerData, "iconOverride") != null ? defaultServerData.getIconOverride() : CONFIG.fallbackServerIcon;
+                                                                    final String specificIcon = Config.getProperty(currentServerData, "iconOverride") != null ? currentServerData.getIconOverride() : defaultIcon;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
@@ -171,8 +171,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                                         // Inner-Event to occur when proceeding with adjusted data
                                                                                         final ModuleData defaultInnerServerData = CONFIG.serverData.get("default");
                                                                                         final ModuleData currentInnerServerData = CONFIG.serverData.get(innerAttributeName);
-                                                                                        final String defaultMessage = Config.isValidProperty(defaultInnerServerData, "textOverride") ? defaultInnerServerData.getTextOverride() : "";
-                                                                                        final String currentMessage = Config.isValidProperty(currentInnerServerData, "textOverride") ? currentInnerServerData.getTextOverride() : "";
+                                                                                        final String defaultMessage = Config.getProperty(defaultInnerServerData, "textOverride") != null ? defaultInnerServerData.getTextOverride() : "";
+                                                                                        final String currentMessage = Config.getProperty(currentInnerServerData, "textOverride") != null ? currentInnerServerData.getTextOverride() : "";
 
                                                                                         CraftPresence.CONFIG.hasChanged = true;
                                                                                         final ModuleData newData = new ModuleData();

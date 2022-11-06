@@ -54,7 +54,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         final ModuleData defaultData = CONFIG.dimensionData.get("default");
-        final String defaultDimensionMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+        final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultMessage = addControl(
                 new ExtendedTextControl(
@@ -80,8 +80,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                             // Event to Occur when proceeding with adjusted data
                                             final ModuleData defaultDimensionData = CONFIG.dimensionData.get("default");
                                             final ModuleData currentDimensionData = CONFIG.dimensionData.get(attributeName);
-                                            final String defaultMessage = Config.isValidProperty(defaultDimensionData, "textOverride") ? defaultDimensionData.getTextOverride() : "";
-                                            final String currentMessage = Config.isValidProperty(currentDimensionData, "textOverride") ? currentDimensionData.getTextOverride() : "";
+                                            final String defaultMessage = Config.getProperty(defaultDimensionData, "textOverride") != null ? defaultDimensionData.getTextOverride() : "";
+                                            final String currentMessage = Config.getProperty(currentDimensionData, "textOverride") != null ? currentDimensionData.getTextOverride() : "";
 
                                             CraftPresence.CONFIG.hasChanged = true;
                                             final ModuleData newData = new ModuleData();
@@ -99,7 +99,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 final ModuleData defaultDimensionData = CONFIG.dimensionData.get("default");
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultDimensionData, "textOverride") ? defaultDimensionData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(defaultDimensionData, "textOverride") != null ? defaultDimensionData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -107,8 +107,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 final ModuleData currentDimensionData = CONFIG.dimensionData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentDimensionData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
-                                                                screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultDimensionData, "textOverride") ? defaultDimensionData.getTextOverride() : "";
-                                                                screenInstance.primaryMessage = Config.isValidProperty(currentDimensionData, "textOverride") ? currentDimensionData.getTextOverride() : screenInstance.originalPrimaryMessage;
+                                                                screenInstance.originalPrimaryMessage = Config.getProperty(defaultDimensionData, "textOverride") != null ? defaultDimensionData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = Config.getProperty(currentDimensionData, "textOverride") != null ? currentDimensionData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
@@ -132,8 +132,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 final ModuleData defaultDimensionData = CONFIG.dimensionData.get("default");
                                                                 final ModuleData currentDimensionData = CONFIG.dimensionData.get(attributeName);
                                                                 if (isPresenceButton) {
-                                                                    final PresenceData defaultPresenceData = Config.isValidProperty(defaultDimensionData, "data") ? defaultDimensionData.getData() : new PresenceData();
-                                                                    final PresenceData currentPresenceData = Config.isValidProperty(currentDimensionData, "data") ? currentDimensionData.getData() : defaultPresenceData;
+                                                                    final PresenceData defaultPresenceData = Config.getProperty(defaultDimensionData, "data") != null ? defaultDimensionData.getData() : new PresenceData();
+                                                                    final PresenceData currentPresenceData = Config.getProperty(currentDimensionData, "data") != null ? currentDimensionData.getData() : defaultPresenceData;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new PresenceSettingsGui(
                                                                                     screenInstance, currentPresenceData,
@@ -144,8 +144,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.isValidProperty(defaultDimensionData, "iconOverride") ? defaultDimensionData.getIconOverride() : CONFIG.fallbackDimensionIcon;
-                                                                    final String specificIcon = Config.isValidProperty(currentDimensionData, "iconOverride") ? currentDimensionData.getIconOverride() : defaultIcon;
+                                                                    final String defaultIcon = Config.getProperty(defaultDimensionData, "iconOverride") != null ? defaultDimensionData.getIconOverride() : CONFIG.fallbackDimensionIcon;
+                                                                    final String specificIcon = Config.getProperty(currentDimensionData, "iconOverride") != null ? currentDimensionData.getIconOverride() : defaultIcon;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
@@ -156,8 +156,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                                         // Inner-Event to occur when proceeding with adjusted data
                                                                                         final ModuleData defaultInnerDimensionData = CONFIG.dimensionData.get("default");
                                                                                         final ModuleData currentInnerDimensionData = CONFIG.dimensionData.get(innerAttributeName);
-                                                                                        final String defaultMessage = Config.isValidProperty(defaultInnerDimensionData, "textOverride") ? defaultInnerDimensionData.getTextOverride() : "";
-                                                                                        final String currentMessage = Config.isValidProperty(currentInnerDimensionData, "textOverride") ? currentInnerDimensionData.getTextOverride() : "";
+                                                                                        final String defaultMessage = Config.getProperty(defaultInnerDimensionData, "textOverride") != null ? defaultInnerDimensionData.getTextOverride() : "";
+                                                                                        final String currentMessage = Config.getProperty(currentInnerDimensionData, "textOverride") != null ? currentInnerDimensionData.getTextOverride() : "";
 
                                                                                         CraftPresence.CONFIG.hasChanged = true;
                                                                                         final ModuleData newData = new ModuleData();

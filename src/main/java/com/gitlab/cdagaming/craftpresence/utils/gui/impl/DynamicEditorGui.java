@@ -107,7 +107,19 @@ public class DynamicEditorGui extends ExtendedScreen {
             }
             additionalNote = ModUtils.TRANSLATOR.translate("gui.config.message.partial");
         } else if (!isDefaultValue) {
-            additionalNote = ModUtils.TRANSLATOR.translate("gui.config.message.remove", primaryText.replaceAll("[^a-zA-Z0-9]", ""));
+            // Adding Reset Button
+            addControl(
+                    new ExtendedButtonControl(
+                            10, (getScreenHeight() - 30),
+                            95, 20,
+                            "gui.config.message.button.remove",
+                            () -> {
+                                if (onRemoveEntry != null) {
+                                    onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
+                                }
+                            }
+                    )
+            );
         }
 
         primaryInput = addControl(
@@ -171,15 +183,8 @@ public class DynamicEditorGui extends ExtendedScreen {
                             if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
                                 attributeName = secondaryInput.getControlMessage();
                             }
-                            if (isAdjusting()) {
-                                if (onAdjustEntry != null) {
-                                    onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
-                                }
-                            }
-                            if (isRemoving()) {
-                                if (onRemoveEntry != null) {
-                                    onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
-                                }
+                            if (isAdjusting() && onAdjustEntry != null) {
+                                onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },
@@ -211,7 +216,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         }
 
         proceedButton.setControlMessage(
-                (isAdjusting() || isRemoving()) ?
+                isAdjusting() ?
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
 
@@ -251,24 +256,6 @@ public class DynamicEditorGui extends ExtendedScreen {
             return !isPrimaryEmpty && !primaryText.equals(primaryMessage);
         } else {
             return !primaryText.equals(primaryMessage);
-        }
-    }
-
-    /**
-     * Whether the inputs in this screen classify as being removed
-     *
-     * @return {@link Boolean#TRUE} if we are doing an removal
-     */
-    private boolean isRemoving() {
-        final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
-        final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
-
-        if (!isDefaultValue && !isPreliminaryData && !isNewValue) {
-            return isPrimaryEmpty || (
-                    primaryText.equalsIgnoreCase(originalPrimaryMessage) && !primaryMessage.equals(originalPrimaryMessage)
-            );
-        } else {
-            return false;
         }
     }
 

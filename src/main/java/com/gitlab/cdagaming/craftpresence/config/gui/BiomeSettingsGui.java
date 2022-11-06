@@ -54,7 +54,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         final ModuleData defaultData = CONFIG.biomeData.get("default");
-        final String defaultBiomeMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+        final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultMessage = addControl(
                 new ExtendedTextControl(
@@ -79,8 +79,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                         (attributeName, currentValue) -> {
                                             final ModuleData defaultBiomeData = CONFIG.biomeData.get("default");
                                             final ModuleData currentBiomeData = CONFIG.biomeData.get(attributeName);
-                                            final String defaultMessage = Config.isValidProperty(defaultBiomeData, "textOverride") ? defaultBiomeData.getTextOverride() : "";
-                                            final String currentMessage = Config.isValidProperty(currentBiomeData, "textOverride") ? currentBiomeData.getTextOverride() : "";
+                                            final String defaultMessage = Config.getProperty(defaultBiomeData, "textOverride") != null ? defaultBiomeData.getTextOverride() : "";
+                                            final String currentMessage = Config.getProperty(currentBiomeData, "textOverride") != null ? currentBiomeData.getTextOverride() : "";
 
                                             CraftPresence.CONFIG.hasChanged = true;
                                             final ModuleData newData = new ModuleData();
@@ -98,7 +98,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 final ModuleData defaultBiomeData = CONFIG.biomeData.get("default");
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultBiomeData, "textOverride") ? defaultBiomeData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(defaultBiomeData, "textOverride") != null ? defaultBiomeData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -106,8 +106,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 final ModuleData currentBiomeData = CONFIG.biomeData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentBiomeData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
-                                                                screenInstance.originalPrimaryMessage = Config.isValidProperty(defaultBiomeData, "textOverride") ? defaultBiomeData.getTextOverride() : "";
-                                                                screenInstance.primaryMessage = Config.isValidProperty(currentBiomeData, "textOverride") ? currentBiomeData.getTextOverride() : screenInstance.originalPrimaryMessage;
+                                                                screenInstance.originalPrimaryMessage = Config.getProperty(defaultBiomeData, "textOverride") != null ? defaultBiomeData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = Config.getProperty(currentBiomeData, "textOverride") != null ? currentBiomeData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
@@ -131,8 +131,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 final ModuleData defaultBiomeData = CONFIG.biomeData.get("default");
                                                                 final ModuleData currentBiomeData = CONFIG.biomeData.get(attributeName);
                                                                 if (isPresenceButton) {
-                                                                    final PresenceData defaultPresenceData = Config.isValidProperty(defaultBiomeData, "data") ? defaultBiomeData.getData() : new PresenceData();
-                                                                    final PresenceData currentPresenceData = Config.isValidProperty(currentBiomeData, "data") ? currentBiomeData.getData() : defaultPresenceData;
+                                                                    final PresenceData defaultPresenceData = Config.getProperty(defaultBiomeData, "data") != null ? defaultBiomeData.getData() : new PresenceData();
+                                                                    final PresenceData currentPresenceData = Config.getProperty(currentBiomeData, "data") != null ? currentBiomeData.getData() : defaultPresenceData;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new PresenceSettingsGui(
                                                                                     screenInstance, currentPresenceData,
@@ -143,8 +143,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.isValidProperty(defaultBiomeData, "iconOverride") ? defaultBiomeData.getIconOverride() : CONFIG.fallbackBiomeIcon;
-                                                                    final String specificIcon = Config.isValidProperty(currentBiomeData, "iconOverride") ? currentBiomeData.getIconOverride() : defaultIcon;
+                                                                    final String defaultIcon = Config.getProperty(defaultBiomeData, "iconOverride") != null ? defaultBiomeData.getIconOverride() : CONFIG.fallbackBiomeIcon;
+                                                                    final String specificIcon = Config.getProperty(currentBiomeData, "iconOverride") != null ? currentBiomeData.getIconOverride() : defaultIcon;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
@@ -155,8 +155,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                                         // Inner-Event to occur when proceeding with adjusted data
                                                                                         final ModuleData defaultInnerBiomeData = CONFIG.biomeData.get("default");
                                                                                         final ModuleData currentInnerBiomeData = CONFIG.biomeData.get(innerAttributeName);
-                                                                                        final String defaultMessage = Config.isValidProperty(defaultInnerBiomeData, "textOverride") ? defaultInnerBiomeData.getTextOverride() : "";
-                                                                                        final String currentMessage = Config.isValidProperty(currentInnerBiomeData, "textOverride") ? currentInnerBiomeData.getTextOverride() : "";
+                                                                                        final String defaultMessage = Config.getProperty(defaultInnerBiomeData, "textOverride") != null ? defaultInnerBiomeData.getTextOverride() : "";
+                                                                                        final String currentMessage = Config.getProperty(currentInnerBiomeData, "textOverride") != null ? currentInnerBiomeData.getTextOverride() : "";
 
                                                                                         CraftPresence.CONFIG.hasChanged = true;
                                                                                         final ModuleData newData = new ModuleData();

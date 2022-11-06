@@ -121,11 +121,22 @@ public final class Config extends Module implements Serializable {
         languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
     }
 
-    public static boolean isValidProperty(final Config instance, final String... path) {
+    public static Object getProperty(final Config instance, final String... path) {
         if (instance == null) {
-            return false;
+            return null;
         }
-        final Object property = instance.getProperty(path);
+        return instance.getProperty(path);
+    }
+
+    public static Object getProperty(final Module instance, final String name) {
+        if (instance == null) {
+            return null;
+        }
+        return instance.getProperty(name);
+    }
+
+    public static boolean isValidProperty(final Config instance, final String... path) {
+        final Object property = getProperty(instance, path);
         return property != null && !StringUtils.isNullOrEmpty(property.toString());
     }
 
@@ -134,10 +145,7 @@ public final class Config extends Module implements Serializable {
     }
 
     public static boolean isValidProperty(final Module instance, final String name) {
-        if (instance == null) {
-            return false;
-        }
-        final Object property = instance.getProperty(name);
+        final Object property = getProperty(instance, name);
         return property != null && !StringUtils.isNullOrEmpty(property.toString());
     }
 
