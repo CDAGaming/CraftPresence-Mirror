@@ -54,6 +54,22 @@ public class PresenceData extends Module implements Serializable {
         }
     };
 
+    public PresenceData(PresenceData other) {
+        if (other != null) {
+            setDetails(other.details);
+            setGameState(other.gameState);
+            setLargeImage(other.largeImageKey, other.largeImageText);
+            setSmallImage(other.smallImageKey, other.smallImageText);
+            for (Map.Entry<String, Button> data : other.buttons.entrySet()) {
+                addButton(data.getKey(), data.getValue());
+            }
+        }
+    }
+
+    public PresenceData() {
+        // N/A
+    }
+
     @Override
     public PresenceData getDefaults() {
         if (DEFAULT == null) {
@@ -102,5 +118,35 @@ public class PresenceData extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(PresenceData.class, this, new Tuple<>(name, value, null));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof PresenceData)) {
+            return false;
+        }
+
+        PresenceData p = (PresenceData) obj;
+        boolean areButtonsEqual = buttons.size() == p.buttons.size();
+        if (areButtonsEqual) {
+            for (String key : buttons.keySet()) {
+                if (!p.buttons.containsKey(key) || !p.buttons.get(key).equals(buttons.get(key))) {
+                    areButtonsEqual = false;
+                    break;
+                }
+            }
+        }
+
+        return (p.details != null && p.details.equals(details)) &&
+                (p.gameState != null && p.gameState.equals(gameState)) &&
+                (p.largeImageKey != null && p.largeImageKey.equals(largeImageKey)) &&
+                (p.largeImageText != null && p.largeImageText.equals(largeImageText)) &&
+                (p.smallImageKey != null && p.smallImageKey.equals(smallImageKey)) &&
+                (p.smallImageText != null && p.smallImageText.equals(smallImageText)) &&
+                areButtonsEqual;
     }
 }

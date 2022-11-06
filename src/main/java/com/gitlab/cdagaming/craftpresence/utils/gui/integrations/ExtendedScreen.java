@@ -67,7 +67,7 @@ public class ExtendedScreen extends GuiScreen {
     /**
      * Variable needed to ensure all buttons are initialized before rendering to prevent an NPE
      */
-    private boolean initialized = false;
+    public boolean initialized = false;
     /**
      * Whether to enable debug mode screen data, specified from screen developers
      */

@@ -24,6 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.config;
 
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+
 public abstract class Module {
     protected abstract Module getDefaults();
 
@@ -33,5 +35,24 @@ public abstract class Module {
 
     public void resetProperty(final String name) {
         setProperty(name, getDefaults().getProperty(name));
+    }
+
+    @Override
+    public String toString() {
+        return FileUtils.toJsonData(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Module)) {
+            return false;
+        }
+
+        Module p = (Module) obj;
+        return toString().equals(p.toString());
     }
 }

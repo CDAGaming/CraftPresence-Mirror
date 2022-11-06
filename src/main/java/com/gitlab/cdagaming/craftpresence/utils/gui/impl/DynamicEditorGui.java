@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.TupleConsumer;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -39,8 +40,9 @@ public class DynamicEditorGui extends ExtendedScreen {
     private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
     private final TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
-    public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, overrideSecondaryRender = false, isPreliminaryData = false;
+    public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
+    public ModuleData defaultData, originalData, currentData;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
     private String additionalNote;
@@ -81,14 +83,16 @@ public class DynamicEditorGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         int controlIndex = 1;
-        if (isNewValue) {
-            mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
-            if (onNewInit != null) {
-                onNewInit.accept(attributeName, this);
-            }
-        } else {
-            if (onAdjustInit != null) {
-                onAdjustInit.accept(attributeName, this);
+        if (!initialized) {
+            if (isNewValue) {
+                mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
+                if (onNewInit != null) {
+                    onNewInit.accept(attributeName, this);
+                }
+            } else {
+                if (onAdjustInit != null) {
+                    onAdjustInit.accept(attributeName, this);
+                }
             }
         }
 
@@ -102,8 +106,13 @@ public class DynamicEditorGui extends ExtendedScreen {
         }
 
         if (isNewValue || isPreliminaryData) {
-            if (isPreliminaryData && !StringUtils.isNullOrEmpty(attributeName)) {
-                mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
+            if (isPreliminaryData) {
+                if (!StringUtils.isNullOrEmpty(attributeName)) {
+                    mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
+                }
+                if (defaultData != null && currentData == null) {
+                    currentData = new ModuleData(defaultData);
+                }
             }
             additionalNote = ModUtils.TRANSLATOR.translate("gui.config.message.partial");
         } else if (!isDefaultValue) {
@@ -122,6 +131,10 @@ public class DynamicEditorGui extends ExtendedScreen {
             );
         }
 
+        if (originalData == null) {
+            originalData = new ModuleData(currentData);
+        }
+
         primaryInput = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -136,28 +149,27 @@ public class DynamicEditorGui extends ExtendedScreen {
             primaryInput.setControlMessage(primaryMessage);
         }
 
-        if (!isNewValue && !isPreliminaryData) {
-            if (onSpecificCallback != null) {
-                // Adding Specific Icon Button
-                addControl(
-                        new ExtendedButtonControl(
-                                (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
-                                180, 20,
-                                "gui.config.message.button.icon.change",
-                                () -> onSpecificCallback.accept(attributeName, this, false)
-                        )
-                );
-                // Adding Presence Settings Button
-                addControl(
-                        new ExtendedButtonControl(
-                                (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
-                                180, 20,
-                                "gui.config.title.presence_settings",
-                                () -> onSpecificCallback.accept(attributeName, this, true)
-                        )
-                );
-            }
+        if (onSpecificCallback != null) {
+            // Adding Specific Icon Button
+            addControl(
+                    new ExtendedButtonControl(
+                            (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
+                            180, 20,
+                            "gui.config.message.button.icon.change",
+                            () -> onSpecificCallback.accept(attributeName, this, false)
+                    )
+            );
+            // Adding Presence Settings Button
+            addControl(
+                    new ExtendedButtonControl(
+                            (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
+                            180, 20,
+                            "gui.config.title.presence_settings",
+                            () -> onSpecificCallback.accept(attributeName, this, true)
+                    )
+            );
         }
+
         if (willRenderSecondaryInput) {
             secondaryInput = addControl(
                     new ExtendedTextControl(
@@ -249,13 +261,24 @@ public class DynamicEditorGui extends ExtendedScreen {
         final String secondaryText = secondaryInput != null ? secondaryInput.getControlMessage() : "";
         final boolean isSecondaryEmpty = StringUtils.isNullOrEmpty(secondaryText);
 
-        final boolean areEitherEmpty = isPrimaryEmpty || isSecondaryEmpty;
-        if (willRenderSecondaryInput) {
-            return !areEitherEmpty && (!primaryText.equals(primaryMessage) || !secondaryText.equals(secondaryMessage));
-        } else if (isDefaultValue) {
-            return !isPrimaryEmpty && !primaryText.equals(primaryMessage);
+        hasChanged = !currentData.getData().equals(originalData.getData());
+        if (!hasChanged) {
+            final String originalIcon = originalData.getIconOverride() != null ? originalData.getIconOverride() : "";
+            final String currentIcon = currentData.getIconOverride() != null ? currentData.getIconOverride() : "";
+            hasChanged = hasChanged || !currentIcon.equals(originalIcon);
+        }
+
+        if (hasChanged) {
+            return true;
         } else {
-            return !primaryText.equals(primaryMessage);
+            final boolean areEitherEmpty = isPrimaryEmpty || isSecondaryEmpty;
+            if (willRenderSecondaryInput) {
+                return !areEitherEmpty && (!primaryText.equals(primaryMessage) || !secondaryText.equals(secondaryMessage));
+            } else if (isDefaultValue) {
+                return !isPrimaryEmpty && !primaryText.equals(primaryMessage);
+            } else {
+                return !primaryText.equals(primaryMessage);
+            }
         }
     }
 

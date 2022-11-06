@@ -82,6 +82,17 @@ public class FileUtils {
     }
 
     /**
+     * Interpret compatible objects into Json Elements
+     *
+     * @param obj     The object data to access
+     * @param args     The Command Arguments to parse
+     */
+    public static String toJsonData(Object obj, Modifiers... args) {
+        final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
+        return builder.create().toJson(obj);
+    }
+
+    /**
      * Writes Raw Json Data Objects to the specified file
      *
      * @param json     The json data to access
