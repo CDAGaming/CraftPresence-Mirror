@@ -141,12 +141,12 @@ public class PresenceData extends Module implements Serializable {
             }
         }
 
-        return (p.details != null && p.details.equals(details)) &&
-                (p.gameState != null && p.gameState.equals(gameState)) &&
-                (p.largeImageKey != null && p.largeImageKey.equals(largeImageKey)) &&
-                (p.largeImageText != null && p.largeImageText.equals(largeImageText)) &&
-                (p.smallImageKey != null && p.smallImageKey.equals(smallImageKey)) &&
-                (p.smallImageText != null && p.smallImageText.equals(smallImageText)) &&
+        return ((p.details == null && details == null) || (p.details != null && p.details.equals(details))) &&
+                ((p.gameState == null && gameState == null) || (p.gameState != null && p.gameState.equals(gameState))) &&
+                ((p.largeImageKey == null && largeImageKey == null) || (p.largeImageKey != null && p.largeImageKey.equals(largeImageKey))) &&
+                ((p.largeImageText == null && largeImageText == null) || (p.largeImageText != null && p.largeImageText.equals(largeImageText))) &&
+                ((p.smallImageKey == null && smallImageKey == null) || (p.smallImageKey != null && p.smallImageKey.equals(smallImageKey))) &&
+                ((p.smallImageText == null && smallImageText == null) || (p.smallImageText != null && p.smallImageText.equals(smallImageText))) &&
                 areButtonsEqual;
     }
 }
