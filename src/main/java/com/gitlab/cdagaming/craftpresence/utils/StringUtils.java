@@ -65,9 +65,13 @@ public class StringUtils {
      */
     private static final Pattern BASE64_PATTERN = Pattern.compile("data:(?<type>.+?);base64,(?<data>.+)");
     /**
-     * Regex Pattern for Uuid Detection
+     * Regex Pattern for Trimmed Uuid Detection
      */
-    private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
+    private static final Pattern TRIMMED_UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
+    /**
+     * Regex Pattern for Full Uuid Detection
+     */
+    private static final Pattern FULL_UUID_PATTERN = Pattern.compile("(\\w{8})-(\\w{4})-(\\w{4})-(\\w{4})-(\\w{12})");
     /**
      * Regex Pattern for Brackets containing Digits
      */
@@ -582,7 +586,8 @@ public class StringUtils {
      * @return Whether the specified String classifies as a valid Uuid
      */
     public static boolean isValidUuid(final String input) {
-        return !StringUtils.isNullOrEmpty(input) && UUID_PATTERN.matcher(input).find();
+        return !StringUtils.isNullOrEmpty(input) &&
+                (input.contains("-") ? FULL_UUID_PATTERN : TRIMMED_UUID_PATTERN).matcher(input).find();
     }
 
     /**
@@ -601,7 +606,11 @@ public class StringUtils {
         if (trimmed) {
             return input.replace("-", "");
         } else {
-            return UUID_PATTERN.matcher(input).replaceFirst("$1-$2-$3-$4-$5");
+            if (!FULL_UUID_PATTERN.matcher(input).find()) {
+                return TRIMMED_UUID_PATTERN.matcher(input).replaceFirst("$1-$2-$3-$4-$5");
+            } else {
+                return FULL_UUID_PATTERN.matcher(input).group();
+            }
         }
     }
 
