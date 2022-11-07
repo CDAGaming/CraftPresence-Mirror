@@ -606,11 +606,8 @@ public class StringUtils {
         if (trimmed) {
             return input.replace("-", "");
         } else {
-            if (!FULL_UUID_PATTERN.matcher(input).find()) {
-                return TRIMMED_UUID_PATTERN.matcher(input).replaceFirst("$1-$2-$3-$4-$5");
-            } else {
-                return FULL_UUID_PATTERN.matcher(input).group();
-            }
+            final Pattern pattern = (input.contains("-") ? FULL_UUID_PATTERN : TRIMMED_UUID_PATTERN);
+            return pattern.matcher(input).find() ? pattern.matcher(input).replaceFirst("$1-$2-$3-$4-$5") : input;
         }
     }
 
