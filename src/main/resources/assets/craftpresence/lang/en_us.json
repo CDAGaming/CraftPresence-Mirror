@@ -317,6 +317,7 @@
   "craftpresence.placeholders.SCREEN.description": "The current Gui Screen's display data, while applicable",
   "craftpresence.placeholders.SCREEN.SCREEN.description": "The current Gui Screen name",
   "craftpresence.placeholders.SCREEN.CLASS.description": "The current Gui Screen class name",
+  "craftpresence.placeholders.SCREEN.ICON.description": "The default Gui Screen icon",
   "craftpresence.placeholders.TILEENTITY.description": "The current TileEntity (block/item/armor) display data, while applicable",
   "craftpresence.placeholders.TILEENTITY.ITEM.description": "The specific item name",
   "craftpresence.placeholders.TILEENTITY.MAIN.description": "Current main hand item",

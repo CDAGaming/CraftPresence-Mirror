@@ -112,7 +112,7 @@ public class Legacy2Modern implements DataMigrator {
             .put("includeExtraGuiClasses", "advancedSettings.includeExtraGuiClasses")
             .put("allowPlaceholderPreviews", "advancedSettings.allowPlaceholderPreviews")
             .put("allowPlaceholderOperators", "advancedSettings.allowPlaceholderOperators")
-            .put("guiMessages", "advancedSettings.guiMessages")
+            .put("guiMessages", "advancedSettings.guiSettings.guiData")
             .put("itemMessages", "advancedSettings.itemMessages")
             .put("entityTargetMessages", "advancedSettings.entityTargetMessages")
             .put("entityRidingMessages", "advancedSettings.entityRidingMessages")

@@ -338,6 +338,7 @@ Example: `&SCREEN:SCREEN&` == `&SCREEN&`
 
 * `&SCREEN&` - The Current Gui Screen Name (Supports `Container` and `Screen` type interfaces)
 * `&CLASS&` - The Current Gui Class Name (Ex: The `xxx` part of `net.minecraft.xxx`)
+* `&ICON&` - The Default Gui Screen Icon Name
 
 ___
 

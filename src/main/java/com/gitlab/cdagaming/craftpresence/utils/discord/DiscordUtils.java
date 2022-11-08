@@ -78,7 +78,7 @@ public class DiscordUtils {
      */
     public static final List<String> iconModules = Lists.newArrayList(
             "&DEFAULT&", "&MAINMENU&", "&PACK&",
-            "&DIMENSION&", "&BIOME&", "&SERVER&"
+            "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&"
     );
     /**
      * A list of the valid operators for this application

@@ -49,13 +49,7 @@ public class Advanced extends Module implements Serializable {
     public boolean includeExtraGuiClasses = false;
     public boolean allowPlaceholderPreviews = false;
     public boolean allowPlaceholderOperators = true;
-    public Map<String, String> guiMessages = new HashMap<String, String>() {
-        private static final long serialVersionUID = 7278062406000885161L;
-
-        {
-            put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.gui_messages"));
-        }
-    };
+    public Gui guiSettings = new Gui();
     public Map<String, String> itemMessages = new HashMap<String, String>() {
         private static final long serialVersionUID = -2477046332015336987L;
 
