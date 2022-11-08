@@ -203,10 +203,11 @@ public class ScrollableListControl extends GuiSlot {
             } else if (renderType == RenderType.EntityData) {
                 if (StringUtils.isValidUuid(displayName)) {
                     // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
-                    String uuid = StringUtils.getFromUuid(displayName, true);
-                    displayName = CraftPresence.ENTITIES.PLAYER_BINDINGS.getOrDefault(uuid, uuid);
+                    String fullUuid = StringUtils.getFromUuid(displayName, false);
+                    String trimmedUuid = StringUtils.getFromUuid(displayName, true);
+                    displayName = CraftPresence.ENTITIES.PLAYER_BINDINGS.getOrDefault(fullUuid, trimmedUuid);
                     if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                        texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, displayName));
+                        texture = ImageUtils.getTextureFromUrl(fullUuid, String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, fullUuid));
                     }
                 }
             } else if (renderType == RenderType.ItemData) {
@@ -223,7 +224,7 @@ public class ScrollableListControl extends GuiSlot {
         }
         if (!originalName.equals(displayName)) {
             entryAliases.put(originalName, displayName);
-            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.list.original") + " " + originalName);
+            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + originalName);
         }
         getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 
