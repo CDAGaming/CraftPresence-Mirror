@@ -86,6 +86,7 @@ public class FileUtils {
      *
      * @param obj  The object data to access
      * @param args The Command Arguments to parse
+     * @return the resulting json string
      */
     public static String toJsonData(Object obj, Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);

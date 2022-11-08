@@ -78,14 +78,15 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param mc           The Minecraft Instance for this Control
-     * @param width        The Width of this Control
-     * @param height       The Height of this Control
-     * @param topIn        How far from the top of the Screen the List should render at
-     * @param bottomIn     How far from the bottom of the Screen the List should render at
-     * @param slotHeightIn The height of each slot in the list
-     * @param itemList     The List of items to allocate for the slots in the Gui
-     * @param currentValue The current value, if any, to select upon initialization of the Gui
+     * @param mc            The Minecraft Instance for this Control
+     * @param currentScreen The current screen instance for this control
+     * @param width         The Width of this Control
+     * @param height        The Height of this Control
+     * @param topIn         How far from the top of the Screen the List should render at
+     * @param bottomIn      How far from the bottom of the Screen the List should render at
+     * @param slotHeightIn  The height of each slot in the list
+     * @param itemList      The List of items to allocate for the slots in the Gui
+     * @param currentValue  The current value, if any, to select upon initialization of the Gui
      */
     public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue) {
         this(mc, currentScreen, width, height, topIn, bottomIn, slotHeightIn, itemList, currentValue, RenderType.None);
@@ -94,15 +95,16 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param mc           The Minecraft Instance for this Control
-     * @param width        The Width of this Control
-     * @param height       The Height of this Control
-     * @param topIn        How far from the top of the Screen the List should render at
-     * @param bottomIn     How far from the bottom of the Screen the List should render at
-     * @param slotHeightIn The height of each slot in the list
-     * @param itemList     The List of items to allocate for the slots in the Gui
-     * @param currentValue The current value, if any, to select upon initialization of the Gui
-     * @param renderType   The Rendering type for this Scroll List
+     * @param mc            The Minecraft Instance for this Control
+     * @param currentScreen The current screen instance for this control
+     * @param width         The Width of this Control
+     * @param height        The Height of this Control
+     * @param topIn         How far from the top of the Screen the List should render at
+     * @param bottomIn      How far from the bottom of the Screen the List should render at
+     * @param slotHeightIn  The height of each slot in the list
+     * @param itemList      The List of items to allocate for the slots in the Gui
+     * @param currentValue  The current value, if any, to select upon initialization of the Gui
+     * @param renderType    The Rendering type for this Scroll List
      */
     public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue, RenderType renderType) {
         super(mc, width, height, topIn, bottomIn, slotHeightIn);
