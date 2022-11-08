@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
@@ -33,50 +34,46 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Advanced extends Module implements Serializable {
-    private static final long serialVersionUID = 6035241954568785784L;
-    private static Advanced DEFAULT;
-    public boolean enableCommands = true;
-    public boolean enablePerGui = false;
-    public boolean enablePerItem = false;
-    public boolean enablePerEntity = false;
-    public boolean renderTooltips = true;
-    public boolean formatWords = true;
-    public boolean debugMode = false;
-    public boolean verboseMode = false;
-    public int refreshRate = 2;
-    public int roundSize = 3;
-    public boolean includeExtraGuiClasses = false;
-    public boolean allowPlaceholderPreviews = false;
-    public boolean allowPlaceholderOperators = true;
-    public Gui guiSettings = new Gui();
-    public Map<String, String> itemMessages = new HashMap<String, String>() {
-        private static final long serialVersionUID = -2477046332015336987L;
+public class Entity extends Module implements Serializable {
+    private static final long serialVersionUID = -4294690176016925084L;
+    private static Entity DEFAULT;
+    public String fallbackEntityIcon = "unknown";
+    public Map<String, ModuleData> targetData = new HashMap<String, ModuleData>() {
+        private static final long serialVersionUID = 9059756640153589401L;
 
         {
-            put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.item_messages"));
+            put("default", new ModuleData(
+                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_target_messages"),
+                    null // Defaults to the Entity Name if nothing is supplied
+            ));
         }
     };
-    public Entity entitySettings = new Entity();
-    public boolean allowEndpointIcons = true;
-    public String serverIconEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.server_icon_endpoint");
-    public String playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
+    public Map<String, ModuleData> ridingData = new HashMap<String, ModuleData>() {
+        private static final long serialVersionUID = 9059756640153589401L;
+
+        {
+            put("default", new ModuleData(
+                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages"),
+                    null // Defaults to the Entity Name if nothing is supplied
+            ));
+        }
+    };
 
     @Override
-    public Advanced getDefaults() {
+    public Entity getDefaults() {
         if (DEFAULT == null) {
-            DEFAULT = new Advanced();
+            DEFAULT = new Entity();
         }
         return DEFAULT;
     }
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Advanced.class, this, name);
+        return StringUtils.lookupObject(Entity.class, this, name);
     }
 
     @Override
     public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(Advanced.class, this, new Tuple<>(name, value, null));
+        StringUtils.updateField(Entity.class, this, new Tuple<>(name, value, null));
     }
 }

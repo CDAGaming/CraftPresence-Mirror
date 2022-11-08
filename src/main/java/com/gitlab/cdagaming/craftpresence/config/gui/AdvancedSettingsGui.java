@@ -305,18 +305,23 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.entityTargetMessages.getOrDefault("default", "");
+                                                                screenInstance.defaultData = CONFIG.entitySettings.targetData.get("default");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.defaultData = CONFIG.entitySettings.targetData.get("default");
+                                                                screenInstance.currentData = CONFIG.entitySettings.targetData.get(attributeName);
+                                                                screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CONFIG.entityTargetMessages.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CONFIG.entityTargetMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
+                                                                screenInstance.currentData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.entityTargetMessages.put(attributeName, inputText);
+                                                                CONFIG.entitySettings.targetData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
                                                                 }
@@ -324,9 +329,42 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.entityTargetMessages.remove(attributeName);
-                                                                CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
-                                                            }, null,
+                                                                CONFIG.entitySettings.targetData.remove(attributeName);
+                                                                if (!screenInstance.isPreliminaryData) {
+                                                                    CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
+                                                                }
+                                                            },
+                                                            (attributeName, screenInstance, isPresenceButton) -> {
+                                                                // Event to occur when adding specific info to set data
+                                                                if (isPresenceButton) {
+                                                                    final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
+                                                                    final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new PresenceSettingsGui(
+                                                                                    screenInstance, currentPresenceData,
+                                                                                    (output) -> screenInstance.currentData.setData(output)
+                                                                            )
+                                                                    );
+                                                                } else {
+                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : CONFIG.entitySettings.fallbackEntityIcon;
+                                                                    final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new SelectorGui(
+                                                                                    screenInstance,
+                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    specificIcon, attributeName,
+                                                                                    true, false, RenderType.DiscordAsset,
+                                                                                    (innerAttributeName, innerCurrentValue) -> {
+                                                                                        // Inner-Event to occur when proceeding with adjusted data
+                                                                                        final String defaultMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
+                                                                                        final String currentMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : "";
+
+                                                                                        screenInstance.currentData.setIconOverride(innerCurrentValue);
+                                                                                    }, null
+                                                                            )
+                                                                    );
+                                                                }
+                                                            },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 CraftPresence.GUIS.drawMultiLineString(
@@ -394,18 +432,23 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.entityRidingMessages.getOrDefault("default", "");
+                                                                screenInstance.defaultData = CONFIG.entitySettings.ridingData.get("default");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.defaultData = CONFIG.entitySettings.ridingData.get("default");
+                                                                screenInstance.currentData = CONFIG.entitySettings.ridingData.get(attributeName);
+                                                                screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CONFIG.entityRidingMessages.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CONFIG.entityRidingMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
+                                                                screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
+                                                                screenInstance.currentData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.entityRidingMessages.put(attributeName, inputText);
+                                                                CONFIG.entitySettings.ridingData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
                                                                 }
@@ -413,9 +456,42 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.entityRidingMessages.remove(attributeName);
-                                                                CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
-                                                            }, null,
+                                                                CONFIG.entitySettings.ridingData.remove(attributeName);
+                                                                if (!screenInstance.isPreliminaryData) {
+                                                                    CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
+                                                                }
+                                                            },
+                                                            (attributeName, screenInstance, isPresenceButton) -> {
+                                                                // Event to occur when adding specific info to set data
+                                                                if (isPresenceButton) {
+                                                                    final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
+                                                                    final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new PresenceSettingsGui(
+                                                                                    screenInstance, currentPresenceData,
+                                                                                    (output) -> screenInstance.currentData.setData(output)
+                                                                            )
+                                                                    );
+                                                                } else {
+                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : CONFIG.entitySettings.fallbackEntityIcon;
+                                                                    final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
+                                                                    CraftPresence.GUIS.openScreen(
+                                                                            new SelectorGui(
+                                                                                    screenInstance,
+                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    specificIcon, attributeName,
+                                                                                    true, false, RenderType.DiscordAsset,
+                                                                                    (innerAttributeName, innerCurrentValue) -> {
+                                                                                        // Inner-Event to occur when proceeding with adjusted data
+                                                                                        final String defaultMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
+                                                                                        final String currentMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : "";
+
+                                                                                        screenInstance.currentData.setIconOverride(innerCurrentValue);
+                                                                                    }, null
+                                                                            )
+                                                                    );
+                                                                }
+                                                            },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 CraftPresence.GUIS.drawMultiLineString(

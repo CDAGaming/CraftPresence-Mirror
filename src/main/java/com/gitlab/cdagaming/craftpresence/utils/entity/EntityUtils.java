@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -57,9 +59,17 @@ public class EntityUtils {
      */
     private final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
     /**
+     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder for &TARGETENTITY&
+     */
+    private final List<Pair<String, String>> entityTargetIconArgs = Lists.newArrayList();
+    /**
      * A Mapping of the Arguments attached to the &RIDINGENTITY& RPC Message placeholder
      */
     private final List<Pair<String, String>> entityRidingArgs = Lists.newArrayList();
+    /**
+     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder for &RIDINGENTITY&
+     */
+    private final List<Pair<String, String>> entityRidingIconArgs = Lists.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -134,11 +144,13 @@ public class EntityUtils {
         CURRENT_RIDING_TAGS.clear();
 
         entityTargetArgs.clear();
+        entityTargetIconArgs.clear();
         entityRidingArgs.clear();
+        entityRidingIconArgs.clear();
 
         isInUse = false;
-        CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:", "&RIDINGENTITY:");
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&", "&RIDINGENTITY&");
+        CraftPresence.CLIENT.removeArgumentsMatching("&TARGETENTITY:", "&RIDINGENTITY:");
+        CraftPresence.CLIENT.initArgument("&TARGETENTITY&", "&RIDINGENTITY&");
     }
 
     /**
@@ -229,19 +241,35 @@ public class EntityUtils {
      * Updates RPC Data related to this Module
      */
     public void updateEntityPresence() {
-        // Retrieve Messages
-        final String defaultEntityTargetMessage = CraftPresence.CONFIG.advancedSettings.entityTargetMessages.getOrDefault("default", "");
-        final String defaultEntityRidingMessage = CraftPresence.CONFIG.advancedSettings.entityRidingMessages.getOrDefault("default", "");
-
-        final String targetEntityMessage = CraftPresence.CONFIG.advancedSettings.entityTargetMessages.getOrDefault(CURRENT_TARGET_NAME, defaultEntityTargetMessage);
-        final String ridingEntityMessage = CraftPresence.CONFIG.advancedSettings.entityRidingMessages.getOrDefault(CURRENT_RIDING_NAME, defaultEntityRidingMessage);
-
         // Form Entity Argument List
         entityTargetArgs.clear();
+        entityTargetIconArgs.clear();
         entityRidingArgs.clear();
+        entityRidingIconArgs.clear();
+
+        final ModuleData defaultTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
+        final ModuleData defaultRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
+
+        final ModuleData currentTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
+        final ModuleData currentRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_RIDING_NAME);
+
+        final String defaultTargetMessage = Config.isValidProperty(defaultTargetData, "textOverride") ? defaultTargetData.getTextOverride() : "";
+        final String defaultRidingMessage = Config.isValidProperty(defaultRidingData, "textOverride") ? defaultRidingData.getTextOverride() : "";
+
+        final String currentTargetMessage = Config.isValidProperty(currentTargetData, "textOverride") ? currentTargetData.getTextOverride() : defaultTargetMessage;
+        final String currentRidingMessage = Config.isValidProperty(currentRidingData, "textOverride") ? currentRidingData.getTextOverride() : defaultRidingMessage;
+
+        final String currentTargetIcon = Config.isValidProperty(currentTargetData, "iconOverride") ? currentTargetData.getIconOverride() : CURRENT_TARGET_NAME;
+        final String currentRidingIcon = Config.isValidProperty(currentRidingData, "iconOverride") ? currentRidingData.getIconOverride() : CURRENT_RIDING_NAME;
+
+        final String formattedTargetIcon = StringUtils.formatAsIcon(currentTargetIcon.replace(" ", "_"));
+        final String formattedRidingIcon = StringUtils.formatAsIcon(currentRidingIcon.replace(" ", "_"));
 
         entityTargetArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME)));
         entityRidingArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME)));
+
+        entityTargetIconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
+        entityRidingIconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
 
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
@@ -260,8 +288,14 @@ public class EntityUtils {
         for (Pair<String, String> argumentData : entityTargetArgs) {
             CraftPresence.CLIENT.syncArgument("&TARGETENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
         }
+        for (Pair<String, String> argumentData : entityTargetIconArgs) {
+            CraftPresence.CLIENT.syncArgument("&TARGETENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
+        }
         for (Pair<String, String> argumentData : entityRidingArgs) {
             CraftPresence.CLIENT.syncArgument("&RIDINGENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+        }
+        for (Pair<String, String> argumentData : entityRidingIconArgs) {
+            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
         }
 
         // Add All Generalized Arguments, if any
@@ -270,21 +304,28 @@ public class EntityUtils {
             StringUtils.addEntriesNotPresent(entityRidingArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        final String CURRENT_TARGET_MESSAGE = StringUtils.sequentialReplaceAnyCase(targetEntityMessage, entityTargetArgs);
-        final String CURRENT_RIDING_MESSAGE = StringUtils.sequentialReplaceAnyCase(ridingEntityMessage, entityRidingArgs);
+        final String CURRENT_TARGET_ICON = StringUtils.sequentialReplaceAnyCase(formattedTargetIcon, entityTargetIconArgs);
+        final String CURRENT_RIDING_ICON = StringUtils.sequentialReplaceAnyCase(formattedRidingIcon, entityRidingIconArgs);
+
+        final String CURRENT_TARGET_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentTargetMessage, entityTargetArgs);
+        final String CURRENT_RIDING_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentRidingMessage, entityRidingArgs);
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
+            CraftPresence.CLIENT.syncOverride("&TARGETENTITY&", currentTargetData != null ? currentTargetData : defaultTargetData);
             CraftPresence.CLIENT.syncArgument("&TARGETENTITY&", CURRENT_TARGET_MESSAGE, ArgumentType.Text);
+            CraftPresence.CLIENT.syncArgument("&TARGETENTITY&", CraftPresence.CLIENT.imageOf("&TARGETENTITY&", true, CURRENT_TARGET_ICON, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), ArgumentType.Image);
         } else {
-            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&TARGETENTITY:");
-            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&TARGETENTITY&");
+            CraftPresence.CLIENT.removeArgumentsMatching("&TARGETENTITY:");
+            CraftPresence.CLIENT.initArgument("&TARGETENTITY&");
         }
         if (CURRENT_RIDING != null) {
+            CraftPresence.CLIENT.syncOverride("&RIDINGENTITY&", currentRidingData != null ? currentRidingData : defaultRidingData);
             CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CURRENT_RIDING_MESSAGE, ArgumentType.Text);
+            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CraftPresence.CLIENT.imageOf("&RIDINGENTITY&", true, CURRENT_RIDING_ICON, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), ArgumentType.Image);
         } else {
-            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, "&RIDINGENTITY:");
-            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&RIDINGENTITY&");
+            CraftPresence.CLIENT.removeArgumentsMatching("&RIDINGENTITY:");
+            CraftPresence.CLIENT.initArgument("&RIDINGENTITY&");
         }
     }
 
@@ -302,7 +343,9 @@ public class EntityUtils {
         List<String> queuedEntries;
         for (ArgumentType type : types) {
             queuedEntries = Lists.newArrayList();
-            if (type == ArgumentType.Text) {
+            if (type == ArgumentType.Image) {
+                queuedEntries.add(subArgumentFormat + "ICON&");
+            } else if (type == ArgumentType.Text) {
                 queuedEntries.add(subArgumentFormat + "ENTITY&");
             }
             argumentData.put(type, queuedEntries);
@@ -410,13 +453,13 @@ public class EntityUtils {
             }
         }
 
-        for (String entityTargetEntry : CraftPresence.CONFIG.advancedSettings.entityTargetMessages.keySet()) {
+        for (String entityTargetEntry : CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.keySet()) {
             if (!StringUtils.isNullOrEmpty(entityTargetEntry) && !ENTITY_NAMES.contains(entityTargetEntry)) {
                 ENTITY_NAMES.add(entityTargetEntry);
             }
         }
 
-        for (String entityRidingEntry : CraftPresence.CONFIG.advancedSettings.entityRidingMessages.keySet()) {
+        for (String entityRidingEntry : CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.keySet()) {
             if (!StringUtils.isNullOrEmpty(entityRidingEntry) && !ENTITY_NAMES.contains(entityRidingEntry)) {
                 ENTITY_NAMES.add(entityRidingEntry);
             }
