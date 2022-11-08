@@ -81,6 +81,10 @@ public class EntityUtils {
      */
     public List<String> ENTITY_NAMES = Lists.newArrayList();
     /**
+     * A Mapping representing the link between UUIDs and Player Names
+     */
+    public Map<String, String> PLAYER_BINDINGS = Maps.newHashMap();
+    /**
      * The Player's Currently Targeted Entity's Nbt Tags, if any
      */
     public List<String> CURRENT_TARGET_TAGS = Lists.newArrayList();
@@ -111,6 +115,7 @@ public class EntityUtils {
     private void emptyData() {
         ENTITY_NAMES.clear();
         ENTITY_CLASSES.clear();
+        PLAYER_BINDINGS.clear();
         clearClientData();
     }
 
@@ -394,8 +399,13 @@ public class EntityUtils {
         if (CraftPresence.SERVER.enabled) {
             for (NetworkPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
                 final String uuidString = playerInfo.getGameProfile().getId().toString();
-                if (!StringUtils.isNullOrEmpty(uuidString) && !ENTITY_NAMES.contains(uuidString)) {
-                    ENTITY_NAMES.add(uuidString);
+                if (!StringUtils.isNullOrEmpty(uuidString)) {
+                    if (!ENTITY_NAMES.contains(uuidString)) {
+                        ENTITY_NAMES.add(uuidString);
+                    }
+                    if (!PLAYER_BINDINGS.containsKey(uuidString)) {
+                        PLAYER_BINDINGS.put(uuidString, playerInfo.getGameProfile().getName());
+                    }
                 }
             }
         }

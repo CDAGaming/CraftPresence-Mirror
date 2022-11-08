@@ -21,8 +21,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       icon is unavailable
     * It also allows for fetching a dynamic server icon if the icon's the module is looking for do not exist within the
       Discord Asset List, and doing similar activity for the player's head icon.
-* Added placeholders:
-    * TBD
+* Multiple Accessibility improvements have been made to the GUI in an effort to be more descriptive and user-friendly
 
 ### Fixes
 

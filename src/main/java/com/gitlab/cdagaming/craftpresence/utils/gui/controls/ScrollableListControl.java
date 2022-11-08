@@ -25,11 +25,15 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
@@ -37,6 +41,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Gui Widget for a Scrollable List
@@ -45,19 +50,30 @@ import java.util.List;
  */
 public class ScrollableListControl extends GuiSlot {
     /**
+     * Mapping representing a link between the entries original name, and it's display name
+     */
+    public final Map<String, String> entryAliases = Maps.newHashMap();
+    /**
      * The Currently Selected Value in the List
      */
     public String currentValue;
-
+    /**
+     * The Current Hover Text that should be displayed
+     */
+    public List<String> currentHoverText = Lists.newArrayList();
     /**
      * The Items available to select within the List Gui
      */
     public List<String> itemList;
-
     /**
      * The Rendering Type to render the slots in
      */
     public RenderType renderType;
+
+    /**
+     * The current screen instance
+     */
+    public ExtendedScreen currentScreen;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -71,8 +87,8 @@ public class ScrollableListControl extends GuiSlot {
      * @param itemList     The List of items to allocate for the slots in the Gui
      * @param currentValue The current value, if any, to select upon initialization of the Gui
      */
-    public ScrollableListControl(Minecraft mc, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue) {
-        this(mc, width, height, topIn, bottomIn, slotHeightIn, itemList, currentValue, RenderType.None);
+    public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue) {
+        this(mc, currentScreen, width, height, topIn, bottomIn, slotHeightIn, itemList, currentValue, RenderType.None);
     }
 
     /**
@@ -88,8 +104,9 @@ public class ScrollableListControl extends GuiSlot {
      * @param currentValue The current value, if any, to select upon initialization of the Gui
      * @param renderType   The Rendering type for this Scroll List
      */
-    public ScrollableListControl(Minecraft mc, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue, RenderType renderType) {
+    public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue, RenderType renderType) {
         super(mc, width, height, topIn, bottomIn, slotHeightIn);
+        this.currentScreen = currentScreen;
         this.itemList = itemList;
         this.currentValue = currentValue;
         this.renderType = renderType;
@@ -155,7 +172,9 @@ public class ScrollableListControl extends GuiSlot {
     @Override
     protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks) {
         int xOffset = xPos;
-        String displayName = getSelectedItem(slotIndex);
+        String originalName = getSelectedItem(slotIndex);
+        String displayName = originalName;
+        List<String> hoverText = Lists.newArrayList();
         if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
                 ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
                         (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
@@ -177,11 +196,15 @@ public class ScrollableListControl extends GuiSlot {
                         renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
                         displayName
                 );
+                if (currentScreen.isDebugMode()) {
+                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
+                }
                 texture = ImageUtils.getTextureFromUrl(displayName, assetUrl);
             } else if (renderType == RenderType.EntityData) {
                 if (StringUtils.isValidUuid(displayName)) {
                     // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
-                    displayName = StringUtils.getFromUuid(displayName);
+                    String uuid = StringUtils.getFromUuid(displayName, true);
+                    displayName = CraftPresence.ENTITIES.PLAYER_BINDINGS.getOrDefault(uuid, uuid);
                     if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
                         texture = ImageUtils.getTextureFromUrl(displayName, String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, displayName));
                     }
@@ -191,11 +214,22 @@ public class ScrollableListControl extends GuiSlot {
             }
             if (!ImageUtils.isTextureNull(texture)) {
                 CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
+                if (currentScreen.isDebugMode()) {
+                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
+                }
             }
             // Note: 35 Added to xOffset to accommodate for Image Size
             xOffset += 35;
         }
+        if (!originalName.equals(displayName)) {
+            entryAliases.put(originalName, displayName);
+            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.list.original") + " " + originalName);
+        }
         getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+
+        if (CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, getListWidth(), heightIn)) {
+            currentHoverText = hoverText;
+        }
     }
 
     /**

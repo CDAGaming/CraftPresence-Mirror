@@ -203,7 +203,7 @@ public class SelectorGui extends ExtendedScreen {
 
             scrollList = addList(
                     new ScrollableListControl(
-                            mc,
+                            mc, this,
                             getScreenWidth(), getScreenHeight(),
                             32, getScreenHeight() - 45, renderType != RenderType.None && !CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements ? 45 : 18,
                             itemList, originalValue,
@@ -244,8 +244,18 @@ public class SelectorGui extends ExtendedScreen {
             if (!searchBox.getControlMessage().equals(searchTerm)) {
                 searchTerm = searchBox.getControlMessage();
                 for (String item : originalList) {
-                    if (item.toLowerCase().contains(searchTerm.toLowerCase()) && !modifiedList.contains(item.toLowerCase())) {
-                        modifiedList.add(item);
+                    if (!modifiedList.contains(item)) {
+                        final List<String> entriesToCheck = Lists.newArrayList(item);
+                        if (scrollList.entryAliases.containsKey(item)) {
+                            entriesToCheck.add(scrollList.entryAliases.get(item));
+                        }
+
+                        for (String entry : entriesToCheck) {
+                            if (entry.toLowerCase().contains(searchTerm.toLowerCase())) {
+                                modifiedList.add(item);
+                                break;
+                            }
+                        }
                     }
                 }
                 itemList = modifiedList;
@@ -265,6 +275,7 @@ public class SelectorGui extends ExtendedScreen {
         }
 
         scrollList.itemList = itemList;
+        scrollList.currentHoverText.clear();
 
         proceedButton.setControlMessage(
                 allowContinuing && scrollList.currentValue != null &&
@@ -281,5 +292,9 @@ public class SelectorGui extends ExtendedScreen {
 
         renderString(searchText, (30 - (getStringWidth(searchText) / 2f)), (getScreenHeight() - 25), 0xFFFFFF);
         renderString(displayText, (getScreenWidth() / 2f) - (getStringWidth(displayText) / 2f), 15, 0xFFFFFF);
+
+        if (scrollList.currentHoverText != null && !scrollList.currentHoverText.isEmpty()) {
+            CraftPresence.GUIS.drawMultiLineString(scrollList.currentHoverText, this, true);
+        }
     }
 }
