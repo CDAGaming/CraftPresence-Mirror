@@ -258,7 +258,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         final String secondaryText = secondaryInput != null ? secondaryInput.getControlMessage() : "";
         final boolean isSecondaryEmpty = StringUtils.isNullOrEmpty(secondaryText);
 
-        hasChanged = !currentData.getData().equals(originalData.getData());
+        hasChanged = currentData.getData() != null && !currentData.getData().equals(originalData.getData());
         if (!hasChanged) {
             final String originalIcon = originalData.getIconOverride() != null ? originalData.getIconOverride() : "";
             final String currentIcon = currentData.getIconOverride() != null ? currentData.getIconOverride() : "";
