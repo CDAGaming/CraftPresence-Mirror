@@ -300,11 +300,13 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-tasks.withType(Javadoc) {
-    exclude "${classPath}/config/category/**"
-    exclude "${classPath}/config/element/**"
-    exclude "${classPath}/config/gui/**"
-    exclude "${classPath}/integrations/**"
+gradle.projectsEvaluated {
+    tasks.withType(Javadoc) {
+        exclude "${classPath}/config/category/**"
+        exclude "${classPath}/config/element/**"
+        exclude "${classPath}/config/gui/**"
+        exclude "${classPath}/integrations/**"
+    }
 }
 
 task generateMyResources {
