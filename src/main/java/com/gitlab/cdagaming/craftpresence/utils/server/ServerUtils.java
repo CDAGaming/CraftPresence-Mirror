@@ -131,7 +131,7 @@ public class ServerUtils {
      */
     private String currentServerMessage = "";
     /**
-     * TODO
+     * Whether the endpoint icon system can be used in this module
      */
     private boolean canUseEndpointIcon = false;
     /**
@@ -626,8 +626,8 @@ public class ServerUtils {
             } else {
                 // NOTE: Server-Only Presence Updates
                 final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-                final String alternateMessage = Config.isValidProperty(alternateData, "textOverride") ? alternateData.getTextOverride() : defaultMessage;
-                currentServerMessage = Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : alternateMessage;
+                final String alternateMessage = alternateData != null && Config.isValidProperty(alternateData, "textOverride") ? alternateData.getTextOverride() : defaultMessage;
+                currentServerMessage = primaryData != null && Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : alternateMessage;
 
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.
