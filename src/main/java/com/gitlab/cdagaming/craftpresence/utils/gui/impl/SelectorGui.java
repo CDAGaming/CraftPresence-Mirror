@@ -274,7 +274,7 @@ public class SelectorGui extends ExtendedScreen {
             scrollList.currentValue = originalValue;
         }
 
-        scrollList.itemList = itemList;
+        scrollList.setList(itemList);
         scrollList.currentHoverText.clear();
 
         proceedButton.setControlMessage(

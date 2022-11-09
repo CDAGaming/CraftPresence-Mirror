@@ -40,6 +40,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * IE You can set the `textOverride` to be an empty string in the frontend, and the mod will respect that
 * Fixed preliminary-supplied data being able to be removed via the Dynamic Editor Screen
     * Only the config entry should have been effected, not the actual module data list
+* Fixed Out-Of-Bound issues when there are less then 3 or 4 search results in a Scrollable List
+    * This issue caused no elements to display until you scrolled, causing it to clamp back to normal values
+    * The list will now reset the scroll when the list is updated
 
 ### Translations
 

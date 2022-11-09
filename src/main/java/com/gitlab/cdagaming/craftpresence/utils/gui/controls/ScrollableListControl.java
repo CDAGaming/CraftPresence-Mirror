@@ -108,8 +108,8 @@ public class ScrollableListControl extends GuiSlot {
      */
     public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue, RenderType renderType) {
         super(mc, width, height, topIn, bottomIn, slotHeightIn);
+        setList(itemList);
         this.currentScreen = currentScreen;
-        this.itemList = itemList;
         this.currentValue = currentValue;
         this.renderType = renderType;
 
@@ -265,6 +265,24 @@ public class ScrollableListControl extends GuiSlot {
      */
     public int getFontHeight() {
         return getFontRenderer().FONT_HEIGHT;
+    }
+
+    /**
+     * Sets the item list to be rendered (And resets the scroll if needed)
+     *
+     * @param itemList The list to interpret
+     */
+    public void setList(List<String> itemList) {
+        if (itemList == null) {
+            itemList = Lists.newArrayList();
+        }
+        if (!itemList.equals(this.itemList)) {
+            this.itemList = itemList;
+            // Reset the scrollbar to prevent OOB issues
+            if (amountScrolled != 0.0f) {
+                amountScrolled = 0.0f;
+            }
+        }
     }
 
     /**
