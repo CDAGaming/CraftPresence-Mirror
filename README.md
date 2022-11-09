@@ -372,6 +372,7 @@ the `&[TARGETENTITY|RIDINGENTITY]:[placeholderName]&` format.
 Example: `&[TARGETENTITY|RIDINGENTITY]:ENTITY&` == `&ENTITY&`
 
 * `&ENTITY&` - The Entity Name
+* `&ICON&` - The Default Entity Icon Name
 
 Additionally, these sub placeholders support nbt data, where in this case the Entity's nbt data is parsed into
 sub-placeholders (Outlined in Tooltips)
