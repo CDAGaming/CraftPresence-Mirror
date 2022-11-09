@@ -43,6 +43,10 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Fixed Out-Of-Bound issues when there are less then 3 or 4 search results in a Scrollable List
     * This issue caused no elements to display until you scrolled, causing it to clamp back to normal values
     * The list will now reset the scroll when the list is updated
+* Fixed Issues where data relying on the `children` list was unavailable in 1.13+ ports (Tab-Focus changing)
+* Fixed Issues where the focus status was not being checked for `keyPressed` and `charTyped` on 1.13+ ports
+    * This also fixes hearing a clicking sound when `KP_ENTER`, `ENTER` or the spacebar was pushed while focused on a
+      text box
 
 ### Translations
 
