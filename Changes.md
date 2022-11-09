@@ -47,6 +47,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Fixed Issues where the focus status was not being checked for `keyPressed` and `charTyped` on 1.13+ ports
     * This also fixes hearing a clicking sound when `KP_ENTER`, `ENTER` or the spacebar was pushed while focused on a
       text box
+* Backend: Fixed `ImageUtils` dynamic texture creation not complying with 1.13+ namespace requirements
 
 ### Translations
 
