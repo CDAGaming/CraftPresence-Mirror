@@ -23,13 +23,15 @@ sourceSets {
     }
 }
 
-version = "${versionId}"
+def versionInfoLabel = "${deploymentType.equalsIgnoreCase("release") ? "" : "-${versionLabel}"}"
+def baseVersionLabel = "${versionId + versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
+
+version = "${baseVersionLabel + "+" + mc_version}"
 group = "com.gitlab.cdagaming"
 
-def versionFileLabel = "${versionLabel.equalsIgnoreCase("release") ? "" : "+${versionLabel}"}"
 def classPath = "${group}".replace(".", "/") + "/${mod_name}".toLowerCase()
 
-archivesBaseName = "${archive_name}-${mc_version}${versionFileLabel.replaceAll("\\s", ".")}"
+archivesBaseName = "${archive_name}"
 
 JavaVersion targetVersion = JavaVersion.VERSION_1_8
 
@@ -73,7 +75,7 @@ curseforge {
         }
 
         mainArtifact(remapJar) {
-            it.displayName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
+            it.displayName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
         }
     }
 }
@@ -81,8 +83,8 @@ curseforge {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "${mod_name}".toLowerCase()
-    versionNumber = "v${version}_${mc_version}-${loader_name}${versionFileLabel}".replaceAll("\\s", "").toLowerCase()
-    versionName = "${archive_name} v${version} ${versionLabel} (${mc_version})"
+    versionNumber = "v${version}_${loader_name}".replaceAll("\\s", "").toLowerCase()
+    versionName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
     changelog = file("Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
     uploadFile = remapJar
@@ -351,34 +353,34 @@ task generateMyResources {
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version.toString()
+    inputs.property "version", "${baseVersionLabel}"
     inputs.property "mcversion", "${mc_version}"
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("mcmod.info") {
         // replace version and mcversion
-        expand 'version': project.version.toString(),
+        expand 'version': "${baseVersionLabel}",
                 'mcversion': "${mc_version}"
     }
 
     // replace stuff in mods.toml, nothing else
     filesMatching("META-INF/mods.toml") {
         // replace version and mcversion
-        expand 'version': project.version.toString(),
+        expand 'version': "${baseVersionLabel}",
                 'mcversion': "${mc_version}"
     }
 
     // replace stuff in mods.toml, nothing else
     filesMatching("fabric.mod.json") {
         // replace version and mcversion
-        expand 'version': project.version.toString(),
+        expand 'version': "${baseVersionLabel}",
                 'mcversion': "${mc_version}"
     }
 
     // replace stuff in mod_modId.info, nothing else
     filesMatching("mod_${mod_name}.info") {
         // replace version
-        expand 'version': project.version.toString()
+        expand 'version': "${baseVersionLabel}"
     }
 
     filesMatching("mappings.srg") {
