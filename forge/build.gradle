@@ -1,0 +1,80 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    forge {
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+    }
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${rootProject.mc_version}-${rootProject.forge_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) {
+        transitive false
+    }
+    common(project(path: ":common", configuration: "shade"))
+    common(project(path: ":common", configuration: "shadeOnly"))
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
+        transitive false
+    }
+}
+
+processResources {
+    inputs.property "version", project.version.toString()
+    inputs.property "mcversion", "${rootProject.mc_version}"
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version.toString(),
+                "mcversion": "${rootProject.mc_version}"
+    }
+}
+
+shadowJar {
+    mustRunAfter(project(":common").tasks.shadowJar)
+    dependsOn(project(":common").tasks.shadowJar)
+    from zipTree(project(":common").tasks.shadowJar.archivePath)
+    exclude "fabric.mod.json"
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier "forge"
+}
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    duplicatesStrategy 'exclude'
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}

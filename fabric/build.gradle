@@ -1,0 +1,90 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+repositories {
+    maven {
+        name = 'TerraformersMC'
+        url = 'https://maven.terraformersmc.com/releases/'
+    }
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    // Required for loading translation data
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
+    include(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
+
+    // Mod Menu API Implementation
+    modImplementation "${rootProject.modmenu_group}:modmenu:${rootProject.modmenu_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) {
+        transitive false
+    }
+    common(project(path: ":common", configuration: "shade"))
+    common(project(path: ":common", configuration: "shadeOnly"))
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
+        transitive false
+    }
+}
+
+processResources {
+    inputs.property "version", project.version.toString()
+    inputs.property "mcversion", "${rootProject.mc_version}"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version.toString(),
+                "mcversion": "${rootProject.mc_version}"
+    }
+
+    from 'LICENSE'
+}
+
+shadowJar {
+    mustRunAfter(project(":common").tasks.shadowJar)
+    dependsOn(project(":common").tasks.shadowJar)
+    from zipTree(project(":common").tasks.shadowJar.archivePath)
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier "fabric"
+}
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    duplicatesStrategy 'exclude'
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}

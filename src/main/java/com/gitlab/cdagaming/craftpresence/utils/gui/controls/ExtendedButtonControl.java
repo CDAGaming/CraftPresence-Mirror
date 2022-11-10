@@ -29,9 +29,11 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.File;
 
@@ -41,7 +43,7 @@ import java.io.File;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class ExtendedButtonControl extends GuiButton {
+public class ExtendedButtonControl extends Button {
     /**
      * Optional Arguments used for functions within the Mod, if any
      */
@@ -57,7 +59,7 @@ public class ExtendedButtonControl extends GuiButton {
     /**
      * The current running Font Render Instance for this control
      */
-    private FontRenderer currentFontRender = null;
+    private Font currentFontRender = null;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -71,7 +73,8 @@ public class ExtendedButtonControl extends GuiButton {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
-        super(buttonId, x, y, widthIn, heightIn, buttonText);
+        super(x, y, widthIn, heightIn, buttonText, (button) -> {
+        });
 
         this.optionalArgs = optionalArgs;
     }
@@ -122,7 +125,8 @@ public class ExtendedButtonControl extends GuiButton {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
-        super(CraftPresence.GUIS.getNextIndex(), x, y, widthIn, heightIn, buttonText);
+        super(x, y, widthIn, heightIn, buttonText, (button) -> {
+        });
         this.optionalArgs = optionalArgs;
     }
 
@@ -168,7 +172,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @param displayString The display text, to display within this Control
      */
     public ExtendedButtonControl(int id, int xPos, int yPos, String displayString) {
-        super(id, xPos, yPos, displayString);
+        this(xPos, yPos, 200, 20, displayString);
     }
 
     /**
@@ -185,14 +189,14 @@ public class ExtendedButtonControl extends GuiButton {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            final int hoverState = getHoverState(hovered);
+            isHovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
+            final int hoverState = getYImage(isHovered);
 
             String backgroundCode = CraftPresence.CONFIG.buttonBackgroundColor;
             ResourceLocation texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                CraftPresence.GUIS.drawGradientRect(zLevel, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
+                CraftPresence.GUIS.drawGradientRect(blitOffset, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
             } else {
                 final boolean usingExternalTexture = ImageUtils.isExternalImage(backgroundCode);
 
@@ -214,15 +218,15 @@ public class ExtendedButtonControl extends GuiButton {
                     texLocation = ImageUtils.getTextureFromUrl(textureName, backgroundCode.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
                 }
 
-                CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
+                CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, blitOffset, texLocation);
             }
 
             renderBg(CraftPresence.instance, mouseX, mouseY);
             final int color;
 
-            if (!enabled) {
+            if (!active) {
                 color = 10526880;
-            } else if (hovered) {
+            } else if (isHovered) {
                 color = 16777120;
             } else {
                 color = 14737632;
@@ -273,7 +277,7 @@ public class ExtendedButtonControl extends GuiButton {
      *
      * @return The Current Font Renderer for this Control
      */
-    public FontRenderer getFontRenderer() {
+    public Font getFontRenderer() {
         return currentFontRender != null ? currentFontRender : GuiUtils.getDefaultFontRenderer();
     }
 
@@ -282,7 +286,7 @@ public class ExtendedButtonControl extends GuiButton {
      *
      * @param currentFontRender The new current font renderer
      */
-    public void setCurrentFontRender(final FontRenderer currentFontRender) {
+    public void setCurrentFontRender(final Font currentFontRender) {
         this.currentFontRender = currentFontRender;
     }
 
@@ -292,7 +296,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Current Font Height for this Control
      */
     public int getFontHeight() {
-        return getFontRenderer().FONT_HEIGHT;
+        return getFontRenderer().lineHeight;
     }
 
     /**
@@ -353,6 +357,24 @@ public class ExtendedButtonControl extends GuiButton {
     }
 
     /**
+     * Gets the control's current raw display message
+     *
+     * @return The control's current raw display message
+     */
+    public Component getControlRawMessage() {
+        return new TextComponent(this.getMessage());
+    }
+
+    /**
+     * Sets the control's raw display message to the specified value
+     *
+     * @param newMessage The new raw display message for this control
+     */
+    public void setControlRawMessage(final Component newMessage) {
+        this.setMessage(newMessage.getString());
+    }
+
+    /**
      * Gets the control's current display message
      *
      * @return The control's current display message
@@ -379,7 +401,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The control's current text contents
      */
     public String getControlMessage() {
-        return this.displayString;
+        return getControlRawMessage().getString();
     }
 
     /**
@@ -388,7 +410,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        this.displayString = newMessage;
+        setControlRawMessage(new TextComponent(newMessage));
     }
 
     /**
@@ -397,7 +419,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return Whether the control is currently active or enabled
      */
     public boolean isControlEnabled() {
-        return this.enabled;
+        return this.active;
     }
 
     /**
@@ -406,7 +428,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @param isEnabled The new enable state for this control
      */
     public void setControlEnabled(final boolean isEnabled) {
-        this.enabled = isEnabled;
+        this.active = isEnabled;
     }
 
     /**

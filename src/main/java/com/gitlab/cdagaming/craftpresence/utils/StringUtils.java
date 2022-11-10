@@ -29,9 +29,9 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
@@ -1078,12 +1078,12 @@ public class StringUtils {
      * @param message The Message to send and display in chat
      */
     public static void sendMessageToPlayer(final Entity sender, final String message) {
-        if (sender instanceof EntityPlayer) {
-            final EntityPlayer player = (EntityPlayer) sender;
+        if (sender instanceof Player) {
+            final Player player = (Player) sender;
             final List<String> lines = splitTextByNewLine(message);
             if (!lines.isEmpty()) {
                 for (String line : lines) {
-                    player.sendMessage(new TextComponentString(line));
+                    player.displayClientMessage(new TextComponent(line), false);
                 }
             }
         }

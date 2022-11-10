@@ -37,7 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
@@ -45,7 +45,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
             smallImageKeyFormat, largeImageKeyFormat;
     private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
 
-    PresenceSettingsGui(GuiScreen parentScreen) {
+    PresenceSettingsGui(Screen parentScreen) {
         super(parentScreen);
     }
 

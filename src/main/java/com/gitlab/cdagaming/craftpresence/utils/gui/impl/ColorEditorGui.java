@@ -35,8 +35,8 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 import java.io.File;
@@ -60,7 +60,7 @@ public class ColorEditorGui extends PaginatedScreen {
     private boolean isModified = false;
     private ResourceLocation currentTexture;
 
-    public ColorEditorGui(GuiScreen parentScreen, String configValueName, PairConsumer<Integer, ColorEditorGui> onAdjustEntry, DataConsumer<ColorEditorGui> onInit) {
+    public ColorEditorGui(Screen parentScreen, String configValueName, PairConsumer<Integer, ColorEditorGui> onAdjustEntry, DataConsumer<ColorEditorGui> onInit) {
         super(parentScreen);
         this.configValueName = configValueName;
         this.onAdjustEntry = onAdjustEntry;
@@ -222,7 +222,7 @@ public class ColorEditorGui extends PaginatedScreen {
             }
 
             // Ensure the Texture is refreshed consistently, if an external texture
-            double widthDivider = 32.0D, heightDivider = 32.0D;
+            float widthDivider = 32.0f, heightDivider = 32.0f;
 
             if (usingExternalTexture) {
                 final String formattedConvertedName = currentConvertedTexturePath.replaceFirst("file://", "");

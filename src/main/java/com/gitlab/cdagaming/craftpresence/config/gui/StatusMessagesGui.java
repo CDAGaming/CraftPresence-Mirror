@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class StatusMessagesGui extends PaginatedScreen {
@@ -38,7 +38,7 @@ public class StatusMessagesGui extends PaginatedScreen {
             outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
             playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, viveCraftMessage, fallbackPackPlaceholderMessage;
 
-    StatusMessagesGui(GuiScreen parentScreen) {
+    StatusMessagesGui(Screen parentScreen) {
         super(parentScreen);
     }
 

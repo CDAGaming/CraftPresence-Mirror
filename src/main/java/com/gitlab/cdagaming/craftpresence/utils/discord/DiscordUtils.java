@@ -970,10 +970,10 @@ public class DiscordUtils {
 
         // Add Any Generalized Argument Data needed
         modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
-        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getUsername()));
+        playerInfoArgs.add(new Pair<>("&NAME&", CraftPresence.session.getName()));
 
         // UUID Data
-        final String uniqueId = CraftPresence.session.getPlayerID();
+        final String uniqueId = CraftPresence.session.getUuid();
         playerInfoArgs.add(new Pair<>("&UUID&", StringUtils.getFromUuid(uniqueId, true)));
         playerInfoArgs.add(new Pair<>("&UUID_FULL&", StringUtils.getFromUuid(uniqueId, false)));
 

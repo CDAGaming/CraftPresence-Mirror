@@ -35,7 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.List;
 public class MainGui extends ExtendedScreen {
     private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, commandGUIButton;
 
-    public MainGui(GuiScreen parentScreen) {
+    public MainGui(Screen parentScreen) {
         super(parentScreen);
     }
 
@@ -242,8 +242,8 @@ public class MainGui extends ExtendedScreen {
                             }
 
                             CraftPresence.GUIS.configGUIOpened = false;
-                            if (mc.player != null) {
-                                mc.player.closeScreen();
+                            if (minecraft.player != null) {
+                                minecraft.player.closeContainer();
                             } else {
                                 CraftPresence.GUIS.openScreen(parentScreen);
                             }

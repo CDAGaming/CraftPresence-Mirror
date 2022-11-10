@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.impl;
 
-import net.minecraft.client.renderer.texture.NativeImage;
+import com.mojang.blaze3d.platform.NativeImage;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

@@ -32,9 +32,9 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
@@ -270,7 +270,7 @@ public class ImageUtils {
                 }
                 try {
                     final DynamicTexture dynTexture = new DynamicTexture(bufferData.getSecond().get(bufferData.getFirst()).getNativeImage());
-                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName + (textureName.endsWith(".gif") ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
+                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().register(textureName + (textureName.endsWith(".gif") ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
                     if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
                         if (doesContinue) {
                             bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(System.currentTimeMillis());

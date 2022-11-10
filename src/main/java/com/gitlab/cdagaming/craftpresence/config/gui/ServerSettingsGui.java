@@ -34,14 +34,14 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class ServerSettingsGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton, serverMessagesButton;
     private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
 
-    ServerSettingsGui(GuiScreen parentScreen) {
+    ServerSettingsGui(Screen parentScreen) {
         super(parentScreen);
     }
 

@@ -36,7 +36,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.jagrosh.discordipc.entities.DiscordBuild;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ExtendedScreen {
@@ -50,7 +50,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
     private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
     private int currentPreferredClient = DiscordBuild.ANY.ordinal();
 
-    GeneralSettingsGui(GuiScreen parentScreen) {
+    GeneralSettingsGui(Screen parentScreen) {
         super(parentScreen);
     }
 

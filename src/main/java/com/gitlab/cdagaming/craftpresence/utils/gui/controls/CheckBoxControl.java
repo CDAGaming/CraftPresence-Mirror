@@ -57,7 +57,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
         is_Checked = isChecked;
         boxWidth = 11;
         height = 11;
-        width = boxWidth + 2 + getFontRenderer().getStringWidth(getDisplayMessage());
+        width = boxWidth + 2 + getFontRenderer().width(getDisplayMessage());
     }
 
     /**
@@ -138,8 +138,8 @@ public class CheckBoxControl extends ExtendedButtonControl {
     @Override
     public void render(int mouseX, int mouseY, float partial) {
         if (visible) {
-            hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, BUTTON_TEXTURES);
+            isHovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
+            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), blitOffset, WIDGETS_LOCATION);
             renderBg(CraftPresence.instance, mouseX, mouseY);
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
@@ -156,7 +156,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      */
     @Override
     public void onClick(double mouseX, double mouseY) {
-        if (isControlEnabled() && visible && hovered) {
+        if (isControlEnabled() && visible && isHovered) {
             is_Checked = !is_Checked;
         }
     }

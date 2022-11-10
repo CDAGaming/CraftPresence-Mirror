@@ -33,9 +33,9 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.util.registry.IRegistry;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 
 import java.util.List;
 import java.util.Map;
@@ -139,12 +139,12 @@ public class DimensionUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateDimensionData() {
-        final Dimension newProvider = CraftPresence.player.world.dimension;
+        final Dimension newProvider = CraftPresence.player.level.dimension;
         final DimensionType newDimensionType = newProvider.getType();
         final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.toString(), false, !CraftPresence.CONFIG.formatWords);
 
         final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(newDimensionType.toString(), true, !CraftPresence.CONFIG.formatWords);
-        final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.formatWords);
+        final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newDimensionType), true, !CraftPresence.CONFIG.formatWords);
         final String newDimension_Identifier = !StringUtils.isNullOrEmpty(newDimension_primaryIdentifier) ? newDimension_primaryIdentifier : newDimension_alternativeIdentifier;
 
         if (!newDimensionName.equals(CURRENT_DIMENSION_NAME) || !newDimension_Identifier.equals(CURRENT_DIMENSION_IDENTIFIER)) {
@@ -206,7 +206,7 @@ public class DimensionUtils {
      */
     private List<DimensionType> getDimensionTypes() {
         List<DimensionType> dimensionTypes = Lists.newArrayList();
-        List<DimensionType> defaultDimensionTypes = Lists.newArrayList(IRegistry.DIMENSION_TYPE.iterator());
+        List<DimensionType> defaultDimensionTypes = Lists.newArrayList(Registry.DIMENSION_TYPE.iterator());
         Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.lookupObject(DimensionType.class, null, "dimensionTypes");
 
         if (!defaultDimensionTypes.isEmpty()) {
