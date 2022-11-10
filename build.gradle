@@ -198,8 +198,8 @@ dependencies {
     }
 
     // Legacy Dependencies, based on Protocol Version
+    int protocol = "${mc_protocol}".toInteger()
     if ("${isLegacy}".toBoolean()) {
-        int protocol = "${mc_protocol}".toInteger()
         if (protocol <= 78) { // MC 1.6.4 and below
             shade('commons-codec:commons-codec:1.15')
         }
@@ -231,7 +231,11 @@ dependencies {
         shade('org.slf4j:slf4j-jdk14:1.7.36')
     } else {
         runtimeOnly('org.slf4j:slf4j-jdk14:1.7.36')
-        shadeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.0') {
+
+        // 17w15a (1.12) and higher use 2.x's full releases of Log4j
+        // while anything below that uses (Or should be using) the *fixed* version of 2.0-beta9
+        def log4j_version = protocol >= 321 ? "2.0" : "2.0-beta9"
+        shadeOnly("org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}") {
             exclude group: 'org.apache.logging.log4j', module: "log4j-api"
             exclude group: 'org.apache.logging.log4j', module: "log4j-core"
         }

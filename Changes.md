@@ -1,23 +1,18 @@
 # CraftPresence Changes
 
-## v1.9.5 (10/25/2022)
+## v1.9.6 (11/10/2022)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.4...release%2Fv1.9.5)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.5...release%2Fv1.9.6)_
 
 ### Changes
 
-* Performance Improvements have been made for the following areas of the mod:
-    * Discord Asset Retrieval and Caching (Also addresses cases of log spam from assets not currently in use)
-    * Tick Rates of Module Clear Functions (No longer run on every tick, instead only when in use, and is no longer
-      active or enabled)
-    * Tick Rates of Immutable (Non-changing) Placeholder syncing (No longer runs on every tick, only on RPC
-      initialization)
+* Updated Translations
 
 ### Fixes
 
-* Backend: Adjusted Shadowed Dependency relocations in buildscript, to resolve class issues
-    * Mostly present with `JUnixSocket`, `GSON` and Unix Systems
+* Backend: Fix a critical issue relating to the Logging Systems used within the mod
+  * This fixes a crash that would occur between SLF4j and Log4j on 1.7.x up to 17w15a (When the Log4j version used updated past `2.0 beta 9`)
 
 ___
 
