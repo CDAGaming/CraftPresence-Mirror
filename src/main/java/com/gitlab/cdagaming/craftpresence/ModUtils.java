@@ -54,11 +54,6 @@ public class ModUtils {
     public static final String VERSION_TYPE;
 
     /**
-     * The Application's Version Release Type Display Name
-     */
-    public static final String VERSION_LABEL;
-
-    /**
      * The Application's Identifier
      */
     public static final String MOD_ID = "craftpresence";
@@ -150,7 +145,6 @@ public class ModUtils {
         NAME = "@MOD_NAME@";
         VERSION_ID = "v@VERSION_ID@";
         VERSION_TYPE = "@VERSION_TYPE@";
-        VERSION_LABEL = "@VERSION_LABEL@";
         MCVersion = "@MC_VERSION@";
         MCProtocolID = Integer.parseInt("@MC_PROTOCOL@");
         TRANSLATOR = new TranslationUtils(MOD_ID, true);

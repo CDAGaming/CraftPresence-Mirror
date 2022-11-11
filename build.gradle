@@ -406,12 +406,11 @@ task processSource(type: Sync) {
 
     from sourceSets.main.java
     filter(ReplaceTokens, tokens: [
-            MOD_NAME     : mod_name,
-            VERSION_ID   : versionId,
-            VERSION_TYPE : deploymentType,
-            VERSION_LABEL: versionLabel,
-            MC_VERSION   : mc_version,
-            MC_PROTOCOL  : mc_protocol
+            MOD_NAME    : mod_name,
+            VERSION_ID  : baseVersionLabel,
+            VERSION_TYPE: deploymentType,
+            MC_VERSION  : mc_version,
+            MC_PROTOCOL : mc_protocol
     ])
     into copyDir
 }

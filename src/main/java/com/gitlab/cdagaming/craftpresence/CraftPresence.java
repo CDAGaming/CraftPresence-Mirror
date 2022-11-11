@@ -176,7 +176,6 @@ public class CraftPresence {
                 // Then replace the Version ID, Name, and Type
                 StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_ID", "v" + ModUtils.UPDATER.targetVersion, ~Modifier.FINAL));
                 StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_TYPE", ModUtils.UPDATER.currentState.getDisplayName(), ~Modifier.FINAL));
-                StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_LABEL", ModUtils.UPDATER.currentState.getDisplayName(), ~Modifier.FINAL));
                 StringUtils.updateField(ModUtils.class, null, new Tuple<>("NAME", CraftPresence.class.getSimpleName(), ~Modifier.FINAL));
 
                 ModUtils.UPDATER.currentVersion = ModUtils.UPDATER.targetVersion;

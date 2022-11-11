@@ -68,7 +68,6 @@ public class UpdateInfoGui extends ExtendedScreen {
                                         // Then replace the Version ID, Name, and Type
                                         StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_ID", "v" + modUpdater.targetVersion, ~Modifier.FINAL));
                                         StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_TYPE", modUpdater.currentState.getDisplayName(), ~Modifier.FINAL));
-                                        StringUtils.updateField(ModUtils.class, null, new Tuple<>("VERSION_LABEL", modUpdater.currentState.getDisplayName(), ~Modifier.FINAL));
                                         StringUtils.updateField(ModUtils.class, null, new Tuple<>("NAME", CraftPresence.class.getSimpleName(), ~Modifier.FINAL));
 
                                         modUpdater.currentVersion = modUpdater.targetVersion;
