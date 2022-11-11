@@ -108,6 +108,7 @@ public class BiomeUtils {
         isInUse = false;
         CraftPresence.CLIENT.removeArgumentsMatching(subArgumentFormat);
         CraftPresence.CLIENT.initArgument(argumentFormat);
+        CraftPresence.CLIENT.clearOverride(argumentFormat);
     }
 
     /**

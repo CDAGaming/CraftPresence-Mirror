@@ -455,6 +455,19 @@ public class DiscordUtils {
     }
 
     /**
+     * Remove {@link ModuleData} overrides for the specified placeholder
+     *
+     * @param args The Specified Argument(s) to interpret
+     */
+    public void clearOverride(String... args) {
+        for (String argumentName : args) {
+            if (!StringUtils.isNullOrEmpty(argumentName)) {
+                overrideData.remove(argumentName);
+            }
+        }
+    }
+
+    /**
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for

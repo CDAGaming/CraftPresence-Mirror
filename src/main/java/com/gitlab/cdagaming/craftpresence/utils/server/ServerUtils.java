@@ -256,6 +256,7 @@ public class ServerUtils {
         subArgumentData.clear();
 
         CraftPresence.CLIENT.initArgument(argumentFormat);
+        CraftPresence.CLIENT.clearOverride(argumentFormat);
         CraftPresence.CLIENT.clearPartyData(true, false);
     }
 

@@ -151,6 +151,7 @@ public class EntityUtils {
         isInUse = false;
         CraftPresence.CLIENT.removeArgumentsMatching("&TARGETENTITY:", "&RIDINGENTITY:");
         CraftPresence.CLIENT.initArgument("&TARGETENTITY&", "&RIDINGENTITY&");
+        CraftPresence.CLIENT.clearOverride("&TARGETENTITY&", "&RIDINGENTITY&");
     }
 
     /**
