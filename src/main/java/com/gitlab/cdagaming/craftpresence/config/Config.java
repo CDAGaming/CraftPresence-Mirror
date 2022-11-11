@@ -320,14 +320,14 @@ public final class Config extends Module implements Serializable {
 
         // Global Case 1 Notes (KeyCode):
         // In this situation, if the currently parsed protocol version differs and
-        // is a newer version then 1.12.2 (340), then
-        // we need to ensure any keycode assignments are in an LWJGL 3 format
-        // Otherwise, if using a config from above 1.12.2 (340) on it or anything lower,
+        // is a newer version then or exactly 17w43a (1.13, 341), then
+        // we need to ensure any keycode assignments are in an LWJGL 3 format.
+        // Otherwise, if our current protocol version is anything less then 17w43a (1.13, 341),
         // we need to ensure any keycode assignments are in an LWJGL 2 format.
         // If neither is true, then we mark the migration data as None, and it will be verified
-        if (oldMCVer <= 340 && MC_VERSION > 340) {
+        if (oldMCVer < 341 && MC_VERSION >= 341) {
             keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl3;
-        } else if (oldMCVer > 340 && MC_VERSION <= 340) {
+        } else if (oldMCVer >= 341 && MC_VERSION < 341) {
             keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl2;
         } else if (oldMCVer >= 0 && MC_VERSION >= 0) {
             keyCodeMigrationId = KeyConverter.ConversionMode.None;
@@ -337,14 +337,14 @@ public final class Config extends Module implements Serializable {
 
         // Normal Case 1 Notes (Language ID):
         // In this situation, if the currently parsed protocol version differs and
-        // is a newer version then or exactly 1.11 (315), then
-        // we need to ensure any Language Locale's are complying with Pack Format 3 and above
-        // Otherwise, if using a config from anything less then 1.11 (315),
-        // we need to ensure any Language Locale's are complying with Pack Format 2 and below
+        // is a newer version then or exactly 16w32a (1.11, 301), then
+        // we need to ensure any Language Locale's are complying with Pack Format 3 and above.
+        // Otherwise, if our current protocol version is anything less then 16w32a (1.11, 301),
+        // we need to ensure any Language Locale's are complying with Pack Format 2 and below.
         // If neither is true, then we mark the migration data as None, and it will be verified
-        if (oldMCVer < 315 && MC_VERSION >= 315) {
+        if (oldMCVer < 301 && MC_VERSION >= 301) {
             languageMigrationId = TranslationUtils.ConversionMode.PackFormat3;
-        } else if (oldMCVer >= 315 && MC_VERSION < 315) {
+        } else if (oldMCVer >= 301 && MC_VERSION < 301) {
             languageMigrationId = TranslationUtils.ConversionMode.PackFormat2;
         } else if (oldMCVer >= 0 && MC_VERSION >= 0) {
             languageMigrationId = TranslationUtils.ConversionMode.None;
