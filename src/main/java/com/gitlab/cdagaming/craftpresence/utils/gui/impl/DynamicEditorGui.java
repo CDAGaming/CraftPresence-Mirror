@@ -40,7 +40,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private final PairConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
     private final TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
-    public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
+    public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     public ModuleData defaultData, originalData, currentData;
     private ExtendedButtonControl proceedButton;
@@ -96,6 +96,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             }
         }
 
+        this.isModuleMode = defaultData != null || currentData != null;
         this.willRenderSecondaryInput = isNewValue || overrideSecondaryRender;
 
         if (StringUtils.isNullOrEmpty(primaryText)) {
@@ -109,7 +110,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             if (isPreliminaryData && !StringUtils.isNullOrEmpty(attributeName)) {
                 mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
             }
-            if (defaultData != null && currentData == null) {
+            if (isModuleMode && defaultData != null && currentData == null) {
                 currentData = new ModuleData(defaultData);
             }
         } else if (!isDefaultValue) {
@@ -128,7 +129,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             );
         }
 
-        if (originalData == null) {
+        if (isModuleMode && originalData == null) {
             originalData = new ModuleData(currentData);
         }
 
@@ -258,11 +259,13 @@ public class DynamicEditorGui extends ExtendedScreen {
         final String secondaryText = secondaryInput != null ? secondaryInput.getControlMessage() : "";
         final boolean isSecondaryEmpty = StringUtils.isNullOrEmpty(secondaryText);
 
-        hasChanged = currentData.getData() != null && !currentData.getData().equals(originalData.getData());
-        if (!hasChanged) {
-            final String originalIcon = originalData.getIconOverride() != null ? originalData.getIconOverride() : "";
-            final String currentIcon = currentData.getIconOverride() != null ? currentData.getIconOverride() : "";
-            hasChanged = hasChanged || !currentIcon.equals(originalIcon);
+        if (isModuleMode) {
+            hasChanged = currentData.getData() != null && !currentData.getData().equals(originalData.getData());
+            if (!hasChanged) {
+                final String originalIcon = originalData.getIconOverride() != null ? originalData.getIconOverride() : "";
+                final String currentIcon = currentData.getIconOverride() != null ? currentData.getIconOverride() : "";
+                hasChanged = hasChanged || !currentIcon.equals(originalIcon);
+            }
         }
 
         if (hasChanged) {
