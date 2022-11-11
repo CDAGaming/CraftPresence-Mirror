@@ -124,6 +124,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                                 if (onRemoveEntry != null) {
                                     onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                                 }
+                                CraftPresence.GUIS.openScreen(parentScreen);
                             }
                     )
             );
