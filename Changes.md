@@ -23,6 +23,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       Discord Asset List, and doing similar activity for the player's head icon.
 * Multiple Accessibility improvements have been made to the GUI in an effort to be more descriptive and user-friendly
 * Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
+* UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
+    * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
 
 ### Fixes
 

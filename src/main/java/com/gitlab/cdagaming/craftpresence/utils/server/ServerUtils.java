@@ -425,6 +425,7 @@ public class ServerUtils {
                 currentPlayerList = newPlayerList;
 
                 if (CraftPresence.ENTITIES.enabled) {
+                    CraftPresence.ENTITIES.ENTITY_NAMES.removeAll(CraftPresence.ENTITIES.PLAYER_BINDINGS.keySet());
                     CraftPresence.ENTITIES.getEntities();
                 }
             }
