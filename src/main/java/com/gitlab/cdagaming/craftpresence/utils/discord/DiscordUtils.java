@@ -401,7 +401,7 @@ public class DiscordUtils {
                         final ModuleData data = overrideData.get(match);
                         if (Config.isValidProperty(data, "data")) {
                             Object overrideResult = null;
-                            if (overridePath.length == 2 && overridePath[0].startsWith("buttons_")) {
+                            if (overridePath.length == 2 && overridePath[0].startsWith("button_")) {
                                 final Map<String, Button> buttons = data.getData().buttons;
                                 if (!buttons.isEmpty() && buttons.containsKey(overridePath[0])) {
                                     overrideResult = buttons.get(overridePath[0]).getProperty(overridePath[1]);
