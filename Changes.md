@@ -3,7 +3,7 @@
 ## v2.0.0 Alpha 1 (11/29/2022)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.5...release%2Fv2.0.0+Alpha.1)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0+Alpha.1)_
 
 ### Changes
 

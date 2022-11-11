@@ -38,7 +38,9 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -90,19 +92,26 @@ public final class Config extends Module implements Serializable {
             if (forceCreate || isNew) {
                 config = new Config();
                 config.isNewFile = isNew;
+                config._schemaVersion = VERSION;
+                config._lastMCVersionId = MC_VERSION;
             }
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-            ex.printStackTrace();
+            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) || ModUtils.IS_VERBOSE) {
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+                ex.printStackTrace();
+            }
         }
 
         if (config == null) {
             config = new Config();
             config.isNewFile = true;
+            config._schemaVersion = VERSION;
+            config._lastMCVersionId = MC_VERSION;
         }
+        final boolean wasNewFile = config.isNewFile;
         config.handleSync(rawJson);
         config.save();
-        if (config.isNewFile) {
+        if (wasNewFile) {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.new"));
         } else {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
@@ -295,7 +304,7 @@ public final class Config extends Module implements Serializable {
     }
 
     public JsonElement handleSync(JsonElement rawJson) {
-        if (_schemaVersion != VERSION) {
+        if (isNewFile || _schemaVersion != VERSION) {
             int oldVer = _schemaVersion;
             rawJson = handleMigrations(rawJson, oldVer, VERSION);
             _schemaVersion = VERSION;
