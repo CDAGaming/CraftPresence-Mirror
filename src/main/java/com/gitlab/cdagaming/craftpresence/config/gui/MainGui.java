@@ -328,10 +328,10 @@ public class MainGui extends ExtendedScreen {
     }
 
     private void syncRenderStates() {
-        biomeSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : biomeSet.isControlEnabled());
-        dimensionSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectDimensionData : dimensionSet.isControlEnabled());
-        serverSet.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : serverSet.isControlEnabled());
-        commandGUIButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enableCommands : commandGUIButton.isControlEnabled());
+        biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
+        dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
+        serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
+        commandGUIButton.setControlEnabled(CraftPresence.CONFIG.advancedSettings.enableCommands);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
 
         proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");

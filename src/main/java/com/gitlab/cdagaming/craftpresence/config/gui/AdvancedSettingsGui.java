@@ -768,10 +768,10 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
         );
 
-        guiMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.GUIS.enabled : guiMessagesButton.isControlEnabled());
-        itemMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.TILE_ENTITIES.enabled : itemMessagesButton.isControlEnabled());
-        entityTargetMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.ENTITIES.enabled : entityTargetMessagesButton.isControlEnabled());
-        entityRidingMessagesButton.setControlEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.ENTITIES.enabled : entityRidingMessagesButton.isControlEnabled());
+        guiMessagesButton.setControlEnabled(CraftPresence.GUIS.enabled);
+        itemMessagesButton.setControlEnabled(CraftPresence.TILE_ENTITIES.enabled);
+        entityTargetMessagesButton.setControlEnabled(CraftPresence.ENTITIES.enabled);
+        entityRidingMessagesButton.setControlEnabled(CraftPresence.ENTITIES.enabled);
     }
 
     @Override
