@@ -363,9 +363,9 @@ public class ServerUtils {
             // &PLAYERINFO& Sub-Arguments
 
             // &coords& Argument = Current Coordinates of Player
-            final double newX = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.x : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
-            final double newY = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.y : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
-            final double newZ = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.z : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
+            final double newX = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.getX() : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
+            final double newY = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.getY() : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
+            final double newZ = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.getZ() : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
             final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(newX, newY, newZ);
             if (!newCoordinates.equals(currentCoordinates)) {
                 currentCoordinates = newCoordinates;

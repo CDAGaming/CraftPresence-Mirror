@@ -227,7 +227,7 @@ public class SliderControl extends ExtendedButtonControl {
 
             onSlide();
             final int hoverValue = (isHovered() ? 2 : 1) * 20;
-            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, blitOffset, WIDGETS_LOCATION);
+            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, getBlitOffset(), WIDGETS_LOCATION);
         }
     }
 
