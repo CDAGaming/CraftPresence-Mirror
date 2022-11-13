@@ -321,7 +321,8 @@ Example: `&SERVER:WORLDINFO:DIFFICULTY&` == `&DIFFICULTY&`
 
 * `&DIFFICULTY&` - The current world's difficulty
 * `&WORLDNAME&` - The name of the current world
-* `&WORLDTIME&` - The current world's in-game time
+* `&WORLDTIME&` - The current world's in-game time (24-hour format)
+* `&WORLDTIME12&` - The current world's in-game time (12-hour format)
 * `&WORLDDAY&` - The current world's in-game day count
 
 ___

@@ -25,6 +25,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
 * UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
     * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
+* Added placeholders:
+    * `&SERVER:WORLDINFO:WORLDTIME12&` - A 12-hour format of the `&WORLDTIME&` placeholder
 
 ### Fixes
 
@@ -56,13 +58,21 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 The following changes have been made for translations:
 
 * Added:
+    * `gui.config.message.editor.original`
     * `gui.config.message.button.remove`
+    * `gui.config.{name,defaults}.advanced.allow_endpoint_icons` (Added Property)
+    * `gui.config.{name,comment}.advanced.server_icon_endpoint` (Added Property)
+    * `craftpresence.placeholders.SERVER.WORLDINFO.WORLDTIME12.description` (Added Placeholder)
+    * `craftpresence.placeholders.{SCREEN,TARGETENTITY,RIDINGENTITY}.ICON.description` (Added Placeholders)
 * Modified:
     * `gui.config.comment.button.sync.config` (Modified for new config file name)
+    * `craftpresence.placeholders.SERVER.WORLDINFO.WORLDTIME.description` (Adjusted description to clarify 24-hour
+      format)
 * Removed:
     * `craftpresence.logger.error.config.adjust.global`
     * `craftpresence.logger.info.config.notice`
     * `craftpresence.exception.config.prop.null`
+    * `gui.config.{name,comment}.advanced.split_character` (Removed Property)
 
 ___
 

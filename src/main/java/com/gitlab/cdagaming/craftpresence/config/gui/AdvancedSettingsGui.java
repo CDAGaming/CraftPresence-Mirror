@@ -62,7 +62,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
 
         allowEndpointIconsButton = addControl(
                 new CheckBoxControl(
-                        calc1+2, CraftPresence.GUIS.getButtonY(1, 3),
+                        calc1 + 2, CraftPresence.GUIS.getButtonY(1, 3),
                         "gui.config.name.advanced.allow_endpoint_icons",
                         CONFIG.allowEndpointIcons,
                         null,
