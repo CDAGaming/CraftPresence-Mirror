@@ -206,9 +206,13 @@ public final class Config extends Module implements Serializable {
             final Object parentValue = getProperty(path);
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
                 final String rawName = pathPrefix + entry.getKey();
+                final List<String> configPath = Lists.newArrayList(path);
+                configPath.add(entry.getKey());
+                final String[] pathData = configPath.toArray(new String[0]);
+
                 final JsonElement rawValue = entry.getValue();
-                Object defaultValue = getDefaults().getProperty(rawName);
-                Object currentValue = getProperty(rawName);
+                Object defaultValue = getDefaults().getProperty(pathData);
+                Object currentValue = getProperty(pathData);
                 boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
@@ -246,7 +250,7 @@ public final class Config extends Module implements Serializable {
                                                 final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
                                                 if (migratedKeyCode != boolData.getSecond()) {
                                                     ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
-                                                    setProperty(rawName, migratedKeyCode);
+                                                    setProperty(migratedKeyCode, pathData);
                                                 }
                                             }
                                             break;
@@ -261,7 +265,7 @@ public final class Config extends Module implements Serializable {
                                 if (!newData.containsKey("default")) {
                                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", rawName));
                                     newData.putAll(defaultData);
-                                    setProperty(rawName, newData);
+                                    setProperty(newData, pathData);
                                 } else if (entry.getValue().isJsonObject()) {
                                     for (Object dataEntry : newData.keySet()) {
                                         final List<String> paths = Lists.newArrayList(path);
@@ -283,7 +287,7 @@ public final class Config extends Module implements Serializable {
                                             final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
                                             if (!migratedLanguageId.equals(rawStringValue)) {
                                                 ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
-                                                setProperty(rawName, migratedLanguageId);
+                                                setProperty((Object) migratedLanguageId, pathData);
                                             }
                                         }
                                         break;
@@ -294,7 +298,7 @@ public final class Config extends Module implements Serializable {
 
                         if (shouldReset) {
                             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.empty", rawName));
-                            resetProperty(rawName);
+                            resetProperty(pathData);
                         }
                     }
                 }
@@ -371,19 +375,21 @@ public final class Config extends Module implements Serializable {
 
         String name = null;
         for (int i = 0; i < path.length; i++) {
-            name = path[i];
-            if (instance instanceof Map) {
-                result = new HashMap((Map) instance).get(name);
-            } else {
-                result = StringUtils.lookupObject(classObj, instance, name);
-            }
-            if (result != null) {
-                if (i < path.length - 1) {
-                    classObj = result.getClass();
-                    instance = result;
+            if (!StringUtils.isNullOrEmpty(path[i])) {
+                name = path[i];
+                if (instance instanceof Map) {
+                    result = new HashMap((Map) instance).get(name);
+                } else {
+                    result = StringUtils.lookupObject(classObj, instance, name);
                 }
-            } else {
-                break;
+                if (result != null) {
+                    if (i < path.length - 1) {
+                        classObj = result.getClass();
+                        instance = result;
+                    }
+                } else {
+                    break;
+                }
             }
         }
         return new Pair<>(result, new Tuple<>(classObj, instance, name));
