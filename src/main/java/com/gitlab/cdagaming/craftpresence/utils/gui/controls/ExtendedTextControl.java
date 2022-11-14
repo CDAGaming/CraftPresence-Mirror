@@ -36,6 +36,10 @@ import net.minecraft.client.gui.GuiTextField;
  */
 public class ExtendedTextControl extends GuiTextField {
     /**
+     * The default character limit for all controls of this type
+     */
+    private static final int DEFAULT_TEXT_LIMIT = 2048;
+    /**
      * The event to occur when a key event occurs
      */
     private Runnable onKeyEvent;
@@ -52,6 +56,7 @@ public class ExtendedTextControl extends GuiTextField {
      */
     public ExtendedTextControl(int componentId, FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
         super(componentId, fontRendererObj, x, y, widthIn, heightIn);
+        setControlMaxLength(DEFAULT_TEXT_LIMIT);
     }
 
     /**

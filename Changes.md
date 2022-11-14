@@ -25,6 +25,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
 * UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
     * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
+* Backend: Increased the default text limit for all `ExtendedTextControl`'s
+    * Due to this change, minified placeholder support has been removed from the backend (Can be re-added in a future
+      update, if needed)
 * Added placeholders:
     * `&SERVER:WORLDINFO:WORLDTIME12&` - A 12-hour format of the `&WORLDTIME&` placeholder
 

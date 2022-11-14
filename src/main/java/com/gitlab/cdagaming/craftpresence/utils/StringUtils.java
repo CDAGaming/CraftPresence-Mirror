@@ -267,32 +267,9 @@ public class StringUtils {
      * @return The completed and replaced String
      */
     public static String replaceAnyCase(final String source, final String targetToReplace, final String replaceWith) {
-        return replaceAnyCase(source, targetToReplace, replaceWith, true);
-    }
-
-    /**
-     * Replaces Data in a String with Case-Insensitivity
-     *
-     * @param source          The original String to replace within
-     * @param targetToReplace The value to replace on
-     * @param replaceWith     The value to replace the target with
-     * @param allowMinified   Flag for whether to allow Minified Placeholders (Trimmed String down to a length of 4)
-     * @return The completed and replaced String
-     */
-    public static String replaceAnyCase(final String source, final String targetToReplace, final String replaceWith, final boolean allowMinified) {
         if (!isNullOrEmpty(source)) {
-            String finalString = Pattern.compile(targetToReplace, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(source)
+            return Pattern.compile(targetToReplace, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(source)
                     .replaceAll(Matcher.quoteReplacement(replaceWith));
-
-            if (allowMinified) {
-                String minifiedTarget = minifyString(targetToReplace, 4);
-                if (!minifiedTarget.endsWith("&")) {
-                    minifiedTarget += "&";
-                }
-                finalString = Pattern.compile(minifiedTarget, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(finalString)
-                        .replaceAll(Matcher.quoteReplacement(replaceWith));
-            }
-            return finalString;
         } else {
             return "";
         }
@@ -301,32 +278,19 @@ public class StringUtils {
     /**
      * Replaces Data in a sequential order, following Case-Insensitivity
      *
-     * @param source      The original String to replace within
-     * @param replaceArgs The replacement list to follow with the form of: targetToReplace:replaceWithValue
-     * @return The completed and replaced String
-     */
-    @SafeVarargs
-    public static String sequentialReplaceAnyCase(final String source, final List<Pair<String, String>>... replaceArgs) {
-        return sequentialReplaceAnyCase(source, true, replaceArgs);
-    }
-
-    /**
-     * Replaces Data in a sequential order, following Case-Insensitivity
-     *
      * @param source        The original String to replace within
-     * @param allowMinified Flag for whether to allow Minified Placeholders (Trimmed String down to a length of 4)
      * @param replaceArgs   The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */
     @SafeVarargs
-    public static String sequentialReplaceAnyCase(final String source, final boolean allowMinified, final List<Pair<String, String>>... replaceArgs) {
+    public static String sequentialReplaceAnyCase(final String source, final List<Pair<String, String>>... replaceArgs) {
         if (!isNullOrEmpty(source)) {
             String finalResult = source;
 
             for (List<Pair<String, String>> replaceData : replaceArgs) {
                 if (!replaceData.isEmpty()) {
                     for (Pair<String, String> replacementData : replaceData) {
-                        finalResult = replaceAnyCase(finalResult, replacementData.getFirst(), replacementData.getSecond(), allowMinified);
+                        finalResult = replaceAnyCase(finalResult, replacementData.getFirst(), replacementData.getSecond());
                     }
                 }
             }
