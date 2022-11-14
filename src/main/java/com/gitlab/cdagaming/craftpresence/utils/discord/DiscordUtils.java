@@ -1137,7 +1137,8 @@ public class DiscordUtils {
                         finalKey = evalString;
                         break;
                     } else {
-                        if (i++ < evalStrings.length) {
+                        i++;
+                        if (i < evalStrings.length) {
                             if (showLogging) {
                                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.fallback", evalString, evalStrings[i]));
                                 if (evalString.equals(primaryKey)) {
