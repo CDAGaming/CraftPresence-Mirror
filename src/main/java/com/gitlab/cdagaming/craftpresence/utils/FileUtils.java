@@ -275,7 +275,7 @@ public class FileUtils {
                 }
 
                 if (!found && includeExtraClasses) {
-                    final Class<?> extraClass = Class.forName(startString, false, ModUtils.CLASS_LOADER);
+                    final Class<?> extraClass = findValidClass(startString);
                     found = true;
                     candidateClasses.add(extraClass);
                 }
@@ -357,6 +357,22 @@ public class FileUtils {
      */
     public static List<Class<?>> getClassNamesMatchingSuperType(final Class<?> searchTarget, final boolean includeExtraClasses, final String... sourcePackages) {
         return getClassNamesMatchingSuperType(Lists.newArrayList(searchTarget), includeExtraClasses, sourcePackages);
+    }
+
+    /**
+     * Return whether or not a class exists out of the specified arguments
+     *
+     * @param paths The class path(s) to interpret
+     * @return the valid {@link Class<>} or null
+     */
+    public static Class<?> findValidClass(final String... paths) {
+        for (String path : paths) {
+            try {
+                return Class.forName(path, false, ModUtils.CLASS_LOADER);
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
     }
 
     /**
