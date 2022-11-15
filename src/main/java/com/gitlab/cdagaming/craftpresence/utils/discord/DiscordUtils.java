@@ -223,6 +223,10 @@ public class DiscordUtils {
      */
     public boolean awaitingReply = false;
     /**
+     * When this is not null, {@link DiscordUtils#buildRichPresence(PresenceData)} will use this data instead of the generic data
+     */
+    public PresenceData forcedData = null;
+    /**
      * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
      */
     public List<Pair<String, String>> generalArgs = Lists.newArrayList();
@@ -341,7 +345,7 @@ public class DiscordUtils {
      * @return the output list
      */
     public List<String> createButtonsList() {
-        return createButtonsList(CraftPresence.CONFIG.displaySettings.presenceData.buttons);
+        return createButtonsList(getPresenceData().buttons);
     }
 
     /**
@@ -448,10 +452,23 @@ public class DiscordUtils {
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the specified argument
      */
-    public void syncOverride(String argumentName, ModuleData data) {
+    public void syncOverride(String argumentName, ModuleData data, final boolean forcePresence) {
         if (!StringUtils.isNullOrEmpty(argumentName)) {
             overrideData.put(argumentName, data);
         }
+        if (forcePresence && data != null && Config.getProperty(data, "data") != null) {
+            forcedData = data.getData();
+        }
+    }
+
+    /**
+     * Sync {@link ModuleData} overrides for the specified placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the specified argument
+     */
+    public void syncOverride(String argumentName, ModuleData data) {
+        syncOverride(argumentName, data, false);
     }
 
     /**
@@ -461,8 +478,15 @@ public class DiscordUtils {
      */
     public void clearOverride(String... args) {
         for (String argumentName : args) {
-            if (!StringUtils.isNullOrEmpty(argumentName)) {
+            if (!StringUtils.isNullOrEmpty(argumentName) && overrideData.containsKey(argumentName)) {
+                final ModuleData oldData = overrideData.get(argumentName);
                 overrideData.remove(argumentName);
+
+                if (oldData != null && Config.getProperty(oldData, "data") != null) {
+                    if (oldData.getData().equals(forcedData)) {
+                        forcedData = null;
+                    }
+                }
             }
         }
     }
@@ -754,7 +778,7 @@ public class DiscordUtils {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : foundPackIcon;
 
-        syncOverride("&PACK&", currentData != null ? currentData : new ModuleData());
+        syncOverride("&PACK&", currentData);
         syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(currentMessage, packArgs), ArgumentType.Text);
         syncArgument("&PACK&", !StringUtils.isNullOrEmpty(currentIcon) ? StringUtils.formatAsIcon(currentIcon) : "", ArgumentType.Image);
     }
@@ -1208,7 +1232,7 @@ public class DiscordUtils {
      * @return whether any of the inputs are currently being used as an RPC image
      */
     public boolean isImageInUse(final String... evalStrings) {
-        final PresenceData configData = CraftPresence.CONFIG.displaySettings.presenceData;
+        final PresenceData configData = getPresenceData();
         for (String evalString : evalStrings) {
             if (configData.largeImageKey.contains(evalString) ||
                     configData.smallImageKey.contains(evalString)
@@ -1299,9 +1323,8 @@ public class DiscordUtils {
      *
      * @return A New Instance of {@link RichPresence}
      */
-    public RichPresence buildRichPresence() {
+    public RichPresence buildRichPresence(final PresenceData configData) {
         // Format Presence based on Arguments available in argumentData
-        final PresenceData configData = CraftPresence.CONFIG.displaySettings.presenceData;
         DETAILS = StringUtils.formatWord(parseArgumentOperators(configData.details, "details", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
         GAME_STATE = StringUtils.formatWord(parseArgumentOperators(configData.gameState, "gameState", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
@@ -1318,7 +1341,7 @@ public class DiscordUtils {
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
-        for (Map.Entry<String, Button> buttonElement : CraftPresence.CONFIG.displaySettings.presenceData.buttons.entrySet()) {
+        for (Map.Entry<String, Button> buttonElement : configData.buttons.entrySet()) {
             JsonObject buttonObj = new JsonObject();
             String overrideId = "button_" + (BUTTONS.size() + 1);
             if (!StringUtils.isNullOrEmpty(buttonElement.getKey()) &&
@@ -1369,5 +1392,23 @@ public class DiscordUtils {
         SMALL_IMAGE_TEXT = StringUtils.getConvertedString(SMALL_IMAGE_TEXT, "UTF-8", false);
 
         return newRPCData;
+    }
+
+    /**
+     * Builds a New Instance of {@link RichPresence} based on Queued Data
+     *
+     * @return A New Instance of {@link RichPresence}
+     */
+    public RichPresence buildRichPresence() {
+        return buildRichPresence(getPresenceData());
+    }
+
+    /**
+     * Retrieve the current {@link PresenceData} being used for {@link RichPresence} builders
+     *
+     * @return the currently used instance of {@link PresenceData}
+     */
+    public PresenceData getPresenceData() {
+        return forcedData != null ? forcedData : CraftPresence.CONFIG.displaySettings.presenceData;
     }
 }
