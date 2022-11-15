@@ -30,17 +30,18 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.Registry;
-import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.dimension.DimensionType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Dimension Utilities used to Parse Dimension Data and handle related RPC Events
@@ -51,7 +52,7 @@ public class DimensionUtils {
     /**
      * A List of the detected Dimension Type's
      */
-    private final List<DimensionType> DIMENSION_TYPES = Lists.newArrayList();
+    private final List<ResourceLocation> DIMENSION_TYPES = Lists.newArrayList();
     /**
      * The argument format to follow for Rich Presence Data
      */
@@ -142,8 +143,7 @@ public class DimensionUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateDimensionData() {
-        final Dimension newProvider = CraftPresence.player.level.dimension;
-        final DimensionType newDimensionType = newProvider.getType();
+        final ResourceLocation newDimensionType = CraftPresence.player.level.dimension().location();
         final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.toString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
         final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(newDimensionType.toString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
@@ -211,43 +211,17 @@ public class DimensionUtils {
      *
      * @return The detected Dimension Types found
      */
-    private List<DimensionType> getDimensionTypes() {
-        List<DimensionType> dimensionTypes = Lists.newArrayList();
-        List<DimensionType> defaultDimensionTypes = Lists.newArrayList(Registry.DIMENSION_TYPE.iterator());
-        Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.lookupObject(DimensionType.class, null, "dimensionTypes");
+    private List<ResourceLocation> getDimensionTypes() {
+        List<ResourceLocation> dimensionTypes = Lists.newArrayList();
+        Optional<? extends Registry<DimensionType>> dimensionRegistry = RegistryAccess.builtin().registry(Registry.DIMENSION_TYPE_REGISTRY);
 
-        if (!defaultDimensionTypes.isEmpty()) {
-            for (DimensionType type : defaultDimensionTypes) {
-                if (type != null) {
-                    dimensionTypes.add(type);
-                }
-            }
-        }
+        if (dimensionRegistry.isPresent()) {
+            List<ResourceLocation> defaultDimensionTypes = Lists.newArrayList(dimensionRegistry.get().keySet());
 
-        if (dimensionTypes.isEmpty()) {
-            // Fallback 1: Use Reflected Dimension Types
-            if (reflectedDimensionTypes != null) {
-                for (Object objectType : reflectedDimensionTypes.values()) {
-                    DimensionType type = (objectType instanceof DimensionType) ? (DimensionType) objectType : null;
-
-                    if (type != null && !dimensionTypes.contains(type)) {
+            if (!defaultDimensionTypes.isEmpty()) {
+                for (ResourceLocation type : defaultDimensionTypes) {
+                    if (type != null) {
                         dimensionTypes.add(type);
-                    }
-                }
-            } else {
-                // Fallback 2: Use Manual Class Lookup
-                for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Dimension.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
-                    if (classObj != null) {
-                        try {
-                            Dimension providerObj = (Dimension) classObj.getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj.getType())) {
-                                dimensionTypes.add(providerObj.getType());
-                            }
-                        } catch (Exception | Error ex) {
-                            if (ModUtils.IS_VERBOSE) {
-                                ex.printStackTrace();
-                            }
-                        }
                     }
                 }
             }
@@ -260,7 +234,7 @@ public class DimensionUtils {
      * Updates and Initializes Module Data, based on found Information
      */
     public void getDimensions() {
-        for (DimensionType TYPE : getDimensionTypes()) {
+        for (ResourceLocation TYPE : getDimensionTypes()) {
             if (TYPE != null) {
                 String dimensionName = !StringUtils.isNullOrEmpty(TYPE.toString()) ? TYPE.toString() : MappingUtils.getClassName(TYPE);
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);

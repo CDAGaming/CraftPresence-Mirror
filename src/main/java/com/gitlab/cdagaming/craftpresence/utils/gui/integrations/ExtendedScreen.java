@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -64,6 +65,10 @@ public class ExtendedScreen extends Screen {
      * Similar to buttonList, a list of compatible ScrollLists in this Screen
      */
     protected final List<ScrollableListControl> extendedLists = Lists.newArrayList();
+    /**
+     * Current Stored MatrixStack for this Instance
+     */
+    protected PoseStack currentMatrix = new PoseStack();
     /**
      * Variable needed to ensure all buttons are initialized before rendering to prevent an NPE
      */
@@ -254,12 +259,15 @@ public class ExtendedScreen extends Screen {
     /**
      * Renders this Screen, including controls and post-Hover Events
      *
+     * @param matrixStack  The Matrix Stack, used for Rendering
      * @param mouseX       The Event Mouse X Coordinate
      * @param mouseY       The Event Mouse Y Coordinate
      * @param partialTicks The Rendering Tick Rate
      */
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        currentMatrix = matrixStack;
+
         // Ensures initialization events have run first, preventing an NPE
         if (initialized) {
             renderCriticalData();
@@ -267,22 +275,22 @@ public class ExtendedScreen extends Screen {
 
             for (ScrollableListControl listControl : extendedLists) {
                 if (listControl.isVisible()) {
-                    listControl.render(mouseX, mouseY, partialTicks);
+                    listControl.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
             }
 
             for (GuiEventListener extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedButtonControl) {
                     final ExtendedButtonControl button = (ExtendedButtonControl) extendedControl;
-                    button.render(mouseX, mouseY, partialTicks);
+                    button.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.render(mouseX, mouseY, partialTicks);
+                    textField.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
             }
 
-            super.render(mouseX, mouseY, partialTicks);
+            super.render(matrixStack, mouseX, mouseY, partialTicks);
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
@@ -401,7 +409,7 @@ public class ExtendedScreen extends Screen {
      * @param color The color to render the text in
      */
     public void renderString(String text, float xPos, float yPos, int color) {
-        getFontRenderer().drawShadow(text, xPos, yPos, color);
+        getFontRenderer().drawShadow(currentMatrix, text, xPos, yPos, color);
     }
 
     /**

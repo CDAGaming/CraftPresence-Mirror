@@ -247,7 +247,7 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     public void renderString(String text, float xPos, float yPos, int color, int renderTarget) {
         if (renderTarget == currentPage) {
-            getFontRenderer().drawShadow(text, xPos, yPos, color);
+            getFontRenderer().drawShadow(currentMatrix, text, xPos, yPos, color);
         }
     }
 

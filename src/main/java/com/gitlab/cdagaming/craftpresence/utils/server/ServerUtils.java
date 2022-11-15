@@ -308,7 +308,7 @@ public class ServerUtils {
             int newMaxPlayers;
             if (newServerData != null) {
                 try {
-                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status).split("/")[1]).getSecond();
+                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status.getString()).split("/")[1]).getSecond();
 
                     if (newMaxPlayers < newCurrentPlayers) {
                         newMaxPlayers = newCurrentPlayers + 1;
@@ -321,15 +321,15 @@ public class ServerUtils {
             }
 
             final boolean newLANStatus = (CraftPresence.instance.isLocalServer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isLan());
-            final boolean isMotdValid = newServerData != null && newServerData.motd != null && !StringUtils.isNullOrEmpty(newServerData.motd);
+            final boolean isMotdValid = newServerData != null && newServerData.motd != null && !StringUtils.isNullOrEmpty(newServerData.motd.getString());
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.ip) ? newServerData.ip : "127.0.0.1";
             final String newServer_Name = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
             final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isLocalServer() && (newServerData != null && isMotdValid) &&
-                    !(newServerData.motd.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.cannot_connect")) ||
-                            newServerData.motd.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.cannot_resolve")) ||
-                            newServerData.motd.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.polling")) ||
-                            newServerData.motd.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.pinging"))) ? StringUtils.stripColors(newServerData.motd) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+                    !(newServerData.motd.getString().equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.cannot_connect")) ||
+                            newServerData.motd.getString().equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.cannot_resolve")) ||
+                            newServerData.motd.getString().equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.polling")) ||
+                            newServerData.motd.getString().equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.pinging"))) ? StringUtils.stripColors(newServerData.motd.getString()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
             if (newLANStatus != isOnLAN || ((newServerData != null && !newServerData.equals(currentServerData)) ||
                     (newServerData == null && currentServerData != null)) ||
@@ -391,8 +391,10 @@ public class ServerUtils {
             }
 
             // &worldname& Argument = Current Name of the World
-            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getLevelName() : "";
-            final String secondaryWorldName = CraftPresence.player != null ? CraftPresence.player.level.getLevelData().getLevelName() : ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
+            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getWorldData().getLevelName() : "";
+            final String secondaryWorldName = CraftPresence.player != null && CraftPresence.player.level != null && CraftPresence.player.level.getServer() != null ?
+                    CraftPresence.player.level.getServer().getWorldData().getLevelName() :
+                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = !StringUtils.isNullOrEmpty(primaryWorldName) ? primaryWorldName : secondaryWorldName;
             if (!newWorldName.equals(currentWorldName)) {
                 currentWorldName = newWorldName;

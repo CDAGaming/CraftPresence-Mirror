@@ -23,9 +23,6 @@
       "com.gitlab.cdagaming.craftpresence.fabric.impl.ModMenuImpl"
     ]
   },
-  "custom": {
-    "modmenu:clientsideOnly": true
-  },
   "depends": {
     "fabricloader": ">=0.14.10",
     "fabric-resource-loader-v0": "*",

@@ -26,6 +26,9 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * Gui Widget for a Clickable Checkbox-Style Button
@@ -136,17 +139,17 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Draws this button to the screen.
      */
     @Override
-    public void render(int mouseX, int mouseY, float partial) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partial) {
         if (visible) {
             isHovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
             CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), getBlitOffset(), WIDGETS_LOCATION);
-            renderBg(CraftPresence.instance, mouseX, mouseY);
+            renderBg(matrixStack, CraftPresence.instance, mouseX, mouseY);
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (is_Checked)
-                drawCenteredString(getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
+                drawCenteredString(matrixStack, getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
 
-            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
+            drawString(matrixStack, getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
         }
     }
 

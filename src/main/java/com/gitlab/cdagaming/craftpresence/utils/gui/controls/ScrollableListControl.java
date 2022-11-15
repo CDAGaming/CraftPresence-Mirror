@@ -34,12 +34,14 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -146,7 +148,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
      * Renders the Background for this Control
      */
     @Override
-    protected void renderBackground() {
+    protected void renderBackground(@Nonnull PoseStack matrixStack) {
         if (getItemCount() != children().size()) {
             clearEntries();
             updateEntries();
@@ -316,6 +318,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
         /**
          * Renders this Entry to the List
          *
+         * @param matrices    The Matrix Stack, used for Rendering
          * @param index       The Index of the Entry within the List
          * @param yPos        The Y Coordinate to render at
          * @param xPos        The X Coordinate to render at
@@ -327,7 +330,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
          * @param tickDelta   The Rendering Tick Rate
          */
         @Override
-        public void render(int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(@Nonnull PoseStack matrices, int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             final String originalName = name;
             final List<String> hoverText = Lists.newArrayList();
             String displayName = entryAliases.getOrDefault(originalName, originalName);
@@ -390,7 +393,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
             if (!originalName.equals(displayName)) {
                 hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + originalName);
             }
-            getFontRenderer().drawShadow(displayName, xOffset, yPos + ((entryHeight / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+            getFontRenderer().drawShadow(matrices, displayName, xOffset, yPos + ((entryHeight / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 
             if (CraftPresence.GUIS.isMouseOver(mouseX, mouseY, xPos, yPos, entryWidth, entryHeight)) {
                 currentHoverText = hoverText;

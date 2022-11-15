@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.TextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -57,7 +58,7 @@ public class ExtendedTextControl extends EditBox {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(int componentId, Font fontRendererObj, int x, int y, int widthIn, int heightIn) {
-        super(fontRendererObj, x, y, widthIn, heightIn, "");
+        super(fontRendererObj, x, y, widthIn, heightIn, new TextComponent(""));
         setControlMaxLength(DEFAULT_TEXT_LIMIT);
     }
 

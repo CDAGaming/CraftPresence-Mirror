@@ -41,8 +41,11 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -579,7 +582,7 @@ public class GuiUtils {
             }
 
             if (withBackground) {
-                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                RenderSystem.disableDepthTest();
 
                 final int zLevel = 300;
                 String backgroundColor, borderColor;
@@ -689,7 +692,7 @@ public class GuiUtils {
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 String line = textLines.get(lineNumber);
-                fontRenderer.drawShadow(line, tooltipX, tooltipY, -1);
+                fontRenderer.drawShadow(new PoseStack(), line, tooltipX, tooltipY, -1);
 
                 if (lineNumber + 1 == titleLinesCount) {
                     tooltipY += 2;
@@ -699,7 +702,7 @@ public class GuiUtils {
             }
 
             if (withBackground) {
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                RenderSystem.enableDepthTest();
             }
         }
     }
@@ -794,7 +797,7 @@ public class GuiUtils {
             }
         } catch (Exception ignored) {
         }
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         drawTexturedModalRect(x, y, u, v, width, height, zLevel);
         drawTexturedModalRect(x + 4, y, u + 196, v, width, height, zLevel);
@@ -818,9 +821,10 @@ public class GuiUtils {
             }
         } catch (Exception ignored) {
         }
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         final int v = 46 + hoverState * 20;
         final int xOffset = width / 2;
@@ -828,7 +832,7 @@ public class GuiUtils {
         drawTexturedModalRect(x, y, 0, v, xOffset, height, zLevel);
         drawTexturedModalRect(x + xOffset, y, 200 - xOffset, v, xOffset, height, zLevel);
 
-        GL11.glDisable(GL11.GL_BLEND);
+        RenderSystem.disableBlend();
     }
 
     /**
@@ -868,9 +872,7 @@ public class GuiUtils {
         } catch (Exception ignored) {
         }
 
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_FOG);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         final Tuple<Integer, Integer, Integer> rgbData = new Tuple<>(shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255);
 
@@ -931,12 +933,12 @@ public class GuiUtils {
         endGreen = (endColorInstance >> 8 & 255) / 255.0F;
         endBlue = (endColorInstance & 255) / 255.0F;
 
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
@@ -947,11 +949,10 @@ public class GuiUtils {
         buffer.vertex(right, bottom, zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
         tessellator.end();
 
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.enableTexture();
+        RenderSystem.enableDepthTest();
     }
 
     /**
@@ -974,9 +975,10 @@ public class GuiUtils {
             }
         } catch (Exception ignored) {
         }
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         int x = positionData.getFirst();
         int y = positionData.getSecond();
