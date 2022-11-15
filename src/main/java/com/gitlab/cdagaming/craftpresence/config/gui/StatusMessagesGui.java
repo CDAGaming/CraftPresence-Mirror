@@ -48,8 +48,6 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class StatusMessagesGui extends PaginatedScreen {
     private final Status CONFIG;
-    private ExtendedTextControl outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
-            playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, viveCraftMessage, fallbackPackPlaceholderMessage;
     // nameTranslation, [configPath,commentTranslation]
     private final Map<String, Pair<String, Runnable>> eventMappings = ImmutableMap.<String, Pair<String, Runnable>>builder()
             .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
@@ -100,6 +98,8 @@ public class StatusMessagesGui extends PaginatedScreen {
             )
             ))
             .build();
+    private ExtendedTextControl outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
+            playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, viveCraftMessage, fallbackPackPlaceholderMessage;
 
     StatusMessagesGui(GuiScreen parentScreen) {
         super(parentScreen);

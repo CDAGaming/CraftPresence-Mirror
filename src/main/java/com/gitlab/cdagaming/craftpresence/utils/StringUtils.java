@@ -278,8 +278,8 @@ public class StringUtils {
     /**
      * Replaces Data in a sequential order, following Case-Insensitivity
      *
-     * @param source        The original String to replace within
-     * @param replaceArgs   The replacement list to follow with the form of: targetToReplace:replaceWithValue
+     * @param source      The original String to replace within
+     * @param replaceArgs The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */
     @SafeVarargs
