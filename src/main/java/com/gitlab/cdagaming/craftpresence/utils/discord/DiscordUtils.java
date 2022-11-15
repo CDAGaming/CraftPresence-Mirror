@@ -403,7 +403,7 @@ public class DiscordUtils {
                 for (String match : matches.getSecond()) {
                     if (overrideData.containsKey(match)) {
                         final ModuleData data = overrideData.get(match);
-                        if (Config.isValidProperty(data, "data")) {
+                        if (Config.isValidProperty(data, "data") && data.getData().enabled) {
                             Object overrideResult = null;
                             if (overridePath.length == 2 && overridePath[0].startsWith("button_")) {
                                 final Map<String, Button> buttons = data.getData().buttons;
@@ -456,7 +456,7 @@ public class DiscordUtils {
         if (!StringUtils.isNullOrEmpty(argumentName)) {
             overrideData.put(argumentName, data);
         }
-        if (data != null && Config.getProperty(data, "data") != null && data.getData().useAsMain) {
+        if (data != null && Config.getProperty(data, "data") != null && data.getData().enabled && data.getData().useAsMain) {
             forcedData = data.getData();
         }
     }

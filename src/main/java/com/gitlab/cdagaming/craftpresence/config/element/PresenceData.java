@@ -37,13 +37,14 @@ public class PresenceData extends Module implements Serializable {
     private static final long serialVersionUID = -7560029890988753870L;
     private static PresenceData DEFAULT;
 
+    public boolean enabled = true;
     public boolean useAsMain = false;
-    public String details;
-    public String gameState;
-    public String largeImageKey;
-    public String largeImageText;
-    public String smallImageKey;
-    public String smallImageText;
+    public String details = "";
+    public String gameState = "";
+    public String largeImageKey = "";
+    public String largeImageText = "";
+    public String smallImageKey = "";
+    public String smallImageText = "";
     public Map<String, Button> buttons = new HashMap<String, Button>() {
         private static final long serialVersionUID = -1738414795267027009L;
 
@@ -57,6 +58,8 @@ public class PresenceData extends Module implements Serializable {
 
     public PresenceData(PresenceData other) {
         if (other != null) {
+            enabled = other.enabled;
+            useAsMain = other.useAsMain;
             setDetails(other.details);
             setGameState(other.gameState);
             setLargeImage(other.largeImageKey, other.largeImageText);

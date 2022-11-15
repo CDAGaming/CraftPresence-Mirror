@@ -42,10 +42,10 @@ public class DynamicEditorGui extends ExtendedScreen {
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
     public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
+    public String additionalNote, resetText;
     public ModuleData defaultData, originalData, currentData;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
-    private String additionalNote;
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, PairConsumer<String, DynamicEditorGui> onNewInit, PairConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, PairConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, PairConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super(parentScreen);
@@ -84,6 +84,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     public void initializeUi() {
         int controlIndex = 1;
         if (!initialized) {
+            this.resetText = "gui.config.message.button.remove";
             if (isNewValue) {
                 mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
                 if (onNewInit != null) {
@@ -119,7 +120,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                     new ExtendedButtonControl(
                             10, (getScreenHeight() - 30),
                             95, 20,
-                            "gui.config.message.button.remove",
+                            resetText,
                             () -> {
                                 if (onRemoveEntry != null) {
                                     onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
