@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.Status;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,8 +37,8 @@ import net.minecraft.client.gui.GuiScreen;
 @SuppressWarnings("DuplicatedCode")
 public class StatusMessagesGui extends PaginatedScreen {
     private final Status CONFIG;
-    private ExtendedTextControl mainMenuMessage, loadingMessage, lanMessage, singlePlayerMessage, packMessage,
-            outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
+    private ExtendedButtonControl mainMenuButton, loadingButton, lanButton, singlePlayerButton, packButton;
+    private ExtendedTextControl outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
             playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, viveCraftMessage, fallbackPackPlaceholderMessage;
 
     StatusMessagesGui(GuiScreen parentScreen) {
@@ -48,34 +49,34 @@ public class StatusMessagesGui extends PaginatedScreen {
     @Override
     public void initializeUi() {
         // Page 1 Items
-        mainMenuMessage = addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
-                        180, 20
-                ), startPage
-        );
-        lanMessage = addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(2),
-                        180, 20
-                ), startPage
-        );
-        singlePlayerMessage = addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(3),
-                        180, 20
-                ), startPage
-        );
-        packMessage = addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(4),
-                        180, 20
-                ), startPage
-        );
+//        mainMenuMessage = addControl(
+//                new ExtendedTextControl(
+//                        getFontRenderer(),
+//                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
+//                        180, 20
+//                ), startPage
+//        );
+//        lanMessage = addControl(
+//                new ExtendedTextControl(
+//                        getFontRenderer(),
+//                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(2),
+//                        180, 20
+//                ), startPage
+//        );
+//        singlePlayerMessage = addControl(
+//                new ExtendedTextControl(
+//                        getFontRenderer(),
+//                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(3),
+//                        180, 20
+//                ), startPage
+//        );
+//        packMessage = addControl(
+//                new ExtendedTextControl(
+//                        getFontRenderer(),
+//                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(4),
+//                        180, 20
+//                ), startPage
+//        );
         modsMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -136,13 +137,13 @@ public class StatusMessagesGui extends PaginatedScreen {
         );
 
         // Page 3 Items
-        loadingMessage = addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
-                        180, 20
-                ), startPage + 2
-        );
+//        loadingMessage = addControl(
+//                new ExtendedTextControl(
+//                        getFontRenderer(),
+//                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
+//                        180, 20
+//                ), startPage + 2
+//        );
         playerItemsMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -285,11 +286,11 @@ public class StatusMessagesGui extends PaginatedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.status_messages");
 
-        final String mainMenuText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.main_menu_message");
-        final String loadingText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.loading_message");
-        final String lanText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.lan_message");
-        final String singlePlayerText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.single_player_message");
-        final String packText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.pack_message");
+//        final String mainMenuText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.main_menu_message");
+//        final String loadingText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.loading_message");
+//        final String lanText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.lan_message");
+//        final String singlePlayerText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.single_player_message");
+//        final String packText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.pack_message");
         final String modsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.mods_message");
         final String viveCraftText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.special.vivecraft_message");
 
@@ -306,10 +307,10 @@ public class StatusMessagesGui extends PaginatedScreen {
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
-        renderString(mainMenuText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage);
-        renderString(lanText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage);
-        renderString(singlePlayerText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage);
-        renderString(packText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage);
+//        renderString(mainMenuText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage);
+//        renderString(lanText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage);
+//        renderString(singlePlayerText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage);
+//        renderString(packText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage);
         renderString(modsText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(5, 5), 0xFFFFFF, startPage);
         renderString(viveCraftText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), 0xFFFFFF, startPage);
 
@@ -320,26 +321,11 @@ public class StatusMessagesGui extends PaginatedScreen {
         renderString(playerAmountText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(5, 5), 0xFFFFFF, startPage + 1);
         renderString(worldDataText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), 0xFFFFFF, startPage + 1);
 
-        renderString(loadingText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 2);
+//        renderString(loadingText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 2);
         renderString(playerItemsText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 2);
         renderString(fallbackPackPlaceholderText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage + 2);
 
         super.preRender();
-
-        backButton.setControlEnabled(!StringUtils.isNullOrEmpty(mainMenuMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(lanMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(singlePlayerMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(packMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(modsMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(viveCraftMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(outerPlayerMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(innerPlayerMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(playerCoordsMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(playerHealthMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(playerAmountMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(worldMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(loadingMessage.getControlMessage())
-                && !StringUtils.isNullOrEmpty(playerItemsMessage.getControlMessage()));
     }
 
     @Override
