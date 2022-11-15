@@ -24,16 +24,19 @@
 
 package com.gitlab.cdagaming.craftpresence.config;
 
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 
@@ -184,12 +187,29 @@ public final class Config extends Module implements Serializable {
             final File legacyFile = new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".properties");
             if (legacyFile.exists()) {
                 new Legacy2Modern(legacyFile, "UTF-8").apply(this, rawJson);
-                try {
-                    rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
-                } catch (Exception ex) {
-                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                    ex.printStackTrace();
+            }
+
+            final Map<Integer, String> hypherionFiles = ImmutableMap.<Integer, String>builder()
+                    .put(0, ModUtils.configDir + File.separator + "simple-rpc.toml")
+                    .put(31, CraftPresence.SYSTEM.USER_DIR + File.separator + "simple-rpc" + File.separator + "simple-rpc.toml")
+                    .put(32, ModUtils.configDir + File.separator + "simple-rpc" + File.separator + "simple-rpc.toml")
+                    .build();
+            for (Map.Entry<Integer, String> entry : hypherionFiles.entrySet()) {
+                final File hypherionFile = new File(entry.getValue());
+                if (hypherionFile.exists()) {
+                    new HypherConverter(entry).apply(this, rawJson);
+                    break;
                 }
+            }
+        }
+
+        // Refresh the raw json contents, in case of any changes
+        if (!isNewFile) {
+            try {
+                rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
+            } catch (Exception ex) {
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+                ex.printStackTrace();
             }
         }
         return rawJson;

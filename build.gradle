@@ -186,6 +186,8 @@ repositories {
         dirs 'libs'
     }
     mavenCentral()
+    maven { url "https://maven.firstdarkdev.xyz/releases" }
+    maven { url "https://maven.firstdarkdev.xyz/snapshots" }
 }
 
 dependencies {
@@ -246,6 +248,10 @@ dependencies {
             exclude group: 'org.apache.logging.log4j', module: "log4j-core"
         }
     }
+
+    // Additional Integrations
+    shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
+    shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
 }
 
 jar {
@@ -265,6 +271,8 @@ shadowJar {
     relocate 'com.jagrosh', 'external.com.jagrosh'
     relocate 'org.slf4j', 'external.org.slf4j'
     relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'
+    // Integration Relocations
+    relocate 'me.hypherionmc', 'external.me.hypherionmc'
 
     archiveClassifier.set('shadow-dev')
 }
