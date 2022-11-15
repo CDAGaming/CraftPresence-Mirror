@@ -168,7 +168,7 @@ public class CommandUtils {
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
 
         CraftPresence.CLIENT.clearPartyData(true, false);
-        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData, true);
+        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData);
         CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(currentMessage, loadingArgs), ArgumentType.Text);
         CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", true, currentIcon), ArgumentType.Image);
 
@@ -199,7 +199,7 @@ public class CommandUtils {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
 
-        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData, true);
+        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData);
         CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(currentMessage, mainMenuArgs), ArgumentType.Text);
         CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", true, currentIcon), ArgumentType.Image);
 

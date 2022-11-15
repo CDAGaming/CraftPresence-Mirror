@@ -37,6 +37,7 @@ public class PresenceData extends Module implements Serializable {
     private static final long serialVersionUID = -7560029890988753870L;
     private static PresenceData DEFAULT;
 
+    public boolean useAsMain = false;
     public String details;
     public String gameState;
     public String largeImageKey;

@@ -452,23 +452,13 @@ public class DiscordUtils {
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the specified argument
      */
-    public void syncOverride(String argumentName, ModuleData data, final boolean forcePresence) {
+    public void syncOverride(String argumentName, ModuleData data) {
         if (!StringUtils.isNullOrEmpty(argumentName)) {
             overrideData.put(argumentName, data);
         }
-        if (forcePresence && data != null && Config.getProperty(data, "data") != null) {
+        if (data != null && Config.getProperty(data, "data") != null && data.getData().useAsMain) {
             forcedData = data.getData();
         }
-    }
-
-    /**
-     * Sync {@link ModuleData} overrides for the specified placeholder
-     *
-     * @param argumentName The Specified Argument to Synchronize for
-     * @param data         The data to attach to the specified argument
-     */
-    public void syncOverride(String argumentName, ModuleData data) {
-        syncOverride(argumentName, data, false);
     }
 
     /**
