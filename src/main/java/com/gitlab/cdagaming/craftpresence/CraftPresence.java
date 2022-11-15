@@ -40,9 +40,8 @@ import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Session;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.client.User;
+import net.minecraft.world.entity.player.Player;
 
 import java.lang.reflect.Modifier;
 import java.util.Timer;
@@ -54,7 +53,6 @@ import java.util.TimerTask;
  * @author CDAGaming
  */
 @SuppressWarnings("ConstantConditions")
-@Mod(ModUtils.MOD_ID)
 public class CraftPresence {
     /**
      * Whether Pack Data was able to be Found and Parsed
@@ -79,12 +77,12 @@ public class CraftPresence {
     /**
      * The Minecraft Instance Session attached to this Mod
      */
-    public static Session session;
+    public static User session;
 
     /**
      * The Current Player detected from the Minecraft Instance
      */
-    public static EntityPlayer player;
+    public static Player player;
 
     /**
      * The {@link Config} Instance for this Mod
@@ -240,7 +238,7 @@ public class CraftPresence {
         if (!closing) {
             instance = Minecraft.getInstance();
             if (initialized) {
-                session = instance.getSession();
+                session = instance.getUser();
                 player = instance.player;
                 // Synchronize Developer and Verbose Modes with Config Options, if they were not overridden pre-setup
                 ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.advancedSettings.debugMode : ModUtils.IS_DEV;
@@ -271,7 +269,7 @@ public class CraftPresence {
                     }
                 }
             } else if (instance != null) {
-                session = instance.getSession();
+                session = instance.getUser();
                 if (session != null) {
                     init();
                 }

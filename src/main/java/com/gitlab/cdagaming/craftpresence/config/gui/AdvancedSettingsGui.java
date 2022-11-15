@@ -40,7 +40,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 public class AdvancedSettingsGui extends ExtendedScreen {
     private final Advanced CONFIG;
@@ -50,7 +50,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
             allowPlaceholderPreviewsButton, allowPlaceholderOperatorsButton, allowEndpointIconsButton;
     private ExtendedTextControl splitCharacter, refreshRate;
 
-    AdvancedSettingsGui(GuiScreen parentScreen) {
+    AdvancedSettingsGui(Screen parentScreen) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.advancedSettings;
     }

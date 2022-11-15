@@ -33,8 +33,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.Map;
 public class ControlsGui extends PaginatedScreen {
 
     // Format: See KeyUtils#KEY_MAPPINGS
-    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> keyMappings;
+    private final Map<String, Tuple<KeyMapping, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = Maps.newHashMap();
     // Format: pageNumber:[elementText:[xPos:yPos]:color]
@@ -52,24 +52,24 @@ public class ControlsGui extends PaginatedScreen {
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
-    private Tuple<ExtendedButtonControl, String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> entryData = null;
+    private Tuple<ExtendedButtonControl, String, Tuple<KeyMapping, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> entryData = null;
     private int currentAllocatedRow = startRow, currentAllocatedPage = startPage;
 
-    public ControlsGui(GuiScreen parentScreen) {
+    public ControlsGui(Screen parentScreen) {
         super(parentScreen);
         this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings();
 
         sortMappings();
     }
 
-    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, List<String> filterData) {
+    public ControlsGui(Screen parentScreen, KeyUtils.FilterMode filterMode, List<String> filterData) {
         super(parentScreen);
         this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings(filterMode, filterData);
 
         sortMappings();
     }
 
-    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
+    public ControlsGui(Screen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
         this(parentScreen, filterMode, Lists.newArrayList(filterData));
     }
 
@@ -136,11 +136,11 @@ public class ControlsGui extends PaginatedScreen {
      */
     private void sortMappings() {
         for (String keyName : keyMappings.keySet()) {
-            final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
-            if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
-                categorizedNames.put(keyData.getFirst().getKeyCategory(), Lists.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
-                categorizedNames.get(keyData.getFirst().getKeyCategory()).add(keyName);
+            final Tuple<KeyMapping, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
+            if (!categorizedNames.containsKey(keyData.getFirst().getCategory())) {
+                categorizedNames.put(keyData.getFirst().getCategory(), Lists.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.getFirst().getCategory()).contains(keyName)) {
+                categorizedNames.get(keyData.getFirst().getCategory()).add(keyName);
             }
         }
     }
@@ -168,8 +168,8 @@ public class ControlsGui extends PaginatedScreen {
             currentAllocatedRow++;
 
             for (String keyName : keyNames) {
-                final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
-                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+                final Tuple<KeyMapping, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = keyMappings.get(keyName);
+                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getName(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
                 if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                     preRenderQueue.put(currentAllocatedPage, Lists.newArrayList(positionData));
                 } else {
@@ -185,7 +185,7 @@ public class ControlsGui extends PaginatedScreen {
                 final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
                         renderPosition + 20, CraftPresence.GUIS.getButtonY(currentAllocatedRow),
                         120, 20,
-                        KeyUtils.getKeyName(keyData.getFirst().getKey().getKeyCode()),
+                        KeyUtils.getKeyName(keyData.getFirst().key.getValue()),
                         keyName
                 );
                 keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton, keyData));
@@ -213,7 +213,7 @@ public class ControlsGui extends PaginatedScreen {
      * @param button  The Pressed upon KeyCode Button
      * @param keyData The key data attached to the entry
      */
-    private void setupEntryData(final ExtendedButtonControl button, final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData) {
+    private void setupEntryData(final ExtendedButtonControl button, final Tuple<KeyMapping, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
             entryData = new Tuple<>(button, button.getOptionalArgs()[0], keyData);
 

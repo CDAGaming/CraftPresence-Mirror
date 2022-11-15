@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -49,7 +49,7 @@ public class UpdateInfoGui extends ExtendedScreen {
      * @param parentScreen The Parent Screen for this Instance
      * @param modUpdater   An instance of the {@link ModUpdaterUtils}
      */
-    public UpdateInfoGui(GuiScreen parentScreen, ModUpdaterUtils modUpdater) {
+    public UpdateInfoGui(Screen parentScreen, ModUpdaterUtils modUpdater) {
         super(parentScreen);
         this.modUpdater = modUpdater;
     }

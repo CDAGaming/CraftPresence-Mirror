@@ -26,8 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
 
 import javax.annotation.Nonnull;
 
@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  *
  * @author CDAGaming
  */
-public class ExtendedTextControl extends GuiTextField {
+public class ExtendedTextControl extends EditBox {
     /**
      * The default character limit for all controls of this type
      */
@@ -56,8 +56,8 @@ public class ExtendedTextControl extends GuiTextField {
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
      */
-    public ExtendedTextControl(int componentId, FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
-        super(componentId, fontRendererObj, x, y, widthIn, heightIn);
+    public ExtendedTextControl(int componentId, Font fontRendererObj, int x, int y, int widthIn, int heightIn) {
+        super(fontRendererObj, x, y, widthIn, heightIn, "");
         setControlMaxLength(DEFAULT_TEXT_LIMIT);
     }
 
@@ -70,7 +70,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
      */
-    public ExtendedTextControl(FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
+    public ExtendedTextControl(Font fontRendererObj, int x, int y, int widthIn, int heightIn) {
         this(CraftPresence.GUIS.getNextIndex(), fontRendererObj, x, y, widthIn, heightIn);
     }
 
@@ -84,7 +84,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param heightIn        The Height for this Control
      * @param keyEvent        The event to run when characters are typed in this control
      */
-    public ExtendedTextControl(FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn, Runnable keyEvent) {
+    public ExtendedTextControl(Font fontRendererObj, int x, int y, int widthIn, int heightIn, Runnable keyEvent) {
         this(fontRendererObj, x, y, widthIn, heightIn);
         setOnKeyTyped(keyEvent);
     }
@@ -131,7 +131,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's current text contents
      */
     public String getControlMessage() {
-        return this.getText();
+        return this.getValue();
     }
 
     /**
@@ -140,7 +140,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        this.setText(!StringUtils.isNullOrEmpty(newMessage) ? newMessage : "");
+        this.setValue(!StringUtils.isNullOrEmpty(newMessage) ? newMessage : "");
     }
 
     /**
@@ -149,7 +149,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @return The control's maximum text contents
      */
     public int getControlMaxLength() {
-        return this.getMaxStringLength();
+        return this.getMaxLength();
     }
 
     /**
@@ -158,7 +158,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param newLength The new maximum length for this control's message
      */
     public void setControlMaxLength(final int newLength) {
-        this.setMaxStringLength(newLength);
+        this.setMaxLength(newLength);
     }
 
     /**
@@ -194,8 +194,8 @@ public class ExtendedTextControl extends GuiTextField {
      * @param textToWrite The text that's being written/replaced
      */
     @Override
-    public void writeText(@Nonnull String textToWrite) {
-        super.writeText(textToWrite);
+    public void insertText(@Nonnull String textToWrite) {
+        super.insertText(textToWrite);
         onKeyTyped();
     }
 
@@ -205,8 +205,8 @@ public class ExtendedTextControl extends GuiTextField {
      * @param num The number of text that's being written/replaced
      */
     @Override
-    public void deleteFromCursor(int num) {
-        super.deleteFromCursor(num);
+    public void deleteChars(int num) {
+        super.deleteChars(num);
         onKeyTyped();
     }
 }

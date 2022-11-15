@@ -1,0 +1,7 @@
+accessWidener   v2  named
+
+accessible    method    net/minecraft/client/gui/components/EditBox    getMaxLength    ()I
+accessible    field    net/minecraft/client/KeyMapping    key    Lcom/mojang/blaze3d/platform/InputConstants$Key;
+mutable    field    net/minecraft/client/Options    keyMappings    [Lnet/minecraft/client/KeyMapping;
+accessible    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;
+mutable    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;

@@ -35,8 +35,8 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.util.registry.IRegistry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Map;
@@ -141,10 +141,10 @@ public class BiomeUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateBiomeData() {
-        final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getDisplayName().getFormattedText(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.getCommandSenderBlockPosition());
+        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getName().getString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getDisplayName().getFormattedText(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getName().getString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_Identifier = !StringUtils.isNullOrEmpty(newBiome_primaryIdentifier) ? newBiome_primaryIdentifier : newBiome_alternativeIdentifier;
 
@@ -211,7 +211,7 @@ public class BiomeUtils {
      */
     private List<Biome> getBiomeTypes() {
         List<Biome> biomeTypes = Lists.newArrayList();
-        List<Biome> defaultBiomeTypes = Lists.newArrayList(IRegistry.BIOME.iterator());
+        List<Biome> defaultBiomeTypes = Lists.newArrayList(Registry.BIOME.iterator());
 
         if (!defaultBiomeTypes.isEmpty()) {
             for (Biome biome : defaultBiomeTypes) {
@@ -248,7 +248,7 @@ public class BiomeUtils {
     public void getBiomes() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
-                String biomeName = !StringUtils.isNullOrEmpty(biome.getDisplayName().getFormattedText()) ? biome.getDisplayName().getFormattedText() : MappingUtils.getClassName(biome);
+                String biomeName = !StringUtils.isNullOrEmpty(biome.getName().getString()) ? biome.getName().getString() : MappingUtils.getClassName(biome);
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);

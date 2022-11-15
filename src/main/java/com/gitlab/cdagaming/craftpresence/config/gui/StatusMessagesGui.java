@@ -41,7 +41,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.Map;
 
@@ -90,7 +90,7 @@ public class StatusMessagesGui extends PaginatedScreen {
     private ExtendedTextControl outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
             playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, packMessage;
 
-    StatusMessagesGui(GuiScreen parentScreen) {
+    StatusMessagesGui(Screen parentScreen) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.statusMessages;
     }

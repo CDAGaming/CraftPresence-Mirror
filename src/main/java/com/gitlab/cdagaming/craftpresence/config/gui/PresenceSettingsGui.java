@@ -43,7 +43,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
@@ -57,7 +57,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
     private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
 
-    PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, DataConsumer<PresenceData> changedCallback) {
+    PresenceSettingsGui(Screen parentScreen, PresenceData moduleData, DataConsumer<PresenceData> changedCallback) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.displaySettings;
         PRESENCE = moduleData != null ? moduleData : CONFIG.presenceData;
@@ -69,7 +69,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         onChangedCallback = changedCallback;
     }
 
-    PresenceSettingsGui(GuiScreen parentScreen) {
+    PresenceSettingsGui(Screen parentScreen) {
         this(parentScreen, CraftPresence.CONFIG.displaySettings.presenceData, (output) ->
                 CraftPresence.CONFIG.displaySettings.presenceData = output
         );

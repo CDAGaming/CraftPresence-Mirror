@@ -30,8 +30,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -42,7 +42,7 @@ import java.util.Map;
  * The Paginated Gui Screen Implementation
  */
 public class PaginatedScreen extends ExtendedScreen {
-    private final Map<Integer, List<Gui>> paginatedControls = Maps.newHashMap();
+    private final Map<Integer, List<GuiEventListener>> paginatedControls = Maps.newHashMap();
     private final Map<Integer, List<ScrollableListControl>> paginatedLists = Maps.newHashMap();
     /**
      * The "Next Page" Button
@@ -75,7 +75,7 @@ public class PaginatedScreen extends ExtendedScreen {
      *
      * @param parentScreen The Parent Screen for this Instance
      */
-    public PaginatedScreen(GuiScreen parentScreen) {
+    public PaginatedScreen(Screen parentScreen) {
         super(parentScreen);
     }
 
@@ -85,7 +85,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @param parentScreen The Parent Screen for this Instance
      * @param debugMode    Whether debug mode should be enabled for this screen
      */
-    public PaginatedScreen(GuiScreen parentScreen, boolean debugMode) {
+    public PaginatedScreen(Screen parentScreen, boolean debugMode) {
         super(parentScreen, debugMode);
     }
 
@@ -96,7 +96,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @param debugMode    Whether debug mode should be enabled for this screen
      * @param verboseMode  Whether verbose mode should be enabled for this screen
      */
-    public PaginatedScreen(GuiScreen parentScreen, boolean debugMode, boolean verboseMode) {
+    public PaginatedScreen(Screen parentScreen, boolean debugMode, boolean verboseMode) {
         super(parentScreen, debugMode, verboseMode);
     }
 
@@ -160,7 +160,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @return The added control with attached class type
      */
     @Nonnull
-    protected <T extends Gui> T addControl(@Nonnull T buttonIn, final int renderTarget) {
+    protected <T extends GuiEventListener> T addControl(@Nonnull T buttonIn, final int renderTarget) {
         if (!paginatedControls.containsKey(renderTarget)) {
             paginatedControls.put(renderTarget, Lists.newArrayList(buttonIn));
             if (renderTarget > maxPages) {
@@ -200,11 +200,11 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     @Override
     public void preRender() {
-        final List<Gui> defaultButtons = Lists.newArrayList(previousPageButton, nextPageButton, backButton);
-        final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
+        final List<GuiEventListener> defaultButtons = Lists.newArrayList(previousPageButton, nextPageButton, backButton);
+        final List<GuiEventListener> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
         final List<ScrollableListControl> listsToRender = paginatedLists.getOrDefault(currentPage, Lists.newArrayList());
 
-        for (Gui extendedControl : extendedControls) {
+        for (GuiEventListener extendedControl : extendedControls) {
             // Toggle visibility/disable element is not on page
             if (extendedControl instanceof ExtendedButtonControl) {
                 ((ExtendedButtonControl) extendedControl).setControlVisible(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
@@ -212,7 +212,7 @@ public class PaginatedScreen extends ExtendedScreen {
             }
             if (extendedControl instanceof ExtendedTextControl) {
                 ((ExtendedTextControl) extendedControl).setVisible(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
-                ((ExtendedTextControl) extendedControl).setEnabled(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
+                ((ExtendedTextControl) extendedControl).setEditable(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
             }
         }
         for (ScrollableListControl listControl : extendedLists) {
@@ -247,7 +247,7 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     public void renderString(String text, float xPos, float yPos, int color, int renderTarget) {
         if (renderTarget == currentPage) {
-            getFontRenderer().drawStringWithShadow(text, xPos, yPos, color);
+            getFontRenderer().drawShadow(text, xPos, yPos, color);
         }
     }
 

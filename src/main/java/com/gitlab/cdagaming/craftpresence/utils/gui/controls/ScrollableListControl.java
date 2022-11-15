@@ -35,10 +35,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-public class ScrollableListControl extends GuiSlot {
+public class ScrollableListControl extends ObjectSelectionList<ScrollableListControl.StringEntry> {
     /**
      * Mapping representing a link between the entries original name, and it's display name
      */
@@ -74,6 +74,11 @@ public class ScrollableListControl extends GuiSlot {
      * The current screen instance
      */
     public ExtendedScreen currentScreen;
+
+    /**
+     * The visibility for this control
+     */
+    public boolean visible = true;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -116,6 +121,15 @@ public class ScrollableListControl extends GuiSlot {
         if (renderType == RenderType.ItemData) {
             CraftPresence.TILE_ENTITIES.getEntities();
         }
+        updateEntries();
+    }
+
+    @Override
+    public void setSelected(StringEntry entry) {
+        super.setSelected(entry);
+        if (entry != null) {
+            currentValue = entry.name;
+        }
     }
 
     /**
@@ -124,140 +138,37 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Amount of Items in the List
      */
     @Override
-    protected int getSize() {
+    protected int getItemCount() {
         return itemList.size();
-    }
-
-    /**
-     * The Event to Occur if a Slot/Element is Clicked within the List
-     *
-     * @param mouseX      The Mouse's Current X Position
-     * @param mouseZ      The Mouse's Current Y Position
-     * @param mouseButton Which Mouse Button was Clicked
-     */
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseZ, int mouseButton) {
-        if (isMouseInList(mouseX, mouseZ)) {
-            int scrollIndex = getEntryAt(mouseX, mouseZ);
-            if (scrollIndex != -1) {
-                currentValue = getSelectedItem(scrollIndex);
-            }
-        }
-        return super.mouseClicked(mouseX, mouseZ, mouseButton);
-    }
-
-    /**
-     * Whether the Specified Slot Number is the Currently Selected Slot
-     *
-     * @param slotIndex The Slot's ID Number to check
-     * @return {@code true} if the Slot Number is the Currently Selected Slot
-     */
-    @Override
-    public boolean isSelected(int slotIndex) {
-        return getSelectedItem(slotIndex).equals(currentValue);
     }
 
     /**
      * Renders the Background for this Control
      */
     @Override
-    protected void drawBackground() {
-        // N/A
-    }
-
-    /**
-     * Renders the Slots for this Control
-     *
-     * @param slotIndex    The Slot Identification Number
-     * @param xPos         The Starting X Position to render the Object at
-     * @param yPos         The Starting Y Position to render the Object at
-     * @param heightIn     The Height for the Object to render to
-     * @param mouseXIn     The Mouse's Current X Position
-     * @param mouseYIn     The Mouse's Current Y Position
-     * @param partialTicks The Current Partial Tick Ratio
-     */
-    @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks) {
-        final String originalName = getSelectedItem(slotIndex);
-        final List<String> hoverText = Lists.newArrayList();
-        String displayName = entryAliases.getOrDefault(originalName, originalName);
-        int xOffset = xPos;
-
-        if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
-                ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
-                        (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
-                        (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
-            ResourceLocation texture = new ResourceLocation("");
-            String assetUrl;
-
-            if (renderType == RenderType.ServerData) {
-                final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
-
-                if (data != null) {
-                    assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
-                    texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
-                } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
-                    final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint, originalName);
-                    texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
-                    if (currentScreen.isDebugMode()) {
-                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
-                    }
-                }
-            } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
-                assetUrl = DiscordAssetUtils.getUrl(
-                        renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
-                        originalName
-                );
-                if (currentScreen.isDebugMode()) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
-                }
-                texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
-            } else if (renderType == RenderType.EntityData) {
-                if (StringUtils.isValidUuid(originalName)) {
-                    // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
-                    final String fullUuid = StringUtils.getFromUuid(originalName, false);
-                    final String trimmedUuid = StringUtils.getFromUuid(originalName, true);
-                    if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                        final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, fullUuid);
-                        texture = ImageUtils.getTextureFromUrl(fullUuid, endpointUrl);
-                        if (currentScreen.isDebugMode()) {
-                            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
-                        }
-                    }
-                }
-            } else if (renderType == RenderType.ItemData) {
-                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
-            }
-            if (!ImageUtils.isTextureNull(texture)) {
-                CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
-                if (currentScreen.isDebugMode()) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
-                }
-            }
-            // Note: 35 Added to xOffset to accommodate for Image Size
-            xOffset += 35;
-        }
-        if (!originalName.equals(displayName)) {
-            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + originalName);
-        }
-        getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
-
-        if (CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, getListWidth(), heightIn)) {
-            currentHoverText = hoverText;
+    protected void renderBackground() {
+        if (getItemCount() != children().size()) {
+            clearEntries();
+            updateEntries();
         }
     }
 
     /**
-     * Attempts to Retrieve the Slot Item Name from the Slot's ID Number
-     *
-     * @param slotIndex The Slot's ID Number
-     * @return The Name of the found slot, if any
+     * Updates the Entries in this List
      */
-    public String getSelectedItem(int slotIndex) {
-        try {
-            return itemList.get(slotIndex);
-        } catch (Exception ex) {
-            return null;
+    public void updateEntries() {
+        for (String item : itemList) {
+            StringEntry dataEntry = new StringEntry(item, renderType);
+            this.addEntry(dataEntry);
+            if (item.equals(currentValue)) {
+                this.setSelected(dataEntry);
+            }
+
+        }
+
+
+        if (this.getSelected() != null) {
+            this.centerScrollOn(this.getSelected());
         }
     }
 
@@ -266,8 +177,8 @@ public class ScrollableListControl extends GuiSlot {
      *
      * @return The Current Font Renderer for this Control
      */
-    public FontRenderer getFontRenderer() {
-        return mc.fontRenderer != null ? mc.fontRenderer : GuiUtils.getDefaultFontRenderer();
+    public Font getFontRenderer() {
+        return minecraft.font != null ? minecraft.font : GuiUtils.getDefaultFontRenderer();
     }
 
     /**
@@ -276,7 +187,14 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Current Font Height for this Control
      */
     public int getFontHeight() {
-        return getFontRenderer().FONT_HEIGHT;
+        return getFontRenderer().lineHeight;
+    }
+
+    /**
+     * Getter for Visibility for this control
+     */
+    public boolean isVisible() {
+        return this.visible;
     }
 
     /**
@@ -291,8 +209,8 @@ public class ScrollableListControl extends GuiSlot {
         if (!itemList.equals(this.itemList)) {
             this.itemList = itemList;
             // Reset the scrollbar to prevent OOB issues
-            if (amountScrolled != 0.0f) {
-                amountScrolled = 0.0f;
+            if (getScrollAmount() != 0.0f) {
+                setScrollAmount(0.0f);
             }
         }
 
@@ -358,5 +276,150 @@ public class ScrollableListControl extends GuiSlot {
          * Constant for the "Text Only" Rendering Mode.
          */
         None
+    }
+
+    /**
+     * Gui Entry for a Scrollable List
+     *
+     * @author CDAGaming
+     */
+    public class StringEntry extends ObjectSelectionList.Entry<StringEntry> {
+        /**
+         * The rendering type to render this entry in
+         */
+        private final RenderType renderType;
+        /**
+         * The name of this Entry
+         */
+        private final String name;
+
+        /**
+         * Initialization Event for this Control, assigning defined arguments
+         *
+         * @param name The name to assign to this Entry
+         */
+        public StringEntry(String name) {
+            this(name, RenderType.None);
+        }
+
+        /**
+         * Initialization Event for this Control, assigning defined arguments
+         *
+         * @param name       The name to assign to this Entry
+         * @param renderType The Render Type to assign to this Entry
+         */
+        public StringEntry(String name, RenderType renderType) {
+            this.name = name;
+            this.renderType = renderType;
+        }
+
+        /**
+         * Renders this Entry to the List
+         *
+         * @param index       The Index of the Entry within the List
+         * @param yPos        The Y Coordinate to render at
+         * @param xPos        The X Coordinate to render at
+         * @param entryWidth  The specified Entry's Width
+         * @param entryHeight The specified Entry's Height
+         * @param mouseX      The Event Mouse X Coordinate
+         * @param mouseY      The Event Mouse Y Coordinate
+         * @param hovered     Whether the specified entry is currently hovered over
+         * @param tickDelta   The Rendering Tick Rate
+         */
+        @Override
+        public void render(int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            final String originalName = name;
+            final List<String> hoverText = Lists.newArrayList();
+            String displayName = entryAliases.getOrDefault(originalName, originalName);
+            int xOffset = xPos;
+
+            if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
+                    ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
+                            (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
+                            (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
+                ResourceLocation texture = new ResourceLocation("");
+                String assetUrl;
+
+                if (renderType == RenderType.ServerData) {
+                    final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
+
+                    if (data != null) {
+                        assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getIconB64();
+                        texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
+                    } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
+                        final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint, originalName);
+                        texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
+                        if (currentScreen.isDebugMode()) {
+                            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
+                        }
+                    }
+                } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
+                    assetUrl = DiscordAssetUtils.getUrl(
+                            renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
+                            originalName
+                    );
+                    if (currentScreen.isDebugMode()) {
+                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
+                    }
+                    texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
+                } else if (renderType == RenderType.EntityData) {
+                    if (StringUtils.isValidUuid(originalName)) {
+                        // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
+                        final String fullUuid = StringUtils.getFromUuid(originalName, false);
+                        final String trimmedUuid = StringUtils.getFromUuid(originalName, true);
+                        if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                            final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, fullUuid);
+                            texture = ImageUtils.getTextureFromUrl(fullUuid, endpointUrl);
+                            if (currentScreen.isDebugMode()) {
+                                hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
+                            }
+                        }
+                    }
+                } else if (renderType == RenderType.ItemData) {
+                    texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
+                }
+                if (!ImageUtils.isTextureNull(texture)) {
+                    CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
+                    if (currentScreen.isDebugMode()) {
+                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
+                    }
+                }
+                // Note: 35 Added to xOffset to accommodate for Image Size
+                xOffset += 35;
+            }
+            if (!originalName.equals(displayName)) {
+                hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + originalName);
+            }
+            getFontRenderer().drawShadow(displayName, xOffset, yPos + ((entryHeight / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+
+            if (CraftPresence.GUIS.isMouseOver(mouseX, mouseY, xPos, yPos, entryWidth, entryHeight)) {
+                currentHoverText = hoverText;
+            }
+        }
+
+        /**
+         * Event to trigger upon the mouse being clicked
+         *
+         * @param mouseX The Event Mouse X Coordinate
+         * @param mouseY The Event Mouse Y Coordinate
+         * @param button The Event Mouse Button Clicked
+         * @return The Event Result
+         */
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (button == 0) {
+                this.onPressed();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * The Event to occur when this Entry is pressed
+         */
+        private void onPressed() {
+            ScrollableListControl.this.setSelected(this);
+        }
     }
 }

@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 
@@ -91,7 +92,7 @@ public class SliderControl extends ExtendedButtonControl {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.valueStep = valueStep;
-        this.displayString = displayString + ": " + denormalizedSlideValue;
+        this.setMessage(displayString + ": " + denormalizedSlideValue);
         this.windowTitle = displayString;
     }
 
@@ -205,7 +206,7 @@ public class SliderControl extends ExtendedButtonControl {
      * 2 if it IS hovering over this button.
      */
     @Override
-    protected int getHoverState(boolean mouseOver) {
+    protected int getYImage(boolean mouseOver) {
         return 0;
     }
 
@@ -225,8 +226,8 @@ public class SliderControl extends ExtendedButtonControl {
             }
 
             onSlide();
-            final int hoverValue = (hovered ? 2 : 1) * 20;
-            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, zLevel, BUTTON_TEXTURES);
+            final int hoverValue = (isHovered() ? 2 : 1) * 20;
+            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, blitOffset, WIDGETS_LOCATION);
         }
     }
 
@@ -242,6 +243,25 @@ public class SliderControl extends ExtendedButtonControl {
 
         setControlMessage(windowTitle + ": " + denormalizedSlideValue);
         dragging = true;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
+        boolean bl = keyCode == GLFW.GLFW_KEY_LEFT;
+        if (bl || keyCode == GLFW.GLFW_KEY_RIGHT) {
+            float f = bl ? -1.0F : 1.0F;
+            sliderValue = normalizeValue(this.denormalizedSlideValue + f);
+            sliderValue = clamp(sliderValue, 0.0F, 1.0F);
+            denormalizedSlideValue = denormalizeValue(sliderValue);
+
+            setControlMessage(windowTitle + ": " + denormalizedSlideValue);
+
+            dragging = true;
+            onPress();
+            dragging = false;
+        }
+
+        return false;
     }
 
     /**

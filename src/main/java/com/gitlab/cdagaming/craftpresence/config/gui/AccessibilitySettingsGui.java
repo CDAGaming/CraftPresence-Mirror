@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ColorEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 public class AccessibilitySettingsGui extends ExtendedScreen {
 
@@ -42,7 +42,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
     private CheckBoxControl showBackgroundAsDarkButton, stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
     private ExtendedButtonControl proceedButton;
 
-    AccessibilitySettingsGui(GuiScreen parentScreen) {
+    AccessibilitySettingsGui(Screen parentScreen) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.accessibilitySettings;
     }

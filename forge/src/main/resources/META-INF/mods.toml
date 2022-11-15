@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[25,)"
+loaderVersion="[28,)"
+license="MIT"
 issueTrackerURL="https://gitlab.com/CDAGaming/CraftPresence/issues"
 [[mods]]
 modId="craftpresence"
@@ -17,7 +18,7 @@ Completely Customize the way others see you play in Discord!
 [[dependencies.craftpresence]]
     modId="forge"
     mandatory=true
-    versionRange="[25,)"
+    versionRange="[28,)"
     ordering="NONE"
     side="BOTH"
 

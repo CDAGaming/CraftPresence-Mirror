@@ -38,7 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ExtendedScreen {
@@ -46,7 +46,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton, dimensionMessagesButton;
     private ExtendedTextControl defaultMessage;
 
-    DimensionSettingsGui(GuiScreen parentScreen) {
+    DimensionSettingsGui(Screen parentScreen) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.dimensionSettings;
     }

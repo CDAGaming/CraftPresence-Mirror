@@ -152,7 +152,7 @@ public class SystemUtils {
                 if (!HAS_LOADED && CraftPresence.CLIENT.STATUS == DiscordStatus.Ready) {
                     HAS_LOADED = true;
                 }
-                if (HAS_LOADED && !HAS_GAME_LOADED && CraftPresence.instance.currentScreen != null) {
+                if (HAS_LOADED && !HAS_GAME_LOADED && CraftPresence.instance.screen != null) {
                     HAS_GAME_LOADED = true;
                 }
                 CraftPresence.CLIENT.updatePresence(CraftPresence.CLIENT.buildRichPresence());

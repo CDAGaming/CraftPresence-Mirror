@@ -39,7 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import com.jagrosh.discordipc.IPCClient;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.BufferedWriter;
@@ -58,7 +58,7 @@ public class CommandsGui extends ExtendedScreen {
     private String[] commandArgs, filteredCommandArgs;
     private List<String> tabCompletions = Lists.newArrayList();
 
-    public CommandsGui(GuiScreen parentScreen) {
+    public CommandsGui(Screen parentScreen) {
         super(parentScreen);
     }
 

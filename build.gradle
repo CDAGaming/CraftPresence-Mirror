@@ -1,428 +1,103 @@
 plugins {
-    id 'java'
-    id 'xyz.wagyourtail.unimined' version '0.1.6-SNAPSHOT'
-    id "com.modrinth.minotaur" version "2.4.4"
-    id "io.github.CDAGaming.cursegradle" version "1.6.0"
-    id "com.diffplug.spotless" version "6.11.0"
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'dev.architectury.loom' version '0.12.0-SNAPSHOT' apply false
+    id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
-import groovy.io.FileType
-import org.apache.tools.ant.filters.ReplaceTokens
+architectury {
+    minecraft = rootProject.mc_version
+}
 
-import java.util.regex.Pattern
+def ext_versionInfoLabel = "${rootProject.deploymentType.equalsIgnoreCase("release") ? "" : "-${rootProject.versionLabel}"}"
+def ext_baseVersionLabel = "${rootProject.versionId + ext_versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
+def ext_classPath = "${rootProject.group}".replace(".", "/") + "/${mod_name}".toLowerCase()
 
-def archive_name = "${mod_name}-${loader_name}"
+def ext_versionFormat = "${ext_baseVersionLabel + "+" + mc_version}"
+def ext_fileFormat = "${rootProject.mod_name}-${ext_versionFormat}"
 
-def mainResources = "$rootDir/src/main/resources"
-def generatedResources = "$buildDir/generated-resources"
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'dev.architectury.loom'
 
-sourceSets {
-    main {
-        output.dir(generatedResources, builtBy: 'generateMyResources')
+    ext {
+        versionInfoLabel = "${ext_versionInfoLabel}"
+        baseVersionLabel = "${ext_baseVersionLabel}"
+        classPath = "${ext_classPath}"
+        versionFormat = "${ext_versionFormat}"
+        fileFormat = "${ext_fileFormat}"
     }
-}
 
-def versionInfoLabel = "${deploymentType.equalsIgnoreCase("release") ? "" : "-${versionLabel}"}"
-def baseVersionLabel = "${versionId + versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
+    version = "${versionFormat}"
+    group = rootProject.group
+    archivesBaseName = "${mod_name}"
 
-version = "${baseVersionLabel + "+" + mc_version}"
-group = "com.gitlab.cdagaming"
+    JavaVersion targetVersion = JavaVersion.VERSION_1_8
 
-def classPath = "${group}".replace(".", "/") + "/${mod_name}".toLowerCase()
 
-archivesBaseName = "${archive_name}"
-
-JavaVersion targetVersion = JavaVersion.VERSION_1_8
-
-allprojects {
     sourceCompatibility = targetVersion
     targetCompatibility = targetVersion
-}
 
-spotless {
+    loom {
+        silentMojangMappingsLicense()
+    }
+
     java {
-        licenseHeaderFile(rootProject.file("HEADER"))
+        withSourcesJar()
     }
-}
 
-// CurseForge Compatibility Layer (For Modloader and Beta MC)
-// (This can be removed when/if CurseForge ever adds support for this)
-def cf_loader = "${loader_name}"
-def cf_version = "${mc_version}"
-if ("${isLegacy}".toBoolean()) {
-    int protocol = "${mc_protocol}".toInteger()
-    if ((protocol == 22 || protocol == 23) && cf_loader == "${"ModLoader"}") { // MC 1.0.0 and 1.1.0
-        cf_loader = "Forge"
-    } else if (protocol < 22) {
-        cf_loader = ""
-        cf_version = "1.0"
-    }
-}
-
-curseforge {
-    project {
-        apiKey = System.getenv("CF_APIKEY")
-        id = "297038"
-        changelog = file("Changes.md")
-        changelogType = "markdown"
-        releaseType = "${deploymentType}".toLowerCase()
-        if (!cf_version.isEmpty()) {
-            addGameVersion cf_version
+    repositories {
+        flatDir {
+            dirs "$rootDir/libs"
         }
-        if (!cf_loader.isEmpty()) {
-            addGameVersion cf_loader
-        }
-
-        mainArtifact(remapJar) {
-            it.displayName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
-        }
-    }
-}
-
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = "${mod_name}".toLowerCase()
-    versionNumber = "v${version}_${loader_name}".replaceAll("\\s", "").toLowerCase()
-    versionName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
-    changelog = file("Changes.md").text
-    versionType = "${deploymentType}".toLowerCase()
-    uploadFile = remapJar
-    gameVersions = ["${mc_version}"]
-    loaders = ["${loader_name}".toLowerCase()]
-    dependencies = []
-}
-
-task publishToModSites {
-    publishToModSites.dependsOn 'modrinth'
-    publishToModSites.dependsOn 'curseforge'
-}
-
-unimined {
-    // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
-    // I recommend you leave this off until unimined is stable
-    useGlobalCache = true
-}
-
-minecraft {
-    // current available options are: forge, jarMod, fabric
-    // if you don't include this, it will default to no mod loader transforms
-    switch ("${loader_name}".toLowerCase()) {
-        case "forge":
-            forge {
-                // required for 1.7+
-                it.mcpVersion = "${mc_mappings}"
-                it.mcpChannel = 'stable'
-            }
-            break
-        case "fabric":
-            break
-        default:
-            jarMod()
-            break
-    }
-    // required when using mcp mappings
-    if ("${isLegacy}".toBoolean()) {
-        int protocol = "${mc_protocol}".toInteger()
-        if (protocol <= 2) { // MC a1.1.2_01 and below
-            targetNamespace = "searge"
-        } else {
-            mcRemapper.fallbackTarget = "searge"
-        }
-    } else {
-        mcRemapper.fallbackTarget = "searge"
-    }
-
-    mcRemapper.tinyRemapperConf = {
-        // most mcp mappings (except older format) dont include field desc
-        it.ignoreFieldDesc(true)
-        // this also fixes some issues with them, as it tells tiny remapper to try harder to resolve conflicts
-        it.ignoreConflicts(true)
-    }
-}
-
-mappings {
-    // ability to add custom mappings
-    // available targets are "CLIENT", "SERVER", "COMBINED"
-    getStub("COMBINED").withMappings(["searge", "named"]) {
-        c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-        c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", classPath + "/mod_${mod_name}", classPath + "/mod_${mod_name}")
-    }
-    getStub("CLIENT").withMappings(["searge", "named"]) {
-        c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-        c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", classPath + "/mod_${mod_name}", classPath + "/mod_${mod_name}")
-    }
-
-    addExport("CLIENT") {
-        it.targetNamespace = ["searge"]
-        it.sourceNamespace = "official"
-        it.location = file("$rootDir/src/main/resources/mappings.srg")
-        it.setType "srg"
-    }
-
-    addExport("COMBINED") {
-        it.targetNamespace = ["searge"]
-        it.sourceNamespace = "official"
-        it.location = file("$rootDir/src/main/resources/mappings.srg")
-        it.setType "srg"
-    }
-}
-
-sourceSets {
-    // enable the client configuration when not using combined (or mc <= 1.2.5)
-    client
-}
-
-configurations {
-    shadeOnly
-    shade
-    implementation.extendsFrom shade
-}
-
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-    mavenCentral()
-    maven { url "https://maven.firstdarkdev.xyz/releases" }
-    maven { url "https://maven.firstdarkdev.xyz/snapshots" }
-}
-
-dependencies {
-    minecraft "net.minecraft:minecraft:${mc_version}"
-
-    switch ("${loader_name}".toLowerCase()) {
-        case "forge":
-            forge "net.minecraftforge:forge:${mc_version}-${loader_version}"
-            break
-        case "fabric":
-            break
-        default:
-            jarMod "local_mod:ModLoader:${loader_version}@zip"
-            mappings "local_mod:mcp:${mc_mappings}@zip"
-            break
-    }
-
-    // Legacy Dependencies, based on Protocol Version
-    int protocol = "${mc_protocol}".toInteger()
-    if ("${isLegacy}".toBoolean()) {
-        if (protocol <= 78) { // MC 1.6.4 and below
-            shade('commons-codec:commons-codec:1.15')
-        }
-        if (protocol <= 61) { // MC 1.5.2 and below
-            shade('org.apache.commons:commons-lang3:3.8.1')
-            shade('commons-io:commons-io:2.5')
-            shade('com.google.code.gson:gson:2.8.0')
-        }
-        if (protocol <= 51) { // MC 1.4.7 and below
-            shade('com.google.guava:guava:14.0-rc3')
+        mavenCentral()
+        maven { url "https://maven.firstdarkdev.xyz/releases" }
+        maven { url "https://maven.firstdarkdev.xyz/snapshots" }
+        maven {
+            name = 'TerraformersMC'
+            url = 'https://maven.terraformersmc.com/releases/'
         }
     }
 
-    // Java-Specific Dependencies
-    if (targetVersion.isJava8Compatible()) {
-        shade('com.kohlschutter.junixsocket:junixsocket-common:2.5.1')
-        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1')
-    } else {
-        shade('com.kohlschutter.junixsocket:junixsocket-common:2.4.0')
-        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.4.0')
+    dependencies {
+        minecraft "com.mojang:minecraft:${project.mc_version}"
+        mappings loom.officialMojangMappings()
     }
-    implementation "com.google.code.findbugs:jsr305:3.0.2"
 
-    // DiscordIPC (Originally by jagrosh)
-    shade("io.github.CDAGaming:DiscordIPC:${ipc_version}")
-    // SLF4J Dependencies
-    shade('org.slf4j:slf4j-api:1.7.36')
-    if ("${isLegacy}".toBoolean()) {
-        shade('org.slf4j:slf4j-jdk14:1.7.36')
-    } else {
-        runtimeOnly('org.slf4j:slf4j-jdk14:1.7.36')
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
 
-        // 17w15a (1.12) and higher use 2.x's full releases of Log4j
-        // while anything below that uses (Or should be using) the *fixed* version of 2.0-beta9
-        def log4j_version = protocol >= 321 ? "2.0" : "2.0-beta9"
-        shadeOnly("org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}") {
-            exclude group: 'org.apache.logging.log4j', module: "log4j-api"
-            exclude group: 'org.apache.logging.log4j', module: "log4j-core"
+        // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
+        // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
+        // We'll use that if it's available, but otherwise we'll use the older option.
+        if (targetVersion.isJava9Compatible()) {
+            options.release = Integer.parseInt(targetVersion.getMajorVersion())
         }
     }
 
-    // Additional Integrations
-    shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
-    shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
-}
-
-jar {
-    from sourceSets.main.output
-}
-
-shadowJar {
-    configurations = [project.configurations.shade, project.configurations.shadeOnly]
-
-    // Meta Exclusions
-    exclude '**/DEPENDENCIES*'
-    exclude '**/LICENSE*'
-    exclude '**/Log4J*'
-    exclude 'META-INF/NOTICE*'
-    exclude 'META-INF/versions/**'
-    // Package Relocations
-    relocate 'com.jagrosh', 'external.com.jagrosh'
-    relocate 'org.slf4j', 'external.org.slf4j'
-    relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'
-    // Integration Relocations
-    relocate 'me.hypherionmc', 'external.me.hypherionmc'
-
-    archiveClassifier.set('shadow-dev')
-}
-
-remapJar {
-    dependsOn(shadowJar)
-    mustRunAfter(shadowJar)
-    inputFile = shadowJar.archiveFile
-    int forgeGradleVer = "${forgeGradleLevel}".toInteger()
-    if (forgeGradleVer >= 2) {
-        targetNamespace = "searge"
-    } else {
-        targetNamespace = "official"
-    }
-    if ("${isLegacy}".toBoolean()) {
-        int protocol = "${mc_protocol}".toInteger()
-        if (protocol <= 2) { // MC a1.1.2_01 and below
-            sourceNamespace = "searge"
-        } else {
-            fallbackFromNamespace = "searge"
-        }
-    } else {
-        fallbackFromNamespace = "searge"
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = 'UTF-8'
-
-    // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
-    // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
-    // We'll use that if it's available, but otherwise we'll use the older option.
-    if (targetVersion.isJava9Compatible()) {
-        it.options.release = Integer.parseInt(targetVersion.getMajorVersion())
-    }
-}
-
-gradle.projectsEvaluated {
-    tasks.withType(Javadoc) {
-        exclude "${classPath}/config/category/**"
-        exclude "${classPath}/config/element/**"
-        exclude "${classPath}/config/gui/**"
-        exclude "${classPath}/integrations/**"
-    }
-}
-
-task generateMyResources {
-    doFirst {
-        def langDir = new File(mainResources, "/assets/$rootProject.name/lang")
-        def resultDir = new File(generatedResources, "/assets/$rootProject.name/lang")
-        langDir.mkdirs()
-        resultDir.mkdirs()
-        langDir.eachFileRecurse(FileType.FILES) { file ->
-            if (file.path.endsWith(".json")) {
-                def contents = "#PARSE_ESCAPES\n"
-                System.out.println("Converting json to lang: " + file.path)
-                // Logic from TranslationUtils#getTranslationMap
-                // Does not include the escape replacements, as those are done later
-                for (currentString in file.text.readLines()) {
-                    currentString = currentString.trim()
-                    if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && currentString.contains(":")) {
-                        final String[] splitTranslation = currentString.split(":", 2)
-                        String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim()
-                        String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - (splitTranslation[1].endsWith(",") ? 2 : 1)).trim()
-                        contents += "${str1}=${str2}\n"
-                    }
-                }
-                def resultName = file.name.replace(".json", ".lang")
-                if ("${rootProject.isLegacy}".toBoolean() || "${rootProject.mc_protocol}".toInteger() <= 210) {
-                    // On 1.10.2 (Pack Format 2 or below) or Legacy MC
-                    // Adjust name format from xx_xx to xx_XX
-                    resultName = Pattern.compile("_.+?\\.").matcher(resultName).replaceAll(m -> m.group().toUpperCase())
-                }
-                def resultFile = new File(resultDir, resultName)
-                resultFile.createNewFile()
-                System.out.println("Outputting to: " + resultFile.path)
-                resultFile.text = contents.replaceAll("(?s)\\\\(.)", '$1')
-            }
+    gradle.projectsEvaluated {
+        tasks.withType(Javadoc) {
+            exclude "${classPath}/config/category/**"
+            exclude "${classPath}/config/element/**"
+            exclude "${classPath}/config/gui/**"
+            exclude "${classPath}/integrations/**"
         }
     }
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", "${baseVersionLabel}"
-    inputs.property "mcversion", "${mc_version}"
+forgix {
+    group = rootProject.group
+    mergedJarName = "${ext_fileFormat}-universal.jar"
+    outputDir = "build/libs"
 
-    // replace stuff in mcmod.info, nothing else
-    filesMatching("mcmod.info") {
-        // replace version and mcversion
-        expand 'version': "${baseVersionLabel}",
-                'mcversion': "${mc_version}"
+    forge {
+        jarLocation = "build/libs/${ext_fileFormat}-forge.jar"
     }
 
-    // replace stuff in mods.toml, nothing else
-    filesMatching("META-INF/mods.toml") {
-        // replace version and mcversion
-        expand 'version': "${baseVersionLabel}",
-                'mcversion': "${mc_version}"
-    }
-
-    // replace stuff in mods.toml, nothing else
-    filesMatching("fabric.mod.json") {
-        // replace version and mcversion
-        expand 'version': "${baseVersionLabel}",
-                'mcversion': "${mc_version}"
-    }
-
-    // replace stuff in mod_modId.info, nothing else
-    filesMatching("mod_${mod_name}.info") {
-        // replace version
-        expand 'version': "${baseVersionLabel}"
-    }
-
-    filesMatching("mappings.srg") {
-        filter { line ->
-            if (line.startsWith("CL:")) {
-                line
-            } else {
-                null
-            }
-        }
+    fabric {
+        jarLocation = "build/libs/${ext_fileFormat}-fabric.jar"
     }
 }
 
-def copyDir = "$compileJava.temporaryDir/replaced"
-task processSource(type: Sync) {
-    // This will ensure that this task is redone when the properties change.
-    inputs.property "modName", "${mod_name}"
-    inputs.property "versionId", "${versionId}"
-    inputs.property "versionType", "${deploymentType}"
-    inputs.property "versionLabel", "${versionLabel}"
-    inputs.property "mcVersion", "${mc_version}"
-    inputs.property "mcProtocol", "${mc_protocol}"
-
-    from sourceSets.main.java
-    filter(ReplaceTokens, tokens: [
-            MOD_NAME    : mod_name,
-            VERSION_ID  : baseVersionLabel,
-            VERSION_TYPE: deploymentType,
-            MC_VERSION  : mc_version,
-            MC_PROTOCOL : mc_protocol
-    ])
-    into copyDir
-}
-
-compileJava {
-    source = processSource.outputs
+allprojects {
+    apply plugin: "architectury-plugin"
 }
