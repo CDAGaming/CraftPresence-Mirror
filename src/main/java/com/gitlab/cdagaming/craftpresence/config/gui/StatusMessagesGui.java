@@ -159,10 +159,11 @@ public class StatusMessagesGui extends PaginatedScreen {
         );
 
         // Page 1 setText
-        mainMenuMessage.setControlMessage(CONFIG.mainMenuMessage);
-        lanMessage.setControlMessage(CONFIG.lanMessage);
-        singlePlayerMessage.setControlMessage(CONFIG.singlePlayerMessage);
-        packMessage.setControlMessage(CONFIG.packPlaceholderMessage);
+        // TODO: Replace with ModuleData buttons
+//        mainMenuMessage.setControlMessage(CONFIG.mainMenuMessage);
+//        lanMessage.setControlMessage(CONFIG.lanMessage);
+//        singlePlayerMessage.setControlMessage(CONFIG.singlePlayerMessage);
+//        packMessage.setControlMessage(CONFIG.packPlaceholderMessage);
         modsMessage.setControlMessage(CONFIG.modsPlaceholderMessage);
         viveCraftMessage.setControlMessage(CONFIG.vivecraftMessage);
 
@@ -175,7 +176,7 @@ public class StatusMessagesGui extends PaginatedScreen {
         worldMessage.setControlMessage(CONFIG.worldPlaceholderMessage);
 
         // Page 3 setText
-        loadingMessage.setControlMessage(CONFIG.loadingMessage);
+        //loadingMessage.setControlMessage(CONFIG.loadingMessage);
         playerItemsMessage.setControlMessage(CONFIG.playerItemsPlaceholderMessage);
         fallbackPackPlaceholderMessage.setControlMessage(CONFIG.fallbackPackPlaceholderMessage);
 
@@ -184,26 +185,26 @@ public class StatusMessagesGui extends PaginatedScreen {
         backButton.setOnClick(
                 () -> {
                     // Page 1 Saving
-                    if (!mainMenuMessage.getControlMessage().equals(CONFIG.mainMenuMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.mainMenuMessage = mainMenuMessage.getControlMessage();
-                    }
-                    if (!lanMessage.getControlMessage().equals(CONFIG.lanMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.lanMessage = lanMessage.getControlMessage();
-                    }
-                    if (!singlePlayerMessage.getControlMessage().equals(CONFIG.singlePlayerMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.singlePlayerMessage = singlePlayerMessage.getControlMessage();
-                    }
-                    if (!packMessage.getControlMessage().equals(CONFIG.packPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.packPlaceholderMessage = packMessage.getControlMessage();
-                    }
+//                    if (!mainMenuMessage.getControlMessage().equals(CONFIG.mainMenuMessage)) {
+//                        CraftPresence.CONFIG.hasChanged = true;
+//                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+//                        CONFIG.mainMenuMessage = mainMenuMessage.getControlMessage();
+//                    }
+//                    if (!lanMessage.getControlMessage().equals(CONFIG.lanMessage)) {
+//                        CraftPresence.CONFIG.hasChanged = true;
+//                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+//                        CONFIG.lanMessage = lanMessage.getControlMessage();
+//                    }
+//                    if (!singlePlayerMessage.getControlMessage().equals(CONFIG.singlePlayerMessage)) {
+//                        CraftPresence.CONFIG.hasChanged = true;
+//                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+//                        CONFIG.singlePlayerMessage = singlePlayerMessage.getControlMessage();
+//                    }
+//                    if (!packMessage.getControlMessage().equals(CONFIG.packPlaceholderMessage)) {
+//                        CraftPresence.CONFIG.hasChanged = true;
+//                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+//                        CONFIG.packPlaceholderMessage = packMessage.getControlMessage();
+//                    }
                     if (!modsMessage.getControlMessage().equals(CONFIG.modsPlaceholderMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
@@ -248,11 +249,11 @@ public class StatusMessagesGui extends PaginatedScreen {
                     }
 
                     // Page 3 Saving
-                    if (!loadingMessage.getControlMessage().equals(CONFIG.loadingMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.loadingMessage = loadingMessage.getControlMessage();
-                    }
+//                    if (!loadingMessage.getControlMessage().equals(CONFIG.loadingMessage)) {
+//                        CraftPresence.CONFIG.hasChanged = true;
+//                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+//                        CONFIG.loadingMessage = loadingMessage.getControlMessage();
+//                    }
                     if (!playerItemsMessage.getControlMessage().equals(CONFIG.playerItemsPlaceholderMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;

@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.integrations.curse.CurseUtils;
@@ -161,10 +163,14 @@ public class CommandUtils {
             StringUtils.addEntriesNotPresent(loadingArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        CraftPresence.CLIENT.clearPartyData(true, false);
+        final ModuleData currentData = CraftPresence.CONFIG.statusMessages.loadingData;
+        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
+        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
 
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.loadingMessage, loadingArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.generalSettings.defaultIcon, ""), ArgumentType.Image);
+        CraftPresence.CLIENT.clearPartyData(true, false);
+        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData != null ? currentData : new ModuleData());
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(currentMessage, loadingArgs), ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", true, currentIcon), ArgumentType.Image);
 
         isLoadingGame = true;
     }
@@ -189,9 +195,24 @@ public class CommandUtils {
             isLoadingGame = false;
         }
 
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.mainMenuMessage, mainMenuArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", false, CraftPresence.CONFIG.generalSettings.defaultIcon, ""), ArgumentType.Image);
+        final ModuleData currentData = CraftPresence.CONFIG.statusMessages.mainMenuData;
+        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
+        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
+
+        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData != null ? currentData : new ModuleData());
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(currentMessage, mainMenuArgs), ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", true, currentIcon), ArgumentType.Image);
 
         isInMainMenu = true;
+    }
+
+    /**
+     * Clear the Initial Presence Data set from the Loading and Main Menu Events
+     */
+    public static void clearInitialPresence() {
+        isInMainMenu = false;
+        isLoadingGame = false;
+        CraftPresence.CLIENT.clearOverride("&MAINMENU&");
+        CraftPresence.CLIENT.initArgument("&MAINMENU&");
     }
 }

@@ -750,8 +750,13 @@ public class DiscordUtils {
             syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
         }
 
-        syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.packPlaceholderMessage, packArgs), ArgumentType.Text);
-        syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
+        final ModuleData currentData = CraftPresence.CONFIG.statusMessages.packData;
+        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
+        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : foundPackIcon;
+
+        syncOverride("&PACK&", currentData != null ? currentData : new ModuleData());
+        syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(currentMessage, packArgs), ArgumentType.Text);
+        syncArgument("&PACK&", !StringUtils.isNullOrEmpty(currentIcon) ? StringUtils.formatAsIcon(currentIcon) : "", ArgumentType.Image);
     }
 
     /**

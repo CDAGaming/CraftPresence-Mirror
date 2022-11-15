@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
@@ -34,11 +35,26 @@ import java.io.Serializable;
 public class Status extends Module implements Serializable {
     private static final long serialVersionUID = 3055410101315942491L;
     private static Status DEFAULT;
-    public String mainMenuMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.main_menu");
-    public String loadingMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.loading");
-    public String lanMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.lan");
-    public String singlePlayerMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.single_player");
-    public String packPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.pack");
+    public ModuleData mainMenuData = new ModuleData(
+            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.main_menu"),
+            null
+    );
+    public ModuleData loadingData = new ModuleData(
+            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.loading"),
+            null
+    );
+    public ModuleData lanData = new ModuleData(
+            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.lan"),
+            null
+    );
+    public ModuleData singleplayerData = new ModuleData(
+            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.single_player"),
+            null
+    );
+    public ModuleData packData = new ModuleData(
+            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.single_player"),
+            null
+    );
     public String outerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.out");
     public String innerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.in");
     public String playerCoordinatePlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.coordinate");

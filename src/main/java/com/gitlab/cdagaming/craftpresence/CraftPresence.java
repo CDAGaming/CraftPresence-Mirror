@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
@@ -256,10 +255,7 @@ public class CraftPresence {
                     } else if (!CommandUtils.isInMainMenu && (!DIMENSIONS.isInUse && !BIOMES.isInUse && !TILE_ENTITIES.isInUse && !ENTITIES.isInUse && !SERVER.isInUse)) {
                         CommandUtils.setMainMenuPresence();
                     } else if (player != null && (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu)) {
-                        CommandUtils.isInMainMenu = false;
-                        CommandUtils.isLoadingGame = false;
-                        CLIENT.initArgument(ArgumentType.Text, "&MAINMENU&");
-                        CLIENT.initArgument(ArgumentType.Image, "&MAINMENU&");
+                        CommandUtils.clearInitialPresence();
                     }
 
                     if (SYSTEM.HAS_LOADED) {

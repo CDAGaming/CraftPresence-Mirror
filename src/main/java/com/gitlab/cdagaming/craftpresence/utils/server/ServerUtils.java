@@ -547,6 +547,8 @@ public class ServerUtils {
 
         iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.serverSettings.fallbackServerIcon));
 
+        ModuleData resultData = new ModuleData();
+        String formattedIcon = "";
         if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
             // Form Pair List of Argument for Servers/LAN Games
             playerAmountArgs.clear();
@@ -570,7 +572,9 @@ public class ServerUtils {
 
             final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : currentServer_Name;
             final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
-            String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
+
+            resultData = primaryData != null ? primaryData : (alternateData != null ? alternateData : defaultData);
+            formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
             // Attempt to find alternative icons, if not in available discord assets
             if (!DiscordAssetUtils.contains(formattedIcon)) {
@@ -584,15 +588,12 @@ public class ServerUtils {
                 }
             }
 
-            currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
-
-            CraftPresence.CLIENT.syncOverride(argumentFormat, primaryData != null ? primaryData :
-                    (alternateData != null ? alternateData : defaultData)
-            );
-
             if (isOnLAN) {
                 // NOTE: LAN-Only Presence Updates
-                currentServerMessage = CraftPresence.CONFIG.statusMessages.lanMessage;
+                resultData = CraftPresence.CONFIG.statusMessages.lanData;
+                currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
+                final String dataIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
+                formattedIcon = StringUtils.formatAsIcon(dataIcon.replace(" ", "_"));
             } else {
                 // NOTE: Server-Only Presence Updates
                 final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
@@ -618,8 +619,10 @@ public class ServerUtils {
             }
         } else if (CraftPresence.instance.isSingleplayer()) {
             // NOTE: SinglePlayer-Only Presence Updates
-            currentServerMessage = CraftPresence.CONFIG.statusMessages.singlePlayerMessage;
-            currentServerIcon = "";
+            resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
+            currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
+            final String dataIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
+            formattedIcon = StringUtils.formatAsIcon(dataIcon.replace(" ", "_"));
         }
 
         // Add applicable args as sub-placeholders
@@ -646,12 +649,12 @@ public class ServerUtils {
             StringUtils.addEntriesNotPresent(serverArgs, CraftPresence.CLIENT.generalArgs);
         }
 
-        CraftPresence.CLIENT.syncArgument(argumentFormat, StringUtils.sequentialReplaceAnyCase(currentServerMessage, serverArgs), ArgumentType.Text);
-        if (!StringUtils.isNullOrEmpty(currentServerIcon)) {
-            CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), ArgumentType.Image);
-        } else {
-            CraftPresence.CLIENT.initArgument(ArgumentType.Image, argumentFormat);
-        }
+        currentServerMessage = StringUtils.sequentialReplaceAnyCase(currentServerMessage, serverArgs);
+        currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
+
+        CraftPresence.CLIENT.syncOverride(argumentFormat, resultData);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, currentServerMessage, ArgumentType.Text);
+        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), ArgumentType.Image);
         queuedForUpdate = false;
     }
 
