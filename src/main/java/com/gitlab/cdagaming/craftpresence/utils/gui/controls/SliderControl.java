@@ -214,7 +214,7 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (visible) {
             if (dragging) {
                 sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
@@ -235,18 +235,13 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (super.mousePressed(mc, mouseX, mouseY)) {
-            sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
-            sliderValue = clamp(sliderValue, 0.0F, 1.0F);
-            denormalizedSlideValue = denormalizeValue(sliderValue);
+    public void onClick(double mouseX, double mouseY) {
+        sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
+        sliderValue = clamp(sliderValue, 0.0F, 1.0F);
+        denormalizedSlideValue = denormalizeValue(sliderValue);
 
-            setControlMessage(windowTitle + ": " + denormalizedSlideValue);
-            dragging = true;
-            return true;
-        } else {
-            return false;
-        }
+        setControlMessage(windowTitle + ": " + denormalizedSlideValue);
+        dragging = true;
     }
 
     /**
@@ -343,7 +338,7 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseReleased(MouseEvent e).
      */
     @Override
-    public void mouseReleased(int mouseX, int mouseY) {
+    public void onRelease(double mouseX, double mouseY) {
         dragging = false;
     }
 

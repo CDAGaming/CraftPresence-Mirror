@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.impl;
 
+import net.minecraft.client.renderer.texture.NativeImage;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -57,6 +58,10 @@ public class ImageFrame {
      */
     private final BufferedImage image;
     /**
+     * The native image instance being stored
+     */
+    private final NativeImage nativeImage;
+    /**
      * The disposal method flag being used for this frame
      */
     private final String disposal;
@@ -84,6 +89,7 @@ public class ImageFrame {
      */
     public ImageFrame(final BufferedImage image, final int delay, final String disposal, final int width, final int height) {
         this.image = image;
+        this.nativeImage = null;
         this.delay = delay;
         this.disposal = disposal;
         this.width = width;
@@ -97,6 +103,62 @@ public class ImageFrame {
      */
     public ImageFrame(final BufferedImage image) {
         this(image, -1, null, -1, -1);
+    }
+
+    /**
+     * Initializes an Image Frame, with the specified arguments
+     *
+     * @param image    The native image, if any, to be stored for this frame
+     * @param delay    The delay between now and the next image transition
+     * @param disposal The disposal method flag to use for this frame
+     * @param width    The width of this image
+     * @param height   The height of this image
+     */
+    public ImageFrame(final NativeImage image, final int delay, final String disposal, final int width, final int height) {
+        this.image = null;
+        this.nativeImage = image;
+        this.delay = delay;
+        this.disposal = disposal;
+        this.width = width;
+        this.height = height;
+    }
+
+    /**
+     * Initializes an Image Frame, with the specified arguments
+     *
+     * @param image The native image, if any, to be stored for this frame
+     */
+    public ImageFrame(final NativeImage image) {
+        this(image, -1, null, -1, -1);
+    }
+
+    /**
+     * Initializes an Image Frame, with the specified arguments
+     *
+     * @param image       The buffered image, if any, to be stored for this frame
+     * @param nativeImage The native image, if any, to be stored for this frame
+     * @param delay       The delay between now and the next image transition
+     * @param disposal    The disposal method flag to use for this frame
+     * @param width       The width of this image
+     * @param height      The height of this image
+     */
+    public ImageFrame(final BufferedImage image, final NativeImage nativeImage, final int delay, final String disposal, final int width, final int height) {
+        this.image = image;
+        this.nativeImage = nativeImage;
+        this.delay = delay;
+        this.disposal = disposal;
+        this.width = width;
+        this.height = height;
+    }
+
+    /**
+     * Initializes an Image Frame, with the specified arguments
+     *
+     * @param image       The buffered image, if any, to be stored for this frame
+     * @param nativeImage The native image, if any, to be stored for this frame
+     */
+    public ImageFrame(final BufferedImage image, final NativeImage nativeImage) {
+        this(image, nativeImage, -1, null, -1, -1);
     }
 
     /**
@@ -235,7 +297,8 @@ public class ImageFrame {
             final boolean alpha = master.isAlphaPremultiplied();
             final WritableRaster raster = master.copyData(null);
             final BufferedImage copy = new BufferedImage(model, raster, alpha, null);
-            frames.add(new ImageFrame(copy, delay, disposal, image.getWidth(), image.getHeight()));
+            final NativeImage imgNew = ImageFrame.convertToNative(copy, true);
+            frames.add(new ImageFrame(copy, imgNew, delay, disposal, image.getWidth(), image.getHeight()));
 
             master.flush();
         }
@@ -245,12 +308,49 @@ public class ImageFrame {
     }
 
     /**
+     * Converts the specified BufferImage into a NativeImage
+     * <p>For usage in Minecraft 1.13+
+     *
+     * @param img    The buffered image to parse and convert
+     * @param useStb Whether or not this is an stb-type image
+     * @return The converted NativeImage
+     */
+    public static NativeImage convertToNative(final BufferedImage img, final boolean useStb) {
+        final NativeImage newImage = new NativeImage(img.getWidth(), img.getHeight(), useStb);
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                int rgb = img.getRGB(x, y);
+                final int alpha = (rgb >> 24) & 0xFF;
+                final int red = (rgb >> 16) & 0xFF;
+                final int green = (rgb >> 8) & 0xFF;
+                final int blue = rgb & 0xFF;
+                rgb = ((alpha & 0xFF) << 24) |
+                        ((blue & 0xFF) << 16) |
+                        ((green & 0xFF) << 8) |
+                        ((red & 0xFF));
+                newImage.setPixelRGBA(x, y, rgb);
+            }
+        }
+
+        return newImage;
+    }
+
+    /**
      * Retrieves the current buffered image being stored
      *
      * @return The current buffered image being stored
      */
     public BufferedImage getImage() {
         return image;
+    }
+
+    /**
+     * Retrieves the current native image being stored
+     *
+     * @return The current native image being stored
+     */
+    public NativeImage getNativeImage() {
+        return nativeImage;
     }
 
     /**

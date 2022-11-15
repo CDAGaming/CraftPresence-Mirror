@@ -317,7 +317,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
-        super.keyTyped(typedChar, keyCode);
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
+        return super.keyPressed(keyCode, mouseX, mouseY);
     }
 }

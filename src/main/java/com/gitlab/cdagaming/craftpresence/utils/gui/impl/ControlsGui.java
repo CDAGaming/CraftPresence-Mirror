@@ -35,7 +35,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Map;
@@ -122,11 +122,12 @@ public class ControlsGui extends PaginatedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
         if (entryData != null) {
             setKeyData(keyCode);
+            return true;
         } else {
-            super.keyTyped(typedChar, keyCode);
+            return super.keyPressed(keyCode, mouseX, mouseY);
         }
     }
 
@@ -184,7 +185,7 @@ public class ControlsGui extends PaginatedScreen {
                 final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
                         renderPosition + 20, CraftPresence.GUIS.getButtonY(currentAllocatedRow),
                         120, 20,
-                        KeyUtils.getKeyName(keyData.getFirst().getKeyCode()),
+                        KeyUtils.getKeyName(keyData.getFirst().getKey().getKeyCode()),
                         keyName
                 );
                 keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton, keyData));
@@ -232,7 +233,7 @@ public class ControlsGui extends PaginatedScreen {
 
         // Ensure a Valid KeyCode is entered
         if (!KeyUtils.isValidKeyCode(keyToSubmit) || KeyUtils.isValidClearCode(keyToSubmit)) {
-            keyToSubmit = Keyboard.KEY_NONE;
+            keyToSubmit = GLFW.GLFW_KEY_UNKNOWN;
         }
 
         final String formattedKey = KeyUtils.getKeyName(keyToSubmit);

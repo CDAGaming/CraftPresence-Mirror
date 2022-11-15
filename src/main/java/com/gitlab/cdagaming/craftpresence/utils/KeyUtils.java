@@ -32,8 +32,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,7 @@ public class KeyUtils {
                 final String altKeyName = Integer.toString(original);
                 String keyName;
                 if (original != unknownKeyCode) {
-                    keyName = Keyboard.getKeyName(original);
+                    keyName = GLFW.glfwGetKeyName(original, GLFW.glfwGetKeyScancode(original));
                 } else {
                     keyName = unknownKeyName;
                 }
@@ -229,7 +230,7 @@ public class KeyUtils {
             }
         }
 
-        if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
+        if (CraftPresence.instance.mainWindow != null && CraftPresence.CONFIG != null) {
             final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
             try {
@@ -237,12 +238,12 @@ public class KeyUtils {
                     final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                     final KeyBinding keyBind = keyData.getFirst();
                     final Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
-                    final int currentBind = keyBind.getKeyCode();
+                    final int currentBind = keyBind.getKey().getKeyCode();
                     boolean hasBeenRun = false;
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                        if (GLFW.glfwGetKey(CraftPresence.instance.mainWindow.getHandle(), currentBind) == GLFW.GLFW_PRESS && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
                             try {
                                 callbackData.getFirst().run();
                             } catch (Exception | Error ex) {
@@ -250,7 +251,7 @@ public class KeyUtils {
                                     keyData.getThird().accept(ex);
                                 } else {
                                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
-                                    syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
+                                    syncKeyData(keyName, ImportMode.Specific, keyBind.getDefault().getKeyCode());
                                 }
                             } finally {
                                 hasBeenRun = true;
@@ -286,7 +287,7 @@ public class KeyUtils {
     private void syncKeyData(final String keyName, final ImportMode mode, final int keyCode) {
         final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
         if (mode == ImportMode.Config) {
-            keyData.getFirst().setKeyCode(keyCode);
+            keyData.getFirst().bind(InputMappings.getInputByCode(keyCode, GLFW.glfwGetKeyScancode(keyCode)));
         } else if (mode == ImportMode.Vanilla) {
             keyData.getSecond().getSecond().accept(keyCode, true);
         } else if (mode == ImportMode.Specific) {

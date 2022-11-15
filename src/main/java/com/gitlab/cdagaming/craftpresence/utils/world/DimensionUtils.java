@@ -35,8 +35,9 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.util.registry.IRegistry;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 
 import java.util.List;
 import java.util.Map;
@@ -141,11 +142,11 @@ public class DimensionUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateDimensionData() {
-        final WorldProvider newProvider = CraftPresence.player.world.provider;
-        final DimensionType newDimensionType = newProvider.getDimensionType();
-        final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.getName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final Dimension newProvider = CraftPresence.player.world.dimension;
+        final DimensionType newDimensionType = newProvider.getType();
+        final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.toString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
-        final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(newDimensionType.getName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(newDimensionType.toString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newDimension_Identifier = !StringUtils.isNullOrEmpty(newDimension_primaryIdentifier) ? newDimension_primaryIdentifier : newDimension_alternativeIdentifier;
 
@@ -212,9 +213,16 @@ public class DimensionUtils {
      */
     private List<DimensionType> getDimensionTypes() {
         List<DimensionType> dimensionTypes = Lists.newArrayList();
+        List<DimensionType> defaultDimensionTypes = Lists.newArrayList(IRegistry.DIMENSION_TYPE.iterator());
         Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.lookupObject(DimensionType.class, null, "dimensionTypes");
 
-        StringUtils.addEntriesNotPresent(dimensionTypes, DimensionType.values());
+        if (!defaultDimensionTypes.isEmpty()) {
+            for (DimensionType type : defaultDimensionTypes) {
+                if (type != null) {
+                    dimensionTypes.add(type);
+                }
+            }
+        }
 
         if (dimensionTypes.isEmpty()) {
             // Fallback 1: Use Reflected Dimension Types
@@ -228,12 +236,12 @@ public class DimensionUtils {
                 }
             } else {
                 // Fallback 2: Use Manual Class Lookup
-                for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
+                for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Dimension.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
                     if (classObj != null) {
                         try {
-                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj.getDimensionType())) {
-                                dimensionTypes.add(providerObj.getDimensionType());
+                            Dimension providerObj = (Dimension) classObj.getDeclaredConstructor().newInstance();
+                            if (!dimensionTypes.contains(providerObj.getType())) {
+                                dimensionTypes.add(providerObj.getType());
                             }
                         } catch (Exception | Error ex) {
                             if (ModUtils.IS_VERBOSE) {
@@ -254,7 +262,7 @@ public class DimensionUtils {
     public void getDimensions() {
         for (DimensionType TYPE : getDimensionTypes()) {
             if (TYPE != null) {
-                String dimensionName = !StringUtils.isNullOrEmpty(TYPE.getName()) ? TYPE.getName() : MappingUtils.getClassName(TYPE);
+                String dimensionName = !StringUtils.isNullOrEmpty(TYPE.toString()) ? TYPE.toString() : MappingUtils.getClassName(TYPE);
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DIMENSION_NAMES.contains(name)) {
                     DIMENSION_NAMES.add(name);

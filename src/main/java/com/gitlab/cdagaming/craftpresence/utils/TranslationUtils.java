@@ -28,10 +28,10 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
+import net.minecraft.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.BufferedReader;
@@ -174,7 +174,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         if (CraftPresence.SYSTEM.HAS_GAME_LOADED) {
             if (needsInit || needsSync) {
                 if (needsInit && CraftPresence.instance.getResourceManager() != null) {
-                    ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
+                    ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).addReloadListener(this);
                 }
 
                 // Sync All if we need to (Normally for initialization or reload purposes)

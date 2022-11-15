@@ -32,7 +32,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -216,7 +216,7 @@ public class PaginatedScreen extends ExtendedScreen {
             }
         }
         for (ScrollableListControl listControl : extendedLists) {
-            listControl.setEnabled(listsToRender.contains(listControl));
+            listControl.setVisible(listsToRender.contains(listControl));
         }
 
         previousPageButton.setControlEnabled(currentPage > startPage);
@@ -224,16 +224,16 @@ public class PaginatedScreen extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == Keyboard.KEY_UP && currentPage > startPage) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
+        if (keyCode == GLFW.GLFW_KEY_UP && currentPage > startPage) {
             currentPage--;
         }
 
-        if (keyCode == Keyboard.KEY_DOWN && currentPage < maxPages) {
+        if (keyCode == GLFW.GLFW_KEY_DOWN && currentPage < maxPages) {
             currentPage++;
         }
 
-        super.keyTyped(typedChar, keyCode);
+        return super.keyPressed(keyCode, mouseX, mouseY);
     }
 
     /**
