@@ -96,8 +96,6 @@ public class Legacy2Modern implements DataMigrator {
             .put("playerItemsPlaceholder", "statusMessages.playerItemsPlaceholderMessage")
             .put("worldDataPlaceholder", "statusMessages.worldPlaceholderMessage")
             .put("modsPlaceholder", "statusMessages.modsPlaceholderMessage")
-            .put("vivecraftMessage", "statusMessages.vivecraftMessage")
-            .put("fallbackPackPlaceholder", "statusMessages.fallbackPackPlaceholderMessage")
             //
             .put("enableCommands", "advancedSettings.enableCommands")
             .put("enablePerGuiSystem", "advancedSettings.enablePerGui")

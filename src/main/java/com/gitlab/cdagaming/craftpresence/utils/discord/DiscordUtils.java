@@ -735,12 +735,7 @@ public class DiscordUtils {
         packArgs.clear();
         String foundPackName = "", foundPackIcon = "";
 
-        if (ModUtils.BRAND.contains("vivecraft")) {
-            CraftPresence.packFound = true;
-
-            foundPackName = CraftPresence.CONFIG.statusMessages.vivecraftMessage;
-            foundPackIcon = "vivecraft";
-        } else if (!StringUtils.isNullOrEmpty(CurseUtils.INSTANCE_NAME)) {
+        if (!StringUtils.isNullOrEmpty(CurseUtils.INSTANCE_NAME)) {
             foundPackName = CurseUtils.INSTANCE_NAME;
             foundPackIcon = foundPackName;
         } else if (!StringUtils.isNullOrEmpty(MultiMCUtils.INSTANCE_NAME)) {
@@ -752,20 +747,22 @@ public class DiscordUtils {
         } else if (!StringUtils.isNullOrEmpty(TechnicUtils.PACK_NAME)) {
             foundPackName = TechnicUtils.PACK_NAME;
             foundPackIcon = TechnicUtils.ICON_NAME;
-        } else if (!StringUtils.isNullOrEmpty(CraftPresence.CONFIG.statusMessages.fallbackPackPlaceholderMessage)) {
-            foundPackName = CraftPresence.CONFIG.statusMessages.fallbackPackPlaceholderMessage;
-            foundPackIcon = foundPackName;
         }
 
-        packArgs.add(new Pair<>("&NAME&", (!StringUtils.isNullOrEmpty(foundPackName) ? foundPackName : "")));
+        if (!StringUtils.isNullOrEmpty(foundPackName)) {
+            packArgs.add(new Pair<>("&NAME&", foundPackName));
 
-        // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : packArgs) {
-            syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+            // Add applicable args as sub-placeholders
+            for (Pair<String, String> argumentData : packArgs) {
+                syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
+            }
+
+            syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.packPlaceholderMessage, packArgs), ArgumentType.Text);
+            syncArgument("&PACK&", imageOf("&PACK&", true, foundPackIcon), ArgumentType.Image);
+        } else {
+            removeArgumentsMatching("&PACK:");
+            initArgument("&PACK&");
         }
-
-        syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.packPlaceholderMessage, packArgs), ArgumentType.Text);
-        syncArgument("&PACK&", !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : "", ArgumentType.Image);
     }
 
     /**
