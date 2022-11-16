@@ -190,6 +190,8 @@ public class StatusMessagesGui extends PaginatedScreen {
             }
             index++;
         }
+
+        // Other Page 1 Items
         packMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -201,6 +203,13 @@ public class StatusMessagesGui extends PaginatedScreen {
                 new ExtendedTextControl(
                         getFontRenderer(),
                         calc2, CraftPresence.GUIS.getButtonY(5),
+                        180, 20
+                ), startPage
+        );
+        worldMessage = addControl(
+                new ExtendedTextControl(
+                        getFontRenderer(),
+                        calc2, CraftPresence.GUIS.getButtonY(6),
                         180, 20
                 ), startPage
         );
@@ -241,7 +250,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                         180, 20
                 ), startPage + 1
         );
-        worldMessage = addControl(
+        playerItemsMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
                         calc2, CraftPresence.GUIS.getButtonY(6),
@@ -249,18 +258,10 @@ public class StatusMessagesGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
-        // Page 3 Items
-        playerItemsMessage = addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        calc2, CraftPresence.GUIS.getButtonY(2),
-                        180, 20
-                ), startPage + 2
-        );
-
         // Page 1 setText
         packMessage.setControlMessage(CONFIG.packPlaceholderMessage);
         modsMessage.setControlMessage(CONFIG.modsPlaceholderMessage);
+        worldMessage.setControlMessage(CONFIG.worldPlaceholderMessage);
 
         // Page 2 setText
         outerPlayerMessage.setControlMessage(CONFIG.outerPlayerPlaceholderMessage);
@@ -268,9 +269,6 @@ public class StatusMessagesGui extends PaginatedScreen {
         playerCoordsMessage.setControlMessage(CONFIG.playerCoordinatePlaceholderMessage);
         playerHealthMessage.setControlMessage(CONFIG.playerHealthPlaceholderMessage);
         playerAmountMessage.setControlMessage(CONFIG.playerAmountPlaceholderMessage);
-        worldMessage.setControlMessage(CONFIG.worldPlaceholderMessage);
-
-        // Page 3 setText
         playerItemsMessage.setControlMessage(CONFIG.playerItemsPlaceholderMessage);
 
         super.initializeUi();
@@ -287,6 +285,11 @@ public class StatusMessagesGui extends PaginatedScreen {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         CONFIG.modsPlaceholderMessage = modsMessage.getControlMessage();
+                    }
+                    if (!worldMessage.getControlMessage().equals(CONFIG.worldPlaceholderMessage)) {
+                        CraftPresence.CONFIG.hasChanged = true;
+                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                        CONFIG.worldPlaceholderMessage = worldMessage.getControlMessage();
                     }
 
                     // Page 2 Saving
@@ -315,13 +318,6 @@ public class StatusMessagesGui extends PaginatedScreen {
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         CONFIG.playerAmountPlaceholderMessage = playerAmountMessage.getControlMessage();
                     }
-                    if (!worldMessage.getControlMessage().equals(CONFIG.worldPlaceholderMessage)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                        CONFIG.worldPlaceholderMessage = worldMessage.getControlMessage();
-                    }
-
-                    // Page 3 Saving
                     if (!playerItemsMessage.getControlMessage().equals(CONFIG.playerItemsPlaceholderMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
@@ -350,6 +346,7 @@ public class StatusMessagesGui extends PaginatedScreen {
 
         final String packText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.pack_message");
         final String modsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.mods_message");
+        final String worldText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.world_message");
 
         final String outerPlayerText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_message.out");
         final String innerPlayerText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_message.in");
@@ -357,22 +354,20 @@ public class StatusMessagesGui extends PaginatedScreen {
         final String playerHealthText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_health_message");
         final String playerAmountText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_amount_message");
         final String playerItemsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_item_message");
-        final String worldDataText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.world_message");
 
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
         renderString(packText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage);
         renderString(modsText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(5, 5), 0xFFFFFF, startPage);
+        renderString(worldText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), 0xFFFFFF, startPage);
 
         renderString(outerPlayerText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 1);
         renderString(innerPlayerText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
         renderString(playerCoordsText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage + 1);
         renderString(playerHealthText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage + 1);
         renderString(playerAmountText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(5, 5), 0xFFFFFF, startPage + 1);
-        renderString(worldDataText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), 0xFFFFFF, startPage + 1);
-
-        renderString(playerItemsText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 2);
+        renderString(playerItemsText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), 0xFFFFFF, startPage + 1);
 
         super.preRender();
     }
@@ -381,14 +376,13 @@ public class StatusMessagesGui extends PaginatedScreen {
     public void postRender() {
         final String packText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.pack_message");
         final String modsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.mods_message");
+        final String worldText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.world_message");
 
         final String outerPlayerText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_message.out");
         final String innerPlayerText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_message.in");
         final String playerCoordsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_coordinate_message");
         final String playerHealthText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_health_message");
         final String playerAmountText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_amount_message");
-        final String worldDataText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.world_message");
-
         final String playerItemsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_item_message");
 
         if (currentPage == startPage) {
@@ -412,6 +406,18 @@ public class StatusMessagesGui extends PaginatedScreen {
                                         CraftPresence.CLIENT.generateArgumentMessage(
                                                 "&MODS&", "&MODS:",
                                                 ArgumentType.Text, "&MODS:"
+                                        ))
+                        ), this, true
+                );
+            }
+            // Hovering over World Data Message Label
+            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), getStringWidth(worldText), getFontHeight())) {
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.world_message",
+                                        CraftPresence.SERVER.generateArgumentMessage(
+                                                "&SERVER:WORLDINFO&", "&SERVER:WORLDINFO:",
+                                                ArgumentType.Text
                                         ))
                         ), this, true
                 );
@@ -479,23 +485,8 @@ public class StatusMessagesGui extends PaginatedScreen {
                         ), this, true
                 );
             }
-            // Hovering over World Data Message Label
-            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), getStringWidth(worldDataText), getFontHeight())) {
-                CraftPresence.GUIS.drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.world_message",
-                                        CraftPresence.SERVER.generateArgumentMessage(
-                                                "&SERVER:WORLDINFO&", "&SERVER:WORLDINFO:",
-                                                ArgumentType.Text
-                                        ))
-                        ), this, true
-                );
-            }
-        }
-
-        if (currentPage == startPage + 2) {
             // Hovering over Player Items Message Label
-            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(playerItemsText), getFontHeight())) {
+            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), getStringWidth(playerItemsText), getFontHeight())) {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.player_item_message",
