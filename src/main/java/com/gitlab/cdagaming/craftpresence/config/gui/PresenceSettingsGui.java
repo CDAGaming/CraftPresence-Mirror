@@ -237,6 +237,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                             );
                                         }
                                 )
+                        ),
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                ), this, true
                         )
                 ), startPage + 1
         );
@@ -329,6 +334,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                             );
                                         }
                                 )
+                        ),
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                ), this, true
                         )
                 ), startPage + 1
         );
@@ -450,22 +460,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 null,
                                                 ArgumentType.Image, DiscordUtils.iconModules
                                         ))
-                        ), this, true
-                );
-            }
-            // Hovering over Button Messages Button
-            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), buttonMessagesButton)) {
-                CraftPresence.GUIS.drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                        ), this, true
-                );
-            }
-            // Hovering over Dynamic Icons Button
-            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), dynamicIconsButton)) {
-                CraftPresence.GUIS.drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
                         ), this, true
                 );
             }
