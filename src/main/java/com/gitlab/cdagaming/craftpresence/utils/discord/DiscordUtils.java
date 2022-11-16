@@ -803,48 +803,53 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final boolean addExtraData, final List<Pair<String, String>> args) {
-        final StringBuilder finalString = new StringBuilder(
-                String.format("%s%s:",
-                        ModUtils.TRANSLATOR.translate(
-                                String.format("%s.placeholders.title", ModUtils.MOD_ID)
-                        ), (!StringUtils.isNullOrEmpty(argumentFormat) ? (" (" + argumentFormat.toLowerCase() + ")") : "")
-                )
+        final String titleString = String.format("%s%s:",
+                ModUtils.TRANSLATOR.translate(
+                        String.format("%s.placeholders.title", ModUtils.MOD_ID)
+                ), (!StringUtils.isNullOrEmpty(argumentFormat) ? (" (" + argumentFormat.toLowerCase() + ")") : "")
         );
+        final StringBuilder placeholderString = new StringBuilder();
         if (args != null && !args.isEmpty()) {
             for (Pair<String, String> argData : args) {
                 String placeholderName = argData.getFirst();
                 String translationName = placeholderName;
-                if (!StringUtils.isNullOrEmpty(argumentFormat)) {
-                    if (!StringUtils.isNullOrEmpty(subArgumentFormat)) {
-                        placeholderName = placeholderName.replaceAll(subArgumentFormat, argumentFormat.substring(0, 1));
-                    }
-                    translationName = (argumentFormat + "." + placeholderName).replaceAll(argumentFormat.substring(0, 1), "");
-                } else {
-                    translationName = translationName.replaceAll("[^a-zA-Z0-9]", "");
-                }
-                finalString.append(
-                        String.format("\\n - %s = %s",
-                                placeholderName.toLowerCase(),
-                                ModUtils.TRANSLATOR.translate(
-                                        String.format("%s.placeholders.%s.description",
-                                                ModUtils.MOD_ID,
-                                                translationName.replaceAll(":", ".")
-                                        )
-                                ))
-                );
+                boolean shouldContinue = StringUtils.isNullOrEmpty(subArgumentFormat) || !subArgumentFormat.equals(placeholderName);
 
-                if (addExtraData && !StringUtils.isNullOrEmpty(argData.getSecond())) {
-                    final String tagValue = argData.getSecond();
-                    finalString.append(String.format("\\n ==> %s \"%s\"",
-                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                            (tagValue.length() >= 128) ? "<...>" : tagValue
-                    ));
+                if (shouldContinue) {
+                    if (!StringUtils.isNullOrEmpty(argumentFormat)) {
+                        if (!StringUtils.isNullOrEmpty(subArgumentFormat)) {
+                            placeholderName = placeholderName.replaceAll(subArgumentFormat, argumentFormat.substring(0, 1));
+                        }
+                        translationName = (argumentFormat + "." + placeholderName).replaceAll(argumentFormat.substring(0, 1), "");
+                    } else {
+                        translationName = translationName.replaceAll("[^a-zA-Z0-9]", "");
+                    }
+                    placeholderString.append(
+                            String.format("\\n - %s = %s",
+                                    placeholderName.toLowerCase(),
+                                    ModUtils.TRANSLATOR.translate(
+                                            String.format("%s.placeholders.%s.description",
+                                                    ModUtils.MOD_ID,
+                                                    translationName.replaceAll(":", ".")
+                                            )
+                                    ))
+                    );
+
+                    if (addExtraData && !StringUtils.isNullOrEmpty(argData.getSecond())) {
+                        final String tagValue = argData.getSecond();
+                        placeholderString.append(String.format("\\n ==> %s \"%s\"",
+                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                (tagValue.length() >= 128) ? "<...>" : tagValue
+                        ));
+                    }
                 }
             }
-        } else {
-            finalString.append("\\n - N/A");
         }
-        return finalString.toString();
+
+        if (placeholderString.length() == 0) {
+            placeholderString.append("\\n - N/A");
+        }
+        return titleString + placeholderString;
     }
 
     /**
