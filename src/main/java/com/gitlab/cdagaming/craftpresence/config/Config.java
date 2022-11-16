@@ -189,13 +189,14 @@ public final class Config extends Module implements Serializable {
                 new Legacy2Modern(legacyFile, "UTF-8").apply(this, rawJson);
             }
 
+            // fileVersion, configDirectories[main,server-entries]
             final Map<Integer, String> hypherionFiles = ImmutableMap.<Integer, String>builder()
-                    .put(0, ModUtils.configDir + File.separator + "simple-rpc.toml")
-                    .put(31, CraftPresence.SYSTEM.USER_DIR + File.separator + "simple-rpc" + File.separator + "simple-rpc.toml")
-                    .put(32, ModUtils.configDir + File.separator + "simple-rpc" + File.separator + "simple-rpc.toml")
+                    .put(0, ModUtils.configDir + File.separator)
+                    .put(31, CraftPresence.SYSTEM.USER_DIR + File.separator + "simple-rpc" + File.separator)
+                    .put(32, ModUtils.configDir + File.separator + "simple-rpc" + File.separator)
                     .build();
             for (Map.Entry<Integer, String> entry : hypherionFiles.entrySet()) {
-                final File hypherionFile = new File(entry.getValue());
+                final File hypherionFile = new File(entry.getValue() + "simple-rpc.toml");
                 if (hypherionFile.exists()) {
                     new HypherConverter(entry).apply(this, rawJson);
                     break;

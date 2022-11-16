@@ -35,13 +35,14 @@ import com.google.gson.JsonElement;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
 import me.hypherionmc.moonconfig.core.file.FileConfig;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class HypherConverter implements DataMigrator {
     private final int fileVersion;
-    private final String configPath;
+    private final String configPath, serverEntriesPath;
     // oldName -> newName
     private final Map<String, String> placeholderMappings = ImmutableMap.<String, String>builder()
             .put("%player%", "&IGN:NAME&")
@@ -83,7 +84,8 @@ public class HypherConverter implements DataMigrator {
 
     public HypherConverter(Map.Entry<Integer, String> entry) {
         this.fileVersion = entry.getKey();
-        this.configPath = entry.getValue();
+        this.configPath = entry.getValue() + "simple-rpc.toml";
+        this.serverEntriesPath = entry.getValue() + "server-entries.toml";
     }
 
     @Override
@@ -125,6 +127,13 @@ public class HypherConverter implements DataMigrator {
 
             instance.save();
         }
+
+        // Server Entries Conversion
+        final File serverEntriesFile = new File(serverEntriesPath);
+        if (serverEntriesFile.exists()) {
+            // TODO
+        }
+
         return instance;
     }
 
