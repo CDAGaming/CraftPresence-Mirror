@@ -87,7 +87,7 @@ public class Legacy2Modern implements DataMigrator {
             .put("loadingMessage", "statusMessages.loadingData.textOverride")
             .put("lanGameMessage", "statusMessages.lanData.textOverride")
             .put("singleplayerGameMessage", "statusMessages.singleplayerData.textOverride")
-            .put("modpackMessage", "statusMessages.packData.textOverride")
+            .put("modpackMessage", "statusMessages.packPlaceholderMessage")
             .put("playerOuterInfoPlaceholder", "statusMessages.outerPlayerPlaceholderMessage")
             .put("playerInnerInfoPlaceholder", "statusMessages.innerPlayerPlaceholderMessage")
             .put("playerCoordinatePlaceholder", "statusMessages.playerCoordinatePlaceholderMessage")

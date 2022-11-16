@@ -86,20 +86,9 @@ public class StatusMessagesGui extends PaginatedScreen {
                     ), this, true
             )
             ))
-            .put("gui.config.name.status_messages.placeholder.pack_message", new Pair<>(
-                    "packData", () -> CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.pack_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage(
-                                            "&PACK&", "&PACK:",
-                                            ArgumentType.Text, "&PACK:"
-                                    ))
-                    ), this, true
-            )
-            ))
             .build();
     private ExtendedTextControl outerPlayerMessage, innerPlayerMessage, playerCoordsMessage, playerHealthMessage,
-            playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, viveCraftMessage, fallbackPackPlaceholderMessage;
+            playerAmountMessage, playerItemsMessage, worldMessage, modsMessage, viveCraftMessage, packMessage, fallbackPackPlaceholderMessage;
 
     StatusMessagesGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -116,11 +105,9 @@ public class StatusMessagesGui extends PaginatedScreen {
         int buttonRow = 1, index = 1;
         for (Map.Entry<String, Pair<String, Runnable>> entry : eventMappings.entrySet()) {
             final boolean isEven = (index % 2 == 0);
-            int startX;
-            if (index >= eventMappings.size()) {
+            int startX = isEven ? calc2 : calc1;
+            if (index >= eventMappings.size() && startX == calc1) {
                 startX = midCalc;
-            } else {
-                startX = isEven ? calc2 : calc1;
             }
 
             addControl(
@@ -203,6 +190,13 @@ public class StatusMessagesGui extends PaginatedScreen {
             }
             index++;
         }
+        packMessage = addControl(
+                new ExtendedTextControl(
+                        getFontRenderer(),
+                        calc2, CraftPresence.GUIS.getButtonY(4),
+                        180, 20
+                ), startPage
+        );
         modsMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -279,6 +273,7 @@ public class StatusMessagesGui extends PaginatedScreen {
         );
 
         // Page 1 setText
+        packMessage.setControlMessage(CONFIG.packPlaceholderMessage);
         modsMessage.setControlMessage(CONFIG.modsPlaceholderMessage);
         viveCraftMessage.setControlMessage(CONFIG.vivecraftMessage);
 
@@ -291,7 +286,6 @@ public class StatusMessagesGui extends PaginatedScreen {
         worldMessage.setControlMessage(CONFIG.worldPlaceholderMessage);
 
         // Page 3 setText
-        //loadingMessage.setControlMessage(CONFIG.loadingMessage);
         playerItemsMessage.setControlMessage(CONFIG.playerItemsPlaceholderMessage);
         fallbackPackPlaceholderMessage.setControlMessage(CONFIG.fallbackPackPlaceholderMessage);
 
@@ -300,6 +294,11 @@ public class StatusMessagesGui extends PaginatedScreen {
         backButton.setOnClick(
                 () -> {
                     // Page 1 Saving
+                    if (!packMessage.getControlMessage().equals(CONFIG.packPlaceholderMessage)) {
+                        CraftPresence.CONFIG.hasChanged = true;
+                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                        CONFIG.packPlaceholderMessage = packMessage.getControlMessage();
+                    }
                     if (!modsMessage.getControlMessage().equals(CONFIG.modsPlaceholderMessage)) {
                         CraftPresence.CONFIG.hasChanged = true;
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
@@ -375,6 +374,7 @@ public class StatusMessagesGui extends PaginatedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.status_messages");
 
+        final String packText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.pack_message");
         final String modsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.mods_message");
         final String viveCraftText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.special.vivecraft_message");
 
@@ -391,6 +391,7 @@ public class StatusMessagesGui extends PaginatedScreen {
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
+        renderString(packText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage);
         renderString(modsText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(5, 5), 0xFFFFFF, startPage);
         renderString(viveCraftText, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(6, 5), 0xFFFFFF, startPage);
 
@@ -409,6 +410,7 @@ public class StatusMessagesGui extends PaginatedScreen {
 
     @Override
     public void postRender() {
+        final String packText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.pack_message");
         final String modsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.mods_message");
         final String viveCraftText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.special.vivecraft_message");
 
@@ -417,11 +419,24 @@ public class StatusMessagesGui extends PaginatedScreen {
         final String playerCoordsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_coordinate_message");
         final String playerHealthText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_health_message");
         final String playerAmountText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_amount_message");
-        final String playerItemsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_item_message");
         final String worldDataText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.world_message");
 
+        final String playerItemsText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.placeholder.player_item_message");
         final String fallbackPackPlaceholderText = ModUtils.TRANSLATOR.translate("gui.config.name.status_messages.fallback.pack_placeholder_message");
+
         if (currentPage == startPage) {
+            // Hovering over Pack Message Label
+            if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), getStringWidth(packText), getFontHeight())) {
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.placeholder.pack_message",
+                                        CraftPresence.CLIENT.generateArgumentMessage(
+                                                "&PACK&", "&PACK:",
+                                                ArgumentType.Text, "&PACK:"
+                                        ))
+                        ), this, true
+                );
+            }
             // Hovering over Mods Message Label
             if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(5, 5), getStringWidth(modsText), getFontHeight())) {
                 CraftPresence.GUIS.drawMultiLineString(

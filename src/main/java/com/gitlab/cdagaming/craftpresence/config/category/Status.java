@@ -51,10 +51,7 @@ public class Status extends Module implements Serializable {
             ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.single_player"),
             null
     );
-    public ModuleData packData = new ModuleData(
-            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.pack"),
-            null
-    );
+    public String packPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.pack");
     public String outerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.out");
     public String innerPlayerPlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.in");
     public String playerCoordinatePlaceholderMessage = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.placeholder.player_info.coordinate");
