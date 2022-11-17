@@ -77,7 +77,7 @@ public class DiscordUtils {
      * A list of the icon modules for this application
      */
     public static final List<String> iconModules = Lists.newArrayList(
-            "&DEFAULT&", "&MAINMENU&", "&PACK&",
+            "&DEFAULT&", "&MAINMENU&", "&IGN&", "&PACK&",
             "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&",
             "&TARGETENTITY&", "&RIDINGENTITY&"
     );
@@ -1087,6 +1087,8 @@ public class DiscordUtils {
                     DiscordAssetUtils.syncCustomAssets();
                     CraftPresence.CONFIG.save();
                 }
+
+                syncArgument("&IGN&", playerName, ArgumentType.Image);
             }
         }
 

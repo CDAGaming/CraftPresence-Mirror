@@ -54,10 +54,10 @@ public class HypherConverter implements DataMigrator {
             .put("%mcver%", "&MCVERSION&")
             .put("%instance%", "&PACK:NAME&")
             .put("%launcher%", "&BRAND&")
-            .put("%server%", "&unknown&") // TODO
-            .put("%launchername%", "&BRAND&") // This automatically becomes lowercase if used as an icon
+            .put("%server%", "&SERVER&")
+            .put("%launchername%", "&BRAND&")
             .put("%savename%", "&SERVER:WORLDINFO:WORLDNAME&")
-            .put("%playerhead%", "&unknown&") // TODO
+            .put("%playerhead%", "&IGN&")
             .put("%gametime12%", "&SERVER:WORLDINFO:WORLDTIME12&")
             .put("%gametime%", "&SERVER:WORLDINFO:WORLDTIME&")
             .put("%day%", "&SERVER:WORLDINFO:WORLDDAY&")
@@ -73,7 +73,7 @@ public class HypherConverter implements DataMigrator {
             .put("%playersexcl%", "&SERVER:PLAYERS:CURRENTEXCL&")
             .put("%maxplayers%", "&SERVER:PLAYERS:MAX&")
             .put("%motd%", "&SERVER:MOTD&")
-            .put("%servericon%", "&unknown&") // TODO
+            .put("%servericon%", "&SERVER&")
             //
             .put("%realmname%", "&unknown&") // Realm Event - Unimplemented
             .put("%realmdescription%", "&unknown&") // Realm Event - Unimplemented
