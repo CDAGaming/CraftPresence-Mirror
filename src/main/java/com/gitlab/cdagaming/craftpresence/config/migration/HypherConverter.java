@@ -80,7 +80,7 @@ public class HypherConverter implements DataMigrator {
             .put("%realmgame%", "&unknown&") // TODO
             .put("%realmicon%", "&unknown&") // TODO
             .build();
-    private int configVersion;
+    private int configVersion = -1, serverEntryVersion = -1;
 
     public HypherConverter(Map.Entry<Integer, String> entry) {
         this.fileVersion = entry.getKey();
@@ -90,22 +90,22 @@ public class HypherConverter implements DataMigrator {
 
     @Override
     public Config apply(Config instance, JsonElement rawJson, Object... args) {
+        ModUtils.LOG.info("Simple RPC (By: HypherionSA) config data found, attempting to migrate settings to CraftPresence...");
         try (FileConfig conf = FileConfig.of(configPath)) {
             conf.load();
             configVersion = conf.get("general.version");
-            ModUtils.LOG.info(String.format("Migrating Simple RPC (Version: %d) settings to CraftPresence...", configVersion));
-            ModUtils.LOG.info("Thanks for using our mods! ~~ CDAGaming and HypherionSA");
+            ModUtils.LOG.debugInfo(String.format("Main Config file found (Version: %d, File Version: %d), interpreting data...", configVersion, fileVersion));
 
             // Main Conversion
             instance.generalSettings.clientId = conf.get("general.applicationID").toString();
             instance.advancedSettings.debugMode = conf.get("general.debugging");
-            boolean launcherIntegration = conf.get("general.launcherIntegration");
+            final boolean launcherIntegration = conf.get("general.launcherIntegration");
             instance.generalSettings.detectCurseManifest = launcherIntegration;
             instance.generalSettings.detectMCUpdaterInstance = launcherIntegration;
             instance.generalSettings.detectTechnicPack = launcherIntegration;
             instance.generalSettings.detectMultiMCManifest = launcherIntegration;
 
-            boolean isOverridesEnabled = conf.get("dimension_overrides.enabled");
+            final boolean areOverridesEnabled = conf.get("dimension_overrides.enabled");
             if (conf.get("dimension_overrides.dimensions") != null) {
                 for (AbstractConfig entry : (List<AbstractConfig>) conf.get("dimension_overrides.dimensions")) {
                     String name = entry.get("name").toString();
@@ -114,15 +114,15 @@ public class HypherConverter implements DataMigrator {
                         name = name.replaceFirst("biome:", "");
                     }
                     final ModuleData data = new ModuleData();
-                    data.setData(convertPresenceData(entry, isOverridesEnabled, true));
+                    data.setData(convertPresenceData(entry, areOverridesEnabled, true));
                     (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
                 }
             }
 
             instance.statusMessages.loadingData.setData(convertPresenceData(conf.get("init")));
             instance.statusMessages.mainMenuData.setData(convertPresenceData(conf.get("main_menu")));
-            instance.statusMessages.singleplayerData.setData(convertPresenceData(conf.get("single_player"), !isOverridesEnabled));
-            instance.serverSettings.serverData.get("default").setData(convertPresenceData(conf.get("multi_player"), !isOverridesEnabled));
+            instance.statusMessages.singleplayerData.setData(convertPresenceData(conf.get("single_player"), !areOverridesEnabled));
+            instance.serverSettings.serverData.get("default").setData(convertPresenceData(conf.get("multi_player"), !areOverridesEnabled));
             instance.displaySettings.presenceData = convertPresenceData(conf.get("generic"));
 
             instance.save();
@@ -131,9 +131,24 @@ public class HypherConverter implements DataMigrator {
         // Server Entries Conversion
         final File serverEntriesFile = new File(serverEntriesPath);
         if (serverEntriesFile.exists()) {
-            // TODO
+            try (FileConfig conf = FileConfig.of(serverEntriesFile)) {
+                conf.load();
+                serverEntryVersion = conf.get("version");
+                ModUtils.LOG.debugInfo(String.format("Server Entries file found (Version: %d, File Version: %d), interpreting data...", serverEntryVersion, fileVersion));
+
+                final boolean areOverridesEnabled = conf.get("enabled");
+                if (conf.get("entry") != null) {
+                    for (AbstractConfig entry : (List<AbstractConfig>) conf.get("entry")) {
+                        final ModuleData data = new ModuleData();
+                        data.setData(convertPresenceData(entry, areOverridesEnabled, true));
+                        instance.serverSettings.serverData.put(entry.get("ip"), data);
+                    }
+                }
+                instance.save();
+            }
         }
 
+        ModUtils.LOG.info("Migration complete, thanks for using our mods! ~~ CDAGaming and HypherionSA");
         return instance;
     }
 
@@ -147,39 +162,58 @@ public class HypherConverter implements DataMigrator {
         return result;
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain) {
+    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain, final ConfigFlag... flags) {
         final PresenceData data = new PresenceData();
         data.enabled = isEnabled;
         data.useAsMain = useAsMain;
         data.details = processPlaceholder(entry.get("description"));
         data.gameState = processPlaceholder(entry.get("state"));
-        if (configVersion < 17) {
+        if (isActive(ConfigFlag.USE_IMAGE_POOLS)) {
+            // TODO: Implement Image Pool Support
+        } else {
             data.largeImageKey = processPlaceholder(entry.get("largeImageKey"));
             data.smallImageKey = processPlaceholder(entry.get("smallImageKey"));
-        } else {
-            // TODO: Implement Image Pool Support
         }
         data.largeImageText = processPlaceholder(entry.get("largeImageText"));
         data.smallImageText = processPlaceholder(entry.get("smallImageText"));
 
         int buttonIndex = 1;
-        for (AbstractConfig buttonEntry : (List<AbstractConfig>) entry.get("buttons")) {
-            final Button buttonData = new Button(
-                    processPlaceholder(buttonEntry.get("label")),
-                    processPlaceholder(buttonEntry.get("url"))
-            );
-            data.addButton("button_" + buttonIndex, buttonData);
-            buttonIndex++;
+        if (entry.get("buttons") != null) {
+            for (AbstractConfig buttonEntry : (List<AbstractConfig>) entry.get("buttons")) {
+                final Button buttonData = new Button(
+                        processPlaceholder(buttonEntry.get("label")),
+                        processPlaceholder(buttonEntry.get("url"))
+                );
+                data.addButton("button_" + buttonIndex, buttonData);
+                buttonIndex++;
+            }
         }
 
         return data;
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean useAsMain) {
-        return convertPresenceData(entry, entry.getOrElse("enabled", true), useAsMain);
+    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean useAsMain, final ConfigFlag... flags) {
+        return convertPresenceData(entry, entry.getOrElse("enabled", true), useAsMain, flags);
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry) {
-        return convertPresenceData(entry, true);
+    private PresenceData convertPresenceData(final AbstractConfig entry, final ConfigFlag... flags) {
+        return convertPresenceData(entry, true, flags);
+    }
+
+    private boolean isActive(final ConfigFlag flag) {
+        return (configVersion < 0 || configVersion >= flag.configVersion) &&
+                (serverEntryVersion < 0 || serverEntryVersion >= flag.serverEntryVersion);
+    }
+
+    private enum ConfigFlag {
+        USE_IMAGE_POOLS(17, 2);
+
+        private int configVersion;
+        private int serverEntryVersion;
+
+        ConfigFlag(int configVersion, int serverEntryVersion) {
+            this.configVersion = configVersion;
+            this.serverEntryVersion = serverEntryVersion;
+        }
     }
 }
