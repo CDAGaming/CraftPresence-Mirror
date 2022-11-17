@@ -256,7 +256,6 @@ Example: `&IGN:NAME&` == `&NAME&`
 * `&NAME&` - Your username
 * `&UUID&` - Your UUID (Trimmed Format, if valid UUID)
 * `&UUID_FULL&` - Your UUID (Full Format, if valid UUID)
-* `&ICON&` - Your player head icon (If valid UUID)
 
 ___
 
