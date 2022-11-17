@@ -555,7 +555,9 @@ public class ServerUtils {
 
             // Player Amount Arguments
             playerAmountArgs.add(new Pair<>("&CURRENT&", Integer.toString(currentPlayers)));
+            playerAmountArgs.add(new Pair<>("&CURRENTEXCL&", Integer.toString(currentPlayers - 1)));
             playerAmountArgs.add(new Pair<>("&MAX&", Integer.toString(maxPlayers)));
+            playerAmountArgs.add(new Pair<>("&MAXEXCL&", Integer.toString(maxPlayers - 1)));
 
             // Server Data Arguments (Multiplayer)
             final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
@@ -731,7 +733,9 @@ public class ServerUtils {
                     queuedEntries.add(subArgumentFormat + "MAX&");
                 } else if (subArgumentFormat.endsWith("PLAYERS:")) {
                     queuedEntries.add(subArgumentFormat + "CURRENT&");
+                    queuedEntries.add(subArgumentFormat + "CURRENTEXCL&");
                     queuedEntries.add(subArgumentFormat + "MAX&");
+                    queuedEntries.add(subArgumentFormat + "MAXEXCL&");
                 } else if (subArgumentFormat.endsWith("WORLDINFO:")) {
                     queuedEntries.add(subArgumentFormat + "DIFFICULTY&");
                     queuedEntries.add(subArgumentFormat + "WORLDNAME&");

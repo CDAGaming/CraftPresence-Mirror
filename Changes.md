@@ -23,6 +23,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       Discord Asset List, and doing similar activity for the player's head icon.
 * Multiple Accessibility improvements have been made to the GUI in an effort to be more descriptive and user-friendly
 * Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
+* Added support for transferring a Simple RPC (By HypherionSA) config to CraftPresence (With permission, of course!)
+* Removed the ViveCraft Message Option and Fallback Placeholder Message
+  * Alpha Note: The ViveCraft Option will be replaced by something later in the development pipeline before v2.0s full release!
 * UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
     * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
 * Backend: Increased the default text limit for all `ExtendedTextControl`'s
@@ -30,6 +33,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       update, if needed)
 * Added placeholders:
     * `&SERVER:WORLDINFO:WORLDTIME12&` - A 12-hour format of the `&WORLDTIME&` placeholder
+    * `&SERVER:PLAYERS:{CURRENT,MAX}EXCL&` - Alternatives for the `&CURRENT&` and `&MAX&` counterparts, but excludes yourself
 
 ### Fixes
 

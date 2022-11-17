@@ -219,8 +219,10 @@ If you wish to use these placeholders on their own, you can do so via the `&SERV
 
 Example: `&SERVER:PLAYERS:CURRENT&` == `&CURRENT&`
 
-* `&CURRENT&` - Current player count
-* `&MAX&` - Maximum player count
+* `&CURRENT&` - Current player count (Includes yourself)
+* `&CURRENTEXCL&` - Current player count (Excluding yourself)
+* `&MAX&` - Maximum player count (Includes yourself)
+* `&MAXEXCL&` - Maximum player count (Excluding yourself)
 
 ___
 

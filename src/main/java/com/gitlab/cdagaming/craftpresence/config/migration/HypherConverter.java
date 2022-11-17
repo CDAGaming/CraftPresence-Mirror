@@ -39,7 +39,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "SameParameterValue"})
 public class HypherConverter implements DataMigrator {
     private final int fileVersion;
     private final String configPath, serverEntriesPath;
@@ -55,30 +55,30 @@ public class HypherConverter implements DataMigrator {
             .put("%instance%", "&PACK:NAME&")
             .put("%launcher%", "&BRAND&")
             .put("%server%", "&unknown&") // TODO
-            .put("%launchername%", "&BRAND&") // Lower-case?
+            .put("%launchername%", "&BRAND&") // This automatically becomes lowercase if used as an icon
             .put("%savename%", "&SERVER:WORLDINFO:WORLDNAME&")
             .put("%playerhead%", "&unknown&") // TODO
             .put("%gametime12%", "&SERVER:WORLDINFO:WORLDTIME12&")
             .put("%gametime%", "&SERVER:WORLDINFO:WORLDTIME&")
             .put("%day%", "&SERVER:WORLDINFO:WORLDDAY&")
             .put("%weather%", "&unknown&") // TODO
-            .put("%replayframe%", "&unknown&") // TODO
-            .put("%replaytotal%", "&unknown&") // TODO
-            .put("%replaytime%", "&unknown&") // TODO
-            .put("%replaytimeleft%", "&unknown&") // TODO
+            .put("%replayframe%", "&unknown&") // Replay Mod Integration - Unimplemented
+            .put("%replaytotal%", "&unknown&") // Replay Mod Integration - Unimplemented
+            .put("%replaytime%", "&unknown&") // Replay Mod Integration - Unimplemented
+            .put("%replaytimeleft%", "&unknown&") // Replay Mod Integration - Unimplemented
             //
             .put("%serverip%", "&SERVER:IP&")
             .put("%servername%", "&SERVER:NAME&")
             .put("%players%", "&SERVER:PLAYERS:CURRENT&")
-            .put("%playersexcl%", "&unknown&") // TODO
+            .put("%playersexcl%", "&SERVER:PLAYERS:CURRENTEXCL&")
             .put("%maxplayers%", "&SERVER:PLAYERS:MAX&")
             .put("%motd%", "&SERVER:MOTD&")
             .put("%servericon%", "&unknown&") // TODO
             //
-            .put("%realmname%", "&unknown&") // TODO
-            .put("%realmdescription%", "&unknown&") // TODO
-            .put("%realmgame%", "&unknown&") // TODO
-            .put("%realmicon%", "&unknown&") // TODO
+            .put("%realmname%", "&unknown&") // Realm Event - Unimplemented
+            .put("%realmdescription%", "&unknown&") // Realm Event - Unimplemented
+            .put("%realmgame%", "&unknown&") // Realm Event - Unimplemented
+            .put("%realmicon%", "&unknown&") // Realm Event - Unimplemented
             .build();
     private int configVersion = -1, serverEntryVersion = -1;
 
@@ -169,7 +169,11 @@ public class HypherConverter implements DataMigrator {
         data.details = processPlaceholder(entry.get("description"));
         data.gameState = processPlaceholder(entry.get("state"));
         if (isActive(ConfigFlag.USE_IMAGE_POOLS)) {
-            // TODO: Implement Image Pool Support
+            // TODO: Implement *full* Image Pool Support
+            final List<String> largeImages = entry.get("largeImageKey");
+            final List<String> smallImages = entry.get("smallImageKey");
+            data.largeImageKey = processPlaceholder(largeImages.get(0));
+            data.smallImageKey = processPlaceholder(smallImages.get(0));
         } else {
             data.largeImageKey = processPlaceholder(entry.get("largeImageKey"));
             data.smallImageKey = processPlaceholder(entry.get("smallImageKey"));
@@ -208,8 +212,8 @@ public class HypherConverter implements DataMigrator {
     private enum ConfigFlag {
         USE_IMAGE_POOLS(17, 2);
 
-        private int configVersion;
-        private int serverEntryVersion;
+        private final int configVersion;
+        private final int serverEntryVersion;
 
         ConfigFlag(int configVersion, int serverEntryVersion) {
             this.configVersion = configVersion;
