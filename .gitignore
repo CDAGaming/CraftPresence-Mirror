@@ -28,7 +28,7 @@ classes/
 
 logs/
 
-src/main/resources/mappings.srg
+**/src/main/resources/mappings.srg
 
 .vscode/settings.json
 
