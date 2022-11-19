@@ -41,6 +41,16 @@ import java.util.Set;
  */
 public class MappingUtils {
     private static Map<String, String> classMap = null;
+    private static String filePath = "/mappings.srg";
+
+    /**
+     * Set the specified file path to retrieve data from
+     *
+     * @param filePath The new path to pull data from
+     */
+    public static void setFilePath(String filePath) {
+        MappingUtils.filePath = filePath;
+    }
 
     /**
      * Retrieve a mapping for class names from the Searge Data
@@ -52,7 +62,7 @@ public class MappingUtils {
             Map<String, String> cm = new HashMap<String, String>();
             // load from /mappings.srg
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, "/mappings.srg")));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, filePath)));
                 try {
                     ModUtils.LOG.info("Loading Mappings...");
                     Stopwatch stopwatch = Stopwatch.createStarted();
