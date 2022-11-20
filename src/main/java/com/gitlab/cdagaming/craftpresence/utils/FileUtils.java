@@ -270,7 +270,9 @@ public class FileUtils {
                     // Attempt to Add Classes Matching any of the Source Packages
                     if (classInfo.getName().startsWith(startString) || classes.contains(classInfo.getName())) {
                         found = true;
-                        candidateClasses.add(findValidClass(classInfo.getName()));
+                        try {
+                            candidateClasses.add(classInfo.load());
+                        } catch (Exception | Error ignored) {}
                     }
                 }
 
