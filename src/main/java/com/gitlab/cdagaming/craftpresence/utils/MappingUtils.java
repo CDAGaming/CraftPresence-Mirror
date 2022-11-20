@@ -111,16 +111,46 @@ public class MappingUtils {
      * @param object The class object to interpret
      * @return the mapped class name
      */
-    public static String getClassName(Class<?> object) {
+    public static String getClassName(Class<?> object, boolean simpleName) {
         String result = getClassMap().get(
                 object.getCanonicalName().replace(".", "/")
         );
         if (result == null) {
-            result = object.getSimpleName();
+            result = simpleName ? object.getSimpleName() : object.getCanonicalName();
         } else {
-            result = result.substring(result.lastIndexOf("/") + 1);
+            result = simpleName ? result.substring(result.lastIndexOf("/") + 1) : result.replaceAll("/", ".");
         }
         return result;
+    }
+
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object The class object to interpret
+     * @return the mapped class name
+     */
+    public static String getCanonicalName(Class<?> object) {
+        return getClassName(object, false);
+    }
+
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object The object to interpret
+     * @return the mapped class name
+     */
+    public static String getCanonicalName(Object object) {
+        return getCanonicalName(object.getClass());
+    }
+
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object The class object to interpret
+     * @return the mapped class name
+     */
+    public static String getClassName(Class<?> object) {
+        return getClassName(object, true);
     }
 
     /**

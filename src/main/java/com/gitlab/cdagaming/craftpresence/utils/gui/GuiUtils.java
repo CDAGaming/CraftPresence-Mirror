@@ -52,7 +52,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -402,11 +401,13 @@ public class GuiUtils {
      * Retrieves and Synchronizes detected Gui Screen Classes
      */
     public void getScreens() {
-        final Class<?>[] searchClasses = new Class[]{
-                GuiScreen.class, GuiContainer.class
-        };
+        final List<Class<?>> searchClasses = Lists.newArrayList(GuiScreen.class, GuiContainer.class);
 
-        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(Arrays.asList(searchClasses), CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
+        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses,
+                CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses,
+                "net.minecraft", "com.gitlab.cdagaming.craftpresence",
+                "forge.com.gitlab.cdagaming.craftpresence", "fabric.com.gitlab.cdagaming.craftpresence"
+        )) {
             String screenName = MappingUtils.getClassName(classObj);
             if (!GUI_NAMES.contains(screenName)) {
                 GUI_NAMES.add(screenName);

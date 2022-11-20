@@ -270,7 +270,7 @@ public class FileUtils {
                     // Attempt to Add Classes Matching any of the Source Packages
                     if (classInfo.getName().startsWith(startString) || classes.contains(classInfo.getName())) {
                         found = true;
-                        candidateClasses.add(classInfo.load());
+                        candidateClasses.add(findValidClass(classInfo.getName()));
                     }
                 }
 
@@ -328,22 +328,31 @@ public class FileUtils {
      */
     protected static Pair<Boolean, List<Class<?>>> isSubclassOf(final Class<?> originalClass, final Class<?> superClass, final List<Class<?>> scannedClasses) {
         Class<?> clazz = originalClass;
-        if (superClass.equals(Object.class)) {
-            // Every class is an Object.
-            return new Pair<>(true, scannedClasses);
-        }
-        if (clazz.equals(superClass)) {
+        try {
+            if (clazz != null && clazz.getCanonicalName() != null) {
+                clazz = findValidClass(MappingUtils.getCanonicalName(clazz));
+            }
+        } catch (Exception | Error ignored) {}
+
+        if (clazz == null || superClass == null) {
+            // Top of hierarchy, or no super class defined
+            return new Pair<>(false, scannedClasses);
+        } else if (clazz.equals(superClass)) {
             return new Pair<>(true, scannedClasses);
         } else {
-            clazz = clazz.getSuperclass();
-            // every class is Object, but superClass is below Object
-            if (clazz == null || clazz.equals(Object.class)) {
-                // we've reached the top of the hierarchy, but superClass couldn't be found.
-                return new Pair<>(false, scannedClasses);
-            }
             // try the next level up the hierarchy and add this class to scanned history.
             scannedClasses.add(clazz);
-            return isSubclassOf(clazz, superClass, scannedClasses);
+            final Pair<Boolean, List<Class<?>>> subClassInfo = isSubclassOf(clazz.getSuperclass(), superClass, scannedClasses);
+
+            if (!subClassInfo.getFirst() && clazz.getInterfaces() != null) {
+                for (final Class<?> inter : clazz.getInterfaces()) {
+                    if (isSubclassOf(inter, superClass, scannedClasses).getFirst()) {
+                        return new Pair<>(true, scannedClasses);
+                    }
+                }
+            }
+
+            return new Pair<>(subClassInfo.getFirst(), scannedClasses);
         }
     }
 
