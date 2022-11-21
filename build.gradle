@@ -111,8 +111,8 @@ minecraft {
         case "forge":
             forge {
                 // required for 1.7+
-                it.mcpVersion = "${mc_mappings}"
-                it.mcpChannel = 'stable'
+                mcpVersion = "${mc_mappings}"
+                mcpChannel = 'stable'
             }
             break
         case "fabric":
