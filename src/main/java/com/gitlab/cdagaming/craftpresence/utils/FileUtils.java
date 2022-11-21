@@ -271,7 +271,7 @@ public class FileUtils {
                     if (classInfo.getName().startsWith(startString) || classes.contains(classInfo.getName())) {
                         found = true;
                         try {
-                            candidateClasses.add(classInfo.load());
+                            candidateClasses.add(findValidClass(classInfo.getName()));
                         } catch (Exception | Error ignored) {}
                     }
                 }
@@ -332,7 +332,8 @@ public class FileUtils {
         Class<?> clazz = originalClass;
         try {
             if (clazz != null && clazz.getCanonicalName() != null) {
-                clazz = findValidClass(MappingUtils.getCanonicalName(clazz));
+                final Class<?> adjusted = findValidClass(MappingUtils.getCanonicalName(clazz));
+                clazz = adjusted != null ? adjusted : originalClass;
             }
         } catch (Exception | Error ignored) {}
 
