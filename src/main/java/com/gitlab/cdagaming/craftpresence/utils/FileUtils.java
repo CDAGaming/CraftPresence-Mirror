@@ -272,6 +272,7 @@ public class FileUtils {
                         found = true;
                         try {
                             candidateClasses.add(findValidClass(classInfo.getName()));
+                            candidateClasses.add(classInfo.load());
                         } catch (Exception | Error ignored) {}
                     }
                 }
