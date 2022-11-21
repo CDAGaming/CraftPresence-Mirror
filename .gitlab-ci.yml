@@ -10,6 +10,7 @@ cache:
   paths:
     - .gradle/wrapper
     - .gradle/caches
+    - build/unimined
 
 build:
   script:
