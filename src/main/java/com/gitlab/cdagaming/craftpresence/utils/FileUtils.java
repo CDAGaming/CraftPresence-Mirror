@@ -273,7 +273,8 @@ public class FileUtils {
                         try {
                             candidateClasses.add(findValidClass(classInfo.getName()));
                             candidateClasses.add(classInfo.load());
-                        } catch (Exception | Error ignored) {}
+                        } catch (Exception | Error ignored) {
+                        }
                     }
                 }
 
@@ -336,7 +337,8 @@ public class FileUtils {
                 final Class<?> adjusted = findValidClass(MappingUtils.getCanonicalName(clazz));
                 clazz = adjusted != null ? adjusted : originalClass;
             }
-        } catch (Exception | Error ignored) {}
+        } catch (Exception | Error ignored) {
+        }
 
         if (clazz == null || superClass == null) {
             // Top of hierarchy, or no super class defined
