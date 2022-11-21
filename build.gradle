@@ -101,7 +101,7 @@ task publishToModSites {
 unimined {
     // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
     // I recommend you leave this off until unimined is stable
-    useGlobalCache = true
+    useGlobalCache = false
 }
 
 minecraft {
