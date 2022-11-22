@@ -1151,6 +1151,22 @@ public class StringUtils {
     }
 
     /**
+     * Retrieves the Specified Field(s) via Reflection
+     *
+     * @param classToAccess The class to access with the field(s)
+     * @param instance      An Instance of the Class, if needed
+     * @param fieldNames    A List of Field Names to search for
+     * @return The Found Field Data, if any
+     */
+    public static Object lookupObject(String classToAccess, Object instance, String... fieldNames) {
+        final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
+        if (foundClass != null) {
+            return lookupObject(foundClass, instance, fieldNames);
+        }
+        return null;
+    }
+
+    /**
      * Retrieves whether the specified class contains the specified field name
      *
      * @param classToAccess The class to access with the field(s)
@@ -1159,6 +1175,21 @@ public class StringUtils {
      */
     public static boolean doesClassContainField(Class<?> classToAccess, final String fieldName) {
         return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
+    }
+
+    /**
+     * Retrieves whether the specified class contains the specified field name
+     *
+     * @param classToAccess The class to access with the field(s)
+     * @param fieldName     The Field name to search for
+     * @return whether the specified class contains the specified field name
+     */
+    public static boolean doesClassContainField(String classToAccess, final String fieldName) {
+        final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
+        if (foundClass != null) {
+            return doesClassContainField(foundClass, fieldName);
+        }
+        return false;
     }
 
     /**
@@ -1213,6 +1244,20 @@ public class StringUtils {
                     ex.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * Adjusts the Specified Field(s) in the Target Class via Reflection
+     *
+     * @param classToAccess The class to access with the field(s)
+     * @param instance      An Instance of the Class, if needed
+     * @param fieldData     A Pair with the format of fieldName:valueToSet:modifierData
+     */
+    public static void updateField(String classToAccess, Object instance, Tuple<?, ?, ?>... fieldData) {
+        final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
+        if (foundClass != null) {
+            updateField(foundClass, instance, fieldData);
         }
     }
 
