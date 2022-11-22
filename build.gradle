@@ -96,7 +96,11 @@ subprojects {
             if (isJarMod) {
                 mappings "local_mod:mcp:${mc_mappings}@zip"
             } else {
-                mappings "de.oceanlabs.mcp:mcp_config:${rootProject.mc_version}@zip"
+                if (!isLegacy && protocol >= 340) {
+                    mappings "de.oceanlabs.mcp:mcp_config:${rootProject.mc_version}@zip"
+                } else {
+                    mappings "de.oceanlabs.mcp:mcp:${rootProject.mc_version}:srg@zip"
+                }
                 mappings "de.oceanlabs.mcp:mcp_stable:${rootProject.mc_mappings}@zip"
             }
         } else {
