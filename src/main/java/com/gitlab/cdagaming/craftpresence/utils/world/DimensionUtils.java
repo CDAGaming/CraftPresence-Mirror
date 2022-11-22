@@ -235,7 +235,7 @@ public class DimensionUtils {
                             if (!dimensionTypes.contains(providerObj.getDimensionType())) {
                                 dimensionTypes.add(providerObj.getDimensionType());
                             }
-                        } catch (Exception | Error ex) {
+                        } catch (Throwable ex) {
                             if (ModUtils.IS_VERBOSE) {
                                 ex.printStackTrace();
                             }

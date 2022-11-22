@@ -1116,7 +1116,7 @@ public class StringUtils {
                 if (doesClassContainField(f.getType(), name)) {
                     return lookupObject(f.getType(), f.get(instance), name);
                 }
-            } catch (Exception | Error ex) {
+            } catch (Throwable ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }
@@ -1141,7 +1141,7 @@ public class StringUtils {
                     lookupField.setAccessible(true);
                     return lookupField.get(instance);
                 }
-            } catch (Exception | Error ex) {
+            } catch (Throwable ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }
@@ -1176,7 +1176,7 @@ public class StringUtils {
                     updateField(f.getType(), f.get(instance), fieldData);
                     return true;
                 }
-            } catch (Exception | Error ex) {
+            } catch (Throwable ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }
@@ -1229,7 +1229,7 @@ public class StringUtils {
                 final Method lookupMethod = classToAccess.getDeclaredMethod(methodInstance.getFirst(), methodInstance.getSecond().getSecond());
                 lookupMethod.setAccessible(true);
                 lookupMethod.invoke(instance, methodInstance.getSecond().getFirst());
-            } catch (Exception | Error ex) {
+            } catch (Throwable ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }

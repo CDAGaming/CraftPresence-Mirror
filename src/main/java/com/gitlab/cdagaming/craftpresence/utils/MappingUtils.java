@@ -113,12 +113,12 @@ public class MappingUtils {
      */
     public static String getClassName(Class<?> object, boolean simpleName) {
         String result = getClassMap().get(
-                object.getCanonicalName().replace(".", "/")
+                object.getName().replace(".", "/")
         );
         if (result == null) {
-            result = simpleName ? object.getSimpleName() : object.getCanonicalName();
+            result = simpleName ? object.getSimpleName() : object.getName();
         } else {
-            result = simpleName ? result.substring(result.lastIndexOf("/") + 1) : result.replaceAll("/", ".");
+            result = simpleName ? result.substring(result.lastIndexOf("/") + 1) : result.replace("/", ".");
         }
         return result;
     }

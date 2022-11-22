@@ -228,7 +228,7 @@ public class BiomeUtils {
                         if (!biomeTypes.contains(biomeObj)) {
                             biomeTypes.add(biomeObj);
                         }
-                    } catch (Exception | Error ex) {
+                    } catch (Throwable ex) {
                         if (ModUtils.IS_VERBOSE) {
                             ex.printStackTrace();
                         }

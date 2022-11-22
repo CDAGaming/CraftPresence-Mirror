@@ -253,7 +253,7 @@ public class KeyUtils {
                         if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
                             try {
                                 callbackData.getFirst().run();
-                            } catch (Exception | Error ex) {
+                            } catch (Throwable ex) {
                                 if (keyData.getThird() != null) {
                                     keyData.getThird().accept(ex);
                                 } else {
@@ -276,7 +276,7 @@ public class KeyUtils {
                         }
                     }
                 }
-            } catch (Exception | Error ex) {
+            } catch (Throwable ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }

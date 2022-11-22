@@ -237,7 +237,7 @@ public class ModUpdaterUtils {
                     }
                 }
             }
-        } catch (Exception | Error ex) {
+        } catch (Throwable ex) {
             // Log Failure and Set Update State to FAILED
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
 

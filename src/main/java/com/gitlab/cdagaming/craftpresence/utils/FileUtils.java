@@ -273,7 +273,7 @@ public class FileUtils {
                         try {
                             candidateClasses.add(findValidClass(classInfo.getName()));
                             candidateClasses.add(classInfo.load());
-                        } catch (Exception | Error ignored) {
+                        } catch (Throwable ignored) {
                         }
                     }
                 }
@@ -283,7 +283,7 @@ public class FileUtils {
                     found = true;
                     candidateClasses.add(extraClass);
                 }
-            } catch (Exception | Error ex) {
+            } catch (Throwable ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }
@@ -331,34 +331,32 @@ public class FileUtils {
      * @return A pair with the format of isSubclassOf:scannedClasses
      */
     protected static Pair<Boolean, List<Class<?>>> isSubclassOf(final Class<?> originalClass, final Class<?> superClass, final List<Class<?>> scannedClasses) {
-        Class<?> clazz = originalClass;
-        try {
-            if (clazz != null && clazz.getCanonicalName() != null) {
-                final Class<?> adjusted = findValidClass(MappingUtils.getCanonicalName(clazz));
-                clazz = adjusted != null ? adjusted : originalClass;
-            }
-        } catch (Exception | Error ignored) {
-        }
-
-        if (clazz == null || superClass == null) {
+        if (originalClass == null || superClass == null) {
             // Top of hierarchy, or no super class defined
             return new Pair<>(false, scannedClasses);
-        } else if (clazz.equals(superClass)) {
+        } else if (originalClass.equals(superClass)) {
             return new Pair<>(true, scannedClasses);
         } else {
-            // try the next level up the hierarchy and add this class to scanned history.
-            scannedClasses.add(clazz);
-            final Pair<Boolean, List<Class<?>>> subClassInfo = isSubclassOf(clazz.getSuperclass(), superClass, scannedClasses);
+            // Attempt to see if things match with their deobfuscated names
+            final String className = MappingUtils.getCanonicalName(originalClass);
+            final String superClassName = MappingUtils.getCanonicalName(superClass);
+            if (className.equals(superClassName)) {
+                return new Pair<>(true, scannedClasses);
+            } else {
+                // try the next level up the hierarchy and add this class to scanned history.
+                scannedClasses.add(originalClass);
+                final Pair<Boolean, List<Class<?>>> subClassInfo = isSubclassOf(originalClass.getSuperclass(), superClass, scannedClasses);
 
-            if (!subClassInfo.getFirst() && clazz.getInterfaces() != null) {
-                for (final Class<?> inter : clazz.getInterfaces()) {
-                    if (isSubclassOf(inter, superClass, scannedClasses).getFirst()) {
-                        return new Pair<>(true, scannedClasses);
+                if (!subClassInfo.getFirst() && originalClass.getInterfaces() != null) {
+                    for (final Class<?> inter : originalClass.getInterfaces()) {
+                        if (isSubclassOf(inter, superClass, scannedClasses).getFirst()) {
+                            return new Pair<>(true, scannedClasses);
+                        }
                     }
                 }
-            }
 
-            return new Pair<>(subClassInfo.getFirst(), scannedClasses);
+                return new Pair<>(subClassInfo.getFirst(), scannedClasses);
+            }
         }
     }
 
@@ -384,7 +382,7 @@ public class FileUtils {
         for (String path : paths) {
             try {
                 return Class.forName(path, false, ModUtils.CLASS_LOADER);
-            } catch (Exception ignored) {
+            } catch (Throwable ignored) {
             }
         }
         return null;
@@ -414,7 +412,7 @@ public class FileUtils {
                             }
                         }
                         jarFile.close();
-                    } catch (Exception | Error ex) {
+                    } catch (Throwable ex) {
                         if (ModUtils.IS_VERBOSE) {
                             ex.printStackTrace();
                         }

@@ -244,7 +244,7 @@ public class ControlsGui extends PaginatedScreen {
             CraftPresence.CONFIG.hasChanged = true;
 
             entryData.getFirst().setControlMessage(formattedKey);
-        } catch (Exception | Error ex) {
+        } catch (Throwable ex) {
             entryData.getFirst().setControlMessage(backupKeyString);
             ex.printStackTrace();
         }
