@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.integrations.guava.ClassPath;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -38,6 +39,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -52,6 +54,14 @@ public class FileUtils {
      * A GSON Json Builder Instance
      */
     private static final GsonBuilder GSON_BUILDER = new GsonBuilder();
+    /**
+     * TODO
+     */
+    private static final List<ClassPath.ClassInfo> CLASS_LIST = Lists.newArrayList();
+    /**
+     * TODO
+     */
+    private static final List<String> MODDED_CLASS_NAMES = Lists.newArrayList();
 
     /**
      * Retrieves Raw Data and Converts it into a Parsed Json Syntax
@@ -247,74 +257,34 @@ public class FileUtils {
      */
     public static List<Class<?>> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final boolean includeExtraClasses, final String... sourcePackages) {
         final List<Class<?>> matchingClasses = Lists.newArrayList();
-        final List<Class<?>> candidateClasses = Lists.newArrayList();
-        final List<ClassPath.ClassInfo> classList = Lists.newArrayList();
         final List<String> sourceData = Lists.newArrayList(sourcePackages);
 
         if (includeExtraClasses) {
             sourceData.addAll(getModClassNames());
         }
 
-        // Attempt to get all possible classes from the JVM Class Loader
-        try {
-            classList.addAll(ClassPath.from(ModUtils.CLASS_LOADER).getAllClasses());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, Lists.newArrayList());
+        for (Class<?> loadedInstance : getClasses(sourceData)) {
+            for (Class<?> searchClass : searchList) {
+                subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getSecond());
 
-        for (String startString : sourceData) {
-            boolean found = false;
-            Set<String> classes = MappingUtils.getUnmappedClassesMatching(startString);
-            try {
-                for (ClassPath.ClassInfo classInfo : classList) {
-                    // Attempt to Add Classes Matching any of the Source Packages
-                    if (classInfo.getName().startsWith(startString) || classes.contains(classInfo.getName())) {
-                        found = true;
-                        try {
-                            candidateClasses.add(findValidClass(classInfo.getName()));
-                            candidateClasses.add(classInfo.load());
-                        } catch (Throwable ignored) {
+                if (subClassData.getFirst()) {
+                    // If superclass data was found, add the scanned classes
+                    // as well as the original class
+                    if (!matchingClasses.contains(loadedInstance)) {
+                        matchingClasses.add(loadedInstance);
+                    }
+
+                    for (Class<?> subClassInfo : subClassData.getSecond()) {
+                        if (!matchingClasses.contains(subClassInfo)) {
+                            matchingClasses.add(subClassInfo);
                         }
                     }
-                }
 
-                if (!found && includeExtraClasses) {
-                    final Class<?> extraClass = findValidClass(startString);
-                    found = true;
-                    candidateClasses.add(extraClass);
-                }
-            } catch (Throwable ex) {
-                if (ModUtils.IS_VERBOSE) {
-                    ex.printStackTrace();
-                }
-            } finally {
-                if (found && !candidateClasses.isEmpty()) {
-                    Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, Lists.newArrayList());
-
-                    for (Class<?> loadedInstance : candidateClasses) {
-                        for (Class<?> searchClass : searchList) {
-                            subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getSecond());
-
-                            if (subClassData.getFirst()) {
-                                // If superclass data was found, add the scanned classes
-                                // as well as the original class
-                                if (!matchingClasses.contains(loadedInstance)) {
-                                    matchingClasses.add(loadedInstance);
-                                }
-
-                                for (Class<?> subClassInfo : subClassData.getSecond()) {
-                                    if (!matchingClasses.contains(subClassInfo)) {
-                                        matchingClasses.add(subClassInfo);
-                                    }
-                                }
-
-                                break;
-                            } else {
-                                // If no superclass data found, reset for next data
-                                subClassData = new Pair<>(false, Lists.newArrayList());
-                            }
-                        }
-                    }
+                    break;
+                } else {
+                    // If no superclass data found, reset for next data
+                    subClassData = new Pair<>(false, Lists.newArrayList());
                 }
             }
         }
@@ -386,6 +356,57 @@ public class FileUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Retrieve and Cache all known classes within the Class Loader
+     *
+     * @return a list of all known classes
+     */
+    public static List<ClassPath.ClassInfo> getClassList() {
+        if (CLASS_LIST.isEmpty()) {
+            // Attempt to get all possible classes from the JVM Class Loader
+            try {
+                CLASS_LIST.addAll(ClassPath.from(ModUtils.CLASS_LOADER).getAllClasses());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return CLASS_LIST;
+    }
+
+    /**
+     * Retrieve a list of all classes matching the specified lists of paths
+     *
+     * @param paths A nullable list of paths to be interpreted
+     * @return the resulting list
+     */
+    public static List<Class<?>> getClasses(final List<String> paths) {
+        final List<Class<?>> results = Lists.newArrayList();
+        final Map<String, Set<String>> unmappedNames = Maps.newHashMap();
+        for (String path : paths) {
+            unmappedNames.put(path, MappingUtils.getUnmappedClassesMatching(path));
+        }
+        for (ClassPath.ClassInfo classInfo : getClassList()) {
+            boolean hasMatch = paths.isEmpty();
+            // Attempt to Add Classes Matching any of the Source Packages
+            for (String path : paths) {
+                final Set<String> unmapped = unmappedNames.get(path);
+                if (classInfo.getName().startsWith(path) || unmapped.contains(classInfo.getName())) {
+                    hasMatch = true;
+                    break;
+                }
+            }
+
+            if (hasMatch) {
+                try {
+                    results.add(findValidClass(classInfo.getName()));
+                    results.add(classInfo.load());
+                } catch (Throwable ignored) {
+                }
+            }
+        }
+        return results;
     }
 
     /**
