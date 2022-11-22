@@ -463,9 +463,6 @@ public class FileUtils {
                 case DISABLE_ESCAPES:
                     instance.disableHtmlEscaping();
                     break;
-                case FORCE_LENIENT:
-                    instance.setLenient();
-                    break;
                 case PRETTY_PRINT:
                     instance.setPrettyPrinting();
                     break;
@@ -478,7 +475,7 @@ public class FileUtils {
 
     /**
      * Constants representing various {@link GsonBuilder} togges,
-     * such as Disabling Escape Characters, Forcing Lenient, and Pretty Print
+     * such as Disabling Escape Characters and Toggling Pretty Print
      */
     public enum Modifiers {
         /**
@@ -488,10 +485,6 @@ public class FileUtils {
         /**
          * Constant for the "Pretty Print" Modifier.
          */
-        PRETTY_PRINT,
-        /**
-         * Constant for the "Force Lenient" Modifier.
-         */
-        FORCE_LENIENT
+        PRETTY_PRINT
     }
 }
