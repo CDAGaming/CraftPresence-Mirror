@@ -39,7 +39,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
 
 import java.util.List;
 import java.util.Map;
@@ -176,7 +175,7 @@ public class EntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == RayTraceResult.Type.field_603 ? CraftPresence.instance.objectMouseOver.entityHit : null;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;

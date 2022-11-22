@@ -27,7 +27,8 @@ curseforge {
             // CurseForge Compatibility Layer (For Modloader and Beta MC)
             // (This can be removed when/if CurseForge ever adds support for this)
             if (isLegacy) {
-                if ((protocol == 22 || protocol == 23) && loaderToAdd.equalsIgnoreCase("ModLoader")) { // MC 1.0.0 and 1.1.0
+                if ((protocol == 22 || protocol == 23) && loaderToAdd.equalsIgnoreCase("ModLoader")) {
+                    // MC 1.0.0 and 1.1.0
                     loaderToAdd = "Forge"
                 } else if (protocol < 22) {
                     loaderToAdd = ""
