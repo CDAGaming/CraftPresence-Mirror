@@ -2,7 +2,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-def accessWidenerFile = file("$rootDir/src/main/resources/craftpresence.accesswidener")
+def accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
 
 minecraft {
     fabric {

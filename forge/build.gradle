@@ -137,6 +137,9 @@ remapJar {
 }
 
 jar {
+    manifest {
+        attributes 'FMLAT': 'accesstransformer.cfg'
+    }
     classifier "dev"
 }
 
