@@ -55,11 +55,11 @@ public class FileUtils {
      */
     private static final GsonBuilder GSON_BUILDER = new GsonBuilder();
     /**
-     * TODO
+     * The list of the currently detected class names
      */
     private static final List<ClassPath.ClassInfo> CLASS_LIST = Lists.newArrayList();
     /**
-     * TODO
+     * The list of the currently detected modded class names
      */
     private static final List<String> MODDED_CLASS_NAMES = Lists.newArrayList();
 

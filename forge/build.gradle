@@ -2,6 +2,10 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
+unimined {
+    modProvider.modRemapper.fromMappings = "searge"
+}
+
 def accessWidenerFile = project(":common").minecraft.minecraftTransformer.accessWidener
 minecraft {
     if (isJarMod) {
@@ -19,11 +23,9 @@ minecraft {
     if (isLegacy) {
         if (protocol <= 2) { // MC a1.1.2_01 and below
             targetNamespace = "searge"
-        } else {
+        } else if (protocol < 39) { // Below MC 1.3 (Legacy Intermediary Cutoff)
             mcRemapper.fallbackTarget = "searge"
         }
-    } else {
-        mcRemapper.fallbackTarget = "searge"
     }
 
     mcRemapper.tinyRemapperConf = {
@@ -129,11 +131,13 @@ remapJar {
     if (isLegacy) {
         if (protocol <= 2) { // MC a1.1.2_01 and below
             sourceNamespace = "searge"
-        } else {
+        } else if (protocol < 39) { // Below MC 1.3 (Legacy Intermediary Cutoff)
             fallbackFromNamespace = "searge"
+        } else {
+            fallbackFromNamespace = "intermediary"
         }
     } else {
-        fallbackFromNamespace = "searge"
+        fallbackFromNamespace = "intermediary"
     }
 }
 
