@@ -35,8 +35,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew --build-cache build
 
+      - name: Merge Jars with Gradle
+        run: ./gradlew --build-cache mergeJars
+
       - name: Deploy with Gradle
-        run: ./gradlew --build-cache publishToModSites
+        run: ./gradlew --build-cache :universal:publishToModSites
 
       - uses: actions/upload-artifact@v3
         with:

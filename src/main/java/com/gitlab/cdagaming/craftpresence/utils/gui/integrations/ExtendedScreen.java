@@ -39,7 +39,6 @@ import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -284,11 +283,9 @@ public class ExtendedScreen extends GuiScreen {
 
     /**
      * Event to trigger upon Mouse Input
-     *
-     * @throws IOException if error occurs in event trigger
      */
     @Override
-    public void handleMouseInput() throws IOException {
+    public void handleMouseInput() {
         if (initialized) {
             for (ScrollableListControl listControl : extendedLists) {
                 listControl.handleMouseInput();
@@ -301,10 +298,9 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon Button Action, including onClick Events
      *
      * @param button The Button to trigger upon
-     * @throws IOException if error occurs in event trigger
      */
     @Override
-    protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
+    protected void actionPerformed(@Nonnull GuiButton button) {
         if (button instanceof ExtendedButtonControl) {
             ((ExtendedButtonControl) button).onClick();
         }
@@ -340,10 +336,9 @@ public class ExtendedScreen extends GuiScreen {
      * @param mouseX      The Event Mouse X Coordinate
      * @param mouseY      The Event Mouse Y Coordinate
      * @param mouseButton The Event Mouse Button Clicked
-     * @throws IOException if error occurs in event trigger
      */
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (initialized) {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {

@@ -1,0 +1,154 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+def accessWidenerFile = project(":common").minecraft.minecraftTransformer.accessWidener
+minecraft {
+    if (isJarMod) {
+        jarMod()
+    } else {
+        forge {
+            if (accessWidenerFile != null) {
+                accessTransformer = aw2at(project(":common").minecraft.minecraftTransformer.accessWidener)
+            }
+            includeSubprojectSourceSets += project(":common").sourceSets.main
+        }
+    }
+
+    // required when using mcp mappings
+    if (isLegacy) {
+        if (protocol <= 2) { // MC a1.1.2_01 and below
+            targetNamespace = "searge"
+        } else {
+            mcRemapper.fallbackTarget = "searge"
+        }
+    } else {
+        mcRemapper.fallbackTarget = "searge"
+    }
+
+    mcRemapper.tinyRemapperConf = {
+        // most mcp mappings (except older format) dont include field desc
+        it.ignoreFieldDesc(true)
+        // this also fixes some issues with them, as it tells tiny remapper to try harder to resolve conflicts
+        it.ignoreConflicts(true)
+    }
+}
+
+mappings {
+    addExport("CLIENT") {
+        it.targetNamespace = ["searge"]
+        it.sourceNamespace = "official"
+        it.location = file("$projectDir/src/main/resources/mappings-forge.srg")
+        it.setType "srg"
+    }
+
+    addExport("COMBINED") {
+        it.targetNamespace = ["searge"]
+        it.sourceNamespace = "official"
+        it.location = file("$projectDir/src/main/resources/mappings-forge.srg")
+        it.setType "srg"
+    }
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+}
+
+dependencies {
+    if (isJarMod) {
+        jarMod "local_mod:ModLoader:${rootProject.forge_version}@zip"
+    } else {
+        forge "net.minecraftforge:forge:${rootProject.mc_version}-${rootProject.forge_version}"
+    }
+
+    common project(path: ':common'), { transitive false }
+    common(project(path: ":common", configuration: "shade"))
+    common(project(path: ":common", configuration: "shadeOnly"))
+    shadowCommon project(path: ':common'), { transitive false }
+}
+
+processResources {
+    inputs.property "version", "${baseVersionLabel}"
+    inputs.property "mcversion", "${rootProject.mc_version}"
+
+    // replace stuff in mcmod.info, nothing else
+    filesMatching("mcmod.info") {
+        // replace version and mcversion
+        expand 'version': "${baseVersionLabel}",
+                'mcversion': "${mc_version}"
+    }
+
+    // replace stuff in mods.toml, nothing else
+    filesMatching("META-INF/mods.toml") {
+        expand "version": "${baseVersionLabel}",
+                "mcversion": "${rootProject.mc_version}"
+    }
+
+    // replace stuff in mod_modId.info, nothing else
+    filesMatching("mod_${mod_name}.info") {
+        // replace version
+        expand 'version': "${baseVersionLabel}"
+    }
+
+    filesMatching("mappings-forge.srg") {
+        filter { line ->
+            if (line.startsWith("CL:")) {
+                line
+            } else {
+                null
+            }
+        }
+    }
+}
+
+shadowJar {
+    mustRunAfter(project(":common").tasks.shadowJar)
+    dependsOn(project(":common").tasks.shadowJar)
+    from zipTree(project(":common").tasks.shadowJar.archivePath)
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier "forge"
+
+    // Ensure correct namespaces
+    int forgeGradleVer = "${rootProject.forgeGradleLevel}".toInteger()
+    if (forgeGradleVer >= 2) {
+        targetNamespace = "searge"
+    } else {
+        targetNamespace = "official"
+    }
+    if (isLegacy) {
+        if (protocol <= 2) { // MC a1.1.2_01 and below
+            sourceNamespace = "searge"
+        } else {
+            fallbackFromNamespace = "searge"
+        }
+    } else {
+        fallbackFromNamespace = "searge"
+    }
+}
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    duplicatesStrategy 'exclude'
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}

@@ -1,0 +1,161 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+def accessWidenerFile = file("$rootDir/src/main/resources/craftpresence.accesswidener")
+
+minecraft {
+    fabric {
+        if (accessWidenerFile.exists()) {
+            accessWidener = accessWidenerFile
+        }
+    }
+}
+
+remapJar {
+    targetNamespace = "named"
+}
+
+configurations {
+    shadeOnly
+    shade
+    implementation.extendsFrom shade
+}
+
+dependencies {
+    fabric "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    mappings "${rootProject.fabric_group}:intermediary:${rootProject.mc_version}:v2"
+
+    // Legacy Dependencies, based on Protocol Version
+    if (isLegacy) {
+        if (protocol <= 78) { // MC 1.6.4 and below
+            shade('commons-codec:commons-codec:1.15')
+        }
+        if (protocol <= 61) { // MC 1.5.2 and below
+            shade('org.apache.commons:commons-lang3:3.8.1')
+            shade('commons-io:commons-io:2.5')
+            shade('com.google.code.gson:gson:2.8.0')
+        }
+        if (protocol <= 51) { // MC 1.4.7 and below
+            shade('com.google.guava:guava:14.0-rc3')
+        }
+    }
+
+    // Java-Specific Dependencies
+    if (targetCompatibility.isJava8Compatible()) {
+        shade('com.kohlschutter.junixsocket:junixsocket-common:2.5.1')
+        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1')
+    } else {
+        shade('com.kohlschutter.junixsocket:junixsocket-common:2.4.0')
+        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.4.0')
+    }
+    implementation "com.google.code.findbugs:jsr305:3.0.2"
+
+    // DiscordIPC (Originally by jagrosh)
+    shade("io.github.CDAGaming:DiscordIPC:${rootProject.ipc_version}")
+    // SLF4J Dependencies (If below 1.17)
+    if (isLegacy || protocol < 755) {
+        shade('org.slf4j:slf4j-api:1.7.36')
+        if (isLegacy) {
+            shade('org.slf4j:slf4j-jdk14:1.7.36')
+        } else {
+            runtimeOnly('org.slf4j:slf4j-jdk14:1.7.36')
+
+            // 17w15a (1.12) and higher use 2.x's full releases of Log4j
+            // while anything below that uses (Or should be using) the *fixed* version of 2.0-beta9
+            def log4j_version = protocol >= 321 ? "2.0" : "2.0-beta9"
+            shadeOnly("org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}") {
+                exclude group: 'org.apache.logging.log4j', module: "log4j-api"
+                exclude group: 'org.apache.logging.log4j', module: "log4j-core"
+            }
+        }
+    }
+
+    // Additional Integrations
+    shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
+    shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
+}
+
+def mainResources = "$rootDir/src/main/resources"
+def generatedResources = "$buildDir/generated-resources"
+
+// ignore this jank, it's so I don't have to move the src folder, as that creates unnecessary git conflicts
+sourceSets {
+    main {
+        java {
+            java {
+                srcDir "$rootDir/src/main/java"
+            }
+            resources {
+                srcDir "$rootDir/src/main/resources"
+            }
+        }
+        output.dir(generatedResources, builtBy: 'generateMyResources')
+    }
+}
+
+jar {
+    from sourceSets.main.output
+}
+
+shadowJar {
+    configurations = [project.configurations.shade, project.configurations.shadeOnly]
+
+    // Meta Exclusions
+    exclude '**/DEPENDENCIES*'
+    exclude '**/LICENSE*'
+    exclude '**/Log4J*'
+    exclude 'META-INF/NOTICE*'
+    exclude 'META-INF/versions/**'
+    // Package Relocations
+    relocate 'com.jagrosh', 'external.com.jagrosh'
+    if (protocol < 755) {
+        relocate 'org.slf4j', 'external.org.slf4j'
+        relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'
+    }
+    // Integration Relocations
+    relocate 'me.hypherionmc', 'external.me.hypherionmc'
+
+    archiveClassifier.set('shadow-dev')
+}
+
+
+import groovy.io.FileType
+
+import java.util.regex.Pattern
+
+task generateMyResources {
+    doFirst {
+        def langDir = new File(mainResources, "/assets/$rootProject.name/lang")
+        def resultDir = new File(generatedResources, "/assets/$rootProject.name/lang")
+        langDir.mkdirs()
+        resultDir.mkdirs()
+        langDir.eachFileRecurse(FileType.FILES) { file ->
+            if (file.path.endsWith(".json")) {
+                def contents = "#PARSE_ESCAPES\n"
+                System.out.println("Converting json to lang: " + file.path)
+                // Logic from TranslationUtils#getTranslationMap
+                // Does not include the escape replacements, as those are done later
+                for (currentString in file.text.readLines()) {
+                    currentString = currentString.trim()
+                    if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && currentString.contains(":")) {
+                        final String[] splitTranslation = currentString.split(":", 2)
+                        String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim()
+                        String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - (splitTranslation[1].endsWith(",") ? 2 : 1)).trim()
+                        contents += "${str1}=${str2}\n"
+                    }
+                }
+                def resultName = file.name.replace(".json", ".lang")
+                if ("${rootProject.mc_protocol}".toInteger() <= 210) {
+                    // On 1.10.2 (Pack Format 2 or below) or Legacy MC
+                    // Adjust name format from xx_xx to xx_XX
+                    resultName = Pattern.compile("_.+?\\.").matcher(resultName).replaceAll(m -> m.group().toUpperCase())
+                }
+                def resultFile = new File(resultDir, resultName)
+                resultFile.createNewFile()
+                System.out.println("Outputting to: " + resultFile.path)
+                resultFile.text = contents.replaceAll("(?s)\\\\(.)", '$1')
+            }
+        }
+    }
+}

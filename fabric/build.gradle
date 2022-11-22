@@ -1,0 +1,108 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+def accessWidenerFile = project(":common").minecraft.minecraftTransformer.accessWidener
+minecraft {
+    fabric {
+        if (accessWidenerFile != null) {
+            accessWidener = accessWidenerFile
+        }
+    }
+}
+
+mappings {
+    addExport("CLIENT") {
+        it.targetNamespace = ["named"]
+        it.sourceNamespace = "intermediary"
+        it.location = file("$projectDir/src/main/resources/mappings-fabric.srg")
+        it.setType "srg"
+    }
+
+    addExport("COMBINED") {
+        it.targetNamespace = ["named"]
+        it.sourceNamespace = "intermediary"
+        it.location = file("$projectDir/src/main/resources/mappings-fabric.srg")
+        it.setType "srg"
+    }
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+dependencies {
+    fabric "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    mappings "${rootProject.fabric_group}:intermediary:${rootProject.mc_version}:v2"
+
+    // Fabric Integrations (1.14+)
+    if (protocol >= 498) {
+        // Required for loading translation data
+        modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
+        include(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
+
+        // Mod Menu API Implementation
+        modImplementation "${rootProject.modmenu_group}:modmenu:${rootProject.modmenu_version}"
+    }
+
+    common project(path: ':common'), { transitive false }
+    common(project(path: ":common", configuration: "shade"))
+    common(project(path: ":common", configuration: "shadeOnly"))
+    shadowCommon project(path: ':common'), { transitive false }
+}
+
+processResources {
+    inputs.property "version", "${baseVersionLabel}"
+    inputs.property "mcversion", "${rootProject.mc_version}"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": "${baseVersionLabel}",
+                "mcversion": "${rootProject.mc_version}"
+    }
+
+    filesMatching("mappings-fabric.srg") {
+        filter { line ->
+            if (line.startsWith("CL:")) {
+                line
+            } else {
+                null
+            }
+        }
+    }
+}
+
+shadowJar {
+    mustRunAfter(project(":common").tasks.shadowJar)
+    dependsOn(project(":common").tasks.shadowJar)
+    from zipTree(project(":common").tasks.shadowJar.archivePath)
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    fallbackTargetNamespace = "intermediary"
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier "fabric"
+}
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    duplicatesStrategy 'exclude'
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}

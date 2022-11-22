@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config;
+package com.gitlab.cdagaming.craftpresence.forge.config;
 
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import net.minecraft.client.Minecraft;

@@ -181,7 +181,7 @@ public class EntityUtils {
      * Synchronizes Data related to this module, if needed
      */
     private void updateEntityData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY ? CraftPresence.instance.objectMouseOver.entityHit : null;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.typeOfHit == RayTraceResult.Type.field_603 ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
@@ -426,7 +426,7 @@ public class EntityUtils {
             for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
                     final String entityName = !StringUtils.isNullOrEmpty(EntityList.getTranslationName(entityLocation)) ? EntityList.getTranslationName(entityLocation) : "generic";
-                    final Class<?> entityClass = EntityList.getClass(entityLocation);
+                    final Class<?> entityClass = EntityList.getClassFromName(entityName);
                     if (entityClass != null) {
                         if (!ENTITY_NAMES.contains(entityName)) {
                             ENTITY_NAMES.add(entityName);

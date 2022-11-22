@@ -15,6 +15,7 @@ cache:
 build:
   script:
     - ./gradlew --build-cache build
+    - ./gradlew --build-cache mergeJars
   rules:
     - if: $CI_COMMIT_BRANCH == "l10n_master" || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "l10n_master"
       when: never
@@ -27,7 +28,8 @@ build:
 deploy_all:
   script:
     - ./gradlew --build-cache build
-    - ./gradlew --build-cache publishToModSites
+    - ./gradlew --build-cache mergeJars
+    - ./gradlew --build-cache :universal:publishToModSites
   artifacts:
     paths:
       - build/libs/*.jar
@@ -37,7 +39,8 @@ deploy_all:
 deploy_curseforge:
   script:
     - ./gradlew --build-cache build
-    - ./gradlew --build-cache curseforge
+    - ./gradlew --build-cache mergeJars
+    - ./gradlew --build-cache :universal:curseforge
   artifacts:
     paths:
       - build/libs/*.jar
@@ -47,7 +50,8 @@ deploy_curseforge:
 deploy_modrinth:
   script:
     - ./gradlew --build-cache build
-    - ./gradlew --build-cache modrinth
+    - ./gradlew --build-cache mergeJars
+    - ./gradlew --build-cache :universal:modrinth
   artifacts:
     paths:
       - build/libs/*.jar

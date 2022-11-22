@@ -1,0 +1,6 @@
+accessWidener   v2  named
+
+accessible    field    net/minecraft/client/gui/GuiTextField    width    I
+mutable    field    net/minecraft/client/gui/GuiTextField    width    I
+accessible    field    net/minecraft/client/gui/GuiTextField    height    I
+mutable    field    net/minecraft/client/gui/GuiTextField    height    I
