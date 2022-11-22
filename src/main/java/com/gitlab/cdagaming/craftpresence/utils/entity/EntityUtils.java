@@ -51,10 +51,6 @@ import java.util.Map;
  */
 public class EntityUtils {
     /**
-     * A List of the detected Entity Class Names
-     */
-    private final List<String> ENTITY_CLASSES = Lists.newArrayList();
-    /**
      * A Mapping of the Arguments attached to the &TARGETENTITY& RPC Message placeholder
      */
     private final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
@@ -124,7 +120,6 @@ public class EntityUtils {
      */
     private void emptyData() {
         ENTITY_NAMES.clear();
-        ENTITY_CLASSES.clear();
         PLAYER_BINDINGS.clear();
         clearClientData();
     }
@@ -159,7 +154,7 @@ public class EntityUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : enabled;
-        final boolean needsUpdate = enabled && (ENTITY_NAMES.isEmpty() || ENTITY_CLASSES.isEmpty());
+        final boolean needsUpdate = enabled && ENTITY_NAMES.isEmpty();
 
         if (needsUpdate) {
             getEntities();
@@ -426,14 +421,8 @@ public class EntityUtils {
             for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
                     final String entityName = !StringUtils.isNullOrEmpty(EntityList.getTranslationName(entityLocation)) ? EntityList.getTranslationName(entityLocation) : "generic";
-                    final Class<?> entityClass = EntityList.getClassFromName(entityName);
-                    if (entityClass != null) {
-                        if (!ENTITY_NAMES.contains(entityName)) {
-                            ENTITY_NAMES.add(entityName);
-                        }
-                        if (!ENTITY_CLASSES.contains(entityClass.getName())) {
-                            ENTITY_CLASSES.add(entityClass.getName());
-                        }
+                    if (!ENTITY_NAMES.contains(entityName)) {
+                        ENTITY_NAMES.add(entityName);
                     }
                 }
             }
