@@ -67,7 +67,8 @@ dependencies {
 
     common project(path: ':common'), { transitive false }
     common(project(path: ":common", configuration: "shade"))
-    common(project(path: ":common", configuration: "shadeOnly"))
+    common project(path: ":common", configuration: "runtime")
+    shadowCommon project(path: ":common", configuration: "shadeOnly")
     shadowCommon project(path: ':common'), { transitive false }
 }
 
