@@ -187,19 +187,19 @@ public final class Config extends Module implements Serializable {
             final File legacyFile = new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".properties");
             if (legacyFile.exists()) {
                 new Legacy2Modern(legacyFile, "UTF-8").apply(this, rawJson);
-            }
-
-            // fileVersion, configDirectories[main,server-entries]
-            final Map<Integer, String> hypherionFiles = ImmutableMap.<Integer, String>builder()
-                    .put(0, ModUtils.configDir + File.separator)
-                    .put(31, CraftPresence.SYSTEM.USER_DIR + File.separator + "simple-rpc" + File.separator)
-                    .put(32, ModUtils.configDir + File.separator + "simple-rpc" + File.separator)
-                    .build();
-            for (Map.Entry<Integer, String> entry : hypherionFiles.entrySet()) {
-                final File hypherionFile = new File(entry.getValue() + "simple-rpc.toml");
-                if (hypherionFile.exists()) {
-                    new HypherConverter(entry).apply(this, rawJson);
-                    break;
+            } else {
+                // fileVersion, configDirectories[main,server-entries]
+                final Map<Integer, String> hypherionFiles = ImmutableMap.<Integer, String>builder()
+                        .put(0, ModUtils.configDir + File.separator)
+                        .put(31, CraftPresence.SYSTEM.USER_DIR + File.separator + "simple-rpc" + File.separator)
+                        .put(32, ModUtils.configDir + File.separator + "simple-rpc" + File.separator)
+                        .build();
+                for (Map.Entry<Integer, String> entry : hypherionFiles.entrySet()) {
+                    final File hypherionFile = new File(entry.getValue() + "simple-rpc.toml");
+                    if (hypherionFile.exists()) {
+                        new HypherConverter(entry).apply(this, rawJson);
+                        break;
+                    }
                 }
             }
         }
