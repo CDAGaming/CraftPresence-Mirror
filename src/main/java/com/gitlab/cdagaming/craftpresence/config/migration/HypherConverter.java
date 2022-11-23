@@ -113,8 +113,8 @@ public class HypherConverter implements DataMigrator {
                     if (isBiome) {
                         name = name.replaceFirst("biome:", "");
                     }
-                    final ModuleData data = new ModuleData();
-                    data.setData(convertPresenceData(entry, areOverridesEnabled, true));
+                    final ModuleData data = new ModuleData()
+                            .setData(convertPresenceData(entry, areOverridesEnabled, true));
                     (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
                 }
             }
@@ -139,8 +139,8 @@ public class HypherConverter implements DataMigrator {
                 final boolean areOverridesEnabled = conf.get("enabled");
                 if (conf.get("entry") != null) {
                     for (AbstractConfig entry : (List<AbstractConfig>) conf.get("entry")) {
-                        final ModuleData data = new ModuleData();
-                        data.setData(convertPresenceData(entry, areOverridesEnabled, true));
+                        final ModuleData data = new ModuleData()
+                                .setData(convertPresenceData(entry, areOverridesEnabled, true));
                         instance.serverSettings.serverData.put(entry.get("ip"), data);
                     }
                 }

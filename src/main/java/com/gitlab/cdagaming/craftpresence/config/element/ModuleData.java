@@ -86,8 +86,9 @@ public class ModuleData extends Module implements Serializable {
         return data;
     }
 
-    public void setData(PresenceData data) {
+    public ModuleData setData(PresenceData data) {
         this.data = data;
+        return this;
     }
 
     @Override
