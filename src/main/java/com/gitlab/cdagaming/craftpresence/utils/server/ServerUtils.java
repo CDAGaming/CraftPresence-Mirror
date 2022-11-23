@@ -127,6 +127,10 @@ public class ServerUtils {
      */
     private String currentServer_MOTD;
     /**
+     * The Message of the Day, split by new lines, of the Current Server the Player is in
+     */
+    private List<String> currentServer_MOTD_Lines = Lists.newArrayList();
+    /**
      * The Current Server RPC Message being used, with Arguments
      */
     private String currentServerMessage = "";
@@ -221,6 +225,7 @@ public class ServerUtils {
     public void clearClientData() {
         currentServer_IP = null;
         currentServer_MOTD = null;
+        currentServer_MOTD_Lines.clear();
         currentServer_Name = null;
         currentServerData = null;
         currentConnection = null;
@@ -320,7 +325,11 @@ public class ServerUtils {
                     (!StringUtils.isNullOrEmpty(newServer_MOTD) && !newServer_MOTD.equals(currentServer_MOTD)) ||
                     (!StringUtils.isNullOrEmpty(newServer_Name) && !newServer_Name.equals(currentServer_Name))) {
                 currentServer_IP = newServer_IP;
-                currentServer_MOTD = newServer_MOTD;
+
+                if (!newServer_MOTD.equals(currentServer_MOTD)) {
+                    currentServer_MOTD = newServer_MOTD;
+                    currentServer_MOTD_Lines = StringUtils.splitTextByNewLine(newServer_MOTD);
+                }
                 currentServer_Name = newServer_Name;
                 currentServerData = newServerData;
                 currentConnection = newConnection;
@@ -564,6 +573,13 @@ public class ServerUtils {
             serverArgs.add(new Pair<>("&IP&", formattedIP));
             serverArgs.add(new Pair<>("&NAME&", currentServer_Name));
             serverArgs.add(new Pair<>("&MOTD&", currentServer_MOTD));
+            if (!currentServer_MOTD_Lines.isEmpty()) {
+                int index = 1;
+                for (String motdPart : currentServer_MOTD_Lines) {
+                    serverArgs.add(new Pair<>("&MOTD" + index + "&", motdPart));
+                    index++;
+                }
+            }
             serverArgs.add(new Pair<>("&PLAYERS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.playerAmountPlaceholderMessage, playerAmountArgs)));
 
             final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");

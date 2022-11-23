@@ -33,6 +33,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * Due to this change, minified placeholder support has been removed from the backend (Can be re-added in a future
       update, if needed)
 * Added placeholders:
+    * `&SERVER:MOTD&` - Added per-line support (Example: `&MOTD1&` for line one of `&MOTD&`)
     * `&SERVER:WORLDINFO:WORLDTIME12&` - A 12-hour format of the `&WORLDTIME&` placeholder
     * `&SERVER:PLAYERS:{CURRENT,MAX}EXCL&` - Alternatives for the `&CURRENT&` and `&MAX&` counterparts, but excludes
       yourself
@@ -91,9 +92,25 @@ ___
 
 ### More Information
 
-#### v2.0.0 Upgrade Info
+#### Known Issues
 
-TBD
+This release represents a work-in-progress build of CraftPresence's v2.0 release, planned for 2023.
+It does not in any way, shape, or form represent a final product, in either it's backend or frontend implementation.
+
+Despite configuration compatibility being ensured between v1.8.x/v1.9.x and v2.0,
+caution is advised to ensure the best experience, while also baring in mind that features can change, be added, or
+outright removed without forewarning and without compatibility
+between future Alpha releases.
+
+The following known issues are present in this build:
+
+* The GUI Module is only properly functioning up to Minecraft 1.16.5, with Minecraft 1.17+ being unable to retrieve the
+  Vanilla Screens automatically (Adding found GUIs will work properly though)
+* The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
+    * The `realms_list`, `server_list`, and `join_game` events are currently unimplemented at this time
+    * The `custom` field will remain unimplemented until Alpha 3, due to more logic that is planned to be added
+    * Placeholders related to the realm and Replay Mod Integration are currently unimplemented and parse as `&unknown&`.
+    * `%weather%` is also unimplemented at this time, and will also parse as `&unknown&`
 
 #### 1.13.x Build Info
 
