@@ -34,6 +34,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
 import me.hypherionmc.moonconfig.core.file.FileConfig;
+import net.minecraft.client.gui.GuiDownloadTerrain;
+import net.minecraft.client.gui.GuiMultiplayer;
+import net.minecraft.client.gui.GuiScreenRealmsProxy;
+import net.minecraft.client.gui.GuiScreenWorking;
 
 import java.io.File;
 import java.util.List;
@@ -118,6 +122,17 @@ public class HypherConverter implements DataMigrator {
                     (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
                 }
             }
+
+            // Per-GUI Events
+            instance.advancedSettings.enablePerGui = true;
+            instance.advancedSettings.guiSettings.guiData.put(GuiScreenRealmsProxy.class.getSimpleName(), new ModuleData()
+                    .setData(convertPresenceData(conf.get("realms_list"))));
+            instance.advancedSettings.guiSettings.guiData.put(GuiMultiplayer.class.getSimpleName(), new ModuleData()
+                    .setData(convertPresenceData(conf.get("server_list"))));
+            instance.advancedSettings.guiSettings.guiData.put(GuiScreenWorking.class.getSimpleName(), new ModuleData()
+                    .setData(convertPresenceData(conf.get("join_game"))));
+            instance.advancedSettings.guiSettings.guiData.put(GuiDownloadTerrain.class.getSimpleName(), new ModuleData()
+                    .setData(convertPresenceData(conf.get("join_game"))));
 
             instance.statusMessages.loadingData.setData(convertPresenceData(conf.get("init")));
             instance.statusMessages.mainMenuData.setData(convertPresenceData(conf.get("main_menu")));
