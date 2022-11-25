@@ -54,6 +54,7 @@ dependencies {
 
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${rootProject.ipc_version}")
+    shade("io.github.classgraph:classgraph:${rootProject.classgraph_version}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
         shade('org.slf4j:slf4j-api:1.7.36')
@@ -110,6 +111,8 @@ shadowJar {
     exclude 'META-INF/versions/**'
     // Package Relocations
     relocate 'com.jagrosh', 'external.com.jagrosh'
+    relocate 'io.github.classgraph', 'external.io.github.classgraph'
+    relocate 'nonapi.io.github.classgraph', 'external.nonapi.io.github.classgraph'
     if (protocol < 755) {
         relocate 'org.slf4j', 'external.org.slf4j'
         relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'

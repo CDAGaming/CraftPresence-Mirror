@@ -55,7 +55,7 @@ public class UrlUtils {
     /**
      * The Java Specification Version
      */
-    private static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
+    public static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
 
     /**
      * The GSON Json Builder to Use while Parsing Json

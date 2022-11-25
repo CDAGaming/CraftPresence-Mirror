@@ -87,6 +87,19 @@ public class MappingUtils {
     }
 
     /**
+     * Retrieve the mapped class path for the specified argument, if present
+     *
+     * @param input The string to interpret
+     * @return the resulting mapped class path
+     */
+    public static String getMappedPath(String input) {
+        if (getClassMap().containsKey(input)) {
+            return getClassMap().get(input).replace("/", ".");
+        }
+        return input;
+    }
+
+    /**
      * Retrieve a list of unmapped class names matching the specified argument
      *
      * @param start The string to interpret

@@ -26,12 +26,15 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.integrations.guava.ClassPath;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ScanResult;
 
 import java.io.*;
 import java.net.URL;
@@ -57,7 +60,11 @@ public class FileUtils {
     /**
      * The list of the currently detected class names
      */
-    private static final List<ClassPath.ClassInfo> CLASS_LIST = Lists.newArrayList();
+    private static final ClassInfoList CLASS_LIST = new ClassInfoList();
+    /**
+     * The list of the currently detected class names
+     */
+    private static final Map<String, Class<?>> CLASS_MAP = Maps.newHashMap();
     /**
      * The list of the currently detected modded class names
      */
@@ -363,13 +370,25 @@ public class FileUtils {
      *
      * @return a list of all known classes
      */
-    public static List<ClassPath.ClassInfo> getClassList() {
+    public static ClassInfoList getClassList() {
         if (CLASS_LIST.isEmpty()) {
             // Attempt to get all possible classes from the JVM Class Loader
-            try {
-                CLASS_LIST.addAll(ClassPath.from(ModUtils.CLASS_LOADER).getAllClasses());
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            final ClassGraph graphInfo = new ClassGraph()
+                    .enableClassInfo()
+                    .rejectPackages("net.java")
+                    .disableModuleScanning();
+            if (UrlUtils.JAVA_SPEC < 16) {
+                // If we are below Java 16, we can just use the Thread's classloader
+                // See: https://github.com/classgraph/classgraph/wiki#running-on-jdk-16
+                graphInfo.overrideClassLoaders(ModUtils.CLASS_LOADER);
+            }
+            try (ScanResult scanResult = graphInfo.scan()) {
+                for (ClassInfo result : scanResult.getAllClasses()) {
+                    if (!CLASS_LIST.contains(result)) {
+                        CLASS_LIST.add(result);
+                        CLASS_MAP.put(MappingUtils.getMappedPath(result.getName()), result.loadClass(true));
+                    }
+                }
             }
         }
         return CLASS_LIST;
@@ -387,12 +406,14 @@ public class FileUtils {
         for (String path : paths) {
             unmappedNames.put(path, MappingUtils.getUnmappedClassesMatching(path));
         }
-        for (ClassPath.ClassInfo classInfo : getClassList()) {
+
+        for (ClassInfo classInfo : getClassList()) {
+            final String classPath = MappingUtils.getMappedPath(classInfo.getName());
             boolean hasMatch = paths.isEmpty();
             // Attempt to Add Classes Matching any of the Source Packages
             for (String path : paths) {
                 final Set<String> unmapped = unmappedNames.get(path);
-                if (classInfo.getName().startsWith(path) || unmapped.contains(classInfo.getName())) {
+                if (classPath.startsWith(path) || unmapped.contains(classPath)) {
                     hasMatch = true;
                     break;
                 }
@@ -400,8 +421,7 @@ public class FileUtils {
 
             if (hasMatch) {
                 try {
-                    results.add(findValidClass(classInfo.getName()));
-                    results.add(classInfo.load());
+                    results.add(CLASS_MAP.get(classPath));
                 } catch (Throwable ignored) {
                 }
             }
