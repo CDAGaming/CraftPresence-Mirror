@@ -75,6 +75,10 @@ public class BiomeUtils {
      */
     public boolean enabled = false;
     /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    public boolean hasScanned = false;
+    /**
      * A List of the detected Biome Names
      */
     public List<String> BIOME_NAMES = Lists.newArrayList();
@@ -91,6 +95,7 @@ public class BiomeUtils {
      * Clears FULL Data from this Module
      */
     private void emptyData() {
+        hasScanned = false;
         BIOME_NAMES.clear();
         BIOME_TYPES.clear();
         clearClientData();
@@ -116,12 +121,11 @@ public class BiomeUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : enabled;
-        final boolean needsUpdate = enabled && (
-                BIOME_NAMES.isEmpty() || BIOME_TYPES.isEmpty()
-        );
+        final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            getBiomes();
+            new Thread(this::getBiomes, "CraftPresence-Biome-Lookup").start();
+            hasScanned = true;
         }
 
         if (enabled) {

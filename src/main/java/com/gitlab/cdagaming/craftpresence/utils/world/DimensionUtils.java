@@ -76,6 +76,10 @@ public class DimensionUtils {
      */
     public boolean enabled = false;
     /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    public boolean hasScanned = false;
+    /**
      * A List of the detected Dimension Names
      */
     public List<String> DIMENSION_NAMES = Lists.newArrayList();
@@ -92,6 +96,7 @@ public class DimensionUtils {
      * Clears FULL Data from this Module
      */
     private void emptyData() {
+        hasScanned = false;
         DIMENSION_NAMES.clear();
         DIMENSION_TYPES.clear();
         clearClientData();
@@ -117,12 +122,11 @@ public class DimensionUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectDimensionData : enabled;
-        final boolean needsUpdate = enabled && (
-                DIMENSION_NAMES.isEmpty() || DIMENSION_TYPES.isEmpty()
-        );
+        final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            getDimensions();
+            new Thread(this::getDimensions, "CraftPresence-Dimension-Lookup").start();
+            hasScanned = true;
         }
 
         if (enabled) {
