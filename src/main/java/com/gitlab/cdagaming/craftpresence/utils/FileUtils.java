@@ -375,18 +375,26 @@ public class FileUtils {
             // Attempt to get all possible classes from the JVM Class Loader
             final ClassGraph graphInfo = new ClassGraph()
                     .enableClassInfo()
-                    .rejectPackages("net.java")
+                    .rejectPackages(
+                            "net.java", "com.sun", "com.jcraft", "com.intellij", "jdk", "akka", "ibxm", "scala",
+                            "*.mixin.*", "*.mixins.*"
+                    )
                     .disableModuleScanning();
             if (UrlUtils.JAVA_SPEC < 16) {
                 // If we are below Java 16, we can just use the Thread's classloader
                 // See: https://github.com/classgraph/classgraph/wiki#running-on-jdk-16
                 graphInfo.overrideClassLoaders(ModUtils.CLASS_LOADER);
             }
+
             try (ScanResult scanResult = graphInfo.scan()) {
                 for (ClassInfo result : scanResult.getAllClasses()) {
-                    if (!CLASS_LIST.contains(result)) {
+                    final String resultName = MappingUtils.getMappedPath(result.getName());
+                    if (!CLASS_LIST.contains(result) && !resultName.toLowerCase().contains("mixin")) {
                         CLASS_LIST.add(result);
-                        CLASS_MAP.put(MappingUtils.getMappedPath(result.getName()), result.loadClass(true));
+                        try {
+                            CLASS_MAP.put(resultName, result.loadClass(true));
+                        } catch (Throwable ignored) {
+                        }
                     }
                 }
             }

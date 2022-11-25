@@ -43,20 +43,17 @@ import java.nio.charset.Charset;
  */
 public class UrlUtils {
     /**
+     * The Java Specification Version
+     */
+    public static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
+    /**
      * The User Agent to Identify As when Accessing other URLs
      */
     private static final String USER_AGENT = ModUtils.MOD_ID + "/" + ModUtils.MCVersion;
-
     /**
      * The Operating System Name
      */
     private static final String OS_NAME = System.getProperty("os.name");
-
-    /**
-     * The Java Specification Version
-     */
-    public static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
-
     /**
      * The GSON Json Builder to Use while Parsing Json
      */

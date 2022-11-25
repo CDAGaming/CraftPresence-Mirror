@@ -81,10 +81,10 @@ subprojects {
             name = 'Fabric'
             url = "https://maven.fabricmc.net/"
         }
-//        maven {
-//            name = "Legacy Fabric"
-//            url = "https://maven.legacyfabric.net/"
-//        }
+        maven {
+            name = "Legacy Fabric"
+            url = "https://maven.legacyfabric.net/"
+        }
         maven { url "https://maven.firstdarkdev.xyz/releases" }
         maven { url "https://maven.firstdarkdev.xyz/snapshots" }
         maven {
