@@ -63,10 +63,6 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class GuiUtils {
     /**
-     * A List of the detected Gui Screen Classes
-     */
-    private final List<Class<?>> GUI_CLASSES = Lists.newArrayList();
-    /**
      * The argument format to follow for Rich Presence Data
      */
     private final String argumentFormat = "&SCREEN&";
@@ -107,6 +103,10 @@ public class GuiUtils {
      * The Last Used Control Id
      */
     public int lastIndex = 0;
+    /**
+     * A List of the detected Gui Screen Classes
+     */
+    public final Map<String, Class<?>> GUI_CLASSES = Maps.newHashMap();
     /**
      * A List of the detected Gui Screen Names
      */
@@ -393,9 +393,8 @@ public class GuiUtils {
                 if (!GUI_NAMES.contains(newScreenName)) {
                     GUI_NAMES.add(newScreenName);
                 }
-
-                if (!GUI_CLASSES.contains(newScreenClass)) {
-                    GUI_CLASSES.add(newScreenClass);
+                if (!GUI_CLASSES.containsKey(newScreenName)) {
+                    GUI_CLASSES.put(newScreenName, newScreenClass);
                 }
 
                 updateGUIPresence();
@@ -414,8 +413,8 @@ public class GuiUtils {
             if (!GUI_NAMES.contains(screenName)) {
                 GUI_NAMES.add(screenName);
             }
-            if (!GUI_CLASSES.contains(classObj)) {
-                GUI_CLASSES.add(classObj);
+            if (!GUI_CLASSES.containsKey(screenName)) {
+                GUI_CLASSES.put(screenName, classObj);
             }
         }
 

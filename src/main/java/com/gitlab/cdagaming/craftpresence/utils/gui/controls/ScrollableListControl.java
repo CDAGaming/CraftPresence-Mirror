@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
+import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -173,73 +174,7 @@ public class ScrollableListControl extends GuiSlot {
      */
     @Override
     protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks) {
-        final String originalName = getSelectedItem(slotIndex);
-        final List<String> hoverText = Lists.newArrayList();
-        String displayName = entryAliases.getOrDefault(originalName, originalName);
-        int xOffset = xPos;
-
-        if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
-                ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
-                        (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
-                        (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
-            ResourceLocation texture = new ResourceLocation("");
-            String assetUrl;
-
-            if (renderType == RenderType.ServerData) {
-                final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
-
-                if (data != null) {
-                    assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
-                    texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
-                } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
-                    final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint, originalName);
-                    texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
-                    if (currentScreen.isDebugMode()) {
-                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
-                    }
-                }
-            } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
-                assetUrl = DiscordAssetUtils.getUrl(
-                        renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
-                        originalName
-                );
-                if (currentScreen.isDebugMode()) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
-                }
-                texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
-            } else if (renderType == RenderType.EntityData) {
-                if (StringUtils.isValidUuid(originalName)) {
-                    // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
-                    final String fullUuid = StringUtils.getFromUuid(originalName, false);
-                    final String trimmedUuid = StringUtils.getFromUuid(originalName, true);
-                    if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                        final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, fullUuid);
-                        texture = ImageUtils.getTextureFromUrl(fullUuid, endpointUrl);
-                        if (currentScreen.isDebugMode()) {
-                            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
-                        }
-                    }
-                }
-            } else if (renderType == RenderType.ItemData) {
-                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
-            }
-            if (!ImageUtils.isTextureNull(texture)) {
-                CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
-                if (currentScreen.isDebugMode()) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
-                }
-            }
-            // Note: 35 Added to xOffset to accommodate for Image Size
-            xOffset += 35;
-        }
-        if (!originalName.equals(displayName)) {
-            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + originalName);
-        }
-        getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
-
-        if (CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, getListWidth(), heightIn)) {
-            currentHoverText = hoverText;
-        }
+        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, heightIn, mouseXIn, mouseYIn);
     }
 
     /**
@@ -317,6 +252,87 @@ public class ScrollableListControl extends GuiSlot {
     }
 
     /**
+     * Renders a Slot Entry for this Control
+     *
+     * @param originalName The original entry name, before processing
+     * @param xPos         The Starting X Position to render the Object at
+     * @param yPos         The Starting Y Position to render the Object at
+     * @param heightIn     The Height for the Object to render to
+     * @param mouseXIn     The Mouse's Current X Position
+     * @param mouseYIn     The Mouse's Current Y Position
+     */
+    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int heightIn, final int mouseXIn, final int mouseYIn) {
+        final List<String> hoverText = Lists.newArrayList();
+        String displayName = entryAliases.getOrDefault(originalName, originalName);
+        int xOffset = xPos;
+
+        if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
+                ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
+                        (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
+                        (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
+            ResourceLocation texture = new ResourceLocation("");
+            String assetUrl;
+
+            if (renderType == RenderType.ServerData) {
+                final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
+
+                if (data != null) {
+                    assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
+                    texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
+                } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
+                    final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint, originalName);
+                    texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
+                    if (currentScreen.isDebugMode()) {
+                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
+                    }
+                }
+            } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
+                assetUrl = DiscordAssetUtils.getUrl(
+                        renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
+                        originalName
+                );
+                if (currentScreen.isDebugMode()) {
+                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
+                }
+                texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
+            } else if (renderType == RenderType.EntityData) {
+                if (StringUtils.isValidUuid(originalName)) {
+                    // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
+                    final String fullUuid = StringUtils.getFromUuid(originalName, false);
+                    final String trimmedUuid = StringUtils.getFromUuid(originalName, true);
+                    if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                        final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, fullUuid);
+                        texture = ImageUtils.getTextureFromUrl(fullUuid, endpointUrl);
+                        if (currentScreen.isDebugMode()) {
+                            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
+                        }
+                    }
+                }
+            } else if (renderType == RenderType.ItemData) {
+                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
+            }
+            if (!ImageUtils.isTextureNull(texture)) {
+                CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
+                if (currentScreen.isDebugMode()) {
+                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
+                }
+            }
+            // Note: 35 Added to xOffset to accommodate for Image Size
+            xOffset += 35;
+        }
+
+        final String identifierName = renderType.getIdentifier(originalName);
+        if (!identifierName.equals(displayName)) {
+            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
+        }
+        getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+
+        if (CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, getListWidth(), heightIn)) {
+            currentHoverText = hoverText;
+        }
+    }
+
+    /**
      * The Rendering Type for this Scroll List
      */
     public enum RenderType {
@@ -343,6 +359,58 @@ public class ScrollableListControl extends GuiSlot {
         /**
          * Constant for the "Text Only" Rendering Mode.
          */
-        None
+        None;
+
+        /**
+         * The Identifier Type attached to a Render Type
+         */
+        public enum IdentifierType {
+            /**
+             * Constant for the "Gui" Identifier Type.
+             */
+            GUI,
+            /**
+             * Constant for the "None" Identifier Type.
+             */
+            None
+        }
+
+        /**
+         * The Identifier Type linked to this Render Type
+         */
+        public IdentifierType identifierType = IdentifierType.None;
+
+        /**
+         * Sets the Identifier Type to be linked to this Render Type
+         *
+         * @param type The {@link IdentifierType} to interpret
+         * @return the modified {@link RenderType} instance
+         */
+        public RenderType setIdentifierType(IdentifierType type) {
+            this.identifierType = type;
+            return this;
+        }
+
+        /**
+         * Retrieve the identifier name to use with the specified argument
+         *
+         * @param originalName The original entry name
+         * @return the processed identifier name
+         */
+        public String getIdentifier(final String originalName) {
+            String identifierName;
+            switch (identifierType) {
+                case GUI: {
+                    final Class<?> target = CraftPresence.GUIS.GUI_CLASSES.get(originalName);
+                    identifierName = target != null ? MappingUtils.getCanonicalName(target) : originalName;
+                    break;
+                }
+                default: {
+                    identifierName = originalName;
+                    break;
+                }
+            }
+            return identifierName;
+        }
     }
 }
