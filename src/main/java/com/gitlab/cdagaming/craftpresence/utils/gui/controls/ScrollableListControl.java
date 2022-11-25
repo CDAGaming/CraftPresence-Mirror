@@ -174,7 +174,7 @@ public class ScrollableListControl extends GuiSlot {
      */
     @Override
     protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks) {
-        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, heightIn, mouseXIn, mouseYIn);
+        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, getListWidth(), heightIn, mouseXIn, mouseYIn);
     }
 
     /**
@@ -257,11 +257,12 @@ public class ScrollableListControl extends GuiSlot {
      * @param originalName The original entry name, before processing
      * @param xPos         The Starting X Position to render the Object at
      * @param yPos         The Starting Y Position to render the Object at
+     * @param widthIn      The Width for the Object to render to
      * @param heightIn     The Height for the Object to render to
      * @param mouseXIn     The Mouse's Current X Position
      * @param mouseYIn     The Mouse's Current Y Position
      */
-    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int heightIn, final int mouseXIn, final int mouseYIn) {
+    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn) {
         final List<String> hoverText = Lists.newArrayList();
         String displayName = entryAliases.getOrDefault(originalName, originalName);
         int xOffset = xPos;
@@ -327,7 +328,7 @@ public class ScrollableListControl extends GuiSlot {
         }
         getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 
-        if (CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, getListWidth(), heightIn)) {
+        if (CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn)) {
             currentHoverText = hoverText;
         }
     }
