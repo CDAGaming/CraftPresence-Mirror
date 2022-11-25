@@ -100,6 +100,10 @@ public class GuiUtils {
      */
     public boolean enabled = false;
     /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    public boolean hasScanned = false;
+    /**
      * The Last Used Control Id
      */
     public int lastIndex = 0;
@@ -308,6 +312,7 @@ public class GuiUtils {
      * Clears FULL Data from this Module
      */
     private void emptyData() {
+        hasScanned = false;
         GUI_NAMES.clear();
         GUI_CLASSES.clear();
         clearClientData();
@@ -335,10 +340,11 @@ public class GuiUtils {
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
         isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.isFocused();
-        final boolean needsUpdate = enabled && (GUI_NAMES.isEmpty() || GUI_CLASSES.isEmpty());
+        final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            getScreens();
+            new Thread(this::getScreens, "CraftPresence-Screen-Lookup").start();
+            hasScanned = true;
         }
 
         if (enabled) {
