@@ -7,6 +7,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Adjusted module logic to perform within their own sub-threads, in an effort to avoid waiting on them to retrieve data
+    * IE the initial retrieval of data when a module is first enabled is now multi-threaded, taking up much less time!
 * Migrated the Config Systems from `Properties` to `GSON`
     * A one-time migration layer has been put into place to migrate your v1.x settings over to the v2.x format
     * The logic behind data validation has been condensed to be more performant, and this change allows config settings
