@@ -232,7 +232,7 @@ public class DimensionUtils {
                 }
             } else {
                 // Fallback 2: Use Manual Class Lookup
-                for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, true, "net.minecraft", "com.gitlab.cdagaming.craftpresence")) {
+                for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
                     if (classObj != null) {
                         try {
                             WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();

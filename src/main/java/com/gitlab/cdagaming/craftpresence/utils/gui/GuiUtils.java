@@ -409,11 +409,7 @@ public class GuiUtils {
     public void getScreens() {
         final List<Class<?>> searchClasses = Lists.newArrayList(GuiScreen.class, GuiContainer.class);
 
-        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses,
-                CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses,
-                "net.minecraft", "com.gitlab.cdagaming.craftpresence",
-                "forge.com.gitlab.cdagaming.craftpresence", "fabric.com.gitlab.cdagaming.craftpresence"
-        )) {
+        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
             String screenName = MappingUtils.getClassName(classObj);
             if (!GUI_NAMES.contains(screenName)) {
                 GUI_NAMES.add(screenName);

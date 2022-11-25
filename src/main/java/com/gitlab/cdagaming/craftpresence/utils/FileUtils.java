@@ -266,7 +266,7 @@ public class FileUtils {
         final List<Class<?>> matchingClasses = Lists.newArrayList();
         final List<String> sourceData = Lists.newArrayList(sourcePackages);
 
-        if (includeExtraClasses) {
+        if (!sourceData.isEmpty() && includeExtraClasses) {
             sourceData.addAll(getModClassNames());
         }
 
