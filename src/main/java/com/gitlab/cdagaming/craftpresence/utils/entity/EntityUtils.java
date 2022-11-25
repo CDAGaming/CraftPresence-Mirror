@@ -74,6 +74,10 @@ public class EntityUtils {
      */
     public boolean enabled = false;
     /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    public boolean hasScanned = false;
+    /**
      * The Player's Currently Targeted Entity Name, if any
      */
     public String CURRENT_TARGET_NAME;
@@ -118,6 +122,7 @@ public class EntityUtils {
      * Clears FULL Data from this Module
      */
     private void emptyData() {
+        hasScanned = false;
         ENTITY_NAMES.clear();
         PLAYER_BINDINGS.clear();
         clearClientData();
@@ -153,10 +158,11 @@ public class EntityUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : enabled;
-        final boolean needsUpdate = enabled && ENTITY_NAMES.isEmpty();
+        final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            getEntities();
+            new Thread(this::getEntities, "CraftPresence-Entity-Lookup").start();
+            hasScanned = true;
         }
 
         if (enabled) {

@@ -103,6 +103,10 @@ public class ServerUtils {
      */
     public boolean enabled = false;
     /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    public boolean hasScanned = false;
+    /**
      * The Current Player Map, if available
      */
     public List<NetworkPlayerInfo> currentPlayerList = Lists.newArrayList();
@@ -213,6 +217,7 @@ public class ServerUtils {
      * Clears FULL Data from this Module
      */
     private void emptyData() {
+        hasScanned = false;
         currentPlayerList.clear();
         knownAddresses.clear();
         knownServerData.clear();
@@ -276,10 +281,11 @@ public class ServerUtils {
     public void onTick() {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : enabled;
-        final boolean needsUpdate = enabled && knownAddresses.isEmpty();
+        final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            getServerAddresses();
+            new Thread(this::getServerAddresses, "CraftPresence-Server-Lookup").start();
+            hasScanned = true;
         }
 
         if (enabled) {

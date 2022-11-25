@@ -101,6 +101,10 @@ public class TileEntityUtils {
      */
     public boolean enabled = false;
     /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    public boolean hasScanned = false;
+    /**
      * A List of the detected Entity (Blocks + Items) Names
      */
     public List<String> TILE_ENTITY_NAMES = Lists.newArrayList();
@@ -217,6 +221,7 @@ public class TileEntityUtils {
      * Clears FULL Data from this Module
      */
     private void emptyData() {
+        hasScanned = false;
         BLOCK_NAMES.clear();
         BLOCK_CLASSES.clear();
         ITEM_NAMES.clear();
@@ -279,10 +284,11 @@ public class TileEntityUtils {
      */
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : enabled;
-        final boolean needsUpdate = enabled && (TILE_ENTITY_NAMES.isEmpty() || TILE_ENTITY_CLASSES.isEmpty());
+        final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            getEntities();
+            new Thread(this::getEntities, "CraftPresence-TileEntity-Lookup").start();
+            hasScanned = true;
         }
 
         if (enabled) {
