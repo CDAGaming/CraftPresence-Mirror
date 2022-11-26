@@ -1,5 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
+import java.nio.file.Files
+
 plugins {
     id 'xyz.wagyourtail.unimined' version '0.2.1-SNAPSHOT' apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
@@ -167,11 +169,8 @@ subprojects {
                 var retrolambdaFile = new File("${rootProject.buildDir}/retrolambda/retrolambda.jar")
                 if (!retrolambdaFile.exists()) {
                     retrolambdaFile.getParentFile().mkdirs()
-                    retrolambdaFile.createNewFile()
-                    retrolambdaFile.withOutputStream { os ->
-                        retrolambaJar.openStream().withStream { is ->
-                            is.transferTo(os)
-                        }
+                    try (InputStream is = retrolambaJar.openStream()) {
+                        Files.copy(is, retrolambdaFile.toPath())
                     }
                 }
                 var classpath = project.sourceSets.main.runtimeClasspath
