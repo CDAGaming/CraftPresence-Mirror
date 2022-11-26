@@ -361,20 +361,6 @@ public class ScrollableListControl extends GuiSlot {
         None;
 
         /**
-         * The Identifier Type attached to a Render Type
-         */
-        public enum IdentifierType {
-            /**
-             * Constant for the "Gui" Identifier Type.
-             */
-            GUI,
-            /**
-             * Constant for the "None" Identifier Type.
-             */
-            None
-        }
-
-        /**
          * The Identifier Type linked to this Render Type
          */
         public IdentifierType identifierType = IdentifierType.None;
@@ -410,6 +396,20 @@ public class ScrollableListControl extends GuiSlot {
                 }
             }
             return identifierName;
+        }
+
+        /**
+         * The Identifier Type attached to a Render Type
+         */
+        public enum IdentifierType {
+            /**
+             * Constant for the "Gui" Identifier Type.
+             */
+            GUI,
+            /**
+             * Constant for the "None" Identifier Type.
+             */
+            None
         }
     }
 }

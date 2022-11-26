@@ -63,6 +63,10 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class GuiUtils {
     /**
+     * A List of the detected Gui Screen Classes
+     */
+    public final Map<String, Class<?>> GUI_CLASSES = Maps.newHashMap();
+    /**
      * The argument format to follow for Rich Presence Data
      */
     private final String argumentFormat = "&SCREEN&";
@@ -103,10 +107,6 @@ public class GuiUtils {
      * The Last Used Control Id
      */
     public int lastIndex = 0;
-    /**
-     * A List of the detected Gui Screen Classes
-     */
-    public final Map<String, Class<?>> GUI_CLASSES = Maps.newHashMap();
     /**
      * A List of the detected Gui Screen Names
      */

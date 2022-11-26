@@ -353,8 +353,8 @@ public class FileUtils {
      * Return whether or not a class exists out of the specified arguments
      *
      * @param loader The {@link ClassLoader} to attempt loading with
-     * @param init Whether to initialize the class, if found
-     * @param paths The class path(s) to interpret
+     * @param init   Whether to initialize the class, if found
+     * @param paths  The class path(s) to interpret
      * @return the valid {@link Class<>} or null
      */
     public static Class<?> findValidClass(ClassLoader loader, final boolean init, final String... paths) {
@@ -375,7 +375,7 @@ public class FileUtils {
      * Return whether or not a class exists out of the specified arguments
      *
      * @param loader The {@link ClassLoader} to attempt loading with
-     * @param paths The class path(s) to interpret
+     * @param paths  The class path(s) to interpret
      * @return the valid {@link Class<>} or null
      */
     public static Class<?> findValidClass(final ClassLoader loader, final String... paths) {
@@ -386,7 +386,7 @@ public class FileUtils {
      * Return whether or not a class exists out of the specified arguments
      *
      * @param useClassLoader Whether to use the thread's current class loader
-     * @param paths The class path(s) to interpret
+     * @param paths          The class path(s) to interpret
      * @return the valid {@link Class<>} or null
      */
     public static Class<?> findValidClass(final boolean useClassLoader, final String... paths) {
