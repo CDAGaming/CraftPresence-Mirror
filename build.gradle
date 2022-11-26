@@ -102,6 +102,10 @@ subprojects {
         }
     }
 
+    sourceSets {
+        client
+    }
+
     dependencies {
         minecraft "net.minecraft:minecraft:${rootProject.mc_version}"
         // If a Legacy Build or below 1.14.4, use MCP Data; otherwise use mojmaps
