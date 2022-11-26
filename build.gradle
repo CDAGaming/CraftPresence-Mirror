@@ -50,6 +50,15 @@ subprojects {
         useGlobalCache = false
     }
 
+    minecraft {
+        mcRemapper.tinyRemapperConf = {
+            // most mcp mappings (except older format) dont include field desc
+            it.ignoreFieldDesc(true)
+            // this also fixes some issues with them, as it tells tiny remapper to try harder to resolve conflicts
+            it.ignoreConflicts(true)
+        }
+    }
+
     mappings {
         // ability to add custom mappings
         // available targets are "CLIENT", "SERVER", "COMBINED"
