@@ -43,7 +43,7 @@ dependencies {
     }
 
     // Java-Specific Dependencies
-    if (targetCompatibility.isJava8Compatible()) {
+    if (targetCompatibility.isJava8Compatible() && !isLegacy) {
         shade('com.kohlschutter.junixsocket:junixsocket-common:2.5.1')
         shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1')
     } else {
@@ -153,7 +153,11 @@ task generateMyResources {
                 if ("${rootProject.mc_protocol}".toInteger() <= 210) {
                     // On 1.10.2 (Pack Format 2 or below) or Legacy MC
                     // Adjust name format from xx_xx to xx_XX
-                    resultName = Pattern.compile("_.+?\\.").matcher(resultName).replaceAll(m -> m.group().toUpperCase())
+                    var matches = Pattern.compile("_.+?\\.").matcher(resultName);
+                    while (matches.find()) {
+                        def match = matches.group()
+                        resultName = resultName.replace(match, match.toUpperCase())
+                    }
                 }
                 def resultFile = new File(resultDir, resultName)
                 resultFile.createNewFile()

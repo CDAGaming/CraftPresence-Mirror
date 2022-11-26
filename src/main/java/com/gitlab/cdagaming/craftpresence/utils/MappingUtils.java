@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.google.common.base.Stopwatch;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -65,14 +64,14 @@ public class MappingUtils {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, filePath)));
                 try {
                     ModUtils.LOG.info("Loading Mappings...");
-                    Stopwatch stopwatch = Stopwatch.createStarted();
+                    long time = System.nanoTime();
                     for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                         String[] parts = line.split(" ");
                         if (parts[0].equals("CL:")) {
                             cm.put(parts[1], parts[2]);
                         }
                     }
-                    ModUtils.LOG.info("Loaded Mappings in " + stopwatch.stop());
+                    ModUtils.LOG.info("Loaded Mappings in " + (System.nanoTime() - time) / 1000000 + "ms");
                 } finally {
                     reader.close();
                 }
