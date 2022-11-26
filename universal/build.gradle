@@ -12,6 +12,11 @@ remapJar {
 }
 
 def archive_name = "${rootProject.mod_name}-${rootProject.loader_name}"
+def targetFile = file("$rootDir/build/libs/${fileFormat}-universal.jar")
+if (!targetFile.exists() && isJarMod) {
+    // Fallback to the Forge Sub-Project Output when in a Jar Mod configuration
+    targetFile = file("$rootDir/forge/build/libs/${fileFormat}-forge.jar")
+}
 
 curseforge {
     project {
@@ -27,10 +32,11 @@ curseforge {
             // CurseForge Compatibility Layer (For Modloader and Beta MC)
             // (This can be removed when/if CurseForge ever adds support for this)
             if (isLegacy) {
-                if ((protocol == 22 || protocol == 23) && loaderToAdd.equalsIgnoreCase("ModLoader")) {
-                    // MC 1.0.0 and 1.1.0
+                if (protocol >= 22 && loaderToAdd.equalsIgnoreCase("modloader")) {
+                    // MC 1.0.0 and above, and using ModLoader
                     loaderToAdd = "Forge"
                 } else if (protocol < 22) {
+                    // CF only goes down to 1.0 for Minecraft
                     loaderToAdd = ""
                     mcVersionTarget = "1.0"
                 }
@@ -39,7 +45,7 @@ curseforge {
         }
         addGameVersion mcVersionTarget
 
-        mainArtifact(file("$rootDir/build/libs/${fileFormat}-universal.jar")) {
+        mainArtifact(targetFile) {
             it.displayName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
         }
     }
@@ -52,7 +58,7 @@ modrinth {
     versionName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
     changelog = file("$rootDir/Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
-    uploadFile = file("$rootDir/build/libs/${fileFormat}-universal.jar")
+    uploadFile = targetFile
     gameVersions = ["${mc_version}"]
     loaders = rootProject.enabled_platforms.split(",").toList()
     dependencies = []

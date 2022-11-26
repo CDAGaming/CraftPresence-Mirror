@@ -181,7 +181,6 @@ subprojects {
                 if (System.getProperty("os.name").toLowerCase().contains("win") && !System.getProperty("os.name").toLowerCase().contains("darwin")) {
                     javaexe += ".exe"
                 }
-                project.logger.warn(compileJava.destinationDir.toString())
                 var processBuilder = new ProcessBuilder(
                         javaexe,
                         "-Dretrolambda.inputDir=${compileJava.destinationDir.toString().replace("\\", "\\\\").replace(" ", "\\ ")}",
