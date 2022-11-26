@@ -59,21 +59,6 @@ subprojects {
         }
     }
 
-    mappings {
-        // ability to add custom mappings
-        // available targets are "CLIENT", "SERVER", "COMBINED"
-        getStub("COMBINED").withMappings(["searge", "named"]) {
-            c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-            c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-            c("mod_${mod_name}", classPath + "/mod_${mod_name}", classPath + "/mod_${mod_name}")
-        }
-        getStub("CLIENT").withMappings(["searge", "named"]) {
-            c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-            c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-            c("mod_${mod_name}", classPath + "/mod_${mod_name}", classPath + "/mod_${mod_name}")
-        }
-    }
-
     repositories {
         flatDir {
             dirs "$rootDir/libs"

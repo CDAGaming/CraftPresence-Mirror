@@ -133,7 +133,9 @@ shadowJar {
         relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'
     }
     // Integration Relocations
-    relocate 'me.hypherionmc', 'external.me.hypherionmc'
+    if (!isLegacy) {
+        relocate 'me.hypherionmc', 'external.me.hypherionmc'
+    }
 
     archiveClassifier.set('shadow-dev')
 }
