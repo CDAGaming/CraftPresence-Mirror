@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id 'xyz.wagyourtail.unimined' version '0.2.0-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '0.2.1-SNAPSHOT' apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
@@ -99,13 +99,15 @@ subprojects {
         if (isLegacy || protocol < 498) {
             if (isJarMod) {
                 mappings "local_mod:mcp:${mc_mappings}@zip"
-            } else {
-                if (!isLegacy && protocol >= 340) {
+            } else if (!isLegacy) {
+                if (protocol >= 340) {
                     mappings "de.oceanlabs.mcp:mcp_config:${rootProject.mc_version}@zip"
                 } else {
                     mappings "de.oceanlabs.mcp:mcp:${rootProject.mc_version}:srg@zip"
                 }
                 mappings "de.oceanlabs.mcp:mcp_stable:${rootProject.mc_mappings}@zip"
+            } else {
+                mappings "net.minecraftforge:forge:${rootProject.mc_version}-${rootProject.forge_version}:src@zip"
             }
         } else {
             mappings "net.minecraft:minecraft:${rootProject.mc_version}:client-mappings"
