@@ -72,6 +72,10 @@ dependencies {
             }
         }
     }
+
+    // Additional Integrations
+    shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
+    shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
 }
 
 def mainResources = "$rootDir/src/main/resources"
@@ -113,6 +117,8 @@ shadowJar {
         relocate 'org.slf4j', 'external.org.slf4j'
         relocate 'org.apache.logging.slf4j', 'external.org.apache.logging.slf4j'
     }
+    // Integration Relocations
+    relocate 'me.hypherionmc', 'external.me.hypherionmc'
 
     archiveClassifier.set('shadow-dev')
 }
