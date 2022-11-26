@@ -171,11 +171,8 @@ subprojects {
 
     compileJava {
         source = processSource.outputs
-    }
 
-    if (isLegacy) {
-        task retroLambda() {
-            dependsOn compileJava
+        if (isLegacy) {
             doLast {
                 var retrolambaJar = new URL("https://oss.sonatype.org/content/groups/public/net/orfjackal/retrolambda/retrolambda/2.5.7/retrolambda-2.5.7.jar")
                 var retrolambdaFile = new File("${rootProject.buildDir}/retrolambda/retrolambda.jar")
@@ -216,8 +213,6 @@ subprojects {
                 }
             }
         }
-
-        compileJava.finalizedBy retroLambda
     }
 }
 
