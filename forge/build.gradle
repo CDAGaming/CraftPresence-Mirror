@@ -8,26 +8,29 @@ unimined {
 
 // Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
 // due to the way Forge requires core-mods for lower version usage
-def accessWidenerFile = project(":common").minecraft.minecraftTransformer.accessWidener
-def canUseATs = accessWidenerFile != null && (!isLegacy || protocol > 60)
+def canUseATs = false
+def accessWidenerFile = null
+if (!isJarMod) {
+    accessWidenerFile = project(":common").minecraft.minecraftTransformer.accessWidener
+    canUseATs = accessWidenerFile != null && (!isLegacy || protocol > 60)
+}
+
 minecraft {
     if (isJarMod) {
         jarMod()
+
+        // required when using mcp mappings
+        if (protocol <= 2) { // MC a1.1.2_01 and below
+            targetNamespace = "searge"
+        } else {
+            mcRemapper.fallbackTarget = "searge"
+        }
     } else {
         forge {
             if (canUseATs) {
                 accessTransformer = aw2at(accessWidenerFile)
             }
             includeSubprojectSourceSets += project(":common").sourceSets.main
-        }
-    }
-
-    // required when using mcp mappings
-    if (isLegacy) {
-        if (protocol <= 2) { // MC a1.1.2_01 and below
-            targetNamespace = "searge"
-        } else if (protocol < 39) { // Below MC 1.3 (Legacy Intermediary Cutoff)
-            mcRemapper.fallbackTarget = "searge"
         }
     }
 }

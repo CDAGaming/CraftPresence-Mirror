@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
@@ -1267,19 +1268,25 @@ public class StringUtils {
      * @param classToAccess The class to access with the method(s)
      * @param instance      An Instance of the Class, if needed
      * @param methodData    The Methods and Necessary Argument Data for execution, in the form of methodName:argsAndTypesForMethod
+     * @return the resulting data mapping with the format of methodName:methodResult
      */
-    public static void executeMethod(final Class<?> classToAccess, final Object instance, final List<Pair<String, Pair<Object[], Class<?>[]>>> methodData) {
+    @SafeVarargs
+    public static Map<String, Object> executeMethod(final Class<?> classToAccess, final Object instance, final Pair<String, Pair<Object[], Class<?>[]>>... methodData) {
+        final Map<String, Object> results = Maps.newHashMap();
         for (Pair<String, Pair<Object[], Class<?>[]>> methodInstance : methodData) {
+            Object result = null;
             try {
                 final Method lookupMethod = classToAccess.getDeclaredMethod(methodInstance.getFirst(), methodInstance.getSecond().getSecond());
                 lookupMethod.setAccessible(true);
-                lookupMethod.invoke(instance, methodInstance.getSecond().getFirst());
+                result = lookupMethod.invoke(instance, methodInstance.getSecond().getFirst());
             } catch (Throwable ex) {
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
                 }
             }
+            results.put(methodInstance.getFirst(), result);
         }
+        return results;
     }
 
     /**

@@ -352,17 +352,55 @@ public class FileUtils {
     /**
      * Return whether or not a class exists out of the specified arguments
      *
+     * @param loader The {@link ClassLoader} to attempt loading with
+     * @param init Whether to initialize the class, if found
      * @param paths The class path(s) to interpret
      * @return the valid {@link Class<>} or null
      */
-    public static Class<?> findValidClass(final String... paths) {
+    public static Class<?> findValidClass(ClassLoader loader, final boolean init, final String... paths) {
         for (String path : paths) {
             try {
-                return Class.forName(path, false, ModUtils.CLASS_LOADER);
+                if (loader == null) {
+                    return Class.forName(path);
+                } else {
+                    return Class.forName(path, init, loader);
+                }
             } catch (Throwable ignored) {
             }
         }
         return null;
+    }
+
+    /**
+     * Return whether or not a class exists out of the specified arguments
+     *
+     * @param loader The {@link ClassLoader} to attempt loading with
+     * @param paths The class path(s) to interpret
+     * @return the valid {@link Class<>} or null
+     */
+    public static Class<?> findValidClass(final ClassLoader loader, final String... paths) {
+        return findValidClass(loader, false, paths);
+    }
+
+    /**
+     * Return whether or not a class exists out of the specified arguments
+     *
+     * @param useClassLoader Whether to use the thread's current class loader
+     * @param paths The class path(s) to interpret
+     * @return the valid {@link Class<>} or null
+     */
+    public static Class<?> findValidClass(final boolean useClassLoader, final String... paths) {
+        return findValidClass(useClassLoader ? ModUtils.CLASS_LOADER : null, paths);
+    }
+
+    /**
+     * Return whether or not a class exists out of the specified arguments
+     *
+     * @param paths The class path(s) to interpret
+     * @return the valid {@link Class<>} or null
+     */
+    public static Class<?> findValidClass(final String... paths) {
+        return findValidClass(true, paths);
     }
 
     /**

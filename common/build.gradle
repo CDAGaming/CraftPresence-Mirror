@@ -5,9 +5,20 @@ plugins {
 def accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
 
 minecraft {
-    fabric {
-        if (accessWidenerFile.exists()) {
-            accessWidener = accessWidenerFile
+    if (isJarMod) {
+        jarMod()
+
+        // required when using mcp mappings
+        if (protocol <= 2) { // MC a1.1.2_01 and below
+            targetNamespace = "searge"
+        } else {
+            mcRemapper.fallbackTarget = "searge"
+        }
+    } else {
+        fabric {
+            if (accessWidenerFile.exists()) {
+                accessWidener = accessWidenerFile
+            }
         }
     }
 }
@@ -25,7 +36,9 @@ configurations {
 }
 
 dependencies {
-    fabric "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    if (!isJarMod) {
+        fabric "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    }
 
     // Legacy Dependencies, based on Protocol Version
     if (isLegacy) {
@@ -74,8 +87,10 @@ dependencies {
     }
 
     // Additional Integrations
-    shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
-    shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
+    if (!isLegacy) {
+        shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
+        shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
+    }
 }
 
 def mainResources = "$rootDir/src/main/resources"
