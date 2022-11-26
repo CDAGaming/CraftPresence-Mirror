@@ -221,9 +221,7 @@ public class ScrollableListControl extends GuiSlot {
         if (!itemList.equals(this.itemList)) {
             this.itemList = itemList;
             // Reset the scrollbar to prevent OOB issues
-            if (amountScrolled != 0.0f) {
-                amountScrolled = 0.0f;
-            }
+            scrollBy(Integer.MIN_VALUE);
         }
 
         setupAliasData();

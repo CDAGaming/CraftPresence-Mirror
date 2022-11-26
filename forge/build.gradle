@@ -6,14 +6,17 @@ unimined {
     modProvider.modRemapper.fromMappings = "searge"
 }
 
+// Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
+// due to the way Forge requires core-mods for lower version usage
 def accessWidenerFile = project(":common").minecraft.minecraftTransformer.accessWidener
+def canUseATs = accessWidenerFile != null && (!isLegacy || protocol > 60)
 minecraft {
     if (isJarMod) {
         jarMod()
     } else {
         forge {
-            if (accessWidenerFile != null) {
-                accessTransformer = aw2at(project(":common").minecraft.minecraftTransformer.accessWidener)
+            if (canUseATs) {
+                accessTransformer = aw2at(accessWidenerFile)
             }
             includeSubprojectSourceSets += project(":common").sourceSets.main
         }
@@ -135,8 +138,10 @@ remapJar {
 }
 
 jar {
-    manifest {
-        attributes 'FMLAT': 'accesstransformer.cfg'
+    if (canUseATs) {
+        manifest {
+            attributes 'FMLAT': 'accesstransformer.cfg'
+        }
     }
     classifier "dev"
 }
