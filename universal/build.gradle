@@ -25,21 +25,15 @@ curseforge {
         changelog = file("$rootDir/Changes.md")
         changelogType = "markdown"
         releaseType = "${deploymentType}".toLowerCase()
-        def mcVersionTarget = "${mc_version}"
+        def mcVersionTarget = (isLegacy && protocol < 22) ? "1.0" : "${mc_version}"
         for (String loaderName : rootProject.enabled_platforms.split(",")) {
             def loaderToAdd = loaderName
 
             // CurseForge Compatibility Layer (For Modloader and Beta MC)
             // (This can be removed when/if CurseForge ever adds support for this)
-            if (isLegacy) {
-                if (protocol >= 22 && loaderToAdd.equalsIgnoreCase("modloader")) {
-                    // MC 1.0.0 and above, and using ModLoader
-                    loaderToAdd = "Forge"
-                } else if (protocol < 22) {
-                    // CF only goes down to 1.0 for Minecraft
-                    loaderToAdd = ""
-                    mcVersionTarget = "1.0"
-                }
+            if (loaderToAdd.equalsIgnoreCase("modloader")) {
+                // MC 1.0.0 and above, and using ModLoader
+                loaderToAdd = (protocol >= 22) ? "Forge" : ""
             }
             addGameVersion loaderToAdd.capitalize()
         }
