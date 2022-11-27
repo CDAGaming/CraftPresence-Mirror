@@ -91,10 +91,10 @@ public final class Config extends Module implements Serializable {
             config = FileUtils.getJsonData(getConfigFile(), Config.class,
                     FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
             rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
-            boolean isNew = (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
-            if (forceCreate || isNew) {
+            boolean shouldBeNew = forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
+            if (shouldBeNew) {
                 config = new Config();
-                config.isNewFile = isNew;
+                config.isNewFile = shouldBeNew;
                 config._schemaVersion = VERSION;
                 config._lastMCVersionId = MC_VERSION;
             }
