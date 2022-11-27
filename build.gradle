@@ -216,3 +216,4 @@ forgix {
         jarLocation = "build/libs/${ext_fileFormat}-fabric.jar"
     }
 }
+subprojects.each { tasks.mergeJars.dependsOn("${it.name}:build") }
