@@ -106,8 +106,8 @@ between future Alpha releases.
 
 The following known issues are present in this build:
 
-* The GUI Module is only properly functioning up to Minecraft 1.16.5, with Minecraft 1.17+ being unable to retrieve the
-  Vanilla Screens automatically (Adding found GUIs will work properly though)
+* Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
+* The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
     * The `custom` field will remain unimplemented until Alpha 3, due to more logic that is planned to be added
     * Placeholders related to the realm and Replay Mod Integration are currently unimplemented and parse as `&unknown&`.

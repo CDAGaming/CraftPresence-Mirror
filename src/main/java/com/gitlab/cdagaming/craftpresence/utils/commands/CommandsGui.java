@@ -55,11 +55,13 @@ public class CommandsGui extends ExtendedScreen {
     public ExtendedButtonControl proceedButton;
     private ExtendedTextControl commandInput;
     private String executionString;
+    private boolean blockInteractions = false;
     private String[] commandArgs, filteredCommandArgs;
     private List<String> tabCompletions = Lists.newArrayList();
 
     public CommandsGui(GuiScreen parentScreen) {
         super(parentScreen);
+        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
     }
 
     /**
@@ -127,8 +129,6 @@ public class CommandsGui extends ExtendedScreen {
                 )
         );
 
-        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
-
         super.initializeUi();
     }
 
@@ -138,13 +138,25 @@ public class CommandsGui extends ExtendedScreen {
 
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
 
+        proceedButton.setControlEnabled(!blockInteractions);
+        commandInput.setEnabled(!blockInteractions);
+
+        if (!blockInteractions) {
+            checkCommands();
+        }
+        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 25, 35, this, false);
+    }
+
+    /**
+     * Executes Tab-Completion and Primary Command Logic
+     */
+    private void checkCommands() {
         if (!StringUtils.isNullOrEmpty(commandInput.getControlMessage()) && commandInput.getControlMessage().startsWith("/")) {
             commandArgs = commandInput.getControlMessage().replace("/", "").split(" ");
             filteredCommandArgs = commandInput.getControlMessage().replace("/", "").replace("cp", "").replace(ModUtils.MOD_ID, "").trim().split(" ");
             tabCompletions = getTabCompletions(filteredCommandArgs);
         }
 
-        // COMMANDS START
         if (executionCommandArgs != null) {
             if (executionCommandArgs.length == 0 || (executionCommandArgs[0].equalsIgnoreCase("help") || executionCommandArgs[0].equalsIgnoreCase("?") || executionCommandArgs[0].equalsIgnoreCase(""))) {
                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
@@ -210,77 +222,7 @@ public class CommandsGui extends ExtendedScreen {
                                 }
                             }
 
-                            final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
-
-                            OutputStream outputData = null;
-                            OutputStreamWriter outputStream = null;
-                            BufferedWriter bw = null;
-                            boolean hasError = false;
-
-                            if (assetList != null) {
-                                final String filePath = ModUtils.MOD_ID + File.separator + "export" + File.separator + clientId + File.separator;
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.pre", assetList.length, clientId, doFullCopy);
-
-                                if (!doFullCopy) {
-                                    try {
-                                        // Create Data Directory if non-existent
-                                        final File dataDir = new File(filePath + "downloads.txt");
-                                        if (!dataDir.getParentFile().exists() && !dataDir.getParentFile().mkdirs()) {
-                                            hasError = true;
-                                        }
-                                        // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
-                                        outputData = Files.newOutputStream(dataDir.toPath());
-                                        outputStream = new OutputStreamWriter(outputData, CraftPresence.CLIENT.ipcInstance.getEncoding());
-                                        bw = new BufferedWriter(outputStream);
-
-                                        bw.write("## Export Data => " + clientId);
-                                        bw.newLine();
-                                        bw.newLine();
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                        hasError = true;
-                                    }
-                                }
-
-                                for (DiscordAsset asset : assetList) {
-                                    final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false);
-                                    final String assetName = asset.getName() + ".png";
-                                    if (doFullCopy) {
-                                        FileUtils.downloadFile(assetUrl, new File(filePath + assetName));
-                                    } else if (!hasError) {
-                                        try {
-                                            bw.write("* " + assetName + " => " + assetUrl);
-                                            bw.newLine();
-                                        } catch (Exception ex) {
-                                            ex.printStackTrace();
-                                            hasError = true;
-                                        }
-                                    } else {
-                                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
-                                    }
-                                }
-
-                                try {
-                                    if (bw != null) {
-                                        bw.close();
-                                    }
-                                    if (outputStream != null) {
-                                        outputStream.close();
-                                    }
-                                    if (outputData != null) {
-                                        outputData.close();
-                                    }
-                                } catch (Exception ex) {
-                                    ModUtils.LOG.debugError(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
-                                    if (ModUtils.IS_VERBOSE) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.post", assetList.length, clientId, doFullCopy);
-                            } else {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
-                            }
+                            exportAssets(clientId, doFullCopy);
                         } else {
                             executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
                         }
@@ -362,9 +304,6 @@ public class CommandsGui extends ExtendedScreen {
         }
 
         executionCommandArgs = null;
-        // COMMANDS END
-
-        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 25, 35, this, false);
     }
 
     @Override
@@ -379,7 +318,9 @@ public class CommandsGui extends ExtendedScreen {
                 executeCommand(filteredCommandArgs);
             }
         }
-        super.keyTyped(typedChar, keyCode);
+        if (!blockInteractions) {
+            super.keyTyped(typedChar, keyCode);
+        }
     }
 
     /**
@@ -425,5 +366,91 @@ public class CommandsGui extends ExtendedScreen {
             }
         }
         return getListOfStringsMatchingLastWord(args, completions);
+    }
+
+    /**
+     * Export the Assets belonging to another client id
+     *
+     * @param clientId   The client ID to export from
+     * @param doFullCopy Whether to do a full copy or a text-only copy
+     */
+    private void exportAssets(final String clientId, final boolean doFullCopy) {
+        new Thread(() -> {
+            blockInteractions = true;
+            final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
+
+            OutputStream outputData = null;
+            OutputStreamWriter outputStream = null;
+            BufferedWriter bw = null;
+            boolean hasError = false;
+
+            if (assetList != null) {
+                final String filePath = ModUtils.MOD_ID + File.separator + "export" + File.separator + clientId + File.separator;
+                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.pre", assetList.length, clientId, doFullCopy);
+
+                if (!doFullCopy) {
+                    try {
+                        // Create Data Directory if non-existent
+                        final File dataDir = new File(filePath + "downloads.txt");
+                        if (!dataDir.getParentFile().exists() && !dataDir.getParentFile().mkdirs()) {
+                            hasError = true;
+                        }
+                        // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
+                        outputData = Files.newOutputStream(dataDir.toPath());
+                        outputStream = new OutputStreamWriter(outputData, CraftPresence.CLIENT.ipcInstance.getEncoding());
+                        bw = new BufferedWriter(outputStream);
+
+                        bw.write("## Export Data => " + clientId);
+                        bw.newLine();
+                        bw.newLine();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        hasError = true;
+                    }
+                }
+
+                for (int i = 0; i < assetList.length; i++) {
+                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.progress", clientId, i + 1, assetList.length);
+                    final DiscordAsset asset = assetList[i];
+                    final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false);
+                    final String assetName = asset.getName() + ".png";
+                    if (doFullCopy) {
+                        FileUtils.downloadFile(assetUrl, new File(filePath + assetName));
+                    } else if (!hasError) {
+                        try {
+                            bw.write("* " + assetName + " => " + assetUrl);
+                            bw.newLine();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            hasError = true;
+                        }
+                    } else {
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
+                    }
+                }
+
+                try {
+                    if (bw != null) {
+                        bw.close();
+                    }
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                    if (outputData != null) {
+                        outputData.close();
+                    }
+                } catch (Exception ex) {
+                    ModUtils.LOG.debugError(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
+                    if (ModUtils.IS_VERBOSE) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.post", assetList.length, clientId, doFullCopy);
+            } else {
+                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
+            }
+            blockInteractions = false;
+        }, "CraftPresence-Asset-Exporter").start();
     }
 }

@@ -342,6 +342,7 @@
   "craftpresence.command.usage.view.assets": "§lCraftPresence - View Assets Sub-Commands:\\n\\n §6§lcustom §r- View Discord assets that were dynamically added\\n §6§lall §r- View all Discord assets",
   "craftpresence.command.usage.export": "§lCraftPresence - Export Sub-Commands:\\n\\n §6§lassets [clientId::%1$s] [doFullCopy::%2$s] §r- Exports Assets from the specified Client ID in text or asset form",
   "craftpresence.command.export.pre": "§6§lBeginning export of %1$s Asset(s) from Client Id %2$s with Full Copy Status as %3$s",
+  "craftpresence.command.export.progress": "§6§lExporting Asset(s) from Client Id %1$s: %2$s of %3$s",
   "craftpresence.command.export.post": "§2§lCompleted export of %1$s Asset(s) from Client Id %2$s with Full Copy Status as %3$s",
   "craftpresence.command.export.exception": "§c§lCommand Exception - Unable to export assets from Client Id %1$s",
   "craftpresence.command.unrecognized": "§c§lUnknown Command - use §6§l/craftpresence help",
