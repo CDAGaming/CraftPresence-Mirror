@@ -95,6 +95,7 @@ public final class Config extends Module implements Serializable {
             if (shouldBeNew) {
                 config = new Config();
                 config.isNewFile = shouldBeNew;
+                config.hasChanged = config.hasClientPropertiesChanged = config.flushClientProperties = shouldBeNew;
                 config._schemaVersion = VERSION;
                 config._lastMCVersionId = MC_VERSION;
             }
@@ -113,7 +114,9 @@ public final class Config extends Module implements Serializable {
         }
         final boolean wasNewFile = config.isNewFile;
         config.handleSync(rawJson);
-        config.save();
+        if (!forceCreate) {
+            config.save();
+        }
         if (wasNewFile) {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.new"));
         } else {
@@ -445,5 +448,24 @@ public final class Config extends Module implements Serializable {
     @Override
     public void resetProperty(final String name) {
         resetProperty(name.split("\\."));
+    }
+
+    @Override
+    public String toString() {
+        return FileUtils.toJsonData(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Config)) {
+            return false;
+        }
+
+        Config p = (Config) obj;
+        return toString().equals(p.toString());
     }
 }

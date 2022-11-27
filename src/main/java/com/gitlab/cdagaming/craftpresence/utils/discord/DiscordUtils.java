@@ -297,6 +297,7 @@ public class DiscordUtils {
         for (String moduleId : iconModules) {
             initArgument(ArgumentType.Image, moduleId);
         }
+        overrideData.clear();
 
         // Ensure Main Menu RPC Resets properly
         CommandUtils.isInMainMenu = false;

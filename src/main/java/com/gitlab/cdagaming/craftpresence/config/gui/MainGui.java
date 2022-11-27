@@ -277,7 +277,17 @@ public class MainGui extends ExtendedScreen {
                         95, 20,
                         "gui.config.message.button.sync.config",
                         () -> {
+                            final String configData = CraftPresence.CONFIG.toString();
                             CraftPresence.CONFIG = Config.loadOrCreate();
+
+                            // Only Mark to Save if there have been Changes in the File
+                            if (!CraftPresence.CONFIG.toString().equals(configData)) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.flushClientProperties = true;
+
+                                syncRenderStates();
+                            }
                         },
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
