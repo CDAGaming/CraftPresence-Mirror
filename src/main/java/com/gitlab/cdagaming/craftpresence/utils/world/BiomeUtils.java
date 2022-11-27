@@ -179,7 +179,8 @@ public class BiomeUtils {
 
         final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
-        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
+        final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
+        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
         final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
         biomeArgs.add(new Pair<>("&BIOME&", CURRENT_BIOME_NAME));
