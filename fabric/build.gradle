@@ -11,22 +11,6 @@ minecraft {
     }
 }
 
-mappings {
-    addExport("CLIENT") {
-        it.targetNamespace = ["named"]
-        it.sourceNamespace = "intermediary"
-        it.location = file("$projectDir/src/main/resources/mappings-fabric.srg")
-        it.setType "srg"
-    }
-
-    addExport("COMBINED") {
-        it.targetNamespace = ["named"]
-        it.sourceNamespace = "intermediary"
-        it.location = file("$projectDir/src/main/resources/mappings-fabric.srg")
-        it.setType "srg"
-    }
-}
-
 configurations {
     common
     shadowCommon
@@ -74,6 +58,23 @@ processResources {
         }
     }
 }
+
+exportMappings {
+    export("CLIENT") {
+        it.targetNamespace = ["named"]
+        it.sourceNamespace = "intermediary"
+        it.location = "$projectDir/src/main/resources/mappings-fabric.srg"
+        it.type = "SRG"
+    }
+
+    export("COMBINED") {
+        it.targetNamespace = ["named"]
+        it.sourceNamespace = "intermediary"
+        it.location = "$projectDir/src/main/resources/mappings-fabric.srg"
+        it.type = "SRG"
+    }
+}
+processResources.dependsOn exportMappings
 
 shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)
