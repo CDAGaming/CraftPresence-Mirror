@@ -31,7 +31,6 @@ import com.gitlab.cdagaming.craftpresence.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
@@ -54,8 +53,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
     private final DataConsumer<PresenceData> onChangedCallback;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
-    private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
-    private ExtendedButtonControl buttonMessagesButton, dynamicIconsButton;
+    private CheckBoxControl enabledCheckbox;
 
     PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, DataConsumer<PresenceData> changedCallback) {
         super(parentScreen);
@@ -131,19 +129,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                             )
                     ), startPage
             );
-            useAsMainCheckbox = addControl(
-                    new CheckBoxControl(
-                            calc2, CraftPresence.GUIS.getButtonY(5),
-                            "gui.config.name.display.use_as_main",
-                            PRESENCE.useAsMain,
-                            null,
-                            () -> CraftPresence.GUIS.drawMultiLineString(
-                                    StringUtils.splitTextByNewLine(
-                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
-                                    ), this, true
-                            )
-                    ), startPage
-            );
         }
 
         // Page 2 Items
@@ -166,7 +151,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
 
         // Button Messages Button
-        buttonMessagesButton = addControl(
+        addControl(
                 new ExtendedButtonControl(
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
@@ -247,7 +232,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         );
 
         // Dynamic Icons Button
-        dynamicIconsButton = addControl(
+        addControl(
                 new ExtendedButtonControl(
                         calc2, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
@@ -373,11 +358,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                             CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                             PRESENCE.enabled = enabledCheckbox.isChecked();
                         }
-                        if (useAsMainCheckbox.isChecked() != PRESENCE.useAsMain) {
-                            CraftPresence.CONFIG.hasChanged = true;
-                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                            PRESENCE.useAsMain = useAsMainCheckbox.isChecked();
-                        }
                     }
                     if (!largeImageKeyFormat.getControlMessage().equals(PRESENCE.largeImageKey)) {
                         CraftPresence.CONFIG.hasChanged = true;
@@ -440,10 +420,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
-                                                null,
-                                                ArgumentType.Text, DiscordUtils.textModules
-                                        ))
+                                        CraftPresence.CLIENT.generateArgumentMessage())
                         ), this, true
                 );
             }
@@ -456,10 +433,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
-                                        CraftPresence.CLIENT.generateArgumentMessage(
-                                                null,
-                                                ArgumentType.Image, DiscordUtils.iconModules
-                                        ))
+                                        CraftPresence.CLIENT.generateArgumentMessage())
                         ), this, true
                 );
             }

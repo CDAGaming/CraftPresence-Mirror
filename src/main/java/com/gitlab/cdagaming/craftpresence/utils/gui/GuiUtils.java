@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
@@ -66,22 +65,6 @@ public class GuiUtils {
      * A List of the detected Gui Screen Classes
      */
     public final Map<String, Class<?>> GUI_CLASSES = Maps.newHashMap();
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&SCREEN&";
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&SCREEN:";
-    /**
-     * A Mapping of the Arguments attached to the &SCREEN& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> guiArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> iconArgs = Lists.newArrayList();
     /**
      * If the Config GUI is currently open
      */
@@ -325,13 +308,10 @@ public class GuiUtils {
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
         CURRENT_GUI_CLASS = null;
-        guiArgs.clear();
-        iconArgs.clear();
 
         isInUse = false;
-        CraftPresence.CLIENT.removeArgumentsMatching(subArgumentFormat);
-        CraftPresence.CLIENT.initArgument(argumentFormat);
-        CraftPresence.CLIENT.clearOverride(argumentFormat);
+        CraftPresence.CLIENT.removeArguments("screen");
+        CraftPresence.CLIENT.clearOverride("screen");
     }
 
     /**
@@ -429,10 +409,6 @@ public class GuiUtils {
      * Updates RPC Data related to this Module
      */
     public void updateGUIPresence() {
-        // Form GUI Argument List
-        guiArgs.clear();
-        iconArgs.clear();
-
         final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
 
@@ -442,53 +418,14 @@ public class GuiUtils {
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
         final String formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
-        guiArgs.add(new Pair<>("&SCREEN&", CURRENT_GUI_NAME));
-        guiArgs.add(new Pair<>("&CLASS&", MappingUtils.getClassName(CURRENT_GUI_CLASS)));
+        CraftPresence.CLIENT.syncArgument("screen.default.icon", CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon));
+        CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
+        CraftPresence.CLIENT.syncArgument("screen.class", MappingUtils.getClassName(CURRENT_GUI_CLASS));
 
-        // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : guiArgs) {
-            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
-        for (Pair<String, String> argumentData : iconArgs) {
-            CraftPresence.CLIENT.syncArgument(subArgumentFormat + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
-        }
-
-        // Add All Generalized Arguments, if any
-        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            StringUtils.addEntriesNotPresent(guiArgs, CraftPresence.CLIENT.generalArgs);
-        }
-
-        final String CURRENT_GUI_ICON = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
-        final String CURRENT_GUI_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentMessage, guiArgs);
-
-        CraftPresence.CLIENT.syncOverride(argumentFormat, currentData != null ? currentData : defaultData);
-        CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_GUI_MESSAGE, ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, CURRENT_GUI_ICON, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon), ArgumentType.Image);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param types The argument types to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(ArgumentType... types) {
-        types = (types != null && types.length > 0 ? types : ArgumentType.values());
-        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
-        List<String> queuedEntries;
-        for (ArgumentType type : types) {
-            queuedEntries = Lists.newArrayList();
-            if (type == ArgumentType.Image) {
-                queuedEntries.add(subArgumentFormat + "ICON&");
-            } else if (type == ArgumentType.Text) {
-                queuedEntries.add(subArgumentFormat + "SCREEN&");
-                queuedEntries.add(subArgumentFormat + "CLASS&");
-            }
-            argumentData.put(type, queuedEntries);
-        }
-        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
+        CraftPresence.CLIENT.syncOverride("screen", currentData != null ? currentData : defaultData);
+        CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
+        CraftPresence.CLIENT.syncArgument("screen.icon", CraftPresence.CLIENT.imageOf("screen.icon", true, formattedIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon));
     }
 
     /**

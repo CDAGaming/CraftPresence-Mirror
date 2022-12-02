@@ -1,94 +1,23 @@
 # CraftPresence Changes
 
-## v2.0.0 Alpha 1 (11/28/2022)
+## v2.0.0 Alpha 2 (02/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.1)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.2)_
 
 ### Changes
 
-* Adjusted module logic to perform within their own sub-threads, in an effort to avoid waiting on them to retrieve data
-    * IE the initial retrieval of data when a module is first enabled is now multi-threaded, taking up much less time!
-* Migrated the Config Systems from `Properties` to `GSON`
-    * A one-time migration layer has been put into place to migrate your v1.x settings over to the v2.x format
-    * The logic behind data validation has been condensed to be more performant, and this change allows config settings
-      to be more easily migrated across major updates
-    * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also
-      removed, since we don't use Arrays in this new system
-* Added the ability for placeholders to be interpreted differently depending on the RPC field
-    * An example of this would be being able to make `&DIMENSION&` equal `this` if it is used in the `Details` Presence
-      Field, while equaling `that` if used in the `Game State` Presence Field
-* Added more flexibility and usage to endpoint icons, including the addition of the `allowEndpointIcons`
-    * For users, the new usages also include fetching the server icon in the Server Settings Scroll Lists, if the Base64
-      icon is unavailable
-    * It also allows for fetching a dynamic server icon if the icon's the module is looking for do not exist within the
-      Discord Asset List, and doing similar activity for the player's head icon.
-* Multiple Accessibility improvements have been made to the GUI in an effort to be more descriptive and user-friendly
-* Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
-* Added support for transferring a Simple RPC (By HypherionSA) config to CraftPresence (With permission, of course!)
-* Removed the ViveCraft Message Option and Fallback Placeholder Message
-    * Alpha Note: The ViveCraft Option will be replaced by something later in the development pipeline before v2.0s full
-      release!
-* UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
-    * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
-* Backend: Increased the default text limit for all `ExtendedTextControl`'s
-    * Due to this change, minified placeholder support has been removed from the backend (Can be re-added in a future
-      update, if needed)
-* Added placeholders:
-    * `&SERVER:MOTD&` - Added per-line support (Example: `&MOTD1&` for line one of `&MOTD&`)
-    * `&SERVER:WORLDINFO:WORLDTIME12&` - A 12-hour format of the `&WORLDTIME&` placeholder
-    * `&SERVER:PLAYERS:{CURRENT,MAX}EXCL&` - Alternatives for the `&CURRENT&` and `&MAX&` counterparts, but excludes
-      yourself
-    * (Icon) `&IGN&` - If a valid UUID and `allowEndpointIcons` is active, `&IGN&` will fetch the `dynamicIcons` data
-        * Note that removing it from `dynamicIcons` will cause `&IGN&` to not find any icon
+* TBD
 
 ### Fixes
 
-* Fixed the GUI module systems not working properly on 1.14+ ports
-    * Note: Different Loaders may have different screen names, depending on mappings
-* Fixed improper options being available in the Dynamic Editor Screen when adding data that was preliminary-supplied
-  from other modules
-* Fixed interpreting Dynamic Icons with Spaces in them (`formatAsIcon` is now ignored for Custom Assets, but null checks
-  do remain)
-* Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
-  the `buttonBackgroundColor` setting
-* Fixed issues that could occur when `setControlMessage` was fired with a null argument
-* Fixed the UUID placeholders in `&IGN&` being available, even if it wasn't a valid UUID
-* Fixed a regression in MultiMC-type instance detection from `v1.9.0` that caused a normal error to not be suppressed
-  properly
-* Fixed multiple issues preventing the ability to hide placeholder output depending on a per-module value
-    * IE You can set the `textOverride` to be an empty string in the frontend, and the mod will respect that
-* Fixed preliminary-supplied data being able to be removed via the Dynamic Editor Screen
-    * Only the config entry should have been effected, not the actual module data list
-* Fixed Out-Of-Bound issues when there are less then 3 or 4 search results in a Scrollable List
-    * This issue caused no elements to display until you scrolled, causing it to clamp back to normal values
-    * The list will now reset the scroll when the list is updated
-* Fixed Issues where data relying on the `children` list was unavailable in 1.13+ ports (Tab-Focus changing)
-* Fixed Issues where the focus status was not being checked for `keyPressed` and `charTyped` on 1.13+ ports
-    * This also fixes hearing a clicking sound when `KP_ENTER`, `ENTER` or the spacebar was pushed while focused on a
-      text box
-* Backend: Fixed `ImageUtils` dynamic texture creation not complying with 1.13+ namespace requirements
+* TBD
 
 ### Translations
 
 The following changes have been made for translations:
 
-* Added:
-    * `gui.config.message.editor.original`
-    * `gui.config.message.button.remove`
-    * `gui.config.{name,defaults}.advanced.allow_endpoint_icons` (Added Property)
-    * `gui.config.{name,comment}.advanced.server_icon_endpoint` (Added Property)
-    * `craftpresence.placeholders.SERVER.WORLDINFO.WORLDTIME12.description` (Added Placeholder)
-    * `craftpresence.placeholders.{SCREEN,TARGETENTITY,RIDINGENTITY}.ICON.description` (Added Placeholders)
-* Modified:
-    * `gui.config.comment.button.sync.config` (Modified for new config file name)
-    * `craftpresence.placeholders.SERVER.WORLDINFO.WORLDTIME.description` (Adjusted description to clarify 24-hour
-      format)
-* Removed:
-    * `craftpresence.logger.error.config.adjust.global`
-    * `craftpresence.logger.info.config.notice`
-    * `craftpresence.exception.config.prop.null`
-    * `gui.config.{name,comment}.advanced.split_character` (Removed Property)
+TBD
 
 ___
 
@@ -106,12 +35,7 @@ between future Alpha releases.
 
 The following known issues are present in this build:
 
-* Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
-* The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
-* The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
-    * The `custom` field will remain unimplemented until Alpha 3, due to more logic that is planned to be added
-    * Placeholders related to the realm and Replay Mod Integration are currently unimplemented and parse as `&unknown&`.
-    * `%weather%` is also unimplemented at this time, and will also parse as `&unknown&`
+TBD
 
 #### 1.13.x Build Info
 

@@ -85,7 +85,7 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                        CraftPresence.BIOMES.generateArgumentMessage())
+                                                        CraftPresence.CLIENT.generateArgumentMessage("biome"))
                                         ), this, true
                                 );
                             }
@@ -110,7 +110,7 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
+                                                        CraftPresence.CLIENT.generateArgumentMessage("dimension"))
                                         ), this, true
                                 );
                             }
@@ -135,7 +135,7 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                                        CraftPresence.SERVER.generateArgumentMessage())
+                                                        CraftPresence.CLIENT.generateArgumentMessage("server"))
                                         ), this, true
                                 );
                             }
@@ -148,7 +148,7 @@ public class MainGui extends ExtendedScreen {
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.title.status_messages",
-                        () -> CraftPresence.GUIS.openScreen(new StatusMessagesGui(currentScreen)),
+                        () -> CraftPresence.GUIS.openScreen(new EventSettingsGui(currentScreen)),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.status_messages")

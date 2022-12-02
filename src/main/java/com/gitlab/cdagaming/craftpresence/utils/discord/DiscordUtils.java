@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.integrations.curse.CurseUtils;
@@ -44,7 +43,6 @@ import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
@@ -54,9 +52,17 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
+import meteordevelopment.starscript.Script;
+import meteordevelopment.starscript.StandardLib;
+import meteordevelopment.starscript.Starscript;
+import meteordevelopment.starscript.compiler.Compiler;
+import meteordevelopment.starscript.compiler.Parser;
+import meteordevelopment.starscript.utils.Error;
+import meteordevelopment.starscript.value.Value;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Variables and Methods used to update the RPC Presence States to display within Discord
@@ -65,48 +71,13 @@ import java.util.Map;
  */
 public class DiscordUtils {
     /**
-     * A list of the text modules for this application
-     */
-    public static final List<String> textModules = Lists.newArrayList(
-            "&MAINMENU&",
-            "&BRAND&", "&MCVERSION&", "&IGN&", "&MODS&", "&PACK&",
-            "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&",
-            "&TILEENTITY&", "&TARGETENTITY&", "&RIDINGENTITY&"
-    );
-    /**
-     * A list of the icon modules for this application
-     */
-    public static final List<String> iconModules = Lists.newArrayList(
-            "&DEFAULT&", "&MAINMENU&", "&IGN&", "&PACK&",
-            "&DIMENSION&", "&BIOME&", "&SERVER&", "&SCREEN&",
-            "&TARGETENTITY&", "&RIDINGENTITY&"
-    );
-    /**
-     * A list of the valid operators for this application
-     */
-    public static final Map<String, Pair<String, String>> validOperators = ImmutableMap.<String, Pair<String, String>>builder()
-            .put("|", new Pair<>("\\|", "&[^&]*&[\\|]&[^&]*&"))
-            .build();
-    /**
      * A mapping of the arguments that have overriden module data
      */
     private final Map<String, ModuleData> overrideData = Maps.newHashMap();
     /**
-     * A Mapping of the Arguments available to use as RPC Message Placeholders
+     * TODO
      */
-    private final Map<ArgumentType, List<Pair<String, String>>> presenceData = Maps.newHashMap();
-    /**
-     * A Mapping of the Arguments attached to the &MODS& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> modsArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &IGN& RPC Message Placeholder
-     */
-    private final List<Pair<String, String>> playerInfoArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &PACK& RPC Message Placeholder
-     */
-    private final List<Pair<String, String>> packArgs = Lists.newArrayList();
+    private final Map<String, Supplier<Value>> placeholderData = Maps.newTreeMap();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to cache data for repeated images in other areas
@@ -215,6 +186,10 @@ public class DiscordUtils {
      */
     public byte INSTANCE;
     /**
+     * TODO
+     */
+    public Starscript scriptEngine = new Starscript();
+    /**
      * An Instance of the {@link IPCClient}, responsible for sending and receiving RPC Events
      */
     public IPCClient ipcInstance;
@@ -226,10 +201,6 @@ public class DiscordUtils {
      * When this is not null, {@link DiscordUtils#buildRichPresence(PresenceData)} will use this data instead of the generic data
      */
     public PresenceData forcedData = null;
-    /**
-     * A Mapping of the General RPC Arguments allowed in adjusting Presence Messages
-     */
-    public List<Pair<String, String>> generalArgs = Lists.newArrayList();
     /**
      * A Mapping of the Last Requested Image Cache Data
      * <p>Used to prevent sending duplicate packets
@@ -274,6 +245,10 @@ public class DiscordUtils {
             }
 
             // Create IPC Instance and Listener and Make a Connection if possible
+            scriptEngine = new Starscript();
+            StandardLib.init(scriptEngine);
+            // TODO: Add some of our functions to the engine
+
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
             ipcInstance.setListener(new ModIPCListener());
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
@@ -290,16 +265,9 @@ public class DiscordUtils {
             ex.printStackTrace();
         }
 
-        // Initialize and Sync any Pre-made Arguments (And Reset Related Data)
-        for (String moduleId : textModules) {
-            initArgument(ArgumentType.Text, moduleId);
-        }
-        for (String moduleId : iconModules) {
-            initArgument(ArgumentType.Image, moduleId);
-        }
+        // Ensure Initial Data Resets properly
         overrideData.clear();
-
-        // Ensure Main Menu RPC Resets properly
+        placeholderData.clear();
         CommandUtils.isInMainMenu = false;
 
         syncPlaceholders();
@@ -355,87 +323,56 @@ public class DiscordUtils {
      * @param input The string to interpret
      * @return The resulting output string
      */
-    public String sanitizePlaceholders(String input) {
-        return !StringUtils.isNullOrEmpty(input) ? input.replaceAll("&[^&]*&", "").trim() : "";
+    public String sanitizePlaceholders(final String input) {
+        return !StringUtils.isNullOrEmpty(input) ? input.trim() : "";
     }
 
     /**
-     * Parses the Argument Operators and Placeholders within a message
-     *
-     * @param input      The string to interpret
-     * @param overrideId The override identifier to interpret
-     * @param typeList   The list of {@link ArgumentType}'s to iterate through
-     * @return the parsed message
+     * TODO
+     * @param input
+     * @return
      */
-    public String parseArgumentOperators(final String input, final String overrideId, ArgumentType... typeList) {
-        String result = input;
-        // Phase 1: Do Operators, if allowed
-        if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderOperators) {
-            for (Map.Entry<String, Pair<String, String>> rawEntry : validOperators.entrySet()) {
-                final Pair<String, String> operatorEntry = rawEntry.getValue();
-                final Pair<String, List<String>> matches = StringUtils.getMatches(operatorEntry.getSecond(), result);
+    public Supplier<Value> compileData(String input, final boolean plain) {
+        input = !StringUtils.isNullOrEmpty(input) ? input : "";
 
-                if (!matches.getSecond().isEmpty()) {
-                    for (String match : matches.getSecond()) {
-                        boolean foundMatch = false;
-                        String resultMatch = match;
-                        for (String splitData : match.split(operatorEntry.getFirst())) {
-                            if (foundMatch) {
-                                break;
-                            }
-                            for (ArgumentType type : typeList) {
-                                if (!getRawArgumentEntries(type, false, splitData).isEmpty()) {
-                                    foundMatch = true;
-                                    resultMatch = splitData;
-                                    break;
-                                }
-                            }
-                        }
-                        result = result.replace(match, foundMatch ? resultMatch : "");
-                    }
-                }
-            }
-        }
-        // Phase 2: Do Overrides, if found
-        if (!StringUtils.isNullOrEmpty(overrideId)) {
-            final String[] overridePath = overrideId.split("\\.");
-            final Pair<String, List<String>> matches = StringUtils.getMatches("&[^&]*&", input);
-            if (!matches.getSecond().isEmpty()) {
-                for (String match : matches.getSecond()) {
-                    if (overrideData.containsKey(match)) {
-                        final ModuleData data = overrideData.get(match);
-                        if (Config.isValidProperty(data, "data") && data.getData().enabled) {
-                            Object overrideResult = null;
-                            if (overridePath.length == 2 && overridePath[0].startsWith("button_")) {
-                                final Map<String, Button> buttons = data.getData().buttons;
-                                if (!buttons.isEmpty() && buttons.containsKey(overridePath[0])) {
-                                    overrideResult = buttons.get(overridePath[0]).getProperty(overridePath[1]);
-                                }
-                            }
+        if (!plain) {
+            Parser.Result result = null;
+            try {
+                result = Parser.parse(input);
+            } catch (Exception ignored) {}
 
-                            if (overrideResult == null) {
-                                overrideResult = data.getData().getProperty(overrideId);
-                            }
-                            if (overrideResult != null && !StringUtils.isNullOrEmpty(overrideResult.toString())) {
-                                result = result.replaceAll(match, overrideResult.toString());
-                            }
-                        }
-                    }
+            if (result == null || result.hasErrors()) {
+                // TODO: Proper Logging
+                if (result != null) {
+                    for (Error error : result.errors) ModUtils.LOG.error(error.toString());
                 }
+                return () -> Value.string("");
             }
+
+            final Script script = Compiler.compile(result);
+            return () -> Value.string(scriptEngine.run(script).toString());
+        } else {
+            String finalInput = input;
+            return () -> Value.string(finalInput);
         }
-        return StringUtils.sequentialReplaceAnyCase(result, getArgumentsFor(typeList));
     }
 
     /**
-     * Parses the Argument Operators and Placeholders within a message
-     *
-     * @param input    The string to interpret
-     * @param typeList The list of {@link ArgumentType}'s to iterate through
-     * @return the parsed message
+     * TODO
+     * @param input
+     * @return
      */
-    public String parseArgumentOperators(final String input, ArgumentType... typeList) {
-        return parseArgumentOperators(input, null, typeList);
+    public Supplier<Value> compileData(String input) {
+        return compileData(input, false);
+    }
+
+    /**
+     * TODO
+     * @param input
+     * @return
+     */
+    public String getResult(final String input) {
+        return compileData(input).get().toString();
     }
 
     /**
@@ -457,7 +394,7 @@ public class DiscordUtils {
         if (!StringUtils.isNullOrEmpty(argumentName)) {
             overrideData.put(argumentName, data);
         }
-        if (data != null && Config.getProperty(data, "data") != null && data.getData().enabled && data.getData().useAsMain) {
+        if (data != null && Config.getProperty(data, "data") != null && data.getData().enabled) {
             forcedData = data.getData();
         }
     }
@@ -487,106 +424,80 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
-     * @param dataTypes    The type(s) the argument should be stored as
      */
-    public void syncArgument(String argumentName, String insertString, ArgumentType... dataTypes) {
-        for (ArgumentType dataType : dataTypes) {
-            // Remove and Replace Placeholder Data, if the placeholder needs updates
-            if (!StringUtils.isNullOrEmpty(argumentName)) {
-                setArgumentsFor(dataType, new Pair<>(argumentName, insertString));
-            }
+    public void syncArgument(String argumentName, String insertString, final boolean plain) {
+        if (!StringUtils.isNullOrEmpty(argumentName)) {
+            final Supplier<Value> value = compileData(insertString, plain);
+            scriptEngine.set(argumentName, value);
+            placeholderData.put(argumentName, value);
         }
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param insertString The String to attach to the Specified Argument
+     */
+    public void syncArgument(String argumentName, String insertString) {
+        syncArgument(argumentName, insertString, false);
     }
 
     /**
      * Initialize the Specified Arguments as Empty Data
      *
-     * @param dataType The type the argument should be stored as
      * @param args     The Arguments to Initialize
      */
-    public void initArgument(ArgumentType dataType, String... args) {
+    public void initArgument(String... args) {
         // Initialize Specified Arguments to Empty Data
         for (String argumentName : args) {
-            syncArgument(argumentName, "", dataType);
+            syncArgument(argumentName, "");
         }
-    }
-
-    /**
-     * Initialize the Specified Arguments as Empty Data
-     *
-     * @param args The Arguments to Initialize
-     */
-    public void initArgument(String... args) {
-        for (ArgumentType type : ArgumentType.values()) {
-            initArgument(type, args);
-        }
-    }
-
-    /**
-     * Retrieve all arguments for the specified types
-     *
-     * @param typeList The types the arguments should be retrieved from
-     * @return The found list of arguments
-     */
-    public List<Pair<String, String>> getArgumentsFor(final ArgumentType... typeList) {
-        List<Pair<String, String>> result = Lists.newArrayList();
-        for (ArgumentType type : typeList) {
-            if (!presenceData.containsKey(type)) {
-                presenceData.put(type, Lists.newArrayList());
-            }
-            StringUtils.addEntriesNotPresent(result, presenceData.get(type));
-        }
-        return result;
     }
 
     /**
      * Remove any arguments following the specified formats within the selected Argument Type
      *
-     * @param type The type the arguments should be retrieved from
      * @param args The string formats to interpret
      */
-    public void removeArgumentsMatching(final ArgumentType type, final String... args) {
-        if (presenceData.containsKey(type)) {
-            final List<Pair<String, String>> list = Lists.newArrayList(presenceData.get(type));
-            for (Pair<String, String> entry : presenceData.get(type)) {
-                for (String format : args) {
-                    if (entry.getFirst().contains(format)) {
-                        list.remove(entry);
-                    }
+    public void removeArguments(final String... args) {
+        final List<String> items = Lists.newArrayList(placeholderData.keySet());
+        for (String key : items) {
+            for (String format : args) {
+                if (key.startsWith(format) || key.contains(format)) {
+                    scriptEngine.remove(key);
+                    placeholderData.remove(key);
+                    break;
                 }
             }
-            setArgumentsFor(type, list);
-        }
-    }
-
-    /**
-     * Remove any arguments following the specified formats within the selected Argument Type
-     *
-     * @param args The string formats to interpret
-     */
-    public void removeArgumentsMatching(final String... args) {
-        for (ArgumentType type : ArgumentType.values()) {
-            removeArgumentsMatching(type, args);
         }
     }
 
     /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
-     * @param type             The type the arguments should be retrieved from
      * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final boolean allowNullEntries, final String... args) {
-        final List<Pair<String, String>> list = Lists.newArrayList();
-        if (presenceData.containsKey(type)) {
-            for (Pair<String, String> entry : presenceData.get(type)) {
-                final boolean isEntryValid = allowNullEntries || !StringUtils.isNullOrEmpty(entry.getSecond());
-                for (String format : args) {
-                    if (entry.getFirst().contains(format) && isEntryValid) {
-                        list.add(entry);
+    public Map<String, String> getArguments(final boolean allowNullEntries, final String... args) {
+        final List<String> items = Lists.newArrayList(placeholderData.keySet());
+        final Map<String, String> list = Maps.newTreeMap();
+
+        for (String item : items) {
+            boolean addToList = args == null || args.length < 1 || args[0] == null;
+            if (!addToList) {
+                for (String argument : args) {
+                    if (!StringUtils.isNullOrEmpty(argument) && item.contains(argument)) {
+                        addToList = true;
+                        break;
                     }
+                }
+            }
+            if (addToList) {
+                final String value = placeholderData.get(item).get().getString();
+                if (allowNullEntries || !StringUtils.isNullOrEmpty(value)) {
+                    list.put(item, value);
                 }
             }
         }
@@ -596,53 +507,26 @@ public class DiscordUtils {
     /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
-     * @param type The type the arguments should be retrieved from
      * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<Pair<String, String>> getArgumentsMatching(final ArgumentType type, final String... args) {
-        return getArgumentsMatching(type, true, args);
-    }
-
-    /**
-     * Retrieves any arguments within the specified type that match the specified string formats
-     *
-     * @param allowNullEntries Whether empty entry values should be interpreted
-     * @param args             The string formats to interpret
-     * @return A List of the entries that satisfy the method conditions
-     */
-    public List<Pair<String, String>> getArgumentsMatching(final boolean allowNullEntries, final String... args) {
-        final List<Pair<String, String>> results = Lists.newArrayList();
-        for (ArgumentType type : ArgumentType.values()) {
-            StringUtils.addEntriesNotPresent(results, getArgumentsMatching(type, allowNullEntries, args));
-        }
-        return results;
-    }
-
-    /**
-     * Retrieves any arguments within the specified type that match the specified string formats
-     *
-     * @param args The string formats to interpret
-     * @return A List of the entries that satisfy the method conditions
-     */
-    public List<Pair<String, String>> getArgumentsMatching(final String... args) {
-        return getArgumentsMatching(true, args);
+    public Map<String, String> getArguments(final String... args) {
+        return getArguments(true, args);
     }
 
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param type             The type the arguments should be retrieved from
      * @param formatToLower    Whether to lower-cases the resulting entries
      * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final boolean allowNullEntries, final String... args) {
-        final List<Pair<String, String>> list = getArgumentsMatching(type, allowNullEntries, args);
+    public List<String> getArgumentEntries(final boolean formatToLower, final boolean allowNullEntries, final String... args) {
+        final Map<String, String> list = getArguments(allowNullEntries, args);
         final List<String> result = Lists.newArrayList();
-        for (Pair<String, String> entry : list) {
-            result.add(formatToLower ? entry.getFirst().toLowerCase() : entry.getFirst());
+        for (String item : list.keySet()) {
+            result.add(formatToLower ? item.toLowerCase() : item);
         }
         return result;
     }
@@ -650,90 +534,136 @@ public class DiscordUtils {
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param type          The type the arguments should be retrieved from
      * @param formatToLower Whether to lower-cases the resulting entries
      * @param args          The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getArgumentEntries(final ArgumentType type, final boolean formatToLower, final String... args) {
-        return getArgumentEntries(type, formatToLower, true, args);
+    public List<String> getArgumentEntries(final boolean formatToLower, final String... args) {
+        return getArgumentEntries(formatToLower, true, args);
     }
 
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param type             The type the arguments should be retrieved from
      * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getRawArgumentEntries(final ArgumentType type, final boolean allowNullEntries, final String... args) {
-        return getArgumentEntries(type, false, allowNullEntries, args);
+    public List<String> getRawArgumentEntries(final boolean allowNullEntries, final String... args) {
+        return getArgumentEntries(false, allowNullEntries, args);
     }
 
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param type The type the arguments should be retrieved from
      * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getRawArgumentEntries(final ArgumentType type, final String... args) {
-        return getRawArgumentEntries(type, true, args);
+    public List<String> getRawArgumentEntries(final String... args) {
+        return getRawArgumentEntries(true, args);
     }
 
     /**
      * Determines whether there are any matching arguments within the specified type matching the specified string formats
      *
-     * @param type             The type the arguments should be retrieved from
      * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
      * @return Whether the resulting list has any matching entries
      */
-    public boolean hasArgumentsMatching(final ArgumentType type, final boolean allowNullEntries, final String... args) {
-        return !getArgumentsMatching(type, allowNullEntries, args).isEmpty();
+    public boolean hasArgumentsMatching(final boolean allowNullEntries, final String... args) {
+        return !getArguments(allowNullEntries, args).isEmpty();
     }
 
     /**
      * Determines whether there are any matching arguments within the specified type matching the specified string formats
      *
-     * @param type The type the arguments should be retrieved from
      * @param args The string formats to interpret
      * @return Whether the resulting list has any matching entries
      */
-    public boolean hasArgumentsMatching(final ArgumentType type, final String... args) {
-        return hasArgumentsMatching(type, true, args);
+    public boolean hasArgumentsMatching(final String... args) {
+        return hasArgumentsMatching(true, args);
     }
 
     /**
-     * Stores the specified argument data for the specified type
+     * Generate a parsable display string for the argument data provided
      *
-     * @param type The type the arguments should be stored as
-     * @param data The list of data to interpret
+     * @param argumentFormat    The primary argument format to interpret
+     * @param addExtraData      Whether to add additional data to the string
+     * @param args              The data to interpret
+     * @return the parsable string
      */
-    public void setArgumentsFor(final ArgumentType type, final List<Pair<String, String>> data) {
-        presenceData.put(type, data);
+    public String generateArgumentMessage(final String argumentFormat, final boolean addExtraData, final Map<String, String> args) {
+        final String titleString = String.format("%s%s:",
+                ModUtils.TRANSLATOR.translate(
+                        String.format("%s.placeholders.title", ModUtils.MOD_ID)
+                ), (!StringUtils.isNullOrEmpty(argumentFormat) ? (" (" + argumentFormat.toLowerCase() + ")") : "")
+        );
+        final StringBuilder placeholderString = new StringBuilder();
+        if (args != null && !args.isEmpty()) {
+            for (Map.Entry<String, String> argData : args.entrySet()) {
+                final String placeholderName = argData.getKey();
+
+                placeholderString.append(
+                        String.format("\\n - %s = %s",
+                                placeholderName.toLowerCase(),
+                                ModUtils.TRANSLATOR.translate(
+                                        String.format("%s.placeholders.%s.description",
+                                                ModUtils.MOD_ID,
+                                                placeholderName
+                                        )
+                                ))
+                );
+
+                if (addExtraData && !StringUtils.isNullOrEmpty(argData.getValue())) {
+                    final String tagValue = argData.getValue();
+                    placeholderString.append(String.format("\\n ==> %s \"%s\"",
+                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                            (tagValue.length() >= 128) ? "<...>" : tagValue
+                    ));
+                }
+            }
+        }
+
+        if (placeholderString.length() == 0) {
+            placeholderString.append("\\n - N/A");
+        }
+        return titleString + placeholderString;
     }
 
     /**
-     * Stores the specified argument data for the specified type
+     * Generate a parsable display string for the argument data provided
      *
-     * @param type The type the arguments should be stored as
-     * @param data The data to interpret
+     * @param argumentFormat    The primary argument format to interpret
+     * @param addExtraData      Whether to add additional data to the string
+     * @return the parsable string
      */
-    public void setArgumentsFor(final ArgumentType type, final Pair<String, String> data) {
-        final List<Pair<String, String>> list = getArgumentsFor(type);
-        StringUtils.removeIf(list, e -> e.getFirst().equalsIgnoreCase(data.getFirst()));
-        list.add(data);
-        setArgumentsFor(type, list);
+    public String generateArgumentMessage(final String argumentFormat, final boolean addExtraData) {
+        return generateArgumentMessage(argumentFormat, addExtraData, getArguments(argumentFormat));
     }
 
     /**
-     * Synchronizes the &PACK& Argument, based on any found Launcher Pack/Instance Data
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param argumentFormat    The primary argument format to interpret
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String argumentFormat) {
+        return generateArgumentMessage(argumentFormat, CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @return the parsable string
+     */
+    public String generateArgumentMessage() {
+        return generateArgumentMessage(null);
+    }
+
+    /**
+     * Synchronizes the `pack` Argument, based on any found Launcher Pack/Instance Data
      */
     private void syncPackArguments() {
-        // Add &PACK& Placeholder to ArgumentData
-        packArgs.clear();
         String foundPackName = "", foundPackIcon = "";
 
         if (!StringUtils.isNullOrEmpty(CurseUtils.INSTANCE_NAME)) {
@@ -751,335 +681,27 @@ public class DiscordUtils {
         }
 
         if (!StringUtils.isNullOrEmpty(foundPackName)) {
-            packArgs.add(new Pair<>("&NAME&", foundPackName));
-
-            // Add applicable args as sub-placeholders
-            for (Pair<String, String> argumentData : packArgs) {
-                syncArgument("&PACK:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-            }
-
-            syncArgument("&PACK&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.packPlaceholderMessage, packArgs), ArgumentType.Text);
-            syncArgument("&PACK&", imageOf("&PACK&", true, foundPackIcon), ArgumentType.Image);
+            syncArgument("pack.name", foundPackName);
+            syncArgument("pack.icon", imageOf("pack.icon", true, foundPackIcon));
         } else {
-            removeArgumentsMatching("&PACK:");
-            initArgument("&PACK&");
+            removeArguments("pack");
         }
-    }
-
-    /**
-     * Generate a list of Arguments, depending on the Argument Types and String List
-     *
-     * @param allowNullEntries Whether empty entry values should be interpreted
-     * @param argumentData     The data to interpret
-     * @return the list of parsed arguments
-     */
-    public List<Pair<String, String>> generateArgumentList(final boolean allowNullEntries, final Map<ArgumentType, List<String>> argumentData) {
-        final List<Pair<String, String>> results = Lists.newArrayList();
-        for (Map.Entry<ArgumentType, List<String>> entry : argumentData.entrySet()) {
-            StringUtils.addEntriesNotPresent(results,
-                    data -> StringUtils.filter(Lists.newArrayList(results), e -> e.getFirst().equalsIgnoreCase(data.getFirst())).isEmpty(),
-                    convertToArgumentList(entry.getKey(), allowNullEntries, entry.getValue())
-            );
-        }
-        return results;
-    }
-
-    /**
-     * Generate a list of Arguments, depending on the Argument Types and String List
-     *
-     * @param argumentData The data to interpret
-     * @return the list of parsed arguments
-     */
-    public List<Pair<String, String>> generateArgumentList(final Map<ArgumentType, List<String>> argumentData) {
-        return generateArgumentList(true, argumentData);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param addExtraData      Whether to add additional data to the string
-     * @param args              The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final boolean addExtraData, final List<Pair<String, String>> args) {
-        final String titleString = String.format("%s%s:",
-                ModUtils.TRANSLATOR.translate(
-                        String.format("%s.placeholders.title", ModUtils.MOD_ID)
-                ), (!StringUtils.isNullOrEmpty(argumentFormat) ? (" (" + argumentFormat.toLowerCase() + ")") : "")
-        );
-        final StringBuilder placeholderString = new StringBuilder();
-        if (args != null && !args.isEmpty()) {
-            for (Pair<String, String> argData : args) {
-                String placeholderName = argData.getFirst();
-                String translationName = placeholderName;
-                boolean shouldContinue = StringUtils.isNullOrEmpty(subArgumentFormat) || !subArgumentFormat.equals(placeholderName);
-
-                if (shouldContinue) {
-                    if (!StringUtils.isNullOrEmpty(argumentFormat)) {
-                        if (!StringUtils.isNullOrEmpty(subArgumentFormat)) {
-                            placeholderName = placeholderName.replaceAll(subArgumentFormat, argumentFormat.substring(0, 1));
-                        }
-                        translationName = (argumentFormat + "." + placeholderName).replaceAll(argumentFormat.substring(0, 1), "");
-                    } else {
-                        translationName = translationName.replaceAll("[^a-zA-Z0-9]", "");
-                    }
-                    placeholderString.append(
-                            String.format("\\n - %s = %s",
-                                    placeholderName.toLowerCase(),
-                                    ModUtils.TRANSLATOR.translate(
-                                            String.format("%s.placeholders.%s.description",
-                                                    ModUtils.MOD_ID,
-                                                    translationName.replaceAll(":", ".")
-                                            )
-                                    ))
-                    );
-
-                    if (addExtraData && !StringUtils.isNullOrEmpty(argData.getSecond())) {
-                        final String tagValue = argData.getSecond();
-                        placeholderString.append(String.format("\\n ==> %s \"%s\"",
-                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                (tagValue.length() >= 128) ? "<...>" : tagValue
-                        ));
-                    }
-                }
-            }
-        }
-
-        if (placeholderString.length() == 0) {
-            placeholderString.append("\\n - N/A");
-        }
-        return titleString + placeholderString;
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param args              The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final List<Pair<String, String>> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat The primary argument format to interpret
-     * @param args           The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final List<Pair<String, String>> args) {
-        return generateArgumentMessage(argumentFormat, null, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param args              The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final Map<ArgumentType, List<String>> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, generateArgumentList(args));
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat The primary argument format to interpret
-     * @param args           The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final Map<ArgumentType, List<String>> args) {
-        return generateArgumentMessage(argumentFormat, null, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param type              The type the arguments should be retrieved from
-     * @param allowNullEntries  Whether empty entry values should be interpreted
-     * @param args              The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final boolean allowNullEntries, final String... args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, allowNullEntries, args));
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param type              The type the arguments should be retrieved from
-     * @param args              The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final String... args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, type, true, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat   The primary argument format to interpret
-     * @param type             The type the arguments should be retrieved from
-     * @param allowNullEntries Whether empty entry values should be interpreted
-     * @param args             The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final boolean allowNullEntries, final String... args) {
-        return generateArgumentMessage(argumentFormat, null, type, allowNullEntries, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat The primary argument format to interpret
-     * @param type           The type the arguments should be retrieved from
-     * @param args           The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final String... args) {
-        return generateArgumentMessage(argumentFormat, type, true, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param type              The type the arguments should be retrieved from
-     * @param allowNullEntries  Whether empty entry values should be interpreted
-     * @param args              The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, convertToArgumentList(type, allowNullEntries, args));
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param type              The type the arguments should be retrieved from
-     * @param args              The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, final ArgumentType type, final List<String> args) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, type, true, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat   The primary argument format to interpret
-     * @param type             The type the arguments should be retrieved from
-     * @param allowNullEntries Whether empty entry values should be interpreted
-     * @param args             The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
-        return generateArgumentMessage(argumentFormat, null, type, allowNullEntries, args);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat The primary argument format to interpret
-     * @param type           The type the arguments should be retrieved from
-     * @param args           The data to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final ArgumentType type, final List<String> args) {
-        return generateArgumentMessage(argumentFormat, type, true, args);
-    }
-
-    /**
-     * Convert a list of strings into a valid argument list
-     *
-     * @param type             The type the arguments should be retrieved from
-     * @param allowNullEntries Whether empty entry values should be interpreted
-     * @param args             The string formats to interpret
-     * @return the resulting list of argument entries
-     */
-    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final boolean allowNullEntries, final String... args) {
-        final List<Pair<String, String>> result = Lists.newArrayList();
-        final List<Pair<String, String>> existingArgs = getArgumentsMatching(type, allowNullEntries, args);
-        for (String argumentName : args) {
-            if (!existingArgs.isEmpty()) {
-                for (Pair<String, String> entry : existingArgs) {
-                    if (entry.getFirst().contains(argumentName)) {
-                        result.add(entry);
-                    }
-                }
-            } else {
-                result.add(new Pair<>(argumentName, ""));
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Convert a list of strings into a valid argument list
-     *
-     * @param type The type the arguments should be retrieved from
-     * @param args The string formats to interpret
-     * @return the resulting list of argument entries
-     */
-    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final String... args) {
-        return convertToArgumentList(type, true, args);
-    }
-
-    /**
-     * Convert a list of strings into a valid argument list
-     *
-     * @param type             The type the arguments should be retrieved from
-     * @param allowNullEntries Whether empty entry values should be interpreted
-     * @param args             The string formats to interpret
-     * @return the resulting list of argument entries
-     */
-    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final boolean allowNullEntries, final List<String> args) {
-        return convertToArgumentList(type, allowNullEntries, args.toArray(new String[0]));
-    }
-
-    /**
-     * Convert a list of strings into a valid argument list
-     *
-     * @param type The type the arguments should be retrieved from
-     * @param args The string formats to interpret
-     * @return the resulting list of argument entries
-     */
-    public List<Pair<String, String>> convertToArgumentList(final ArgumentType type, final List<String> args) {
-        return convertToArgumentList(type, true, args);
     }
 
     /**
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
-        generalArgs.clear();
-        modsArgs.clear();
-        playerInfoArgs.clear();
-
         // Add Any Generalized Argument Data needed
         final String playerName = CraftPresence.session.getUsername();
-        modsArgs.add(new Pair<>("&MODCOUNT&", Integer.toString(FileUtils.getModCount())));
-        playerInfoArgs.add(new Pair<>("&NAME&", playerName));
+        syncArgument("general.mods", Integer.toString(FileUtils.getModCount()));
+        syncArgument("player.name", playerName);
 
         // UUID Data
         final String uniqueId = CraftPresence.session.getPlayerID();
         if (StringUtils.isValidUuid(uniqueId)) {
-            playerInfoArgs.add(new Pair<>("&UUID&", StringUtils.getFromUuid(uniqueId, true)));
-            playerInfoArgs.add(new Pair<>("&UUID_FULL&", StringUtils.getFromUuid(uniqueId, false)));
+            syncArgument("player.uuid", StringUtils.getFromUuid(uniqueId, true));
+            syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));
 
             if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
                 final String playerIcon = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, uniqueId);
@@ -1089,31 +711,15 @@ public class DiscordUtils {
                     CraftPresence.CONFIG.save();
                 }
 
-                syncArgument("&IGN&", playerName, ArgumentType.Image);
+                syncArgument("player.icon", playerName);
             }
         }
 
-        generalArgs.add(new Pair<>("&MCVERSION&", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion)));
-        generalArgs.add(new Pair<>("&BRAND&", ModUtils.BRAND));
-        generalArgs.add(new Pair<>("&MODS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.modsPlaceholderMessage, modsArgs)));
-        generalArgs.add(new Pair<>("&IGN&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.outerPlayerPlaceholderMessage, playerInfoArgs)));
-
-        for (Pair<String, String> generalArgument : generalArgs) {
-            // For each General (Can be used Anywhere) Argument
-            // Ensure they sync as Formatter Arguments too
-            syncArgument(generalArgument.getFirst(), generalArgument.getSecond(), ArgumentType.Text);
-        }
-
-        // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : modsArgs) {
-            syncArgument("&MODS:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
-        for (Pair<String, String> argumentData : playerInfoArgs) {
-            syncArgument("&IGN:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
+        syncArgument("general.version", ModUtils.MCVersion);
+        syncArgument("general.brand", ModUtils.BRAND);
 
         // Sync the Default Icon Argument
-        syncArgument("&DEFAULT&", CraftPresence.CONFIG.generalSettings.defaultIcon, ArgumentType.Image);
+        syncArgument("general.icon", CraftPresence.CONFIG.generalSettings.defaultIcon);
         syncPackArguments();
     }
 
@@ -1315,19 +921,19 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence(final PresenceData configData) {
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(parseArgumentOperators(configData.details, "details", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(parseArgumentOperators(configData.gameState, "gameState", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(getResult(configData.details), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(getResult(configData.gameState), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.largeImageKey, "largeImageKey", ArgumentType.Image));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(parseArgumentOperators(configData.smallImageKey, "smallImageKey", ArgumentType.Image));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.largeImageKey));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.smallImageKey));
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                parseArgumentOperators(LARGE_IMAGE_ASSET.getUrl(), ArgumentType.Text) : LARGE_IMAGE_ASSET.getName()) : "";
+                getResult(LARGE_IMAGE_ASSET.getUrl()) : LARGE_IMAGE_ASSET.getName()) : "";
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                parseArgumentOperators(SMALL_IMAGE_ASSET.getUrl(), ArgumentType.Text) : SMALL_IMAGE_ASSET.getName()) : "";
+                getResult(SMALL_IMAGE_ASSET.getUrl()) : SMALL_IMAGE_ASSET.getName()) : "";
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.largeImageText, "largeImageText", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(parseArgumentOperators(configData.smallImageText, "smallImageText", ArgumentType.Text), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
@@ -1338,11 +944,11 @@ public class DiscordUtils {
                     !buttonElement.getKey().equalsIgnoreCase("default") &&
                     !StringUtils.isNullOrEmpty(buttonElement.getValue().label)) {
                 String label = StringUtils.formatWord(
-                        parseArgumentOperators(buttonElement.getValue().label, overrideId + ".label", ArgumentType.Text),
+                        getResult(buttonElement.getValue().label),
                         !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
                 );
-                String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().url) ? parseArgumentOperators(
-                        buttonElement.getValue().url, overrideId + ".url", ArgumentType.Text
+                String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().url) ? getResult(
+                        buttonElement.getValue().url
                 ) : "";
 
                 label = sanitizePlaceholders(label);

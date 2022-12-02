@@ -25,11 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -49,22 +46,6 @@ import java.util.Map;
  * @author CDAGaming
  */
 public class EntityUtils {
-    /**
-     * A Mapping of the Arguments attached to the &TARGETENTITY& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> entityTargetArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder for &TARGETENTITY&
-     */
-    private final List<Pair<String, String>> entityTargetIconArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &RIDINGENTITY& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> entityRidingArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &ICON& RPC Message placeholder for &RIDINGENTITY&
-     */
-    private final List<Pair<String, String>> entityRidingIconArgs = Lists.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -142,15 +123,9 @@ public class EntityUtils {
         CURRENT_TARGET_TAGS.clear();
         CURRENT_RIDING_TAGS.clear();
 
-        entityTargetArgs.clear();
-        entityTargetIconArgs.clear();
-        entityRidingArgs.clear();
-        entityRidingIconArgs.clear();
-
         isInUse = false;
-        CraftPresence.CLIENT.removeArgumentsMatching("&TARGETENTITY:", "&RIDINGENTITY:");
-        CraftPresence.CLIENT.initArgument("&TARGETENTITY&", "&RIDINGENTITY&");
-        CraftPresence.CLIENT.clearOverride("&TARGETENTITY&", "&RIDINGENTITY&");
+        CraftPresence.CLIENT.removeArguments("entity");
+        CraftPresence.CLIENT.clearOverride("entity.target", "entity.riding");
     }
 
     /**
@@ -243,11 +218,6 @@ public class EntityUtils {
      */
     public void updateEntityPresence() {
         // Form Entity Argument List
-        entityTargetArgs.clear();
-        entityTargetIconArgs.clear();
-        entityRidingArgs.clear();
-        entityRidingIconArgs.clear();
-
         final ModuleData defaultTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
         final ModuleData defaultRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
 
@@ -266,92 +236,39 @@ public class EntityUtils {
         final String formattedTargetIcon = StringUtils.formatAsIcon(currentTargetIcon.replace(" ", "_"));
         final String formattedRidingIcon = StringUtils.formatAsIcon(currentRidingIcon.replace(" ", "_"));
 
-        entityTargetArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME)));
-        entityRidingArgs.add(new Pair<>("&ENTITY&", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME)));
+        CraftPresence.CLIENT.syncArgument("entity.default.icon", CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
 
-        entityTargetIconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
-        entityRidingIconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
+        CraftPresence.CLIENT.syncArgument("entity.target.name", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME));
+        CraftPresence.CLIENT.syncArgument("entity.riding.name", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME));
 
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_TARGET_TAGS) {
-                entityTargetArgs.add(new Pair<>("&" + tagName + "&", CURRENT_TARGET_TAG.getTag(tagName).toString()));
+                CraftPresence.CLIENT.syncArgument("entity.target.nbt." + tagName, CURRENT_TARGET_TAG.getTag(tagName).toString(), true);
             }
         }
 
         if (!CURRENT_RIDING_TAGS.isEmpty()) {
             for (String tagName : CURRENT_RIDING_TAGS) {
-                entityRidingArgs.add(new Pair<>("&" + tagName + "&", CURRENT_RIDING_TAG.getTag(tagName).toString()));
+                CraftPresence.CLIENT.syncArgument("entity.riding.nbt." + tagName, CURRENT_RIDING_TAG.getTag(tagName).toString(), true);
             }
         }
-
-        // Add applicable args as sub-placeholders
-        for (Pair<String, String> argumentData : entityTargetArgs) {
-            CraftPresence.CLIENT.syncArgument("&TARGETENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
-        for (Pair<String, String> argumentData : entityTargetIconArgs) {
-            CraftPresence.CLIENT.syncArgument("&TARGETENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
-        }
-        for (Pair<String, String> argumentData : entityRidingArgs) {
-            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Text);
-        }
-        for (Pair<String, String> argumentData : entityRidingIconArgs) {
-            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY:" + argumentData.getFirst().substring(1), argumentData.getSecond(), ArgumentType.Image);
-        }
-
-        // Add All Generalized Arguments, if any
-        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            StringUtils.addEntriesNotPresent(entityTargetArgs, CraftPresence.CLIENT.generalArgs);
-            StringUtils.addEntriesNotPresent(entityRidingArgs, CraftPresence.CLIENT.generalArgs);
-        }
-
-        final String CURRENT_TARGET_ICON = StringUtils.sequentialReplaceAnyCase(formattedTargetIcon, entityTargetIconArgs);
-        final String CURRENT_RIDING_ICON = StringUtils.sequentialReplaceAnyCase(formattedRidingIcon, entityRidingIconArgs);
-
-        final String CURRENT_TARGET_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentTargetMessage, entityTargetArgs);
-        final String CURRENT_RIDING_MESSAGE = StringUtils.sequentialReplaceAnyCase(currentRidingMessage, entityRidingArgs);
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
-            CraftPresence.CLIENT.syncOverride("&TARGETENTITY&", currentTargetData != null ? currentTargetData : defaultTargetData);
-            CraftPresence.CLIENT.syncArgument("&TARGETENTITY&", CURRENT_TARGET_MESSAGE, ArgumentType.Text);
-            CraftPresence.CLIENT.syncArgument("&TARGETENTITY&", CraftPresence.CLIENT.imageOf("&TARGETENTITY&", true, CURRENT_TARGET_ICON, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), ArgumentType.Image);
+            CraftPresence.CLIENT.syncOverride("entity.target", currentTargetData != null ? currentTargetData : defaultTargetData);
+            CraftPresence.CLIENT.syncArgument("entity.target.message", currentTargetMessage);
+            CraftPresence.CLIENT.syncArgument("entity.target.icon", CraftPresence.CLIENT.imageOf("entity.target.icon", true, formattedTargetIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
         } else {
-            CraftPresence.CLIENT.removeArgumentsMatching("&TARGETENTITY:");
-            CraftPresence.CLIENT.initArgument("&TARGETENTITY&");
+            CraftPresence.CLIENT.removeArguments("entity.target");
         }
         if (CURRENT_RIDING != null) {
-            CraftPresence.CLIENT.syncOverride("&RIDINGENTITY&", currentRidingData != null ? currentRidingData : defaultRidingData);
-            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CURRENT_RIDING_MESSAGE, ArgumentType.Text);
-            CraftPresence.CLIENT.syncArgument("&RIDINGENTITY&", CraftPresence.CLIENT.imageOf("&RIDINGENTITY&", true, CURRENT_RIDING_ICON, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), ArgumentType.Image);
+            CraftPresence.CLIENT.syncOverride("entity.riding", currentRidingData != null ? currentRidingData : defaultRidingData);
+            CraftPresence.CLIENT.syncArgument("entity.riding.message", currentRidingMessage);
+            CraftPresence.CLIENT.syncArgument("entity.riding.icon", CraftPresence.CLIENT.imageOf("entity.riding.icon", true, formattedRidingIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
         } else {
-            CraftPresence.CLIENT.removeArgumentsMatching("&RIDINGENTITY:");
-            CraftPresence.CLIENT.initArgument("&RIDINGENTITY&");
+            CraftPresence.CLIENT.removeArguments("entity.riding");
         }
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param types             The argument types to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, ArgumentType... types) {
-        types = (types != null && types.length > 0 ? types : ArgumentType.values());
-        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
-        List<String> queuedEntries;
-        for (ArgumentType type : types) {
-            queuedEntries = Lists.newArrayList();
-            if (type == ArgumentType.Image) {
-                queuedEntries.add(subArgumentFormat + "ICON&");
-            } else if (type == ArgumentType.Text) {
-                queuedEntries.add(subArgumentFormat + "ENTITY&");
-            }
-            argumentData.put(type, queuedEntries);
-        }
-        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
     }
 
     /**
@@ -363,59 +280,6 @@ public class EntityUtils {
      */
     public String getEntityName(final Entity entity, final String original) {
         return StringUtils.isValidUuid(original) ? entity.getName() : original;
-    }
-
-    /**
-     * Retrieves a List of Tags from a Entity name, if currently equipped
-     *
-     * @param name The Entity Name
-     * @return A List of Tags from a Entity name, if currently equipped
-     */
-    public List<String> getListFromName(String name) {
-        name = !StringUtils.isNullOrEmpty(name) ? name : "";
-        return name.equalsIgnoreCase(CURRENT_TARGET_NAME) ? CURRENT_TARGET_TAGS
-                : name.equalsIgnoreCase(CURRENT_RIDING_NAME) ? CURRENT_RIDING_TAGS : Lists.newArrayList();
-    }
-
-    /**
-     * Generates Entity Tag Placeholder String
-     *
-     * @param name         The Entity Name
-     * @param addExtraData Whether to add additional data to the string
-     * @param tags         A List of the tags associated with the Entity
-     * @return The Resulting Entity Tag Placeholder String
-     */
-    public String generatePlaceholderString(final String name, final boolean addExtraData, final List<String> tags) {
-        final StringBuilder finalString = new StringBuilder(addExtraData ? "" : "\n{");
-        if (!tags.isEmpty()) {
-            for (int i = 0; i < tags.size(); i++) {
-                final String tagName = tags.get(i);
-                finalString.append(addExtraData ? "\n - " : "").append("&").append(tagName).append("&");
-
-                if (addExtraData) {
-                    // If specified, also append the Tag's value to the placeholder String
-                    final String tagValue =
-                            tags.equals(CURRENT_TARGET_TAGS) ? CURRENT_TARGET_TAG.getTag(tagName).toString() :
-                                    tags.equals(CURRENT_RIDING_TAGS) ? CURRENT_RIDING_TAG.getTag(tagName).toString() : null;
-
-                    if (!StringUtils.isNullOrEmpty(tagValue)) {
-                        finalString.append(String.format(" (%s \"%s\")",
-                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                (tagValue.length() >= 128) ? "<...>" : tagValue
-                        ));
-                    }
-                } else if (i < tags.size() - 1) {
-                    finalString.append(",");
-                    if (i % 5 == 4) {
-                        finalString.append("\n");
-                    }
-                }
-            }
-        }
-        if (!addExtraData) {
-            finalString.append("}");
-        }
-        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + ((!StringUtils.isNullOrEmpty(finalString.toString()) && !finalString.toString().equals("\n{}")) ? finalString.toString() : "\\n - N/A"));
     }
 
     /**

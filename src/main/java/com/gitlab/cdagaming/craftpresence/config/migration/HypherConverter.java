@@ -47,42 +47,43 @@ import java.util.Map;
 public class HypherConverter implements DataMigrator {
     private final int fileVersion;
     private final String configPath, serverEntriesPath;
+    private final String EMPTY_QUOTES = "{''}";
     // oldName -> newName
     private final Map<String, String> placeholderMappings = ImmutableMap.<String, String>builder()
-            .put("%player%", "&IGN:NAME&")
-            .put("%world%", "&DIMENSION:DIMENSION&")
-            .put("%mods%", "&MODS:MODCOUNT&")
-            .put("%difficulty%", "&SERVER:WORLDINFO:DIFFICULTY&")
-            .put("%position%", "&SERVER:PLAYERINFO:COORDS&")
-            .put("%biome%", "&BIOME:BIOME&")
-            .put("%mcver%", "&MCVERSION&")
-            .put("%instance%", "&PACK:NAME&")
-            .put("%launcher%", "&BRAND&")
-            .put("%server%", "&SERVER&")
-            .put("%launchername%", "&BRAND&")
-            .put("%savename%", "&SERVER:WORLDINFO:WORLDNAME&")
-            .put("%playerhead%", "&IGN&")
-            .put("%gametime12%", "&SERVER:WORLDINFO:WORLDTIME12&")
-            .put("%gametime%", "&SERVER:WORLDINFO:WORLDTIME&")
-            .put("%day%", "&SERVER:WORLDINFO:WORLDDAY&")
-            .put("%weather%", "&unknown&") // TODO
-            .put("%replayframe%", "&unknown&") // Replay Mod Integration - Unimplemented
-            .put("%replaytotal%", "&unknown&") // Replay Mod Integration - Unimplemented
-            .put("%replaytime%", "&unknown&") // Replay Mod Integration - Unimplemented
-            .put("%replaytimeleft%", "&unknown&") // Replay Mod Integration - Unimplemented
+            .put("%player%", "{player.name}")
+            .put("%world%", "{dimension.name}")
+            .put("%mods%", "{general.mods}")
+            .put("%difficulty%", "{world.difficulty}")
+            .put("%position%", EMPTY_QUOTES) // Removed option
+            .put("%biome%", "{biome.name}")
+            .put("%mcver%", "{general.version}")
+            .put("%instance%", "{pack.name}")
+            .put("%launcher%", "{general.brand}")
+            .put("%server%", "{replace(server.address, '.', '_')}")
+            .put("%launchername%", "{toLower(general.brand)}")
+            .put("%savename%", "{world.name}")
+            .put("%playerhead%", "{player.icon}")
+            .put("%gametime12%", "{world.time.12}")
+            .put("%gametime%", "{world.time.24}")
+            .put("%day%", "{world.day}")
+            .put("%weather%", EMPTY_QUOTES) // TODO
+            .put("%replayframe%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
+            .put("%replaytotal%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
+            .put("%replaytime%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
+            .put("%replaytimeleft%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
             //
-            .put("%serverip%", "&SERVER:IP&")
-            .put("%servername%", "&SERVER:NAME&")
-            .put("%players%", "&SERVER:PLAYERS:CURRENT&")
-            .put("%playersexcl%", "&SERVER:PLAYERS:CURRENTEXCL&")
-            .put("%maxplayers%", "&SERVER:PLAYERS:MAX&")
-            .put("%motd%", "&SERVER:MOTD&")
-            .put("%servericon%", "&SERVER&")
+            .put("%serverip%", "{server.address}")
+            .put("%servername%", "{server.name}")
+            .put("%players%", "{server.players.current}")
+            .put("%playersexcl%", "{server.players.current.exclude}")
+            .put("%maxplayers%", "{server.players.max}")
+            .put("%motd%", "{server.motd.raw}")
+            .put("%servericon%", "{server.icon}")
             //
-            .put("%realmname%", "&unknown&") // Realm Event - Unimplemented
-            .put("%realmdescription%", "&unknown&") // Realm Event - Unimplemented
-            .put("%realmgame%", "&unknown&") // Realm Event - Unimplemented
-            .put("%realmicon%", "&unknown&") // Realm Event - Unimplemented
+            .put("%realmname%", EMPTY_QUOTES) // Realm Event - Unimplemented
+            .put("%realmdescription%", EMPTY_QUOTES) // Realm Event - Unimplemented
+            .put("%realmgame%", EMPTY_QUOTES) // Realm Event - Unimplemented
+            .put("%realmicon%", EMPTY_QUOTES) // Realm Event - Unimplemented
             .build();
     private int configVersion = -1, serverEntryVersion = -1;
 
@@ -118,7 +119,7 @@ public class HypherConverter implements DataMigrator {
                         name = name.replaceFirst("biome:", "");
                     }
                     final ModuleData data = new ModuleData()
-                            .setData(convertPresenceData(entry, areOverridesEnabled, true));
+                            .setData(convertPresenceData(entry, areOverridesEnabled));
                     (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
                 }
             }
@@ -155,7 +156,7 @@ public class HypherConverter implements DataMigrator {
                 if (conf.get("entry") != null) {
                     for (AbstractConfig entry : (List<AbstractConfig>) conf.get("entry")) {
                         final ModuleData data = new ModuleData()
-                                .setData(convertPresenceData(entry, areOverridesEnabled, true));
+                                .setData(convertPresenceData(entry, areOverridesEnabled));
                         instance.serverSettings.serverData.put(entry.get("ip"), data);
                     }
                 }
@@ -177,10 +178,9 @@ public class HypherConverter implements DataMigrator {
         return result;
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain, final ConfigFlag... flags) {
+    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final ConfigFlag... flags) {
         final PresenceData data = new PresenceData();
         data.enabled = isEnabled;
-        data.useAsMain = useAsMain;
         data.details = processPlaceholder(entry.get("description"));
         data.gameState = processPlaceholder(entry.get("state"));
         if (isActive(ConfigFlag.USE_IMAGE_POOLS)) {
@@ -211,12 +211,8 @@ public class HypherConverter implements DataMigrator {
         return data;
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean useAsMain, final ConfigFlag... flags) {
-        return convertPresenceData(entry, entry.getOrElse("enabled", true), useAsMain, flags);
-    }
-
     private PresenceData convertPresenceData(final AbstractConfig entry, final ConfigFlag... flags) {
-        return convertPresenceData(entry, true, flags);
+        return convertPresenceData(entry, entry.getOrElse("enabled", true), flags);
     }
 
     private boolean isActive(final ConfigFlag flag) {

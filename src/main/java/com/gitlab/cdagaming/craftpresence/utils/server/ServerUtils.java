@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -54,46 +53,6 @@ import java.util.Map;
  */
 @SuppressWarnings("DuplicatedCode")
 public class ServerUtils {
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&SERVER&";
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&SERVER:";
-    /**
-     * A Mapping of the Arguments attached to the &SERVER& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> serverArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER& RPC Image placeholder
-     */
-    private final List<Pair<String, String>> iconArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> playerDataArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERS& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> playerAmountArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:WORLDINFO& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> worldDataArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:COORDS& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> coordinateArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER:PLAYERINFO:HEALTH& RPC Message placeholder
-     */
-    private final List<Pair<String, String>> healthArgs = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &SERVER& RPC Message sub-argument placeholders
-     */
-    private final Map<String, List<Pair<String, String>>> subArgumentData = Maps.newHashMap();
     /**
      * Whether this module is active and currently in use
      */
@@ -247,15 +206,6 @@ public class ServerUtils {
         currentPlayers = 0;
         maxPlayers = 0;
 
-        serverArgs.clear();
-        iconArgs.clear();
-
-        playerDataArgs.clear();
-        playerAmountArgs.clear();
-        worldDataArgs.clear();
-        coordinateArgs.clear();
-        healthArgs.clear();
-
         queuedForUpdate = false;
         isOnLAN = false;
         isInUse = false;
@@ -264,14 +214,8 @@ public class ServerUtils {
             requestedServerData = null;
         }
 
-        // Clear Sub-Argument Mappings
-        for (String entry : subArgumentData.keySet()) {
-            CraftPresence.CLIENT.removeArgumentsMatching(entry);
-        }
-        subArgumentData.clear();
-
-        CraftPresence.CLIENT.initArgument(argumentFormat);
-        CraftPresence.CLIENT.clearOverride(argumentFormat);
+        CraftPresence.CLIENT.removeArguments("server");
+        CraftPresence.CLIENT.clearOverride("server");
         CraftPresence.CLIENT.clearPartyData(true, false);
     }
 
@@ -358,9 +302,9 @@ public class ServerUtils {
 
             // NOTE: Universal + Custom Events
 
-            // &PLAYERINFO& Sub-Arguments
+            // `player` Sub-Arguments
 
-            // &coords& Argument = Current Coordinates of Player
+            // `player.position` Argument = Current Coordinates of Player
             final double newX = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.posX : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
             final double newY = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.posY : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
             final double newZ = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.posZ : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
@@ -370,16 +314,16 @@ public class ServerUtils {
                 queuedForUpdate = true;
             }
 
-            // &health& Argument = Current and Maximum Health of Player
+            // 'player.health' Argument = Current and Maximum Health of Player
             final Pair<Double, Double> newHealth = CraftPresence.player != null ? new Pair<>(StringUtils.roundDouble(CraftPresence.player.getHealth(), 0), StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)) : new Pair<>(0.0D, 0.0D);
             if (!newHealth.equals(currentHealth)) {
                 currentHealth = newHealth;
                 queuedForUpdate = true;
             }
 
-            // &WORLDINFO& Sub-Arguments
+            // 'world' Sub-Arguments
 
-            // &difficulty& Argument = Current Difficulty of the World
+            // 'world.difficulty' Argument = Current Difficulty of the World
             final String newDifficulty = CraftPresence.player != null ?
                     (CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : CraftPresence.player.world.getDifficulty().name()) :
                     "";
@@ -388,7 +332,7 @@ public class ServerUtils {
                 queuedForUpdate = true;
             }
 
-            // &worldname& Argument = Current Name of the World
+            // 'world.name' Argument = Current Name of the World
             final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
             final String secondaryWorldName = CraftPresence.player != null ? CraftPresence.player.world.getWorldInfo().getWorldName() : ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = !StringUtils.isNullOrEmpty(primaryWorldName) ? primaryWorldName : secondaryWorldName;
@@ -397,7 +341,7 @@ public class ServerUtils {
                 queuedForUpdate = true;
             }
 
-            // &worldtime& Argument = Current Time in World
+            // 'world.time' Argument = Current Time in World
             final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.world.getWorldTime()) : null;
             if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString24)) {
                 timeString24 = newGameTime;
@@ -405,14 +349,14 @@ public class ServerUtils {
                 queuedForUpdate = true;
             }
 
-            // &worldday& Argument = Current Amount of Days in World
+            // 'world.day' Argument = Current Amount of Days in World
             final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.world.getWorldTime() / 24000L) : null;
             if (!StringUtils.isNullOrEmpty(newGameDay) && !newGameDay.equals(dayString)) {
                 dayString = newGameDay;
                 queuedForUpdate = true;
             }
 
-            // &players& Argument = Current and Maximum Allowed Players in Server/World
+            // 'server.players' Argument = Current and Maximum Allowed Players in Server/World
             if (newCurrentPlayers != currentPlayers || newMaxPlayers != maxPlayers) {
                 currentPlayers = newCurrentPlayers;
                 maxPlayers = newMaxPlayers;
@@ -524,69 +468,44 @@ public class ServerUtils {
         // Form General Argument Lists & Sub Argument Lists
         canUseEndpointIcon = false;
 
-        serverArgs.clear();
-        iconArgs.clear();
+        CraftPresence.CLIENT.syncArgument("player.position.x", currentCoordinates.getFirst().toString());
+        CraftPresence.CLIENT.syncArgument("player.position.y", currentCoordinates.getSecond().toString());
+        CraftPresence.CLIENT.syncArgument("player.position.z", currentCoordinates.getThird().toString());
 
-        playerDataArgs.clear();
-        worldDataArgs.clear();
-        coordinateArgs.clear();
-        healthArgs.clear();
-
-        // Clear Sub-Argument Mappings
-        for (String entry : subArgumentData.keySet()) {
-            CraftPresence.CLIENT.removeArgumentsMatching(entry);
-        }
-        subArgumentData.clear();
-
-        coordinateArgs.add(new Pair<>("&xPosition&", currentCoordinates.getFirst().toString()));
-        coordinateArgs.add(new Pair<>("&yPosition&", currentCoordinates.getSecond().toString()));
-        coordinateArgs.add(new Pair<>("&zPosition&", currentCoordinates.getThird().toString()));
-
-        healthArgs.add(new Pair<>("&CURRENT&", currentHealth.getFirst().toString()));
-        healthArgs.add(new Pair<>("&MAX&", currentHealth.getSecond().toString()));
-
-        // Player Data Arguments
-        playerDataArgs.add(new Pair<>("&COORDS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.playerCoordinatePlaceholderMessage, coordinateArgs)));
-        playerDataArgs.add(new Pair<>("&HEALTH&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.playerHealthPlaceholderMessage, healthArgs)));
+        CraftPresence.CLIENT.syncArgument("player.health.current", currentHealth.getFirst().toString());
+        CraftPresence.CLIENT.syncArgument("player.health.max", currentHealth.getSecond().toString());
 
         // World Data Arguments
-        worldDataArgs.add(new Pair<>("&DIFFICULTY&", !StringUtils.isNullOrEmpty(currentDifficulty) ? currentDifficulty : ""));
-        worldDataArgs.add(new Pair<>("&WORLDNAME&", !StringUtils.isNullOrEmpty(currentWorldName) ? currentWorldName : ""));
-        worldDataArgs.add(new Pair<>("&WORLDTIME&", !StringUtils.isNullOrEmpty(timeString24) ? timeString24 : ""));
-        worldDataArgs.add(new Pair<>("&WORLDTIME12&", !StringUtils.isNullOrEmpty(timeString12) ? timeString12 : ""));
-        worldDataArgs.add(new Pair<>("&WORLDDAY&", !StringUtils.isNullOrEmpty(dayString) ? dayString : ""));
+        CraftPresence.CLIENT.syncArgument("world.difficulty", !StringUtils.isNullOrEmpty(currentDifficulty) ? currentDifficulty : "");
+        CraftPresence.CLIENT.syncArgument("world.name", !StringUtils.isNullOrEmpty(currentWorldName) ? currentWorldName : "");
+        CraftPresence.CLIENT.syncArgument("world.time.24", !StringUtils.isNullOrEmpty(timeString24) ? timeString24 : "");
+        CraftPresence.CLIENT.syncArgument("world.time.12", !StringUtils.isNullOrEmpty(timeString12) ? timeString12 : "");
+        CraftPresence.CLIENT.syncArgument("world.day", !StringUtils.isNullOrEmpty(dayString) ? dayString : "");
 
-        // Server Data Arguments (Universal)
-        serverArgs.add(new Pair<>("&PLAYERINFO&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.innerPlayerPlaceholderMessage, playerDataArgs)));
-        serverArgs.add(new Pair<>("&WORLDINFO&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.worldPlaceholderMessage, worldDataArgs)));
-
-        iconArgs.add(new Pair<>("&ICON&", CraftPresence.CONFIG.serverSettings.fallbackServerIcon));
+        CraftPresence.CLIENT.syncArgument("server.default.icon", CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
         ModuleData resultData = new ModuleData();
         String formattedIcon = "";
         if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
-            // Form Pair List of Argument for Servers/LAN Games
-            playerAmountArgs.clear();
-
             // Player Amount Arguments
-            playerAmountArgs.add(new Pair<>("&CURRENT&", Integer.toString(currentPlayers)));
-            playerAmountArgs.add(new Pair<>("&CURRENTEXCL&", Integer.toString(currentPlayers - 1)));
-            playerAmountArgs.add(new Pair<>("&MAX&", Integer.toString(maxPlayers)));
-            playerAmountArgs.add(new Pair<>("&MAXEXCL&", Integer.toString(maxPlayers - 1)));
+            CraftPresence.CLIENT.syncArgument("server.players.current", Integer.toString(currentPlayers));
+            CraftPresence.CLIENT.syncArgument("server.players.current.exclude", Integer.toString(currentPlayers - 1));
+            CraftPresence.CLIENT.syncArgument("server.players.max", Integer.toString(maxPlayers));
+            CraftPresence.CLIENT.syncArgument("server.players.max.exclude", Integer.toString(maxPlayers - 1));
 
             // Server Data Arguments (Multiplayer)
             final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
-            serverArgs.add(new Pair<>("&IP&", formattedIP));
-            serverArgs.add(new Pair<>("&NAME&", currentServer_Name));
-            serverArgs.add(new Pair<>("&MOTD&", currentServer_MOTD));
+            CraftPresence.CLIENT.syncArgument("server.address.raw", currentServer_IP);
+            CraftPresence.CLIENT.syncArgument("server.address", formattedIP);
+            CraftPresence.CLIENT.syncArgument("server.name", currentServer_Name);
+            CraftPresence.CLIENT.syncArgument("server.motd.raw", currentServer_MOTD);
             if (!currentServer_MOTD_Lines.isEmpty()) {
                 int index = 1;
                 for (String motdPart : currentServer_MOTD_Lines) {
-                    serverArgs.add(new Pair<>("&MOTD" + index + "&", motdPart));
+                    CraftPresence.CLIENT.syncArgument("server.motd.line." + index, motdPart);
                     index++;
                 }
             }
-            serverArgs.add(new Pair<>("&PLAYERS&", StringUtils.sequentialReplaceAnyCase(CraftPresence.CONFIG.statusMessages.playerAmountPlaceholderMessage, playerAmountArgs)));
 
             final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
             final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
@@ -649,37 +568,11 @@ public class ServerUtils {
             final String dataIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
             formattedIcon = StringUtils.formatAsIcon(dataIcon.replace(" ", "_"));
         }
+        currentServerIcon = formattedIcon;
 
-        // Add applicable args as sub-placeholders
-        subArgumentData.put(subArgumentFormat, serverArgs);
-        subArgumentData.put(subArgumentFormat + "PLAYERINFO:", playerDataArgs);
-        subArgumentData.put(subArgumentFormat + "PLAYERINFO:COORDS:", coordinateArgs);
-        subArgumentData.put(subArgumentFormat + "PLAYERINFO:HEALTH:", healthArgs);
-        subArgumentData.put(subArgumentFormat + "PLAYERS:", playerAmountArgs);
-        subArgumentData.put(subArgumentFormat + "WORLDINFO:", worldDataArgs);
-        for (Map.Entry<String, List<Pair<String, String>>> entry : subArgumentData.entrySet()) {
-            if (!StringUtils.isNullOrEmpty(entry.getKey()) && !entry.getValue().isEmpty()) {
-                for (Pair<String, String> argumentData : entry.getValue()) {
-                    CraftPresence.CLIENT.syncArgument(
-                            entry.getKey() + argumentData.getFirst().substring(1),
-                            argumentData.getSecond(),
-                            ArgumentType.Text
-                    );
-                }
-            }
-        }
-
-        // Add All Generalized Arguments, if any
-        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            StringUtils.addEntriesNotPresent(serverArgs, CraftPresence.CLIENT.generalArgs);
-        }
-
-        currentServerMessage = StringUtils.sequentialReplaceAnyCase(currentServerMessage, serverArgs);
-        currentServerIcon = StringUtils.sequentialReplaceAnyCase(formattedIcon, iconArgs);
-
-        CraftPresence.CLIENT.syncOverride(argumentFormat, resultData);
-        CraftPresence.CLIENT.syncArgument(argumentFormat, currentServerMessage, ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument(argumentFormat, CraftPresence.CLIENT.imageOf(argumentFormat, true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), ArgumentType.Image);
+        CraftPresence.CLIENT.syncOverride("server", resultData);
+        CraftPresence.CLIENT.syncArgument("server.message", currentServerMessage);
+        CraftPresence.CLIENT.syncArgument("server.icon", CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon));
         queuedForUpdate = false;
     }
 
@@ -725,67 +618,5 @@ public class ServerUtils {
      */
     public ServerData getDataFromName(final String serverAddress) {
         return knownServerData.getOrDefault(serverAddress, null);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param types             The argument types to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(final String argumentFormat, final String subArgumentFormat, ArgumentType... types) {
-        types = (types != null && types.length > 0 ? types : ArgumentType.values());
-        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
-        List<String> queuedEntries;
-        for (ArgumentType type : types) {
-            queuedEntries = Lists.newArrayList();
-            if (type == ArgumentType.Image) {
-                queuedEntries.add(subArgumentFormat + "ICON&");
-            } else if (type == ArgumentType.Text) {
-                if (subArgumentFormat.endsWith("PLAYERINFO:")) {
-                    queuedEntries.add(subArgumentFormat + "COORDS&");
-                    queuedEntries.add(subArgumentFormat + "HEALTH&");
-                } else if (subArgumentFormat.endsWith("PLAYERINFO:COORDS:")) {
-                    queuedEntries.add(subArgumentFormat + "xPosition&");
-                    queuedEntries.add(subArgumentFormat + "yPosition&");
-                    queuedEntries.add(subArgumentFormat + "zPosition&");
-                } else if (subArgumentFormat.endsWith("PLAYERINFO:HEALTH:")) {
-                    queuedEntries.add(subArgumentFormat + "CURRENT&");
-                    queuedEntries.add(subArgumentFormat + "MAX&");
-                } else if (subArgumentFormat.endsWith("PLAYERS:")) {
-                    queuedEntries.add(subArgumentFormat + "CURRENT&");
-                    queuedEntries.add(subArgumentFormat + "CURRENTEXCL&");
-                    queuedEntries.add(subArgumentFormat + "MAX&");
-                    queuedEntries.add(subArgumentFormat + "MAXEXCL&");
-                } else if (subArgumentFormat.endsWith("WORLDINFO:")) {
-                    queuedEntries.add(subArgumentFormat + "DIFFICULTY&");
-                    queuedEntries.add(subArgumentFormat + "WORLDNAME&");
-                    queuedEntries.add(subArgumentFormat + "WORLDTIME&");
-                    queuedEntries.add(subArgumentFormat + "WORLDTIME12&");
-                    queuedEntries.add(subArgumentFormat + "WORLDDAY&");
-                } else {
-                    queuedEntries.add(subArgumentFormat + "PLAYERINFO&");
-                    queuedEntries.add(subArgumentFormat + "WORLDINFO&");
-                    queuedEntries.add(subArgumentFormat + "IP&");
-                    queuedEntries.add(subArgumentFormat + "NAME&");
-                    queuedEntries.add(subArgumentFormat + "MOTD&");
-                    queuedEntries.add(subArgumentFormat + "PLAYERS&");
-                }
-            }
-            argumentData.put(type, queuedEntries);
-        }
-        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param types The argument types to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(ArgumentType... types) {
-        return generateArgumentMessage(argumentFormat, subArgumentFormat, types);
     }
 }

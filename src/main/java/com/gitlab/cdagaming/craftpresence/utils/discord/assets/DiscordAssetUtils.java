@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.google.common.collect.Maps;
@@ -198,7 +197,7 @@ public class DiscordAssetUtils {
                 return getDiscordAssetUrl(asset.getName());
             } else {
                 return StringUtils.sequentialReplaceAnyCase(
-                        asset.getUrl(), CraftPresence.CLIENT.getArgumentsFor(ArgumentType.Text)
+                        asset.getUrl(), CraftPresence.CLIENT.getArguments()
                 );
             }
         }

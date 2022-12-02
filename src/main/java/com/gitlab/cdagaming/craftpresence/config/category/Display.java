@@ -38,10 +38,12 @@ public class Display extends Module implements Serializable {
     private static final long serialVersionUID = -3302764075156017733L;
     private static Display DEFAULT;
     public PresenceData presenceData = new PresenceData()
-            .setGameState("&SERVER& &PACK&")
-            .setDetails("&MAINMENU&|&DIMENSION&")
-            .setLargeImage("&MAINMENU&|&DIMENSION&", "&MAINMENU&|&DIMENSION&")
-            .setSmallImage("&SERVER&|&PACK&", "&SERVER& &PACK&");
+            .setGameState("{server.message != null ? server.message : ''} {pack.name != null ? pack.name : ''}")
+            .setDetails("{menu.message != null ? menu.message : (dimension.message != null ? dimension.message : '')}")
+            .setLargeImage("{menu.icon != null ? menu.icon : (dimension.icon != null ? dimension.icon : '')}",
+                    "{menu.message != null ? menu.message : (dimension.message != null ? dimension.message : '')}")
+            .setSmallImage("{server.icon != null ? server.icon : (pack.name != null ? pack.name : '')}",
+                    "{server.message != null ? server.message : ''} {pack.name != null ? pack.name : ''}");
     public Map<String, String> dynamicIcons = new HashMap<String, String>() {
         private static final long serialVersionUID = 4900744874595923346L;
 

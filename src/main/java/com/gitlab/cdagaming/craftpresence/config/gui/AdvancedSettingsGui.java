@@ -47,7 +47,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enableCommandsButton, enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
-            allowPlaceholderPreviewsButton, allowPlaceholderOperatorsButton, allowEndpointIconsButton;
+            allowPlaceholderPreviewsButton, allowEndpointIconsButton;
     private ExtendedTextControl splitCharacter, refreshRate;
 
     AdvancedSettingsGui(GuiScreen parentScreen) {
@@ -169,7 +169,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
-                                                                                        CraftPresence.GUIS.generateArgumentMessage())
+                                                                                        CraftPresence.CLIENT.generateArgumentMessage("screen"))
                                                                         ), screenInstance, true
                                                                 );
                                                             }
@@ -189,7 +189,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
-                                                        CraftPresence.GUIS.generateArgumentMessage())
+                                                        CraftPresence.CLIENT.generateArgumentMessage("screen"))
                                         ), this, true
                                 );
                             }
@@ -249,13 +249,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
-                                                                                        CraftPresence.TILE_ENTITIES.generateArgumentMessage(),
-                                                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                                                CraftPresence.TILE_ENTITIES.generatePlaceholderString(
-                                                                                                        attributeName, screenInstance.isDebugMode(),
-                                                                                                        CraftPresence.TILE_ENTITIES.getListFromName(attributeName)
-                                                                                                )
-                                                                                        )
+                                                                                        CraftPresence.CLIENT.generateArgumentMessage("item")
                                                                                 )
                                                                         ), screenInstance, true
                                                                 );
@@ -277,13 +271,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
-                                                        CraftPresence.TILE_ENTITIES.generateArgumentMessage(),
-                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                CraftPresence.TILE_ENTITIES.generatePlaceholderString(
-                                                                        "", isDebugMode(),
-                                                                        CraftPresence.TILE_ENTITIES.getListFromName("")
-                                                                )
-                                                        )
+                                                        CraftPresence.CLIENT.generateArgumentMessage("item")
                                                 )
                                         ), this, true
                                 );
@@ -375,13 +363,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
-                                                                                        CraftPresence.ENTITIES.generateArgumentMessage("&TARGETENTITY&", "&TARGETENTITY:"),
-                                                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                                                CraftPresence.ENTITIES.generatePlaceholderString(
-                                                                                                        attributeName, screenInstance.isDebugMode(),
-                                                                                                        CraftPresence.ENTITIES.getListFromName(attributeName)
-                                                                                                )
-                                                                                        )
+                                                                                        CraftPresence.CLIENT.generateArgumentMessage("entity.target")
                                                                                 )
                                                                         ), screenInstance, true
                                                                 );
@@ -403,14 +385,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
-                                                        CraftPresence.ENTITIES.generateArgumentMessage("&TARGETENTITY&", "&TARGETENTITY:"),
-                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                CraftPresence.ENTITIES.generatePlaceholderString(
-                                                                        CraftPresence.ENTITIES.getEntityName(
-                                                                                CraftPresence.ENTITIES.CURRENT_TARGET, CraftPresence.ENTITIES.CURRENT_TARGET_NAME
-                                                                        ), isDebugMode(), CraftPresence.ENTITIES.CURRENT_TARGET_TAGS
-                                                                )
-                                                        )
+                                                        CraftPresence.CLIENT.generateArgumentMessage("entity.target")
                                                 )
                                         ), this, true
                                 );
@@ -502,13 +477,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
-                                                                                        CraftPresence.ENTITIES.generateArgumentMessage("&RIDINGENTITY&", "&RIDINGENTITY:"),
-                                                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                                                CraftPresence.ENTITIES.generatePlaceholderString(
-                                                                                                        attributeName, screenInstance.isDebugMode(),
-                                                                                                        CraftPresence.ENTITIES.getListFromName(attributeName)
-                                                                                                )
-                                                                                        )
+                                                                                        CraftPresence.CLIENT.generateArgumentMessage("entity.riding")
                                                                                 )
                                                                         ), screenInstance, true
                                                                 );
@@ -530,14 +499,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
-                                                        CraftPresence.ENTITIES.generateArgumentMessage("&RIDINGENTITY&", "&RIDINGENTITY:"),
-                                                        ModUtils.TRANSLATOR.translate("gui.config.message.tags",
-                                                                CraftPresence.ENTITIES.generatePlaceholderString(
-                                                                        CraftPresence.ENTITIES.getEntityName(
-                                                                                CraftPresence.ENTITIES.CURRENT_RIDING, CraftPresence.ENTITIES.CURRENT_RIDING_NAME
-                                                                        ), isDebugMode(), CraftPresence.ENTITIES.CURRENT_RIDING_TAGS
-                                                                )
-                                                        )
+                                                        CraftPresence.CLIENT.generateArgumentMessage("entity.riding")
                                                 )
                                         ), this, true
                                 );
@@ -663,19 +625,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        allowPlaceholderOperatorsButton = addControl(
-                new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(8, -40),
-                        "gui.config.name.advanced.allow_placeholder_operators",
-                        CONFIG.allowPlaceholderOperators,
-                        null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_placeholder_operators")
-                                ), this, true
-                        )
-                )
-        );
         proceedButton = addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
@@ -731,11 +680,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             if (allowPlaceholderPreviewsButton.isChecked() != CONFIG.allowPlaceholderPreviews) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CONFIG.allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked();
-                            }
-                            if (allowPlaceholderOperatorsButton.isChecked() != CONFIG.allowPlaceholderOperators) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CONFIG.allowPlaceholderOperators = allowPlaceholderOperatorsButton.isChecked();
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
                         },

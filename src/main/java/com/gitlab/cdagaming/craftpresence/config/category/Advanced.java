@@ -48,7 +48,6 @@ public class Advanced extends Module implements Serializable {
     public int roundSize = 3;
     public boolean includeExtraGuiClasses = false;
     public boolean allowPlaceholderPreviews = false;
-    public boolean allowPlaceholderOperators = true;
     public Gui guiSettings = new Gui();
     public Map<String, String> itemMessages = new HashMap<String, String>() {
         private static final long serialVersionUID = -2477046332015336987L;

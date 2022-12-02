@@ -28,17 +28,12 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.integrations.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.mcupdater.MCUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.google.common.collect.Lists;
 import com.jagrosh.discordipc.entities.DiscordBuild;
-
-import java.util.List;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -155,22 +150,14 @@ public class CommandUtils {
      * Synchronizes RPC Data towards that of being in a Loading State
      */
     public static void setLoadingPresence() {
-        // Form Argument Lists
-        final List<Pair<String, String>> loadingArgs = Lists.newArrayList();
-
-        // Add All Generalized Arguments, if any
-        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            StringUtils.addEntriesNotPresent(loadingArgs, CraftPresence.CLIENT.generalArgs);
-        }
-
         final ModuleData currentData = CraftPresence.CONFIG.statusMessages.loadingData;
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
 
         CraftPresence.CLIENT.clearPartyData(true, false);
-        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(currentMessage, loadingArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", true, currentIcon), ArgumentType.Image);
+        CraftPresence.CLIENT.syncOverride("menu", currentData);
+        CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
+        CraftPresence.CLIENT.syncArgument("menu.icon", CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon));
 
         isLoadingGame = true;
     }
@@ -179,18 +166,9 @@ public class CommandUtils {
      * Synchronizes RPC Data towards that of being in the Main Menu
      */
     public static void setMainMenuPresence() {
-        // Form Argument Lists
-        final List<Pair<String, String>> mainMenuArgs = Lists.newArrayList();
-
-        // Add All Generalized Arguments, if any
-        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            StringUtils.addEntriesNotPresent(mainMenuArgs, CraftPresence.CLIENT.generalArgs);
-        }
-
         // Clear Loading Game State, if applicable
         if (isLoadingGame) {
-            CraftPresence.CLIENT.initArgument(ArgumentType.Text, "&MAINMENU&");
-            CraftPresence.CLIENT.initArgument(ArgumentType.Image, "&MAINMENU&");
+            CraftPresence.CLIENT.removeArguments("menu");
 
             isLoadingGame = false;
         }
@@ -199,9 +177,9 @@ public class CommandUtils {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
 
-        CraftPresence.CLIENT.syncOverride("&MAINMENU&", currentData);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", StringUtils.sequentialReplaceAnyCase(currentMessage, mainMenuArgs), ArgumentType.Text);
-        CraftPresence.CLIENT.syncArgument("&MAINMENU&", CraftPresence.CLIENT.imageOf("&MAINMENU&", true, currentIcon), ArgumentType.Image);
+        CraftPresence.CLIENT.syncOverride("menu", currentData);
+        CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
+        CraftPresence.CLIENT.syncArgument("menu.icon", CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon));
 
         isInMainMenu = true;
     }
@@ -212,7 +190,7 @@ public class CommandUtils {
     public static void clearInitialPresence() {
         isInMainMenu = false;
         isLoadingGame = false;
-        CraftPresence.CLIENT.clearOverride("&MAINMENU&");
-        CraftPresence.CLIENT.initArgument("&MAINMENU&");
+        CraftPresence.CLIENT.clearOverride("menu");
+        CraftPresence.CLIENT.removeArguments("menu");
     }
 }

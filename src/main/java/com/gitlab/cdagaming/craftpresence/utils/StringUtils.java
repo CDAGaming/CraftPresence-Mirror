@@ -179,6 +179,17 @@ public class StringUtils {
     }
 
     /**
+     * Retrieve the primary value if non-empty; Otherwise, use the secondary value
+     *
+     * @param primary The primary value to interpret
+     * @param secondary The secondary value to interpret
+     * @return the resulting value
+     */
+    public static String getOrDefault(final String primary, final String secondary) {
+        return !StringUtils.isNullOrEmpty(primary) ? primary : secondary;
+    }
+
+    /**
      * Retrieve Matching Values from an input that matches the defined regex
      *
      * @param regexValue The Regex Value to test against
@@ -284,14 +295,14 @@ public class StringUtils {
      * @return The completed and replaced String
      */
     @SafeVarargs
-    public static String sequentialReplaceAnyCase(final String source, final List<Pair<String, String>>... replaceArgs) {
+    public static String sequentialReplaceAnyCase(final String source, final Map<String, String>... replaceArgs) {
         if (!isNullOrEmpty(source)) {
             String finalResult = source;
 
-            for (List<Pair<String, String>> replaceData : replaceArgs) {
+            for (Map<String, String> replaceData : replaceArgs) {
                 if (!replaceData.isEmpty()) {
-                    for (Pair<String, String> replacementData : replaceData) {
-                        finalResult = replaceAnyCase(finalResult, replacementData.getFirst(), replacementData.getSecond());
+                    for (Map.Entry<String, String> replacementData : replaceData.entrySet()) {
+                        finalResult = replaceAnyCase(finalResult, replacementData.getKey(), replacementData.getValue());
                     }
                 }
             }
