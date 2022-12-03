@@ -269,8 +269,6 @@ public class DiscordUtils {
         overrideData.clear();
         placeholderData.clear();
         CommandUtils.isInMainMenu = false;
-
-        syncPlaceholders();
     }
 
     /**
@@ -754,6 +752,13 @@ public class DiscordUtils {
     }
 
     /**
+     * Synchronizes and Updates the Rich Presence Data, if needed and connected
+     */
+    public void updatePresence() {
+        updatePresence(buildRichPresence());
+    }
+
+    /**
      * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
      *
      * @param allowNull   If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
@@ -872,7 +877,7 @@ public class DiscordUtils {
         PARTY_SIZE = 0;
         PARTY_MAX = 0;
         if (updateRPC) {
-            updatePresence(buildRichPresence());
+            updatePresence();
         }
     }
 
