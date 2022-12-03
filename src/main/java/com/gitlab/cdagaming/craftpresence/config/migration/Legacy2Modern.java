@@ -73,7 +73,7 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&BRAND&", "{general.brand}", IS_TEXT),
             generatePair("&MCVERSION&", "{general.version}", IS_TEXT),
             //
-            generatePair("&IGN&", EMPTY_QUOTES, IS_TEXT), // Removed option
+            generatePair("&IGN&", "{custom.player_info_out}", IS_TEXT),
             generatePair("&IGN&", "{player.icon}", IS_ICON),
             generatePair("&IGN:NAME&", "{player.name}", IS_TEXT),
             generatePair("&NAME&", "{player.name}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
@@ -82,11 +82,11 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&IGN:UUID_FULL&", "{player.uuid.full}", IS_TEXT),
             generatePair("&UUID_FULL&", "{player.uuid.full}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
             //
-            generatePair("&MODS&", EMPTY_QUOTES, IS_TEXT), // Removed option
+            generatePair("&MODS&", "{custom.mods}", IS_TEXT),
             generatePair("&MODS:MODCOUNT&", "{general.mods}", IS_TEXT),
             generatePair("&MODCOUNT&", "{general.mods}", IS_TEXT, (e) -> e.equalsIgnoreCase("modsPlaceholder")),
             //
-            generatePair("&PACK&", EMPTY_QUOTES, IS_TEXT), // Removed option
+            generatePair("&PACK&", "{custom.pack}", IS_TEXT),
             generatePair("&PACK&", "{pack.icon}", IS_ICON),
             generatePair("&PACK:NAME&", "{pack.name}", IS_TEXT),
             generatePair("&NAME&", "{pack.name}", IS_TEXT, (e) -> e.equalsIgnoreCase("modpackMessage")),
@@ -116,22 +116,22 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&ICON&", "{server.icon}", IS_ICON, IS_SERVER_MODULE),
             generatePair("&SERVER&", "{server.icon}", IS_ICON),
             //
-            generatePair("&SERVER:PLAYERS&", EMPTY_QUOTES, IS_TEXT), // Removed option
-            generatePair("&PLAYERS&", EMPTY_QUOTES, IS_TEXT, IS_SERVER_MODULE), // Removed option
+            generatePair("&SERVER:PLAYERS&", "{custom.players}", IS_TEXT),
+            generatePair("&PLAYERS&", "{custom.players}", IS_TEXT, IS_SERVER_MODULE),
             //
-            generatePair("&SERVER:WORLDINFO&", EMPTY_QUOTES, IS_TEXT), // Removed option
-            generatePair("&WORLDINFO&", EMPTY_QUOTES, IS_TEXT, IS_SERVER_MODULE), // Removed option
+            generatePair("&SERVER:WORLDINFO&", "{custom.world_info}", IS_TEXT),
+            generatePair("&WORLDINFO&", "{custom.world_info}", IS_TEXT, IS_SERVER_MODULE),
             //
-            generatePair("&SERVER:PLAYERINFO&", EMPTY_QUOTES, IS_TEXT), // Removed option
-            generatePair("&PLAYERINFO&", EMPTY_QUOTES, IS_TEXT, IS_SERVER_MODULE), // Removed option
+            generatePair("&SERVER:PLAYERINFO&", "{custom.player_info_in}", IS_TEXT),
+            generatePair("&PLAYERINFO&", "{custom.player_info_in}", IS_TEXT, IS_SERVER_MODULE),
             //
-            generatePair("&SERVER:PLAYERINFO:COORDS&", EMPTY_QUOTES, IS_TEXT), // Removed option
-            generatePair("&PLAYERINFO:COORDS&", EMPTY_QUOTES, IS_TEXT, IS_SERVER_MODULE), // Removed option
-            generatePair("&COORDS&", EMPTY_QUOTES, IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")), // Removed option
+            generatePair("&SERVER:PLAYERINFO:COORDS&", "{custom.player_info_coordinate}", IS_TEXT),
+            generatePair("&PLAYERINFO:COORDS&", "{custom.player_info_coordinate}", IS_TEXT, IS_SERVER_MODULE),
+            generatePair("&COORDS&", "{custom.player_info_coordinate}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
             //
-            generatePair("&SERVER:PLAYERINFO:HEALTH&", EMPTY_QUOTES, IS_TEXT), // Removed option
-            generatePair("&PLAYERINFO:HEALTH&", EMPTY_QUOTES, IS_TEXT, IS_SERVER_MODULE), // Removed option
-            generatePair("&HEALTH&", EMPTY_QUOTES, IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")), // Removed option
+            generatePair("&SERVER:PLAYERINFO:HEALTH&", "{custom.player_info_health}", IS_TEXT),
+            generatePair("&PLAYERINFO:HEALTH&", "{custom.player_info_health}", IS_TEXT, IS_SERVER_MODULE),
+            generatePair("&HEALTH&", "{custom.player_info_health}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
             //
             generatePair("&SERVER:PLAYERINFO:COORDS:xPosition&", "{player.position.x}", IS_TEXT),
             generatePair("&PLAYERINFO:COORDS:xPosition&", "{player.position.x}", IS_TEXT, IS_SERVER_MODULE),
@@ -271,6 +271,16 @@ public class Legacy2Modern implements DataMigrator {
             .put("loadingMessage", "eventSettings.loadingData.textOverride")
             .put("lanGameMessage", "eventSettings.lanData.textOverride")
             .put("singleplayerGameMessage", "eventSettings.singleplayerData.textOverride")
+            //
+            .put("modpackMessage", "displaySettings.dynamicVariables.pack")
+            .put("playerOuterInfoPlaceholder", "displaySettings.dynamicVariables.player_info_out")
+            .put("playerInnerInfoPlaceholder", "displaySettings.dynamicVariables.player_info_in")
+            .put("playerCoordinatePlaceholder", "displaySettings.dynamicVariables.player_info_coordinate")
+            .put("playerHealthPlaceholder", "displaySettings.dynamicVariables.player_info_health")
+            .put("playerListPlaceholder", "displaySettings.dynamicVariables.players")
+            .put("playerItemsPlaceholder", "displaySettings.dynamicVariables.player_info_items")
+            .put("worldDataPlaceholder", "displaySettings.dynamicVariables.world_info")
+            .put("modsPlaceholder", "displaySettings.dynamicVariables.mods")
             //
             .put("enableCommands", "advancedSettings.enableCommands")
             .put("enablePerGuiSystem", "advancedSettings.enablePerGui")

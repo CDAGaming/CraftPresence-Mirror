@@ -51,6 +51,22 @@ public class Display extends Module implements Serializable {
             put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"));
         }
     };
+    public Map<String, String> dynamicVariables = new HashMap<String, String>() {
+        private static final long serialVersionUID = 4900744874595923346L;
+
+        {
+            put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"));
+            put("pack", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.pack"));
+            put("players", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.players"));
+            put("player_info_out", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.out"));
+            put("player_info_in", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.in"));
+            put("player_info_coordinate", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.coordinate"));
+            put("player_info_health", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.health"));
+            put("player_info_items", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.items"));
+            put("world_info", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.world_info"));
+            put("mods", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.mods"));
+        }
+    };
 
     @Override
     public Display getDefaults() {

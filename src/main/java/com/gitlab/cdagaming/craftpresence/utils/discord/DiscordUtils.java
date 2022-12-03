@@ -706,6 +706,13 @@ public class DiscordUtils {
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
+        // Sync Custom Variables
+        removeArguments("custom.");
+        for (Map.Entry<String, String> entry : CraftPresence.CONFIG.displaySettings.dynamicVariables.entrySet()) {
+            if (!entry.getKey().equals("default")) {
+                syncArgument("custom." + entry.getKey(), entry.getValue());
+            }
+        }
         // Add Any Generalized Argument Data needed
         final String playerName = CraftPresence.session.getUsername();
         syncArgument("general.mods", Integer.toString(FileUtils.getModCount()));

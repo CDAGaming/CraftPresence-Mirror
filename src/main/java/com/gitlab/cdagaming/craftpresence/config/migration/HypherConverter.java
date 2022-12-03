@@ -57,7 +57,7 @@ public class HypherConverter implements DataMigrator {
             .put("%world%", "{dimension.name}")
             .put("%mods%", "{general.mods}")
             .put("%difficulty%", "{world.difficulty}")
-            .put("%position%", EMPTY_QUOTES) // Removed option
+            .put("%position%", "{custom.player_info_coordinate}")
             .put("%biome%", "{biome.name}")
             .put("%mcver%", "{general.version}")
             .put("%instance%", "{pack.name}")
