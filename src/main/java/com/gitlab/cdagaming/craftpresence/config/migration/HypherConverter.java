@@ -43,6 +43,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Migration from SimpleRPC (Hypherion) Config to our {@link Config} format
+ */
 @SuppressWarnings({"unchecked", "SameParameterValue"})
 public class HypherConverter implements DataMigrator {
     private final int fileVersion;
@@ -87,6 +90,11 @@ public class HypherConverter implements DataMigrator {
             .build();
     private int configVersion = -1, serverEntryVersion = -1;
 
+    /**
+     * Initializes this {@link DataMigrator}
+     *
+     * @param entry A mapping containing the fileVersion and configFolder to be used
+     */
     public HypherConverter(Map.Entry<Integer, String> entry) {
         this.fileVersion = entry.getKey();
         this.configPath = entry.getValue() + "simple-rpc.toml";

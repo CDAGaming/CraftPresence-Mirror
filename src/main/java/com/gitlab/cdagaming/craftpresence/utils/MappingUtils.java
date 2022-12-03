@@ -120,7 +120,8 @@ public class MappingUtils {
     /**
      * Retrieve the mapped class name matching the requested object
      *
-     * @param object The class object to interpret
+     * @param object     The class object to interpret
+     * @param simpleName Whether to return the simple name of the found class
      * @return the mapped class name
      */
     public static String getClassName(Class<?> object, boolean simpleName) {

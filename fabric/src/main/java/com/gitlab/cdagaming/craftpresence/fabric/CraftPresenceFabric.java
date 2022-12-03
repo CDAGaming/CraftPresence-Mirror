@@ -28,7 +28,13 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import net.fabricmc.api.ClientModInitializer;
 
+/**
+ * The Primary Application Class and Utilities
+ *
+ * @author CDAGaming
+ */
 public class CraftPresenceFabric implements ClientModInitializer {
+    @Override
     public void onInitializeClient() {
         MappingUtils.setFilePath("/mappings-fabric.srg");
         new CraftPresence();

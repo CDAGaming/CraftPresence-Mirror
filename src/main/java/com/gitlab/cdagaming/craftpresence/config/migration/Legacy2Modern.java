@@ -43,6 +43,9 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.*;
 
+/**
+ * Migration from v1 (v1.x) to v2 (v2.0 - Schema 1) Configs
+ */
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public class Legacy2Modern implements DataMigrator {
     private final File configFile;
@@ -309,6 +312,12 @@ public class Legacy2Modern implements DataMigrator {
             "guiBackgroundColor", "buttonBackgroundColor", "tooltipBackgroundColor", "tooltipBorderColor"
     );
 
+    /**
+     * Initializes this {@link DataMigrator}
+     *
+     * @param configFile the location of the v1 config
+     * @param encoding   the encoding of the v1 config
+     */
     public Legacy2Modern(File configFile, String encoding) {
         this.configFile = configFile;
         this.encoding = encoding;

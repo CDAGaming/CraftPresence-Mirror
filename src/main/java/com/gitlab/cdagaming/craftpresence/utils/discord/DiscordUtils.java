@@ -439,6 +439,7 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
+     * @param plain        Whether the expression should be parsed as a plain string
      */
     public void syncArgument(String argumentName, String insertString, final boolean plain) {
         if (!StringUtils.isNullOrEmpty(argumentName)) {
@@ -932,6 +933,7 @@ public class DiscordUtils {
     /**
      * Builds a New Instance of {@link RichPresence} based on Queued Data
      *
+     * @param configData The {@link PresenceData} to be interpreted
      * @return A New Instance of {@link RichPresence}
      */
     public RichPresence buildRichPresence(final PresenceData configData) {

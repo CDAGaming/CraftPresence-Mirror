@@ -31,6 +31,9 @@ import net.minecraftforge.fml.client.IModGuiFactory;
 
 import java.util.Set;
 
+/**
+ * The Config GUI Factory, used in Forge for Mod Menu integration
+ */
 public class ConfigGuiDataFactory implements IModGuiFactory {
     @Override
     public void initialize(Minecraft mc) {

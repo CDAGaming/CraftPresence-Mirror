@@ -29,8 +29,16 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * The Primary Application Class and Utilities
+ *
+ * @author CDAGaming
+ */
 @Mod(modid = ModUtils.MOD_ID, name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = ModUtils.UPDATE_JSON, acceptedMinecraftVersions = "*")
 public class CraftPresenceForge {
+    /**
+     * Begins Scheduling Ticks on Class Initialization
+     */
     public CraftPresenceForge() {
         MappingUtils.setFilePath("/mappings-forge.srg");
         new CraftPresence();
