@@ -148,7 +148,7 @@ public class MainGui extends ExtendedScreen {
                         calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.title.status_messages",
-                        () -> CraftPresence.GUIS.openScreen(new EventSettingsGui(currentScreen)),
+                        () -> CraftPresence.GUIS.openScreen(new StatusMessagesGui(currentScreen)),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.status_messages")

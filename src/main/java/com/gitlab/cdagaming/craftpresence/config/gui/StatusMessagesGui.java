@@ -44,7 +44,7 @@ import net.minecraft.client.gui.GuiScreen;
 import java.util.Map;
 
 @SuppressWarnings("DuplicatedCode")
-public class EventSettingsGui extends PaginatedScreen {
+public class StatusMessagesGui extends PaginatedScreen {
     private final Status CONFIG;
     // nameTranslation, [configPath,commentTranslation]
     private final Map<String, Pair<String, Runnable>> eventMappings = ImmutableMap.<String, Pair<String, Runnable>>builder()
@@ -82,7 +82,7 @@ public class EventSettingsGui extends PaginatedScreen {
             ))
             .build();
 
-    EventSettingsGui(GuiScreen parentScreen) {
+    StatusMessagesGui(GuiScreen parentScreen) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.statusMessages;
     }

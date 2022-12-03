@@ -267,10 +267,10 @@ public class Legacy2Modern implements DataMigrator {
             .put("defaultServerMotd", "serverSettings.fallbackServerMotd")
             .put("serverMessages", "serverSettings.serverData")
             //
-            .put("mainMenuMessage", "eventSettings.mainMenuData.textOverride")
-            .put("loadingMessage", "eventSettings.loadingData.textOverride")
-            .put("lanGameMessage", "eventSettings.lanData.textOverride")
-            .put("singleplayerGameMessage", "eventSettings.singleplayerData.textOverride")
+            .put("mainMenuMessage", "statusMessages.mainMenuData.textOverride")
+            .put("loadingMessage", "statusMessages.loadingData.textOverride")
+            .put("lanGameMessage", "statusMessages.lanData.textOverride")
+            .put("singleplayerGameMessage", "statusMessages.singleplayerData.textOverride")
             //
             .put("modpackMessage", "displaySettings.dynamicVariables.pack")
             .put("playerOuterInfoPlaceholder", "displaySettings.dynamicVariables.player_info_out")
