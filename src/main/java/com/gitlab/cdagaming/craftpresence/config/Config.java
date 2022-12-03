@@ -433,7 +433,17 @@ public final class Config extends Module implements Serializable {
         final Pair<Object, Tuple<Class<?>, Object, String>> propertyData = lookupProperty(path);
         if (propertyData.getFirst() != null) {
             final Tuple<Class<?>, Object, String> fieldData = propertyData.getSecond();
-            StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Tuple<>(fieldData.getThird(), value, null));
+            if (fieldData.getSecond() instanceof Map) {
+                final String[] parentPath = Arrays.copyOf(path, path.length - 1);
+                final Tuple<Class<?>, Object, String> parentData = lookupProperty(parentPath).getSecond();
+
+                Map data = new HashMap((Map) fieldData.getSecond());
+                data.put(fieldData.getThird(), value);
+
+                StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), new Tuple<>(parentData.getThird(), data, null));
+            } else {
+                StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Tuple<>(fieldData.getThird(), value, null));
+            }
         }
     }
 
