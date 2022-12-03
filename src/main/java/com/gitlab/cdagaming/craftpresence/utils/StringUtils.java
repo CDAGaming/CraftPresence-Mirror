@@ -181,7 +181,7 @@ public class StringUtils {
     /**
      * Retrieve the primary value if non-empty; Otherwise, use the secondary value
      *
-     * @param primary The primary value to interpret
+     * @param primary   The primary value to interpret
      * @param secondary The secondary value to interpret
      * @return the resulting value
      */

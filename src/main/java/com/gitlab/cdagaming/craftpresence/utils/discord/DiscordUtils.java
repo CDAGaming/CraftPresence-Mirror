@@ -75,7 +75,7 @@ public class DiscordUtils {
      */
     private final Map<String, ModuleData> overrideData = Maps.newHashMap();
     /**
-     * TODO
+     * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
     private final Map<String, Supplier<Value>> placeholderData = Maps.newTreeMap();
     /**
@@ -186,7 +186,7 @@ public class DiscordUtils {
      */
     public byte INSTANCE;
     /**
-     * TODO
+     * An Instance of the {@link Starscript} engine, responsible for parsing and compining expressions
      */
     public Starscript scriptEngine = new Starscript();
     /**
@@ -328,22 +328,25 @@ public class DiscordUtils {
     }
 
     /**
-     * TODO
-     * @param input
-     * @return
+     * Compiles and Parses the specified input, via {@link Starscript}
+     *
+     * @param input The input expression to interpret
+     * @param plain Whether the expression should be parsed as a plain string
+     * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(String input, final boolean plain) {
-        input = StringUtils.getOrDefault(input);
+    public Supplier<Value> compileData(final String input, final boolean plain) {
+        final String data = StringUtils.getOrDefault(input);
 
         if (!plain) {
             Parser.Result result = null;
             try {
-                result = Parser.parse(input);
-            } catch (Exception ignored) {}
+                result = Parser.parse(data);
+            } catch (Exception ignored) {
+            }
 
             if (result == null || result.hasErrors()) {
-                // TODO: Proper Logging
                 if (result != null) {
+                    // TODO: Proper Logging
                     for (Error error : result.errors) ModUtils.LOG.error(error.toString());
                 }
                 return () -> Value.string("");
@@ -352,24 +355,36 @@ public class DiscordUtils {
             final Script script = Compiler.compile(result);
             return () -> Value.string(scriptEngine.run(script).toString());
         } else {
-            String finalInput = input;
-            return () -> Value.string(finalInput);
+            return () -> Value.string(data);
         }
     }
 
     /**
-     * TODO
-     * @param input
-     * @return
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, boolean)}
+     *
+     * @param input The input expression to interpret
+     * @param plain Whether the expression should be parsed as a plain string
+     * @return the result of the supplier containing the output
      */
-    public Supplier<Value> compileData(String input) {
+    public String getResult(final String input, final boolean plain) {
+        return compileData(input, plain).get().toString();
+    }
+
+    /**
+     * Compiles and Parses the specified input, via {@link Starscript}
+     *
+     * @param input The input expression to interpret
+     * @return the supplier containing the output
+     */
+    public Supplier<Value> compileData(final String input) {
         return compileData(input, false);
     }
 
     /**
-     * TODO
-     * @param input
-     * @return
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, boolean)}
+     *
+     * @param input The input expression to interpret
+     * @return the result of the supplier containing the output
      */
     public String getResult(final String input) {
         return compileData(input).get().toString();
@@ -446,7 +461,7 @@ public class DiscordUtils {
     /**
      * Initialize the Specified Arguments as Empty Data
      *
-     * @param args     The Arguments to Initialize
+     * @param args The Arguments to Initialize
      */
     public void initArgument(String... args) {
         // Initialize Specified Arguments to Empty Data
@@ -587,9 +602,9 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param addExtraData      Whether to add additional data to the string
-     * @param args              The data to interpret
+     * @param argumentFormat The primary argument format to interpret
+     * @param addExtraData   Whether to add additional data to the string
+     * @param args           The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final boolean addExtraData, final Map<String, String> args) {
@@ -633,8 +648,8 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param addExtraData      Whether to add additional data to the string
+     * @param argumentFormat The primary argument format to interpret
+     * @param addExtraData   Whether to add additional data to the string
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat, final boolean addExtraData) {
@@ -644,7 +659,7 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat    The primary argument format to interpret
+     * @param argumentFormat The primary argument format to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final String argumentFormat) {
