@@ -261,7 +261,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param languageId The Language ID (Default: en_US)
      */
     private void setLanguage(final String languageId) {
-        String result = !StringUtils.isNullOrEmpty(languageId) ? languageId : defaultLanguageId;
+        String result = StringUtils.getOrDefault(languageId, defaultLanguageId);
         this.languageId = usingJson ? result.toLowerCase() : result;
     }
 
@@ -271,11 +271,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param encoding The Charset Encoding (Default: UTF-8)
      */
     private void setEncoding(final String encoding) {
-        if (!StringUtils.isNullOrEmpty(encoding)) {
-            this.encoding = encoding;
-        } else {
-            this.encoding = "UTF-8";
-        }
+        this.encoding = StringUtils.getOrDefault(encoding, "UTF-8");
     }
 
     /**
@@ -284,11 +280,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param modId The Mod ID to target
      */
     private void setModId(final String modId) {
-        if (!StringUtils.isNullOrEmpty(modId)) {
-            this.modId = modId;
-        } else {
-            this.modId = null;
-        }
+        this.modId = StringUtils.getOrDefault(modId);
     }
 
     /**

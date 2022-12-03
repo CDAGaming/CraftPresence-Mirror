@@ -126,10 +126,10 @@ public class BiomeUtils {
 
         final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-        final String newBiome_Identifier = !StringUtils.isNullOrEmpty(newBiome_primaryIdentifier) ? newBiome_primaryIdentifier : newBiome_alternativeIdentifier;
+        final String newBiome_Identifier = StringUtils.getOrDefault(newBiome_primaryIdentifier, newBiome_alternativeIdentifier);
 
         if (!newBiomeName.equals(CURRENT_BIOME_NAME) || !newBiome_Identifier.equals(CURRENT_BIOME_IDENTIFIER)) {
-            CURRENT_BIOME_NAME = !StringUtils.isNullOrEmpty(newBiomeName) ? newBiomeName : newBiome_Identifier;
+            CURRENT_BIOME_NAME = StringUtils.getOrDefault(newBiomeName, newBiome_Identifier);
             CURRENT_BIOME_IDENTIFIER = newBiome_Identifier;
 
             if (!BIOME_NAMES.contains(newBiome_Identifier)) {
@@ -208,7 +208,7 @@ public class BiomeUtils {
     public void getBiomes() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
-                String biomeName = !StringUtils.isNullOrEmpty(biome.getBiomeName()) ? biome.getBiomeName() : MappingUtils.getClassName(biome);
+                String biomeName = StringUtils.getOrDefault(biome.getBiomeName(), MappingUtils.getClassName(biome));
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);

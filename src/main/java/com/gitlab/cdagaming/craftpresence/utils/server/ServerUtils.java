@@ -335,7 +335,7 @@ public class ServerUtils {
             // 'world.name' Argument = Current Name of the World
             final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
             final String secondaryWorldName = CraftPresence.player != null ? CraftPresence.player.world.getWorldInfo().getWorldName() : ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
-            final String newWorldName = !StringUtils.isNullOrEmpty(primaryWorldName) ? primaryWorldName : secondaryWorldName;
+            final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             if (!newWorldName.equals(currentWorldName)) {
                 currentWorldName = newWorldName;
                 queuedForUpdate = true;
@@ -476,11 +476,11 @@ public class ServerUtils {
         CraftPresence.CLIENT.syncArgument("player.health.max", currentHealth.getSecond().toString());
 
         // World Data Arguments
-        CraftPresence.CLIENT.syncArgument("world.difficulty", !StringUtils.isNullOrEmpty(currentDifficulty) ? currentDifficulty : "");
-        CraftPresence.CLIENT.syncArgument("world.name", !StringUtils.isNullOrEmpty(currentWorldName) ? currentWorldName : "");
-        CraftPresence.CLIENT.syncArgument("world.time.24", !StringUtils.isNullOrEmpty(timeString24) ? timeString24 : "");
-        CraftPresence.CLIENT.syncArgument("world.time.12", !StringUtils.isNullOrEmpty(timeString12) ? timeString12 : "");
-        CraftPresence.CLIENT.syncArgument("world.day", !StringUtils.isNullOrEmpty(dayString) ? dayString : "");
+        CraftPresence.CLIENT.syncArgument("world.difficulty", StringUtils.getOrDefault(currentDifficulty));
+        CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
+        CraftPresence.CLIENT.syncArgument("world.time.24", StringUtils.getOrDefault(timeString24));
+        CraftPresence.CLIENT.syncArgument("world.time.12", StringUtils.getOrDefault(timeString12));
+        CraftPresence.CLIENT.syncArgument("world.day", StringUtils.getOrDefault(dayString));
 
         CraftPresence.CLIENT.syncArgument("server.default.icon", CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 

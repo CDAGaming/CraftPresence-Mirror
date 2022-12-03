@@ -289,7 +289,7 @@ public class EntityUtils {
         if (!EntityList.getEntityNameList().isEmpty()) {
             for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
-                    final String entityName = !StringUtils.isNullOrEmpty(EntityList.getTranslationName(entityLocation)) ? EntityList.getTranslationName(entityLocation) : "generic";
+                    final String entityName = StringUtils.getOrDefault(EntityList.getTranslationName(entityLocation), "generic");
                     if (!ENTITY_NAMES.contains(entityName)) {
                         ENTITY_NAMES.add(entityName);
                     }

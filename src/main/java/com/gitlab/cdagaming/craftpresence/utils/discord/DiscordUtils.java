@@ -324,7 +324,7 @@ public class DiscordUtils {
      * @return The resulting output string
      */
     public String sanitizePlaceholders(final String input) {
-        return !StringUtils.isNullOrEmpty(input) ? input.trim() : "";
+        return StringUtils.getOrDefault(input).trim();
     }
 
     /**
@@ -333,7 +333,7 @@ public class DiscordUtils {
      * @return
      */
     public Supplier<Value> compileData(String input, final boolean plain) {
-        input = !StringUtils.isNullOrEmpty(input) ? input : "";
+        input = StringUtils.getOrDefault(input);
 
         if (!plain) {
             Parser.Result result = null;

@@ -190,6 +190,16 @@ public class StringUtils {
     }
 
     /**
+     * Retrieve the primary value if non-empty; Otherwise, use the secondary value
+     *
+     * @param primary The primary value to interpret
+     * @return the resulting value
+     */
+    public static String getOrDefault(final String primary) {
+        return getOrDefault(primary, "");
+    }
+
+    /**
      * Retrieve Matching Values from an input that matches the defined regex
      *
      * @param regexValue The Regex Value to test against
