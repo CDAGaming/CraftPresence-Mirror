@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -43,18 +42,20 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
+import java.util.function.Consumer;
+
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
     private final Display CONFIG;
     private final PresenceData PRESENCE;
     private final Button DEFAULT_BUTTON;
     private final boolean isDefaultModule;
-    private final DataConsumer<PresenceData> onChangedCallback;
+    private final Consumer<PresenceData> onChangedCallback;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
     private CheckBoxControl enabledCheckbox;
 
-    PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, DataConsumer<PresenceData> changedCallback) {
+    PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
         super(parentScreen);
         CONFIG = CraftPresence.CONFIG.displaySettings;
         PRESENCE = moduleData != null ? moduleData : CONFIG.presenceData;

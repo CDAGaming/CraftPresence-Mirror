@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -38,6 +37,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 /**
  * The Selector Gui Screen
@@ -46,9 +46,9 @@ public class SelectorGui extends ExtendedScreen {
     private final String mainTitle, attributeName, originalValue;
     private final List<String> originalList;
     private final boolean allowContinuing, allowDynamicEditing;
-    private final PairConsumer<String, String> onUpdatedCallback;
+    private final BiConsumer<String, String> onUpdatedCallback;
     private final RenderType renderType;
-    private final PairConsumer<String, GuiScreen> onAdjustDynamicEntry;
+    private final BiConsumer<String, GuiScreen> onAdjustDynamicEntry;
     private ExtendedButtonControl proceedButton;
     private ScrollableListControl scrollList;
     private ExtendedTextControl searchBox;
@@ -69,7 +69,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, String> onUpdatedCallback, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         super(parentScreen);
         itemList = originalList = list;
         originalValue = currentValue;
@@ -96,7 +96,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, String> onUpdatedCallback, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, Lists.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
     }
 
@@ -113,7 +113,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
@@ -130,7 +130,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
@@ -146,7 +146,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
     }
 
@@ -162,7 +162,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, PairConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
     }
 

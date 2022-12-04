@@ -26,9 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.DataConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.PairConsumer;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -40,13 +38,15 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 import java.io.File;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @SuppressWarnings("DuplicatedCode")
 public class ColorEditorGui extends PaginatedScreen {
     private final String configValueName;
     // Event Data
-    private final PairConsumer<Integer, ColorEditorGui> onAdjustEntry;
-    private final DataConsumer<ColorEditorGui> onInit;
+    private final BiConsumer<Integer, ColorEditorGui> onAdjustEntry;
+    private final Consumer<ColorEditorGui> onInit;
     public String currentNormalHexValue, startingHexValue, currentNormalTexturePath, startingTexturePath;
     public boolean usingExternalTexture = false;
     // Page 1 Variables
@@ -60,7 +60,7 @@ public class ColorEditorGui extends PaginatedScreen {
     private boolean isModified = false;
     private ResourceLocation currentTexture;
 
-    public ColorEditorGui(GuiScreen parentScreen, String configValueName, PairConsumer<Integer, ColorEditorGui> onAdjustEntry, DataConsumer<ColorEditorGui> onInit) {
+    public ColorEditorGui(GuiScreen parentScreen, String configValueName, BiConsumer<Integer, ColorEditorGui> onAdjustEntry, Consumer<ColorEditorGui> onInit) {
         super(parentScreen);
         this.configValueName = configValueName;
         this.onAdjustEntry = onAdjustEntry;

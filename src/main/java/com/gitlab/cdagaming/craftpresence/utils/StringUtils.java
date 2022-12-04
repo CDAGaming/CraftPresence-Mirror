@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Predicate;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -41,8 +40,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * String Utilities for interpreting Strings and Basic Data Types
@@ -660,7 +661,7 @@ public class StringUtils {
      * @return the resulting list
      */
     public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, List<T> newList) {
-        newList = Lists.newArrayList(filter(newList, filter));
+        newList = newList.stream().filter(filter).collect(Collectors.toList());
         return addEntriesNotPresent(original, newList);
     }
 
@@ -686,7 +687,7 @@ public class StringUtils {
      * @return the resulting list
      */
     public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, Set<T> newList) {
-        newList = new HashSet<>(filter(newList, filter));
+        newList = newList.stream().filter(filter).collect(Collectors.toSet());
         return addEntriesNotPresent(original, newList);
     }
 
@@ -1054,77 +1055,6 @@ public class StringUtils {
     }
 
     /**
-     * Removes all of the elements of this collection that satisfy the given
-     * predicate.  Errors or runtime exceptions thrown during iteration or by
-     * the predicate are relayed to the caller.
-     * <p>
-     * The default implementation traverses all elements of the collection using
-     * its {@link Collection#iterator}.  Each matching element is removed using
-     * {@link Iterator#remove()}.  If the collection's iterator does not
-     * support removal then an {@code UnsupportedOperationException} will be
-     * thrown on the first matching element.
-     * <p>
-     * This is a stubbed function from {@link Collection#removeIf} for older java versions
-     *
-     * @param <E>        The type of the collection to interpret
-     * @param collection the collection to interpret
-     * @param filter     a predicate which returns {@code true} for elements to be
-     *                   removed
-     * @return {@code true} if any elements were removed
-     * @throws NullPointerException          if the specified filter is null
-     * @throws UnsupportedOperationException if elements cannot be removed
-     *                                       from this collection.  Implementations may throw this exception if a
-     *                                       matching element cannot be removed or if, in general, removal is not
-     *                                       supported.
-     */
-    public static <E> boolean removeIf(Collection<E> collection, Predicate<? super E> filter) {
-        Objects.requireNonNull(filter);
-        boolean removed = false;
-        final Iterator<E> each = collection.iterator();
-        while (each.hasNext()) {
-            if (filter.test(each.next())) {
-                each.remove();
-                removed = true;
-            }
-        }
-        return removed;
-    }
-
-    /**
-     * Returns a collection consisting of the elements of this collection that match
-     * the given predicate.
-     * <p>
-     * The default implementation traverses all elements of the collection using
-     * its {@link Collection#iterator}.  Each non-matching element is removed using
-     * {@link Iterator#remove()}.  If the collection's iterator does not
-     * support removal then an {@code UnsupportedOperationException} will be
-     * thrown on the first matching element.
-     * <p>
-     * This is a stubbed function from Stream#filter for older java versions
-     *
-     * @param <E>        The type of the collection to interpret
-     * @param collection the collection to interpret
-     * @param filter     a predicate which returns {@code true} for elements to be
-     *                   removed
-     * @return {@code true} if any elements were removed
-     * @throws NullPointerException          if the specified filter is null
-     * @throws UnsupportedOperationException if elements cannot be removed
-     *                                       from this collection.  Implementations may throw this exception if a
-     *                                       matching element cannot be removed or if, in general, removal is not
-     *                                       supported.
-     */
-    public static <E> Collection<E> filter(Collection<E> collection, Predicate<? super E> filter) {
-        Objects.requireNonNull(filter);
-        final Iterator<E> each = collection.iterator();
-        while (each.hasNext()) {
-            if (!filter.test(each.next())) {
-                each.remove();
-            }
-        }
-        return collection;
-    }
-
-    /**
      * Retrieves the Specified Inner Object from a List of Fields via Reflection
      *
      * @param fields   The field(s) to interpret
@@ -1195,8 +1125,8 @@ public class StringUtils {
      * @param fieldName     The Field name to search for
      * @return whether the specified class contains the specified field name
      */
-    public static boolean doesClassContainField(Class<?> classToAccess, final String fieldName) {
-        return !filter(Lists.newArrayList(classToAccess.getDeclaredFields()), f -> f.getName().equals(fieldName)).isEmpty();
+    public static boolean doesClassContainField(final Class<?> classToAccess, final String fieldName) {
+        return Lists.newArrayList(classToAccess.getDeclaredFields()).stream().anyMatch(f -> f.getName().equals(fieldName));
     }
 
     /**
@@ -1206,7 +1136,7 @@ public class StringUtils {
      * @param fieldName     The Field name to search for
      * @return whether the specified class contains the specified field name
      */
-    public static boolean doesClassContainField(String classToAccess, final String fieldName) {
+    public static boolean doesClassContainField(final String classToAccess, final String fieldName) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
             return doesClassContainField(foundClass, fieldName);

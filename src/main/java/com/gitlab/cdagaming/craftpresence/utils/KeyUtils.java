@@ -38,6 +38,9 @@ import org.lwjgl.input.Keyboard;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Keyboard Utilities to Parse KeyCodes and handle KeyCode Events
@@ -64,7 +67,7 @@ public class KeyUtils {
      * <p>
      * Format: rawKeyField:[keyBindInstance:(runEvent,configEvent,vanillaPredicate):errorCallback]
      */
-    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
+    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
     /**
      * List of Keys that are in queue for later syncing operations
      */
@@ -182,7 +185,7 @@ public class KeyUtils {
      *
      * @return The unfiltered key mappings
      */
-    public Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> getRawKeyMappings() {
+    public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getRawKeyMappings() {
         return KEY_MAPPINGS;
     }
 
@@ -238,9 +241,9 @@ public class KeyUtils {
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
             try {
                 for (String keyName : KEY_MAPPINGS.keySet()) {
-                    final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
+                    final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                     final KeyBinding keyBind = keyData.getFirst();
-                    final Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
+                    final Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
                     final int currentBind = keyBind.getKeyCode();
                     boolean hasBeenRun = false;
 
@@ -288,7 +291,7 @@ public class KeyUtils {
      * @param keyCode The new keycode to synchronize
      */
     private void syncKeyData(final String keyName, final ImportMode mode, final int keyCode) {
-        final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
+        final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
         if (mode == ImportMode.Config) {
             keyData.getFirst().setKeyCode(keyCode);
         } else if (mode == ImportMode.Vanilla) {
@@ -310,8 +313,8 @@ public class KeyUtils {
      * @param filterData The filter data to attach to the filter mode
      * @return The filtered key mappings
      */
-    public Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> getKeyMappings(final FilterMode mode, final List<String> filterData) {
-        final Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> filteredMappings = Maps.newHashMap();
+    public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getKeyMappings(final FilterMode mode, final List<String> filterData) {
+        final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> filteredMappings = Maps.newHashMap();
 
         for (String keyName : KEY_MAPPINGS.keySet()) {
             if (mode == FilterMode.None ||
@@ -319,7 +322,7 @@ public class KeyUtils {
                     mode == FilterMode.Id ||
                     (mode == FilterMode.Name && filterData.contains(keyName))
             ) {
-                final Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
+                final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
                 if (mode == FilterMode.None ||
                         (mode == FilterMode.Category && filterData.contains(keyData.getFirst().getKeyCategory())) ||
                         (mode == FilterMode.Id && filterData.contains(keyData.getFirst().getKeyDescription())) ||
@@ -337,7 +340,7 @@ public class KeyUtils {
      *
      * @return The filtered key mappings
      */
-    public Map<String, Tuple<KeyBinding, Tuple<Runnable, PairConsumer<Integer, Boolean>, Predicate<Integer>>, DataConsumer<Throwable>>> getKeyMappings() {
+    public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getKeyMappings() {
         return getKeyMappings(FilterMode.None, Lists.newArrayList());
     }
 
