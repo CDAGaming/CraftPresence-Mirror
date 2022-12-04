@@ -283,9 +283,9 @@ public class ScrollableListControl extends GuiSlot {
                         !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
                     final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
                     final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
-                            CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
-                            originalName
-                    ),
+                                    CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
+                                    originalName
+                            ),
                             new Pair<>("server.address", () -> formattedIP),
                             new Pair<>("server.address.raw", () -> originalName)
                     ).get().toString();
