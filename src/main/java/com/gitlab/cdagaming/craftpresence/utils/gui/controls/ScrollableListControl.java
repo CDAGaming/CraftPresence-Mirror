@@ -268,7 +268,7 @@ public class ScrollableListControl extends GuiSlot {
         if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
                 ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
                         (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
-                        (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
+                        (renderType == RenderType.ItemData/* && CraftPresence.TILE_ENTITIES.enabled*/))) {
             ResourceLocation texture = new ResourceLocation("");
             String assetUrl;
 
@@ -308,7 +308,7 @@ public class ScrollableListControl extends GuiSlot {
                     }
                 }
             } else if (renderType == RenderType.ItemData) {
-                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
+                //texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
             }
             if (!ImageUtils.isTextureNull(texture)) {
                 CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);

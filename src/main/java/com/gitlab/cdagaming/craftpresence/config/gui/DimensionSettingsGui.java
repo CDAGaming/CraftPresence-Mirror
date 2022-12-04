@@ -163,7 +163,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
+                                                                                        CraftPresence.CLIENT.generateArgumentMessage("dimension"))
                                                                         ), screenInstance, true
                                                                 );
                                                             }
@@ -184,7 +184,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                                        CraftPresence.DIMENSIONS.generateArgumentMessage())
+                                                        CraftPresence.CLIENT.generateArgumentMessage("dimension"))
                                         ), this, true
                                 );
                             }
@@ -269,7 +269,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
-                                    CraftPresence.DIMENSIONS.generateArgumentMessage())
+                                    CraftPresence.CLIENT.generateArgumentMessage("dimension"))
                     ), this, true
             );
         }

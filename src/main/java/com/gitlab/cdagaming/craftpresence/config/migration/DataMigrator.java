@@ -27,6 +27,17 @@ package com.gitlab.cdagaming.craftpresence.config.migration;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.google.gson.JsonElement;
 
+/**
+ * An interface used for Data Migration
+ */
 public interface DataMigrator {
+    /**
+     * Apply a change to the specified {@link Config}
+     *
+     * @param instance the original instance to be modified
+     * @param rawJson  the raw json format of the original instance
+     * @param args     additional arguments for usage in migration
+     * @return the adjusted instance
+     */
     Config apply(Config instance, JsonElement rawJson, Object... args);
 }

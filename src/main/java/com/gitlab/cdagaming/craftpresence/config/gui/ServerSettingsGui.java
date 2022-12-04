@@ -178,7 +178,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                                                                        CraftPresence.SERVER.generateArgumentMessage())
+                                                                                        CraftPresence.CLIENT.generateArgumentMessage("server"))
                                                                         ), screenInstance, true
                                                                 );
                                                             }
@@ -199,7 +199,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                                        CraftPresence.SERVER.generateArgumentMessage())
+                                                        CraftPresence.CLIENT.generateArgumentMessage("server"))
                                         ), this, true
                                 );
                             }
@@ -316,7 +316,7 @@ public class ServerSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                    CraftPresence.SERVER.generateArgumentMessage())
+                                    CraftPresence.CLIENT.generateArgumentMessage("server"))
                     ), this, true
             );
         }

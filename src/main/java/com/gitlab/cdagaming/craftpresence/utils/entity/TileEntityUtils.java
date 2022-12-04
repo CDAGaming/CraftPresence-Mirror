@@ -25,9 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.discord.ArgumentType;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -57,10 +54,6 @@ public class TileEntityUtils {
      */
     public final List<String> ITEM_NAMES = Lists.newArrayList();
     /**
-     * A Mapping of the Arguments attached to the &TILEENTITY& Equipment placeholders
-     */
-    private final List<Pair<String, String>> equipmentArgs = Lists.newArrayList();
-    /**
      * A List of the detected Block Class Names
      */
     private final List<String> BLOCK_CLASSES = Lists.newArrayList();
@@ -80,18 +73,6 @@ public class TileEntityUtils {
      * An Instance of an Empty ItemStack
      */
     private final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
-    /**
-     * The argument format to follow for Rich Presence Data
-     */
-    private final String argumentFormat = "&TILEENTITY&";
-    /**
-     * The sub-argument format to follow for Rich Presence Data
-     */
-    private final String subArgumentFormat = "&TILEENTITY:";
-    /**
-     * A Mapping of the Arguments attached to the &TILEENTITY& RPC Message sub-argument placeholders
-     */
-    private final Map<String, List<Pair<String, String>>> subArgumentData = Maps.newHashMap();
     /**
      * Whether this module is active and currently in use
      */
@@ -136,10 +117,6 @@ public class TileEntityUtils {
      * The Player's Currently equipped Boots Nbt Tags, if any
      */
     public List<String> CURRENT_BOOTS_TAGS = Lists.newArrayList();
-    /**
-     * A Mapping of the Arguments attached to the &TILEENTITY& RPC Message placeholder
-     */
-    private List<Pair<String, String>> tileEntityArgs = Lists.newArrayList();
     /**
      * The Player's Current Main Hand Item, if any
      */
@@ -264,19 +241,11 @@ public class TileEntityUtils {
         CURRENT_LEGS_TAGS.clear();
         CURRENT_BOOTS_TAGS.clear();
 
-        tileEntityArgs.clear();
-        equipmentArgs.clear();
-
         allItemsEmpty = true;
         isInUse = false;
 
-        // Clear Sub-Argument Mappings
-        for (String entry : subArgumentData.keySet()) {
-            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, entry);
-        }
-        subArgumentData.clear();
-
-        CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
+        CraftPresence.CLIENT.removeArguments("item");
+        CraftPresence.CLIENT.clearOverride("item");
     }
 
     /**
@@ -476,213 +445,70 @@ public class TileEntityUtils {
     public void updateEntityPresence() {
         // Retrieve Messages
         final String defaultItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault("default", "");
-        final String placeholderItemMessage = CraftPresence.CONFIG.statusMessages.playerItemsPlaceholderMessage;
 
         String offHandItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME);
-        String mainItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, defaultItemMessage);
+        String mainItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, CURRENT_MAIN_HAND_ITEM_NAME);
 
         String helmetMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_HELMET_NAME, CURRENT_HELMET_NAME);
         String chestMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_CHEST_NAME, CURRENT_CHEST_NAME);
         String legsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_LEGS_NAME, CURRENT_LEGS_NAME);
         String bootsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME);
 
-        // Form Entity/Item Argument List
-        tileEntityArgs.clear();
-        equipmentArgs.clear();
-
-        // Clear Sub-Argument Mappings
-        for (String entry : subArgumentData.keySet()) {
-            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, entry);
-        }
-        subArgumentData.clear();
+        CraftPresence.CLIENT.syncArgument("item.message.default", defaultItemMessage);
+        CraftPresence.CLIENT.syncArgument("item.message.holding", String.format("[%s, %s]",
+                StringUtils.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, "N/A"),
+                StringUtils.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, "N/A")
+        ), true);
+        CraftPresence.CLIENT.syncArgument("item.message.equipped", String.format("[%s, %s, %s, %s]",
+                StringUtils.getOrDefault(CURRENT_HELMET_NAME, "N/A"),
+                StringUtils.getOrDefault(CURRENT_CHEST_NAME, "N/A"),
+                StringUtils.getOrDefault(CURRENT_LEGS_NAME, "N/A"),
+                StringUtils.getOrDefault(CURRENT_BOOTS_NAME, "N/A")
+        ), true);
 
         // Extend Argument Messages, if tags available
+        CraftPresence.CLIENT.syncArgument("item.main_hand.name", CURRENT_MAIN_HAND_ITEM_NAME);
+        CraftPresence.CLIENT.syncArgument("item.main_hand.message", mainItemMessage);
         if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
             for (String tagName : CURRENT_MAIN_HAND_ITEM_TAGS) {
-                mainItemMessage = StringUtils.replaceAnyCase(mainItemMessage, "&" + tagName + "&", CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString());
+                CraftPresence.CLIENT.syncArgument("item.main_hand.nbt." + tagName, CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString(), true);
             }
         }
-
+        CraftPresence.CLIENT.syncArgument("item.off_hand.name", CURRENT_OFFHAND_ITEM_NAME);
+        CraftPresence.CLIENT.syncArgument("item.off_hand.message", offHandItemMessage);
         if (!CURRENT_OFFHAND_ITEM_TAGS.isEmpty()) {
             for (String tagName : CURRENT_OFFHAND_ITEM_TAGS) {
-                offHandItemMessage = StringUtils.replaceAnyCase(offHandItemMessage, "&" + tagName + "&", CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString());
+                CraftPresence.CLIENT.syncArgument("item.off_hand.nbt." + tagName, CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString(), true);
             }
         }
-
+        CraftPresence.CLIENT.syncArgument("item.helmet.name", CURRENT_HELMET_NAME);
+        CraftPresence.CLIENT.syncArgument("item.helmet.message", helmetMessage);
         if (!CURRENT_HELMET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_HELMET_TAGS) {
-                helmetMessage = StringUtils.replaceAnyCase(helmetMessage, "&" + tagName + "&", CURRENT_HELMET_TAG.getTag(tagName).toString());
+                CraftPresence.CLIENT.syncArgument("item.helmet.nbt." + tagName, CURRENT_HELMET_TAG.getTag(tagName).toString(), true);
             }
         }
-
+        CraftPresence.CLIENT.syncArgument("item.chestplate.name", CURRENT_CHEST_NAME);
+        CraftPresence.CLIENT.syncArgument("item.chestplate.message", chestMessage);
         if (!CURRENT_CHEST_TAGS.isEmpty()) {
             for (String tagName : CURRENT_CHEST_TAGS) {
-                chestMessage = StringUtils.replaceAnyCase(chestMessage, "&" + tagName + "&", CURRENT_CHEST_TAG.getTag(tagName).toString());
+                CraftPresence.CLIENT.syncArgument("item.chestplate.nbt." + tagName, CURRENT_CHEST_TAG.getTag(tagName).toString(), true);
             }
         }
-
+        CraftPresence.CLIENT.syncArgument("item.leggings.name", CURRENT_LEGS_NAME);
+        CraftPresence.CLIENT.syncArgument("item.leggings.message", legsMessage);
         if (!CURRENT_LEGS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_LEGS_TAGS) {
-                legsMessage = StringUtils.replaceAnyCase(legsMessage, "&" + tagName + "&", CURRENT_LEGS_TAG.getTag(tagName).toString());
+                CraftPresence.CLIENT.syncArgument("item.leggings.nbt." + tagName, CURRENT_LEGS_TAG.getTag(tagName).toString(), true);
             }
         }
-
+        CraftPresence.CLIENT.syncArgument("item.boots.name", CURRENT_BOOTS_NAME);
+        CraftPresence.CLIENT.syncArgument("item.boots.message", bootsMessage);
         if (!CURRENT_BOOTS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_BOOTS_TAGS) {
-                bootsMessage = StringUtils.replaceAnyCase(bootsMessage, "&" + tagName + "&", CURRENT_BOOTS_TAG.getTag(tagName).toString());
+                CraftPresence.CLIENT.syncArgument("item.boots.nbt." + tagName, CURRENT_BOOTS_TAG.getTag(tagName).toString(), true);
             }
         }
-
-        equipmentArgs.add(new Pair<>("&MAIN&", !StringUtils.isNullOrEmpty(CURRENT_MAIN_HAND_ITEM_NAME) ?
-                StringUtils.replaceAnyCase(mainItemMessage, "&item&", CURRENT_MAIN_HAND_ITEM_NAME) : ""));
-        equipmentArgs.add(new Pair<>("&OFFHAND&", !StringUtils.isNullOrEmpty(CURRENT_OFFHAND_ITEM_NAME) ?
-                StringUtils.replaceAnyCase(offHandItemMessage, "&item&", CURRENT_OFFHAND_ITEM_NAME) : ""));
-        equipmentArgs.add(new Pair<>("&HELMET&", !StringUtils.isNullOrEmpty(CURRENT_HELMET_NAME) ?
-                StringUtils.replaceAnyCase(helmetMessage, "&item&", CURRENT_HELMET_NAME) : ""));
-        equipmentArgs.add(new Pair<>("&CHEST&", !StringUtils.isNullOrEmpty(CURRENT_CHEST_NAME) ?
-                StringUtils.replaceAnyCase(chestMessage, "&item&", CURRENT_CHEST_NAME) : ""));
-        equipmentArgs.add(new Pair<>("&LEGS&", !StringUtils.isNullOrEmpty(CURRENT_LEGS_NAME) ?
-                StringUtils.replaceAnyCase(legsMessage, "&item&", CURRENT_LEGS_NAME) : ""));
-        equipmentArgs.add(new Pair<>("&BOOTS&", !StringUtils.isNullOrEmpty(CURRENT_BOOTS_NAME) ?
-                StringUtils.replaceAnyCase(bootsMessage, "&item&", CURRENT_BOOTS_NAME) : ""));
-
-        // Add applicable args as sub-placeholders
-        subArgumentData.put(subArgumentFormat, equipmentArgs);
-        for (Map.Entry<String, List<Pair<String, String>>> entry : subArgumentData.entrySet()) {
-            if (!StringUtils.isNullOrEmpty(entry.getKey()) && !entry.getValue().isEmpty()) {
-                for (Pair<String, String> argumentData : entry.getValue()) {
-                    CraftPresence.CLIENT.syncArgument(
-                            entry.getKey() + argumentData.getFirst().substring(1),
-                            argumentData.getSecond(),
-                            ArgumentType.Text
-                    );
-                }
-            }
-        }
-
-        // Add All Generalized Arguments, if any
-        tileEntityArgs = Lists.newArrayList(equipmentArgs);
-        if (!CraftPresence.CLIENT.generalArgs.isEmpty()) {
-            StringUtils.addEntriesNotPresent(tileEntityArgs, CraftPresence.CLIENT.generalArgs);
-        }
-
-        final String CURRENT_MESSAGE = StringUtils.sequentialReplaceAnyCase(placeholderItemMessage, tileEntityArgs);
-
-        // NOTE: Only Apply if Items are not Empty, otherwise Clear Argument
-        if (!allItemsEmpty) {
-            CraftPresence.CLIENT.syncArgument(argumentFormat, CURRENT_MESSAGE, ArgumentType.Text);
-        } else {
-            CraftPresence.CLIENT.removeArgumentsMatching(ArgumentType.Text, subArgumentFormat);
-            CraftPresence.CLIENT.initArgument(ArgumentType.Text, argumentFormat);
-        }
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param argumentFormat    The primary argument format to interpret
-     * @param subArgumentFormat The secondary (or sub-prefix) argument format to interpret
-     * @param types             The argument types to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(String argumentFormat, String subArgumentFormat, ArgumentType... types) {
-        types = (types != null && types.length > 0 ? types : ArgumentType.values());
-        final boolean useDefault = StringUtils.isNullOrEmpty(argumentFormat) && StringUtils.isNullOrEmpty(subArgumentFormat);
-        if (useDefault) {
-            argumentFormat = this.argumentFormat;
-            subArgumentFormat = this.subArgumentFormat;
-        }
-
-        final Map<ArgumentType, List<String>> argumentData = Maps.newHashMap();
-        List<String> queuedEntries;
-        for (ArgumentType type : types) {
-            queuedEntries = Lists.newArrayList();
-            if (type == ArgumentType.Text) {
-                if (!useDefault) {
-                    queuedEntries.add(subArgumentFormat + "MAIN&");
-                    queuedEntries.add(subArgumentFormat + "OFFHAND&");
-                    queuedEntries.add(subArgumentFormat + "HELMET&");
-                    queuedEntries.add(subArgumentFormat + "CHEST&");
-                    queuedEntries.add(subArgumentFormat + "LEGS&");
-                    queuedEntries.add(subArgumentFormat + "BOOTS&");
-                } else {
-                    queuedEntries.add(subArgumentFormat + "ITEM&");
-                }
-            }
-            argumentData.put(type, queuedEntries);
-        }
-        return CraftPresence.CLIENT.generateArgumentMessage(argumentFormat, subArgumentFormat, argumentData);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @param types The argument types to interpret
-     * @return the parsable string
-     */
-    public String generateArgumentMessage(ArgumentType... types) {
-        return generateArgumentMessage(null, null, types);
-    }
-
-    /**
-     * Retrieves a List of Tags from a TileEntity name, if currently equipped
-     *
-     * @param name The TileEntity Name
-     * @return A List of Tags from a TileEntity name, if currently equipped
-     */
-    public List<String> getListFromName(String name) {
-        name = !StringUtils.isNullOrEmpty(name) ? name : "";
-        return name.equalsIgnoreCase(CURRENT_MAIN_HAND_ITEM_NAME) ? CURRENT_MAIN_HAND_ITEM_TAGS
-                : name.equalsIgnoreCase(CURRENT_OFFHAND_ITEM_NAME) ? CURRENT_OFFHAND_ITEM_TAGS
-                : name.equalsIgnoreCase(CURRENT_HELMET_NAME) ? CURRENT_HELMET_TAGS
-                : name.equalsIgnoreCase(CURRENT_CHEST_NAME) ? CURRENT_CHEST_TAGS
-                : name.equalsIgnoreCase(CURRENT_LEGS_NAME) ? CURRENT_LEGS_TAGS
-                : name.equalsIgnoreCase(CURRENT_BOOTS_NAME) ? CURRENT_BOOTS_TAGS : Lists.newArrayList();
-    }
-
-    /**
-     * Generates TileEntity Tag Placeholder String
-     *
-     * @param name         The TileEntity Name
-     * @param addExtraData Whether to add additional data to the string
-     * @param tags         A List of the tags associated with the TileEntity
-     * @return The Resulting TileEntity Tag Placeholder String
-     */
-    public String generatePlaceholderString(final String name, final boolean addExtraData, final List<String> tags) {
-        final StringBuilder finalString = new StringBuilder(addExtraData ? "" : "\n{");
-        if (!tags.isEmpty()) {
-            for (int i = 0; i < tags.size(); i++) {
-                final String tagName = tags.get(i);
-                finalString.append(addExtraData ? "\n - " : "").append("&").append(tagName).append("&");
-
-                if (addExtraData) {
-                    // If specified, also append the Tag's value to the placeholder String
-                    final String tagValue =
-                            tags.equals(CURRENT_MAIN_HAND_ITEM_TAGS) ? CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString() :
-                                    tags.equals(CURRENT_OFFHAND_ITEM_TAGS) ? CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString() :
-                                            tags.equals(CURRENT_HELMET_TAGS) ? CURRENT_HELMET_TAG.getTag(tagName).toString() :
-                                                    tags.equals(CURRENT_CHEST_TAGS) ? CURRENT_CHEST_TAG.getTag(tagName).toString() :
-                                                            tags.equals(CURRENT_LEGS_TAGS) ? CURRENT_LEGS_TAG.getTag(tagName).toString() :
-                                                                    tags.equals(CURRENT_BOOTS_TAGS) ? CURRENT_BOOTS_TAG.getTag(tagName).toString() : null;
-
-                    if (!StringUtils.isNullOrEmpty(tagValue)) {
-                        finalString.append(String.format(" (%s \"%s\")",
-                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                (tagValue.length() >= 128) ? "<...>" : tagValue
-                        ));
-                    }
-                } else if (i < tags.size() - 1) {
-                    finalString.append(",");
-                    if (i % 5 == 4) {
-                        finalString.append("\n");
-                    }
-                }
-            }
-        }
-        if (!addExtraData) {
-            finalString.append("}");
-        }
-        return ((!StringUtils.isNullOrEmpty(name) ? name : "None") + " " + ((!StringUtils.isNullOrEmpty(finalString.toString()) && !finalString.toString().equals("\n{}")) ? finalString.toString() : "\\n - N/A"));
     }
 
     /**

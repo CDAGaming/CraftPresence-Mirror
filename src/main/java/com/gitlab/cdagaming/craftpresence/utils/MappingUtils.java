@@ -39,6 +39,10 @@ import java.util.Set;
  * @author CDAGaming, wagyourtail
  */
 public class MappingUtils {
+    /**
+     * The Java Specification Version
+     */
+    public static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
     private static Map<String, String> classMap = null;
     private static String filePath = "/mappings.srg";
 
@@ -120,7 +124,8 @@ public class MappingUtils {
     /**
      * Retrieve the mapped class name matching the requested object
      *
-     * @param object The class object to interpret
+     * @param object     The class object to interpret
+     * @param simpleName Whether to return the simple name of the found class
      * @return the mapped class name
      */
     public static String getClassName(Class<?> object, boolean simpleName) {

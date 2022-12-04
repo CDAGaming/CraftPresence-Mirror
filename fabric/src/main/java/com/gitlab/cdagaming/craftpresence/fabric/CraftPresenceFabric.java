@@ -28,8 +28,17 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import net.fabricmc.api.ClientModInitializer;
 
+/**
+ * The Primary Application Class and Utilities
+ *
+ * @author CDAGaming
+ */
 public class CraftPresenceFabric implements ClientModInitializer {
+    @Override
     public void onInitializeClient() {
+        if (MappingUtils.JAVA_SPEC < 1.8) {
+            throw new RuntimeException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
+        }
         MappingUtils.setFilePath("/mappings-fabric.srg");
         new CraftPresence();
     }

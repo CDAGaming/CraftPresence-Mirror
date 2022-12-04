@@ -56,17 +56,14 @@ dependencies {
     }
 
     // Java-Specific Dependencies
-    if (targetCompatibility.isJava8Compatible() && !isLegacy) {
-        shade('com.kohlschutter.junixsocket:junixsocket-common:2.5.1')
-        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.5.1')
-    } else {
-        shade('com.kohlschutter.junixsocket:junixsocket-common:2.4.0')
-        shade('com.kohlschutter.junixsocket:junixsocket-native-common:2.4.0')
-    }
+    shade("com.kohlschutter.junixsocket:junixsocket-common:${isLegacy ? "2.4.0" : "2.6.1"}")
+    shade("com.kohlschutter.junixsocket:junixsocket-native-common:${isLegacy ? "2.4.0" : "2.6.1"}")
     implementation "com.google.code.findbugs:jsr305:3.0.2"
 
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${rootProject.ipc_version}")
+    // StarScript (Used for Placeholder Expressions)
+    shade("io.github.CDAGaming:starscript:${rootProject.starscript_version + (isLegacy ? "-legacy" : "")}")
     shade("io.github.classgraph:classgraph:${rootProject.classgraph_version}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
@@ -126,6 +123,7 @@ shadowJar {
     exclude 'META-INF/versions/**'
     // Package Relocations
     relocate 'com.jagrosh', 'external.com.jagrosh'
+    relocate 'meteordevelopment', 'external.meteordevelopment'
     relocate 'io.github.classgraph', 'external.io.github.classgraph'
     relocate 'nonapi.io.github.classgraph', 'external.nonapi.io.github.classgraph'
     if (protocol < 755) {

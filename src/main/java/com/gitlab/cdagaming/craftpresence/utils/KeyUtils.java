@@ -131,11 +131,7 @@ public class KeyUtils {
                 }
 
                 // If Key Name is not Empty or Null, use that, otherwise use original
-                if (!StringUtils.isNullOrEmpty(keyName)) {
-                    return keyName;
-                } else {
-                    return altKeyName;
-                }
+                return StringUtils.getOrDefault(keyName, altKeyName);
             }
         } else {
             // If Not a Valid KeyCode, return the appropriate Unknown Keycode

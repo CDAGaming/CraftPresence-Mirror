@@ -52,7 +52,7 @@ import java.util.Map;
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public final class Config extends Module implements Serializable {
     // Constants
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
     private static final long serialVersionUID = -4853238501768086595L;
     public static int MC_VERSION;
     private static List<String> keyCodeTriggers;
@@ -207,8 +207,9 @@ public final class Config extends Module implements Serializable {
             }
         }
 
-        // Refresh the raw json contents, in case of any changes
+        // Config Layers for prior existing files (Or recently made ones)
         if (!isNewFile) {
+            // Refresh the raw json contents, in case of any changes
             try {
                 rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
             } catch (Exception ex) {
@@ -240,7 +241,7 @@ public final class Config extends Module implements Serializable {
                 boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
-                    if (!(parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
+                    if (currentValue == null || !(parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
                         shouldContinue = false;
                     } else {
@@ -432,7 +433,17 @@ public final class Config extends Module implements Serializable {
         final Pair<Object, Tuple<Class<?>, Object, String>> propertyData = lookupProperty(path);
         if (propertyData.getFirst() != null) {
             final Tuple<Class<?>, Object, String> fieldData = propertyData.getSecond();
-            StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Tuple<>(fieldData.getThird(), value, null));
+            if (fieldData.getSecond() instanceof Map) {
+                final String[] parentPath = Arrays.copyOf(path, path.length - 1);
+                final Tuple<Class<?>, Object, String> parentData = lookupProperty(parentPath).getSecond();
+
+                Map data = new HashMap((Map) fieldData.getSecond());
+                data.put(fieldData.getThird(), value);
+
+                StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), new Tuple<>(parentData.getThird(), data, null));
+            } else {
+                StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Tuple<>(fieldData.getThird(), value, null));
+            }
         }
     }
 

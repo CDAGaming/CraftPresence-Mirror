@@ -138,7 +138,7 @@ public class ExtendedTextControl extends GuiTextField {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        this.setText(!StringUtils.isNullOrEmpty(newMessage) ? newMessage : "");
+        this.setText(StringUtils.getOrDefault(newMessage));
     }
 
     /**

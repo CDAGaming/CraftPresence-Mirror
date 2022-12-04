@@ -38,15 +38,33 @@ public class Display extends Module implements Serializable {
     private static final long serialVersionUID = -3302764075156017733L;
     private static Display DEFAULT;
     public PresenceData presenceData = new PresenceData()
-            .setGameState("&SERVER& &PACK&")
-            .setDetails("&MAINMENU&|&DIMENSION&")
-            .setLargeImage("&MAINMENU&|&DIMENSION&", "&MAINMENU&|&DIMENSION&")
-            .setSmallImage("&SERVER&|&PACK&", "&SERVER& &PACK&");
+            .setGameState("{server.message != null ? server.message : ''} {pack.name != null ? pack.name : ''}")
+            .setDetails("{menu.message != null ? menu.message : (dimension.message != null ? dimension.message : '')}")
+            .setLargeImage("{menu.icon != null ? menu.icon : (dimension.icon != null ? dimension.icon : '')}",
+                    "{menu.message != null ? menu.message : (dimension.message != null ? dimension.message : '')}")
+            .setSmallImage("{server.icon != null ? server.icon : (pack.name != null ? pack.name : '')}",
+                    "{server.message != null ? server.message : ''} {pack.name != null ? pack.name : ''}");
     public Map<String, String> dynamicIcons = new HashMap<String, String>() {
         private static final long serialVersionUID = 4900744874595923346L;
 
         {
             put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"));
+        }
+    };
+    public Map<String, String> dynamicVariables = new HashMap<String, String>() {
+        private static final long serialVersionUID = 4900744874595923346L;
+
+        {
+            put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"));
+            put("pack", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.pack"));
+            put("players", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.players"));
+            put("player_info_out", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.out"));
+            put("player_info_in", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.in"));
+            put("player_info_coordinate", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.coordinate"));
+            put("player_info_health", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.health"));
+            put("player_info_items", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.items"));
+            put("world_info", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.world_info"));
+            put("mods", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.mods"));
         }
     };
 

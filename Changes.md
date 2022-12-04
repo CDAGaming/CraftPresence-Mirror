@@ -1,12 +1,20 @@
 # CraftPresence Changes
 
-## v2.0.0 Alpha 1 (11/28/2022)
+## v2.0.0 Alpha 2 (02/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.1)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.2)_
 
 ### Changes
 
+* Java 7 is no longer supported! (You should be using at least Java 8 by now!)
+    * The mod will still display as using Java 7 bytecode on legacy versions, but will be utilizing Java 8 APIs
+    * The mod will crash on initialization with a `RuntimeException` when used on anything below Java 8
+* Reworked the way placeholders are interpreted to utilize [Starscript](https://github.com/MeteorDevelopment/starscript)
+    * This integration will allow for significantly more flexibility and overall control over placeholders and how they
+      can be used
+    * Due to this change, all placeholder names have been adjusted (See the `Placeholders` section of this changelog)
+    * Aditionally, the `allowPlaceholderOperators` option has been removed, due to being redundant
 * Adjusted module logic to perform within their own sub-threads, in an effort to avoid waiting on them to retrieve data
     * IE the initial retrieval of data when a module is first enabled is now multi-threaded, taking up much less time!
 * Migrated the Config Systems from `Properties` to `GSON`
@@ -15,9 +23,11 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       to be more easily migrated across major updates
     * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also
       removed, since we don't use Arrays in this new system
-* Added the ability for placeholders to be interpreted differently depending on the RPC field
-    * An example of this would be being able to make `&DIMENSION&` equal `this` if it is used in the `Details` Presence
-      Field, while equaling `that` if used in the `Game State` Presence Field
+* Added the ability for Module elements to supply their own `PresenceData`
+    * When supplied and enabled, this will allow an event to become the generic event rather then simple argument
+      replacement
+    * This is similar to the
+      way [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) presents it's data
 * Added more flexibility and usage to endpoint icons, including the addition of the `allowEndpointIcons`
     * For users, the new usages also include fetching the server icon in the Server Settings Scroll Lists, if the Base64
       icon is unavailable
@@ -27,20 +37,11 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
 * Added support for transferring a Simple RPC (By HypherionSA) config to CraftPresence (With permission, of course!)
 * Removed the ViveCraft Message Option and Fallback Placeholder Message
-    * Alpha Note: The ViveCraft Option will be replaced by something later in the development pipeline before v2.0s full
-      release!
+    * Alpha Note: The ViveCraft Option will be replaced by something before v2.0 fully releases!
 * UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
     * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
 * Backend: Increased the default text limit for all `ExtendedTextControl`'s
-    * Due to this change, minified placeholder support has been removed from the backend (Can be re-added in a future
-      update, if needed)
-* Added placeholders:
-    * `&SERVER:MOTD&` - Added per-line support (Example: `&MOTD1&` for line one of `&MOTD&`)
-    * `&SERVER:WORLDINFO:WORLDTIME12&` - A 12-hour format of the `&WORLDTIME&` placeholder
-    * `&SERVER:PLAYERS:{CURRENT,MAX}EXCL&` - Alternatives for the `&CURRENT&` and `&MAX&` counterparts, but excludes
-      yourself
-    * (Icon) `&IGN&` - If a valid UUID and `allowEndpointIcons` is active, `&IGN&` will fetch the `dynamicIcons` data
-        * Note that removing it from `dynamicIcons` will cause `&IGN&` to not find any icon
+    * Due to this change, minified placeholder support has been removed from the backend
 
 ### Fixes
 
@@ -69,6 +70,31 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       text box
 * Backend: Fixed `ImageUtils` dynamic texture creation not complying with 1.13+ namespace requirements
 
+### Placeholders
+
+One of the foundational changes that have been made to CraftPresence, is with placeholder interpetation.
+
+With the integration of Starscript, several changes, additions, and removals have been made to placeholders and their
+related systems:
+
+* Placeholders can now be used anywhere (Gone with `ArgumentType` and freedom to customize)
+* Programmer expressions (Such as formatting, operators, as well as custom functions) have been implemented to allow an
+  even greater level of customizability then we've ever had prior
+    * See [their wiki](https://github.com/MeteorDevelopment/starscript/wiki) for some of the standard functions now
+      available
+* The OR operator (Initially added in v1.9.x) has been removed
+    * Prior usages will migrate to an `{foo != null ? foo : bar}` format to replicate the prior behavior
+* All Placeholders have been renamed, following a base format of converting to an `{foo.bar}` format instead
+  of `&FOO:BAR&`
+    * All prior usages from v1 configs will also be migrated to follow the new names as mentioned below:
+
+* Renamed Placeholders (`old` => `new` (`conditions`)):
+    * `TBD` => `TBD` ()
+* Added Placeholders:
+    * TBD
+* Removed (or moved) Placeholders:
+    * TBD
+
 ### Translations
 
 The following changes have been made for translations:
@@ -78,12 +104,9 @@ The following changes have been made for translations:
     * `gui.config.message.button.remove`
     * `gui.config.{name,defaults}.advanced.allow_endpoint_icons` (Added Property)
     * `gui.config.{name,comment}.advanced.server_icon_endpoint` (Added Property)
-    * `craftpresence.placeholders.SERVER.WORLDINFO.WORLDTIME12.description` (Added Placeholder)
-    * `craftpresence.placeholders.{SCREEN,TARGETENTITY,RIDINGENTITY}.ICON.description` (Added Placeholders)
+    * `craftpresence.placeholders.*` (See `Placeholders` Section)
 * Modified:
     * `gui.config.comment.button.sync.config` (Modified for new config file name)
-    * `craftpresence.placeholders.SERVER.WORLDINFO.WORLDTIME.description` (Adjusted description to clarify 24-hour
-      format)
 * Removed:
     * `craftpresence.logger.error.config.adjust.global`
     * `craftpresence.logger.info.config.notice`
@@ -109,7 +132,7 @@ The following known issues are present in this build:
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
-    * The `custom` field will remain unimplemented until Alpha 3, due to more logic that is planned to be added
+    * The `custom` field will remain unimplemented until Alpha 2, due to more logic that is planned to be added
     * Placeholders related to the realm and Replay Mod Integration are currently unimplemented and parse as `&unknown&`.
     * `%weather%` is also unimplemented at this time, and will also parse as `&unknown&`
 
