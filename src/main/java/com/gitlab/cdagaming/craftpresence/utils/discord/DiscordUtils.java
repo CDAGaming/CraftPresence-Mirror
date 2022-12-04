@@ -616,16 +616,23 @@ public class DiscordUtils {
         if (args != null && !args.isEmpty()) {
             for (Map.Entry<String, String> argData : args.entrySet()) {
                 final String placeholderName = argData.getKey();
+                final String placeholderTranslation = String.format("%s.placeholders.%s.description",
+                        ModUtils.MOD_ID,
+                        placeholderName
+                );
+                String placeholderDescription = "";
+                String placeholderFormat = "\\n - %s";
+
+                if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
+                    placeholderDescription = ModUtils.TRANSLATOR.translate(placeholderTranslation);
+                    placeholderFormat = "\\n - %s = %s";
+                }
 
                 placeholderString.append(
-                        String.format("\\n - %s = %s",
+                        String.format(placeholderFormat,
                                 placeholderName.toLowerCase(),
-                                ModUtils.TRANSLATOR.translate(
-                                        String.format("%s.placeholders.%s.description",
-                                                ModUtils.MOD_ID,
-                                                placeholderName
-                                        )
-                                ))
+                                placeholderDescription
+                        )
                 );
 
                 if (addExtraData && !StringUtils.isNullOrEmpty(argData.getValue())) {
