@@ -68,7 +68,7 @@ dependencies {
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${rootProject.ipc_version}")
     // StarScript (Used for Placeholder Expressions)
-    shade("meteordevelopment:starscript:${rootProject.starscript_version}")
+    shade("io.github.CDAGaming:starscript:${rootProject.starscript_version + (isLegacy ? "-legacy" : "")}")
     shade("io.github.classgraph:classgraph:${rootProject.classgraph_version}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
