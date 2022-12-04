@@ -36,6 +36,9 @@ import net.fabricmc.api.ClientModInitializer;
 public class CraftPresenceFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        if (MappingUtils.JAVA_SPEC < 1.8) {
+            throw new RuntimeException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
+        }
         MappingUtils.setFilePath("/mappings-fabric.srg");
         new CraftPresence();
     }

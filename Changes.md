@@ -7,6 +7,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Changes
 
+* Java 7 is no longer supported! (You should be using at least Java 8 by now!)
+    * The mod will still display as using Java 7 bytecode on legacy versions, but will be utilizing Java 8 APIs
+    * The mod will crash on initialization with a `RuntimeException` when used on anything below Java 8
 * Reworked the way placeholders are interpreted to utilize [Starscript](https://github.com/MeteorDevelopment/starscript)
     * This integration will allow for significantly more flexibility and overall control over placeholders and how they
       can be used
