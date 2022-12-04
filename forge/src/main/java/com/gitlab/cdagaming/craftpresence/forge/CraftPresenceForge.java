@@ -40,7 +40,7 @@ public class CraftPresenceForge {
      * Begins Scheduling Ticks on Class Initialization
      */
     public CraftPresenceForge() {
-        if (MappingUtils.JAVA_SPEC < 1.8) {
+        if (MappingUtils.JAVA_SPEC < 1.8f) {
             throw new RuntimeException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-forge.srg");
