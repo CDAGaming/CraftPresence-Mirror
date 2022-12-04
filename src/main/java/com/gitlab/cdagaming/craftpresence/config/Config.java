@@ -52,7 +52,7 @@ import java.util.Map;
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public final class Config extends Module implements Serializable {
     // Constants
-    public static final int VERSION = 2;
+    public static final int VERSION = 1;
     private static final long serialVersionUID = -4853238501768086595L;
     public static int MC_VERSION;
     private static List<String> keyCodeTriggers;
