@@ -78,8 +78,12 @@ public final class Config extends Module implements Serializable {
         return INSTANCE;
     }
 
+    public static String getConfigPath() {
+        return ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".json";
+    }
+
     public static File getConfigFile() {
-        return new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".json");
+        return new File(getConfigPath());
     }
 
     public static Config loadOrCreate(final boolean forceCreate) {
@@ -100,9 +104,13 @@ public final class Config extends Module implements Serializable {
                 config._lastMCVersionId = MC_VERSION;
             }
         } catch (Exception ex) {
-            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) || ModUtils.IS_VERBOSE) {
+            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class)) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
                 ex.printStackTrace();
+
+                if (!getConfigFile().renameTo(new File(getConfigPath() + ".bak"))) {
+                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.backup"));
+                }
             }
         }
 
