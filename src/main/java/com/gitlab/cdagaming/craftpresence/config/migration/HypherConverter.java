@@ -132,6 +132,16 @@ public class HypherConverter implements DataMigrator {
                 }
             }
 
+            // Custom Variables (Enabled state is ignored)
+            if (conf.get("custom.variables") != null) {
+                for (AbstractConfig entry : (List<AbstractConfig>) conf.get("custom.variables")) {
+                    String name = entry.get("name").toString();
+                    String value = entry.get("value").toString();
+
+                    instance.displaySettings.dynamicVariables.put(name, processPlaceholder(value));
+                }
+            }
+
             // Per-GUI Events
             instance.advancedSettings.enablePerGui = true;
             instance.advancedSettings.guiSettings.guiData.put(GuiScreenRealmsProxy.class.getSimpleName(), new ModuleData()

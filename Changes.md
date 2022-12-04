@@ -132,9 +132,8 @@ The following known issues are present in this build:
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
-    * The `custom` field will remain unimplemented until Alpha 2, due to more logic that is planned to be added
     * Placeholders related to the realm and Replay Mod Integration are currently unimplemented and parse as `&unknown&`.
-    * `%weather%` is also unimplemented at this time, and will also parse as `&unknown&`
+    * `%weather%` is also unimplemented at this time, and will also parse as `{''}'`
 
 #### 1.13.x Build Info
 
