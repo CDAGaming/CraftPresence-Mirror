@@ -367,7 +367,7 @@ public class DiscordUtils {
             }
 
             final Script script = Compiler.compile(result);
-            return () -> Value.string(scriptEngine.run(script).toString());
+            return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
         } else {
             return () -> Value.string(data);
         }
