@@ -51,7 +51,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({"DuplicatedCode", "unchecked"})
 public class ServerUtils {
     /**
      * Whether this module is active and currently in use
@@ -524,7 +524,12 @@ public class ServerUtils {
             if (!DiscordAssetUtils.contains(formattedIcon)) {
                 if (canUseEndpointIcon) {
                     if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(formattedIP)) {
-                        CraftPresence.CONFIG.displaySettings.dynamicIcons.put(formattedIP, String.format(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint, formattedIP));
+                        CraftPresence.CONFIG.displaySettings.dynamicIcons.put(formattedIP,
+                                CraftPresence.CLIENT.compileData(String.format(
+                                        CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
+                                        formattedIP
+                                )).get().toString()
+                        );
                         DiscordAssetUtils.syncCustomAssets();
                         CraftPresence.CONFIG.save();
                     }

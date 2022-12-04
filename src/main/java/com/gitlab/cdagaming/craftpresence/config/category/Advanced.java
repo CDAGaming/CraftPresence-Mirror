@@ -58,8 +58,8 @@ public class Advanced extends Module implements Serializable {
     };
     public Entity entitySettings = new Entity();
     public boolean allowEndpointIcons = true;
-    public String serverIconEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.server_icon_endpoint");
-    public String playerSkinEndpoint = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.player_skin_endpoint");
+    public String serverIconEndpoint = "https://api.mcsrvstat.us/icon/{server.address != null ? server.address : server.address.raw}";
+    public String playerSkinEndpoint = "https://crafatar.com/avatars/{player.uuid != null ? player.uuid : player.name}";
 
     @Override
     public Advanced getDefaults() {

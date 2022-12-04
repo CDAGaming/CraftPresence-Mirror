@@ -49,6 +49,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("unchecked")
 public class ScrollableListControl extends GuiSlot {
     /**
      * Mapping representing a link between the entries original name, and it's display name
@@ -268,7 +269,7 @@ public class ScrollableListControl extends GuiSlot {
         if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
                 ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
                         (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
-                        (renderType == RenderType.ItemData/* && CraftPresence.TILE_ENTITIES.enabled*/))) {
+                        (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
             ResourceLocation texture = new ResourceLocation("");
             String assetUrl;
 
@@ -278,8 +279,16 @@ public class ScrollableListControl extends GuiSlot {
                 if (data != null) {
                     assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
                     texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
-                } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
-                    final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint, originalName);
+                } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                        !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
+                    final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
+                    final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
+                            CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
+                            originalName
+                    ),
+                            new Pair<>("server.address", () -> formattedIP),
+                            new Pair<>("server.address.raw", () -> originalName)
+                    ).get().toString();
                     texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                     if (currentScreen.isDebugMode()) {
                         hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
@@ -299,8 +308,16 @@ public class ScrollableListControl extends GuiSlot {
                     // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
                     final String fullUuid = StringUtils.getFromUuid(originalName, false);
                     final String trimmedUuid = StringUtils.getFromUuid(originalName, true);
-                    if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                        final String endpointUrl = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, fullUuid);
+                    if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                            !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                        final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
+                                        CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                                        fullUuid
+                                ),
+                                new Pair<>("player.name", () -> ""),
+                                new Pair<>("player.uuid.full", () -> fullUuid),
+                                new Pair<>("player.uuid", () -> trimmedUuid)
+                        ).get().toString();
                         texture = ImageUtils.getTextureFromUrl(fullUuid, endpointUrl);
                         if (currentScreen.isDebugMode()) {
                             hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
@@ -308,7 +325,7 @@ public class ScrollableListControl extends GuiSlot {
                     }
                 }
             } else if (renderType == RenderType.ItemData) {
-                //texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
+                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
             }
             if (!ImageUtils.isTextureNull(texture)) {
                 CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);

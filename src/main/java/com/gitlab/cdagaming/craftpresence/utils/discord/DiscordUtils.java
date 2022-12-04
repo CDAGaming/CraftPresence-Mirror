@@ -70,6 +70,7 @@ import java.util.function.Supplier;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("unchecked")
 public class DiscordUtils {
     /**
      * A mapping of the arguments that have overriden module data
@@ -333,7 +334,7 @@ public class DiscordUtils {
      * @param plain Whether the expression should be parsed as a plain string
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain) {
+    public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         final String data = StringUtils.getOrDefault(input);
 
         if (!plain) {
@@ -352,8 +353,10 @@ public class DiscordUtils {
             }
 
             // Perform variable replacement before compilation
+            final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
+
+            // Phase 1: Override System
             if (!StringUtils.isNullOrEmpty(overrideId)) {
-                VariableReplacementTransformer transformer = new VariableReplacementTransformer();
                 for (String placeholderName : placeholderData.keySet()) {
                     transformer.addReplacer(placeholderName, () -> {
                         final String overrideName = "overrides." + placeholderName + "." + overrideId;
@@ -363,8 +366,12 @@ public class DiscordUtils {
                                 ) ? overrideName : placeholderName;
                     });
                 }
-                result.accept(transformer);
             }
+            // Phase 2: args field (Pair<String, Supplier<String>>...)
+            for (Pair<String, Supplier<String>> replacement : replacements) {
+                transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
+            }
+            result.accept(transformer);
 
             final Script script = Compiler.compile(result);
             return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
@@ -374,14 +381,14 @@ public class DiscordUtils {
     }
 
     /**
-     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, boolean)}
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, boolean, Pair[])}
      *
      * @param input The input expression to interpret
      * @param plain Whether the expression should be parsed as a plain string
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input, final String overrideId, final boolean plain) {
-        return compileData(input, overrideId, plain).get().toString();
+    public String getResult(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
+        return compileData(input, overrideId, plain, replacements).get().toString();
     }
 
     /**
@@ -390,18 +397,18 @@ public class DiscordUtils {
      * @param input The input expression to interpret
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final String overrideId) {
-        return compileData(input, overrideId, false);
+    public Supplier<Value> compileData(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
+        return compileData(input, overrideId, false, replacements);
     }
 
     /**
-     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, boolean)}
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, Pair[])}
      *
      * @param input The input expression to interpret
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input, final String overrideId) {
-        return getResult(input, overrideId, false);
+    public String getResult(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
+        return getResult(input, overrideId, false, replacements);
     }
 
     /**
@@ -411,19 +418,19 @@ public class DiscordUtils {
      * @param plain Whether the expression should be parsed as a plain string
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final boolean plain) {
-        return compileData(input, null, plain);
+    public Supplier<Value> compileData(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
+        return compileData(input, null, plain, replacements);
     }
 
     /**
-     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, boolean)}
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, boolean, Pair[])}
      *
      * @param input The input expression to interpret
      * @param plain Whether the expression should be parsed as a plain string
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input, final boolean plain) {
-        return getResult(input, null, plain);
+    public String getResult(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
+        return getResult(input, null, plain, replacements);
     }
 
     /**
@@ -432,18 +439,18 @@ public class DiscordUtils {
      * @param input The input expression to interpret
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input) {
-        return compileData(input, false);
+    public Supplier<Value> compileData(final String input, final Pair<String, Supplier<String>>... replacements) {
+        return compileData(input, false, replacements);
     }
 
     /**
-     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, boolean)}
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, Pair[])}
      *
      * @param input The input expression to interpret
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input) {
-        return getResult(input, false);
+    public String getResult(final String input, final Pair<String, Supplier<String>>... replacements) {
+        return getResult(input, false, replacements);
     }
 
     /**
@@ -826,17 +833,21 @@ public class DiscordUtils {
         if (StringUtils.isValidUuid(uniqueId)) {
             syncArgument("player.uuid", StringUtils.getFromUuid(uniqueId, true));
             syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));
+        }
 
-            if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                final String playerIcon = String.format(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint, uniqueId);
-                if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(playerName)) {
-                    CraftPresence.CONFIG.displaySettings.dynamicIcons.put(playerName, playerIcon);
-                    DiscordAssetUtils.syncCustomAssets();
-                    CraftPresence.CONFIG.save();
-                }
-
-                syncArgument("player.icon", playerName);
+        if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+            final String playerIcon = compileData(String.format(
+                    CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                    StringUtils.getOrDefault(uniqueId, playerName)
+            )).get().toString();
+            if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(playerName)) {
+                CraftPresence.CONFIG.displaySettings.dynamicIcons.put(playerName, playerIcon);
+                DiscordAssetUtils.syncCustomAssets();
+                CraftPresence.CONFIG.save();
             }
+
+            syncArgument("player.icon", playerName);
         }
 
         syncArgument("general.version", ModUtils.MCVersion);

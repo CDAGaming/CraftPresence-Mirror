@@ -234,8 +234,6 @@
   "craftpresence.defaults.advanced.item_messages": "Holding {item.message.holding}",
   "craftpresence.defaults.advanced.entity_target_messages": "Targeting {entity.target.name}",
   "craftpresence.defaults.advanced.entity_riding_messages": "Riding {entity.riding.name}",
-  "craftpresence.defaults.advanced.server_icon_endpoint": "https://api.mcsrvstat.us/icon/%1$s",
-  "craftpresence.defaults.advanced.player_skin_endpoint": "https://crafatar.com/avatars/%1$s",
   "craftpresence.defaults.state.main_menu": "In the Main Menu",
   "craftpresence.defaults.state.loading": "Loading...",
   "craftpresence.defaults.state.mc.version": "Minecraft %1$s",

@@ -189,10 +189,6 @@ public class TileEntityUtils {
      * The Player's Currently equipped Boots Tag, if any
      */
     private NBTTagCompound CURRENT_BOOTS_TAG;
-    /**
-     * If the Player doesn't have any Items in the Critical Slots such as equipped items or armor
-     */
-    private boolean allItemsEmpty = false;
 
     /**
      * Clears FULL Data from this Module
@@ -241,7 +237,6 @@ public class TileEntityUtils {
         CURRENT_LEGS_TAGS.clear();
         CURRENT_BOOTS_TAGS.clear();
 
-        allItemsEmpty = true;
         isInUse = false;
 
         CraftPresence.CLIENT.removeArguments("item", "nbt.item");
@@ -434,7 +429,6 @@ public class TileEntityUtils {
         if (hasMainHandChanged || hasOffHandChanged ||
                 hasHelmetChanged || hasChestChanged ||
                 hasLegsChanged || hasBootsChanged) {
-            allItemsEmpty = isEmpty(CURRENT_MAIN_HAND_ITEM) && isEmpty(CURRENT_OFFHAND_ITEM) && isEmpty(CURRENT_HELMET) && isEmpty(CURRENT_CHEST) && isEmpty(CURRENT_LEGS) && isEmpty(CURRENT_BOOTS);
             updateEntityPresence();
         }
     }
