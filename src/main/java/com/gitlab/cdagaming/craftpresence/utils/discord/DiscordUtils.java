@@ -63,6 +63,8 @@ import meteordevelopment.starscript.value.Value;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 /**
@@ -79,7 +81,7 @@ public class DiscordUtils {
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
-    private final Map<String, Supplier<Value>> placeholderData = Maps.newTreeMap();
+    private final TreeMap<String, Supplier<Value>> placeholderData = Maps.newTreeMap();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to cache data for repeated images in other areas
@@ -598,7 +600,7 @@ public class DiscordUtils {
      * @return A List of the entries that satisfy the method conditions
      */
     public Map<String, String> getArguments(final boolean allowNullEntries, final String... args) {
-        final List<String> items = Lists.newArrayList(placeholderData.keySet());
+        final Set<String> items = Maps.newTreeMap(placeholderData).keySet();
         final Map<String, String> list = Maps.newTreeMap();
 
         for (String item : items) {
