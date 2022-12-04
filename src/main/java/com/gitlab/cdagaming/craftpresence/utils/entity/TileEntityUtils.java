@@ -244,7 +244,7 @@ public class TileEntityUtils {
         allItemsEmpty = true;
         isInUse = false;
 
-        CraftPresence.CLIENT.removeArguments("item");
+        CraftPresence.CLIENT.removeArguments("item", "nbt.item");
         CraftPresence.CLIENT.clearOverride("item");
     }
 

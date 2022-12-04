@@ -214,7 +214,7 @@ public class ServerUtils {
             requestedServerData = null;
         }
 
-        CraftPresence.CLIENT.removeArguments("server");
+        CraftPresence.CLIENT.removeArguments("server", "world", "player");
         CraftPresence.CLIENT.clearOverride("server");
         CraftPresence.CLIENT.clearPartyData(true, false);
     }

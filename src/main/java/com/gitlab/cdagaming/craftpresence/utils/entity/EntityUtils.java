@@ -124,7 +124,7 @@ public class EntityUtils {
         CURRENT_RIDING_TAGS.clear();
 
         isInUse = false;
-        CraftPresence.CLIENT.removeArguments("entity");
+        CraftPresence.CLIENT.removeArguments("entity", "nbt.entity");
         CraftPresence.CLIENT.clearOverride("entity.target", "entity.riding");
     }
 
