@@ -244,26 +244,26 @@ public class EntityUtils {
         // Extend Arguments, if tags available
         if (!CURRENT_TARGET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_TARGET_TAGS) {
-                CraftPresence.CLIENT.syncArgument("entity.target.nbt." + tagName, CURRENT_TARGET_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.entity.target." + tagName, CURRENT_TARGET_TAG.getTag(tagName).toString(), true);
             }
         }
 
         if (!CURRENT_RIDING_TAGS.isEmpty()) {
             for (String tagName : CURRENT_RIDING_TAGS) {
-                CraftPresence.CLIENT.syncArgument("entity.riding.nbt." + tagName, CURRENT_RIDING_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.entity.riding." + tagName, CURRENT_RIDING_TAG.getTag(tagName).toString(), true);
             }
         }
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
-            CraftPresence.CLIENT.syncOverride("entity.target", currentTargetData != null ? currentTargetData : defaultTargetData);
+            CraftPresence.CLIENT.syncOverride(currentTargetData != null ? currentTargetData : defaultTargetData, "entity.target.message", "entity.target.icon");
             CraftPresence.CLIENT.syncArgument("entity.target.message", currentTargetMessage);
             CraftPresence.CLIENT.syncArgument("entity.target.icon", CraftPresence.CLIENT.imageOf("entity.target.icon", true, formattedTargetIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
         } else {
             CraftPresence.CLIENT.removeArguments("entity.target");
         }
         if (CURRENT_RIDING != null) {
-            CraftPresence.CLIENT.syncOverride("entity.riding", currentRidingData != null ? currentRidingData : defaultRidingData);
+            CraftPresence.CLIENT.syncOverride(currentRidingData != null ? currentRidingData : defaultRidingData, "entity.riding.message", "entity.riding.icon");
             CraftPresence.CLIENT.syncArgument("entity.riding.message", currentRidingMessage);
             CraftPresence.CLIENT.syncArgument("entity.riding.icon", CraftPresence.CLIENT.imageOf("entity.riding.icon", true, formattedRidingIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
         } else {

@@ -24,10 +24,15 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also
       removed, since we don't use Arrays in this new system
 * Added the ability for Module elements to supply their own `PresenceData`
-    * When supplied and enabled, this will allow an event to become the generic event rather then simple argument
-      replacement
-    * This is similar to the
-      way [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) presents it's data
+    * When supplied and enabled, this will do one of two things:
+        * If `useAsMain` is enabled, this will allow an event to become the generic event rather then simple argument
+          replacement, which is similar to the
+          way [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) presents it's
+          data.
+        * Otherwise, if `useAsMain` is disabled, this allows a placeholder to be interpreted differently depending on
+          the RPC field that placeholder is within. An example of this would be being able to make `&DIMENSION&`
+          equal `this` if it is used in the `Details` Presence
+          Field, while equaling `that` if used in the `Game State` Presence Field.
 * Added more flexibility and usage to endpoint icons, including the addition of the `allowEndpointIcons`
     * For users, the new usages also include fetching the server icon in the Server Settings Scroll Lists, if the Base64
       icon is unavailable

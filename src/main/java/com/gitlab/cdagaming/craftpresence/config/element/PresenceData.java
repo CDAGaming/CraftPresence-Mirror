@@ -38,6 +38,7 @@ public class PresenceData extends Module implements Serializable {
     private static PresenceData DEFAULT;
 
     public boolean enabled = true;
+    public boolean useAsMain = false;
     public String details = "";
     public String gameState = "";
     public String largeImageKey = "";
@@ -58,6 +59,7 @@ public class PresenceData extends Module implements Serializable {
     public PresenceData(PresenceData other) {
         if (other != null) {
             enabled = other.enabled;
+            useAsMain = other.useAsMain;
             setDetails(other.details);
             setGameState(other.gameState);
             setLargeImage(other.largeImageKey, other.largeImageText);

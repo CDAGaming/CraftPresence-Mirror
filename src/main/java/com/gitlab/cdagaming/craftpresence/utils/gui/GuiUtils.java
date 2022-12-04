@@ -423,7 +423,7 @@ public class GuiUtils {
         CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
         CraftPresence.CLIENT.syncArgument("screen.class", MappingUtils.getClassName(CURRENT_GUI_CLASS));
 
-        CraftPresence.CLIENT.syncOverride("screen", currentData != null ? currentData : defaultData);
+        CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("screen.icon", CraftPresence.CLIENT.imageOf("screen.icon", true, formattedIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon));
     }

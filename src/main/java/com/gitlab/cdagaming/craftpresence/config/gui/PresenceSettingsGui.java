@@ -53,7 +53,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
     private final Consumer<PresenceData> onChangedCallback;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat;
-    private CheckBoxControl enabledCheckbox;
+    private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
 
     PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
         super(parentScreen);
@@ -125,6 +125,19 @@ public class PresenceSettingsGui extends PaginatedScreen {
                             () -> CraftPresence.GUIS.drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
                                             ModUtils.TRANSLATOR.translate("gui.config.comment.display.enabled")
+                                    ), this, true
+                            )
+                    ), startPage
+            );
+            useAsMainCheckbox = addControl(
+                    new CheckBoxControl(
+                            calc2, CraftPresence.GUIS.getButtonY(5),
+                            "gui.config.name.display.use_as_main",
+                            PRESENCE.useAsMain,
+                            null,
+                            () -> CraftPresence.GUIS.drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
                                     ), this, true
                             )
                     ), startPage
@@ -432,6 +445,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
                             CraftPresence.CONFIG.hasChanged = true;
                             CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                             PRESENCE.enabled = enabledCheckbox.isChecked();
+                        }
+                        if (useAsMainCheckbox.isChecked() != PRESENCE.useAsMain) {
+                            CraftPresence.CONFIG.hasChanged = true;
+                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                            PRESENCE.useAsMain = useAsMainCheckbox.isChecked();
                         }
                     }
                     if (!largeImageKeyFormat.getControlMessage().equals(PRESENCE.largeImageKey)) {

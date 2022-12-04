@@ -164,7 +164,7 @@ public class DimensionUtils {
 
         CraftPresence.CLIENT.syncArgument("dimension.name", CURRENT_DIMENSION_NAME);
 
-        CraftPresence.CLIENT.syncOverride("dimension", currentData != null ? currentData : defaultData);
+        CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "dimension.message", "dimension.icon");
         CraftPresence.CLIENT.syncArgument("dimension.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("dimension.icon", CraftPresence.CLIENT.imageOf("dimension.icon", true, formattedIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon));
     }

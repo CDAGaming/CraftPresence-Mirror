@@ -127,7 +127,7 @@ public class HypherConverter implements DataMigrator {
                         name = name.replaceFirst("biome:", "");
                     }
                     final ModuleData data = new ModuleData()
-                            .setData(convertPresenceData(entry, areOverridesEnabled));
+                            .setData(convertPresenceData(entry, areOverridesEnabled, true));
                     (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
                 }
             }
@@ -174,7 +174,7 @@ public class HypherConverter implements DataMigrator {
                 if (conf.get("entry") != null) {
                     for (AbstractConfig entry : (List<AbstractConfig>) conf.get("entry")) {
                         final ModuleData data = new ModuleData()
-                                .setData(convertPresenceData(entry, areOverridesEnabled));
+                                .setData(convertPresenceData(entry, areOverridesEnabled, true));
                         instance.serverSettings.serverData.put(entry.get("ip"), data);
                     }
                 }
@@ -196,9 +196,10 @@ public class HypherConverter implements DataMigrator {
         return result;
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final ConfigFlag... flags) {
+    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain, final ConfigFlag... flags) {
         final PresenceData data = new PresenceData();
         data.enabled = isEnabled;
+        data.useAsMain = useAsMain;
         data.details = processPlaceholder(entry.get("description"));
         data.gameState = processPlaceholder(entry.get("state"));
         if (isActive(ConfigFlag.USE_IMAGE_POOLS)) {
@@ -229,8 +230,12 @@ public class HypherConverter implements DataMigrator {
         return data;
     }
 
+    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean useAsMain, final ConfigFlag... flags) {
+        return convertPresenceData(entry, entry.getOrElse("enabled", true), useAsMain, flags);
+    }
+
     private PresenceData convertPresenceData(final AbstractConfig entry, final ConfigFlag... flags) {
-        return convertPresenceData(entry, entry.getOrElse("enabled", true), flags);
+        return convertPresenceData(entry, true, flags);
     }
 
     private boolean isActive(final ConfigFlag flag) {

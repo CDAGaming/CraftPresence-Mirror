@@ -58,6 +58,7 @@ import meteordevelopment.starscript.Starscript;
 import meteordevelopment.starscript.compiler.Compiler;
 import meteordevelopment.starscript.compiler.Parser;
 import meteordevelopment.starscript.utils.Error;
+import meteordevelopment.starscript.utils.VariableReplacementTransformer;
 import meteordevelopment.starscript.value.Value;
 
 import java.util.List;
@@ -332,7 +333,7 @@ public class DiscordUtils {
      * @param plain Whether the expression should be parsed as a plain string
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final boolean plain) {
+    public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain) {
         final String data = StringUtils.getOrDefault(input);
 
         if (!plain) {
@@ -350,11 +351,68 @@ public class DiscordUtils {
                 return () -> Value.string("");
             }
 
+            // Perform variable replacement before compilation
+            if (!StringUtils.isNullOrEmpty(overrideId)) {
+                VariableReplacementTransformer transformer = new VariableReplacementTransformer();
+                for (String placeholderName : placeholderData.keySet()) {
+                    transformer.addReplacer(placeholderName, () -> {
+                        final String overrideName = "overrides." + placeholderName + "." + overrideId;
+                        return placeholderData.containsKey(overrideName) &&
+                                !StringUtils.isNullOrEmpty(
+                                        placeholderData.get(overrideName).get().toString()
+                                ) ? overrideName : placeholderName;
+                    });
+                }
+                result.accept(transformer);
+            }
+
             final Script script = Compiler.compile(result);
             return () -> Value.string(scriptEngine.run(script).toString());
         } else {
             return () -> Value.string(data);
         }
+    }
+
+    /**
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, boolean)}
+     *
+     * @param input The input expression to interpret
+     * @param plain Whether the expression should be parsed as a plain string
+     * @return the result of the supplier containing the output
+     */
+    public String getResult(final String input, final String overrideId, final boolean plain) {
+        return compileData(input, overrideId, plain).get().toString();
+    }
+
+    /**
+     * Compiles and Parses the specified input, via {@link Starscript}
+     *
+     * @param input The input expression to interpret
+     * @return the supplier containing the output
+     */
+    public Supplier<Value> compileData(final String input, final String overrideId) {
+        return compileData(input, overrideId, false);
+    }
+
+    /**
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, boolean)}
+     *
+     * @param input The input expression to interpret
+     * @return the result of the supplier containing the output
+     */
+    public String getResult(final String input, final String overrideId) {
+        return getResult(input, overrideId, false);
+    }
+
+    /**
+     * Compiles and Parses the specified input, via {@link Starscript}
+     *
+     * @param input The input expression to interpret
+     * @param plain Whether the expression should be parsed as a plain string
+     * @return the supplier containing the output
+     */
+    public Supplier<Value> compileData(final String input, final boolean plain) {
+        return compileData(input, null, plain);
     }
 
     /**
@@ -365,7 +423,7 @@ public class DiscordUtils {
      * @return the result of the supplier containing the output
      */
     public String getResult(final String input, final boolean plain) {
-        return compileData(input, plain).get().toString();
+        return getResult(input, null, plain);
     }
 
     /**
@@ -385,7 +443,7 @@ public class DiscordUtils {
      * @return the result of the supplier containing the output
      */
     public String getResult(final String input) {
-        return compileData(input).get().toString();
+        return getResult(input, false);
     }
 
     /**
@@ -398,18 +456,56 @@ public class DiscordUtils {
     }
 
     /**
+     * Sync {@link ModuleData} overrides for the specified placeholder(s)
+     *
+     * @param data The data to attach to the specified argument
+     * @param args The Specified Arguments to Synchronize for
+     */
+    public void syncOverride(ModuleData data, String... args) {
+        PresenceData presenceInfo = null;
+        if (data != null && Config.getProperty(data, "data") != null) {
+            presenceInfo = data.getData();
+        }
+        final boolean isPresenceOn = presenceInfo != null && presenceInfo.enabled;
+
+        for (String argumentName : args) {
+            if (!StringUtils.isNullOrEmpty(argumentName)) {
+                overrideData.put(argumentName, data);
+
+                final String prefix = "overrides." + argumentName;
+                if (isPresenceOn && !presenceInfo.useAsMain) {
+                    syncArgument(prefix + ".details", presenceInfo.details);
+                    syncArgument(prefix + ".gameState", presenceInfo.gameState);
+                    syncArgument(prefix + ".largeImageKey", presenceInfo.largeImageKey);
+                    syncArgument(prefix + ".largeImageText", presenceInfo.largeImageText);
+                    syncArgument(prefix + ".smallImageKey", presenceInfo.smallImageKey);
+                    syncArgument(prefix + ".smallImageText", presenceInfo.smallImageText);
+
+                    int buttonIndex = 1;
+                    for (Button buttonInfo : presenceInfo.buttons.values()) {
+                        final String buttonId = "button_" + buttonIndex;
+                        syncArgument(prefix + "." + buttonId + ".label", buttonInfo.label);
+                        syncArgument(prefix + "." + buttonId + ".url", buttonInfo.url);
+                        buttonIndex++;
+                    }
+                } else {
+                    removeArguments(prefix);
+                }
+            }
+        }
+        if (isPresenceOn && presenceInfo.useAsMain) {
+            forcedData = data.getData();
+        }
+    }
+
+    /**
      * Sync {@link ModuleData} overrides for the specified placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the specified argument
      */
     public void syncOverride(String argumentName, ModuleData data) {
-        if (!StringUtils.isNullOrEmpty(argumentName)) {
-            overrideData.put(argumentName, data);
-        }
-        if (data != null && Config.getProperty(data, "data") != null && data.getData().enabled) {
-            forcedData = data.getData();
-        }
+        syncOverride(data, argumentName);
     }
 
     /**
@@ -478,7 +574,7 @@ public class DiscordUtils {
         final List<String> items = Lists.newArrayList(placeholderData.keySet());
         for (String key : items) {
             for (String format : args) {
-                if (key.startsWith(format) || key.contains(format)) {
+                if (key.startsWith(format)) {
                     scriptEngine.remove(key);
                     placeholderData.remove(key);
                     break;
@@ -502,7 +598,7 @@ public class DiscordUtils {
             boolean addToList = args == null || args.length < 1 || args[0] == null;
             if (!addToList) {
                 for (String argument : args) {
-                    if (!StringUtils.isNullOrEmpty(argument) && item.contains(argument)) {
+                    if (!StringUtils.isNullOrEmpty(argument) && item.startsWith(argument)) {
                         addToList = true;
                         break;
                     }
@@ -957,19 +1053,19 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence(final PresenceData configData) {
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(getResult(configData.details), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(getResult(configData.gameState), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(getResult(configData.details, "details"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.largeImageKey));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.smallImageKey));
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.largeImageKey, "largeImageKey"));
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.smallImageKey, "smallImageKey"));
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 getResult(LARGE_IMAGE_ASSET.getUrl()) : LARGE_IMAGE_ASSET.getName()) : "";
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 getResult(SMALL_IMAGE_ASSET.getUrl()) : SMALL_IMAGE_ASSET.getName()) : "";
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
@@ -980,11 +1076,11 @@ public class DiscordUtils {
                     !buttonElement.getKey().equalsIgnoreCase("default") &&
                     !StringUtils.isNullOrEmpty(buttonElement.getValue().label)) {
                 String label = StringUtils.formatWord(
-                        getResult(buttonElement.getValue().label),
+                        getResult(buttonElement.getValue().label, overrideId + ".label"),
                         !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
                 );
                 String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().url) ? getResult(
-                        buttonElement.getValue().url
+                        buttonElement.getValue().url, overrideId + ".label"
                 ) : "";
 
                 label = sanitizePlaceholders(label);

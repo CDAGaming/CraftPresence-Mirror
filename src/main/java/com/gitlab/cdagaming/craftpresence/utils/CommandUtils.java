@@ -155,7 +155,7 @@ public class CommandUtils {
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
 
         CraftPresence.CLIENT.clearPartyData(true, false);
-        CraftPresence.CLIENT.syncOverride("menu", currentData);
+        CraftPresence.CLIENT.syncOverride(currentData, "menu.message", "menu.icon");
         CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("menu.icon", CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon));
 
@@ -177,7 +177,7 @@ public class CommandUtils {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
 
-        CraftPresence.CLIENT.syncOverride("menu", currentData);
+        CraftPresence.CLIENT.syncOverride(currentData, "menu.message", "menu.icon");
         CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("menu.icon", CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon));
 

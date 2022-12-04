@@ -570,7 +570,7 @@ public class ServerUtils {
         }
         currentServerIcon = formattedIcon;
 
-        CraftPresence.CLIENT.syncOverride("server", resultData);
+        CraftPresence.CLIENT.syncOverride(resultData, "server.message", "server.icon");
         CraftPresence.CLIENT.syncArgument("server.message", currentServerMessage);
         CraftPresence.CLIENT.syncArgument("server.icon", CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon));
         queuedForUpdate = false;

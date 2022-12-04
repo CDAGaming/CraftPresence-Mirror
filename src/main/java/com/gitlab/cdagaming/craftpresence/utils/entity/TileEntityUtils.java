@@ -471,42 +471,42 @@ public class TileEntityUtils {
         CraftPresence.CLIENT.syncArgument("item.main_hand.message", mainItemMessage);
         if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
             for (String tagName : CURRENT_MAIN_HAND_ITEM_TAGS) {
-                CraftPresence.CLIENT.syncArgument("item.main_hand.nbt." + tagName, CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.item.main_hand." + tagName, CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString(), true);
             }
         }
         CraftPresence.CLIENT.syncArgument("item.off_hand.name", CURRENT_OFFHAND_ITEM_NAME);
         CraftPresence.CLIENT.syncArgument("item.off_hand.message", offHandItemMessage);
         if (!CURRENT_OFFHAND_ITEM_TAGS.isEmpty()) {
             for (String tagName : CURRENT_OFFHAND_ITEM_TAGS) {
-                CraftPresence.CLIENT.syncArgument("item.off_hand.nbt." + tagName, CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.item.off_hand." + tagName, CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString(), true);
             }
         }
         CraftPresence.CLIENT.syncArgument("item.helmet.name", CURRENT_HELMET_NAME);
         CraftPresence.CLIENT.syncArgument("item.helmet.message", helmetMessage);
         if (!CURRENT_HELMET_TAGS.isEmpty()) {
             for (String tagName : CURRENT_HELMET_TAGS) {
-                CraftPresence.CLIENT.syncArgument("item.helmet.nbt." + tagName, CURRENT_HELMET_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.item.helmet." + tagName, CURRENT_HELMET_TAG.getTag(tagName).toString(), true);
             }
         }
         CraftPresence.CLIENT.syncArgument("item.chestplate.name", CURRENT_CHEST_NAME);
         CraftPresence.CLIENT.syncArgument("item.chestplate.message", chestMessage);
         if (!CURRENT_CHEST_TAGS.isEmpty()) {
             for (String tagName : CURRENT_CHEST_TAGS) {
-                CraftPresence.CLIENT.syncArgument("item.chestplate.nbt." + tagName, CURRENT_CHEST_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.item.chestplate." + tagName, CURRENT_CHEST_TAG.getTag(tagName).toString(), true);
             }
         }
         CraftPresence.CLIENT.syncArgument("item.leggings.name", CURRENT_LEGS_NAME);
         CraftPresence.CLIENT.syncArgument("item.leggings.message", legsMessage);
         if (!CURRENT_LEGS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_LEGS_TAGS) {
-                CraftPresence.CLIENT.syncArgument("item.leggings.nbt." + tagName, CURRENT_LEGS_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.item.leggings." + tagName, CURRENT_LEGS_TAG.getTag(tagName).toString(), true);
             }
         }
         CraftPresence.CLIENT.syncArgument("item.boots.name", CURRENT_BOOTS_NAME);
         CraftPresence.CLIENT.syncArgument("item.boots.message", bootsMessage);
         if (!CURRENT_BOOTS_TAGS.isEmpty()) {
             for (String tagName : CURRENT_BOOTS_TAGS) {
-                CraftPresence.CLIENT.syncArgument("item.boots.nbt." + tagName, CURRENT_BOOTS_TAG.getTag(tagName).toString(), true);
+                CraftPresence.CLIENT.syncArgument("nbt.item.boots." + tagName, CURRENT_BOOTS_TAG.getTag(tagName).toString(), true);
             }
         }
     }

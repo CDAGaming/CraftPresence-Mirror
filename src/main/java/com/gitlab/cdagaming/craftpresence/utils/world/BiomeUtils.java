@@ -160,7 +160,7 @@ public class BiomeUtils {
 
         CraftPresence.CLIENT.syncArgument("biome.name", CURRENT_BIOME_NAME);
 
-        CraftPresence.CLIENT.syncOverride("biome", currentData != null ? currentData : defaultData);
+        CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "biome.message", "biome.icon");
         CraftPresence.CLIENT.syncArgument("biome.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("biome.icon", CraftPresence.CLIENT.imageOf("biome.icon", true, formattedIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon));
     }
