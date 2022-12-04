@@ -234,7 +234,7 @@ public class ScrollableListControl extends GuiSlot {
     public void setupAliasData() {
         entryAliases.clear();
 
-        for (String originalName : itemList) {
+        for (String originalName : Lists.newArrayList(itemList)) {
             String displayName = originalName;
             if (renderType == RenderType.EntityData) {
                 if (StringUtils.isValidUuid(originalName)) {
