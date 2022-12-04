@@ -418,7 +418,7 @@ public class FileUtils {
                             "*.mixin.*", "*.mixins.*"
                     )
                     .disableModuleScanning();
-            if (UrlUtils.JAVA_SPEC < 16) {
+            if (MappingUtils.JAVA_SPEC < 16) {
                 // If we are below Java 16, we can just use the Thread's classloader
                 // See: https://github.com/classgraph/classgraph/wiki#running-on-jdk-16
                 graphInfo.overrideClassLoaders(ModUtils.CLASS_LOADER);

@@ -39,6 +39,10 @@ import java.util.Set;
  * @author CDAGaming, wagyourtail
  */
 public class MappingUtils {
+    /**
+     * The Java Specification Version
+     */
+    public static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
     private static Map<String, String> classMap = null;
     private static String filePath = "/mappings.srg";
 

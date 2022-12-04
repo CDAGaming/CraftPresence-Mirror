@@ -43,10 +43,6 @@ import java.nio.charset.Charset;
  */
 public class UrlUtils {
     /**
-     * The Java Specification Version
-     */
-    public static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
-    /**
      * The User Agent to Identify As when Accessing other URLs
      */
     private static final String USER_AGENT = ModUtils.MOD_ID + "/" + ModUtils.MCVersion;
@@ -125,7 +121,7 @@ public class UrlUtils {
      * @throws Exception If a connection is unable to be established
      */
     public static InputStream getURLStream(final URL url) throws Exception {
-        if (JAVA_SPEC < 1.8) {
+        if (MappingUtils.JAVA_SPEC < 1.8) {
             // Java Versions below 1.8 do not supply a modern protocol_version
             // which can break certain URL requests.
             // To avoid this, TLSv1.2 is used as the protocol, which is equivalent to 1.8s default
