@@ -61,10 +61,7 @@ import meteordevelopment.starscript.utils.Error;
 import meteordevelopment.starscript.utils.VariableReplacementTransformer;
 import meteordevelopment.starscript.value.Value;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -337,7 +334,7 @@ public class DiscordUtils {
      * @return the supplier containing the output
      */
     public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
-        final TreeMap<String, Supplier<Value>> placeholders = Maps.newTreeMap(placeholderData);
+        final Map<String, Supplier<Value>> placeholders = Collections.unmodifiableMap(placeholderData);
         String data = StringUtils.getOrDefault(input);
 
         if (!plain) {
@@ -612,7 +609,7 @@ public class DiscordUtils {
      * @return A List of the entries that satisfy the method conditions
      */
     public Map<String, String> getArguments(final boolean allowNullEntries, final String... args) {
-        final TreeMap<String, Supplier<Value>> items = Maps.newTreeMap(placeholderData);
+        final Map<String, Supplier<Value>> items = Collections.unmodifiableMap(placeholderData);
         final Map<String, String> list = Maps.newTreeMap();
 
         for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
