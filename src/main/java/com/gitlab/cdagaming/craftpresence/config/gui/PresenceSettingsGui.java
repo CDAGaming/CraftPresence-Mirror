@@ -513,7 +513,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
-                                        CraftPresence.CLIENT.generateArgumentMessage())
+                                        CraftPresence.CLIENT.generateArgumentMessage("general", "custom"))
                         ), this, true
                 );
             }
@@ -526,7 +526,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 CraftPresence.GUIS.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
-                                        CraftPresence.CLIENT.generateArgumentMessage())
+                                        CraftPresence.CLIENT.generateArgumentMessage("general", "custom"))
                         ), this, true
                 );
             }

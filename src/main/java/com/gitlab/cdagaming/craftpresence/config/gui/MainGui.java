@@ -135,7 +135,7 @@ public class MainGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                                        CraftPresence.CLIENT.generateArgumentMessage("server"))
+                                                        CraftPresence.CLIENT.generateArgumentMessage("server", "world", "player"))
                                         ), this, true
                                 );
                             }

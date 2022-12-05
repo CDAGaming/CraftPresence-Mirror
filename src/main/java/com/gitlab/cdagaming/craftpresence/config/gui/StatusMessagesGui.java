@@ -52,7 +52,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                     "mainMenuData", () -> CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("general"))
+                                    CraftPresence.CLIENT.generateArgumentMessage("general", "custom"))
                     ), this, true
             )
             ))
@@ -60,7 +60,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                     "loadingData", () -> CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("general"))
+                                    CraftPresence.CLIENT.generateArgumentMessage("general", "custom"))
                     ), this, true
             )
             ))
@@ -68,7 +68,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                     "lanData", () -> CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("server"))
+                                    CraftPresence.CLIENT.generateArgumentMessage("server", "world", "player"))
                     ), this, true
             )
             ))
@@ -76,7 +76,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                     "singleplayerData", () -> CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("server"))
+                                    CraftPresence.CLIENT.generateArgumentMessage("server", "world", "player"))
                     ), this, true
             )
             ))

@@ -61,6 +61,7 @@ import meteordevelopment.starscript.utils.Error;
 import meteordevelopment.starscript.utils.VariableReplacementTransformer;
 import meteordevelopment.starscript.value.Value;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -728,17 +729,22 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
+     * @param formats The argument formats to interpret
      * @param addExtraData   Whether to add additional data to the string
      * @param args           The data to interpret
      * @return the parsable string
      */
-    public String generateArgumentMessage(final String argumentFormat, final boolean addExtraData, final Map<String, String> args) {
-        final String titleString = String.format("%s%s:",
+    public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, String> args) {
+        final StringBuilder resultString = new StringBuilder(
                 ModUtils.TRANSLATOR.translate(
                         String.format("%s.placeholders.title", ModUtils.MOD_ID)
-                ), (!StringUtils.isNullOrEmpty(argumentFormat) ? (" (" + argumentFormat.toLowerCase() + ")") : "")
+                )
         );
+        if (!formats.isEmpty()) {
+            resultString.append(" (").append(String.join(",", formats)).append(")");
+        }
+        resultString.append(":");
+
         final StringBuilder placeholderString = new StringBuilder();
         if (args != null && !args.isEmpty()) {
             for (Map.Entry<String, String> argData : args.entrySet()) {
@@ -775,37 +781,29 @@ public class DiscordUtils {
         if (placeholderString.length() == 0) {
             placeholderString.append("\\n - N/A");
         }
-        return titleString + placeholderString;
+        resultString.append(placeholderString);
+        return resultString.toString();
     }
 
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
      * @param addExtraData   Whether to add additional data to the string
+     * @param formats The argument formats to interpret
      * @return the parsable string
      */
-    public String generateArgumentMessage(final String argumentFormat, final boolean addExtraData) {
-        return generateArgumentMessage(argumentFormat, addExtraData, getArguments(argumentFormat));
+    public String generateArgumentMessage(final boolean addExtraData, final String... formats) {
+        return generateArgumentMessage(Arrays.asList(formats), addExtraData, getArguments(formats));
     }
 
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param argumentFormat The primary argument format to interpret
+     * @param formats The argument formats to interpret
      * @return the parsable string
      */
-    public String generateArgumentMessage(final String argumentFormat) {
-        return generateArgumentMessage(argumentFormat, CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews);
-    }
-
-    /**
-     * Generate a parsable display string for the argument data provided
-     *
-     * @return the parsable string
-     */
-    public String generateArgumentMessage() {
-        return generateArgumentMessage(null);
+    public String generateArgumentMessage(final String... formats) {
+        return generateArgumentMessage(CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews, formats);
     }
 
     /**
