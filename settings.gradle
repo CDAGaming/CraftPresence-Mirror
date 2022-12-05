@@ -16,6 +16,10 @@ pluginManagement {
             name = 'WagYourTail'
             url = "https://maven.wagyourtail.xyz/snapshots"
         }
+        maven {
+            name = 'OSS SonaType'
+            url = "https://s01.oss.sonatype.org/content/repositories/releases"
+        }
         mavenCentral()
         gradlePluginPortal() {
             content {
