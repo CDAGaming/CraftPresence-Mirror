@@ -304,24 +304,21 @@ public class ScrollableListControl extends GuiSlot {
                 }
                 texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
             } else if (renderType == RenderType.EntityData) {
-                if (StringUtils.isValidUuid(originalName)) {
-                    // If the entity is classified via Uuid, assume it is a player's and get their altFace texture
-                    final String fullUuid = StringUtils.getFromUuid(originalName, false);
-                    final String trimmedUuid = StringUtils.getFromUuid(originalName, true);
-                    if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
-                            !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                        final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
-                                        CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
-                                        fullUuid
-                                ),
-                                new Pair<>("player.name", () -> ""),
-                                new Pair<>("player.uuid.full", () -> fullUuid),
-                                new Pair<>("player.uuid", () -> trimmedUuid)
-                        ).get().toString();
-                        texture = ImageUtils.getTextureFromUrl(fullUuid, endpointUrl);
-                        if (currentScreen.isDebugMode()) {
-                            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
-                        }
+                final boolean isPlayer = CraftPresence.ENTITIES.PLAYER_BINDINGS.containsKey(originalName);
+                final boolean isValidUuid = StringUtils.isValidUuid(originalName);
+                if (isPlayer && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                        !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                    final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
+                                    CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                                    originalName
+                            ),
+                            new Pair<>("player.name", () -> originalName),
+                            new Pair<>("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
+                            new Pair<>("player.uuid", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
+                    ).get().toString();
+                    texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
+                    if (currentScreen.isDebugMode()) {
+                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                     }
                 }
             } else if (renderType == RenderType.ItemData) {

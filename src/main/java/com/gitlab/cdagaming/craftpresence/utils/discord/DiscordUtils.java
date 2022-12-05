@@ -337,9 +337,40 @@ public class DiscordUtils {
      * @return the supplier containing the output
      */
     public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
-        final String data = StringUtils.getOrDefault(input);
+        final TreeMap<String, Supplier<Value>> placeholders = Maps.newTreeMap(placeholderData);
+        String data = StringUtils.getOrDefault(input);
 
         if (!plain) {
+            // Perform variable replacement before compilation
+            final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
+
+            // Phase 1: Override System
+            if (!StringUtils.isNullOrEmpty(overrideId)) {
+                for (String placeholderName : placeholders.keySet()) {
+                    if (!placeholderName.startsWith("overrides.")) {
+                        transformer.addReplacer(placeholderName, () -> {
+                            final String overrideName = "overrides." + placeholderName + "." + overrideId;
+                            return placeholders.containsKey(overrideName) &&
+                                    !StringUtils.isNullOrEmpty(
+                                            placeholders.get(overrideName).get().toString()
+                                    ) ? overrideName : placeholderName;
+                        });
+                    }
+                }
+            }
+            // Phase 2: args field (Pair<String, Supplier<String>>...)
+            for (Pair<String, Supplier<String>> replacement : replacements) {
+                final String value = replacement.getSecond().get();
+                if (placeholders.containsKey(value)) {
+                    transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
+                } else {
+                    data = data.replace(
+                            replacement.getFirst(),
+                            !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
+                    );
+                }
+            }
+
             Parser.Result result = null;
             try {
                 result = Parser.parse(data);
@@ -353,32 +384,13 @@ public class DiscordUtils {
                 }
                 return () -> Value.string("");
             }
-
-            // Perform variable replacement before compilation
-            final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
-
-            // Phase 1: Override System
-            if (!StringUtils.isNullOrEmpty(overrideId)) {
-                for (String placeholderName : placeholderData.keySet()) {
-                    transformer.addReplacer(placeholderName, () -> {
-                        final String overrideName = "overrides." + placeholderName + "." + overrideId;
-                        return placeholderData.containsKey(overrideName) &&
-                                !StringUtils.isNullOrEmpty(
-                                        placeholderData.get(overrideName).get().toString()
-                                ) ? overrideName : placeholderName;
-                    });
-                }
-            }
-            // Phase 2: args field (Pair<String, Supplier<String>>...)
-            for (Pair<String, Supplier<String>> replacement : replacements) {
-                transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
-            }
             result.accept(transformer);
 
             final Script script = Compiler.compile(result);
             return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
         } else {
-            return () -> Value.string(data);
+            String finalData = data;
+            return () -> Value.string(finalData);
         }
     }
 
@@ -600,10 +612,11 @@ public class DiscordUtils {
      * @return A List of the entries that satisfy the method conditions
      */
     public Map<String, String> getArguments(final boolean allowNullEntries, final String... args) {
-        final Set<String> items = Maps.newTreeMap(placeholderData).keySet();
+        final TreeMap<String, Supplier<Value>> items = Maps.newTreeMap(placeholderData);
         final Map<String, String> list = Maps.newTreeMap();
 
-        for (String item : items) {
+        for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
+            final String item = entry.getKey();
             boolean addToList = args == null || args.length < 1 || args[0] == null;
             if (!addToList) {
                 for (String argument : args) {
@@ -614,7 +627,7 @@ public class DiscordUtils {
                 }
             }
             if (addToList) {
-                final String value = placeholderData.get(item).get().getString();
+                final String value = entry.getValue().get().toString();
                 if (allowNullEntries || !StringUtils.isNullOrEmpty(value)) {
                     list.put(item, value);
                 }
