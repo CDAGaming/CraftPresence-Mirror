@@ -196,9 +196,7 @@ public class DiscordAssetUtils {
             if (!StringUtils.isNullOrEmpty(asset.getId())) {
                 return getDiscordAssetUrl(asset.getName());
             } else {
-                return StringUtils.sequentialReplaceAnyCase(
-                        asset.getUrl(), CraftPresence.CLIENT.getArguments()
-                );
+                return CraftPresence.CLIENT.getResult(asset.getUrl());
             }
         }
         return "";
