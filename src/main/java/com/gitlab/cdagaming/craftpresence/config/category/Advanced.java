@@ -59,7 +59,7 @@ public class Advanced extends Module implements Serializable {
     public Entity entitySettings = new Entity();
     public boolean allowEndpointIcons = true;
     public String serverIconEndpoint = "https://api.mcsrvstat.us/icon/{server.address != null ? server.address : server.address.raw}";
-    public String playerSkinEndpoint = "https://mc-heads.net/avatar/{player.uuid != null ? player.uuid : player.name}";
+    public String playerSkinEndpoint = "https://mc-heads.net/avatar/{player.uuid.short != null ? player.uuid.short : player.name}";
 
     @Override
     public Advanced getDefaults() {

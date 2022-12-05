@@ -314,7 +314,7 @@ public class ScrollableListControl extends GuiSlot {
                             ),
                             new Pair<>("player.name", () -> originalName),
                             new Pair<>("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
-                            new Pair<>("player.uuid", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
+                            new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
                     ).get().toString();
                     texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                     if (currentScreen.isDebugMode()) {

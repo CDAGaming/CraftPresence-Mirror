@@ -278,7 +278,7 @@
   "craftpresence.placeholders.pack.name.description": "The currently detected pack's name",
   "craftpresence.placeholders.pack.icon.description": "The currently detected pack's icon",
   "craftpresence.placeholders.player.name.description": "Your username",
-  "craftpresence.placeholders.player.uuid.description": "Your UUID (Trimmed Format)",
+  "craftpresence.placeholders.player.uuid.short.description": "Your UUID (Trimmed Format)",
   "craftpresence.placeholders.player.uuid.full.description": "Your UUID (Full Format, if valid UUID)",
   "craftpresence.placeholders.player.icon.description": "Your player head icon (If valid UUID)",
   "craftpresence.placeholders.player.position.x.description": "Your current in-game X position",

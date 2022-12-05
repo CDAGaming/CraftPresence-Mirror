@@ -77,8 +77,8 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&IGN&", "{player.icon}", IS_ICON),
             generatePair("&IGN:NAME&", "{player.name}", IS_TEXT),
             generatePair("&NAME&", "{player.name}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
-            generatePair("&IGN:UUID&", "{player.uuid}", IS_TEXT),
-            generatePair("&UUID&", "{player.uuid}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
+            generatePair("&IGN:UUID&", "{player.uuid.short}", IS_TEXT),
+            generatePair("&UUID&", "{player.uuid.short}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
             generatePair("&IGN:UUID_FULL&", "{player.uuid.full}", IS_TEXT),
             generatePair("&UUID_FULL&", "{player.uuid.full}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
             //

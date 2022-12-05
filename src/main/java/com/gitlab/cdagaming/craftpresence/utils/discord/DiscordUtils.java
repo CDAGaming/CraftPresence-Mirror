@@ -853,7 +853,7 @@ public class DiscordUtils {
         // UUID Data
         final String uniqueId = CraftPresence.session.getPlayerID();
         if (StringUtils.isValidUuid(uniqueId)) {
-            syncArgument("player.uuid", StringUtils.getFromUuid(uniqueId, true));
+            syncArgument("player.uuid.short", StringUtils.getFromUuid(uniqueId, true));
             syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));
         }
 
