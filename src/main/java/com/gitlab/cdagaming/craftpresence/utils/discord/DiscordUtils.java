@@ -61,7 +61,9 @@ import meteordevelopment.starscript.utils.Error;
 import meteordevelopment.starscript.utils.VariableReplacementTransformer;
 import meteordevelopment.starscript.value.Value;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 /**
@@ -267,8 +269,10 @@ public class DiscordUtils {
         }
 
         // Ensure Initial Data Resets properly
-        overrideData.clear();
-        placeholderData.clear();
+        synchronized (placeholderData) {
+            overrideData.clear();
+            placeholderData.clear();
+        }
         CommandUtils.isInMainMenu = false;
     }
 
@@ -334,60 +338,61 @@ public class DiscordUtils {
      * @return the supplier containing the output
      */
     public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
-        final Map<String, Supplier<Value>> placeholders = Collections.unmodifiableMap(placeholderData);
-        String data = StringUtils.getOrDefault(input);
+        synchronized (placeholderData) {
+            String data = StringUtils.getOrDefault(input);
 
-        if (!plain) {
-            // Perform variable replacement before compilation
-            final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
+            if (!plain) {
+                // Perform variable replacement before compilation
+                final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
 
-            // Phase 1: Override System
-            if (!StringUtils.isNullOrEmpty(overrideId)) {
-                for (String placeholderName : placeholders.keySet()) {
-                    if (!placeholderName.startsWith("overrides.")) {
-                        transformer.addReplacer(placeholderName, () -> {
-                            final String overrideName = "overrides." + placeholderName + "." + overrideId;
-                            return placeholders.containsKey(overrideName) &&
-                                    !StringUtils.isNullOrEmpty(
-                                            placeholders.get(overrideName).get().toString()
-                                    ) ? overrideName : placeholderName;
-                        });
+                // Phase 1: Override System
+                if (!StringUtils.isNullOrEmpty(overrideId)) {
+                    for (String placeholderName : placeholderData.keySet()) {
+                        if (!placeholderName.startsWith("overrides.")) {
+                            transformer.addReplacer(placeholderName, () -> {
+                                final String overrideName = "overrides." + placeholderName + "." + overrideId;
+                                return placeholderData.containsKey(overrideName) &&
+                                        !StringUtils.isNullOrEmpty(
+                                                placeholderData.get(overrideName).get().toString()
+                                        ) ? overrideName : placeholderName;
+                            });
+                        }
                     }
                 }
-            }
-            // Phase 2: args field (Pair<String, Supplier<String>>...)
-            for (Pair<String, Supplier<String>> replacement : replacements) {
-                final String value = replacement.getSecond().get();
-                if (placeholders.containsKey(value)) {
-                    transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
-                } else {
-                    data = data.replace(
-                            replacement.getFirst(),
-                            !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
-                    );
+                // Phase 2: args field (Pair<String, Supplier<String>>...)
+                for (Pair<String, Supplier<String>> replacement : replacements) {
+                    final String value = replacement.getSecond().get();
+                    if (placeholderData.containsKey(value)) {
+                        transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
+                    } else {
+                        data = data.replace(
+                                replacement.getFirst(),
+                                !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
+                        );
+                    }
                 }
-            }
 
-            Parser.Result result = null;
-            try {
-                result = Parser.parse(data);
-            } catch (Exception ignored) {
-            }
-
-            if (result == null || result.hasErrors()) {
-                if (result != null) {
-                    // TODO: Proper Logging
-                    for (Error error : result.errors) ModUtils.LOG.error(error.toString());
+                Parser.Result result = null;
+                try {
+                    result = Parser.parse(data);
+                } catch (Exception ignored) {
                 }
-                return () -> Value.string("");
-            }
-            result.accept(transformer);
 
-            final Script script = Compiler.compile(result);
-            return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
-        } else {
-            String finalData = data;
-            return () -> Value.string(finalData);
+                if (result == null || result.hasErrors()) {
+                    if (result != null) {
+                        // TODO: Proper Logging
+                        for (Error error : result.errors) ModUtils.LOG.error(error.toString());
+                    }
+                    return () -> Value.string("");
+                }
+                result.accept(transformer);
+
+                final Script script = Compiler.compile(result);
+                return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
+            } else {
+                String finalData = data;
+                return () -> Value.string(finalData);
+            }
         }
     }
 
@@ -554,10 +559,12 @@ public class DiscordUtils {
      * @param plain        Whether the expression should be parsed as a plain string
      */
     public void syncArgument(String argumentName, String insertString, final boolean plain) {
-        if (!StringUtils.isNullOrEmpty(argumentName)) {
-            final Supplier<Value> value = compileData(insertString, plain);
-            scriptEngine.set(argumentName, value);
-            placeholderData.put(argumentName, value);
+        synchronized (placeholderData) {
+            if (!StringUtils.isNullOrEmpty(argumentName)) {
+                final Supplier<Value> value = compileData(insertString, plain);
+                scriptEngine.set(argumentName, value);
+                placeholderData.put(argumentName, value);
+            }
         }
     }
 
@@ -589,13 +596,14 @@ public class DiscordUtils {
      * @param args The string formats to interpret
      */
     public void removeArguments(final String... args) {
-        final List<String> items = Lists.newArrayList(placeholderData.keySet());
-        for (String key : items) {
-            for (String format : args) {
-                if (key.startsWith(format)) {
-                    scriptEngine.remove(key);
-                    placeholderData.remove(key);
-                    break;
+        synchronized (placeholderData) {
+            for (String key : placeholderData.keySet()) {
+                for (String format : args) {
+                    if (key.startsWith(format)) {
+                        scriptEngine.remove(key);
+                        placeholderData.remove(key);
+                        break;
+                    }
                 }
             }
         }
@@ -609,28 +617,29 @@ public class DiscordUtils {
      * @return A List of the entries that satisfy the method conditions
      */
     public Map<String, String> getArguments(final boolean allowNullEntries, final String... args) {
-        final Map<String, Supplier<Value>> items = Collections.unmodifiableMap(placeholderData);
-        final Map<String, String> list = Maps.newTreeMap();
+        synchronized (placeholderData) {
+            final Map<String, String> list = Maps.newTreeMap();
 
-        for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
-            final String item = entry.getKey();
-            boolean addToList = args == null || args.length < 1 || args[0] == null;
-            if (!addToList) {
-                for (String argument : args) {
-                    if (!StringUtils.isNullOrEmpty(argument) && item.startsWith(argument)) {
-                        addToList = true;
-                        break;
+            for (Map.Entry<String, Supplier<Value>> entry : placeholderData.entrySet()) {
+                final String item = entry.getKey();
+                boolean addToList = args == null || args.length < 1 || args[0] == null;
+                if (!addToList) {
+                    for (String argument : args) {
+                        if (!StringUtils.isNullOrEmpty(argument) && item.startsWith(argument)) {
+                            addToList = true;
+                            break;
+                        }
+                    }
+                }
+                if (addToList) {
+                    final String value = entry.getValue().get().toString();
+                    if (allowNullEntries || !StringUtils.isNullOrEmpty(value)) {
+                        list.put(item, value);
                     }
                 }
             }
-            if (addToList) {
-                final String value = entry.getValue().get().toString();
-                if (allowNullEntries || !StringUtils.isNullOrEmpty(value)) {
-                    list.put(item, value);
-                }
-            }
+            return list;
         }
-        return list;
     }
 
     /**
