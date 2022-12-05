@@ -339,6 +339,7 @@ public class DiscordUtils {
      */
     public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         synchronized (placeholderData) {
+            final Map<String, Supplier<Value>> placeholders = Maps.newTreeMap(placeholderData);
             String data = StringUtils.getOrDefault(input);
 
             if (!plain) {
@@ -347,13 +348,13 @@ public class DiscordUtils {
 
                 // Phase 1: Override System
                 if (!StringUtils.isNullOrEmpty(overrideId)) {
-                    for (String placeholderName : placeholderData.keySet()) {
+                    for (String placeholderName : placeholders.keySet()) {
                         if (!placeholderName.startsWith("overrides.")) {
                             transformer.addReplacer(placeholderName, () -> {
                                 final String overrideName = "overrides." + placeholderName + "." + overrideId;
-                                return placeholderData.containsKey(overrideName) &&
+                                return placeholders.containsKey(overrideName) &&
                                         !StringUtils.isNullOrEmpty(
-                                                placeholderData.get(overrideName).get().toString()
+                                                placeholders.get(overrideName).get().toString()
                                         ) ? overrideName : placeholderName;
                             });
                         }
@@ -362,7 +363,7 @@ public class DiscordUtils {
                 // Phase 2: args field (Pair<String, Supplier<String>>...)
                 for (Pair<String, Supplier<String>> replacement : replacements) {
                     final String value = replacement.getSecond().get();
-                    if (placeholderData.containsKey(value)) {
+                    if (placeholders.containsKey(value)) {
                         transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
                     } else {
                         data = data.replace(
@@ -597,7 +598,8 @@ public class DiscordUtils {
      */
     public void removeArguments(final String... args) {
         synchronized (placeholderData) {
-            for (String key : placeholderData.keySet()) {
+            final List<String> items = Lists.newArrayList(placeholderData.keySet());
+            for (String key : items) {
                 for (String format : args) {
                     if (key.startsWith(format)) {
                         scriptEngine.remove(key);
@@ -618,9 +620,10 @@ public class DiscordUtils {
      */
     public Map<String, String> getArguments(final boolean allowNullEntries, final String... args) {
         synchronized (placeholderData) {
+            final Map<String, Supplier<Value>> items = Maps.newTreeMap(placeholderData);
             final Map<String, String> list = Maps.newTreeMap();
 
-            for (Map.Entry<String, Supplier<Value>> entry : placeholderData.entrySet()) {
+            for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
                 final String item = entry.getKey();
                 boolean addToList = args == null || args.length < 1 || args[0] == null;
                 if (!addToList) {
