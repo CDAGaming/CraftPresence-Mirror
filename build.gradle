@@ -81,10 +81,9 @@ subprojects {
             name = "Legacy Fabric"
             url = "https://maven.legacyfabric.net/"
         }
-        maven {
-            name = 'OSS SonaType'
-            url = "https://s01.oss.sonatype.org/content/repositories/releases"
-        }
+        // OSS Mavens
+        maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots" }
         // HypherionMC Mavens
         maven { url "https://maven.firstdarkdev.xyz/releases" }
         maven { url "https://maven.firstdarkdev.xyz/snapshots" }
