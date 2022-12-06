@@ -35,7 +35,7 @@ import java.util.HashMap;
  */
 public class KeyConverter {
     /**
-     * Mapping from lwjgl2 -> lwjgl3
+     * Mapping from lwjgl2 to lwjgl3
      * Note: Characters that are Unavailable in lwjgl3 are listed as lwjgl3's Unknown Keycode (-1)
      * Format: LWJGL2 Key;[LWJGL3 Key, Universal Key Name]
      */
@@ -179,7 +179,7 @@ public class KeyConverter {
     };
 
     /**
-     * Mapping from lwjgl3 -> lwjgl2
+     * Mapping from lwjgl3 to lwjgl2
      * Note: Characters that are Unavailable in lwjgl2 are listed as lwjgl2's Unknown Keycode (0)
      * Format: LWJGL3 Key;[LWJGL2 Key, Universal Key Name]
      */

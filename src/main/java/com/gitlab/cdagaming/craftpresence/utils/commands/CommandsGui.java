@@ -41,6 +41,7 @@ import com.google.common.collect.Lists;
 import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
+import org.meteordev.starscript.value.Value;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -49,6 +50,9 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommandsGui extends ExtendedScreen {
     private static String[] executionCommandArgs;
@@ -226,6 +230,17 @@ public class CommandsGui extends ExtendedScreen {
                         } else {
                             executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
                         }
+                    }
+                } else if (executionCommandArgs[0].equalsIgnoreCase("compile")) {
+                    final Matcher matcher = Pattern.compile("\"([^\"]*)\"").matcher(commandInput.getControlMessage());
+                    if (matcher.find()) {
+                        final String contents = matcher.group(1);
+                        final StringBuilder out = new StringBuilder();
+                        final Supplier<Value> data = CraftPresence.CLIENT.getCompileResult(contents, out);
+
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.compile", data.get().toString(), out.toString().replace("\n", "\\n"));
+                    } else {
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reload")) {
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reload");

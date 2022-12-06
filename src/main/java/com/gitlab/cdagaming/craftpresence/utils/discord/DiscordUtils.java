@@ -56,6 +56,7 @@ import org.meteordev.starscript.Script;
 import org.meteordev.starscript.StandardLib;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.compiler.Compiler;
+import org.meteordev.starscript.compiler.Expr;
 import org.meteordev.starscript.compiler.Parser;
 import org.meteordev.starscript.utils.Error;
 import org.meteordev.starscript.utils.VariableReplacementTransformer;
@@ -334,75 +335,110 @@ public class DiscordUtils {
     /**
      * Compiles and Parses the specified input, via {@link Starscript}
      *
-     * @param input The input expression to interpret
-     * @param plain Whether the expression should be parsed as a plain string
+     * @param input        The input expression to interpret
+     * @param overrideId   The override identifier to interpret
+     * @param plain        Whether the expression should be parsed as a plain string
+     * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
     public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         synchronized (placeholderData) {
             final Map<String, Supplier<Value>> placeholders = Maps.newTreeMap(placeholderData);
-            String data = StringUtils.getOrDefault(input);
+            final String data = StringUtils.getOrDefault(input);
 
             if (!plain) {
-                // Perform variable replacement before compilation
-                final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
-
-                // Phase 1: Override System
-                if (!StringUtils.isNullOrEmpty(overrideId)) {
-                    for (String placeholderName : placeholders.keySet()) {
-                        if (!placeholderName.startsWith("overrides.")) {
-                            transformer.addReplacer(placeholderName, () -> {
-                                final String overrideName = "overrides." + placeholderName + "." + overrideId;
-                                return placeholders.containsKey(overrideName) &&
-                                        !StringUtils.isNullOrEmpty(
-                                                placeholders.get(overrideName).get().toString()
-                                        ) ? overrideName : placeholderName;
-                            });
-                        }
-                    }
-                }
-                // Phase 2: args field (Pair<String, Supplier<String>>...)
-                for (Pair<String, Supplier<String>> replacement : replacements) {
-                    final String value = replacement.getSecond().get();
-                    if (placeholders.containsKey(value)) {
-                        transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
-                    } else {
-                        data = data.replace(
-                                replacement.getFirst(),
-                                !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
-                        );
-                    }
-                }
-
-                Parser.Result result = null;
-                try {
-                    result = Parser.parse(data);
-                } catch (Exception ignored) {
-                }
-
-                if (result == null || result.hasErrors()) {
-                    if (result != null) {
-                        // TODO: Proper Logging
-                        for (Error error : result.errors) ModUtils.LOG.error(error.toString());
-                    }
-                    return () -> Value.string("");
-                }
-                result.accept(transformer);
-
-                final Script script = Compiler.compile(result);
-                return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
+                return getCompileResult(data, null, generateTransformer(
+                        data, overrideId, placeholders, replacements
+                ));
             } else {
-                String finalData = data;
-                return () -> Value.string(finalData);
+                return () -> Value.string(data);
             }
         }
     }
 
     /**
+     * Generates a {@link VariableReplacementTransformer} for the specified arguments
+     *
+     * @param input        The original string to interpret
+     * @param overrideId   The override identifier to interpret
+     * @param placeholders A mapping of the placeholders currently available
+     * @param replacements A mapping of additional replacements to perform
+     * @return the processed string
+     */
+    public VariableReplacementTransformer generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
+        final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
+        String data = StringUtils.getOrDefault(input);
+
+        // Phase 1: Override System
+        if (!StringUtils.isNullOrEmpty(overrideId)) {
+            for (String placeholderName : placeholders.keySet()) {
+                if (!placeholderName.startsWith("overrides.")) {
+                    transformer.addReplacer(placeholderName, () -> {
+                        final String overrideName = "overrides." + placeholderName + "." + overrideId;
+                        return placeholders.containsKey(overrideName) &&
+                                !StringUtils.isNullOrEmpty(
+                                        placeholders.get(overrideName).get().toString()
+                                ) ? overrideName : placeholderName;
+                    });
+                }
+            }
+        }
+        // Phase 2: args field (Pair<String, Supplier<String>>...)
+        for (Pair<String, Supplier<String>> replacement : replacements) {
+            final String value = replacement.getSecond().get();
+            if (placeholders.containsKey(value)) {
+                transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
+            } else {
+                data = data.replace(
+                        replacement.getFirst(),
+                        !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
+                );
+            }
+        }
+        return transformer;
+    }
+
+    /**
+     * Interpret the processed {@link Script} from parsing the specified args, and compile it
+     *
+     * @param data       The data or expression to be parsed
+     * @param output     If specified, attach the decompiled info to this {@link Appendable}
+     * @param transforms Any additional expression transformations, to be done before compiling
+     * @return the processed output
+     */
+    public Supplier<Value> getCompileResult(final String data, final Appendable output, Expr.Visitor... transforms) {
+        Parser.Result result = null;
+        try {
+            result = Parser.parse(data);
+        } catch (Exception ignored) {
+        }
+
+        if (result == null || result.hasErrors()) {
+            if (result != null) {
+                // TODO: Proper Logging
+                for (Error error : result.errors) ModUtils.LOG.error(error.toString());
+            }
+            return () -> Value.string("");
+        }
+
+        for (Expr.Visitor transformer : transforms) {
+            result.accept(transformer);
+        }
+
+        final Script script = Compiler.compile(result);
+        if (output != null) {
+            script.decompile(output);
+        }
+        return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
+    }
+
+    /**
      * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, boolean, Pair[])}
      *
-     * @param input The input expression to interpret
-     * @param plain Whether the expression should be parsed as a plain string
+     * @param input        The input expression to interpret
+     * @param overrideId   The override identifier to interpret
+     * @param plain        Whether the expression should be parsed as a plain string
+     * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
     public String getResult(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
@@ -412,7 +448,9 @@ public class DiscordUtils {
     /**
      * Compiles and Parses the specified input, via {@link Starscript}
      *
-     * @param input The input expression to interpret
+     * @param input        The input expression to interpret
+     * @param overrideId   The override identifier to interpret
+     * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
     public Supplier<Value> compileData(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
@@ -422,7 +460,9 @@ public class DiscordUtils {
     /**
      * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, String, Pair[])}
      *
-     * @param input The input expression to interpret
+     * @param input        The input expression to interpret
+     * @param overrideId   The override identifier to interpret
+     * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
     public String getResult(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
@@ -432,8 +472,9 @@ public class DiscordUtils {
     /**
      * Compiles and Parses the specified input, via {@link Starscript}
      *
-     * @param input The input expression to interpret
-     * @param plain Whether the expression should be parsed as a plain string
+     * @param input        The input expression to interpret
+     * @param plain        Whether the expression should be parsed as a plain string
+     * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
     public Supplier<Value> compileData(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
@@ -443,8 +484,9 @@ public class DiscordUtils {
     /**
      * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, boolean, Pair[])}
      *
-     * @param input The input expression to interpret
-     * @param plain Whether the expression should be parsed as a plain string
+     * @param input        The input expression to interpret
+     * @param plain        Whether the expression should be parsed as a plain string
+     * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
     public String getResult(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
@@ -454,7 +496,8 @@ public class DiscordUtils {
     /**
      * Compiles and Parses the specified input, via {@link Starscript}
      *
-     * @param input The input expression to interpret
+     * @param input        The input expression to interpret
+     * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
     public Supplier<Value> compileData(final String input, final Pair<String, Supplier<String>>... replacements) {
@@ -464,7 +507,8 @@ public class DiscordUtils {
     /**
      * Retrieve the output from the execution of {@link DiscordUtils#compileData(String, Pair[])}
      *
-     * @param input The input expression to interpret
+     * @param input        The input expression to interpret
+     * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
     public String getResult(final String input, final Pair<String, Supplier<String>>... replacements) {
@@ -729,9 +773,9 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param formats The argument formats to interpret
-     * @param addExtraData   Whether to add additional data to the string
-     * @param args           The data to interpret
+     * @param formats      The argument formats to interpret
+     * @param addExtraData Whether to add additional data to the string
+     * @param args         The data to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, String> args) {
@@ -788,8 +832,8 @@ public class DiscordUtils {
     /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param addExtraData   Whether to add additional data to the string
-     * @param formats The argument formats to interpret
+     * @param addExtraData Whether to add additional data to the string
+     * @param formats      The argument formats to interpret
      * @return the parsable string
      */
     public String generateArgumentMessage(final boolean addExtraData, final String... formats) {
