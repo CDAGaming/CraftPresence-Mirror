@@ -93,11 +93,6 @@ public class ModUtils {
     public static final ModLogger LOG = new ModLogger(MOD_ID);
 
     /**
-     * The Current Thread's Class Loader, used to dynamically receive data as needed
-     */
-    public static final ClassLoader CLASS_LOADER = Thread.currentThread().getContextClassLoader();
-
-    /**
      * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
      */
     public static final TranslationUtils TRANSLATOR;

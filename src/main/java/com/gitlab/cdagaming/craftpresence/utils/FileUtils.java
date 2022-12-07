@@ -390,7 +390,7 @@ public class FileUtils {
      * @return the valid {@link Class} or null
      */
     public static Class<?> findValidClass(final boolean useClassLoader, final String... paths) {
-        return findValidClass(useClassLoader ? ModUtils.CLASS_LOADER : null, paths);
+        return findValidClass(useClassLoader ? MappingUtils.CLASS_LOADER : null, paths);
     }
 
     /**
@@ -421,7 +421,7 @@ public class FileUtils {
             if (MappingUtils.JAVA_SPEC < 16) {
                 // If we are below Java 16, we can just use the Thread's classloader
                 // See: https://github.com/classgraph/classgraph/wiki#running-on-jdk-16
-                graphInfo.overrideClassLoaders(ModUtils.CLASS_LOADER);
+                graphInfo.overrideClassLoaders(MappingUtils.CLASS_LOADER);
             }
 
             try (ScanResult scanResult = graphInfo.scan()) {
@@ -524,7 +524,7 @@ public class FileUtils {
         boolean useFallback = false;
 
         try {
-            in = ModUtils.CLASS_LOADER.getResourceAsStream(pathToSearch);
+            in = MappingUtils.CLASS_LOADER.getResourceAsStream(pathToSearch);
         } catch (Exception ex) {
             useFallback = true;
         }

@@ -40,6 +40,10 @@ import java.util.Set;
  */
 public class MappingUtils {
     /**
+     * The Current Thread's Class Loader, used to dynamically receive data as needed
+     */
+    public static final ClassLoader CLASS_LOADER = Thread.currentThread().getContextClassLoader();
+    /**
      * The Java Specification Version
      */
     public static final float JAVA_SPEC = Float.parseFloat(System.getProperty("java.specification.version"));
