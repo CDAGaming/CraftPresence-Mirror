@@ -85,8 +85,11 @@ dependencies {
 
     // Additional Integrations
     if (!isLegacy) {
+        // Moon Config (Used for HypherConverter)
         shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
         shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
+        // Replay Mod
+        //modImplementation("maven.modrinth:replaymod:${mc_version}-${replaymod_ver}")
     }
 }
 

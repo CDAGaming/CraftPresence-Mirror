@@ -87,6 +87,21 @@ subprojects {
         // HypherionMC Mavens
         maven { url "https://maven.firstdarkdev.xyz/releases" }
         maven { url "https://maven.firstdarkdev.xyz/snapshots" }
+        // Mod Integration Mavens
+        maven {
+            name = "CurseForge"
+            url = "https://cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
+        }
         maven {
             name = 'TerraformersMC'
             url = 'https://maven.terraformersmc.com/releases/'
