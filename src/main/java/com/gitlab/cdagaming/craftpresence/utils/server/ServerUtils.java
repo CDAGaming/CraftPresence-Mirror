@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
@@ -52,7 +53,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings({"DuplicatedCode", "unchecked"})
-public class ServerUtils {
+public class ServerUtils implements Module {
     /**
      * Whether this module is active and currently in use
      */
@@ -172,10 +173,8 @@ public class ServerUtils {
      */
     private boolean isOnLAN = false;
 
-    /**
-     * Clears FULL Data from this Module
-     */
-    private void emptyData() {
+    @Override
+    public void emptyData() {
         hasScanned = false;
         currentPlayerList.clear();
         knownAddresses.clear();
@@ -183,9 +182,7 @@ public class ServerUtils {
         clearClientData();
     }
 
-    /**
-     * Clears Runtime Client Data from this Module (PARTIAL Clear)
-     */
+    @Override
     public void clearClientData() {
         currentServer_IP = null;
         currentServer_MOTD = null;
@@ -219,23 +216,21 @@ public class ServerUtils {
         CraftPresence.CLIENT.clearPartyData(true, false);
     }
 
-    /**
-     * Module Event to Occur on each tick within the Application
-     */
+    @Override
     public void onTick() {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : enabled;
         final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            new Thread(this::getServerAddresses, "CraftPresence-Server-Lookup").start();
+            new Thread(this::getAllData, "CraftPresence-Server-Lookup").start();
             hasScanned = true;
         }
 
         if (enabled) {
             if (CraftPresence.player != null && !joinInProgress) {
                 isInUse = true;
-                updateServerData();
+                updateData();
             } else if (isInUse) {
                 clearClientData();
             }
@@ -248,10 +243,8 @@ public class ServerUtils {
         }
     }
 
-    /**
-     * Synchronizes Data related to this module, if needed
-     */
-    private void updateServerData() {
+    @Override
+    public void updateData() {
         final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
         final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
 
@@ -296,7 +289,7 @@ public class ServerUtils {
                 final ServerList serverList = new ServerList(CraftPresence.instance);
                 serverList.loadServerList();
                 if (serverList.countServers() != serverIndex || CraftPresence.CONFIG.serverSettings.serverData.size() != serverIndex) {
-                    getServerAddresses();
+                    getAllData();
                 }
             }
 
@@ -369,13 +362,13 @@ public class ServerUtils {
 
                 if (CraftPresence.ENTITIES.enabled) {
                     CraftPresence.ENTITIES.ENTITY_NAMES.removeAll(CraftPresence.ENTITIES.PLAYER_BINDINGS.keySet());
-                    CraftPresence.ENTITIES.getEntities();
+                    CraftPresence.ENTITIES.getAllData();
                 }
             }
         }
 
         if (queuedForUpdate) {
-            updateServerPresence();
+            updatePresence();
         }
     }
 
@@ -461,10 +454,8 @@ public class ServerUtils {
         }
     }
 
-    /**
-     * Updates RPC Data related to this Module
-     */
-    public void updateServerPresence() {
+    @Override
+    public void updatePresence() {
         // Form General Argument Lists & Sub Argument Lists
         canUseEndpointIcon = false;
 
@@ -581,10 +572,8 @@ public class ServerUtils {
         queuedForUpdate = false;
     }
 
-    /**
-     * Retrieves and Synchronizes detected Server Addresses from the Server List
-     */
-    public void getServerAddresses() {
+    @Override
+    public void getAllData() {
         try {
             final ServerList serverList = new ServerList(CraftPresence.instance);
             serverList.loadServerList();
@@ -613,6 +602,26 @@ public class ServerUtils {
                 knownAddresses.add(serverEntry);
             }
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean state) {
+        this.enabled = state;
+    }
+
+    @Override
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    @Override
+    public void setInUse(boolean state) {
+        this.isInUse = state;
     }
 
     /**

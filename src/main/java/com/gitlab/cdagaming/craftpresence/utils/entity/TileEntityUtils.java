@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -44,7 +45,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings("ConstantConditions")
-public class TileEntityUtils {
+public class TileEntityUtils implements Module {
     /**
      * A List of the detected Block Names
      */
@@ -190,10 +191,8 @@ public class TileEntityUtils {
      */
     private NBTTagCompound CURRENT_BOOTS_TAG;
 
-    /**
-     * Clears FULL Data from this Module
-     */
-    private void emptyData() {
+    @Override
+    public void emptyData() {
         hasScanned = false;
         BLOCK_NAMES.clear();
         BLOCK_CLASSES.clear();
@@ -205,9 +204,7 @@ public class TileEntityUtils {
         clearClientData();
     }
 
-    /**
-     * Clears Runtime Client Data from this Module (PARTIAL Clear)
-     */
+    @Override
     public void clearClientData() {
         CURRENT_MAIN_HAND_ITEM = EMPTY_STACK;
         CURRENT_OFFHAND_ITEM = EMPTY_STACK;
@@ -243,22 +240,20 @@ public class TileEntityUtils {
         CraftPresence.CLIENT.clearOverride("item");
     }
 
-    /**
-     * Module Event to Occur on each tick within the Application
-     */
+    @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : enabled;
         final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            new Thread(this::getEntities, "CraftPresence-TileEntity-Lookup").start();
+            new Thread(this::getAllData, "CraftPresence-TileEntity-Lookup").start();
             hasScanned = true;
         }
 
         if (enabled) {
             if (CraftPresence.player != null) {
                 isInUse = true;
-                updateEntityData();
+                updateData();
             } else if (isInUse) {
                 clearClientData();
             }
@@ -317,10 +312,8 @@ public class TileEntityUtils {
         }
     }
 
-    /**
-     * Synchronizes Data related to this module, if needed
-     */
-    private void updateEntityData() {
+    @Override
+    public void updateData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
         final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getHeldItemOffhand();
         final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory.get(3);
@@ -429,14 +422,12 @@ public class TileEntityUtils {
         if (hasMainHandChanged || hasOffHandChanged ||
                 hasHelmetChanged || hasChestChanged ||
                 hasLegsChanged || hasBootsChanged) {
-            updateEntityPresence();
+            updatePresence();
         }
     }
 
-    /**
-     * Updates RPC Data related to this Module
-     */
-    public void updateEntityPresence() {
+    @Override
+    public void updatePresence() {
         // Retrieve Messages
         final String defaultItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault("default", "");
 
@@ -505,10 +496,8 @@ public class TileEntityUtils {
         }
     }
 
-    /**
-     * Retrieves and Synchronizes detected Entities
-     */
-    public void getEntities() {
+    @Override
+    public void getAllData() {
         for (Block block : Block.REGISTRY) {
             if (!isEmpty(block)) {
                 final String blockName = block.getLocalizedName();
@@ -577,6 +566,26 @@ public class TileEntityUtils {
         }
 
         verifyEntities();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean state) {
+        this.enabled = state;
+    }
+
+    @Override
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    @Override
+    public void setInUse(boolean state) {
+        this.isInUse = state;
     }
 
     /**

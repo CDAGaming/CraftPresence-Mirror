@@ -67,7 +67,8 @@ public class FunctionsLib {
     }
 
     public static Value rgbaToHex(Starscript ss, int argCount) {
-        if (argCount < 3 || argCount > 4) ss.error("rgbaToHex() can only be used with 3-4 arguments, got %d.", argCount);
+        if (argCount < 3 || argCount > 4)
+            ss.error("rgbaToHex() can only be used with 3-4 arguments, got %d.", argCount);
         int r = (int) ss.popNumber("First argument to rgbaToHex() needs to be a number.");
         if (r < 0 || r > 255) {
             ss.error("First argument to rgbaToHex() is not a valid color index, can only be 0-255.");
@@ -91,7 +92,8 @@ public class FunctionsLib {
     }
 
     public static Value getOrDefault(Starscript ss, int argCount) {
-        if (argCount < 1 || argCount > 2) ss.error("getOrDefault() can only be used with 1-2 arguments, got %d.", argCount);
+        if (argCount < 1 || argCount > 2)
+            ss.error("getOrDefault() can only be used with 1-2 arguments, got %d.", argCount);
         String target = ss.popString("First argument to getOrDefault() needs to be a string.");
         String alternative = "";
         if (argCount == 2) {
@@ -124,12 +126,13 @@ public class FunctionsLib {
     /**
      * Determines whether a String classifies as NULL or EMPTY
      *
-     * @param ss The {@link Starscript} instance
+     * @param ss       The {@link Starscript} instance
      * @param argCount The argument count
      * @return {@code true} if Entry is classified as NULL or EMPTY
      */
     public static Value nullOrEmpty(Starscript ss, int argCount) {
-        if (argCount < 1 || argCount > 2) ss.error("nullOrEmpty() can only be used with 1-2 arguments, got %d.", argCount);
+        if (argCount < 1 || argCount > 2)
+            ss.error("nullOrEmpty() can only be used with 1-2 arguments, got %d.", argCount);
         String target = ss.popString("First argument to nullOrEmpty() needs to be a string.");
         boolean allowWhitespace = false;
         if (argCount == 2) {
@@ -139,7 +142,8 @@ public class FunctionsLib {
     }
 
     public static Value formatAddress(Starscript ss, int argCount) {
-        if (argCount < 1 || argCount > 2) ss.error("formatAddress() can only be used with 1-2 arguments, got %d.", argCount);
+        if (argCount < 1 || argCount > 2)
+            ss.error("formatAddress() can only be used with 1-2 arguments, got %d.", argCount);
         String target = ss.popString("First argument to formatAddress() needs to be a string.");
         boolean returnPort = false;
         if (argCount == 2) {
@@ -185,7 +189,8 @@ public class FunctionsLib {
     }
 
     public static Value asProperWord(Starscript ss, int argCount) {
-        if (argCount < 1 || argCount > 4) ss.error("asProperWord() can only be used with 1-4 arguments, got %d.", argCount);
+        if (argCount < 1 || argCount > 4)
+            ss.error("asProperWord() can only be used with 1-4 arguments, got %d.", argCount);
         String target = ss.popString("First argument to asProperWord() needs to be a string.");
         boolean avoid = false;
         if (argCount >= 2) {
@@ -209,7 +214,8 @@ public class FunctionsLib {
     }
 
     public static Value asIdentifier(Starscript ss, int argCount) {
-        if (argCount < 1 || argCount > 3) ss.error("asIdentifier() can only be used with 1-3 arguments, got %d.", argCount);
+        if (argCount < 1 || argCount > 3)
+            ss.error("asIdentifier() can only be used with 1-3 arguments, got %d.", argCount);
         String target = ss.popString("First argument to asIdentifier() needs to be a string.");
         boolean formatToId = false;
         if (argCount >= 2) {
@@ -231,7 +237,8 @@ public class FunctionsLib {
     }
 
     public static Value capitalizeWords(Starscript ss, int argCount) {
-        if (argCount < 1 || argCount > 2) ss.error("capitalizeWords() can only be used with 1-2 arguments, got %d.", argCount);
+        if (argCount < 1 || argCount > 2)
+            ss.error("capitalizeWords() can only be used with 1-2 arguments, got %d.", argCount);
         String target = ss.popString("First argument to capitalizeWords() needs to be a string.");
         int timesToCheck = -1;
         if (argCount == 2) {
@@ -275,7 +282,7 @@ public class FunctionsLib {
     /**
      * Retrieves whether the specified class contains the specified field name
      *
-     * @param ss The {@link Starscript} instance
+     * @param ss       The {@link Starscript} instance
      * @param argCount The argument count
      * @return whether the specified class contains the specified field name
      */
@@ -289,7 +296,7 @@ public class FunctionsLib {
     /**
      * Strips Color and Formatting Codes from the inputted String
      *
-     * @param ss The {@link Starscript} instance
+     * @param ss       The {@link Starscript} instance
      * @param argCount The argument count
      * @return whether the specified class contains the specified field name
      */

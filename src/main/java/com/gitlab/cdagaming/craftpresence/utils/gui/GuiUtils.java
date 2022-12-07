@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
@@ -60,7 +61,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class GuiUtils {
+public class GuiUtils implements Module {
     /**
      * A List of the detected Gui Screen Classes
      */
@@ -97,15 +98,15 @@ public class GuiUtils {
     /**
      * The name of the Current Gui the player is in
      */
-    private String CURRENT_GUI_NAME;
+    public String CURRENT_GUI_NAME;
     /**
      * The Class Type of the Current Gui the player is in
      */
-    private Class<?> CURRENT_GUI_CLASS;
+    public Class<?> CURRENT_GUI_CLASS;
     /**
      * The Current Instance of the Gui the player is in
      */
-    private GuiScreen CURRENT_SCREEN;
+    public GuiScreen CURRENT_SCREEN;
 
     /**
      * Gets the Default/Global Font Renderer
@@ -291,19 +292,15 @@ public class GuiUtils {
         lastIndex = 0;
     }
 
-    /**
-     * Clears FULL Data from this Module
-     */
-    private void emptyData() {
+    @Override
+    public void emptyData() {
         hasScanned = false;
         GUI_NAMES.clear();
         GUI_CLASSES.clear();
         clearClientData();
     }
 
-    /**
-     * Clears Runtime Client Data from this Module (PARTIAL Clear)
-     */
+    @Override
     public void clearClientData() {
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
@@ -314,23 +311,21 @@ public class GuiUtils {
         CraftPresence.CLIENT.clearOverride("screen");
     }
 
-    /**
-     * Module Event to Occur on each tick within the Application
-     */
+    @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
         isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.isFocused();
         final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            new Thread(this::getScreens, "CraftPresence-Screen-Lookup").start();
+            new Thread(this::getAllData, "CraftPresence-Screen-Lookup").start();
             hasScanned = true;
         }
 
         if (enabled) {
             if (CraftPresence.instance.currentScreen != null) {
                 isInUse = true;
-                updateGUIData();
+                updateData();
             } else if (isInUse) {
                 clearClientData();
             }
@@ -354,10 +349,8 @@ public class GuiUtils {
         CraftPresence.instance.addScheduledTask(() -> CraftPresence.instance.displayGuiScreen(targetScreen));
     }
 
-    /**
-     * Synchronizes Data related to this module, if needed
-     */
-    private void updateGUIData() {
+    @Override
+    public void updateData() {
         if (CraftPresence.instance.currentScreen == null) {
             clearClientData();
         } else {
@@ -377,15 +370,13 @@ public class GuiUtils {
                     GUI_CLASSES.put(newScreenName, newScreenClass);
                 }
 
-                updateGUIPresence();
+                updatePresence();
             }
         }
     }
 
-    /**
-     * Retrieves and Synchronizes detected Gui Screen Classes
-     */
-    public void getScreens() {
+    @Override
+    public void getAllData() {
         final List<Class<?>> searchClasses = Lists.newArrayList(GuiScreen.class, GuiContainer.class);
 
         for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
@@ -405,10 +396,28 @@ public class GuiUtils {
         }
     }
 
-    /**
-     * Updates RPC Data related to this Module
-     */
-    public void updateGUIPresence() {
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean state) {
+        this.enabled = state;
+    }
+
+    @Override
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    @Override
+    public void setInUse(boolean state) {
+        this.isInUse = state;
+    }
+
+    @Override
+    public void updatePresence() {
         final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
 

@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -45,7 +46,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-public class EntityUtils {
+public class EntityUtils implements Module {
     /**
      * Whether this module is active and currently in use
      */
@@ -99,19 +100,15 @@ public class EntityUtils {
      */
     private NBTTagCompound CURRENT_RIDING_TAG;
 
-    /**
-     * Clears FULL Data from this Module
-     */
-    private void emptyData() {
+    @Override
+    public void emptyData() {
         hasScanned = false;
         ENTITY_NAMES.clear();
         PLAYER_BINDINGS.clear();
         clearClientData();
     }
 
-    /**
-     * Clears Runtime Client Data from this Module (PARTIAL Clear)
-     */
+    @Override
     public void clearClientData() {
         CURRENT_TARGET = null;
         CURRENT_RIDING = null;
@@ -128,22 +125,20 @@ public class EntityUtils {
         CraftPresence.CLIENT.clearOverride("entity.target", "entity.riding");
     }
 
-    /**
-     * Module Event to Occur on each tick within the Application
-     */
+    @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : enabled;
         final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            new Thread(this::getEntities, "CraftPresence-Entity-Lookup").start();
+            new Thread(this::getAllData, "CraftPresence-Entity-Lookup").start();
             hasScanned = true;
         }
 
         if (enabled) {
             if (CraftPresence.player != null) {
                 isInUse = true;
-                updateEntityData();
+                updateData();
             } else if (isInUse) {
                 clearClientData();
             }
@@ -152,10 +147,8 @@ public class EntityUtils {
         }
     }
 
-    /**
-     * Synchronizes Data related to this module, if needed
-     */
-    private void updateEntityData() {
+    @Override
+    public void updateData() {
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
@@ -209,14 +202,12 @@ public class EntityUtils {
         }
 
         if (hasTargetChanged || hasRidingChanged) {
-            updateEntityPresence();
+            updatePresence();
         }
     }
 
-    /**
-     * Updates RPC Data related to this Module
-     */
-    public void updateEntityPresence() {
+    @Override
+    public void updatePresence() {
         // Form Entity Argument List
         final ModuleData defaultTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
         final ModuleData defaultRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
@@ -282,10 +273,8 @@ public class EntityUtils {
         return StringUtils.isValidUuid(original) ? entity.getName() : original;
     }
 
-    /**
-     * Retrieves and Synchronizes detected Entities
-     */
-    public void getEntities() {
+    @Override
+    public void getAllData() {
         if (!EntityList.getEntityNameList().isEmpty()) {
             for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
@@ -325,6 +314,26 @@ public class EntityUtils {
         }
 
         verifyEntities();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean state) {
+        this.enabled = state;
+    }
+
+    @Override
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    @Override
+    public void setInUse(boolean state) {
+        this.isInUse = state;
     }
 
     /**

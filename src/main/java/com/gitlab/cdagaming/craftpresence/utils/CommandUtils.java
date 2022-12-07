@@ -28,12 +28,16 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.integrations.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.mcupdater.MCUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -51,6 +55,19 @@ public class CommandUtils {
      */
     public static boolean isLoadingGame = false;
 
+    public static Map<String, Module> modules = new HashMap<String, Module>() {
+        private static final long serialVersionUID = 510350212503123679L;
+
+        {
+            put("biome", CraftPresence.BIOMES);
+            put("dimension", CraftPresence.DIMENSIONS);
+            put("item", CraftPresence.TILE_ENTITIES);
+            put("entity", CraftPresence.ENTITIES);
+            put("server", CraftPresence.SERVER);
+            put("screen", CraftPresence.GUIS);
+        }
+    };
+
     /**
      * Reloads and Synchronizes Data, as needed, and performs onTick Events
      *
@@ -60,34 +77,16 @@ public class CommandUtils {
         ModUtils.TRANSLATOR.onTick();
         CraftPresence.SYSTEM.onTick();
         CraftPresence.instance.addScheduledTask(() -> CraftPresence.KEYBINDINGS.onTick());
-        CraftPresence.GUIS.onTick();
 
         if (CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED) {
-            CraftPresence.BIOMES.onTick();
-            CraftPresence.DIMENSIONS.onTick();
-            CraftPresence.TILE_ENTITIES.onTick();
-            CraftPresence.ENTITIES.onTick();
-            CraftPresence.SERVER.onTick();
-
             if (forceUpdateRPC) {
                 ModUtils.TRANSLATOR.syncTranslations();
-                if (CraftPresence.DIMENSIONS.isInUse) {
-                    CraftPresence.DIMENSIONS.updateDimensionPresence();
-                }
-                if (CraftPresence.GUIS.isInUse) {
-                    CraftPresence.GUIS.updateGUIPresence();
-                }
-                if (CraftPresence.TILE_ENTITIES.isInUse) {
-                    CraftPresence.TILE_ENTITIES.updateEntityPresence();
-                }
-                if (CraftPresence.ENTITIES.isInUse) {
-                    CraftPresence.ENTITIES.updateEntityPresence();
-                }
-                if (CraftPresence.SERVER.isInUse) {
-                    CraftPresence.SERVER.updateServerPresence();
-                }
-                if (CraftPresence.BIOMES.isInUse) {
-                    CraftPresence.BIOMES.updateBiomePresence();
+            }
+
+            for (Module module : modules.values()) {
+                module.onTick();
+                if (forceUpdateRPC && module.isInUse()) {
+                    module.updatePresence();
                 }
             }
         }

@@ -116,7 +116,7 @@ public class ScrollableListControl extends GuiSlot {
         this.renderType = renderType;
 
         if (renderType == RenderType.ItemData) {
-            CraftPresence.TILE_ENTITIES.getEntities();
+            CraftPresence.TILE_ENTITIES.getAllData();
         }
     }
 

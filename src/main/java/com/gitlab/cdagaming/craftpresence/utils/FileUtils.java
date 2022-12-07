@@ -415,7 +415,7 @@ public class FileUtils {
                     .enableClassInfo()
                     .rejectPackages(
                             "net.java", "com.sun", "com.jcraft", "com.intellij", "jdk", "akka", "ibxm", "scala",
-                            "*.mixin.*", "*.mixins.*"
+                            "*.mixin.*", "*.mixins.*", "*.jetty.*"
                     )
                     .disableModuleScanning();
             if (MappingUtils.JAVA_SPEC < 16) {

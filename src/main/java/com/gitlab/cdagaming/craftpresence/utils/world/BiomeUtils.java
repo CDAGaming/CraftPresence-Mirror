@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -41,7 +42,7 @@ import java.util.List;
  *
  * @author CDAGaming
  */
-public class BiomeUtils {
+public class BiomeUtils implements Module {
     /**
      * A List of the detected Biome Type's
      */
@@ -71,19 +72,15 @@ public class BiomeUtils {
      */
     private String CURRENT_BIOME_IDENTIFIER;
 
-    /**
-     * Clears FULL Data from this Module
-     */
-    private void emptyData() {
+    @Override
+    public void emptyData() {
         hasScanned = false;
         BIOME_NAMES.clear();
         BIOME_TYPES.clear();
         clearClientData();
     }
 
-    /**
-     * Clears Runtime Client Data from this Module (PARTIAL Clear)
-     */
+    @Override
     public void clearClientData() {
         CURRENT_BIOME_NAME = null;
         CURRENT_BIOME_IDENTIFIER = null;
@@ -93,22 +90,20 @@ public class BiomeUtils {
         CraftPresence.CLIENT.clearOverride("biome");
     }
 
-    /**
-     * Module Event to Occur on each tick within the Application
-     */
+    @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : enabled;
         final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            new Thread(this::getBiomes, "CraftPresence-Biome-Lookup").start();
+            new Thread(this::getAllData, "CraftPresence-Biome-Lookup").start();
             hasScanned = true;
         }
 
         if (enabled) {
             if (CraftPresence.player != null) {
                 isInUse = true;
-                updateBiomeData();
+                updateData();
             } else if (isInUse) {
                 clearClientData();
             }
@@ -117,10 +112,8 @@ public class BiomeUtils {
         }
     }
 
-    /**
-     * Synchronizes Data related to this module, if needed
-     */
-    private void updateBiomeData() {
+    @Override
+    public void updateData() {
         final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
         final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
@@ -139,14 +132,12 @@ public class BiomeUtils {
                 BIOME_TYPES.add(newBiome);
             }
 
-            updateBiomePresence();
+            updatePresence();
         }
     }
 
-    /**
-     * Updates RPC Data related to this Module
-     */
-    public void updateBiomePresence() {
+    @Override
+    public void updatePresence() {
         final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
 
@@ -202,10 +193,8 @@ public class BiomeUtils {
         return biomeTypes;
     }
 
-    /**
-     * Updates and Initializes Module Data, based on found Information
-     */
-    public void getBiomes() {
+    @Override
+    public void getAllData() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
                 String biomeName = StringUtils.getOrDefault(biome.getBiomeName(), MappingUtils.getClassName(biome));
@@ -227,5 +216,25 @@ public class BiomeUtils {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean state) {
+        this.enabled = state;
+    }
+
+    @Override
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    @Override
+    public void setInUse(boolean state) {
+        this.isInUse = state;
     }
 }

@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -43,7 +44,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-public class DimensionUtils {
+public class DimensionUtils implements Module {
     /**
      * A List of the detected Dimension Type's
      */
@@ -73,19 +74,15 @@ public class DimensionUtils {
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
 
-    /**
-     * Clears FULL Data from this Module
-     */
-    private void emptyData() {
+    @Override
+    public void emptyData() {
         hasScanned = false;
         DIMENSION_NAMES.clear();
         DIMENSION_TYPES.clear();
         clearClientData();
     }
 
-    /**
-     * Clears Runtime Client Data from this Module (PARTIAL Clear)
-     */
+    @Override
     public void clearClientData() {
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
@@ -95,22 +92,20 @@ public class DimensionUtils {
         CraftPresence.CLIENT.clearOverride("dimension");
     }
 
-    /**
-     * Module Event to Occur on each tick within the Application
-     */
+    @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectDimensionData : enabled;
         final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            new Thread(this::getDimensions, "CraftPresence-Dimension-Lookup").start();
+            new Thread(this::getAllData, "CraftPresence-Dimension-Lookup").start();
             hasScanned = true;
         }
 
         if (enabled) {
             if (CraftPresence.player != null) {
                 isInUse = true;
-                updateDimensionData();
+                updateData();
             } else if (isInUse) {
                 clearClientData();
             }
@@ -119,10 +114,8 @@ public class DimensionUtils {
         }
     }
 
-    /**
-     * Synchronizes Data related to this module, if needed
-     */
-    private void updateDimensionData() {
+    @Override
+    public void updateData() {
         final WorldProvider newProvider = CraftPresence.player.world.provider;
         final DimensionType newDimensionType = newProvider.getDimensionType();
         final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.getName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
@@ -142,14 +135,12 @@ public class DimensionUtils {
                 DIMENSION_TYPES.add(newDimensionType);
             }
 
-            updateDimensionPresence();
+            updatePresence();
         }
     }
 
-    /**
-     * Updates RPC Data related to this Module
-     */
-    public void updateDimensionPresence() {
+    @Override
+    public void updatePresence() {
         // Form Dimension Argument List
         final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
@@ -212,10 +203,8 @@ public class DimensionUtils {
         return dimensionTypes;
     }
 
-    /**
-     * Updates and Initializes Module Data, based on found Information
-     */
-    public void getDimensions() {
+    @Override
+    public void getAllData() {
         for (DimensionType TYPE : getDimensionTypes()) {
             if (TYPE != null) {
                 String dimensionName = StringUtils.getOrDefault(TYPE.getName(), MappingUtils.getClassName(TYPE));
@@ -237,5 +226,25 @@ public class DimensionUtils {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean state) {
+        this.enabled = state;
+    }
+
+    @Override
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    @Override
+    public void setInUse(boolean state) {
+        this.isInUse = state;
     }
 }

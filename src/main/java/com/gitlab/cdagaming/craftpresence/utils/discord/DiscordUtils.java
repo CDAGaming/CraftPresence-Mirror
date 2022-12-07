@@ -422,7 +422,8 @@ public class DiscordUtils {
                     if (output != null) {
                         try {
                             output.append(error.toString()).append('\n');
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                     }
                     ModUtils.LOG.error("\t" + error.toString());
                 }
@@ -448,7 +449,8 @@ public class DiscordUtils {
                 if (output != null) {
                     try {
                         output.append(ex.getMessage()).append('\n');
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                 }
                 ex.printStackTrace();
                 return Value.string("");

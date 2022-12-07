@@ -41,5 +41,10 @@ public class CraftPresenceFabric implements ClientModInitializer {
         }
         MappingUtils.setFilePath("/mappings-fabric.srg");
         new CraftPresence();
+        setupIntegrations();
+    }
+
+    public void setupIntegrations() {
+        // TODO
     }
 }
