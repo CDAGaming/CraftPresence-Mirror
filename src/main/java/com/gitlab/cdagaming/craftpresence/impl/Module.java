@@ -4,38 +4,58 @@ public interface Module {
     /**
      * Clears FULL Data from this Module
      */
-    void emptyData();
+    default void emptyData() {
+        // N/A
+    }
 
     /**
      * Clears Runtime Client Data from this Module (PARTIAL Clear)
      */
-    void clearClientData();
+    default void clearClientData() {
+        // N/A
+    }
 
     /**
      * Module Event to Occur on each tick within the Application
      */
-    void onTick();
+    default void onTick() {
+        // N/A
+    }
 
     /**
      * Synchronizes Data related to this module, if needed
      */
-    void updateData();
+    default void updateData() {
+        // N/A
+    }
 
     /**
      * Updates RPC Data related to this Module
      */
-    void updatePresence();
+    default void updatePresence() {
+        // N/A
+    }
 
     /**
      * Updates and Initializes Module Data, based on found Information
      */
-    void getAllData();
+    default void getAllData() {
+        // N/A
+    }
 
-    boolean isEnabled();
+    default boolean isEnabled() {
+        return true;
+    }
 
-    void setEnabled(boolean state);
+    default void setEnabled(boolean state) {
+        // N/A
+    }
 
-    boolean isInUse();
+    default boolean isInUse() {
+        return true;
+    }
 
-    void setInUse(boolean state);
+    default void setInUse(boolean state) {
+        // N/A
+    }
 }

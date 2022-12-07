@@ -70,10 +70,10 @@ public class HypherConverter implements DataMigrator {
             .put("%gametime%", "{world.time.24}")
             .put("%day%", "{world.day}")
             .put("%weather%", EMPTY_QUOTES) // TODO
-            .put("%replayframe%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
-            .put("%replaytotal%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
-            .put("%replaytime%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
-            .put("%replaytimeleft%", EMPTY_QUOTES) // Replay Mod Integration - Unimplemented
+            .put("%replayframe%", "{replaymod.frames.current}")
+            .put("%replaytotal%", "{replaymod.frames.total}")
+            .put("%replaytime%", "{replaymod.time.current}")
+            .put("%replaytimeleft%", "{replaymod.time.remaining")
             //
             .put("%serverip%", "{server.address}")
             .put("%servername%", "{server.name}")
