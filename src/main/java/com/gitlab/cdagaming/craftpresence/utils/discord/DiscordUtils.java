@@ -53,7 +53,7 @@ import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import org.meteordev.starscript.Script;
-import org.meteordev.starscript.StandardLib;
+import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.compiler.Compiler;
 import org.meteordev.starscript.compiler.Expr;
@@ -251,8 +251,7 @@ public class DiscordUtils {
 
             // Create IPC Instance and Listener and Make a Connection if possible
             scriptEngine = new Starscript();
-            StandardLib.init(scriptEngine);
-            // TODO: Add some of our functions to the engine
+            FunctionsLib.init(scriptEngine);
 
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
             ipcInstance.setListener(new ModIPCListener());
@@ -416,7 +415,17 @@ public class DiscordUtils {
         if (result == null || result.hasErrors()) {
             if (result != null) {
                 // TODO: Proper Logging
-                for (Error error : result.errors) ModUtils.LOG.error(error.toString());
+                ModUtils.LOG.error("A parser exception has occured:");
+                ModUtils.LOG.error("Original: \"" + data + "\"");
+                ModUtils.LOG.error("Errors:");
+                for (Error error : result.errors) {
+                    if (output != null) {
+                        try {
+                            output.append(error.toString()).append('\n');
+                        } catch (Exception ignored) {}
+                    }
+                    ModUtils.LOG.error("\t" + error.toString());
+                }
             }
             return () -> Value.string("");
         }
@@ -426,10 +435,26 @@ public class DiscordUtils {
         }
 
         final Script script = Compiler.compile(result);
-        if (output != null) {
-            script.decompile(output);
-        }
-        return () -> Value.string(new Starscript(scriptEngine).run(script).toString());
+        return () -> {
+            Section sect;
+            try {
+                sect = new Starscript(scriptEngine).run(script);
+                if (output != null) {
+                    script.decompile(output);
+                }
+            } catch (Exception ex) {
+                ModUtils.LOG.error("A compiler exception has occured:");
+                ModUtils.LOG.error("Original: \"" + data + "\"");
+                if (output != null) {
+                    try {
+                        output.append(ex.getMessage()).append('\n');
+                    } catch (Exception ignored) {}
+                }
+                ex.printStackTrace();
+                return Value.string("");
+            }
+            return Value.string(sect.toString());
+        };
     }
 
     /**
@@ -882,6 +907,15 @@ public class DiscordUtils {
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
+        // Sync Internal Values
+        scriptEngine.set("_general.instance", CraftPresence.instance);
+        scriptEngine.set("_config.instance", CraftPresence.CONFIG);
+        scriptEngine.set("_dimension.instance", CraftPresence.DIMENSIONS);
+        scriptEngine.set("_biome.instance", CraftPresence.BIOMES);
+        scriptEngine.set("_server.instance", CraftPresence.SERVER);
+        scriptEngine.set("_screen.instance", CraftPresence.GUIS);
+        scriptEngine.set("_entity.instance", CraftPresence.ENTITIES);
+        scriptEngine.set("_item.instance", CraftPresence.TILE_ENTITIES);
         // Sync Custom Variables
         removeArguments("custom.");
         for (Map.Entry<String, String> entry : CraftPresence.CONFIG.displaySettings.dynamicVariables.entrySet()) {
