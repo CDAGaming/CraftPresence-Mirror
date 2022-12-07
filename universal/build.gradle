@@ -7,6 +7,10 @@ minecraft {
     // N/A
 }
 
+remapJar {
+    targetNamespace = "named"
+}
+
 def archive_name = "${rootProject.mod_name}-${rootProject.loader_name}"
 def targetFile = file("$rootDir/build/libs/${fileFormat}-universal.jar")
 if (!targetFile.exists() && isJarMod) {
