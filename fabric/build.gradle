@@ -2,7 +2,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-def accessWidenerFile = project(":common").minecraft.minecraftTransformer.accessWidener
+def accessWidenerFile = project(":common").minecraft.mcPatcher.accessWidener
 minecraft {
     fabric {
         if (accessWidenerFile != null) {
@@ -61,17 +61,17 @@ processResources {
 
 exportMappings {
     export("CLIENT") {
-        it.targetNamespace = ["named"]
-        it.sourceNamespace = "intermediary"
-        it.location = "$projectDir/src/main/resources/mappings-fabric.srg"
-        it.type = "SRG"
+        targetNamespace = ["named"]
+        sourceNamespace = "intermediary"
+        location = "$projectDir/src/main/resources/mappings-fabric.srg"
+        type = "SRG"
     }
 
     export("COMBINED") {
-        it.targetNamespace = ["named"]
-        it.sourceNamespace = "intermediary"
-        it.location = "$projectDir/src/main/resources/mappings-fabric.srg"
-        it.type = "SRG"
+        targetNamespace = ["named"]
+        sourceNamespace = "intermediary"
+        location = "$projectDir/src/main/resources/mappings-fabric.srg"
+        type = "SRG"
     }
 }
 processResources.dependsOn exportMappings
@@ -85,7 +85,6 @@ shadowJar {
 }
 
 remapJar {
-    fallbackTargetNamespace = "intermediary"
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier "fabric"

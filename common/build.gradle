@@ -10,9 +10,9 @@ minecraft {
 
         // required when using mcp mappings
         if (protocol <= 2) { // MC a1.1.2_01 and below
-            targetNamespace = "searge"
+            devFallbackNamespace = "searge"
         } else {
-            mcRemapper.fallbackTarget = "searge"
+            devNamespace = "searge"
         }
     } else {
         fabric {
@@ -21,10 +21,6 @@ minecraft {
             }
         }
     }
-}
-
-remapJar {
-    targetNamespace = "named"
 }
 
 configurations {

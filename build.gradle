@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.nio.file.Files
 
 plugins {
-    id 'xyz.wagyourtail.unimined' version '0.2.2-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '0.3.1-SNAPSHOT' apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
@@ -53,11 +53,14 @@ subprojects {
     }
 
     minecraft {
+        if (isLegacy) {
+            clientSourceSets = [sourceSets.main]
+        }
         mcRemapper.tinyRemapperConf = {
             // most mcp mappings (except older format) dont include field desc
-            it.ignoreFieldDesc(true)
+            ignoreFieldDesc(true)
             // this also fixes some issues with them, as it tells tiny remapper to try harder to resolve conflicts
-            it.ignoreConflicts(true)
+            ignoreConflicts(true)
         }
     }
 
@@ -108,8 +111,10 @@ subprojects {
         }
     }
 
-    sourceSets {
-        client
+    if (!isLegacy) {
+        sourceSets {
+            client
+        }
     }
 
     dependencies {
