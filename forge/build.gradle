@@ -65,6 +65,9 @@ dependencies {
     common project(path: ":common", configuration: "runtime")
     shadowCommon project(path: ":common", configuration: "shadeOnly")
     shadowCommon project(path: ':common'), { transitive false }
+
+    // Replay Mod
+    modImplementation("maven.modrinth:replaymod:${rootProject.mc_version}-${rootProject.replaymod_ver}")
 }
 
 processResources {
