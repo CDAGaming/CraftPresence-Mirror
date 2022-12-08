@@ -351,6 +351,7 @@ public class CommandsGui extends ExtendedScreen {
             completions.add("?");
             completions.add("help");
             completions.add("config");
+            completions.add("compile");
             completions.add("reload");
             completions.add("request");
             completions.add("export");
