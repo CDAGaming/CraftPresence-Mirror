@@ -630,7 +630,7 @@ public class DiscordUtils {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
-     * @param data The data to attach to the Specified Argument
+     * @param data         The data to attach to the Specified Argument
      */
     public void syncArgument(String argumentName, Supplier<Value> data) {
         synchronized (placeholderData) {
@@ -645,7 +645,7 @@ public class DiscordUtils {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
-     * @param data The data to attach to the Specified Argument
+     * @param data         The data to attach to the Specified Argument
      */
     public void syncArgument(String argumentName, Object data) {
         syncArgument(argumentName, () -> Value.object(data));
@@ -655,7 +655,7 @@ public class DiscordUtils {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
-     * @param data The data to attach to the Specified Argument
+     * @param data         The data to attach to the Specified Argument
      */
     public void syncArgument(String argumentName, double data) {
         syncArgument(argumentName, () -> Value.number(data));
@@ -665,7 +665,7 @@ public class DiscordUtils {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
-     * @param data The data to attach to the Specified Argument
+     * @param data         The data to attach to the Specified Argument
      */
     public void syncArgument(String argumentName, boolean data) {
         syncArgument(argumentName, () -> Value.bool(data));

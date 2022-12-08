@@ -247,12 +247,14 @@ public class CraftPresence {
                 CommandUtils.reloadData(false);
 
                 if (!CONFIG.hasChanged) {
-                    if (!SYSTEM.HAS_LOADED) {
+                    final boolean isMenuActive = (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu);
+                    final boolean isFullyLoaded = SYSTEM.HAS_LOADED && SYSTEM.HAS_GAME_LOADED;
+                    if (!isFullyLoaded && !isMenuActive) {
                         // Ensure Loading Presence has already passed, before any other type of presence displays
                         CommandUtils.setLoadingPresence();
-                    } else if (!CommandUtils.isInMainMenu && !CommandUtils.areModulesActive("_screen", "integration")) {
+                    } else if (player == null && !CommandUtils.isInMainMenu) {
                         CommandUtils.setMainMenuPresence();
-                    } else if (player != null && (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu)) {
+                    } else if (player != null && isMenuActive) {
                         CommandUtils.clearInitialPresence();
                     }
 

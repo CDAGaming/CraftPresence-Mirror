@@ -36,10 +36,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
-import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -72,21 +69,6 @@ public class CommandUtils {
             put("_screen", CraftPresence.GUIS);
         }
     };
-
-    /**
-     * Retrieve whether any {@link Module}s are actively running
-     *
-     * @return {@link Boolean#TRUE} if there are any actively running modules
-     */
-    public static boolean areModulesActive(final String... excludePatterns) {
-        final Supplier<Stream<String>> stream = () -> Stream.of(excludePatterns);
-        for (Map.Entry<String, Module> module : modules.entrySet()) {
-            if (stream.get().noneMatch(e -> module.getKey().startsWith(e)) && module.getValue().isInUse()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Reloads and Synchronizes Data, as needed, and performs onTick Events
