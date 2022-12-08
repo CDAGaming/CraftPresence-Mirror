@@ -67,7 +67,7 @@ public class ReplayModUtils implements Module {
         }
 
         if (isEnabled()) {
-            if (CraftPresence.instance.currentScreen != null) {
+            if (CraftPresence.GUIS.CURRENT_SCREEN != null) {
                 isInUse = true;
                 updateData();
             } else if (isInUse) {
@@ -80,11 +80,11 @@ public class ReplayModUtils implements Module {
 
     @Override
     public void updateData() {
-        if (CraftPresence.instance.currentScreen == null) {
+        if (CraftPresence.GUIS.CURRENT_SCREEN == null) {
             clearClientData();
         } else {
-            final AbstractGuiScreen<?> possibleScreen = GuiScreen.from(CraftPresence.instance.currentScreen);
-            final AbstractGuiOverlay<?> possibleOverlay = GuiOverlay.from(CraftPresence.instance.currentScreen);
+            final AbstractGuiScreen<?> possibleScreen = GuiScreen.from(CraftPresence.GUIS.CURRENT_SCREEN);
+            final AbstractGuiOverlay<?> possibleOverlay = GuiOverlay.from(CraftPresence.GUIS.CURRENT_SCREEN);
             if (possibleScreen == null && possibleOverlay == null) {
                 clearClientData();
             } else {
@@ -124,6 +124,16 @@ public class ReplayModUtils implements Module {
                 CraftPresence.GUIS.GUI_CLASSES.put(screenName, classObj);
             }
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean state) {
+        this.enabled = state;
     }
 
     @Override
