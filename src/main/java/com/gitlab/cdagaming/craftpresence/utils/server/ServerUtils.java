@@ -459,12 +459,12 @@ public class ServerUtils implements Module {
         // Form General Argument Lists & Sub Argument Lists
         canUseEndpointIcon = false;
 
-        CraftPresence.CLIENT.syncArgument("player.position.x", currentCoordinates.getFirst().toString());
-        CraftPresence.CLIENT.syncArgument("player.position.y", currentCoordinates.getSecond().toString());
-        CraftPresence.CLIENT.syncArgument("player.position.z", currentCoordinates.getThird().toString());
+        CraftPresence.CLIENT.syncArgument("player.position.x", currentCoordinates.getFirst());
+        CraftPresence.CLIENT.syncArgument("player.position.y", currentCoordinates.getSecond());
+        CraftPresence.CLIENT.syncArgument("player.position.z", currentCoordinates.getThird());
 
-        CraftPresence.CLIENT.syncArgument("player.health.current", currentHealth.getFirst().toString());
-        CraftPresence.CLIENT.syncArgument("player.health.max", currentHealth.getSecond().toString());
+        CraftPresence.CLIENT.syncArgument("player.health.current", currentHealth.getFirst());
+        CraftPresence.CLIENT.syncArgument("player.health.max", currentHealth.getSecond());
 
         // World Data Arguments
         CraftPresence.CLIENT.syncArgument("world.difficulty", StringUtils.getOrDefault(currentDifficulty));
@@ -479,10 +479,10 @@ public class ServerUtils implements Module {
         String formattedIcon = "";
         if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
             // Player Amount Arguments
-            CraftPresence.CLIENT.syncArgument("server.players.current", Integer.toString(currentPlayers));
-            CraftPresence.CLIENT.syncArgument("server.players.current.exclude", Integer.toString(currentPlayers - 1));
-            CraftPresence.CLIENT.syncArgument("server.players.max", Integer.toString(maxPlayers));
-            CraftPresence.CLIENT.syncArgument("server.players.max.exclude", Integer.toString(maxPlayers - 1));
+            CraftPresence.CLIENT.syncArgument("server.players.current", currentPlayers);
+            CraftPresence.CLIENT.syncArgument("server.players.current.exclude", currentPlayers - 1);
+            CraftPresence.CLIENT.syncArgument("server.players.max", maxPlayers);
+            CraftPresence.CLIENT.syncArgument("server.players.max.exclude", maxPlayers - 1);
 
             // Server Data Arguments (Multiplayer)
             final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;

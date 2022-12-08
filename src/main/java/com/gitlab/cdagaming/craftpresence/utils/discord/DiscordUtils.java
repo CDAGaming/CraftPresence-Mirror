@@ -630,17 +630,56 @@ public class DiscordUtils {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
+     * @param data The data to attach to the Specified Argument
+     */
+    public void syncArgument(String argumentName, Supplier<Value> data) {
+        synchronized (placeholderData) {
+            if (!StringUtils.isNullOrEmpty(argumentName)) {
+                scriptEngine.set(argumentName, data);
+                placeholderData.put(argumentName, data);
+            }
+        }
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data The data to attach to the Specified Argument
+     */
+    public void syncArgument(String argumentName, Object data) {
+        syncArgument(argumentName, () -> Value.object(data));
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data The data to attach to the Specified Argument
+     */
+    public void syncArgument(String argumentName, double data) {
+        syncArgument(argumentName, () -> Value.number(data));
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data The data to attach to the Specified Argument
+     */
+    public void syncArgument(String argumentName, boolean data) {
+        syncArgument(argumentName, () -> Value.bool(data));
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
      * @param insertString The String to attach to the Specified Argument
      * @param plain        Whether the expression should be parsed as a plain string
      */
     public void syncArgument(String argumentName, String insertString, final boolean plain) {
-        synchronized (placeholderData) {
-            if (!StringUtils.isNullOrEmpty(argumentName)) {
-                final Supplier<Value> value = compileData(insertString, plain);
-                scriptEngine.set(argumentName, value);
-                placeholderData.put(argumentName, value);
-            }
-        }
+        syncArgument(argumentName, compileData(insertString, plain));
     }
 
     /**
@@ -661,7 +700,7 @@ public class DiscordUtils {
     public void initArgument(String... args) {
         // Initialize Specified Arguments to Empty Data
         for (String argumentName : args) {
-            syncArgument(argumentName, "");
+            syncArgument(argumentName, Value::null_);
         }
     }
 
@@ -912,10 +951,10 @@ public class DiscordUtils {
      */
     public void syncPlaceholders() {
         // Sync Internal Values
-        scriptEngine.set("_general.instance", CraftPresence.instance);
-        scriptEngine.set("_config.instance", CraftPresence.CONFIG);
+        syncArgument("_general.instance", CraftPresence.instance);
+        syncArgument("_config.instance", CraftPresence.CONFIG);
         for (Map.Entry<String, Module> module : CommandUtils.modules.entrySet()) {
-            scriptEngine.set(module.getKey() + ".instance", module.getValue());
+            syncArgument(module.getKey() + ".instance", module.getValue());
         }
         // Sync Custom Variables
         removeArguments("custom.");

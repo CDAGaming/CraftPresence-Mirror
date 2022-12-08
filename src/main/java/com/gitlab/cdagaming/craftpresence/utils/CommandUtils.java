@@ -38,6 +38,8 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -76,9 +78,10 @@ public class CommandUtils {
      *
      * @return {@link Boolean#TRUE} if there are any actively running modules
      */
-    public static boolean areModulesActive(final boolean excludeIntegrations) {
+    public static boolean areModulesActive(final String... excludePatterns) {
+        final Supplier<Stream<String>> stream = () -> Stream.of(excludePatterns);
         for (Map.Entry<String, Module> module : modules.entrySet()) {
-            if (module.getValue().isInUse() && (!excludeIntegrations || module.getKey().startsWith("_"))) {
+            if (stream.get().noneMatch(e -> module.getKey().startsWith(e)) && module.getValue().isInUse()) {
                 return true;
             }
         }

@@ -184,8 +184,8 @@ public class ReplayModUtils implements Module {
             final VideoRenderer renderer = (VideoRenderer) StringUtils.lookupObject(
                     GuiVideoRenderer.class, CURRENT_SCREEN, "renderer"
             );
-            CraftPresence.CLIENT.syncArgument("replaymod.frames.current", Integer.toString(renderer.getFramesDone()));
-            CraftPresence.CLIENT.syncArgument("replaymod.frames.total", Integer.toString(renderer.getTotalFrames()));
+            CraftPresence.CLIENT.syncArgument("replaymod.frames.current", renderer.getFramesDone());
+            CraftPresence.CLIENT.syncArgument("replaymod.frames.total", renderer.getTotalFrames());
         } else {
             CraftPresence.CLIENT.removeArguments("replaymod");
         }
