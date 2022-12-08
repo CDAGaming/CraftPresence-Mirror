@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
@@ -912,12 +913,9 @@ public class DiscordUtils {
         // Sync Internal Values
         scriptEngine.set("_general.instance", CraftPresence.instance);
         scriptEngine.set("_config.instance", CraftPresence.CONFIG);
-        scriptEngine.set("_dimension.instance", CraftPresence.DIMENSIONS);
-        scriptEngine.set("_biome.instance", CraftPresence.BIOMES);
-        scriptEngine.set("_server.instance", CraftPresence.SERVER);
-        scriptEngine.set("_screen.instance", CraftPresence.GUIS);
-        scriptEngine.set("_entity.instance", CraftPresence.ENTITIES);
-        scriptEngine.set("_item.instance", CraftPresence.TILE_ENTITIES);
+        for (Map.Entry<String, Module> module : CommandUtils.modules.entrySet()) {
+            scriptEngine.set(module.getKey() + ".instance", module.getValue());
+        }
         // Sync Custom Variables
         removeArguments("custom.");
         for (Map.Entry<String, String> entry : CraftPresence.CONFIG.displaySettings.dynamicVariables.entrySet()) {

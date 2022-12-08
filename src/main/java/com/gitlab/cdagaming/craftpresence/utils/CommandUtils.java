@@ -36,8 +36,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -55,16 +54,16 @@ public class CommandUtils {
      */
     public static boolean isLoadingGame = false;
 
-    public static Map<String, Module> modules = new HashMap<String, Module>() {
+    public static TreeMap<String, Module> modules = new TreeMap<String, Module>() {
         private static final long serialVersionUID = 510350212503123679L;
 
         {
-            put("biome", CraftPresence.BIOMES);
-            put("dimension", CraftPresence.DIMENSIONS);
-            put("item", CraftPresence.TILE_ENTITIES);
-            put("entity", CraftPresence.ENTITIES);
-            put("server", CraftPresence.SERVER);
-            put("screen", CraftPresence.GUIS);
+            put("_biome", CraftPresence.BIOMES);
+            put("_dimension", CraftPresence.DIMENSIONS);
+            put("_item", CraftPresence.TILE_ENTITIES);
+            put("_entity", CraftPresence.ENTITIES);
+            put("_server", CraftPresence.SERVER);
+            put("_screen", CraftPresence.GUIS);
         }
     };
 

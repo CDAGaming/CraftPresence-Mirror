@@ -54,7 +54,7 @@ public class CraftPresenceForge {
     public void setupIntegrations() {
         // TODO
         if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
-            CommandUtils.modules.put("replaymod", new ReplayModUtils());
+            CommandUtils.modules.put("integration.replaymod", new ReplayModUtils());
         }
     }
 }

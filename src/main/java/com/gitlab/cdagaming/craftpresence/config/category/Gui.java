@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
@@ -48,6 +49,23 @@ public class Gui extends Module implements Serializable {
             ));
         }
     };
+
+    public Gui() {
+        if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
+            guiData.put("GuiReplayViewer", new ModuleData(
+                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.integrations.replaymod.viewer"),
+                    null
+            ));
+            guiData.put("GuiReplayOverlay", new ModuleData(
+                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.integrations.replaymod.editor"),
+                    null
+            ));
+            guiData.put("GuiVideoRenderer", new ModuleData(
+                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.integrations.replaymod.renderer"),
+                    null
+            ));
+        }
+    }
 
     @Override
     public Gui getDefaults() {
