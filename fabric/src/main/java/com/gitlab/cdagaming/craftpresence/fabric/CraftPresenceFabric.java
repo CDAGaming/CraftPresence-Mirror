@@ -45,6 +45,6 @@ public class CraftPresenceFabric implements ClientModInitializer {
     }
 
     public void setupIntegrations() {
-        // TODO
+        // N/A
     }
 }
