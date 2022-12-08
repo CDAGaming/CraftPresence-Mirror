@@ -52,7 +52,7 @@ public class ReplayModUtils implements Module {
         CURRENT_SCREEN = null;
         CURRENT_GUI_CLASS = null;
 
-        isInUse = false;
+        setInUse(false);
         CraftPresence.CLIENT.removeArguments("replaymod");
     }
 
@@ -68,12 +68,12 @@ public class ReplayModUtils implements Module {
 
         if (isEnabled()) {
             if (CraftPresence.GUIS.CURRENT_SCREEN != null) {
-                isInUse = true;
+                setInUse(true);
                 updateData();
-            } else if (isInUse) {
+            } else if (isInUse()) {
                 clearClientData();
             }
-        } else if (isInUse) {
+        } else if (isInUse()) {
             emptyData();
         }
     }

@@ -85,7 +85,7 @@ public class BiomeUtils implements Module {
         CURRENT_BIOME_NAME = null;
         CURRENT_BIOME_IDENTIFIER = null;
 
-        isInUse = false;
+        setInUse(false);
         CraftPresence.CLIENT.removeArguments("biome");
         CraftPresence.CLIENT.clearOverride("biome");
     }
@@ -102,12 +102,12 @@ public class BiomeUtils implements Module {
 
         if (enabled) {
             if (CraftPresence.player != null) {
-                isInUse = true;
+                setInUse(true);
                 updateData();
-            } else if (isInUse) {
+            } else if (isInUse()) {
                 clearClientData();
             }
-        } else if (isInUse) {
+        } else if (isInUse()) {
             emptyData();
         }
     }

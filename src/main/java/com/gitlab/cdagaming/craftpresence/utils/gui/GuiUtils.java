@@ -306,7 +306,7 @@ public class GuiUtils implements Module {
         CURRENT_SCREEN = null;
         CURRENT_GUI_CLASS = null;
 
-        isInUse = false;
+        setInUse(false);
         CraftPresence.CLIENT.removeArguments("screen");
         CraftPresence.CLIENT.clearOverride("screen");
     }
@@ -324,12 +324,12 @@ public class GuiUtils implements Module {
 
         if (enabled) {
             if (CraftPresence.instance.currentScreen != null) {
-                isInUse = true;
+                setInUse(true);
                 updateData();
-            } else if (isInUse) {
+            } else if (isInUse()) {
                 clearClientData();
             }
-        } else if (isInUse) {
+        } else if (isInUse()) {
             emptyData();
         }
 

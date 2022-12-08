@@ -205,7 +205,7 @@ public class ServerUtils implements Module {
 
         queuedForUpdate = false;
         isOnLAN = false;
-        isInUse = false;
+        setInUse(false);
 
         if (!joinInProgress) {
             requestedServerData = null;
@@ -229,12 +229,12 @@ public class ServerUtils implements Module {
 
         if (enabled) {
             if (CraftPresence.player != null && !joinInProgress) {
-                isInUse = true;
+                setInUse(true);
                 updateData();
-            } else if (isInUse) {
+            } else if (isInUse()) {
                 clearClientData();
             }
-        } else if (isInUse) {
+        } else if (isInUse()) {
             emptyData();
         }
 

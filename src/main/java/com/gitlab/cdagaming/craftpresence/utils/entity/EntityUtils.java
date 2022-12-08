@@ -120,7 +120,7 @@ public class EntityUtils implements Module {
         CURRENT_TARGET_TAGS.clear();
         CURRENT_RIDING_TAGS.clear();
 
-        isInUse = false;
+        setInUse(false);
         CraftPresence.CLIENT.removeArguments("entity", "nbt.entity");
         CraftPresence.CLIENT.clearOverride("entity.target", "entity.riding");
     }
@@ -137,12 +137,12 @@ public class EntityUtils implements Module {
 
         if (enabled) {
             if (CraftPresence.player != null) {
-                isInUse = true;
+                setInUse(true);
                 updateData();
-            } else if (isInUse) {
+            } else if (isInUse()) {
                 clearClientData();
             }
-        } else if (isInUse) {
+        } else if (isInUse()) {
             emptyData();
         }
     }

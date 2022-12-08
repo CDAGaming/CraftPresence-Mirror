@@ -87,7 +87,7 @@ public class DimensionUtils implements Module {
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
 
-        isInUse = false;
+        setInUse(false);
         CraftPresence.CLIENT.removeArguments("dimension");
         CraftPresence.CLIENT.clearOverride("dimension");
     }
@@ -104,12 +104,12 @@ public class DimensionUtils implements Module {
 
         if (enabled) {
             if (CraftPresence.player != null) {
-                isInUse = true;
+                setInUse(true);
                 updateData();
-            } else if (isInUse) {
+            } else if (isInUse()) {
                 clearClientData();
             }
-        } else if (isInUse) {
+        } else if (isInUse()) {
             emptyData();
         }
     }

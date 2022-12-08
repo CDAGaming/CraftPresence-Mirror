@@ -234,8 +234,7 @@ public class TileEntityUtils implements Module {
         CURRENT_LEGS_TAGS.clear();
         CURRENT_BOOTS_TAGS.clear();
 
-        isInUse = false;
-
+        setInUse(false);
         CraftPresence.CLIENT.removeArguments("item", "nbt.item");
         CraftPresence.CLIENT.clearOverride("item");
     }
@@ -252,12 +251,12 @@ public class TileEntityUtils implements Module {
 
         if (enabled) {
             if (CraftPresence.player != null) {
-                isInUse = true;
+                setInUse(true);
                 updateData();
-            } else if (isInUse) {
+            } else if (isInUse()) {
                 clearClientData();
             }
-        } else if (isInUse) {
+        } else if (isInUse()) {
             emptyData();
         }
     }
