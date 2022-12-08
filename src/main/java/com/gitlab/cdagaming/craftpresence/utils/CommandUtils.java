@@ -54,6 +54,9 @@ public class CommandUtils {
      */
     public static boolean isLoadingGame = false;
 
+    /**
+     * A mapping of the currently loaded Rich Presence Modules
+     */
     public static TreeMap<String, Module> modules = new TreeMap<String, Module>() {
         private static final long serialVersionUID = 510350212503123679L;
 
@@ -66,6 +69,20 @@ public class CommandUtils {
             put("_screen", CraftPresence.GUIS);
         }
     };
+
+    /**
+     * Retrieve whether any {@link Module}s are actively running
+     *
+     * @return {@link Boolean#TRUE} if there are any actively running modules
+     */
+    public static boolean areModulesActive() {
+        for (Module module : modules.values()) {
+            if (module.isInUse()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Reloads and Synchronizes Data, as needed, and performs onTick Events
