@@ -54,7 +54,6 @@ public class ReplayModUtils implements Module {
 
         isInUse = false;
         CraftPresence.CLIENT.removeArguments("replaymod");
-        CraftPresence.CLIENT.clearOverride("replaymod");
     }
 
     @Override
@@ -158,6 +157,7 @@ public class ReplayModUtils implements Module {
         CraftPresence.CLIENT.syncArgument("screen.icon", CraftPresence.CLIENT.imageOf("screen.icon", true, formattedIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon));
 
         // Additional Data for Replay Mod
+        CraftPresence.CLIENT.removeArguments("replaymod");
         if (CURRENT_SCREEN instanceof GuiVideoRenderer) {
             CraftPresence.CLIENT.syncArgument("replaymod.time.current", secToString(
                     (Integer) StringUtils.lookupObject(
