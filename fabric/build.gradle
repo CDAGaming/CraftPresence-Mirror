@@ -39,7 +39,7 @@ dependencies {
     shadowCommon project(path: ':common'), { transitive false }
 
     // Additional Integrations
-    if (use_replay_mod) {
+    if (use_replay_mod.toBoolean()) {
         modImplementation("com.replaymod:replaymod-${rootProject.mc_version}:${rootProject.replaymod_ver}")
     }
 }
