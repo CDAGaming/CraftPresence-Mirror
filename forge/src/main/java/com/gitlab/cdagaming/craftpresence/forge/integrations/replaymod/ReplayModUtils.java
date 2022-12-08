@@ -103,10 +103,10 @@ public class ReplayModUtils implements Module {
                     if (!CraftPresence.GUIS.GUI_CLASSES.containsKey(newScreenName)) {
                         CraftPresence.GUIS.GUI_CLASSES.put(newScreenName, newScreenClass);
                     }
-                }
 
-                // GUI Fields will have constant changes
-                updatePresence();
+                    updatePresence();
+                }
+                syncPlaceholders();
             }
         }
     }
@@ -165,9 +165,10 @@ public class ReplayModUtils implements Module {
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("screen.icon", CraftPresence.CLIENT.imageOf("screen.icon", true, formattedIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon));
+    }
 
+    private void syncPlaceholders() {
         // Additional Data for Replay Mod
-        CraftPresence.CLIENT.removeArguments("replaymod");
         if (CURRENT_SCREEN instanceof GuiVideoRenderer) {
             CraftPresence.CLIENT.syncArgument("replaymod.time.current", secToString(
                     (Integer) StringUtils.lookupObject(
@@ -185,6 +186,8 @@ public class ReplayModUtils implements Module {
             );
             CraftPresence.CLIENT.syncArgument("replaymod.frames.current", Integer.toString(renderer.getFramesDone()));
             CraftPresence.CLIENT.syncArgument("replaymod.frames.total", Integer.toString(renderer.getTotalFrames()));
+        } else {
+            CraftPresence.CLIENT.removeArguments("replaymod");
         }
     }
 

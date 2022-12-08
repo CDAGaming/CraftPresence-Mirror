@@ -250,7 +250,7 @@ public class CraftPresence {
                     if (!SYSTEM.HAS_LOADED) {
                         // Ensure Loading Presence has already passed, before any other type of presence displays
                         CommandUtils.setLoadingPresence();
-                    } else if (!CommandUtils.isInMainMenu && !CommandUtils.areModulesActive()) {
+                    } else if (!CommandUtils.isInMainMenu && !CommandUtils.areModulesActive(true)) {
                         CommandUtils.setMainMenuPresence();
                     } else if (player != null && (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu)) {
                         CommandUtils.clearInitialPresence();

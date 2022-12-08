@@ -36,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -75,9 +76,9 @@ public class CommandUtils {
      *
      * @return {@link Boolean#TRUE} if there are any actively running modules
      */
-    public static boolean areModulesActive() {
-        for (Module module : modules.values()) {
-            if (module.isInUse()) {
+    public static boolean areModulesActive(final boolean excludeIntegrations) {
+        for (Map.Entry<String, Module> module : modules.entrySet()) {
+            if (module.getValue().isInUse() && (!excludeIntegrations || module.getKey().startsWith("_"))) {
                 return true;
             }
         }

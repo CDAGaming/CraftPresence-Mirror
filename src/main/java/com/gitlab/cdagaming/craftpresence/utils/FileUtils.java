@@ -454,21 +454,23 @@ public class FileUtils {
         }
 
         for (ClassInfo classInfo : getClassList()) {
-            final String classPath = MappingUtils.getMappedPath(classInfo.getName());
-            boolean hasMatch = paths.isEmpty();
-            // Attempt to Add Classes Matching any of the Source Packages
-            for (String path : paths) {
-                final Set<String> unmapped = unmappedNames.get(path);
-                if (classPath.startsWith(path) || unmapped.contains(classPath)) {
-                    hasMatch = true;
-                    break;
+            if (classInfo != null) {
+                final String classPath = MappingUtils.getMappedPath(classInfo.getName());
+                boolean hasMatch = paths.isEmpty();
+                // Attempt to Add Classes Matching any of the Source Packages
+                for (String path : paths) {
+                    final Set<String> unmapped = unmappedNames.get(path);
+                    if (classPath.startsWith(path) || unmapped.contains(classPath)) {
+                        hasMatch = true;
+                        break;
+                    }
                 }
-            }
 
-            if (hasMatch) {
-                try {
-                    results.add(CLASS_MAP.get(classPath));
-                } catch (Throwable ignored) {
+                if (hasMatch) {
+                    try {
+                        results.add(CLASS_MAP.get(classPath));
+                    } catch (Throwable ignored) {
+                    }
                 }
             }
         }

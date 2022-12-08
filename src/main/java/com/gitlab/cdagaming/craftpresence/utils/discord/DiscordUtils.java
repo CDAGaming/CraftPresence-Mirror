@@ -429,7 +429,7 @@ public class DiscordUtils {
                     ModUtils.LOG.error("\t" + error.toString());
                 }
             }
-            return () -> Value.string("");
+            return Value::null_;
         }
 
         for (Expr.Visitor transformer : transforms) {
@@ -454,9 +454,9 @@ public class DiscordUtils {
                     }
                 }
                 ex.printStackTrace();
-                return Value.string("");
+                return Value.null_();
             }
-            return Value.string(sect.toString());
+            return !StringUtils.isNullOrEmpty(sect.toString()) ? Value.string(sect.toString()) : Value.null_();
         };
     }
 
@@ -470,7 +470,8 @@ public class DiscordUtils {
      * @return the result of the supplier containing the output
      */
     public String getResult(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
-        return compileData(input, overrideId, plain, replacements).get().toString();
+        final Value data = compileData(input, overrideId, plain, replacements).get();
+        return !data.isNull() ? data.toString() : "";
     }
 
     /**
