@@ -95,15 +95,14 @@ public class CommandUtils {
      */
     public static void reloadData(final boolean forceUpdateRPC) {
         ModUtils.TRANSLATOR.onTick();
+        if (forceUpdateRPC) {
+            ModUtils.TRANSLATOR.syncTranslations();
+        }
         CraftPresence.SYSTEM.onTick();
         CraftPresence.instance.addScheduledTask(() -> CraftPresence.KEYBINDINGS.onTick());
 
-        if (CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED) {
-            if (forceUpdateRPC) {
-                ModUtils.TRANSLATOR.syncTranslations();
-            }
-
-            for (Module module : modules.values()) {
+        for (Module module : modules.values()) {
+            if (module.canBeLoaded()) {
                 module.onTick();
                 if (forceUpdateRPC && module.isInUse()) {
                     module.updatePresence();

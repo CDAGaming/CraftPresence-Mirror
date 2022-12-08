@@ -1,5 +1,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
+
 public interface Module {
     /**
      * Clears FULL Data from this Module
@@ -57,5 +59,9 @@ public interface Module {
 
     default void setInUse(boolean state) {
         // N/A
+    }
+
+    default boolean canBeLoaded() {
+        return CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
     }
 }

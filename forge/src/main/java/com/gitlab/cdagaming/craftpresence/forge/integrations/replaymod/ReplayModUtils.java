@@ -147,6 +147,11 @@ public class ReplayModUtils implements Module {
     }
 
     @Override
+    public boolean canBeLoaded() {
+        return true;
+    }
+
+    @Override
     public void updatePresence() {
         final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
