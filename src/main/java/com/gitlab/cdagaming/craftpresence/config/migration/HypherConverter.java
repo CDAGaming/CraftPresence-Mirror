@@ -49,7 +49,7 @@ import java.util.Map;
 @SuppressWarnings({"unchecked", "SameParameterValue"})
 public class HypherConverter implements DataMigrator {
     private final int fileVersion;
-    private final String configPath, serverEntriesPath;
+    private final String configPath, serverEntriesPath, replayModPath;
     private final String EMPTY_QUOTES = "{''}";
     // oldName -> newName
     private final Map<String, String> placeholderMappings = ImmutableMap.<String, String>builder()
@@ -88,7 +88,7 @@ public class HypherConverter implements DataMigrator {
             .put("%realmgame%", EMPTY_QUOTES) // Realm Event - Unimplemented
             .put("%realmicon%", EMPTY_QUOTES) // Realm Event - Unimplemented
             .build();
-    private int configVersion = -1, serverEntryVersion = -1;
+    private int configVersion = -1, serverEntryVersion = -1, replayModVersion = -1;
 
     /**
      * Initializes this {@link DataMigrator}
@@ -99,6 +99,7 @@ public class HypherConverter implements DataMigrator {
         this.fileVersion = entry.getKey();
         this.configPath = entry.getValue() + "simple-rpc.toml";
         this.serverEntriesPath = entry.getValue() + "server-entries.toml";
+        this.replayModPath = entry.getValue() + "simple-rpc-replaymod.toml";
     }
 
     @Override
@@ -173,11 +174,30 @@ public class HypherConverter implements DataMigrator {
                 final boolean areOverridesEnabled = conf.get("enabled");
                 if (conf.get("entry") != null) {
                     for (AbstractConfig entry : (List<AbstractConfig>) conf.get("entry")) {
-                        final ModuleData data = new ModuleData()
-                                .setData(convertPresenceData(entry, areOverridesEnabled, true));
-                        instance.serverSettings.serverData.put(entry.get("ip"), data);
+                        instance.serverSettings.serverData.put(entry.get("ip"), new ModuleData()
+                                .setData(convertPresenceData(entry, areOverridesEnabled, true)));
                     }
                 }
+                instance.save();
+            }
+        }
+
+        // Replay Mod Integration Conversion
+        final File replayModFile = new File(replayModPath);
+        if (replayModFile.exists()) {
+            try (FileConfig conf = FileConfig.of(replayModFile)) {
+                conf.load();
+                replayModVersion = conf.get("general.version");
+                ModUtils.LOG.debugInfo(String.format("Replay Mod Integration file found (Version: %d, File Version: %d), interpreting data...", replayModVersion, fileVersion));
+
+                instance.advancedSettings.enablePerGui = true;
+                instance.advancedSettings.guiSettings.guiData.put("GuiReplayViewer", new ModuleData()
+                        .setData(convertPresenceData(conf.get("replay_viewer"))));
+                instance.advancedSettings.guiSettings.guiData.put("GuiReplayOverlay", new ModuleData()
+                        .setData(convertPresenceData(conf.get("replay_editor"))));
+                instance.advancedSettings.guiSettings.guiData.put("GuiVideoRenderer", new ModuleData()
+                        .setData(convertPresenceData(conf.get("replay_render"))));
+
                 instance.save();
             }
         }
@@ -240,18 +260,21 @@ public class HypherConverter implements DataMigrator {
 
     private boolean isActive(final ConfigFlag flag) {
         return (configVersion < 0 || configVersion >= flag.configVersion) &&
-                (serverEntryVersion < 0 || serverEntryVersion >= flag.serverEntryVersion);
+                (serverEntryVersion < 0 || serverEntryVersion >= flag.serverEntryVersion) &&
+                (replayModVersion < 0 || replayModVersion >= flag.replayModVersion);
     }
 
     private enum ConfigFlag {
-        USE_IMAGE_POOLS(17, 2);
+        USE_IMAGE_POOLS(17, 2, 1);
 
         private final int configVersion;
         private final int serverEntryVersion;
+        private final int replayModVersion;
 
-        ConfigFlag(int configVersion, int serverEntryVersion) {
+        ConfigFlag(int configVersion, int serverEntryVersion, int replayModVersion) {
             this.configVersion = configVersion;
             this.serverEntryVersion = serverEntryVersion;
+            this.replayModVersion = replayModVersion;
         }
     }
 }
