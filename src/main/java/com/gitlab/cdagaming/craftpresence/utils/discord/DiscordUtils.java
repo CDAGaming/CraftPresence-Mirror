@@ -648,27 +648,15 @@ public class DiscordUtils {
      * @param data         The data to attach to the Specified Argument
      */
     public void syncArgument(String argumentName, Object data) {
-        syncArgument(argumentName, () -> Value.object(data));
-    }
-
-    /**
-     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
-     *
-     * @param argumentName The Specified Argument to Synchronize for
-     * @param data         The data to attach to the Specified Argument
-     */
-    public void syncArgument(String argumentName, double data) {
-        syncArgument(argumentName, () -> Value.number(data));
-    }
-
-    /**
-     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
-     *
-     * @param argumentName The Specified Argument to Synchronize for
-     * @param data         The data to attach to the Specified Argument
-     */
-    public void syncArgument(String argumentName, boolean data) {
-        syncArgument(argumentName, () -> Value.bool(data));
+        syncArgument(argumentName, () -> {
+            if (data instanceof Number) {
+                return Value.number(((Number) data).doubleValue());
+            } else if (data instanceof Boolean) {
+                return Value.bool((Boolean) data);
+            } else {
+                return Value.object(data);
+            }
+        });
     }
 
     /**
