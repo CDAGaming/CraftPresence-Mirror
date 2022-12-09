@@ -6,13 +6,13 @@ def accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.a
 
 minecraft {
     if (isJarMod) {
-        jarMod()
-
-        // required when using mcp mappings
-        if (protocol <= 2) { // MC a1.1.2_01 and below
-            devNamespace = "searge"
-        } else {
-            devFallbackNamespace = "searge"
+        jarMod {
+            // required when using mcp mappings
+            if (protocol <= 2) { // MC a1.1.2_01 and below
+                devNamespace = "searge"
+            } else {
+                devFallbackNamespace = "searge"
+            }
         }
     } else {
         fabric {
