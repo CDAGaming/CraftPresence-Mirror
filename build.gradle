@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.nio.file.Files
 
 plugins {
-    id 'xyz.wagyourtail.unimined' version '0.3.2-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '0.3.3-SNAPSHOT' apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
