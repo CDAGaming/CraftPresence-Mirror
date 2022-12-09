@@ -480,9 +480,7 @@ public class ServerUtils implements Module {
         if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
             // Player Amount Arguments
             CraftPresence.CLIENT.syncArgument("server.players.current", currentPlayers);
-            CraftPresence.CLIENT.syncArgument("server.players.current.exclude", currentPlayers - 1);
             CraftPresence.CLIENT.syncArgument("server.players.max", maxPlayers);
-            CraftPresence.CLIENT.syncArgument("server.players.max.exclude", maxPlayers - 1);
 
             // Server Data Arguments (Multiplayer)
             final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;

@@ -78,7 +78,7 @@ public class HypherConverter implements DataMigrator {
             .put("%serverip%", "{server.address}")
             .put("%servername%", "{server.name}")
             .put("%players%", "{server.players.current}")
-            .put("%playersexcl%", "{server.players.current.exclude}")
+            .put("%playersexcl%", "{server.players.current - 1}")
             .put("%maxplayers%", "{server.players.max}")
             .put("%motd%", "{server.motd.raw}")
             .put("%servericon%", "{server.icon}")
