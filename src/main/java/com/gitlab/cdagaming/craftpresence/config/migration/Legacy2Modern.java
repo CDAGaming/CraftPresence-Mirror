@@ -162,17 +162,9 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&PLAYERS:CURRENT&", "{server.players.current}", IS_TEXT, IS_SERVER_MODULE),
             generatePair("&CURRENT&", "{server.players.current}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerListPlaceholder")),
             //
-            generatePair("&SERVER:PLAYERS:CURRENTEXCL&", "{server.players.current - 1}", IS_TEXT),
-            generatePair("&PLAYERS:CURRENTEXCL&", "{server.players.current - 1}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&CURRENTEXCL&", "{server.players.current - 1}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerListPlaceholder")),
-            //
             generatePair("&SERVER:PLAYERS:MAX&", "{server.players.max}", IS_TEXT),
             generatePair("&PLAYERS:MAX&", "{server.players.max}", IS_TEXT, IS_SERVER_MODULE),
             generatePair("&MAX&", "{server.players.max}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerListPlaceholder")),
-            //
-            generatePair("&SERVER:PLAYERS:MAXEXCL&", "{server.players.max - 1}", IS_TEXT),
-            generatePair("&PLAYERS:MAXEXCL&", "{server.players.max - 1}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&MAXEXCL&", "{server.players.max - 1}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerListPlaceholder")),
             //
             generatePair("&SERVER:WORLDINFO:DIFFICULTY&", "{world.difficulty}", IS_TEXT),
             generatePair("&WORLDINFO:DIFFICULTY&", "{world.difficulty}", IS_TEXT, IS_SERVER_MODULE),
