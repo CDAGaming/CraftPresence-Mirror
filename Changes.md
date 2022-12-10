@@ -138,10 +138,19 @@ related systems:
     * `&SCREEN:ICON&`, `&ICON&` (From Gui Settings) => `screen.icon`
     * `&SCREEN:CLASS&`, `&CLASS&` (From Gui Settings) => `screen.class`
     * `&SCREEN&` => `screen.message`, `screen.icon` (Depends on config setting)
+    * `&TARGETENTITY:ENTITY&`, `&ENTITY&` (From Target Entity Settings) => `entity.target.name`
+    * `&TARGETENTITY:ICON&`, `&ICON&` (From Target Entity Settings) => `entity.target.icon`
+    * `&TARGETENTITY&` => `entity.target.message`, `entity.target.icon` (Depends on config setting)
+    * `&RIDINGENTITY:ENTITY&`, `&ENTITY&` (From Riding Entity Settings) => `entity.riding.name`
+    * `&RIDINGENTITY:ICON&`, `&ICON&` (From Riding Entity Settings) => `entity.riding.icon`
+    * `&RIDINGENTITY&` => `entity.riding.message`, `entity.riding.icon` (Depends on config setting)
+    * `&TILEENTITY:[SLOT]&`, `&[SLOT]&` (From `playerItemsPlaceholder`) => `item.[slotIdentifier].message`
+    * `&TILEENTITY&` => `item.message.default`
+    * `&ITEM&` (From Item Settings) => `item.message.holding`
 * Added Placeholders:
     * TBD
 * Removed (or moved) Placeholders:
-    * TBD
+    * NBT placeholders have moved from being module only as `&[tagName]&` to being able to be used anywhere with a `nbt.[module].[tagName]` format
 
 ### Translations
 
