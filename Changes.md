@@ -168,6 +168,7 @@ related systems:
     * `server.motd.line.*` added to display only the specified line from `server.motd.raw`
     * `world.time.12` added to display `world.time.24` in an `xx:xx AM/PM` format
     * `player.icon` added if `allowEndpointIcons` is active and a valid `playerSkinEndpoint` is supplied
+    * `*.instance` and `*.class` placeholders added to relevant `Gui`, `Entity`, and `Tile Entity` Modules
 * Removed (or moved) Placeholders:
     * NBT placeholders have moved from being module only as `&[tagName]&` to being able to be used anywhere with
       a `nbt.[module].[tagName]` format
