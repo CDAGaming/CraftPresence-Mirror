@@ -165,7 +165,7 @@ public class ReplayModUtils implements Module {
         CraftPresence.CLIENT.syncArgument("screen.default.icon", CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
         CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
-        CraftPresence.CLIENT.syncArgument("screen.class", MappingUtils.getClassName(CURRENT_GUI_CLASS));
+        CraftPresence.CLIENT.syncArgument("screen.class", CURRENT_GUI_CLASS);
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
