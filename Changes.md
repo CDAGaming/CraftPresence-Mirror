@@ -82,7 +82,7 @@ One of the foundational changes that have been made to CraftPresence, is with pl
 With the integration of Starscript, several changes, additions, and removals have been made to placeholders and their
 related systems:
 
-* Placeholders can now be used anywhere (Gone with `ArgumentType` and freedom to customize)
+* Placeholders can now be used anywhere, without restrictions
 * Programmer expressions (Such as formatting, operators, as well as custom functions) have been implemented to allow an
   even greater level of customizability then we've ever had prior
     * See [their wiki](https://github.com/MeteorDevelopment/starscript/wiki) for some of the standard functions now
@@ -93,8 +93,51 @@ related systems:
   of `&FOO:BAR&`
     * All prior usages from v1 configs will also be migrated to follow the new names as mentioned below:
 
-* Renamed Placeholders (`old` => `new` (`conditions`)):
-    * `TBD` => `TBD` ()
+* Renamed Placeholders (`old` => `new`, Surround with `{}` when using new names):
+    * `&DEFAULT&` => `general.icon` (Icons Only)
+    * `&MAINMENU&` => `menu.message`, `menu.icon` (Depends on config setting)
+    * `&BRAND&` => `general.brand`
+    * `&MCVERSION&` => `general.version`
+    * `&IGN&` => `custom.player_info_out`, `player.icon` (Depends on config setting)
+    * `&IGN:NAME&`, `&NAME&` (From `playerOuterInfoPlaceholder`) => `player.name`
+    * `&IGN:UUID&`, `&UUID&` (From `playerOuterInfoPlaceholder`) => `player.uuid.short`
+    * `&IGN:UUID_FULL&`, `&UUID_FULL&` (From `playerOuterInfoPlaceholder`) => `player.uuid.full`
+    * `&MODS` => `custom.mods`
+    * `&MODS:MODCOUNT&`, `&MODCOUNT&` (From `modsPlaceholder`) => `general.mods`
+    * `&PACK&` => `custom.pack`, `pack.icon` (Depends on config setting)
+    * `&PACK:NAME&`, `&NAME&` (From `modpackMessage`) => `pack.name`
+    * `&DIMENSION:DIMENSION&`, `&DIMENSION&` (From Dimension Settings) => `dimension.name`
+    * `&DIMENSION:ICON&`, `&ICON&` (From Dimension Settings) => `dimension.icon`
+    * `&DIMENSION&` => `dimension.message`, `dimension.icon` (Depends on config setting)
+    * `&BIOME:BIOME&`, `&BIOME&` (From Biome Settings) => `biome.name`
+    * `&BIOME:ICON&`, `&ICON&` (From Biome Settings) => `biome.icon`
+    * `&BIOME&` => `biome.message`, `biome.icon` (Depends on config setting)
+    * `&SERVER:IP&`, `&IP&` (From Server Settings) => `server.address`
+    * `&SERVER:NAME&`, `&NAME&` (From Server Settings) => `server.name`
+    * `&SERVER:MOTD&`, `&MOTD&` (From Server Settings) => `server.motd.raw`
+    * `&SERVER:ICON&`, `&ICON&` (From Server Settings) => `server.icon`
+    * `&SERVER&` => `server.message`, `server.icon` (Depends on config setting)
+    * `&SERVER:PLAYERS&`, `&PLAYERS&` (From Server Settings) => `custom.players`
+    * `&SERVER:WORLDINFO&`, `&WORLDINFO&` (From Server Settings) => `custom.world_info`
+    * `&SERVER:PLAYERINFO&`, `&PLAYERINFO&` (From Server Settings) => `custom.player_info_in`
+    * `&SERVER:PLAYERINFO:COORDS&`, `&PLAYERINFO:COORDS&` (From Server Settings), `&COORDS&` (From `playerInnerInfoPlaceholder`) => `custom.player_info_coordinate`
+    * `&SERVER:PLAYERINFO:HEALTH&`, `&PLAYERINFO:HEALTH&` (From Server Settings), `&HEALTH&` (From `playerInnerInfoPlaceholder`) => `custom.player_info_health`
+    * `&SERVER:PLAYERINFO:COORDS:xPosition&`, `&PLAYERINFO:COORDS:xPosition&` (From Server Settings), `&COORDS:xPosition&` (From `playerInnerInfoPlaceholder`), `&xPosition&` (From `playerCoordinatePlaceholder`) => `player.position.x`
+    * `&SERVER:PLAYERINFO:COORDS:yPosition&`, `&PLAYERINFO:COORDS:yPosition&` (From Server Settings), `&COORDS:yPosition&` (From `playerInnerInfoPlaceholder`), `&yPosition&` (From `playerCoordinatePlaceholder`) => `player.position.y`
+    * `&SERVER:PLAYERINFO:COORDS:zPosition&`, `&PLAYERINFO:COORDS:zPosition&` (From Server Settings), `&COORDS:zPosition&` (From `playerInnerInfoPlaceholder`), `&zPosition&` (From `playerCoordinatePlaceholder`) => `player.position.z`
+    * `&SERVER:PLAYERINFO:HEALTH:CURRENT&`, `&PLAYERINFO:HEALTH:CURRENT&` (From Server Settings), `&HEALTH:CURRENT&` (From `playerInnerInfoPlaceholder`), `&CURRENT&` (From `playerHealthPlaceholder`) => `player.health.current`
+    * `&SERVER:PLAYERINFO:HEALTH:MAX&`, `&PLAYERINFO:HEALTH:MAX&` (From Server Settings), `&HEALTH:MAX&` (From `playerInnerInfoPlaceholder`), `&MAX&` (From `playerHealthPlaceholder`) => `player.health.max`
+    * `&SERVER:PLAYERS:CURRENT&`, `&PLAYERS:CURRENT&` (From Server Settings), `&CURRENT&` (From `playerListPlaceholder`) => `server.players.current`
+    * `&SERVER:PLAYERS:MAX&`, `&PLAYERS:MAX&` (From Server Settings), `&MAX&` (From `playerListPlaceholder`) => `server.players.max`
+    * `&SERVER:WORLDINFO:DIFFICULTY&`, `&WORLDINFO:DIFFICULTY&` (From Server Settings), `&DIFFICULTY&` (From `worldDataPlaceholder`) => `world.difficulty`
+    * `&SERVER:WORLDINFO:WORLDNAME&`, `&WORLDINFO:WORLDNAME&` (From Server Settings), `&WORLDNAME&` (From `worldDataPlaceholder`) => `world.name`
+    * `&SERVER:WORLDINFO:WORLDTIME&`, `&WORLDINFO:WORLDTIME&` (From Server Settings), `&WORLDTIME&` (From `worldDataPlaceholder`) => `world.time.24`
+    * `&SERVER:WORLDINFO:WORLDTIME12&`, `&WORLDINFO:WORLDTIME12&` (From Server Settings), `&WORLDTIME12&` (From `worldDataPlaceholder`) => `world.time.12`
+    * `&SERVER:WORLDINFO:WORLDDAY&`, `&WORLDINFO:WORLDDAY&` (From Server Settings), `&WORLDDAY&` (From `worldDataPlaceholder`) => `world.day`
+    * `&SCREEN:SCREEN&`, `&SCREEN&` (From Gui Settings) => `screen.name`
+    * `&SCREEN:ICON&`, `&ICON&` (From Gui Settings) => `screen.icon`
+    * `&SCREEN:CLASS&`, `&CLASS&` (From Gui Settings) => `screen.class`
+    * `&SCREEN&` => `screen.message`, `screen.icon` (Depends on config setting)
 * Added Placeholders:
     * TBD
 * Removed (or moved) Placeholders:
@@ -137,8 +180,8 @@ The following known issues are present in this build:
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
-    * Placeholders related to the realm and Replay Mod Integration are currently unimplemented and parse as `&unknown&`.
-    * `%weather%` is also unimplemented at this time, and will also parse as `{''}'`
+    * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
+    * `%weather%` is also unimplemented at this time, and will also parse as `{''}`
 
 #### 1.13.x Build Info
 
