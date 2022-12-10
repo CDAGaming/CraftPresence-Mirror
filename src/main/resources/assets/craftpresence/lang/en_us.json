@@ -293,6 +293,7 @@
   "craftpresence.placeholders.screen.name.description": "The current Gui Screen name",
   "craftpresence.placeholders.screen.class.description": "The current Gui Screen class",
   "craftpresence.placeholders.screen.icon.description": "The current Gui Screen icon",
+  "craftpresence.placeholders.screen.instance.description": "The current Gui Screen instance",
   "craftpresence.placeholders.screen.default.icon.description": "The default Gui Screen icon",
   "craftpresence.placeholders.world.difficulty.description": "The current world's difficulty",
   "craftpresence.placeholders.world.name.description": "The name of the current world",
