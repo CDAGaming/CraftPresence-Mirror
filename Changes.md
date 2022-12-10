@@ -120,20 +120,37 @@ related systems:
     * `&SERVER:PLAYERS&`, `&PLAYERS&` (From Server Settings) => `custom.players`
     * `&SERVER:WORLDINFO&`, `&WORLDINFO&` (From Server Settings) => `custom.world_info`
     * `&SERVER:PLAYERINFO&`, `&PLAYERINFO&` (From Server Settings) => `custom.player_info_in`
-    * `&SERVER:PLAYERINFO:COORDS&`, `&PLAYERINFO:COORDS&` (From Server Settings), `&COORDS&` (From `playerInnerInfoPlaceholder`) => `custom.player_info_coordinate`
-    * `&SERVER:PLAYERINFO:HEALTH&`, `&PLAYERINFO:HEALTH&` (From Server Settings), `&HEALTH&` (From `playerInnerInfoPlaceholder`) => `custom.player_info_health`
-    * `&SERVER:PLAYERINFO:COORDS:xPosition&`, `&PLAYERINFO:COORDS:xPosition&` (From Server Settings), `&COORDS:xPosition&` (From `playerInnerInfoPlaceholder`), `&xPosition&` (From `playerCoordinatePlaceholder`) => `player.position.x`
-    * `&SERVER:PLAYERINFO:COORDS:yPosition&`, `&PLAYERINFO:COORDS:yPosition&` (From Server Settings), `&COORDS:yPosition&` (From `playerInnerInfoPlaceholder`), `&yPosition&` (From `playerCoordinatePlaceholder`) => `player.position.y`
-    * `&SERVER:PLAYERINFO:COORDS:zPosition&`, `&PLAYERINFO:COORDS:zPosition&` (From Server Settings), `&COORDS:zPosition&` (From `playerInnerInfoPlaceholder`), `&zPosition&` (From `playerCoordinatePlaceholder`) => `player.position.z`
-    * `&SERVER:PLAYERINFO:HEALTH:CURRENT&`, `&PLAYERINFO:HEALTH:CURRENT&` (From Server Settings), `&HEALTH:CURRENT&` (From `playerInnerInfoPlaceholder`), `&CURRENT&` (From `playerHealthPlaceholder`) => `player.health.current`
-    * `&SERVER:PLAYERINFO:HEALTH:MAX&`, `&PLAYERINFO:HEALTH:MAX&` (From Server Settings), `&HEALTH:MAX&` (From `playerInnerInfoPlaceholder`), `&MAX&` (From `playerHealthPlaceholder`) => `player.health.max`
-    * `&SERVER:PLAYERS:CURRENT&`, `&PLAYERS:CURRENT&` (From Server Settings), `&CURRENT&` (From `playerListPlaceholder`) => `server.players.current`
-    * `&SERVER:PLAYERS:MAX&`, `&PLAYERS:MAX&` (From Server Settings), `&MAX&` (From `playerListPlaceholder`) => `server.players.max`
-    * `&SERVER:WORLDINFO:DIFFICULTY&`, `&WORLDINFO:DIFFICULTY&` (From Server Settings), `&DIFFICULTY&` (From `worldDataPlaceholder`) => `world.difficulty`
-    * `&SERVER:WORLDINFO:WORLDNAME&`, `&WORLDINFO:WORLDNAME&` (From Server Settings), `&WORLDNAME&` (From `worldDataPlaceholder`) => `world.name`
-    * `&SERVER:WORLDINFO:WORLDTIME&`, `&WORLDINFO:WORLDTIME&` (From Server Settings), `&WORLDTIME&` (From `worldDataPlaceholder`) => `world.time.24`
-    * `&SERVER:WORLDINFO:WORLDTIME12&`, `&WORLDINFO:WORLDTIME12&` (From Server Settings), `&WORLDTIME12&` (From `worldDataPlaceholder`) => `world.time.12`
-    * `&SERVER:WORLDINFO:WORLDDAY&`, `&WORLDINFO:WORLDDAY&` (From Server Settings), `&WORLDDAY&` (From `worldDataPlaceholder`) => `world.day`
+    * `&SERVER:PLAYERINFO:COORDS&`, `&PLAYERINFO:COORDS&` (From Server Settings), `&COORDS&` (
+      From `playerInnerInfoPlaceholder`) => `custom.player_info_coordinate`
+    * `&SERVER:PLAYERINFO:HEALTH&`, `&PLAYERINFO:HEALTH&` (From Server Settings), `&HEALTH&` (
+      From `playerInnerInfoPlaceholder`) => `custom.player_info_health`
+    * `&SERVER:PLAYERINFO:COORDS:xPosition&`, `&PLAYERINFO:COORDS:xPosition&` (From Server Settings)
+      , `&COORDS:xPosition&` (From `playerInnerInfoPlaceholder`), `&xPosition&` (From `playerCoordinatePlaceholder`)
+      => `player.position.x`
+    * `&SERVER:PLAYERINFO:COORDS:yPosition&`, `&PLAYERINFO:COORDS:yPosition&` (From Server Settings)
+      , `&COORDS:yPosition&` (From `playerInnerInfoPlaceholder`), `&yPosition&` (From `playerCoordinatePlaceholder`)
+      => `player.position.y`
+    * `&SERVER:PLAYERINFO:COORDS:zPosition&`, `&PLAYERINFO:COORDS:zPosition&` (From Server Settings)
+      , `&COORDS:zPosition&` (From `playerInnerInfoPlaceholder`), `&zPosition&` (From `playerCoordinatePlaceholder`)
+      => `player.position.z`
+    * `&SERVER:PLAYERINFO:HEALTH:CURRENT&`, `&PLAYERINFO:HEALTH:CURRENT&` (From Server Settings), `&HEALTH:CURRENT&` (
+      From `playerInnerInfoPlaceholder`), `&CURRENT&` (From `playerHealthPlaceholder`) => `player.health.current`
+    * `&SERVER:PLAYERINFO:HEALTH:MAX&`, `&PLAYERINFO:HEALTH:MAX&` (From Server Settings), `&HEALTH:MAX&` (
+      From `playerInnerInfoPlaceholder`), `&MAX&` (From `playerHealthPlaceholder`) => `player.health.max`
+    * `&SERVER:PLAYERS:CURRENT&`, `&PLAYERS:CURRENT&` (From Server Settings), `&CURRENT&` (From `playerListPlaceholder`)
+      => `server.players.current`
+    * `&SERVER:PLAYERS:MAX&`, `&PLAYERS:MAX&` (From Server Settings), `&MAX&` (From `playerListPlaceholder`)
+      => `server.players.max`
+    * `&SERVER:WORLDINFO:DIFFICULTY&`, `&WORLDINFO:DIFFICULTY&` (From Server Settings), `&DIFFICULTY&` (
+      From `worldDataPlaceholder`) => `world.difficulty`
+    * `&SERVER:WORLDINFO:WORLDNAME&`, `&WORLDINFO:WORLDNAME&` (From Server Settings), `&WORLDNAME&` (
+      From `worldDataPlaceholder`) => `world.name`
+    * `&SERVER:WORLDINFO:WORLDTIME&`, `&WORLDINFO:WORLDTIME&` (From Server Settings), `&WORLDTIME&` (
+      From `worldDataPlaceholder`) => `world.time.24`
+    * `&SERVER:WORLDINFO:WORLDTIME12&`, `&WORLDINFO:WORLDTIME12&` (From Server Settings), `&WORLDTIME12&` (
+      From `worldDataPlaceholder`) => `world.time.12`
+    * `&SERVER:WORLDINFO:WORLDDAY&`, `&WORLDINFO:WORLDDAY&` (From Server Settings), `&WORLDDAY&` (
+      From `worldDataPlaceholder`) => `world.day`
     * `&SCREEN:SCREEN&`, `&SCREEN&` (From Gui Settings) => `screen.name`
     * `&SCREEN:ICON&`, `&ICON&` (From Gui Settings) => `screen.icon`
     * `&SCREEN:CLASS&`, `&CLASS&` (From Gui Settings) => `screen.class`
@@ -150,7 +167,8 @@ related systems:
 * Added Placeholders:
     * TBD
 * Removed (or moved) Placeholders:
-    * NBT placeholders have moved from being module only as `&[tagName]&` to being able to be used anywhere with a `nbt.[module].[tagName]` format
+    * NBT placeholders have moved from being module only as `&[tagName]&` to being able to be used anywhere with
+      a `nbt.[module].[tagName]` format
 
 ### Translations
 
