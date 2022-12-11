@@ -646,13 +646,16 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
+     * @param plain        Whether the expression should be parsed as a plain string
      */
-    public void syncArgument(String argumentName, Object data) {
+    public void syncArgument(String argumentName, Object data, final boolean plain) {
         syncArgument(argumentName, () -> {
             if (data instanceof Number) {
                 return Value.number(((Number) data).doubleValue());
             } else if (data instanceof Boolean) {
                 return Value.bool((Boolean) data);
+            } else if (data instanceof String) {
+                return compileData(data.toString(), plain).get();
             } else {
                 return Value.object(data);
             }
@@ -663,21 +666,10 @@ public class DiscordUtils {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
-     * @param insertString The String to attach to the Specified Argument
-     * @param plain        Whether the expression should be parsed as a plain string
+     * @param data         The data to attach to the Specified Argument
      */
-    public void syncArgument(String argumentName, String insertString, final boolean plain) {
-        syncArgument(argumentName, compileData(insertString, plain));
-    }
-
-    /**
-     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
-     *
-     * @param argumentName The Specified Argument to Synchronize for
-     * @param insertString The String to attach to the Specified Argument
-     */
-    public void syncArgument(String argumentName, String insertString) {
-        syncArgument(argumentName, insertString, false);
+    public void syncArgument(String argumentName, Object data) {
+        syncArgument(argumentName, data, false);
     }
 
     /**
@@ -715,7 +707,7 @@ public class DiscordUtils {
     /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
-     * @param args             The string formats to interpret
+     * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public Map<String, Supplier<Value>> getArguments(final String... args) {
@@ -745,8 +737,8 @@ public class DiscordUtils {
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param formatToLower    Whether to lower-cases the resulting entries
-     * @param args             The string formats to interpret
+     * @param formatToLower Whether to lower-cases the resulting entries
+     * @param args          The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<String> getArgumentEntries(final boolean formatToLower, final String... args) {
@@ -761,7 +753,7 @@ public class DiscordUtils {
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param args             The string formats to interpret
+     * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<String> getRawArgumentEntries(final String... args) {
@@ -771,7 +763,7 @@ public class DiscordUtils {
     /**
      * Determines whether there are any matching arguments within the specified type matching the specified string formats
      *
-     * @param args             The string formats to interpret
+     * @param args The string formats to interpret
      * @return Whether the resulting list has any matching entries
      */
     public boolean hasArgumentsMatching(final String... args) {
