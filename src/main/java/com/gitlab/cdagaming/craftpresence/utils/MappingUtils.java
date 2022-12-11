@@ -66,11 +66,10 @@ public class MappingUtils {
      */
     public static Map<String, String> getClassMap() {
         if (classMap == null) {
-            Map<String, String> cm = new HashMap<String, String>();
+            Map<String, String> cm = new HashMap<>();
             // load from /mappings.srg
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, filePath)));
-                try {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, filePath)))) {
                     ModUtils.LOG.info("Loading Mappings...");
                     long time = System.nanoTime();
                     for (String line = reader.readLine(); line != null; line = reader.readLine()) {
@@ -80,13 +79,9 @@ public class MappingUtils {
                         }
                     }
                     ModUtils.LOG.info("Loaded Mappings in " + (System.nanoTime() - time) / 1000000 + "ms");
-                } finally {
-                    reader.close();
                 }
             } catch (Throwable e) {
-                if (ModUtils.MCProtocolID <= 340) {
-                    e.printStackTrace();
-                }
+                e.printStackTrace();
             }
             classMap = cm;
         }
