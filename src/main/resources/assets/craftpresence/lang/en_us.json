@@ -283,7 +283,7 @@
   "craftpresence.placeholders.player.name.description": "Your username",
   "craftpresence.placeholders.player.uuid.short.description": "Your UUID (Trimmed Format)",
   "craftpresence.placeholders.player.uuid.full.description": "Your UUID (Full Format, if valid UUID)",
-  "craftpresence.placeholders.player.icon.description": "Your player head icon (If valid UUID)",
+  "craftpresence.placeholders.player.icon.description": "Your player head icon, while applicable",
   "craftpresence.placeholders.player.position.x.description": "Your current in-game X position",
   "craftpresence.placeholders.player.position.y.description": "Your current in-game Y position",
   "craftpresence.placeholders.player.position.z.description": "Your current in-game Z position",
