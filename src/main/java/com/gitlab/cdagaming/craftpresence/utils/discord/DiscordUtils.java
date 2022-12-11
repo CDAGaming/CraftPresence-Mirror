@@ -715,14 +715,13 @@ public class DiscordUtils {
     /**
      * Retrieves any arguments within the specified type that match the specified string formats
      *
-     * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public Map<String, String> getArguments(final boolean allowNullEntries, final String... args) {
+    public Map<String, Supplier<Value>> getArguments(final String... args) {
         synchronized (placeholderData) {
             final Map<String, Supplier<Value>> items = Maps.newTreeMap(placeholderData);
-            final Map<String, String> list = Maps.newTreeMap();
+            final Map<String, Supplier<Value>> list = Maps.newTreeMap();
 
             for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
                 final String item = entry.getKey();
@@ -736,10 +735,7 @@ public class DiscordUtils {
                     }
                 }
                 if (addToList) {
-                    final String value = entry.getValue().get().toString();
-                    if (allowNullEntries || !StringUtils.isNullOrEmpty(value)) {
-                        list.put(item, value);
-                    }
+                    list.put(item, entry.getValue());
                 }
             }
             return list;
@@ -747,25 +743,14 @@ public class DiscordUtils {
     }
 
     /**
-     * Retrieves any arguments within the specified type that match the specified string formats
-     *
-     * @param args The string formats to interpret
-     * @return A List of the entries that satisfy the method conditions
-     */
-    public Map<String, String> getArguments(final String... args) {
-        return getArguments(true, args);
-    }
-
-    /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
      * @param formatToLower    Whether to lower-cases the resulting entries
-     * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getArgumentEntries(final boolean formatToLower, final boolean allowNullEntries, final String... args) {
-        final Map<String, String> list = getArguments(allowNullEntries, args);
+    public List<String> getArgumentEntries(final boolean formatToLower, final String... args) {
+        final Map<String, Supplier<Value>> list = getArguments(args);
         final List<String> result = Lists.newArrayList();
         for (String item : list.keySet()) {
             result.add(formatToLower ? item.toLowerCase() : item);
@@ -776,54 +761,21 @@ public class DiscordUtils {
     /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
-     * @param formatToLower Whether to lower-cases the resulting entries
-     * @param args          The string formats to interpret
-     * @return A List of the entries that satisfy the method conditions
-     */
-    public List<String> getArgumentEntries(final boolean formatToLower, final String... args) {
-        return getArgumentEntries(formatToLower, true, args);
-    }
-
-    /**
-     * Retrieves any argument entries within the specified type that match the specified string formats
-     *
-     * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
-     * @return A List of the entries that satisfy the method conditions
-     */
-    public List<String> getRawArgumentEntries(final boolean allowNullEntries, final String... args) {
-        return getArgumentEntries(false, allowNullEntries, args);
-    }
-
-    /**
-     * Retrieves any argument entries within the specified type that match the specified string formats
-     *
-     * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
     public List<String> getRawArgumentEntries(final String... args) {
-        return getRawArgumentEntries(true, args);
+        return getArgumentEntries(false, args);
     }
 
     /**
      * Determines whether there are any matching arguments within the specified type matching the specified string formats
      *
-     * @param allowNullEntries Whether empty entry values should be interpreted
      * @param args             The string formats to interpret
      * @return Whether the resulting list has any matching entries
      */
-    public boolean hasArgumentsMatching(final boolean allowNullEntries, final String... args) {
-        return !getArguments(allowNullEntries, args).isEmpty();
-    }
-
-    /**
-     * Determines whether there are any matching arguments within the specified type matching the specified string formats
-     *
-     * @param args The string formats to interpret
-     * @return Whether the resulting list has any matching entries
-     */
     public boolean hasArgumentsMatching(final String... args) {
-        return hasArgumentsMatching(true, args);
+        return !getArguments(args).isEmpty();
     }
 
     /**
@@ -834,7 +786,7 @@ public class DiscordUtils {
      * @param args         The data to interpret
      * @return the parsable string
      */
-    public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, String> args) {
+    public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, Supplier<Value>> args) {
         final StringBuilder resultString = new StringBuilder(
                 ModUtils.TRANSLATOR.translate(
                         String.format("%s.placeholders.title", ModUtils.MOD_ID)
@@ -847,33 +799,40 @@ public class DiscordUtils {
 
         final StringBuilder placeholderString = new StringBuilder();
         if (args != null && !args.isEmpty()) {
-            for (Map.Entry<String, String> argData : args.entrySet()) {
+            for (Map.Entry<String, Supplier<Value>> argData : args.entrySet()) {
                 final String placeholderName = argData.getKey();
+                final Supplier<Value> placeholderValue = argData.getValue();
                 final String placeholderTranslation = String.format("%s.placeholders.%s.description",
                         ModUtils.MOD_ID,
                         placeholderName
                 );
-                String placeholderDescription = "";
-                String placeholderFormat = "\\n - %s";
 
-                if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
-                    placeholderDescription = ModUtils.TRANSLATOR.translate(placeholderTranslation);
-                    placeholderFormat = "\\n - %s = %s";
-                }
+                if (placeholderValue != null) {
+                    final Value placeholderData = placeholderValue.get();
+                    if (!placeholderData.isNull() && !placeholderData.isObject()) {
+                        String placeholderDescription = "";
+                        String placeholderFormat = "\\n - %s";
 
-                placeholderString.append(
-                        String.format(placeholderFormat,
-                                placeholderName.toLowerCase(),
-                                placeholderDescription
-                        )
-                );
+                        if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
+                            placeholderDescription = ModUtils.TRANSLATOR.translate(placeholderTranslation);
+                            placeholderFormat = "\\n - %s = %s";
+                        }
 
-                if (addExtraData && !StringUtils.isNullOrEmpty(argData.getValue())) {
-                    final String tagValue = argData.getValue();
-                    placeholderString.append(String.format("\\n ==> %s \"%s\"",
-                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                            (tagValue.length() >= 128) ? "<...>" : tagValue
-                    ));
+                        placeholderString.append(
+                                String.format(placeholderFormat,
+                                        placeholderName.toLowerCase(),
+                                        placeholderDescription
+                                )
+                        );
+
+                        if (addExtraData) {
+                            final String tagValue = placeholderData.toString();
+                            placeholderString.append(String.format("\\n ==> %s \"%s\"",
+                                    ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                    (tagValue.length() >= 128) ? "<...>" : tagValue
+                            ));
+                        }
+                    }
                 }
             }
         }
