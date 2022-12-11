@@ -180,18 +180,32 @@ related systems:
 The following changes have been made for translations:
 
 * Added:
-    * `gui.config.message.editor.original`
-    * `gui.config.message.button.remove`
-    * `gui.config.{name,defaults}.advanced.allow_endpoint_icons` (Added Property)
+    * `gui.config.message.editor.original` (Used in Scroll List tooltips)
+    * `gui.config.message.button.remove` (Used in Dynamic Editors)
+    * `gui.config.{name,comment}.advanced.allow_endpoint_icons` (Added Property)
     * `gui.config.{name,comment}.advanced.server_icon_endpoint` (Added Property)
-    * `craftpresence.placeholders.*` (See `Placeholders` Section)
+    * `gui.config.{name,comment}.display.dynamic_variables` (Added Property)
+    * `gui.config.{name,comment}.display.enabled` (Added Property)
+    * `gui.config.{name,comment}.display.use_as_main` (Added Property)
+    * `craftpresence.defaults.integrations.*` (New namespace for Mod Integrations, only ReplayMod at the moment)
+    * `craftpresence.command.export.progress` (Added Progress notifier for `/cp export assets`)
+    * `craftpresence.command.compile` (Output for `/cp compile`)
 * Modified:
     * `gui.config.comment.button.sync.config` (Modified for new config file name)
+    * `gui.config.comment.advanced.{item,entity_target,entity_riding}_messages` (Modified to remove seperate tag
+      placeholder section)
+    * `gui.config.comment.display.{button_messages,dynamic_icons}` (Modified to remove outdated info)
+    * `craftpresence.defaults.*` (Related to `Placeholders` Section)
+    * `craftpresence.placeholders.*` (See `Placeholders` Section)
+    * `craftpresence.command.usage.main` (Modified for `/cp compile` command)
 * Removed:
     * `craftpresence.logger.error.config.adjust.global`
     * `craftpresence.logger.info.config.notice`
     * `craftpresence.exception.config.prop.null`
     * `gui.config.{name,comment}.advanced.split_character` (Removed Property)
+    * `gui.config.message.remove`
+    * `gui.config.message.tags`
+    * `gui.config.[name,comment].status_messages.placeholder.*` (Moved to the Dynamic Variables UI)
 
 ___
 
