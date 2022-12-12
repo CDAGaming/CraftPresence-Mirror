@@ -124,7 +124,7 @@ shadowJar {
     exclude 'META-INF/versions/**'
     // Package Relocations
     relocate 'com.jagrosh', 'external.com.jagrosh'
-    relocate 'meteordevelopment', 'external.meteordevelopment'
+    relocate 'org.meteordev', 'external.org.meteordev'
     relocate 'io.github.classgraph', 'external.io.github.classgraph'
     relocate 'nonapi.io.github.classgraph', 'external.nonapi.io.github.classgraph'
     if (protocol < 755) {
