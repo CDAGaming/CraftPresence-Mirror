@@ -190,7 +190,7 @@ public class CommandUtils {
     public static void clearInitialPresence() {
         isInMainMenu = false;
         isLoadingGame = false;
-        CraftPresence.CLIENT.clearOverride("menu");
+        CraftPresence.CLIENT.clearOverride("menu.message", "menu.icon");
         CraftPresence.CLIENT.removeArguments("menu");
     }
 }
