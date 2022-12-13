@@ -47,7 +47,6 @@ public class CraftPresenceForge {
             throw new RuntimeException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-forge.srg");
-        MappingUtils.getClassMap();
         new CraftPresence();
         setupIntegrations();
     }

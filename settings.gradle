@@ -10,7 +10,7 @@ pluginManagement {
         }
         maven {
             name = 'Forge'
-            url = "https://files.minecraftforge.net/maven/"
+            url = "https://maven.minecraftforge.net/"
         }
         maven {
             name = 'WagYourTail'
