@@ -168,8 +168,7 @@ public class CommandUtils {
     public static void setMainMenuPresence() {
         // Clear Loading Game State, if applicable
         if (isLoadingGame) {
-            CraftPresence.CLIENT.removeArguments("menu");
-
+            clearMenuPresence();
             isLoadingGame = false;
         }
 
@@ -190,6 +189,13 @@ public class CommandUtils {
     public static void clearInitialPresence() {
         isInMainMenu = false;
         isLoadingGame = false;
+        clearMenuPresence();
+    }
+
+    /**
+     * Clear the Menu Presence Data, derived from the Loading and Main Menu Events
+     */
+    public static void clearMenuPresence() {
         CraftPresence.CLIENT.clearOverride("menu.message", "menu.icon");
         CraftPresence.CLIENT.removeArguments("menu");
     }
