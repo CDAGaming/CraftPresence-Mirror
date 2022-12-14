@@ -60,8 +60,10 @@ import org.meteordev.starscript.compiler.Compiler;
 import org.meteordev.starscript.compiler.Expr;
 import org.meteordev.starscript.compiler.Parser;
 import org.meteordev.starscript.utils.Error;
+import org.meteordev.starscript.utils.SFunction;
 import org.meteordev.starscript.utils.VariableReplacementTransformer;
 import org.meteordev.starscript.value.Value;
+import org.meteordev.starscript.value.ValueMap;
 
 import java.util.Arrays;
 import java.util.List;
@@ -654,10 +656,14 @@ public class DiscordUtils {
                 return Value.number(((Number) data).doubleValue());
             } else if (data instanceof Boolean) {
                 return Value.bool((Boolean) data);
+            } else if (data instanceof ValueMap) {
+                return Value.map((ValueMap) data);
+            } else if (data instanceof SFunction) {
+                return Value.function((SFunction) data);
             } else if (data instanceof String) {
                 return compileData(data.toString(), plain).get();
             } else {
-                return Value.object(data);
+                return data != null ? Value.object(data) : Value.null_();
             }
         });
     }
