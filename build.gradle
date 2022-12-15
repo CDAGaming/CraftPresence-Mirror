@@ -110,8 +110,8 @@ subprojects {
             url = 'https://maven.terraformersmc.com/releases/'
         }
         ivy {
-            setName("ReplayMod")
-            setUrl("https://minio.replaymod.com/replaymod/")
+            name = "ReplayMod"
+            url = "https://minio.replaymod.com/replaymod/"
             patternLayout { artifact("[artifact]-[revision](-[classifier])(.[ext])") }
             metadataSources { artifact() }
             content { includeGroup("com.replaymod") }
@@ -207,7 +207,7 @@ subprojects {
                 }
                 var processBuilder = new ProcessBuilder(
                         javaexe,
-                        "-Dretrolambda.inputDir=${compileJava.destinationDir.toString().replace("\\", "\\\\").replace(" ", "\\ ")}",
+                        "-Dretrolambda.inputDir=${compileJava.destinationDirectory.toString().replace("\\", "\\\\").replace(" ", "\\ ")}",
                         "-Dretrolambda.classpath=${classpathString.replace("\\", "\\\\").replace(" ", "\\ ")}",
                         "-Dretrolambda.defaultMethods=true",
                         "-Dretrolambda.bytecodeVersion=51",
