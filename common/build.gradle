@@ -144,7 +144,7 @@ import groovy.io.FileType
 
 import java.util.regex.Pattern
 
-task generateMyResources {
+tasks.register('generateMyResources') {
     doFirst {
         def langDir = new File(mainResources, "/assets/$rootProject.name/lang")
         def resultDir = new File(generatedResources, "/assets/$rootProject.name/lang")
