@@ -1243,6 +1243,7 @@ public class DiscordUtils {
     public void onTick() {
         syncPlaceholders();
 
+        // Menu Tick Event
         final boolean isMenuActive = (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu);
         final boolean isFullyLoaded = CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
         if (!isFullyLoaded && !isMenuActive) {
@@ -1252,6 +1253,19 @@ public class DiscordUtils {
             CommandUtils.setMainMenuPresence();
         } else if (CraftPresence.player != null && isMenuActive) {
             CommandUtils.clearInitialPresence();
+        }
+        // Join Request Tick Event
+        if (!CraftPresence.CONFIG.hasChanged && isFullyLoaded) {
+            // Processing for Join Request Systems
+            if (awaitingReply && CraftPresence.SYSTEM.TIMER == 0) {
+                StringUtils.sendMessageToPlayer(CraftPresence.player, ModUtils.TRANSLATOR.translate("craftpresence.command.request.ignored", REQUESTER_USER.getName()));
+                ipcInstance.respondToJoinRequest(REQUESTER_USER, IPCClient.ApprovalMode.DENY);
+                awaitingReply = false;
+                STATUS = DiscordStatus.Ready;
+            } else if (!awaitingReply && REQUESTER_USER != null) {
+                REQUESTER_USER = null;
+                STATUS = DiscordStatus.Ready;
+            }
         }
 
         updatePresence();

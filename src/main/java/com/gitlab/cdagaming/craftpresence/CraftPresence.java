@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
@@ -35,7 +34,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
-import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -245,19 +243,6 @@ public class CraftPresence {
                 ModUtils.IS_VERBOSE = !isVerboseStatusOverridden ? CONFIG.advancedSettings.verboseMode : ModUtils.IS_VERBOSE;
 
                 CommandUtils.reloadData(false);
-
-                if (!CONFIG.hasChanged && SYSTEM.HAS_LOADED) {
-                    // Processing for Join Request Systems
-                    if (CLIENT.awaitingReply && SYSTEM.TIMER == 0) {
-                        StringUtils.sendMessageToPlayer(player, ModUtils.TRANSLATOR.translate("craftpresence.command.request.ignored", CLIENT.REQUESTER_USER.getName()));
-                        CLIENT.ipcInstance.respondToJoinRequest(CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY);
-                        CLIENT.awaitingReply = false;
-                        CLIENT.STATUS = DiscordStatus.Ready;
-                    } else if (!CLIENT.awaitingReply && CLIENT.REQUESTER_USER != null) {
-                        CLIENT.REQUESTER_USER = null;
-                        CLIENT.STATUS = DiscordStatus.Ready;
-                    }
-                }
             } else if (instance != null) {
                 session = instance.getSession();
                 if (session != null) {
