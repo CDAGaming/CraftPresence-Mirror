@@ -246,28 +246,16 @@ public class CraftPresence {
 
                 CommandUtils.reloadData(false);
 
-                if (!CONFIG.hasChanged) {
-                    final boolean isMenuActive = (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu);
-                    final boolean isFullyLoaded = SYSTEM.HAS_LOADED && SYSTEM.HAS_GAME_LOADED;
-                    if (!isFullyLoaded && !isMenuActive) {
-                        // Ensure Loading Presence has already passed, before any other type of presence displays
-                        CommandUtils.setLoadingPresence();
-                    } else if (player == null && !CommandUtils.isInMainMenu) {
-                        CommandUtils.setMainMenuPresence();
-                    } else if (player != null && isMenuActive) {
-                        CommandUtils.clearInitialPresence();
-                    }
-
-                    if (SYSTEM.HAS_LOADED) {
-                        if (CLIENT.awaitingReply && SYSTEM.TIMER == 0) {
-                            StringUtils.sendMessageToPlayer(player, ModUtils.TRANSLATOR.translate("craftpresence.command.request.ignored", CLIENT.REQUESTER_USER.getName()));
-                            CLIENT.ipcInstance.respondToJoinRequest(CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY);
-                            CLIENT.awaitingReply = false;
-                            CLIENT.STATUS = DiscordStatus.Ready;
-                        } else if (!CLIENT.awaitingReply && CLIENT.REQUESTER_USER != null) {
-                            CLIENT.REQUESTER_USER = null;
-                            CLIENT.STATUS = DiscordStatus.Ready;
-                        }
+                if (!CONFIG.hasChanged && SYSTEM.HAS_LOADED) {
+                    // Processing for Join Request Systems
+                    if (CLIENT.awaitingReply && SYSTEM.TIMER == 0) {
+                        StringUtils.sendMessageToPlayer(player, ModUtils.TRANSLATOR.translate("craftpresence.command.request.ignored", CLIENT.REQUESTER_USER.getName()));
+                        CLIENT.ipcInstance.respondToJoinRequest(CLIENT.REQUESTER_USER, IPCClient.ApprovalMode.DENY);
+                        CLIENT.awaitingReply = false;
+                        CLIENT.STATUS = DiscordStatus.Ready;
+                    } else if (!CLIENT.awaitingReply && CLIENT.REQUESTER_USER != null) {
+                        CLIENT.REQUESTER_USER = null;
+                        CLIENT.STATUS = DiscordStatus.Ready;
                     }
                 }
             } else if (instance != null) {

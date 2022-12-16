@@ -42,6 +42,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
@@ -1234,5 +1235,25 @@ public class DiscordUtils {
      */
     public PresenceData getPresenceData() {
         return forcedData != null ? forcedData : CraftPresence.CONFIG.displaySettings.presenceData;
+    }
+
+    /**
+     * Perform any needed Tick events, tied to {@link SystemUtils#MINIMUM_REFRESH_RATE} ticks
+     */
+    public void onTick() {
+        syncPlaceholders();
+
+        final boolean isMenuActive = (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu);
+        final boolean isFullyLoaded = CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
+        if (!isFullyLoaded && !isMenuActive) {
+            // Ensure Loading Presence has already passed, before any other type of presence displays
+            CommandUtils.setLoadingPresence();
+        } else if (CraftPresence.player == null && !CommandUtils.isInMainMenu) {
+            CommandUtils.setMainMenuPresence();
+        } else if (CraftPresence.player != null && isMenuActive) {
+            CommandUtils.clearInitialPresence();
+        }
+
+        updatePresence();
     }
 }
