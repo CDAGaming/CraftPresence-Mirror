@@ -469,8 +469,8 @@ public class ServerUtils implements Module {
         // World Data Arguments
         CraftPresence.CLIENT.syncArgument("world.difficulty", StringUtils.getOrDefault(currentDifficulty));
         CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
-        CraftPresence.CLIENT.syncArgument("world.time.24", StringUtils.getOrDefault(timeString24));
-        CraftPresence.CLIENT.syncArgument("world.time.12", StringUtils.getOrDefault(timeString12));
+        CraftPresence.CLIENT.syncArgument("world.time24", StringUtils.getOrDefault(timeString24));
+        CraftPresence.CLIENT.syncArgument("world.time12", StringUtils.getOrDefault(timeString12));
         CraftPresence.CLIENT.syncArgument("world.day", StringUtils.getOrDefault(dayString));
 
         CraftPresence.CLIENT.syncArgument("server.default.icon", CraftPresence.CONFIG.serverSettings.fallbackServerIcon);

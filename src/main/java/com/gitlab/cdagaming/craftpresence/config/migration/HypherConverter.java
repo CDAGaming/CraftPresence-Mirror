@@ -66,8 +66,8 @@ public class HypherConverter implements DataMigrator {
             .put("%launchername%", "{toLower(general.brand)}")
             .put("%savename%", "{world.name}")
             .put("%playerhead%", "{player.icon}")
-            .put("%gametime12%", "{world.time.12}")
-            .put("%gametime%", "{world.time.24}")
+            .put("%gametime12%", "{world.time12}")
+            .put("%gametime%", "{world.time24}")
             .put("%day%", "{world.day}")
             .put("%weather%", EMPTY_QUOTES) // TODO
             .put("%replayframe%", "{replaymod.frames.current}")
