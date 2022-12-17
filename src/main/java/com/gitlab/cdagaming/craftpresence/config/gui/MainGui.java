@@ -331,7 +331,9 @@ public class MainGui extends ExtendedScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
-            CraftPresence.CONFIG = Config.loadOrCreate();
+            if (CraftPresence.CONFIG.hasChanged) {
+                CraftPresence.CONFIG = Config.loadOrCreate();
+            }
             CraftPresence.GUIS.configGUIOpened = false;
         }
         super.keyTyped(typedChar, keyCode);

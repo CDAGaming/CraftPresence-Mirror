@@ -307,7 +307,7 @@ public class GuiUtils implements Module {
         CURRENT_GUI_CLASS = null;
 
         setInUse(false);
-        CraftPresence.CLIENT.removeArguments("screen");
+        CraftPresence.CLIENT.removeArguments("screen", "data.screen");
         CraftPresence.CLIENT.clearOverride("screen");
     }
 
@@ -434,9 +434,9 @@ public class GuiUtils implements Module {
 
         CraftPresence.CLIENT.syncArgument("screen.default.icon", CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        CraftPresence.CLIENT.syncArgument("screen.instance", CURRENT_SCREEN);
+        CraftPresence.CLIENT.syncArgument("data.screen.instance", CURRENT_SCREEN);
         CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
-        CraftPresence.CLIENT.syncArgument("screen.class", CURRENT_GUI_CLASS);
+        CraftPresence.CLIENT.syncArgument("data.screen.class", CURRENT_GUI_CLASS);
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);

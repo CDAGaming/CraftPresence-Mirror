@@ -235,7 +235,7 @@ public class TileEntityUtils implements Module {
         CURRENT_BOOTS_TAGS.clear();
 
         setInUse(false);
-        CraftPresence.CLIENT.removeArguments("item", "nbt.item");
+        CraftPresence.CLIENT.removeArguments("item", "data.item");
         CraftPresence.CLIENT.clearOverride("item");
     }
 
@@ -452,87 +452,87 @@ public class TileEntityUtils implements Module {
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
-            CraftPresence.CLIENT.syncArgument("item.main_hand.instance", CURRENT_MAIN_HAND_ITEM);
-            CraftPresence.CLIENT.syncArgument("item.main_hand.class", CURRENT_MAIN_HAND_ITEM.getClass());
+            CraftPresence.CLIENT.syncArgument("data.item.main_hand.instance", CURRENT_MAIN_HAND_ITEM);
+            CraftPresence.CLIENT.syncArgument("data.item.main_hand.class", CURRENT_MAIN_HAND_ITEM.getClass());
             CraftPresence.CLIENT.syncArgument("item.main_hand.name", CURRENT_MAIN_HAND_ITEM_NAME);
             CraftPresence.CLIENT.syncArgument("item.main_hand.message", mainItemMessage);
             if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_MAIN_HAND_ITEM_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.item.main_hand." + tagName, CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.item.main_hand." + tagName, CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString(), true);
                 }
             }
         } else {
-            CraftPresence.CLIENT.removeArguments("item.main_hand", "nbt.item.off_hand");
+            CraftPresence.CLIENT.removeArguments("item.main_hand", "data.item.main_hand");
         }
 
         if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
-            CraftPresence.CLIENT.syncArgument("item.off_hand.instance", CURRENT_OFFHAND_ITEM);
-            CraftPresence.CLIENT.syncArgument("item.off_hand.class", CURRENT_OFFHAND_ITEM.getClass());
+            CraftPresence.CLIENT.syncArgument("data.item.off_hand.instance", CURRENT_OFFHAND_ITEM);
+            CraftPresence.CLIENT.syncArgument("data.item.off_hand.class", CURRENT_OFFHAND_ITEM.getClass());
             CraftPresence.CLIENT.syncArgument("item.off_hand.name", CURRENT_OFFHAND_ITEM_NAME);
             CraftPresence.CLIENT.syncArgument("item.off_hand.message", offHandItemMessage);
             if (!CURRENT_OFFHAND_ITEM_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_OFFHAND_ITEM_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.item.off_hand." + tagName, CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.item.off_hand." + tagName, CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString(), true);
                 }
             }
         } else {
-            CraftPresence.CLIENT.removeArguments("item.off_hand", "nbt.item.off_hand");
+            CraftPresence.CLIENT.removeArguments("item.off_hand", "data.item.off_hand");
         }
 
         if (!isEmpty(CURRENT_HELMET)) {
-            CraftPresence.CLIENT.syncArgument("item.helmet.instance", CURRENT_HELMET);
-            CraftPresence.CLIENT.syncArgument("item.helmet.class", CURRENT_HELMET.getClass());
+            CraftPresence.CLIENT.syncArgument("data.item.helmet.instance", CURRENT_HELMET);
+            CraftPresence.CLIENT.syncArgument("data.item.helmet.class", CURRENT_HELMET.getClass());
             CraftPresence.CLIENT.syncArgument("item.helmet.name", CURRENT_HELMET_NAME);
             CraftPresence.CLIENT.syncArgument("item.helmet.message", helmetMessage);
             if (!CURRENT_HELMET_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_HELMET_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.item.helmet." + tagName, CURRENT_HELMET_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.item.helmet." + tagName, CURRENT_HELMET_TAG.getTag(tagName).toString(), true);
                 }
             }
         } else {
-            CraftPresence.CLIENT.removeArguments("item.helmet", "nbt.item.helmet");
+            CraftPresence.CLIENT.removeArguments("item.helmet", "data.item.helmet");
         }
 
         if (!isEmpty(CURRENT_CHEST)) {
-            CraftPresence.CLIENT.syncArgument("item.chestplate.instance", CURRENT_CHEST);
-            CraftPresence.CLIENT.syncArgument("item.chestplate.class", CURRENT_CHEST.getClass());
+            CraftPresence.CLIENT.syncArgument("data.item.chestplate.instance", CURRENT_CHEST);
+            CraftPresence.CLIENT.syncArgument("data.item.chestplate.class", CURRENT_CHEST.getClass());
             CraftPresence.CLIENT.syncArgument("item.chestplate.name", CURRENT_CHEST_NAME);
             CraftPresence.CLIENT.syncArgument("item.chestplate.message", chestMessage);
             if (!CURRENT_CHEST_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_CHEST_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.item.chestplate." + tagName, CURRENT_CHEST_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.item.chestplate." + tagName, CURRENT_CHEST_TAG.getTag(tagName).toString(), true);
                 }
             }
         } else {
-            CraftPresence.CLIENT.removeArguments("item.chestplate", "nbt.item.chestplate");
+            CraftPresence.CLIENT.removeArguments("item.chestplate", "data.item.chestplate");
         }
 
         if (!isEmpty(CURRENT_LEGS)) {
-            CraftPresence.CLIENT.syncArgument("item.leggings.instance", CURRENT_LEGS);
-            CraftPresence.CLIENT.syncArgument("item.leggings.class", CURRENT_LEGS.getClass());
+            CraftPresence.CLIENT.syncArgument("data.item.leggings.instance", CURRENT_LEGS);
+            CraftPresence.CLIENT.syncArgument("data.item.leggings.class", CURRENT_LEGS.getClass());
             CraftPresence.CLIENT.syncArgument("item.leggings.name", CURRENT_LEGS_NAME);
             CraftPresence.CLIENT.syncArgument("item.leggings.message", legsMessage);
             if (!CURRENT_LEGS_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_LEGS_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.item.leggings." + tagName, CURRENT_LEGS_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.item.leggings." + tagName, CURRENT_LEGS_TAG.getTag(tagName).toString(), true);
                 }
             }
         } else {
-            CraftPresence.CLIENT.removeArguments("item.leggings", "nbt.item.leggings");
+            CraftPresence.CLIENT.removeArguments("item.leggings", "data.item.leggings");
         }
 
         if (!isEmpty(CURRENT_BOOTS)) {
-            CraftPresence.CLIENT.syncArgument("item.boots.instance", CURRENT_BOOTS);
-            CraftPresence.CLIENT.syncArgument("item.boots.class", CURRENT_BOOTS.getClass());
+            CraftPresence.CLIENT.syncArgument("data.item.boots.instance", CURRENT_BOOTS);
+            CraftPresence.CLIENT.syncArgument("data.item.boots.class", CURRENT_BOOTS.getClass());
             CraftPresence.CLIENT.syncArgument("item.boots.name", CURRENT_BOOTS_NAME);
             CraftPresence.CLIENT.syncArgument("item.boots.message", bootsMessage);
             if (!CURRENT_BOOTS_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_BOOTS_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.item.boots." + tagName, CURRENT_BOOTS_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.item.boots." + tagName, CURRENT_BOOTS_TAG.getTag(tagName).toString(), true);
                 }
             }
         } else {
-            CraftPresence.CLIENT.removeArguments("item.boots", "nbt.item.boots");
+            CraftPresence.CLIENT.removeArguments("item.boots", "data.item.boots");
         }
     }
 

@@ -807,32 +807,27 @@ public class DiscordUtils {
                         placeholderName
                 );
 
-                if (placeholderValue != null) {
-                    final Value placeholderData = placeholderValue.get();
-                    if (!placeholderData.isNull() && !placeholderData.isObject()) {
-                        String placeholderDescription = "";
-                        String placeholderFormat = "\\n - %s";
+                String placeholderDescription = "";
+                String placeholderFormat = "\\n - %s";
 
-                        if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
-                            placeholderDescription = ModUtils.TRANSLATOR.translate(placeholderTranslation);
-                            placeholderFormat = "\\n - %s = %s";
-                        }
+                if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
+                    placeholderDescription = ModUtils.TRANSLATOR.translate(placeholderTranslation);
+                    placeholderFormat = "\\n - %s = %s";
+                }
 
-                        placeholderString.append(
-                                String.format(placeholderFormat,
-                                        placeholderName.toLowerCase(),
-                                        placeholderDescription
-                                )
-                        );
+                placeholderString.append(
+                        String.format(placeholderFormat,
+                                placeholderName.toLowerCase(),
+                                placeholderDescription
+                        )
+                );
 
-                        if (addExtraData) {
-                            final String tagValue = placeholderData.toString();
-                            placeholderString.append(String.format("\\n ==> %s \"%s\"",
-                                    ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                    (tagValue.length() >= 128) ? "<...>" : tagValue
-                            ));
-                        }
-                    }
+                if (addExtraData && placeholderValue != null) {
+                    final String tagValue = placeholderValue.get().toString();
+                    placeholderString.append(String.format("\\n ==> %s \"%s\"",
+                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                            (tagValue.length() >= 128) ? "<...>" : tagValue
+                    ));
                 }
             }
         }

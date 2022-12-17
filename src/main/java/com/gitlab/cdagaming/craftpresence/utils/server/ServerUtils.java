@@ -491,7 +491,7 @@ public class ServerUtils implements Module {
             if (!currentServer_MOTD_Lines.isEmpty()) {
                 int index = 1;
                 for (String motdPart : currentServer_MOTD_Lines) {
-                    CraftPresence.CLIENT.syncArgument("server.motd.line." + index, motdPart);
+                    CraftPresence.CLIENT.syncArgument("data.server.motd.line." + index, motdPart);
                     index++;
                 }
             }

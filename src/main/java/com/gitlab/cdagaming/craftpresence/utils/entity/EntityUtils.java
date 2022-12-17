@@ -121,7 +121,7 @@ public class EntityUtils implements Module {
         CURRENT_RIDING_TAGS.clear();
 
         setInUse(false);
-        CraftPresence.CLIENT.removeArguments("entity", "nbt.entity");
+        CraftPresence.CLIENT.removeArguments("entity", "data.entity");
         CraftPresence.CLIENT.clearOverride("entity.target", "entity.riding");
     }
 
@@ -231,12 +231,12 @@ public class EntityUtils implements Module {
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
-            CraftPresence.CLIENT.syncArgument("entity.target.instance", CURRENT_TARGET);
-            CraftPresence.CLIENT.syncArgument("entity.target.class", CURRENT_TARGET.getClass());
+            CraftPresence.CLIENT.syncArgument("data.entity.target.instance", CURRENT_TARGET);
+            CraftPresence.CLIENT.syncArgument("data.entity.target.class", CURRENT_TARGET.getClass());
             CraftPresence.CLIENT.syncArgument("entity.target.name", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME));
             if (!CURRENT_TARGET_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_TARGET_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.entity.target." + tagName, CURRENT_TARGET_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.entity.target." + tagName, CURRENT_TARGET_TAG.getTag(tagName).toString(), true);
                 }
             }
 
@@ -244,16 +244,16 @@ public class EntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("entity.target.message", currentTargetMessage);
             CraftPresence.CLIENT.syncArgument("entity.target.icon", CraftPresence.CLIENT.imageOf("entity.target.icon", true, formattedTargetIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
         } else {
-            CraftPresence.CLIENT.removeArguments("entity.target", "nbt.entity.target");
+            CraftPresence.CLIENT.removeArguments("entity.target", "data.entity.target");
         }
 
         if (CURRENT_RIDING != null) {
-            CraftPresence.CLIENT.syncArgument("entity.riding.instance", CURRENT_RIDING);
-            CraftPresence.CLIENT.syncArgument("entity.riding.class", CURRENT_RIDING.getClass());
+            CraftPresence.CLIENT.syncArgument("data.entity.riding.instance", CURRENT_RIDING);
+            CraftPresence.CLIENT.syncArgument("data.entity.riding.class", CURRENT_RIDING.getClass());
             CraftPresence.CLIENT.syncArgument("entity.riding.name", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME));
             if (!CURRENT_RIDING_TAGS.isEmpty()) {
                 for (String tagName : CURRENT_RIDING_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("nbt.entity.riding." + tagName, CURRENT_RIDING_TAG.getTag(tagName).toString(), true);
+                    CraftPresence.CLIENT.syncArgument("data.entity.riding." + tagName, CURRENT_RIDING_TAG.getTag(tagName).toString(), true);
                 }
             }
 
@@ -261,7 +261,7 @@ public class EntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("entity.riding.message", currentRidingMessage);
             CraftPresence.CLIENT.syncArgument("entity.riding.icon", CraftPresence.CLIENT.imageOf("entity.riding.icon", true, formattedRidingIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon));
         } else {
-            CraftPresence.CLIENT.removeArguments("entity.riding", "nbt.entity.riding");
+            CraftPresence.CLIENT.removeArguments("entity.riding", "data.entity.riding");
         }
     }
 
