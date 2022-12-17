@@ -265,9 +265,7 @@ public class MainGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> {
-                            CraftPresence.CONFIG = Config.loadOrCreate(true);
-                        }
+                        () -> CraftPresence.CONFIG = Config.loadOrCreate(true)
                 )
         );
         // Added Sync Config Button

@@ -175,7 +175,7 @@ public class GuiUtils implements Module {
                 }
             }
 
-            if (currentCharacter == '\u00a7' && currentLine < stringLength - 1) {
+            if (currentCharacter == StringUtils.COLOR_CHAR && currentLine < stringLength - 1) {
                 ++currentLine;
                 currentCharacter = stringEntry.charAt(currentLine);
                 stringOfCharacter = String.valueOf(currentCharacter);

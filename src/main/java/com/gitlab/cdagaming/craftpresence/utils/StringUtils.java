@@ -59,7 +59,7 @@ public class StringUtils {
     /**
      * The Character to be interpreted as the start to a Formatting Character
      */
-    private static final char COLOR_CHAR = '\u00A7';
+    public static final char COLOR_CHAR = '§';
     /**
      * Regex Pattern for Color and Formatting Codes
      */
@@ -884,8 +884,9 @@ public class StringUtils {
             if (index < stringLength - 1) {
                 char currentCharacter = text.charAt(index + 1);
 
-                if (STRIP_COLOR_PATTERN.matcher(String.valueOf(currentCharacter)).find()) {
-                    s = new StringBuilder("\u00a7" + currentCharacter);
+                String charString = String.valueOf(currentCharacter);
+                if (STRIP_COLOR_PATTERN.matcher(charString).find()) {
+                    s = new StringBuilder(COLOR_CHAR + charString);
                 }
             }
         }

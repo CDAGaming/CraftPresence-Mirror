@@ -46,7 +46,6 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("deprecation")
 public class TranslationUtils implements IResourceManagerReloadListener {
     /**
      * The default/fallback Language ID to Locate and Retrieve Translations
