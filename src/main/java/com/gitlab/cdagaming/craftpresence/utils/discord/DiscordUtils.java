@@ -619,6 +619,7 @@ public class DiscordUtils {
             if (!StringUtils.isNullOrEmpty(argumentName) && overrideData.containsKey(argumentName)) {
                 final ModuleData oldData = overrideData.get(argumentName);
                 overrideData.remove(argumentName);
+                removeArguments("overrides." + argumentName);
 
                 if (oldData != null && Config.getProperty(oldData, "data") != null) {
                     if (oldData.getData().equals(forcedData)) {
