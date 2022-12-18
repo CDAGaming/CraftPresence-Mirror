@@ -1153,12 +1153,9 @@ public class DiscordUtils {
             lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
-            CraftPresence.DIMENSIONS.clearClientData();
-            CraftPresence.TILE_ENTITIES.clearClientData();
-            CraftPresence.ENTITIES.clearClientData();
-            CraftPresence.BIOMES.clearClientData();
-            CraftPresence.SERVER.clearClientData();
-            CraftPresence.GUIS.clearClientData();
+            for (Module module : CommandUtils.modules.values()) {
+                module.clearClientData();
+            }
 
             CraftPresence.SYSTEM.HAS_LOADED = false;
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
