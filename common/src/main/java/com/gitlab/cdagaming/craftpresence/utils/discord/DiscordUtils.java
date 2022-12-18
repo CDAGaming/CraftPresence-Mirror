@@ -548,6 +548,26 @@ public class DiscordUtils {
     }
 
     /**
+     * Compiles and Parses the specified input, via {@link Starscript}
+     *
+     * @param input The input expression to interpret
+     * @return the supplier containing the output
+     */
+    public Supplier<Value> compileData(final String input) {
+        return compileData(input, (Pair<String, Supplier<String>>) null);
+    }
+
+    /**
+     * Retrieve the output from the execution of {@link DiscordUtils#compileData(String)}
+     *
+     * @param input The input expression to interpret
+     * @return the result of the supplier containing the output
+     */
+    public String getResult(final String input) {
+        return getResult(input, (Pair<String, Supplier<String>>) null);
+    }
+
+    /**
      * Updates the Starting Unix Timestamp, if allowed
      */
     public void updateTimestamp() {

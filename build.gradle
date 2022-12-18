@@ -81,7 +81,7 @@ subprojects {
             name = "Forge"
             url = "https://maven.minecraftforge.net/"
             metadataSources {
-                artifact()
+                it.artifact()
             }
         }
         maven {
@@ -121,7 +121,7 @@ subprojects {
             name = "ReplayMod"
             url = "https://minio.replaymod.com/replaymod/"
             patternLayout { artifact("[artifact]-[revision](-[classifier])(.[ext])") }
-            metadataSources { artifact() }
+            metadataSources { it.artifact() }
             content { includeGroup("com.replaymod") }
         }
     }
