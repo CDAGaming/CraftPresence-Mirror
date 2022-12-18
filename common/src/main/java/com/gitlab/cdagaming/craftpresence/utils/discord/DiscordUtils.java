@@ -387,15 +387,22 @@ public class DiscordUtils {
             }
         }
         // Phase 2: args field (Pair<String, Supplier<String>>...)
-        for (Pair<String, Supplier<String>> replacement : replacements) {
-            final String value = replacement.getSecond().get();
-            if (placeholders.containsKey(value)) {
-                transformer.addReplacer(replacement.getFirst(), replacement.getSecond());
-            } else {
-                data = data.replace(
-                        replacement.getFirst(),
-                        !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
-                );
+        if (replacements != null) {
+            for (Pair<String, Supplier<String>> replacement : replacements) {
+                if (replacement != null) {
+                    final Supplier<String> info = replacement.getSecond();
+                    if (info != null) {
+                        final String value = info.get();
+                        if (placeholders.containsKey(value)) {
+                            transformer.addReplacer(replacement.getFirst(), info);
+                        } else {
+                            data = data.replace(
+                                    replacement.getFirst(),
+                                    !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
+                            );
+                        }
+                    }
+                }
             }
         }
         return transformer;
