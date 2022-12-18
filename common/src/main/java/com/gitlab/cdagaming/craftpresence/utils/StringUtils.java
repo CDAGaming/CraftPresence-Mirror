@@ -59,7 +59,7 @@ public class StringUtils {
     /**
      * The Character to be interpreted as the start to a Formatting Character
      */
-    public static final char COLOR_CHAR = '§';
+    public static final char COLOR_CHAR = '\u00A7';
     /**
      * Regex Pattern for Color and Formatting Codes
      */

@@ -152,27 +152,23 @@ subprojects {
         }
     }
 
-    tasks.withType(JavaCompile).tap {
-        configureEach {
-            options.encoding = "UTF-8"
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = "UTF-8"
 
-            // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
-            // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
-            // We'll use that if it's available, but otherwise we'll use the older option.
-            if (JavaVersion.current().isJava9Compatible()) {
-                it.options.release.set(Integer.parseInt(targetVersion.getMajorVersion()))
-            }
+        // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
+        // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
+        // We'll use that if it's available, but otherwise we'll use the older option.
+        if (JavaVersion.current().isJava9Compatible()) {
+            it.options.release.set(Integer.parseInt(targetVersion.getMajorVersion()))
         }
     }
 
     gradle.projectsEvaluated {
-        tasks.withType(Javadoc).tap {
-            configureEach {
-                exclude "${classPath}/config/category/**"
-                exclude "${classPath}/config/element/**"
-                exclude "${classPath}/config/gui/**"
-                exclude "${classPath}/integrations/**"
-            }
+        tasks.withType(Javadoc).configureEach {
+            exclude "${classPath}/config/category/**"
+            exclude "${classPath}/config/element/**"
+            exclude "${classPath}/config/gui/**"
+            exclude "${classPath}/integrations/**"
         }
     }
 
