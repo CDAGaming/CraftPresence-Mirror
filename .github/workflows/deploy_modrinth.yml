@@ -39,7 +39,7 @@ jobs:
         run: ./gradlew --build-cache mergeJars
 
       - name: Deploy with Gradle
-        run: ./gradlew --build-cache :universal:modrinth
+        run: ./gradlew --build-cache :common:modrinth
 
       - uses: actions/upload-artifact@v3
         with:
