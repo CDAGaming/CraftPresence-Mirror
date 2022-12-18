@@ -31,6 +31,5 @@ pluginManagement {
 include('common')
 include('fabric')
 include('forge')
-include('universal')
 
 rootProject.name = 'craftpresence'

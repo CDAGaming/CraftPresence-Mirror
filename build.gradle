@@ -4,6 +4,7 @@ import java.nio.file.Files
 
 plugins {
     id 'xyz.wagyourtail.unimined' version '0.3.4-SNAPSHOT' apply false
+    id "com.diffplug.spotless" version "6.11.0" apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
@@ -21,6 +22,7 @@ boolean ext_isJarMod = "${isJarMod}".toBoolean()
 subprojects {
     apply plugin: 'java'
     apply plugin: 'xyz.wagyourtail.unimined'
+    apply plugin: "com.diffplug.spotless"
 
     ext {
         versionInfoLabel = "${ext_versionInfoLabel}"
@@ -31,6 +33,12 @@ subprojects {
         protocol = ext_protocol
         isLegacy = ext_isLegacy
         isJarMod = ext_isJarMod
+    }
+
+    spotless {
+        java {
+            licenseHeaderFile(rootProject.file("HEADER"))
+        }
     }
 
     version = "${versionFormat}"
