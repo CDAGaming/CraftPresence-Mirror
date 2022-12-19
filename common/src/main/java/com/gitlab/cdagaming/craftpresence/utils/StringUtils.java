@@ -125,12 +125,12 @@ public class StringUtils {
      * @param decode   If we are Decoding an already encoded String
      * @return The converted UTF_8 String, if successful
      */
-    public static String getConvertedString(String original, String encoding, boolean decode) {
+    public static String convertString(String original, String encoding, boolean decode) {
         try {
             if (decode) {
-                return new String(original.getBytes(), encoding).replaceAll("\\s+", " ");
+                return new String(original.getBytes(), encoding);
             } else {
-                return new String(original.getBytes(encoding)).replaceAll("\\s+", " ");
+                return new String(original.getBytes(encoding));
             }
         } catch (Exception ex) {
             return original;

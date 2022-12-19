@@ -1227,14 +1227,14 @@ public class DiscordUtils {
                 .build();
 
         // Format Data to UTF_8 after Sent to RPC (RPC has it's own Encoding)
-        GAME_STATE = StringUtils.getConvertedString(GAME_STATE, "UTF-8", false);
-        DETAILS = StringUtils.getConvertedString(DETAILS, "UTF-8", false);
+        GAME_STATE = StringUtils.convertString(GAME_STATE, "UTF-8", false);
+        DETAILS = StringUtils.convertString(DETAILS, "UTF-8", false);
 
-        LARGE_IMAGE_KEY = StringUtils.getConvertedString(LARGE_IMAGE_KEY, "UTF-8", false);
-        SMALL_IMAGE_KEY = StringUtils.getConvertedString(SMALL_IMAGE_KEY, "UTF-8", false);
+        LARGE_IMAGE_KEY = StringUtils.convertString(LARGE_IMAGE_KEY, "UTF-8", false);
+        SMALL_IMAGE_KEY = StringUtils.convertString(SMALL_IMAGE_KEY, "UTF-8", false);
 
-        LARGE_IMAGE_TEXT = StringUtils.getConvertedString(LARGE_IMAGE_TEXT, "UTF-8", false);
-        SMALL_IMAGE_TEXT = StringUtils.getConvertedString(SMALL_IMAGE_TEXT, "UTF-8", false);
+        LARGE_IMAGE_TEXT = StringUtils.convertString(LARGE_IMAGE_TEXT, "UTF-8", false);
+        SMALL_IMAGE_TEXT = StringUtils.convertString(SMALL_IMAGE_TEXT, "UTF-8", false);
 
         return newRPCData;
     }
