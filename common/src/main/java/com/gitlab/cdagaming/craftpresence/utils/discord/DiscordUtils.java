@@ -1201,11 +1201,11 @@ public class DiscordUtils {
                 ) : "";
 
                 label = sanitizePlaceholders(label);
-                if (StringUtils.convertString(label, "UTF-8", false).length() > 32) {
+                if (StringUtils.getBytes(label, "UTF-8").length > 32) {
                     label = StringUtils.TOO_LARGE;
                 }
                 url = sanitizePlaceholders(url);
-                if (StringUtils.convertString(url, "UTF-8", false).length() > 512) {
+                if (StringUtils.getBytes(url, "UTF-8").length > 512) {
                     url = null;
                 }
                 if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {

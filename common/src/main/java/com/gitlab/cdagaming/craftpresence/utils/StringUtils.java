@@ -122,9 +122,28 @@ public class StringUtils {
     }
 
     /**
+     * Converts a String to that of the Specified Charset, in byte form
+     *
+     * @param original The original String to interpret
+     * @param encoding The Charset to encode the bytes under
+     * @return The processed byte array
+     */
+    public static byte[] getBytes(String original, String encoding) {
+        try {
+            if (!StringUtils.isNullOrEmpty(encoding)) {
+                return original.getBytes(encoding);
+            } else {
+                return original.getBytes();
+            }
+        } catch (Exception ex) {
+            return original.getBytes();
+        }
+    }
+
+    /**
      * Converts a String and it's bytes to that of the Specified Charset
      *
-     * @param original The original String
+     * @param original The original String to interpet
      * @param encoding The Charset to encode the String under
      * @param decode   If we are Decoding an already encoded String
      * @return The converted UTF_8 String, if successful
@@ -132,9 +151,9 @@ public class StringUtils {
     public static String convertString(String original, String encoding, boolean decode) {
         try {
             if (decode) {
-                return new String(original.getBytes(), encoding);
+                return new String(getBytes(original, null), encoding);
             } else {
-                return new String(original.getBytes(encoding));
+                return new String(getBytes(original, encoding));
             }
         } catch (Exception ex) {
             return original;
