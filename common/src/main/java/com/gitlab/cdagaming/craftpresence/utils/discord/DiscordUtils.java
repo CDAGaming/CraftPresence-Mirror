@@ -934,7 +934,7 @@ public class DiscordUtils {
         }
         // Add Any Generalized Argument Data needed
         final String playerName = CraftPresence.session.getUsername();
-        syncArgument("general.mods", Integer.toString(FileUtils.getModCount()));
+        syncArgument("general.mods", FileUtils.getModCount());
         syncArgument("player.name", playerName);
 
         // UUID Data
