@@ -816,6 +816,11 @@ public class DiscordUtils {
     public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, Supplier<Value>> args) {
         final StringBuilder resultString = new StringBuilder(
                 ModUtils.TRANSLATOR.translate(
+                        String.format("%s.placeholders.notes", ModUtils.MOD_ID)
+                )
+        );
+        resultString.append("\\n").append(
+                ModUtils.TRANSLATOR.translate(
                         String.format("%s.placeholders.title", ModUtils.MOD_ID)
                 )
         );
