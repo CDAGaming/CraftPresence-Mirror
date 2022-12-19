@@ -26,7 +26,11 @@ minecraft {
 }
 
 remapJar {
-    targetNamespace = "named"
+    if (isJarMod && protocol <= 2) { // MC a1.1.2_01 and below
+        targetNamespace = "searge"
+    } else {
+        targetNamespace = "named"
+    }
 }
 
 configurations {
