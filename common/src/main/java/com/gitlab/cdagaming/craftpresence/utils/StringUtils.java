@@ -61,6 +61,10 @@ public class StringUtils {
      */
     public static final char COLOR_CHAR = '\u00A7';
     /**
+     * The character set representing data that is too large to display
+     */
+    public static final String TOO_LARGE = "<...>";
+    /**
      * Regex Pattern for Color and Formatting Codes
      */
     public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");

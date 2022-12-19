@@ -853,7 +853,7 @@ public class DiscordUtils {
                     final String tagValue = placeholderValue.get().toString();
                     placeholderString.append(String.format("\\n ==> %s \"%s\"",
                             ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                            (tagValue.length() >= 128) ? "<...>" : tagValue
+                            (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
                     ));
                 }
             }
@@ -1197,11 +1197,17 @@ public class DiscordUtils {
                         !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
                 );
                 String url = !StringUtils.isNullOrEmpty(buttonElement.getValue().url) ? getResult(
-                        buttonElement.getValue().url, overrideId + ".label"
+                        buttonElement.getValue().url, overrideId + ".url"
                 ) : "";
 
                 label = sanitizePlaceholders(label);
+                if (StringUtils.convertString(label, "UTF-8", false).length() > 32) {
+                    label = StringUtils.TOO_LARGE;
+                }
                 url = sanitizePlaceholders(url);
+                if (StringUtils.convertString(url, "UTF-8", false).length() > 512) {
+                    url = null;
+                }
                 if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
                     buttonObj.addProperty("label", label);
                     buttonObj.addProperty("url", url);
