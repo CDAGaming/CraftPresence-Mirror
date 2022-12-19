@@ -249,14 +249,17 @@ public class CommandsGui extends ExtendedScreen {
                         }
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("compile")) {
-                    final Matcher matcher = Pattern.compile("\"([^\"]*)\"").matcher(commandInput.getControlMessage());
+                    final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandInput.getControlMessage());
                     if (matcher.find()) {
                         final String contents = matcher.group(1);
                         final StringBuilder out = new StringBuilder();
                         final Supplier<Value> data = CraftPresence.CLIENT.getCompileResult(contents, out);
 
+                        final String value = data.get().toString();
+                        final int length = StringUtils.getBytes(value, "UTF-8").length;
+
                         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.compile",
-                                data.get().toString(), out.toString().replace("\n", "\\n")
+                                value, length, out.toString().replace("\n", "\\n")
                         );
                     } else {
                         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
