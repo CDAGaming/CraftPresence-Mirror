@@ -337,7 +337,7 @@ public class DiscordUtils {
         return StringUtils.getOrDefault(
                 input, fallback,
                 StringUtils.NULL_OR_EMPTY.negate()
-                        .and(e -> StringUtils.getBytes(e, "UTF-8").length <= length)
+                        .and(e -> StringUtils.getBytes(e, "UTF-8").length < length)
         ).trim();
     }
 
@@ -1222,8 +1222,8 @@ public class DiscordUtils {
                         buttonElement.getValue().url, overrideId + ".url"
                 ) : "";
 
-                label = sanitizePlaceholders(label, 32, StringUtils.TOO_LARGE);
-                url = sanitizePlaceholders(url, 512, null);
+                label = sanitizePlaceholders(label, 32);
+                url = sanitizePlaceholders(url, 512);
                 if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
                     buttonObj.addProperty("label", label);
                     buttonObj.addProperty("url", url);
