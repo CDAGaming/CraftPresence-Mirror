@@ -328,11 +328,28 @@ public class DiscordUtils {
     /**
      * Removes any invalid data from a placeholder argument
      *
-     * @param input The string to interpret
+     * @param input    The string to interpret
+     * @param length   The required length the input must fall under
+     * @param fallback The fallback string to interpret
      * @return The resulting output string
      */
-    public String sanitizePlaceholders(final String input) {
-        return StringUtils.getOrDefault(input).trim();
+    public String sanitizePlaceholders(final String input, int length, final String fallback) {
+        return StringUtils.getOrDefault(
+                input, fallback,
+                StringUtils.NULL_OR_EMPTY.negate()
+                        .and(e -> StringUtils.getBytes(e, "UTF-8").length <= length)
+        ).trim();
+    }
+
+    /**
+     * Removes any invalid data from a placeholder argument
+     *
+     * @param input  The string to interpret
+     * @param length The required length the input must fall under
+     * @return The resulting output string
+     */
+    public String sanitizePlaceholders(final String input, int length) {
+        return sanitizePlaceholders(input, length, "");
     }
 
     /**
@@ -1205,14 +1222,8 @@ public class DiscordUtils {
                         buttonElement.getValue().url, overrideId + ".url"
                 ) : "";
 
-                label = sanitizePlaceholders(label);
-                if (StringUtils.getBytes(label, "UTF-8").length > 32) {
-                    label = StringUtils.TOO_LARGE;
-                }
-                url = sanitizePlaceholders(url);
-                if (StringUtils.getBytes(url, "UTF-8").length > 512) {
-                    url = null;
-                }
+                label = sanitizePlaceholders(label, 32, StringUtils.TOO_LARGE);
+                url = sanitizePlaceholders(url, 512, null);
                 if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
                     buttonObj.addProperty("label", label);
                     buttonObj.addProperty("url", url);
@@ -1222,14 +1233,14 @@ public class DiscordUtils {
         }
 
         final RichPresence newRPCData = new RichPresence.Builder()
-                .setState(GAME_STATE = sanitizePlaceholders(GAME_STATE))
-                .setDetails(DETAILS = sanitizePlaceholders(DETAILS))
+                .setState(GAME_STATE = sanitizePlaceholders(GAME_STATE, 128))
+                .setDetails(DETAILS = sanitizePlaceholders(DETAILS, 128))
                 .setStartTimestamp(START_TIMESTAMP)
                 .setEndTimestamp(END_TIMESTAMP)
-                .setLargeImage(LARGE_IMAGE_KEY = sanitizePlaceholders(LARGE_IMAGE_KEY),
-                        LARGE_IMAGE_TEXT = sanitizePlaceholders(LARGE_IMAGE_TEXT))
-                .setSmallImage(SMALL_IMAGE_KEY = sanitizePlaceholders(SMALL_IMAGE_KEY),
-                        SMALL_IMAGE_TEXT = sanitizePlaceholders(SMALL_IMAGE_TEXT))
+                .setLargeImage(LARGE_IMAGE_KEY = sanitizePlaceholders(LARGE_IMAGE_KEY, 256),
+                        LARGE_IMAGE_TEXT = sanitizePlaceholders(LARGE_IMAGE_TEXT, 128))
+                .setSmallImage(SMALL_IMAGE_KEY = sanitizePlaceholders(SMALL_IMAGE_KEY, 256),
+                        SMALL_IMAGE_TEXT = sanitizePlaceholders(SMALL_IMAGE_TEXT, 128))
                 .setParty(PARTY_ID, PARTY_SIZE, PARTY_MAX, PARTY_PRIVACY.ordinal())
                 .setMatchSecret(MATCH_SECRET)
                 .setJoinSecret(JOIN_SECRET)

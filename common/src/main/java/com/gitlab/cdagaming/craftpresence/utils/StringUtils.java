@@ -65,6 +65,10 @@ public class StringUtils {
      */
     public static final String TOO_LARGE = "<...>";
     /**
+     * A conditional statement for determining if a String is null or empty
+     */
+    public static final Predicate<String> NULL_OR_EMPTY = StringUtils::isNullOrEmpty;
+    /**
      * Regex Pattern for Color and Formatting Codes
      */
     public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
@@ -207,10 +211,22 @@ public class StringUtils {
      *
      * @param primary   The primary value to interpret
      * @param secondary The secondary value to interpret
+     * @param condition The conditional statement to interpret
+     * @return the resulting value
+     */
+    public static String getOrDefault(final String primary, final String secondary, final Predicate<String> condition) {
+        return condition.test(primary) ? primary : secondary;
+    }
+
+    /**
+     * Retrieve the primary value if non-empty; Otherwise, use the secondary value
+     *
+     * @param primary   The primary value to interpret
+     * @param secondary The secondary value to interpret
      * @return the resulting value
      */
     public static String getOrDefault(final String primary, final String secondary) {
-        return !StringUtils.isNullOrEmpty(primary) ? primary : secondary;
+        return getOrDefault(primary, secondary, NULL_OR_EMPTY.negate());
     }
 
     /**
