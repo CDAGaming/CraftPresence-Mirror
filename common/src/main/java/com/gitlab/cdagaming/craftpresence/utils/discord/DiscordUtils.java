@@ -836,7 +836,7 @@ public class DiscordUtils {
                         String.format("%s.placeholders.notes", ModUtils.MOD_ID)
                 )
         );
-        resultString.append("\\n").append(
+        resultString.append("\\n\\n").append(
                 ModUtils.TRANSLATOR.translate(
                         String.format("%s.placeholders.title", ModUtils.MOD_ID)
                 )
