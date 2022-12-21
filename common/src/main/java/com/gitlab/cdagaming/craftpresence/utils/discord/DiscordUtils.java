@@ -444,7 +444,6 @@ public class DiscordUtils {
 
         if (result == null || result.hasErrors()) {
             if (result != null) {
-                // TODO: Proper Logging
                 ModUtils.LOG.error("A parser exception has occured:");
                 ModUtils.LOG.error("Original: \"" + data + "\"");
                 ModUtils.LOG.error("Errors:");
