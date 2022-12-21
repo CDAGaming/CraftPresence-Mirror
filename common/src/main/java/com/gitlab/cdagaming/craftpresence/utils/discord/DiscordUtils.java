@@ -270,7 +270,9 @@ public class DiscordUtils {
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_JOIN_REQUEST);
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_SPECTATE);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
         }
 
         // Ensure Initial Data Resets properly
@@ -437,7 +439,7 @@ public class DiscordUtils {
         Parser.Result result = null;
         try {
             result = Parser.parse(data);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
 
         if (result == null || result.hasErrors()) {
@@ -471,7 +473,7 @@ public class DiscordUtils {
                 if (output != null) {
                     script.decompile(output);
                 }
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 ModUtils.LOG.error("A compiler exception has occured:");
                 ModUtils.LOG.error("Original: \"" + data + "\"");
                 if (output != null) {
@@ -480,7 +482,9 @@ public class DiscordUtils {
                     } catch (Exception ignored) {
                     }
                 }
-                ex.printStackTrace();
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
                 return Value.null_();
             }
             return !StringUtils.isNullOrEmpty(sect.toString()) ? Value.string(sect.toString()) : Value.null_();
@@ -1162,7 +1166,9 @@ public class DiscordUtils {
             try {
                 ipcInstance.close();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
             }
 
             // Clear User Data before final clear and shutdown

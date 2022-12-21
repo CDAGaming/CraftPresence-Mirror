@@ -250,7 +250,9 @@ public class ControlsGui extends PaginatedScreen {
             entryData.getFirst().setControlMessage(formattedKey);
         } catch (Throwable ex) {
             entryData.getFirst().setControlMessage(backupKeyString);
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
         }
 
         // Clear Data

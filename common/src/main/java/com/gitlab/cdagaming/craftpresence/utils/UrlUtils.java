@@ -179,7 +179,9 @@ public class UrlUtils {
         try {
             openUrl(new URI(targetUrl));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -192,7 +194,9 @@ public class UrlUtils {
         try {
             openUrl(targetUrl.toURI());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
         }
     }
 

@@ -241,7 +241,9 @@ public class DiscordAssetUtils {
             return values[randomObj.nextInt(values.length)];
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
             return null;
         }
     }
@@ -333,8 +335,9 @@ public class DiscordAssetUtils {
             return assets;
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.load"));
-            ex.printStackTrace();
-
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
             return null;
         } finally {
             syncCompleted = true;

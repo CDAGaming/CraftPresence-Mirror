@@ -241,7 +241,7 @@ public class ModUpdaterUtils {
             // Log Failure and Set Update State to FAILED
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
 
-            if (ModUtils.IS_DEV) {
+            if (ModUtils.IS_VERBOSE) {
                 ex.printStackTrace();
             }
             currentState = UpdateState.FAILED;

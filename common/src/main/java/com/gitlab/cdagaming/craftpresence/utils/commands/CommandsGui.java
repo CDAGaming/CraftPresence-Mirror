@@ -535,7 +535,9 @@ public class CommandsGui extends ExtendedScreen {
                         bw.newLine();
                         bw.newLine();
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        if (ModUtils.IS_VERBOSE) {
+                            ex.printStackTrace();
+                        }
                         hasError = true;
                     }
                 }
@@ -554,7 +556,9 @@ public class CommandsGui extends ExtendedScreen {
                             bw.write("* " + assetName + " => " + assetUrl);
                             bw.newLine();
                         } catch (Exception ex) {
-                            ex.printStackTrace();
+                            if (ModUtils.IS_VERBOSE) {
+                                ex.printStackTrace();
+                            }
                             hasError = true;
                         }
                     } else {

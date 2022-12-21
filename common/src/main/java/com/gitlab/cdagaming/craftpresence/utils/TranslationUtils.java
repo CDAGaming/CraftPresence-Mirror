@@ -378,7 +378,9 @@ public class TranslationUtils implements IResourceManagerReloadListener {
                         in.close();
                     } catch (Exception ex) {
                         ModUtils.LOG.error("An exception has occurred while loading Translation Mappings, aborting scan to prevent issues...");
-                        ex.printStackTrace();
+                        if (ModUtils.IS_VERBOSE) {
+                            ex.printStackTrace();
+                        }
                         hasError = true;
                         break;
                     }
@@ -450,7 +452,9 @@ public class TranslationUtils implements IResourceManagerReloadListener {
             }
         } catch (Exception ex) {
             ModUtils.LOG.error("Exception parsing " + translationKey + " from " + languageId);
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
             hasError = true;
         }
 

@@ -204,7 +204,9 @@ public class CraftPresence {
             CLIENT.init(true);
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.load"));
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
         } finally {
             initialized = true;
         }

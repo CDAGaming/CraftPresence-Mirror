@@ -336,7 +336,9 @@ public class Legacy2Modern implements DataMigrator {
             properties.load(configReader);
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
         } finally {
             String originalName, newName;
             Object originalValue, currentValue, newValue;
@@ -440,7 +442,9 @@ public class Legacy2Modern implements DataMigrator {
             }
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
-            ex.printStackTrace();
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
         } finally {
             if (!configFile.delete()) {
                 ModUtils.LOG.error("Failed to remove: " + configFile.getName());

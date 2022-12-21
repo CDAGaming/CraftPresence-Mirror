@@ -106,7 +106,9 @@ public final class Config extends Module implements Serializable {
         } catch (Exception ex) {
             if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class)) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                ex.printStackTrace();
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
 
                 if (!getConfigFile().renameTo(new File(getConfigPath() + ".bak"))) {
                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.backup"));
@@ -222,7 +224,9 @@ public final class Config extends Module implements Serializable {
                 rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
             } catch (Exception ex) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                ex.printStackTrace();
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
             }
         }
         return rawJson;
