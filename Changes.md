@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.0.0 Alpha 2 (02/??/2023)
+## v2.0.0 Alpha 2 (12/23/2022)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.2)_
@@ -87,9 +87,9 @@ related systems:
   even greater level of customizability then we've ever had prior
     * See [their wiki](https://github.com/MeteorDevelopment/starscript/wiki) for some of the standard functions now
       available
-* The OR operator (Initially added in v1.9.x) has been removed
+* The OR operator, initially added in v1.9.x, has been replaced with Starscript usages
     * Prior usages will migrate to an `{foo != null ? foo : bar}` format to replicate the prior behavior
-* All Placeholders have been renamed, following a base format of converting to an `{foo.bar}` format instead
+* All Placeholders have been renamed, converting to an `{foo.bar}` format instead
   of `&FOO:BAR&`
     * All prior usages from v1 configs will also be migrated to follow the new names as mentioned below:
 

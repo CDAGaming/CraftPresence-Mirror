@@ -948,7 +948,9 @@ public class DiscordUtils {
         syncArgument("_general.instance", CraftPresence.instance);
         syncArgument("_config.instance", CraftPresence.CONFIG);
         for (Map.Entry<String, Module> module : CommandUtils.modules.entrySet()) {
-            syncArgument("_" + module.getKey() + ".instance", module.getValue());
+            String name = module.getKey();
+            name = (name.startsWith("_") ? "" : "_") + name;
+            syncArgument(name + ".instance", module.getValue());
         }
         // Sync Custom Variables
         removeArguments("custom.");

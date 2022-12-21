@@ -93,289 +93,108 @@ ___
 
 * `Open Config Gui` - KeyBind to open the CraftPresence Config Gui (Default: GRAVE/TILDE Key)
 
-## Placeholders
+## About Placeholders
 
 In some configuration areas, CraftPresence provides some placeholders to make things easier:
 
 Keep in mind the following:
 
-* In v1.6.0 and above, you can now define where in the Rich Presence the messages should go
-* Placeholders are not case-sensitive, but should be entered lowercase to prevent issues with recognizing them on v1.5.x
-  and below
-* As of v1.6.8, you can now also use minified versions of placeholders, which are trimmed down to a length of 4; `&DIM&`
-  and `&DIMENSION&` are the same in this case
-* As of v1.9.0, you can now use the inner-placeholders of modules in a sub-argument format, such as `&SERVER:IP&`, to
-  allow using a module's placeholders in multiple areas without the global placeholder
+* In v2.0.0, placeholders have been rewritten to be compatible
+  with [Starscript](https://github.com/MeteorDevelopment/starscript)
+    * The older list of this section can be
+      viewed [here](https://gitlab.com/CDAGaming/CraftPresence/-/wikis/Legacy-Placeholders-(v1.x))
+    * All Placeholders (And code expressions) must be surrounded with curly brackets (Example: `{foo.bar}`)
 
 ___
 
-### Global Placeholders
-
-These placeholders are used in the `Presence Settings` menu within the Config Gui.
-
-In v1.9.4 and above, The `|` (Or) operator can be used to combine 2 placeholders, in which the mod will choose the first
-non-null placeholder. One such example is that doing `&SERVER&|&PACK&` will show the pack message, if the server message
-is null, and will show
-the `&SERVER&` data if it is not null (Even if the `&PACK&` data is also not null)
-
-* `&MAINMENU&` - The message to display whilst in the main menu.
-    * See `Status Messages::Main Menu Message` for more info.
-* `&PACK&` - The message to display whilst using a valid modpack.
-    * See `Status Messages::Modpack Message` for more info.
-* `&DIMENSION&` - The Dimension Message, if in use.
-    * See `Dimension Messages` for more info.
-* `&BIOME&` - The Biome Message, if in use.
-    * See `Biome Messages` for more info.
-* `&SERVER&` - The Server/SinglePlayer Message, if in use.
-    * See `Server Messages` (Or `Status Messages::Singleplayer Game Message`) for more info.
-* `&SCREEN&` - The Gui Screen Message, if in use.
-    * See `Advanced Settings::Gui Messages` for more info.
-* `&TILEENTITY&` - The TileEntity (Block/Item) Message, if in use.
-    * See `Advanced Settings::Item Messages` for more info.
-* `&TARGETENTITY&` - The Targeted Entity Message, if in use.
-    * See `Advanced Settings::Entity Target Messages` for more info.
-* `&RIDINGENTITY&` - The Riding Entity Message, if in use.
-    * See `Advanced Settings::Entity Riding Messages` for more info.
-
-___
-
-### General Placeholders
-
-As these placeholders are global, they can be set in any of the RPC fields within `Presence Settings` as well as
-anywhere else in the config, without needing any extra formatting.
-
-They can also be customized at a deeper level via their sub-placeholders, where applicable.
-
-* `&BRAND&` - The minecraft branding label, displayed as interpreted by minecraft.
-* `&MCVERSION&` - The minecraft version, displayed as interpreted by minecraft.
-* `&IGN&` - The non-world player info message.
-    * See `Status Messages::Player Outer Info` for more info.
-* `&MODS&` - The message to display with your mod count.
-    * See `Status Messages::Mods Placeholder` for more info.
-
-___
-
-### Biome Placeholders
-
-These placeholders translate to the `&BIOME&` Global Placeholder in the `Presence Settings` menu within the Config Gui.
-
-You can configure these Sub-Placeholders throughout the `Biome Messages` area of the Config Gui.
-
-If you wish to use these placeholders on their own, you can do so via the `&BIOME:[placeholderName]&` format.
-
-Example: `&BIOME:BIOME&` == `&BIOME&`
-
-* `&BIOME&` - The Current Biome Name
-* `&ICON&` - The Default Biome Icon Name
-
-___
-
-### Dimension Placeholders
-
-These placeholders translate to the `&DIMENSION&` Global Placeholder in the `Presence Settings` menu within the Config
-Gui.
-
-You can configure these Sub-Placeholders throughout the `Dimension Messages` area of the Config Gui.
-
-If you wish to use these placeholders on their own, you can do so via the `&DIMENSION:[placeholderName]&` format.
-
-Example: `&DIMENSION:DIMENSION&` == `&DIMENSION&`
-
-* `&DIMENSION&` - The Current Dimension Name
-* `&ICON&` - The Default Dimension Icon Name
-
-___
-
-### Server/LAN Message Placeholders
-
-These placeholders translate to the `&SERVER&` Global Placeholder in the `Presence Settings` menu within the Config Gui.
-
-You can configure these Sub-Placeholders throughout the `Server Messages` area of the Config Gui.
-
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]&` format.
-
-Example: `&SERVER:IP&` == `&IP&`
-
-* `&PLAYERINFO&` - Your in-world player info message
-    * See `Status Messages::Player Inner Info` for more info.
-* `&WORLDINFO&` - Your in-world game info message
-    * See `Status Messages::World Data Placeholder` for more info.
-* `&IP&` - The Current Server IP Address
-* `&NAME&` - The Current Server Name
-* `&MOTD&` - The Current Server MOTD (Message of The Day)
-* `&PLAYERS&` - The Current Player Count `(10 / 100 Players)`
-    * See `Status Messages::Player List Placeholder` for more info.
-* `&ICON&` - The Default Server Icon Name
-
-___
-
-### Server Player List Placeholders
-
-These placeholders translate to the `&PLAYERS&` Placeholder from the `Server Settings` menu within the Config Gui.
-
-You can configure these Sub-Placeholders within the `Status Messages::Player List Placeholder` setting.
-
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERS:[placeholderName]&` format.
-
-Example: `&SERVER:PLAYERS:CURRENT&` == `&CURRENT&`
-
-* `&CURRENT&` - Current player count (Includes yourself)
-* `&MAX&` - Maximum player count (Includes yourself)
-
-___
-
-### Singleplayer Placeholders
-
-These placeholders translate to the `&SERVER&` Global Placeholder in the `Presence Settings` menu within the Config Gui.
-
-You can configure these Sub-Placeholders within the `Status Messages::Singleplayer Message` setting.
-
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:[placeholderName]&` format.
-
-Example: `&SERVER:IP&` == `&IP&`
-
-* `&PLAYERINFO&` - Your in-world player info message
-    * See `Status Messages::Player Inner Info` for more info.
-* `&WORLDINFO&` - Your in-world game info message
-    * See `Status Messages::World Data Placeholder` for more info.
-
-___
-
-### Outer Player Info Placeholders
-
-These placeholders translate to the `&IGN&` Placeholder from the `Presence Settings` menu within the Config Gui.
-
-You can configure these Sub-Placeholders within the `Status Messages::Player Outer Info` setting.
-
-If you wish to use these placeholders on their own, you can do so via the `&IGN:[placeholderName]&` format.
-
-Example: `&IGN:NAME&` == `&NAME&`
-
-* `&NAME&` - Your username
-* `&UUID&` - Your UUID (Trimmed Format, if valid UUID)
-* `&UUID_FULL&` - Your UUID (Full Format, if valid UUID)
-
-___
-
-### Inner Player Info Placeholders
-
-These placeholders translate to the `&PLAYERINFO&` Placeholder from the `Server Settings` menu (
-Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
-
-You can configure these Sub-Placeholders within the `Status Messages::Player Inner Info` setting.
-
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:[placeholderName]&`
-format.
-
-Example: `&SERVER:PLAYERINFO:COORDS&` == `&COORDS&`
-
-* `&COORDS&` - The player's coordinate placeholder message
-    * See `Status Messages:Player Coordinate Placeholder` for more info.
-* `&HEALTH&` - The player's health placeholder message
-    * See `Status Messages:Player Health Placeholder` for more info.
-
-___
-
-### Player Coordinate Placeholders
-
-These placeholders translate to the `&COORDS&` Placeholder from the `Player Coordinate Placeholder` setting within the
-Config Gui.
-
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:COORDS:[placeholderName]&`
-format.
-
-Example: `&SERVER:PLAYERINFO:COORDS:xPosition&` == `&xPosition&`
-
-* `&xPosition&` - Your current in-game X position
-* `&yPosition&` - Your current in-game Y position
-* `&zPosition&` - Your current in-game Z position
-
-___
-
-### Player Health Placeholders
-
-These placeholders translate to the `&HEALTH&` Placeholder from the `Player Health Placeholder` setting within the
-Config Gui.
-
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:PLAYERINFO:HEALTH:[placeholderName]&`
-format.
-
-Example: `&SERVER:PLAYERINFO:HEALTH:CURRENT&` == `&CURRENT&`
-
-* `&CURRENT&` - Your current in-game health
-* `&MAX&` - Your current in-game maximum health
-
-___
-
-### World Info Placeholders
-
-These placeholders translate to the `&WORLDINFO&` Placeholder from the `Server Settings` menu (
-Or `Status Messages::Singleplayer Game Message`) within the Config Gui.
-
-You can configure these Sub-Placeholders within the `Status Messages::World Data Placeholder` setting.
-
-If you wish to use these placeholders on their own, you can do so via the `&SERVER:WORLDINFO:[placeholderName]&` format.
-
-Example: `&SERVER:WORLDINFO:DIFFICULTY&` == `&DIFFICULTY&`
-
-* `&DIFFICULTY&` - The current world's difficulty
-* `&WORLDNAME&` - The name of the current world
-* `&WORLDTIME&` - The current world's in-game time (24-hour format)
-* `&WORLDTIME12&` - The current world's in-game time (12-hour format)
-* `&WORLDDAY&` - The current world's in-game day count
-
-___
-
-### Gui Placeholders
-
-These placeholders translate to the `&SCREEN&` Global Placeholder in the `Presence Settings` menu within the Config Gui.
-
-You can configure these Sub-Placeholders throughout the `Advanced Settings::Gui Messages` area of the Config Gui.
-
-If you wish to use these placeholders on their own, you can do so via the `&SCREEN:[placeholderName]&` format.
-
-Example: `&SCREEN:SCREEN&` == `&SCREEN&`
-
-* `&SCREEN&` - The Current Gui Screen Name (Supports `Container` and `Screen` type interfaces)
-* `&CLASS&` - The Current Gui Class Name (Ex: The `xxx` part of `net.minecraft.xxx`)
-* `&ICON&` - The Default Gui Screen Icon Name
-
-___
-
-### Item Placeholders
-
-These placeholders translate to the `&TILEENTITY&` Global Placeholder in the `Presence Settings` menu within the Config
-Gui.
-
-You can configure these Sub-Placeholders throughout the `Advanced Settings::Item Messages` area of the Config Gui.
-
-* `&MAIN&` - The Current Item your Main Hand is Holding
-* `&OFFHAND&` - The Current Item your Off Hand is Holding
-* `&HELMET&` - The Current Helmet Armor Piece you have Equipped
-* `&CHEST&` - The Current Chest Armor Piece you have Equipped
-* `&LEGS&` - The Current Leggings Armor Piece you have Equipped
-* `&BOOTS&` - The Current Boots Armor Piece you have Equipped
-
-___
-
-## Entity Placeholders
-
-These placeholders translate to the `&TARGETENTITY&` and `&RIDINGENTITY&` Global Placeholder in
-the `Presence Settings` menu within the Config Gui.
-
-You can configure these Sub-Placeholders throughout the `Advanced Settings::Entity [Target,Riding] Messages`
-area of the Config Gui.
-
-If you wish to use these placeholders on their own, you can do so via
-the `&[TARGETENTITY|RIDINGENTITY]:[placeholderName]&` format.
-
-Example: `&[TARGETENTITY|RIDINGENTITY]:ENTITY&` == `&ENTITY&`
-
-* `&ENTITY&` - The Entity Name
-* `&ICON&` - The Default Entity Icon Name
-
-Additionally, these sub placeholders support nbt data, where in this case the Entity's nbt data is parsed into
-sub-placeholders (Outlined in Tooltips)
+### Placeholder List
+
+The following placeholders are available for use anywhere in CraftPresence:
+
+* General Placeholders:
+    * `general.brand` - The Minecraft branding label
+    * `general.icon` - The default display icon
+    * `general.version` - The Minecraft version label
+    * `general.mods` - The amount of mods currently in your mods folder
+* Menu Event Placeholders (Loading and Main Menu):
+    * `menu.message` - The main menu's display data, while applicable
+    * `menu.icon` - The main menu's display icon, while applicable
+* Pack Placeholders:
+    * `pack.name` - The currently detected pack's name
+    * `pack.icon` - The currently detected pack's icon
+* Player Placeholders:
+    * `player.name` - Your username
+    * `player.uuid.short` - Your UUID (Trimmed Format)
+    * `player.uuid.full` - Your UUID (Full Format, if valid UUID)
+    * `player.icon` - Your player head icon, while applicable
+    * `player.position.x` - Your current in-game X position
+    * `player.position.y` - Your current in-game Y position
+    * `player.position.z` - Your current in-game Z position
+    * `player.health.current` - Your current in-game health
+    * `player.health.max` - Your current in-game maximum health
+* Gui Placeholders:
+    * `screen.message` - The current Gui Screen's display data, while applicable
+    * `screen.name` - The current Gui Screen name
+    * `screen.icon` - The current Gui Screen icon
+    * `screen.default.icon` - The default Gui Screen icon
+* Biome Placeholders:
+    * `biome.message` - The current biome's display data, while in-game
+    * `biome.name` - The current biome name
+    * `biome.icon` - The current biome icon
+    * `biome.default.icon` - The default biome icon
+* Dimension Placeholders:
+    * `dimension.message` - The current dimension's display data, while in-game
+    * `dimension.name` - The current dimension name
+    * `dimension.icon` - The current dimension icon
+    * `dimension.default.icon` - The default dimension icon
+* Entity Placeholders:
+    * `entity.default.icon` - The default entity icon
+    * `entity.target.message` - The currently targeted entity's display data, while applicable
+    * `entity.target.name` - The currently targeted entity's name
+    * `entity.target.icon` - The currently targeted entity's icon
+    * `entity.riding.message` - The currently riding entity's display data, while applicable
+    * `entity.riding.name` - The currently riding entity's name
+    * `entity.riding.icon` - The currently riding entity's icon
+* World Placeholders:
+    * `world.difficulty` - The current world's difficulty
+    * `world.name` - The name of the current world
+    * `world.time24` - The current world's in-game time (24-hour format)
+    * `world.time12` - The current world's in-game time (12-hour format)
+    * `world.day` - The current world's in-game day count
+* Server Placeholders:
+    * `server.message` - The current server's display data, while in-game
+    * `server.icon` - The current server icon
+    * `server.default.icon` - The default server icon
+    * `server.players.current` - The server's current player count
+    * `server.players.max` - The server's maximum player count
+    * `server.address.raw` - (MP) The raw current server address
+    * `server.address` - (MP) The formatted current server address
+    * `server.name` - (MP) The current server name
+    * `server.motd` - (MP) The current server motd
+* Item Placeholders:
+    * `item.message.default` - The default item display data, while applicable
+    * `item.message.holding` - The held item(s) display data, while applicable
+    * `item.message.equipped` - The equipped item(s) display data, while applicable
+    * `item.[slotId].name` - Current `slotId` item name
+    * `item.[slotId].message` - Current `slotId` item message
+* Integration - Replay Mod:
+    * `replaymod.time.current` - When in the Video Renderer, retrieves the `renderTimeTaken` field
+    * `replaymod.time.remaining` - When in the Video Renderer, retrieves the `renderTimeLeft` field
+* Extra Placeholders (Advanced Usage):
+    * `_general.instance` - The `Minecraft` Instance
+    * `_config.instance` - The Mod Config Instance
+    * `_[moduleName].instance` - An instance of one of the modules CraftPresence has
+        * Module Order: `biome, dimension, item, entity, server, screen, <...>`
+    * `data.entity.target.instance` - An instance of the currently targeted entity
+    * `data.entity.target.class` - The class object for the currently targeted entity
+    * `data.entity.riding.instance` - An instance of the currently riding entity
+    * `data.entity.riding.class` - The class object for the currently riding entity
+    * `data.item.[slotId].instance` - An instance of the current `slotId`
+    * `data.item.[slotId].class` - The class object for the current `slotId`
+    * `data.item.[slotId].[tagName]` - The nbt tag `tagName`, within the current `slotId`, if said NBT exists
+    * `data.screen.instance` - An instance of the current Gui Screen
+    * `data.screen.class` - The class object for the current Gui Screen
+    * `data.server.motd.line.[number]` - Retrieves a specific line of `server.motd`
 
 ## Versions of CraftPresence
 
