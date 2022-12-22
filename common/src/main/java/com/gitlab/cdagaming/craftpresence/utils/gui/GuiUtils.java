@@ -308,7 +308,7 @@ public class GuiUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("screen", "data.screen");
-        CraftPresence.CLIENT.clearOverride("screen");
+        CraftPresence.CLIENT.clearOverride("screen.message", "screen.icon");
     }
 
     @Override

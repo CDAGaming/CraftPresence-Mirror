@@ -184,7 +184,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `_general.instance` - The `Minecraft` Instance
     * `_config.instance` - The Mod Config Instance
     * `_[moduleName].instance` - An instance of one of the modules CraftPresence has
-        * Module Order: `biome, dimension, item, entity, server, screen, <...>`
+        * Module Order: `biome, dimension, entity, item, screen, server, <...>`
     * `data.entity.target.instance` - An instance of the currently targeted entity
     * `data.entity.target.class` - The class object for the currently targeted entity
     * `data.entity.riding.instance` - An instance of the currently riding entity

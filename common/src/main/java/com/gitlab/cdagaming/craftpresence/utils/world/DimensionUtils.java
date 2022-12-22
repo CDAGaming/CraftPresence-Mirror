@@ -89,7 +89,7 @@ public class DimensionUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("dimension");
-        CraftPresence.CLIENT.clearOverride("dimension");
+        CraftPresence.CLIENT.clearOverride("dimension.message", "dimension.icon");
     }
 
     @Override

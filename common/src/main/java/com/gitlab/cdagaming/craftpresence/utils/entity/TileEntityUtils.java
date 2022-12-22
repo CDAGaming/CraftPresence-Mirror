@@ -236,7 +236,7 @@ public class TileEntityUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("item", "data.item");
-        CraftPresence.CLIENT.clearOverride("item");
+        CraftPresence.CLIENT.clearOverride("item.message", "item.icon");
     }
 
     @Override

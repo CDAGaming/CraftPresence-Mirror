@@ -122,7 +122,10 @@ public class EntityUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("entity", "data.entity");
-        CraftPresence.CLIENT.clearOverride("entity.target", "entity.riding");
+        CraftPresence.CLIENT.clearOverride(
+                "entity.target.message", "entity.target.icon",
+                "entity.riding.message", "entity.riding.icon"
+        );
     }
 
     @Override

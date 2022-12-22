@@ -87,7 +87,7 @@ public class BiomeUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("biome");
-        CraftPresence.CLIENT.clearOverride("biome");
+        CraftPresence.CLIENT.clearOverride("biome.message", "biome.icon");
     }
 
     @Override
