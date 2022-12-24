@@ -286,8 +286,8 @@ public class ScrollableListControl extends GuiSlot {
                                     CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
                                     originalName
                             ),
-                            new Pair<>("server.address", () -> formattedIP),
-                            new Pair<>("server.address.raw", () -> originalName)
+                            new Pair<>("server.address.short", () -> formattedIP),
+                            new Pair<>("server.address.full", () -> originalName)
                     ).get().toString();
                     texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                     if (currentScreen.isDebugMode()) {

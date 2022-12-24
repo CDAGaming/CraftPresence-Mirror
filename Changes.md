@@ -112,7 +112,7 @@ related systems:
     * `&BIOME:BIOME&`, `&BIOME&` (From Biome Settings) => `biome.name`
     * `&BIOME:ICON&`, `&ICON&` (From Biome Settings) => `biome.icon`
     * `&BIOME&` => `biome.message`, `biome.icon` (Depends on config setting)
-    * `&SERVER:IP&`, `&IP&` (From Server Settings) => `server.address`
+    * `&SERVER:IP&`, `&IP&` (From Server Settings) => `server.address.short`
     * `&SERVER:NAME&`, `&NAME&` (From Server Settings) => `server.name`
     * `&SERVER:MOTD&`, `&MOTD&` (From Server Settings) => `server.motd.raw`
     * `&SERVER:ICON&`, `&ICON&` (From Server Settings) => `server.icon`

@@ -167,8 +167,8 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `server.default.icon` - The default server icon
     * `server.players.current` - The server's current player count
     * `server.players.max` - The server's maximum player count
-    * `server.address.raw` - (MP) The raw current server address
-    * `server.address` - (MP) The formatted current server address
+    * `server.address.full` - (MP) The raw current server address
+    * `server.address.short` - (MP) The formatted current server address
     * `server.name` - (MP) The current server name
     * `server.motd` - (MP) The current server motd
 * Item Placeholders:

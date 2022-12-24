@@ -486,8 +486,8 @@ public class ServerUtils implements Module {
 
             // Server Data Arguments (Multiplayer)
             final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
-            CraftPresence.CLIENT.syncArgument("server.address.raw", currentServer_IP);
-            CraftPresence.CLIENT.syncArgument("server.address", formattedIP);
+            CraftPresence.CLIENT.syncArgument("server.address.full", currentServer_IP);
+            CraftPresence.CLIENT.syncArgument("server.address.short", formattedIP);
             CraftPresence.CLIENT.syncArgument("server.name", currentServer_Name);
             CraftPresence.CLIENT.syncArgument("server.motd.raw", currentServer_MOTD);
             if (!currentServer_MOTD_Lines.isEmpty()) {

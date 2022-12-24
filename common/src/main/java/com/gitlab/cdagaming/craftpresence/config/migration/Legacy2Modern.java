@@ -105,8 +105,8 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&ICON&", "{biome.icon}", IS_ICON, IS_BIOME_MODULE),
             generatePair("&BIOME&", "{biome.icon}", IS_ICON),
             //
-            generatePair("&SERVER:IP&", "{server.address}", IS_TEXT),
-            generatePair("&IP&", "{server.address}", IS_TEXT, IS_SERVER_MODULE),
+            generatePair("&SERVER:IP&", "{server.address.short}", IS_TEXT),
+            generatePair("&IP&", "{server.address.short}", IS_TEXT, IS_SERVER_MODULE),
             generatePair("&SERVER:NAME&", "{server.name}", IS_TEXT),
             generatePair("&NAME&", "{server.name}", IS_TEXT, IS_SERVER_MODULE),
             generatePair("&SERVER:MOTD&", "{server.motd.raw}", IS_TEXT),

@@ -62,7 +62,7 @@ public class HypherConverter implements DataMigrator {
             .put("%mcver%", "{general.version}")
             .put("%instance%", "{pack.name}")
             .put("%launcher%", "{general.brand}")
-            .put("%server%", "{replace(server.address, '.', '_')}")
+            .put("%server%", "{replace(server.address.short, '.', '_')}")
             .put("%launchername%", "{toLower(general.brand)}")
             .put("%savename%", "{world.name}")
             .put("%playerhead%", "{player.icon}")
@@ -75,7 +75,7 @@ public class HypherConverter implements DataMigrator {
             .put("%replaytime%", "{replaymod.time.current}")
             .put("%replaytimeleft%", "{replaymod.time.remaining")
             //
-            .put("%serverip%", "{server.address}")
+            .put("%serverip%", "{server.address.short}")
             .put("%servername%", "{server.name}")
             .put("%players%", "{server.players.current}")
             .put("%playersexcl%", "{server.players.current - 1}")
