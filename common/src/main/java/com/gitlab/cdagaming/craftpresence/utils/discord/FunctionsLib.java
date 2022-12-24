@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.discord;
 
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -45,8 +46,12 @@ public class FunctionsLib {
     public static void init(Starscript ss) {
         StandardLib.init(ss);
 
+        // General Functions
         ss.set("randomAsset", FunctionsLib::randomAsset);
         ss.set("randomString", FunctionsLib::randomString);
+
+        // DiscordUtils
+        ss.set("getResult", FunctionsLib::getResult);
 
         // StringUtils
         ss.set("rgbaToHex", FunctionsLib::rgbaToHex);
@@ -71,6 +76,12 @@ public class FunctionsLib {
         ss.set("getClass", FunctionsLib::getClass);
         ss.set("hasField", FunctionsLib::hasField);
         ss.set("stripColors", FunctionsLib::stripColors);
+    }
+
+    public static Value getResult(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("randomString() can only be used with one argument, got %d.", argCount);
+        return Value.string(CraftPresence.CLIENT.getResult(ss.pop().toString()));
     }
 
     public static Value randomAsset(Starscript ss, int argCount) {

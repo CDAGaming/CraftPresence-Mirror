@@ -42,6 +42,7 @@ import net.minecraft.client.gui.GuiScreenWorking;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Migration from SimpleRPC (Hypherion) Config to our {@link Config} format
@@ -206,14 +207,21 @@ public class HypherConverter implements DataMigrator {
         return instance;
     }
 
-    private String processPlaceholder(final String original) {
+    private String processPlaceholder(final String original, final boolean addMetadata) {
         String result = original;
+        if (addMetadata) {
+            result = "'" + original + "'";
+        }
         if (!StringUtils.isNullOrEmpty(result)) {
             for (Map.Entry<String, String> entry : placeholderMappings.entrySet()) {
                 result = StringUtils.replaceAnyCase(result, entry.getKey(), entry.getValue());
             }
         }
         return result;
+    }
+
+    private String processPlaceholder(final String original) {
+        return processPlaceholder(original, false);
     }
 
     private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain, final ConfigFlag... flags) {
@@ -223,11 +231,8 @@ public class HypherConverter implements DataMigrator {
         data.details = processPlaceholder(entry.get("description"));
         data.gameState = processPlaceholder(entry.get("state"));
         if (isActive(ConfigFlag.USE_IMAGE_POOLS)) {
-            // TODO: Implement *full* Image Pool Support
-            final List<String> largeImages = entry.get("largeImageKey");
-            final List<String> smallImages = entry.get("smallImageKey");
-            data.largeImageKey = processPlaceholder(largeImages.get(0));
-            data.smallImageKey = processPlaceholder(smallImages.get(0));
+            data.largeImageKey = combineData(entry.get("largeImageKey"));
+            data.smallImageKey = combineData(entry.get("smallImageKey"));
         } else {
             data.largeImageKey = processPlaceholder(entry.get("largeImageKey"));
             data.smallImageKey = processPlaceholder(entry.get("smallImageKey"));
@@ -248,6 +253,31 @@ public class HypherConverter implements DataMigrator {
         }
 
         return data;
+    }
+
+    private String combineData(final List<String> items) {
+        final StringBuilder dataBuilder = new StringBuilder();
+        if (!items.isEmpty()) {
+            if (items.size() > 1) {
+                dataBuilder.append("{randomString(");
+                for (int i = 0; i < items.size(); i++) {
+                    final String output = processPlaceholder(items.get(i), true);
+                    final boolean hasExpr = Pattern.compile("\\{(.*?)}").matcher(output).find();
+                    dataBuilder
+                            .append(hasExpr ? "getResult(" : "")
+                            .append(output)
+                            .append(hasExpr ? ")" : "");
+
+                    if (i < items.size() - 1) {
+                        dataBuilder.append(",");
+                    }
+                }
+                dataBuilder.append(")}");
+            } else {
+                dataBuilder.append(processPlaceholder(items.get(0)));
+            }
+        }
+        return dataBuilder.toString();
     }
 
     private PresenceData convertPresenceData(final AbstractConfig entry, final boolean useAsMain, final ConfigFlag... flags) {
