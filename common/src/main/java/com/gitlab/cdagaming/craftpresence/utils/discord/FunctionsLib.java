@@ -26,11 +26,15 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
+import com.google.common.collect.Lists;
 import org.meteordev.starscript.StandardLib;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
 
 import java.awt.*;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Standard library with some default functions and variables.
@@ -40,6 +44,9 @@ import java.awt.*;
 public class FunctionsLib {
     public static void init(Starscript ss) {
         StandardLib.init(ss);
+
+        ss.set("randomAsset", FunctionsLib::randomAsset);
+        ss.set("randomString", FunctionsLib::randomString);
 
         // StringUtils
         ss.set("rgbaToHex", FunctionsLib::rgbaToHex);
@@ -64,6 +71,20 @@ public class FunctionsLib {
         ss.set("getClass", FunctionsLib::getClass);
         ss.set("hasField", FunctionsLib::hasField);
         ss.set("stripColors", FunctionsLib::stripColors);
+    }
+
+    public static Value randomAsset(Starscript ss, int argCount) {
+        return Value.string(DiscordAssetUtils.getRandomAssetName());
+    }
+
+    public static Value randomString(Starscript ss, int argCount) {
+        final List<String> args = Lists.newArrayList();
+        if (argCount < 1)
+            ss.error("randomString() requires one or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop().toString());
+        }
+        return Value.string(args.get(new Random().nextInt(argCount)));
     }
 
     public static Value rgbaToHex(Starscript ss, int argCount) {

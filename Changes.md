@@ -1,9 +1,9 @@
 # CraftPresence Changes
 
-## v2.0.0 Alpha 2 (12/23/2022)
+## v2.0.0 Alpha 3 (02/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.2)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.3)_
 
 ### Changes
 
@@ -165,7 +165,7 @@ related systems:
     * `&TILEENTITY&` => `item.message.default`
     * `&ITEM&` (From Item Settings) => `item.message.holding`
 * Added Placeholders:
-    * `server.motd.line.*` added to display only the specified line from `server.motd.raw`
+    * `data.server.motd.line.*` added to display only the specified line from `server.motd.raw`
     * `world.time12` added to display `world.time24` in an `xx:xx AM/PM` format
     * `player.icon` added if `allowEndpointIcons` is active and a valid `playerSkinEndpoint` is supplied
     * `*.instance` and `*.class` placeholders added to relevant `Gui`, `Entity`, and `Tile Entity` Modules

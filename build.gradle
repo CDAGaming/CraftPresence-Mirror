@@ -238,7 +238,7 @@ subprojects {
 
 forgix {
     group = rootProject.group
-    mergedJarName = "${ext_fileFormat}-universal.jar"
+    mergedJarName = "${ext_fileFormat}.jar"
     outputDir = "build/libs"
 
     forge {

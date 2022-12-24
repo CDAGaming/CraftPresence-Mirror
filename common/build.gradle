@@ -181,8 +181,8 @@ tasks.register('generateMyResources') {
     }
 }
 
-def archive_name = "${rootProject.mod_name}-${rootProject.loader_name}"
-def targetFile = file("$rootDir/build/libs/${fileFormat}-universal.jar")
+def archive_name = "${rootProject.mod_name}"
+def targetFile = file("$rootDir/build/libs/${fileFormat}.jar")
 if (!targetFile.exists() && isJarMod) {
     // Fallback to the Forge Sub-Project Output when in a Jar Mod configuration
     targetFile = file("$rootDir/forge/build/libs/${fileFormat}-forge.jar")
@@ -218,7 +218,7 @@ curseforge {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "${mod_name}".toLowerCase()
-    versionNumber = "v${versionFormat}_${loader_name}".replaceAll("\\s", "").toLowerCase()
+    versionNumber = "v${versionFormat}".replaceAll("\\s", "").toLowerCase()
     versionName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
     changelog = file("$rootDir/Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
