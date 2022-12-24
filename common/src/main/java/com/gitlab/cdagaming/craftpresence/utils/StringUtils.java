@@ -244,10 +244,45 @@ public class StringUtils {
      *
      * @param regexValue The Regex Value to test against
      * @param original   The original Object to get matches from
+     * @param flags      The bit mask for Pattern compilation, see {@link Pattern#compile(String, int)}
+     * @return A Pair with the Format of originalString:listOfMatches
+     */
+    public static Pair<String, List<String>> getMatches(final String regexValue, final Object original, final int flags) {
+        return original != null ? getMatches(regexValue, original.toString(), flags) : new Pair<>("", Lists.newArrayList());
+    }
+
+    /**
+     * Retrieve Matching Values from an input that matches the defined regex
+     *
+     * @param regexValue The Regex Value to test against
+     * @param original   The original Object to get matches from
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final Object original) {
-        return original != null ? getMatches(regexValue, original.toString()) : new Pair<>("", Lists.newArrayList());
+        return getMatches(regexValue, original, 0);
+    }
+
+    /**
+     * Retrieve Matching Values from an input that matches the defined regex
+     *
+     * @param regexValue The Regex Value to test against
+     * @param original   The original String to get matches from
+     * @param flags      The bit mask for Pattern compilation, see {@link Pattern#compile(String, int)}
+     * @return A Pair with the Format of originalString:listOfMatches
+     */
+    public static Pair<String, List<String>> getMatches(final String regexValue, final String original, final int flags) {
+        final List<String> matches = Lists.newArrayList();
+
+        if (!isNullOrEmpty(original)) {
+            final Pattern pattern = Pattern.compile(regexValue, flags);
+            final Matcher m = pattern.matcher(original);
+
+            while (m.find()) {
+                matches.add(m.group());
+            }
+        }
+
+        return new Pair<>(original, matches);
     }
 
     /**
@@ -258,18 +293,7 @@ public class StringUtils {
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final String original) {
-        final List<String> matches = Lists.newArrayList();
-
-        if (!isNullOrEmpty(original)) {
-            final Pattern pattern = Pattern.compile(regexValue);
-            final Matcher m = pattern.matcher(original);
-
-            while (m.find()) {
-                matches.add(m.group());
-            }
-        }
-
-        return new Pair<>(original, matches);
+        return getMatches(regexValue, original, 0);
     }
 
     /**
