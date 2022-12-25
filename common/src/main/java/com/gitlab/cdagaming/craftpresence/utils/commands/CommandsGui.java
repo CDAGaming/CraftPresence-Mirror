@@ -266,24 +266,64 @@ public class CommandsGui extends ExtendedScreen {
                             executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.compile",
                                     value, length, out.toString().replace("\n", "\\n")
                             );
-                        } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
-                            final ValueMap globals = CraftPresence.CLIENT.scriptEngine.getGlobals();
-                            final List<String> results = Lists.newArrayList();
-                            if (executionCommandArgs[1].equalsIgnoreCase("functions")) {
-                                results.addAll(globals.keys().stream().filter(e -> globals.get(e).get().isFunction()).collect(Collectors.toList()));
-                            } else {
-                                results.addAll(CraftPresence.CLIENT.getArgumentEntries(false, executionCommandArgs[1]));
-                            }
-
-                            CraftPresence.GUIS.openScreen(new SelectorGui(
-                                    currentScreen,
-                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
-                                    results,
-                                    null, null,
-                                    false, false, RenderType.None,
-                                    null, null
-                            ));
+                        } else {
+                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
                         }
+                    }
+                } else if (executionCommandArgs[0].equalsIgnoreCase("search")) {
+                    if (executionCommandArgs.length == 1) {
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.search");
+                    } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
+                        final ValueMap globals = CraftPresence.CLIENT.scriptEngine.getGlobals();
+                        final List<String> results = Lists.newArrayList();
+                        if (executionCommandArgs[1].startsWith("type:")) {
+                            final String type = executionCommandArgs[1].substring(executionCommandArgs[1].lastIndexOf("type:") + 1).toLowerCase();
+                            results.addAll(globals.keys().stream().filter(e -> {
+                                        final Value data = globals.get(e).get();
+                                        switch (type) {
+                                            case "function":
+                                                return data.isFunction();
+                                            case "object":
+                                                return data.isObject();
+                                            case "bool":
+                                            case "boolean":
+                                                return data.isBool();
+                                            case "map":
+                                                return data.isMap();
+                                            case "int":
+                                            case "integer":
+                                            case "float":
+                                            case "double":
+                                            case "number":
+                                                return data.isNumber();
+                                            case "text":
+                                            case "string":
+                                                return data.isString();
+                                            case "empty":
+                                            case "null":
+                                                return data.isNull();
+                                            case "any":
+                                            case "all":
+                                                return true;
+                                            default:
+                                                return false;
+                                        }
+                                    }
+                            ).collect(Collectors.toList()));
+                        } else if (executionCommandArgs[1].equalsIgnoreCase("all")) {
+                            results.addAll(CraftPresence.CLIENT.getArgumentEntries(false));
+                        } else {
+                            results.addAll(CraftPresence.CLIENT.getArgumentEntries(false, executionCommandArgs[1]));
+                        }
+
+                        CraftPresence.GUIS.openScreen(new SelectorGui(
+                                currentScreen,
+                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
+                                results,
+                                null, null,
+                                false, false, RenderType.None,
+                                null, null
+                        ));
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reload")) {
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reload");
@@ -488,6 +528,7 @@ public class CommandsGui extends ExtendedScreen {
             completions.add("help");
             completions.add("config");
             completions.add("compile");
+            completions.add("search");
             completions.add("reload");
             completions.add("request");
             completions.add("export");
