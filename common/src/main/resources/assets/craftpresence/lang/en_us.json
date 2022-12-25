@@ -305,7 +305,7 @@
   "craftpresence.placeholders.server.address.full.description": "(MP) The raw current server address",
   "craftpresence.placeholders.server.address.short.description": "(MP) The formatted current server address",
   "craftpresence.placeholders.server.name.description": "(MP) The current server name",
-  "craftpresence.placeholders.server.motd.description": "(MP) The current server motd",
+  "craftpresence.placeholders.server.motd.raw.description": "(MP) The current raw server motd",
   "craftpresence.placeholders.item.message.default.description": "The default item display data, while applicable",
   "craftpresence.placeholders.item.message.holding.description": "The held item(s) display data, while applicable",
   "craftpresence.placeholders.item.message.equipped.description": "The equipped item(s) display data, while applicable",
