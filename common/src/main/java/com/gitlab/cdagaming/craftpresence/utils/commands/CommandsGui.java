@@ -42,6 +42,7 @@ import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.meteordev.starscript.value.Value;
+import org.meteordev.starscript.value.ValueMap;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CommandsGui extends ExtendedScreen {
     private static String[] executionCommandArgs;
@@ -265,7 +267,22 @@ public class CommandsGui extends ExtendedScreen {
                                     value, length, out.toString().replace("\n", "\\n")
                             );
                         } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
-                            // TODO: Add the ability to search different types of argument data
+                            final ValueMap globals = CraftPresence.CLIENT.scriptEngine.getGlobals();
+                            final List<String> results = Lists.newArrayList();
+                            if (executionCommandArgs[1].equalsIgnoreCase("functions")) {
+                                results.addAll(globals.keys().stream().filter(e -> globals.get(e).get().isFunction()).collect(Collectors.toList()));
+                            } else {
+                                results.addAll(CraftPresence.CLIENT.getArgumentEntries(false, executionCommandArgs[1]));
+                            }
+
+                            CraftPresence.GUIS.openScreen(new SelectorGui(
+                                    currentScreen,
+                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
+                                    results,
+                                    null, null,
+                                    false, false, RenderType.None,
+                                    null, null
+                            ));
                         }
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reload")) {
