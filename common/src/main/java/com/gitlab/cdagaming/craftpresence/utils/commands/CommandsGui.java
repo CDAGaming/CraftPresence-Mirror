@@ -316,14 +316,18 @@ public class CommandsGui extends ExtendedScreen {
                             results.addAll(CraftPresence.CLIENT.getArgumentEntries(false, executionCommandArgs[1]));
                         }
 
-                        CraftPresence.GUIS.openScreen(new SelectorGui(
-                                currentScreen,
-                                ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
-                                results,
-                                null, null,
-                                false, false, RenderType.None,
-                                null, null
-                        ));
+                        if (!results.isEmpty()) {
+                            CraftPresence.GUIS.openScreen(new SelectorGui(
+                                    currentScreen,
+                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
+                                    results,
+                                    null, null,
+                                    false, false, RenderType.Placeholder.setCanRenderImage(false),
+                                    null, null
+                            ));
+                        } else {
+                            executionString = ModUtils.TRANSLATOR.translate("gui.config.message.empty.list");
+                        }
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reload")) {
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reload");

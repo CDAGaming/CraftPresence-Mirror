@@ -95,7 +95,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.gui"), CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
                                         true, true, RenderType.None.setIdentifierType(
-                                        RenderType.IdentifierType.GUI),
+                                        RenderType.IdentifierType.Gui),
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data

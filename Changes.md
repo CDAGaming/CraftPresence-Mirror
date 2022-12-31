@@ -30,7 +30,8 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
           way [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) presents it's
           data.
         * Otherwise, if `useAsMain` is disabled, this allows a placeholder to be interpreted differently depending on
-          the RPC field that placeholder is within. An example of this would be being able to make `&DIMENSION&`
+          the RPC field that placeholder is within. An example of this would be being able to make a module's
+          placeholder (`[module].message, [module].icon`)
           equal `this` if it is used in the `Details` Presence
           Field, while equaling `that` if used in the `Game State` Presence Field.
 * Added more flexibility and usage to endpoint icons, including the addition of the `allowEndpointIcons`

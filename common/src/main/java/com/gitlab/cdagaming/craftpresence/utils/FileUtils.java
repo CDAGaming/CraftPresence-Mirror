@@ -356,7 +356,7 @@ public class FileUtils {
     }
 
     /**
-     * Return whether or not a class exists out of the specified arguments
+     * Return whether a class exists out of the specified arguments
      *
      * @param loader The {@link ClassLoader} to attempt loading with
      * @param init   Whether to initialize the class, if found
@@ -378,7 +378,7 @@ public class FileUtils {
     }
 
     /**
-     * Return whether or not a class exists out of the specified arguments
+     * Return whether a class exists out of the specified arguments
      *
      * @param loader The {@link ClassLoader} to attempt loading with
      * @param paths  The class path(s) to interpret
@@ -389,7 +389,7 @@ public class FileUtils {
     }
 
     /**
-     * Return whether or not a class exists out of the specified arguments
+     * Return whether a class exists out of the specified arguments
      *
      * @param useClassLoader Whether to use the thread's current class loader
      * @param paths          The class path(s) to interpret
@@ -400,7 +400,7 @@ public class FileUtils {
     }
 
     /**
-     * Return whether or not a class exists out of the specified arguments
+     * Return whether a class exists out of the specified arguments
      *
      * @param paths The class path(s) to interpret
      * @return the valid {@link Class} or null

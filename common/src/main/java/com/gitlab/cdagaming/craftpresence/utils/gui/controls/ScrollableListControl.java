@@ -121,6 +121,32 @@ public class ScrollableListControl extends GuiSlot {
     }
 
     /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param mc            The Minecraft Instance for this Control
+     * @param currentScreen The current screen instance for this control
+     * @param width         The Width of this Control
+     * @param height        The Height of this Control
+     * @param topIn         How far from the top of the Screen the List should render at
+     * @param bottomIn      How far from the bottom of the Screen the List should render at
+     * @param itemList      The List of items to allocate for the slots in the Gui
+     * @param currentValue  The current value, if any, to select upon initialization of the Gui
+     * @param renderType    The Rendering type for this Scroll List
+     */
+    public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, List<String> itemList, String currentValue, RenderType renderType) {
+        this(
+                mc,
+                currentScreen,
+                width, height,
+                topIn, bottomIn,
+                renderType.canRenderImage() ? 45 : 18,
+                itemList,
+                currentValue,
+                renderType
+        );
+    }
+
+    /**
      * Retrieves the Amount of Items in the List
      *
      * @return The Amount of Items in the List
@@ -266,10 +292,7 @@ public class ScrollableListControl extends GuiSlot {
         String displayName = entryAliases.getOrDefault(originalName, originalName);
         int xOffset = xPos;
 
-        if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements &&
-                ((renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) || (renderType == RenderType.ServerData && CraftPresence.SERVER.enabled) ||
-                        (renderType == RenderType.EntityData && CraftPresence.ENTITIES.enabled) ||
-                        (renderType == RenderType.ItemData && CraftPresence.TILE_ENTITIES.enabled))) {
+        if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements) {
             ResourceLocation texture = new ResourceLocation("");
             String assetUrl;
 
@@ -323,15 +346,23 @@ public class ScrollableListControl extends GuiSlot {
                 }
             } else if (renderType == RenderType.ItemData) {
                 texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
+            } else if (renderType == RenderType.Placeholder) {
+                if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {
+                    hoverText.add(String.format("%s \"%s\"",
+                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                            CraftPresence.CLIENT.getArgument(originalName).get().toString()
+                    ));
+                }
             }
-            if (!ImageUtils.isTextureNull(texture)) {
+
+            if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
                 CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
                 if (currentScreen.isDebugMode()) {
                     hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
                 }
+                // Note: 35 Added to xOffset to accommodate for Image Size
+                xOffset += 35;
             }
-            // Note: 35 Added to xOffset to accommodate for Image Size
-            xOffset += 35;
         }
 
         final String identifierName = renderType.getIdentifier(originalName);
@@ -370,6 +401,10 @@ public class ScrollableListControl extends GuiSlot {
          */
         ItemData,
         /**
+         * Constant for the "Placeholder" Rendering Mode.
+         */
+        Placeholder,
+        /**
          * Constant for the "Text Only" Rendering Mode.
          */
         None;
@@ -378,6 +413,30 @@ public class ScrollableListControl extends GuiSlot {
          * The Identifier Type linked to this Render Type
          */
         public IdentifierType identifierType = IdentifierType.None;
+
+        /**
+         * Whether this Render Mode can render images
+         */
+        private boolean canRenderImage = !CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements;
+
+        /**
+         * Retrieve whether this Render Mode can render images
+         * @return {@link Boolean#TRUE} if this Render Mode can render images
+         */
+        public boolean canRenderImage() {
+            return this != None && canRenderImage;
+        }
+
+        /**
+         * Sets whether this Rendering Mode involves Image Rendering
+         *
+         * @param canRenderImage the modified value
+         * @return the modified {@link RenderType} instance
+         */
+        public RenderType setCanRenderImage(boolean canRenderImage) {
+            this.canRenderImage = canRenderImage;
+            return this;
+        }
 
         /**
          * Sets the Identifier Type to be linked to this Render Type
@@ -399,7 +458,7 @@ public class ScrollableListControl extends GuiSlot {
         public String getIdentifier(final String originalName) {
             String identifierName;
             switch (identifierType) {
-                case GUI: {
+                case Gui: {
                     final Class<?> target = CraftPresence.GUIS.GUI_CLASSES.get(originalName);
                     identifierName = target != null ? MappingUtils.getCanonicalName(target) : originalName;
                     break;
@@ -419,7 +478,7 @@ public class ScrollableListControl extends GuiSlot {
             /**
              * Constant for the "Gui" Identifier Type.
              */
-            GUI,
+            Gui,
             /**
              * Constant for the "None" Identifier Type.
              */

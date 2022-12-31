@@ -790,6 +790,17 @@ public class DiscordUtils {
     }
 
     /**
+     * Retrieves the argument within the specified type that matches the specified string format
+     *
+     * @return The entry that satisfies the method conditions, or null
+     */
+    public Supplier<Value> getArgument(final String key) {
+        synchronized (placeholderData) {
+            return placeholderData.getOrDefault(key, Value::null_);
+        }
+    }
+
+    /**
      * Retrieves any argument entries within the specified type that match the specified string formats
      *
      * @param formatToLower Whether to lower-cases the resulting entries
@@ -1019,7 +1030,7 @@ public class DiscordUtils {
      * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
      *
      * @param allowNull   If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
-     * @param showLogging Whether or not to display logging for this function
+     * @param showLogging Whether to display logging for this function
      * @param evalStrings The Specified Icon Key(s) to search for from the {@link DiscordUtils#CLIENT_ID} Assets
      * @return The found or alternative matching Icon Key
      */
