@@ -240,6 +240,29 @@ public class StringUtils {
     }
 
     /**
+     * Reverse the specified list recursively
+     *
+     * @param list The specified list to interpret
+     * @param <T> The list type
+     */
+    public static <T> void revlist(List<T> list) {
+        // base condition when the list size is 0
+        if (list.size() <= 1 || list == null)
+            return;
+
+        T value = list.remove(0);
+
+        // call the recursive function to reverse
+        // the list after removing the first element
+        revlist(list);
+
+        // now after the rest of the list has been
+        // reversed by the upper recursive call,
+        // add the first value at the end
+        list.add(value);
+    }
+
+    /**
      * Retrieve Matching Values from an input that matches the defined regex
      *
      * @param regexValue The Regex Value to test against

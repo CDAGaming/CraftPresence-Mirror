@@ -27,8 +27,12 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.meteordev.starscript.StandardLib;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
@@ -47,6 +51,7 @@ public class FunctionsLib {
         StandardLib.init(ss);
 
         // General Functions
+        ss.set("getJsonElement", FunctionsLib::getJsonElement);
         ss.set("randomAsset", FunctionsLib::randomAsset);
         ss.set("randomString", FunctionsLib::randomString);
 
@@ -76,6 +81,66 @@ public class FunctionsLib {
         ss.set("getClass", FunctionsLib::getClass);
         ss.set("hasField", FunctionsLib::hasField);
         ss.set("stripColors", FunctionsLib::stripColors);
+    }
+
+    public static Value getJsonElement(Starscript ss, int argCount) {
+        final List<String> path = Lists.newArrayList();
+        String source, json = "";
+        JsonObject contents;
+        JsonElement result = null;
+        // Argument Collection
+        if (argCount < 1)
+            ss.error("getJsonElement() requires one or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            if (i == argCount - 1) {
+                source = ss.pop().toString();
+                if (source.toLowerCase().startsWith("http")) {
+                    try {
+                        json = UrlUtils.getURLText(source, "UTF-8");
+                    } catch (Exception ex) {
+                        ss.error("Unable to parse URL for getJsonElement(), try again.");
+                    }
+                } else {
+                    json = source;
+                }
+            } else {
+                path.add(ss.pop().toString());
+            }
+        }
+        result = contents = FileUtils.parseJson(json);
+        StringUtils.revlist(path);
+
+        boolean needsIndex = false;
+        for (String part : path) {
+            JsonElement element;
+            if (needsIndex) {
+                result = element = result.getAsJsonArray().get(
+                        StringUtils.getValidInteger(part).getSecond()
+                );
+            } else {
+                result = element = contents.get(part);
+            }
+
+            if (element.isJsonObject()) {
+                contents = element.getAsJsonObject();
+            } else if (element.isJsonNull()) {
+                return Value.null_();
+            } else if (element.isJsonArray()) {
+                needsIndex = true;
+            } else if (element.isJsonPrimitive()) {
+                final JsonPrimitive inner = element.getAsJsonPrimitive();
+                if (inner.isBoolean()) {
+                    return Value.bool(inner.getAsBoolean());
+                } else if (inner.isNumber()) {
+                    return Value.number(inner.getAsDouble());
+                } else if (inner.isString()) {
+                    return Value.string(inner.getAsString());
+                } else {
+                    return Value.object(inner);
+                }
+            }
+        }
+        return result != null ? Value.object(result) : Value.null_();
     }
 
     public static Value getResult(Starscript ss, int argCount) {
