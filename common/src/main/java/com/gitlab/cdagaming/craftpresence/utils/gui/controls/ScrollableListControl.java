@@ -421,6 +421,7 @@ public class ScrollableListControl extends GuiSlot {
 
         /**
          * Retrieve whether this Render Mode can render images
+         *
          * @return {@link Boolean#TRUE} if this Render Mode can render images
          */
         public boolean canRenderImage() {

@@ -243,7 +243,7 @@ public class StringUtils {
      * Reverse the specified list recursively
      *
      * @param list The specified list to interpret
-     * @param <T> The list type
+     * @param <T>  The list type
      */
     public static <T> void revlist(List<T> list) {
         // base condition when the list size is 0
