@@ -65,10 +65,6 @@ public class FileUtils {
      * The list of the currently detected class names
      */
     private static final Map<String, Class<?>> CLASS_MAP = Maps.newHashMap();
-    /**
-     * The list of the currently detected modded class names
-     */
-    private static final List<String> MODDED_CLASS_NAMES = Lists.newArrayList();
 
     /**
      * Retrieves Raw Data and Converts it into a Parsed Json Syntax

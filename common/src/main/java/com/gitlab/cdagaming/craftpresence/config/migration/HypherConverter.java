@@ -224,7 +224,7 @@ public class HypherConverter implements DataMigrator {
         return processPlaceholder(original, false);
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain, final ConfigFlag... flags) {
+    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain) {
         final PresenceData data = new PresenceData();
         data.enabled = isEnabled;
         data.useAsMain = useAsMain;
@@ -280,12 +280,12 @@ public class HypherConverter implements DataMigrator {
         return dataBuilder.toString();
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean useAsMain, final ConfigFlag... flags) {
-        return convertPresenceData(entry, entry.getOrElse("enabled", true), useAsMain, flags);
+    private PresenceData convertPresenceData(final AbstractConfig entry, final boolean useAsMain) {
+        return convertPresenceData(entry, entry.getOrElse("enabled", true), useAsMain);
     }
 
-    private PresenceData convertPresenceData(final AbstractConfig entry, final ConfigFlag... flags) {
-        return convertPresenceData(entry, true, flags);
+    private PresenceData convertPresenceData(final AbstractConfig entry) {
+        return convertPresenceData(entry, true);
     }
 
     private boolean isActive(final ConfigFlag flag) {

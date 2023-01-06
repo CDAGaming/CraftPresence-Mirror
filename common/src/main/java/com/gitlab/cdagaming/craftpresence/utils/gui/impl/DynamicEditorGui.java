@@ -274,7 +274,6 @@ public class DynamicEditorGui extends ExtendedScreen {
         if (hasChanged) {
             return true;
         } else {
-            final boolean areEitherEmpty = isPrimaryEmpty || isSecondaryEmpty;
             if (willRenderSecondaryInput) {
                 return !isSecondaryEmpty && (!primaryText.equals(primaryMessage) || !secondaryText.equals(secondaryMessage));
             } else if (isDefaultValue) {

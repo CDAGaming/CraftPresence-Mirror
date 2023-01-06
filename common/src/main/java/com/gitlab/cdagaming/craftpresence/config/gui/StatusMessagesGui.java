@@ -162,9 +162,6 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                                     true, false, ScrollableListControl.RenderType.DiscordAsset,
                                                                     (innerAttributeName, innerCurrentValue) -> {
                                                                         // Inner-Event to occur when proceeding with adjusted data
-                                                                        final String defaultMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
-                                                                        final String currentMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : "";
-
                                                                         screenInstance.currentData.setIconOverride(innerCurrentValue);
                                                                     }, null
                                                             )

@@ -48,7 +48,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
     private CheckBoxControl enableCommandsButton, enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowEndpointIconsButton;
-    private ExtendedTextControl splitCharacter, refreshRate;
+    private ExtendedTextControl refreshRate;
 
     AdvancedSettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -155,9 +155,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
                                                                                         // Inner-Event to occur when proceeding with adjusted data
-                                                                                        final String defaultMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
-                                                                                        final String currentMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : "";
-
                                                                                         screenInstance.currentData.setIconOverride(innerCurrentValue);
                                                                                     }, null
                                                                             )
@@ -349,9 +346,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
                                                                                         // Inner-Event to occur when proceeding with adjusted data
-                                                                                        final String defaultMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
-                                                                                        final String currentMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : "";
-
                                                                                         screenInstance.currentData.setIconOverride(innerCurrentValue);
                                                                                     }, null
                                                                             )
@@ -463,9 +457,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
                                                                                         // Inner-Event to occur when proceeding with adjusted data
-                                                                                        final String defaultMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
-                                                                                        final String currentMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : "";
-
                                                                                         screenInstance.currentData.setIconOverride(innerCurrentValue);
                                                                                     }, null
                                                                             )
