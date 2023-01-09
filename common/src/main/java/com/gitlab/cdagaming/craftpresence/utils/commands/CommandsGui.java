@@ -345,7 +345,10 @@ public class CommandsGui extends ExtendedScreen {
                     if (executionCommandArgs.length == 1) {
                         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.view");
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
-                        if (executionCommandArgs[1].equalsIgnoreCase("items")) {
+                        if (executionCommandArgs[1].equalsIgnoreCase("placeholders")) {
+                            // Redirect: `/cp view placeholders` => `/cp search all`
+                            executeCommand("search", "all");
+                        } else if (executionCommandArgs[1].equalsIgnoreCase("items")) {
                             if (CraftPresence.TILE_ENTITIES.enabled) {
                                 CraftPresence.GUIS.openScreen(new SelectorGui(
                                         currentScreen,
@@ -542,7 +545,11 @@ public class CommandsGui extends ExtendedScreen {
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("export")) {
                 completions.add("assets");
+            } else if (args[0].equalsIgnoreCase("search")) {
+                completions.add("type:");
+                completions.add("all");
             } else if (args[0].equalsIgnoreCase("view")) {
+                completions.add("placeholders");
                 completions.add("currentData");
                 completions.add("assets");
                 completions.add("dimensions");

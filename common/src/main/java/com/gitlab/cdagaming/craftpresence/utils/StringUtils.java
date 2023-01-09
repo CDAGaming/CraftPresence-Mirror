@@ -247,7 +247,7 @@ public class StringUtils {
      */
     public static <T> void revlist(List<T> list) {
         // base condition when the list size is 0
-        if (list.size() <= 1 || list == null)
+        if (list == null || list.size() <= 1)
             return;
 
         T value = list.remove(0);

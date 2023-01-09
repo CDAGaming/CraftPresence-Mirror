@@ -52,11 +52,11 @@ public class FunctionsLib {
 
         // General Functions
         ss.set("getJsonElement", FunctionsLib::getJsonElement);
-        ss.set("randomAsset", FunctionsLib::randomAsset);
         ss.set("randomString", FunctionsLib::randomString);
 
         // DiscordUtils
         ss.set("getResult", FunctionsLib::getResult);
+        ss.set("randomAsset", FunctionsLib::randomAsset);
 
         // StringUtils
         ss.set("rgbaToHex", FunctionsLib::rgbaToHex);
