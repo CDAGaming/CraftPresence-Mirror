@@ -1,9 +1,9 @@
 # CraftPresence Changes
 
-## v2.0.0 Alpha 3 (01/10/2023)
+## v2.0.0 Beta (03/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-alpha.3)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-beta.1)_
 
 ### Changes
 
@@ -14,7 +14,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * This integration will allow for significantly more flexibility and overall control over placeholders and how they
       can be used
     * Due to this change, all placeholder names have been adjusted (See the `Placeholders` section of this changelog)
-    * Aditionally, the `allowPlaceholderOperators` option has been removed, due to being redundant
+    * Additionally, the `allowPlaceholderOperators` option has been removed, due to being redundant
 * Adjusted module logic to perform within their own sub-threads, in an effort to avoid waiting on them to retrieve data
     * IE the initial retrieval of data when a module is first enabled is now multi-threaded, taking up much less time!
 * Migrated the Config Systems from `Properties` to `GSON`
@@ -78,7 +78,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 ### Placeholders
 
-One of the foundational changes that have been made to CraftPresence, is with placeholder interpetation.
+One of the foundational changes that have been made to CraftPresence, is with placeholder interpretation.
 
 With the integration of Starscript, several changes, additions, and removals have been made to placeholders and their
 related systems:
