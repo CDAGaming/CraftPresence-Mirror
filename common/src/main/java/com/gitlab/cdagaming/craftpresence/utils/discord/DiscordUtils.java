@@ -122,6 +122,10 @@ public class DiscordUtils {
      */
     public String SMALL_IMAGE_KEY;
     /**
+     * The Current Raw Small Image Icon being displayed in the RPC, if any
+     */
+    public String SMALL_IMAGE_RAW;
+    /**
      * The Current Message tied to the Small Image, if any
      */
     public String SMALL_IMAGE_TEXT;
@@ -133,6 +137,10 @@ public class DiscordUtils {
      * The Current Large Image Icon being displayed in the RPC, if any
      */
     public String LARGE_IMAGE_KEY;
+    /**
+     * The Current Raw Large Image Icon being displayed in the RPC, if any
+     */
+    public String LARGE_IMAGE_RAW;
     /**
      * The Current Message tied to the Large Image, if any
      */
@@ -1213,13 +1221,16 @@ public class DiscordUtils {
         DETAILS = StringUtils.formatWord(getResult(configData.details, "details"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
         GAME_STATE = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.largeImageKey, "largeImageKey"));
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(getResult(configData.smallImageKey, "smallImageKey"));
+        LARGE_IMAGE_RAW = getResult(configData.largeImageKey, "largeImageKey");
+        SMALL_IMAGE_RAW = getResult(configData.smallImageKey, "smallImageKey");
+
+        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(LARGE_IMAGE_RAW);
+        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(SMALL_IMAGE_RAW);
 
         LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                getResult(LARGE_IMAGE_ASSET.getUrl()) : LARGE_IMAGE_ASSET.getName()) : "";
+                getResult(LARGE_IMAGE_ASSET.getUrl()) : LARGE_IMAGE_ASSET.getName()) : LARGE_IMAGE_RAW;
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                getResult(SMALL_IMAGE_ASSET.getUrl()) : SMALL_IMAGE_ASSET.getName()) : "";
+                getResult(SMALL_IMAGE_ASSET.getUrl()) : SMALL_IMAGE_ASSET.getName()) : SMALL_IMAGE_RAW;
 
         LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
         SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
