@@ -64,6 +64,18 @@ public class DiscordAssetUtils {
     public static Map<String, DiscordAsset> CUSTOM_ASSET_LIST = Maps.newHashMap();
 
     /**
+     * Determines if the specified Client ID is valid
+     *
+     * @param clientId The id to interpret
+     * @return {@code true} if the client ID is valid
+     */
+    public static boolean isValidId(final String clientId) {
+        return !StringUtils.isNullOrEmpty(clientId) &&
+                clientId.length() >= 18 &&
+                StringUtils.getValidLong(clientId).getFirst();
+    }
+
+    /**
      * Determines if the Specified Icon Key is present under the specified list
      *
      * @param list The list to iterate through

@@ -224,28 +224,30 @@ public class CommandsGui extends ExtendedScreen {
                 } else if (executionCommandArgs[0].equalsIgnoreCase("export")) {
                     String clientId = CraftPresence.CONFIG.generalSettings.clientId;
                     boolean doFullCopy = false;
+                    String urlMeta = "";
 
                     if (executionCommandArgs.length == 1) {
                         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.export", clientId, false);
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
                         if (executionCommandArgs[1].equalsIgnoreCase("assets")) {
-                            if (executionCommandArgs.length != 2 && !StringUtils.isNullOrEmpty(executionCommandArgs[2])) {
-                                if (StringUtils.isValidBoolean(executionCommandArgs[2])) {
-                                    doFullCopy = Boolean.parseBoolean(executionCommandArgs[2]);
-                                } else {
-                                    clientId = executionCommandArgs[2];
-                                }
-
-                                if (executionCommandArgs.length != 3 && !StringUtils.isNullOrEmpty(executionCommandArgs[3])) {
-                                    if (StringUtils.isValidBoolean(executionCommandArgs[3])) {
-                                        doFullCopy = Boolean.parseBoolean(executionCommandArgs[3]);
+                            if (executionCommandArgs.length >= 3 && executionCommandArgs.length <= 5) {
+                                for (int i = 2; i < executionCommandArgs.length; i++) {
+                                    if (StringUtils.isValidBoolean(executionCommandArgs[i])) {
+                                        doFullCopy = Boolean.parseBoolean(executionCommandArgs[i]);
+                                    } else if (DiscordAssetUtils.isValidId(executionCommandArgs[i])) {
+                                        clientId = executionCommandArgs[i];
                                     } else {
-                                        clientId = executionCommandArgs[3];
+                                        final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandInput.getControlMessage());
+                                        if (matcher.find()) {
+                                            urlMeta = matcher.group(1);
+                                        }
                                     }
                                 }
+                            } else {
+                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
                             }
 
-                            exportAssets(clientId, doFullCopy);
+                            exportAssets(clientId, doFullCopy, urlMeta);
                         } else {
                             executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
                         }
@@ -578,7 +580,7 @@ public class CommandsGui extends ExtendedScreen {
      * @param clientId   The client ID to export from
      * @param doFullCopy Whether to do a full copy or a text-only copy
      */
-    private void exportAssets(final String clientId, final boolean doFullCopy) {
+    private void exportAssets(final String clientId, final boolean doFullCopy, final String urlMeta) {
         new Thread(() -> {
             blockInteractions = true;
             final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
@@ -620,7 +622,7 @@ public class CommandsGui extends ExtendedScreen {
                             clientId, i + 1, assetList.length
                     );
                     final DiscordAsset asset = assetList[i];
-                    final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false);
+                    final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false) + urlMeta;
                     final String assetName = asset.getName() + ".png";
                     if (doFullCopy) {
                         FileUtils.downloadFile(assetUrl, new File(filePath + assetName));
