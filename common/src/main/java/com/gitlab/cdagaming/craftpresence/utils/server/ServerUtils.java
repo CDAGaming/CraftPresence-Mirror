@@ -504,15 +504,15 @@ public class ServerUtils implements Module {
 
             canUseEndpointIcon = CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint);
 
-            final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : currentServer_Name;
+            final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : "";
             final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : defaultIcon;
             final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
 
             resultData = primaryData != null ? primaryData : (alternateData != null ? alternateData : defaultData);
             formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
 
-            // Attempt to find alternative icons, if not in available discord assets
-            if (!DiscordAssetUtils.contains(formattedIcon)) {
+            // Attempt to find alternative icons, if no overrides are present
+            if (StringUtils.isNullOrEmpty(formattedIcon)) {
                 if (canUseEndpointIcon) {
                     if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(formattedIP)) {
                         CraftPresence.CONFIG.displaySettings.dynamicIcons.put(formattedIP,
@@ -525,6 +525,8 @@ public class ServerUtils implements Module {
                         CraftPresence.CONFIG.save();
                     }
                     formattedIcon = formattedIP;
+                } else {
+                    formattedIcon = StringUtils.formatAsIcon(currentServer_Name.replace(" ", "_"));
                 }
             }
 
