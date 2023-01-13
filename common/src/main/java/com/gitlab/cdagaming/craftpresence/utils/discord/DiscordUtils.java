@@ -953,7 +953,10 @@ public class DiscordUtils {
 
         if (!StringUtils.isNullOrEmpty(foundPackName)) {
             syncArgument("pack.name", foundPackName);
-            syncArgument("pack.icon", imageOf("pack.icon", true, foundPackIcon));
+            syncArgument("pack.icon", imageOf(
+                    "pack.icon", true,
+                    !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : ""
+            ));
         } else {
             removeArguments("pack");
         }
