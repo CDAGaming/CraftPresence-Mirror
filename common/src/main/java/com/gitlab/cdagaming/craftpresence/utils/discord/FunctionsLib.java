@@ -212,9 +212,9 @@ public class FunctionsLib {
             ss.error("getOrDefault() can only be used with 1-2 arguments, got %d.", argCount);
         String alternative = "";
         if (argCount == 2) {
-            alternative = ss.popString("Second argument to getOrDefault() needs to be a string.");
+            alternative = ss.pop().toString();
         }
-        String target = ss.popString("First argument to getOrDefault() needs to be a string.");
+        String target = ss.pop().toString();
         return Value.string(StringUtils.getOrDefault(target, alternative));
     }
 
