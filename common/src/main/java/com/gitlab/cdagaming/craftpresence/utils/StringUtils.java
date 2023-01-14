@@ -172,14 +172,11 @@ public class StringUtils {
      * @return The rounded Double value
      */
     public static double roundDouble(double value, int places) {
-        if (places >= 0) {
-            double mod = 1;
-            for (int i = 0; i < places; i++) mod /= 10;
-            return value + mod * .5 - ((value + mod * .5) % mod);
-        } else {
-            // Do not Round if Places is less then 0
+        if (places < 0) {
             return value;
         }
+
+        return Math.round(value * Math.pow(10, places)) / Math.pow(10, places);
     }
 
     /**
