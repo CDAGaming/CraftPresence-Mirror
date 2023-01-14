@@ -53,6 +53,7 @@ public class FunctionsLib {
         // General Functions
         ss.set("getJsonElement", FunctionsLib::getJsonElement);
         ss.set("randomString", FunctionsLib::randomString);
+        ss.set("getFirst", FunctionsLib::getFirst);
 
         // DiscordUtils
         ss.set("getResult", FunctionsLib::getResult);
@@ -87,7 +88,7 @@ public class FunctionsLib {
         final List<String> path = Lists.newArrayList();
         String source, json = "";
         JsonObject contents;
-        JsonElement result = null;
+        JsonElement result;
         // Argument Collection
         if (argCount < 1)
             ss.error("getJsonElement() requires one or more arguments, got %d.", argCount);
@@ -145,8 +146,25 @@ public class FunctionsLib {
 
     public static Value getResult(Starscript ss, int argCount) {
         if (argCount != 1)
-            ss.error("randomString() can only be used with one argument, got %d.", argCount);
+            ss.error("getResult() can only be used with one argument, got %d.", argCount);
         return Value.string(CraftPresence.CLIENT.getResult(ss.pop().toString()));
+    }
+
+    public static Value getFirst(Starscript ss, int argCount) {
+        final List<String> args = Lists.newArrayList();
+        if (argCount < 1)
+            ss.error("getFirst() requires one or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop().toString());
+        }
+        StringUtils.revlist(args);
+
+        for (String arg : args) {
+            if (!StringUtils.isNullOrEmpty(arg)) {
+                return Value.string(arg);
+            }
+        }
+        return Value.null_();
     }
 
     public static Value randomAsset(Starscript ss, int argCount) {
@@ -160,6 +178,7 @@ public class FunctionsLib {
         for (int i = 0; i < argCount; i++) {
             args.add(ss.pop().toString());
         }
+        StringUtils.revlist(args);
         return Value.string(args.get(new Random().nextInt(argCount)));
     }
 
