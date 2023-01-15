@@ -441,14 +441,13 @@ public class FunctionsLib {
         args.remove(0); // Remove the classToAccess from parsing
 
         target = args.get(0); // This will either be the instance or methodName
-        boolean isInstanceNull = false;
-        if (instance == null) {
+        boolean isInstanceNull = (instance == null);
+        if (isInstanceNull) {
             // 2nd argument as instance (Object)
             if (target.isObject()) {
                 instance = target.getObject();
                 args.remove(0); // Remove the instance from parsing
-            } else {
-                isInstanceNull = true;
+                isInstanceNull = false;
             }
         }
 
