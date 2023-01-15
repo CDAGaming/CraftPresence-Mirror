@@ -240,13 +240,6 @@ public class FunctionsLib {
         return Value.string(StringUtils.minifyString(source, length));
     }
 
-    /**
-     * Determines whether a String classifies as NULL or EMPTY
-     *
-     * @param ss       The {@link Starscript} instance
-     * @param argCount The argument count
-     * @return {@code true} if Entry is classified as NULL or EMPTY
-     */
     public static Value nullOrEmpty(Starscript ss, int argCount) {
         if (argCount < 1 || argCount > 2)
             ss.error("nullOrEmpty() can only be used with 1-2 arguments, got %d.", argCount);
@@ -396,13 +389,6 @@ public class FunctionsLib {
         return result != null ? Value.object(result) : Value.null_();
     }
 
-    /**
-     * Retrieves whether the specified class contains the specified field name
-     *
-     * @param ss       The {@link Starscript} instance
-     * @param argCount The argument count
-     * @return whether the specified class contains the specified field name
-     */
     public static Value hasField(Starscript ss, int argCount) {
         if (argCount != 2) ss.error("hasField() requires 2 arguments, got %d.", argCount);
         String b = ss.popString("Second argument to hasField() needs to be a string.");
@@ -519,13 +505,6 @@ public class FunctionsLib {
         ));
     }
 
-    /**
-     * Strips Color and Formatting Codes from the inputted String
-     *
-     * @param ss       The {@link Starscript} instance
-     * @param argCount The argument count
-     * @return whether the specified class contains the specified field name
-     */
     public static Value stripColors(Starscript ss, int argCount) {
         if (argCount != 1) ss.error("stripColors() requires 1 argument, got %d.", argCount);
         String a = ss.popString("Argument to stripColors() needs to be a string.");
