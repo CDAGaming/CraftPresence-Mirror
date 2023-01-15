@@ -81,6 +81,7 @@ public class FunctionsLib {
         ss.set("getField", FunctionsLib::getField);
         ss.set("getClass", FunctionsLib::getClass);
         ss.set("hasField", FunctionsLib::hasField);
+        ss.set("executeMethod", FunctionsLib::executeMethod);
         ss.set("stripColors", FunctionsLib::stripColors);
     }
 
@@ -407,6 +408,116 @@ public class FunctionsLib {
         String b = ss.popString("Second argument to hasField() needs to be a string.");
         String a = ss.popString("First argument to hasField() needs to be a string.");
         return Value.bool(StringUtils.hasField(a, b));
+    }
+
+    public static Value executeMethod(Starscript ss, int argCount) {
+        final List<Value> args = Lists.newArrayList();
+        if (argCount < 2)
+            ss.error("executeMethod() requires two or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop());
+        }
+        StringUtils.revlist(args);
+        Value target = args.get(0);
+
+        Class<?> classToAccess = null;
+        Object instance = null;
+        String methodName = null;
+
+        // Argument 1: classToAccess
+        if (target.isObject()) {
+            Object temp = target.getObject();
+            if (temp instanceof Class<?>) {
+                classToAccess = (Class<?>) temp;
+            } else {
+                classToAccess = temp.getClass();
+                instance = temp;
+            }
+        } else if (target.isString()) {
+            classToAccess = FileUtils.findValidClass(target.getString());
+        } else {
+            ss.error("First argument to executeMethod(), classToAccess, needs to be either a string, object, or class.");
+        }
+        args.remove(0); // Remove the classToAccess from parsing
+
+        target = args.get(0); // This will either be the instance or methodName
+        boolean isInstanceNull = false;
+        if (instance == null) {
+            // 2nd argument as instance (Object)
+            if (target.isObject()) {
+                instance = target.getObject();
+                args.remove(0); // Remove the instance from parsing
+            } else {
+                isInstanceNull = true;
+            }
+        }
+
+        // Either the 2nd or 3rd param will be methodName, depending on args
+        if (!args.isEmpty()) {
+            target = args.get(0); // Refresh arg table
+            if (target.isString()) {
+                methodName = target.getString();
+            } else {
+                ss.error((isInstanceNull ? "Second" : "Third") + " argument to executeMethod(), methodName, needs to be a string.");
+            }
+            args.remove(0); // Remove the methodName from parsing
+        }
+
+        // If the className or methodName is null, error as such
+        // instanceName, and the parameterTypes and parameters tables can be null
+        if (classToAccess == null || methodName == null) {
+            ss.error("Insufficient or null arguments provided for required executeMethod() params, please try again.");
+        }
+
+        // For remaining args, you specify the parameter type, then the parameter itself
+        List<Class<?>> parameterTypes = null;
+        List<Object> parameters = null;
+
+        if (!args.isEmpty()) {
+            parameterTypes = Lists.newArrayList();
+            parameters = Lists.newArrayList();
+
+            boolean classMode = true;
+            for (Value data : args) {
+                if (classMode) {
+                    Class<?> classObj = null;
+                    if (data.isObject()) {
+                        Object temp = data.getObject();
+                        if (temp instanceof Class<?>) {
+                            classObj = (Class<?>) temp;
+                        }
+                    } else if (data.isString()) {
+                        classObj = FileUtils.findValidClass(data.getString());
+                    }
+
+                    if (classObj == null) {
+                        ss.error("Class argument for executeMethod() parameterTypes, must be a class object or string.");
+                    } else {
+                        parameterTypes.add(classObj);
+                    }
+                } else {
+                    if (data.isBool()) {
+                        parameters.add(data.getBool());
+                    } else if (data.isNumber()) {
+                        parameters.add(data.getNumber());
+                    } else if (data.isString()) {
+                        parameters.add(data.getString());
+                    } else if (data.isObject()) {
+                        parameters.add(data.getObject());
+                    } else if (data.isNull()) {
+                        parameters.add(null);
+                    } else {
+                        ss.error("Object argument for executeMethod() parameters is not in a supported type.");
+                    }
+                }
+                classMode = !classMode;
+            }
+        }
+
+        return Value.object(StringUtils.executeMethod(classToAccess, instance, methodName,
+                parameterTypes != null ? parameterTypes.toArray(new Class<?>[0]) : null,
+                parameters != null ? parameters.toArray(new Object[0]) : null
+        ));
     }
 
     /**

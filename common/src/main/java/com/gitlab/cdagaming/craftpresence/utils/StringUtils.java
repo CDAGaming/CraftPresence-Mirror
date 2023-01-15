@@ -1251,6 +1251,30 @@ public class StringUtils {
     }
 
     /**
+     * Invokes the specified Method in the Target Class via Reflection
+     *
+     * @param classToAccess  The class to access with the method(s)
+     * @param instance       An Instance of the Class, if needed
+     * @param methodName     The name of the method to be invoked.
+     * @param parameterTypes An array of Class objects representing the types of the method's parameters.
+     * @param parameters     An array of objects representing the method's actual parameters.
+     * @return the resulting method result
+     */
+    public static Object executeMethod(final Class<?> classToAccess, final Object instance, final String methodName, final Class<?>[] parameterTypes, final Object[] parameters) {
+        Object result = null;
+        try {
+            final Method lookupMethod = classToAccess.getDeclaredMethod(methodName, parameterTypes);
+            lookupMethod.setAccessible(true);
+            result = lookupMethod.invoke(instance, parameters);
+        } catch (Throwable ex) {
+            if (ModUtils.IS_VERBOSE) {
+                ex.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    /**
      * Invokes the specified Method(s) in the Target Class via Reflection
      *
      * @param classToAccess The class to access with the method(s)
@@ -1262,17 +1286,13 @@ public class StringUtils {
     public static Map<String, Object> executeMethod(final Class<?> classToAccess, final Object instance, final Pair<String, Pair<Object[], Class<?>[]>>... methodData) {
         final Map<String, Object> results = Maps.newHashMap();
         for (Pair<String, Pair<Object[], Class<?>[]>> methodInstance : methodData) {
-            Object result = null;
-            try {
-                final Method lookupMethod = classToAccess.getDeclaredMethod(methodInstance.getFirst(), methodInstance.getSecond().getSecond());
-                lookupMethod.setAccessible(true);
-                result = lookupMethod.invoke(instance, methodInstance.getSecond().getFirst());
-            } catch (Throwable ex) {
-                if (ModUtils.IS_VERBOSE) {
-                    ex.printStackTrace();
-                }
-            }
-            results.put(methodInstance.getFirst(), result);
+            results.put(methodInstance.getFirst(), executeMethod(
+                    classToAccess,
+                    instance,
+                    methodInstance.getFirst(),
+                    methodInstance.getSecond().getSecond(),
+                    methodInstance.getSecond().getFirst()
+            ));
         }
         return results;
     }
