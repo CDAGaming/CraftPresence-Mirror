@@ -89,7 +89,7 @@ related systems:
     * See [their wiki](https://github.com/MeteorDevelopment/starscript/wiki) for some of the standard functions now
       available
 * The OR operator, initially added in v1.9.x, has been replaced with Starscript usages
-    * Prior usages will migrate to an `{foo != null ? foo : bar}` format to replicate the prior behavior
+    * Prior usages will migrate to an `{getOrDefault(foo, bar)}` format to replicate the prior behavior
 * All Placeholders have been renamed, converting to an `{foo.bar}` format instead
   of `&FOO:BAR&`
     * All prior usages from v1 configs will also be migrated to follow the new names as mentioned below:

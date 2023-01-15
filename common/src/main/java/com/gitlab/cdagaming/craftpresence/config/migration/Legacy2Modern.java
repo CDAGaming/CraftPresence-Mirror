@@ -477,7 +477,7 @@ public class Legacy2Modern implements DataMigrator {
                 final String[] split = match.split("\\|");
                 split[0] = split[0].replaceAll("[{}]", "");
                 split[1] = split[1].replaceAll("[{}]", "");
-                final String replacement = String.format("{%1$s != null ? %1$s : %2$s}", split[0], split[1]);
+                final String replacement = String.format("{getOrDefault(%1$s, %2$s)}", split[0], split[1]);
                 ModUtils.LOG.info(String.format("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, match, replacement));
                 result = result.replace(match, replacement);
             }
