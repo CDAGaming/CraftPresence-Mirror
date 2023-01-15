@@ -62,20 +62,24 @@ Keep in mind the following:
 
 ___
 
+* `/cp compile "<expr>"` - Test the output of a placeholder expression, via Starscript
+* `/cp search (type:typeName, <searchTerm>, all)` - Search for valid placeholders available to use with Rich Presence
+* `/cp reload` - Reloads mod data
+* `/cp request` - View Join Request Info
+* `/cp export` - View export commands for mod data
 * `/cp view` - Help command to display the commands available to view and control a variety of display data
-* `/cp reload` - Reloads mod data (In v1.4.8 and Above, this forces a Tick Event)
+    * `/cp view placeholders` - Displays all available placeholders for use in the RPC
+    * `/cp view currentData` - Displays your Current RPC Data, in text form
+    * `/cp view assets (custom | all)` - Displays all asset icon keys available to you
+    * `/cp view dimensions` - Displays all Dimension Names available for use, requires `Show Current Dimension` to be
+      enabled
+    * `/cp view biomes` - Displays all Biome Names available for use, requires `Show Current Biome` to be enabled
+    * `/cp view servers` - Displays all Server Addresses available for use, requires `Show Game State` to be enabled
+    * `/cp view screens` - Displays all Gui Names available for use, if Per-Gui is enabled
+    * `/cp view items` - Displays all Item Names available for use, if Per-Item is enabled
+    * `/cp view entities` - Displays all Entity Names available for use, if Per-Entity is enabled
 * `/cp reboot` - Reboots the RPC
 * `/cp shutdown` - Shutdown the RPC (Can be turned on from `/cp reboot`)
-* `/cp request` - View Join Request Info
-* `/cp view currentData` - Displays your Current RPC Data, in text form
-* `/cp view assets (custom | all)` - Displays all asset icon keys available to you
-* `/cp view dimensions` - Displays all Dimension Names available for use, requires `Show Current Dimension` to be
-  enabled
-* `/cp view biomes` - Displays all Biome Names available for use, requires `Show Current Biome` to be enabled
-* `/cp view servers` - Displays all Server Addresses available for use, requires `Show Game State` to be enabled
-* `/cp view screens` - Displays all Gui Names available for use, if Per-Gui is enabled
-* `/cp view items` - Displays all Item Names available for use, if Per-Item is enabled
-* `/cp view entities` - Displays all Entity Names available for use, if Per-Entity is enabled
 * `/cp (help | ?)` - Help Command to display the above commands and these explanations
 
 ## KeyBinds

@@ -536,7 +536,6 @@ public class CommandsGui extends ExtendedScreen {
         if (args.length == 1) {
             completions.add("?");
             completions.add("help");
-            completions.add("config");
             completions.add("compile");
             completions.add("search");
             completions.add("reload");
@@ -557,7 +556,6 @@ public class CommandsGui extends ExtendedScreen {
                 completions.add("assets");
                 completions.add("dimensions");
                 completions.add("biomes");
-                completions.add("guis");
                 completions.add("items");
                 completions.add("entities");
                 completions.add("servers");
