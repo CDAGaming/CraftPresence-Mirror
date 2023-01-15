@@ -350,6 +350,7 @@ public class CommandsGui extends ExtendedScreen {
                         if (executionCommandArgs[1].equalsIgnoreCase("placeholders")) {
                             // Redirect: `/cp view placeholders` => `/cp search all`
                             executeCommand("search", "all");
+                            return;
                         } else if (executionCommandArgs[1].equalsIgnoreCase("items")) {
                             if (CraftPresence.TILE_ENTITIES.enabled) {
                                 CraftPresence.GUIS.openScreen(new SelectorGui(
