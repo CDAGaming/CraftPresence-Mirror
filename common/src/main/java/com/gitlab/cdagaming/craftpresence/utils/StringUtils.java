@@ -176,7 +176,8 @@ public class StringUtils {
             return value;
         }
 
-        return Math.round(value * Math.pow(10, places)) / Math.pow(10, places);
+        final double x = Math.pow(10, places);
+        return Math.round(value * x) / x;
     }
 
     /**
