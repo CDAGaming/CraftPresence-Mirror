@@ -351,10 +351,20 @@ public class ScrollableListControl extends GuiSlot {
                         ModUtils.MOD_ID,
                         originalName
                 );
+                final String placeholderUsage = String.format("%s.placeholders.%s.usage",
+                        ModUtils.MOD_ID,
+                        originalName
+                );
                 if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
                     hoverText.add(String.format("%s \"%s\"",
                             ModUtils.TRANSLATOR.translate("gui.config.message.editor.description"),
                             ModUtils.TRANSLATOR.translate(placeholderTranslation)
+                    ));
+                }
+                if (ModUtils.TRANSLATOR.hasTranslation(placeholderUsage)) {
+                    hoverText.add(String.format("%s \"%s\"",
+                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.usage"),
+                            ModUtils.TRANSLATOR.translate(placeholderUsage)
                     ));
                 }
                 if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {

@@ -877,6 +877,10 @@ public class DiscordUtils {
                         ModUtils.MOD_ID,
                         placeholderName
                 );
+                final String placeholderUsage = String.format("%s.placeholders.%s.usage",
+                        ModUtils.MOD_ID,
+                        placeholderName
+                );
 
                 String placeholderDescription = "";
                 String placeholderFormat = "\\n - %s";
@@ -892,6 +896,13 @@ public class DiscordUtils {
                                 placeholderDescription
                         )
                 );
+
+                if (ModUtils.TRANSLATOR.hasTranslation(placeholderUsage)) {
+                    placeholderString.append(String.format("\\n ==> %s \"%s\"",
+                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.usage"),
+                            ModUtils.TRANSLATOR.translate(placeholderUsage)
+                    ));
+                }
 
                 if (addExtraData && placeholderValue != null) {
                     final String tagValue = placeholderValue.get().toString();
