@@ -279,7 +279,7 @@ public class CommandsGui extends ExtendedScreen {
                         final ValueMap globals = CraftPresence.CLIENT.scriptEngine.getGlobals();
                         final List<String> results = Lists.newArrayList();
                         if (executionCommandArgs[1].startsWith("type:")) {
-                            final String type = executionCommandArgs[1].substring(executionCommandArgs[1].lastIndexOf("type:") + 1).toLowerCase();
+                            final String type = executionCommandArgs[1].replaceFirst("type:", "").toLowerCase();
                             results.addAll(globals.keys().stream().filter(e -> {
                                         final Value data = globals.get(e).get();
                                         switch (type) {
