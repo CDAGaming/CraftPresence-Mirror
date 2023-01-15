@@ -70,6 +70,7 @@
   "gui.config.message.editor.original": "Original:",
   "gui.config.message.editor.search": "Search:",
   "gui.config.message.editor.message": "Message:",
+  "gui.config.message.editor.description": "Description:",
   "gui.config.message.editor.label": "Label:",
   "gui.config.message.editor.url": "Url:",
   "gui.config.message.editor.enter_key": "Enter Key...",

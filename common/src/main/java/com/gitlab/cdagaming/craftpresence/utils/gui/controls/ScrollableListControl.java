@@ -347,6 +347,16 @@ public class ScrollableListControl extends GuiSlot {
             } else if (renderType == RenderType.ItemData) {
                 texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
             } else if (renderType == RenderType.Placeholder) {
+                final String placeholderTranslation = String.format("%s.placeholders.%s.description",
+                        ModUtils.MOD_ID,
+                        originalName
+                );
+                if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
+                    hoverText.add(String.format("%s \"%s\"",
+                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.description"),
+                            ModUtils.TRANSLATOR.translate(placeholderTranslation)
+                    ));
+                }
                 if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {
                     hoverText.add(String.format("%s \"%s\"",
                             ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),

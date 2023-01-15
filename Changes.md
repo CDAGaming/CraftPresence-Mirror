@@ -182,6 +182,7 @@ The following changes have been made for translations:
 
 * Added:
     * `gui.config.message.editor.original` (Used in Scroll List tooltips)
+    * `gui.config.message.editor.description` (Used in Scroll List tooltips)
     * `gui.config.message.button.remove` (Used in Dynamic Editors)
     * `gui.config.{name,comment}.advanced.allow_endpoint_icons` (Added Property)
     * `gui.config.{name,comment}.advanced.server_icon_endpoint` (Added Property)
