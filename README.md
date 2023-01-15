@@ -170,7 +170,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `server.address.full` - (MP) The raw current server address
     * `server.address.short` - (MP) The formatted current server address
     * `server.name` - (MP) The current server name
-    * `server.motd` - (MP) The current server motd
+    * `server.motd.raw` - (MP) The current raw server motd
 * Item Placeholders:
     * `item.message.default` - The default item display data, while applicable
     * `item.message.holding` - The held item(s) display data, while applicable
@@ -194,7 +194,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `data.item.[slotId].[tagName]` - The nbt tag `tagName`, within the current `slotId`, if said NBT exists
     * `data.screen.instance` - An instance of the current Gui Screen
     * `data.screen.class` - The class object for the current Gui Screen
-    * `data.server.motd.line.[number]` - Retrieves a specific line of `server.motd`
+    * `data.server.motd.line.[number]` - Retrieves a specific line of `server.motd.raw`
 
 ## Versions of CraftPresence
 
