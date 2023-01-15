@@ -59,7 +59,7 @@ public class Dimension extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Dimension.class, this, name);
+        return StringUtils.getField(Dimension.class, this, name);
     }
 
     @Override

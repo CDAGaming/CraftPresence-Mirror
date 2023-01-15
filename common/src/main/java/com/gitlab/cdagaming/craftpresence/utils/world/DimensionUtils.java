@@ -167,7 +167,7 @@ public class DimensionUtils implements Module {
      */
     private List<DimensionType> getDimensionTypes() {
         List<DimensionType> dimensionTypes = Lists.newArrayList();
-        Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.lookupObject(DimensionType.class, null, "dimensionTypes");
+        Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(DimensionType.class, null, "dimensionTypes");
 
         StringUtils.addEntriesNotPresent(dimensionTypes, DimensionType.values());
 

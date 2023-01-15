@@ -61,7 +61,7 @@ public class Server extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Server.class, this, name);
+        return StringUtils.getField(Server.class, this, name);
     }
 
     @Override

@@ -71,7 +71,7 @@ public class Advanced extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Advanced.class, this, name);
+        return StringUtils.getField(Advanced.class, this, name);
     }
 
     @Override

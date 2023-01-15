@@ -116,7 +116,7 @@ public class PresenceData extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(PresenceData.class, this, name);
+        return StringUtils.getField(PresenceData.class, this, name);
     }
 
     @Override

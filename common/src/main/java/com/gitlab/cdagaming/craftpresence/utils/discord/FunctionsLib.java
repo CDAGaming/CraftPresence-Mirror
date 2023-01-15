@@ -370,12 +370,12 @@ public class FunctionsLib {
         if (argCount == 2) {
             fieldName = ss.popString("Second argument to getField() needs to be a string.");
             instance = ss.popObject("First argument to getField() needs to be an object.");
-            result = StringUtils.lookupObject(instance.getClass(), instance, fieldName);
+            result = StringUtils.getField(instance.getClass(), instance, fieldName);
         } else {
             fieldName = ss.popString("Third argument to getField() needs to be a string.");
             instance = ss.popObject("Second argument to getField() needs to be an object.");
             className = ss.popString("First argument to getField() needs to be a string.");
-            result = StringUtils.lookupObject(className, instance, fieldName);
+            result = StringUtils.getField(className, instance, fieldName);
         }
 
         return result != null ? Value.object(result) : Value.null_();
@@ -406,7 +406,7 @@ public class FunctionsLib {
         if (argCount != 2) ss.error("hasField() requires 2 arguments, got %d.", argCount);
         String b = ss.popString("Second argument to hasField() needs to be a string.");
         String a = ss.popString("First argument to hasField() needs to be a string.");
-        return Value.bool(StringUtils.doesClassContainField(a, b));
+        return Value.bool(StringUtils.hasField(a, b));
     }
 
     /**

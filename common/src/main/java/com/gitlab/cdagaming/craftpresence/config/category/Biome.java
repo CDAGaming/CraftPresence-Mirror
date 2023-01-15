@@ -59,7 +59,7 @@ public class Biome extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Biome.class, this, name);
+        return StringUtils.getField(Biome.class, this, name);
     }
 
     @Override

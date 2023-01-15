@@ -201,17 +201,17 @@ public class ReplayModUtils implements Module {
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN instanceof GuiVideoRenderer) {
             CraftPresence.CLIENT.syncArgument("replaymod.time.current", secToString(
-                    (Integer) StringUtils.lookupObject(
+                    (Integer) StringUtils.getField(
                             GuiVideoRenderer.class, CURRENT_SCREEN, "renderTimeTaken"
                     ) / 1000
             ));
             CraftPresence.CLIENT.syncArgument("replaymod.time.remaining", secToString(
-                    (Integer) StringUtils.lookupObject(
+                    (Integer) StringUtils.getField(
                             GuiVideoRenderer.class, CURRENT_SCREEN, "renderTimeLeft"
                     ) / 1000
             ));
 
-            final VideoRenderer renderer = (VideoRenderer) StringUtils.lookupObject(
+            final VideoRenderer renderer = (VideoRenderer) StringUtils.getField(
                     GuiVideoRenderer.class, CURRENT_SCREEN, "renderer"
             );
             CraftPresence.CLIENT.syncArgument("replaymod.frames.current", renderer.getFramesDone());

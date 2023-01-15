@@ -417,7 +417,7 @@ public final class Config extends Module implements Serializable {
                 if (instance instanceof Map) {
                     result = new HashMap((Map) instance).get(name);
                 } else {
-                    result = StringUtils.lookupObject(classObj, instance, name);
+                    result = StringUtils.getField(classObj, instance, name);
                 }
                 if (result != null) {
                     if (i < path.length - 1) {

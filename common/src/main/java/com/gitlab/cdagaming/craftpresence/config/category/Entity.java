@@ -69,7 +69,7 @@ public class Entity extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Entity.class, this, name);
+        return StringUtils.getField(Entity.class, this, name);
     }
 
     @Override

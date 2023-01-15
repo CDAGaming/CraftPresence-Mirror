@@ -62,7 +62,7 @@ public class Status extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Status.class, this, name);
+        return StringUtils.getField(Status.class, this, name);
     }
 
     @Override

@@ -77,7 +77,7 @@ public class Gui extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Gui.class, this, name);
+        return StringUtils.getField(Gui.class, this, name);
     }
 
     @Override

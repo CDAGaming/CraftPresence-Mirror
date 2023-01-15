@@ -78,7 +78,7 @@ public class Display extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Display.class, this, name);
+        return StringUtils.getField(Display.class, this, name);
     }
 
     @Override

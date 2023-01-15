@@ -55,7 +55,7 @@ public class Accessibility extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Accessibility.class, this, name);
+        return StringUtils.getField(Accessibility.class, this, name);
     }
 
     @Override

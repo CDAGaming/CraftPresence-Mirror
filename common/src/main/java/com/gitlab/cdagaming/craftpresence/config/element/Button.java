@@ -56,7 +56,7 @@ public class Button extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(Button.class, this, name);
+        return StringUtils.getField(Button.class, this, name);
     }
 
     @Override

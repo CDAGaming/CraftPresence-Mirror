@@ -93,7 +93,7 @@ public class ModuleData extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        return StringUtils.lookupObject(ModuleData.class, this, name);
+        return StringUtils.getField(ModuleData.class, this, name);
     }
 
     @Override

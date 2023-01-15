@@ -1139,29 +1139,6 @@ public class StringUtils {
     }
 
     /**
-     * Retrieves the Specified Inner Object from a List of Fields via Reflection
-     *
-     * @param fields   The field(s) to interpret
-     * @param instance An Instance of the root class, if needed
-     * @param name     The field name to search for
-     * @return The Found Field Data, if any
-     */
-    public static Object lookupInnerObject(List<Field> fields, Object instance, String name) {
-        for (Field f : fields) {
-            try {
-                if (doesClassContainField(f.getType(), name)) {
-                    return lookupObject(f.getType(), f.get(instance), name);
-                }
-            } catch (Throwable ex) {
-                if (ModUtils.IS_VERBOSE) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Retrieves the Specified Field(s) via Reflection
      *
      * @param classToAccess The class to access with the field(s)
@@ -1169,10 +1146,10 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      * @return The Found Field Data, if any
      */
-    public static Object lookupObject(Class<?> classToAccess, Object instance, String... fieldNames) {
+    public static Object getField(Class<?> classToAccess, Object instance, String... fieldNames) {
         for (String fieldName : fieldNames) {
             try {
-                if (doesClassContainField(classToAccess, fieldName)) {
+                if (hasField(classToAccess, fieldName)) {
                     Field lookupField = classToAccess.getDeclaredField(fieldName);
                     lookupField.setAccessible(true);
                     return lookupField.get(instance);
@@ -1194,10 +1171,10 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      * @return The Found Field Data, if any
      */
-    public static Object lookupObject(String classToAccess, Object instance, String... fieldNames) {
+    public static Object getField(String classToAccess, Object instance, String... fieldNames) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
-            return lookupObject(foundClass, instance, fieldNames);
+            return getField(foundClass, instance, fieldNames);
         }
         return null;
     }
@@ -1209,7 +1186,7 @@ public class StringUtils {
      * @param fieldName     The Field name to search for
      * @return whether the specified class contains the specified field name
      */
-    public static boolean doesClassContainField(final Class<?> classToAccess, final String fieldName) {
+    public static boolean hasField(final Class<?> classToAccess, final String fieldName) {
         return Lists.newArrayList(classToAccess.getDeclaredFields()).stream().anyMatch(f -> f.getName().equals(fieldName));
     }
 
@@ -1220,34 +1197,10 @@ public class StringUtils {
      * @param fieldName     The Field name to search for
      * @return whether the specified class contains the specified field name
      */
-    public static boolean doesClassContainField(final String classToAccess, final String fieldName) {
+    public static boolean hasField(final String classToAccess, final String fieldName) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
-            return doesClassContainField(foundClass, fieldName);
-        }
-        return false;
-    }
-
-    /**
-     * Adjusts the specified Inner Object from a List of Fields via Reflection
-     *
-     * @param fields    The field(s) to interpret
-     * @param instance  An Instance of the root class, if needed
-     * @param fieldData A Pair with the format of fieldName:valueToSet:modifierData
-     * @return {@link Boolean#TRUE} if the operation succeeded
-     */
-    public static boolean updateInnerObject(List<Field> fields, Object instance, Tuple<?, ?, ?> fieldData) {
-        for (Field f : fields) {
-            try {
-                if (doesClassContainField(f.getType(), fieldData.getFirst().toString())) {
-                    updateField(f.getType(), f.get(instance), fieldData);
-                    return true;
-                }
-            } catch (Throwable ex) {
-                if (ModUtils.IS_VERBOSE) {
-                    ex.printStackTrace();
-                }
-            }
+            return hasField(foundClass, fieldName);
         }
         return false;
     }
