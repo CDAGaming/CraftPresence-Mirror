@@ -40,9 +40,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ResourceLocation;
+import org.meteordev.starscript.value.Value;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Gui Widget for a Scrollable List
@@ -368,10 +370,15 @@ public class ScrollableListControl extends GuiSlot {
                     ));
                 }
                 if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {
-                    hoverText.add(String.format("%s \"%s\"",
-                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                            CraftPresence.CLIENT.getArgument(originalName).get().toString()
-                    ));
+                    final Supplier<Value> placeholderValue = CraftPresence.CLIENT.getArgument(originalName);
+
+                    if (placeholderValue != null) {
+                        final String tagValue = placeholderValue.get().toString();
+                        hoverText.add(String.format("%s \"%s\"",
+                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
+                        ));
+                    }
                 }
             }
 
