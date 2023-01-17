@@ -97,9 +97,9 @@ ___
 
 * `Open Config Gui` - KeyBind to open the CraftPresence Config Gui (Default: GRAVE/TILDE Key)
 
-## About Placeholders
+## About Placeholders and Functions
 
-In some configuration areas, CraftPresence provides some placeholders to make things easier:
+In some configuration areas, CraftPresence provides some placeholders and functions to make things easier:
 
 Keep in mind the following:
 
@@ -107,7 +107,11 @@ Keep in mind the following:
   with [Starscript](https://github.com/MeteorDevelopment/starscript)
     * The older list of this section can be
       viewed [here](https://gitlab.com/CDAGaming/CraftPresence/-/wikis/Legacy-Placeholders-(v1.x))
-    * All Placeholders (And code expressions) must be surrounded with curly brackets (Example: `{foo.bar}`)
+    * All Placeholders, functions, and code expressions must be surrounded with curly brackets (Example: `{foo.bar}`)
+    * In the event that you need to combine a placeholder with other data in a function argument, use the `getResult`
+      function
+    * Additional functions and standard variables are available
+      within [StandardLib](https://github.com/MeteorDevelopment/starscript/wiki)
 
 ___
 
@@ -200,6 +204,46 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `data.screen.class` - The class object for the current Gui Screen
     * `data.server.motd.line.[number]` - Retrieves a specific line of `server.motd.raw`
 
+### Function List
+
+The following functions are available for use anywhere in CraftPresence:
+
+* `getClass(reference=Object|String)` - Attempt to retrieve a class object, via the string path or object reference
+* `getOrDefault(target, alternative ?: '')` - Retrieve the primary value if non-empty; Otherwise, use the secondary
+  value
+* `minify(input, length)` - Reduces the Length of a String to the Specified Length
+* `getFirst(args)` - Retrieve the first non-null string from the specified arguments, or return null
+* `formatIdentifier(target, formatToId ?: false, avoid ?: false)` - Converts an Identifier into a properly formatted and
+  interpretable Name
+* `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
+* `getField(classObj=Object|String|Class ?: instance.getClass(), instance=Object, fieldName=String)` - Retrieves the
+  Specified Field(s) via Reflection
+* `isUuid(input)` - Checks via Regex whether the specified String classifies as a valid Uuid
+* `hasWhitespace(input)` - Whether the specified string contains whitespace characters
+* `getJsonElement(url|jsonString, path=Object...)` - Retrieves the json element from the specified content, or null if
+  unable
+* `asIcon(input)` - Converts a String into a Valid and Acceptable Icon Format
+* `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
+* `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
+  able
+* `randomString(args)` - Retrieves a random element from the specified arguments, as a string
+* `randomAsset()` - Attempts to retrieve a Random Icon Key from the available assets
+* `capitalizeWords(input, timesToCheck ?: -1)` - Capitalizes the words within a specified string
+* `executeMethod(classToAccess=Object|String|Class, instance=Object ?: null, methodName, <parameterType, parameter>...)` -
+  Invokes the specified Method in the Target Class via Reflection
+* `asProperWord(input, avoid ?: false, skipSymbolReplacement ?: false, caseCheckTimes ?: -1)` - Converts input into a
+  Properly Readable String
+* `replaceAnyCase(input, from, to)` - Replaces Data in a String with Case-Insensitivity
+* `hasAlphaNumeric(input)` - Whether the specified string contains alpha-numeric characters
+* `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
+* `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
+* `formatAddress(input, returnPort ?: false)` - Formats an IP Address based on Input
+* `nullOrEmpty(input, allowWhitespace ?: false)` - Determines whether a String classifies as NULL or EMPTY
+* `length(input)` - Returns the length of the specified string
+* `toCamelCase(input)` - Converts a String into a Valid and Acceptable Camel-Case Format
+* `getResult(input)` - Perform recursive conversion on the specified input
+* `hasField(classToAccess, fieldName)` - Retrieves whether the specified class contains the specified field name
+
 ## Versions of CraftPresence
 
 Beginning in v1.5.2, CraftPresence is now split into different editions, based on the Minecraft Version you use it in:
@@ -261,10 +305,12 @@ This Mod is under the MIT License as well as the Apache 2.0 License
 
 This project makes usage of the following dependencies internally:
 
+* [Starscript](https://github.com/MeteorDevelopment/starscript)
+  by [MeteorDevelopment](https://github.com/MeteorDevelopment) on v2.0 and above
 * [DiscordIPC API](https://github.com/jagrosh/DiscordIPC) by [jagrosh](https://github.com/jagrosh)
     * [JUnixSocket](https://github.com/kohlschutter/junixsocket) by [kohlschutter](https://github.com/kohlschutter)
 * [Google's Guava Api](https://github.com/google/guava) by [Google](https://github.com/google/)
-* [Java Native Access (JNA) API](https://github.com/java-native-access/jna) on v1.5.x and Below
+* [Java Native Access (JNA) API](https://github.com/java-native-access/jna) on v1.5.x and below
 
 #### Discord Terms of Service
 
