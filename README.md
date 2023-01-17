@@ -62,8 +62,8 @@ Keep in mind the following:
 
 ___
 
-* `/cp compile "<expr>"` - Test the output of a placeholder expression, via Starscript
-* `/cp search (type:typeName, <searchTerm>, all)` - Search for valid placeholders available to use with Rich Presence
+* `/cp compile "[expr]"` - Test the output of a placeholder expression, via Starscript
+* `/cp search (type:typeName, [searchTerm], all)` - Search for valid placeholders available to use with Rich Presence
 * `/cp reload` - Reloads mod data
 * `/cp request` - View Join Request Info
 * `/cp export` - View export commands for mod data
