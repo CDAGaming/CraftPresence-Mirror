@@ -906,10 +906,12 @@ public class DiscordUtils {
 
                 if (addExtraData && placeholderValue != null) {
                     final String tagValue = placeholderValue.get().toString();
-                    placeholderString.append(String.format("\\n ==> %s \"%s\"",
-                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                            (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
-                    ));
+                    if (!StringUtils.isNullOrEmpty(tagValue)) {
+                        placeholderString.append(String.format("\\n ==> %s \"%s\"",
+                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
+                        ));
+                    }
                 }
             }
         }

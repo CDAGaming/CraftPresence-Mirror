@@ -374,10 +374,12 @@ public class ScrollableListControl extends GuiSlot {
 
                     if (placeholderValue != null) {
                         final String tagValue = placeholderValue.get().toString();
-                        hoverText.add(String.format("%s \"%s\"",
-                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
-                        ));
+                        if (!StringUtils.isNullOrEmpty(tagValue)) {
+                            hoverText.add(String.format("%s \"%s\"",
+                                    ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                    (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
+                            ));
+                        }
                     }
                 }
             }
