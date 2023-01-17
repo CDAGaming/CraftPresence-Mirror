@@ -97,7 +97,7 @@ public class ModUpdaterUtils {
     /**
      * Initializes this Module from the Specified Arguments
      *
-     * @param modID              The Mod Id for this Instance
+     * @param modID              The Mod ID for this Instance
      * @param updateUrl          The Update Url to attach to this Instance
      * @param currentVersion     The Current Version to attach to this Instance
      * @param currentGameVersion The Current Game Version to attach to this Instance

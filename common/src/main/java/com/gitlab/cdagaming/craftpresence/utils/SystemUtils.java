@@ -135,7 +135,7 @@ public class SystemUtils {
     /**
      * The Event to Run on each Client Tick, if passed initialization events
      * <p>
-     * Comprises of Synchronizing Data, and Updating Timer-Related Data as needed
+     * Consists of Synchronizing Data, and Updating Timer-Related Data as needed
      */
     void onTick() {
         ELAPSED_TIME = (System.currentTimeMillis() - CURRENT_TIMESTAMP) / 1000L;

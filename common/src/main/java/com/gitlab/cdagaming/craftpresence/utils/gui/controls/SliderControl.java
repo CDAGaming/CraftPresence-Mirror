@@ -81,7 +81,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param startValue    The Starting Value between the minimum and maximum value to set the slider at
      * @param minValue      The Minimum Value the Slider is allowed to be -- denormalized
      * @param maxValue      The Maximum Value the Slider is allowed to be -- denormalized
-     * @param valueStep     The rate at which each move to the slider adjusts it's value
+     * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      */
     public SliderControl(int buttonId, Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString) {
@@ -104,7 +104,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param startValue    The Starting Value between the minimum and maximum value to set the slider at
      * @param minValue      The Minimum Value the Slider is allowed to be -- denormalized
      * @param maxValue      The Maximum Value the Slider is allowed to be -- denormalized
-     * @param valueStep     The rate at which each move to the slider adjusts it's value
+     * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      * @param onPushEvent   The Click Event to Occur when this control is clicked
      */
@@ -122,7 +122,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param startValue    The Starting Value between the minimum and maximum value to set the slider at
      * @param minValue      The Minimum Value the Slider is allowed to be -- denormalized
      * @param maxValue      The Maximum Value the Slider is allowed to be -- denormalized
-     * @param valueStep     The rate at which each move to the slider adjusts it's value
+     * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      * @param events        The events to occur when this control is modified
      */
@@ -139,7 +139,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param startValue    The Starting Value between the minimum and maximum value to set the slider at
      * @param minValue      The Minimum Value the Slider is allowed to be -- denormalized
      * @param maxValue      The Maximum Value the Slider is allowed to be -- denormalized
-     * @param valueStep     The rate at which each move to the slider adjusts it's value
+     * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      */
     public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString) {
@@ -154,7 +154,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param startValue    The Starting Value between the minimum and maximum value to set the slider at
      * @param minValue      The Minimum Value the Slider is allowed to be -- denormalized
      * @param maxValue      The Maximum Value the Slider is allowed to be -- denormalized
-     * @param valueStep     The rate at which each move to the slider adjusts it's value
+     * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      * @param onPushEvent   The Click Event to Occur when this control is clicked
      */
@@ -171,7 +171,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param startValue    The Starting Value between the minimum and maximum value to set the slider at
      * @param minValue      The Minimum Value the Slider is allowed to be -- denormalized
      * @param maxValue      The Maximum Value the Slider is allowed to be -- denormalized
-     * @param valueStep     The rate at which each move to the slider adjusts it's value
+     * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      * @param events        The events to occur when this control is modified
      */
@@ -188,7 +188,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param startValue    The Starting Value between the minimum and maximum value to set the slider at
      * @param minValue      The Minimum Value the Slider is allowed to be -- denormalized
      * @param maxValue      The Maximum Value the Slider is allowed to be -- denormalized
-     * @param valueStep     The rate at which each move to the slider adjusts it's value
+     * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      * @param events        The events to occur when this control is modified
      */

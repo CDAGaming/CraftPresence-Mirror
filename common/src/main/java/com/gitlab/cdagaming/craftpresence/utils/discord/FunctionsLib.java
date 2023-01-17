@@ -359,7 +359,7 @@ public class FunctionsLib {
 
     public static Value getField(Starscript ss, int argCount) {
         if (argCount < 2 || argCount > 3) ss.error("getField() can only be used with 2-3 arguments, got %d.", argCount);
-        String fieldName, className;
+        String fieldName;
         Object instance, result = null;
         if (argCount == 2) {
             fieldName = ss.popString("Second argument to getField() needs to be a string.");
@@ -371,12 +371,7 @@ public class FunctionsLib {
 
             Value classObject = ss.pop();
             if (classObject.isObject()) {
-                Object data = classObject.getObject();
-                if (data instanceof Class<?>) {
-                    result = StringUtils.getField((Class<?>) data, instance, fieldName);
-                } else {
-                    result = data.getClass();
-                }
+                result = StringUtils.getField(classObject.getObject(), instance, fieldName);
             } else if (classObject.isString()) {
                 result = StringUtils.getField(classObject.getString(), instance, fieldName);
             } else {

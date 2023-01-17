@@ -53,7 +53,7 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     protected ExtendedButtonControl previousPageButton;
     /**
-     * The Back Button, normally binded to the parent screen
+     * The Back Button, normally bound to the parent screen
      */
     protected ExtendedButtonControl backButton;
     /**

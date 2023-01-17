@@ -111,10 +111,10 @@ public class Pair<U, V> {
     }
 
     /**
-     * Determines if elements in two different Pair's are equivalent
+     * Determines if elements in two different {@link Pair}'s are equivalent
      *
      * @param obj The Object to compare against
-     * @return If the Two Opposing Objects's are equivalent
+     * @return If the Two Opposing Objects are equivalent
      */
     @Override
     public boolean equals(Object obj) {

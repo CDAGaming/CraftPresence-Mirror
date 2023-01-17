@@ -260,7 +260,7 @@ public class FileUtils {
      * Retrieve a List of Classes that extend or implement anything in the search list
      *
      * @param searchList          The Super Type Classes to look for within the source packages specified
-     * @param includeExtraClasses Whether to include any extra sub classes
+     * @param includeExtraClasses Whether to include any extra subclasses
      * @param sourcePackages      The root package directories to search within
      * @return The List of found class names from the search
      */
@@ -343,7 +343,7 @@ public class FileUtils {
      * Retrieve a List of Classes that extend or implement anything in the search list
      *
      * @param searchTarget        The Super Type Class to look for within the source packages specified
-     * @param includeExtraClasses Whether to include any extra sub classes
+     * @param includeExtraClasses Whether to include any extra subclasses
      * @param sourcePackages      The root package directories to search within
      * @return The List of found classes from the search
      */
@@ -563,7 +563,7 @@ public class FileUtils {
     }
 
     /**
-     * Constants representing various {@link GsonBuilder} togges,
+     * Constants representing various {@link GsonBuilder} toggles,
      * such as Disabling Escape Characters and Toggling Pretty Print
      */
     public enum Modifiers {

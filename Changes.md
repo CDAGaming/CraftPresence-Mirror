@@ -17,7 +17,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * Additionally, the `allowPlaceholderOperators` option has been removed, due to being redundant
     * Several new commands, such as `/cp compile` and `/cp search` have also been implemented
 * Adjusted module logic to perform within their own sub-threads, in an effort to avoid waiting on them to retrieve data
-    * IE the initial retrieval of data when a module is first enabled is now multi-threaded, taking up much less time!
+    * IE the initial retrieval of data when a module is first enabled is now multithreaded, taking up much less time!
 * Migrated the Config Systems from `Properties` to `GSON`
     * A one-time migration layer has been put into place to migrate your v1.x settings over to the v2.x format
     * The logic behind data validation has been condensed to be more performant, and this change allows config settings
@@ -26,9 +26,9 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       removed, since we don't use Arrays in this new system
 * Added the ability for Module elements to supply their own `PresenceData`
     * When supplied and enabled, this will do one of two things:
-        * If `useAsMain` is enabled, this will allow an event to become the generic event rather then simple argument
+        * If `useAsMain` is enabled, this will allow an event to become the generic event rather than simple argument
           replacement, which is similar to the
-          way [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) presents it's
+          way [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) presents its
           data.
         * Otherwise, if `useAsMain` is disabled, this allows a placeholder to be interpreted differently depending on
           the RPC field that placeholder is within. An example of this would be being able to make a module's
@@ -68,7 +68,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * IE You can set the `textOverride` to be an empty string in the frontend, and the mod will respect that
 * Fixed preliminary-supplied data being able to be removed via the Dynamic Editor Screen
     * Only the config entry should have been effected, not the actual module data list
-* Fixed Out-Of-Bound issues when there are less then 3 or 4 search results in a Scrollable List
+* Fixed Out-Of-Bound issues when there are less than 3 or 4 search results in a Scrollable List
     * This issue caused no elements to display until you scrolled, causing it to clamp back to normal values
     * The list will now reset the scroll when the list is updated
 * Fixed Issues where data relying on the `children` list was unavailable in 1.13+ ports (Tab-Focus changing)
@@ -86,8 +86,8 @@ related systems:
 
 * Placeholders can now be used anywhere, without restrictions
 * Programmer expressions (Such as formatting, operators, as well as custom functions) have been implemented to allow an
-  even greater level of customizability then we've ever had prior
-    * See [their wiki](https://github.com/MeteorDevelopment/starscript/wiki) for some of the standard functions now
+  even greater level of configurability then we've ever had prior
+    * See [their wiki](https://github.com/MeteorDevelopment/starscript/wiki) for some standard functions now
       available
 * The OR operator, initially added in v1.9.x, has been replaced with Starscript usages
     * Prior usages will migrate to an `{getOrDefault(foo, bar)}` format to replicate the prior behavior
@@ -200,7 +200,7 @@ The following changes have been made for translations:
     * `gui.config.message.presence.{generalArgs,iconArgs}` (Edited to move duplicated data
       to `craftpresence.placeholders.notes`)
     * `gui.config.comment.button.sync.config` (Modified for new config file name)
-    * `gui.config.comment.advanced.{item,entity_target,entity_riding}_messages` (Modified to remove seperate tag
+    * `gui.config.comment.advanced.{item,entity_target,entity_riding}_messages` (Modified to remove separate tag
       placeholder section)
     * `gui.config.comment.display.{button_messages,dynamic_icons}` (Modified to remove outdated info)
     * `craftpresence.defaults.*` (Related to `Placeholders` Section)
@@ -280,7 +280,7 @@ Please keep in mind the following:
   logic for this until MC 1.7 and above
 * The MC a1.1.2_01 Port has its Dimension and Biome Modules **disabled**, as Mojang did not implement the logic for this
   until MC a1.2.x and above
-* Bugs that are related to or are caused by issues in the Vanilla Codebase, are unlikely able to be fixed due to
+* Bugs that are related to or are caused by issues in the Vanilla Codebase, are unlikely to be fixed due to
   Minecraft's limitations
 
 See the Mod Description // README for More Info

@@ -88,7 +88,7 @@ public class GuiUtils implements Module {
      */
     public boolean hasScanned = false;
     /**
-     * The Last Used Control Id
+     * The Last Used Control ID
      */
     public int lastIndex = 0;
     /**
@@ -276,9 +276,9 @@ public class GuiUtils implements Module {
     }
 
     /**
-     * Retrieves the Next Available Button Id for use in the currently open Screen
+     * Retrieves the Next Available Button ID for use in the currently open Screen
      *
-     * @return The next available Button Id
+     * @return The next available Button ID
      */
     public int getNextIndex() {
         return lastIndex++;
@@ -286,7 +286,7 @@ public class GuiUtils implements Module {
 
     /**
      * Resets the Button Index to 0
-     * Normally used when closing a screen and no longer using the allocated Id's
+     * Normally used when closing a screen and no longer using the allocated ID's
      */
     public void resetIndex() {
         lastIndex = 0;

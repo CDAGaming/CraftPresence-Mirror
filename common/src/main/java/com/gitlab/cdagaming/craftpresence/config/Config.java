@@ -399,7 +399,7 @@ public final class Config extends Module implements Serializable {
     }
 
     public void save() {
-        // Ensure Critical Data is setup
+        // Ensure Critical Data is configured
         applyData();
         FileUtils.writeJsonData(this, getConfigFile(), "UTF-8",
                 FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);

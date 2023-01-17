@@ -50,7 +50,7 @@ import java.util.TimerTask;
 @SuppressWarnings("ConstantConditions")
 public class CraftPresence {
     /**
-     * Whether Pack Data was able to be Found and Parsed
+     * Whether Pack Data could be found and parsed
      */
     public static boolean packFound = false;
 
@@ -140,7 +140,7 @@ public class CraftPresence {
     public static boolean isVerboseStatusOverridden = false;
 
     /**
-     * Whether the Mod has completed it's Initialization Phase
+     * Whether the Mod has completed its Initialization Phase
      */
     private boolean initialized = false;
 
@@ -154,7 +154,7 @@ public class CraftPresence {
     /**
      * The Mod's Initialization Event
      * <p>
-     * Comprises of Data Initialization and RPC Setup
+     * Consists of Data Initialization and RPC Setup
      */
     private void init() {
         // Initialize Dynamic Mappings
@@ -232,7 +232,7 @@ public class CraftPresence {
     /**
      * The Event to Run on each Client Tick, if passed initialization events and not closing
      * <p>
-     * Comprises of Synchronizing Data, and Updating RPC Data as needed
+     * Consists of Synchronizing Data, and Updating RPC Data as needed
      */
     private void clientTick() {
         if (!closing) {

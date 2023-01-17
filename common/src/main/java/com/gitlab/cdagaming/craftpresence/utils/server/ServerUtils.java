@@ -52,7 +52,6 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-@SuppressWarnings({"DuplicatedCode", "unchecked"})
 public class ServerUtils implements Module {
     /**
      * Whether this module is active and currently in use
@@ -546,7 +545,7 @@ public class ServerUtils implements Module {
                 // to form party information.
                 //
                 // Note: The party privacy level is appended by modulus division to prevent
-                // it being anything other then valid privacy levels
+                // it being anything other than valid privacy levels
                 if (CraftPresence.CONFIG.generalSettings.enableJoinRequests) {
                     if (!StringUtils.isNullOrEmpty(currentServer_Name) && !currentServer_Name.equalsIgnoreCase(CraftPresence.CONFIG.serverSettings.fallbackServerName)) {
                         CraftPresence.CLIENT.PARTY_ID = "Join Server: " + currentServer_Name;

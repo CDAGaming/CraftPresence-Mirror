@@ -63,9 +63,9 @@ public class SelectorGui extends ExtendedScreen {
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
      * @param attributeName        The attribute name to interpret following selection
-     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
@@ -90,9 +90,9 @@ public class SelectorGui extends ExtendedScreen {
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
      * @param attributeName        The attribute name to interpret following selection
-     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
@@ -108,9 +108,9 @@ public class SelectorGui extends ExtendedScreen {
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
      * @param attributeName        The attribute name to interpret following selection
-     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
@@ -125,9 +125,9 @@ public class SelectorGui extends ExtendedScreen {
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
      * @param attributeName        The attribute name to interpret following selection
-     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting it's look and feel
+     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
@@ -142,7 +142,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
      * @param attributeName        The attribute name to interpret following selection
-     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
@@ -158,7 +158,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
      * @param attributeName        The attribute name to interpret following selection
-     * @param allowContinuing      Whether to allow continue button functionality
+     * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */

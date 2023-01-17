@@ -51,7 +51,6 @@ public class Legacy2Modern implements DataMigrator {
     private final File configFile;
     private final String encoding;
     private final Properties properties = new Properties();
-    private final String translationPrefix = "gui.config.name.";
 
     private final Predicate<String> IS_TEXT = (id) -> id.equalsIgnoreCase("text");
     private final Predicate<String> IS_ICON = (id) -> id.equalsIgnoreCase("icon");
@@ -62,8 +61,6 @@ public class Legacy2Modern implements DataMigrator {
     private final Predicate<String> IS_ITEM_MODULE = (e) -> e.equals("itemMessages");
     private final Predicate<String> IS_ENTITY_TARGET_MODULE = (e) -> e.equals("entityTargetMessages");
     private final Predicate<String> IS_ENTITY_RIDING_MODULE = (e) -> e.equals("entityRidingMessages");
-
-    private final String EMPTY_QUOTES = "{''}";
 
     // oldName -> newName:replaceCondition
     private final List<Tuple<Pair<String, String>, Predicate<String>, Predicate<String>>> placeholderMappings = Arrays.asList(

@@ -277,8 +277,8 @@ public class DiscordAssetUtils {
      *
      * @param clientId    The client id to load asset data from
      * @param keyId       The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
-     * @param isLocalName Whether the specified Key ID is a Key name derived from the currently synced client id
-     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
+     * @param isLocalName Whether the specified Key ID is a Key name derived from the currently synced Client ID
+     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client ID)
      */
     public static String getDiscordAssetUrl(final String clientId, final String keyId, final boolean isLocalName) {
         return !StringUtils.isNullOrEmpty(keyId) ? assetsEndpoint
@@ -292,7 +292,7 @@ public class DiscordAssetUtils {
      *
      * @param clientId The client id to load asset data from
      * @param keyId    The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
-     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
+     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client ID)
      */
     public static String getDiscordAssetUrl(final String clientId, final String keyId) {
         return getDiscordAssetUrl(clientId, keyId, clientId.equals(CraftPresence.CONFIG.generalSettings.clientId));
@@ -304,7 +304,7 @@ public class DiscordAssetUtils {
      * Url Format: [assetsEndpoint]/[clientId]/[id].png
      *
      * @param keyId The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
-     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client Id)
+     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client ID)
      */
     public static String getDiscordAssetUrl(final String keyId) {
         return getDiscordAssetUrl(CraftPresence.CONFIG.generalSettings.clientId, keyId);
@@ -332,8 +332,8 @@ public class DiscordAssetUtils {
                 ASSET_LIST = Maps.newHashMap();
                 if (assets != null) {
                     for (DiscordAsset asset : assets) {
-                        // Ensure URL is set before-hand for non-custom Assets
-                        // localName set to false to avoid unneeded calls
+                        // Ensure URL is set beforehand for non-custom Assets
+                        // isLocalName is made false to avoid unneeded calls
                         if (!StringUtils.isNullOrEmpty(asset.getUrl()) && asset.getType() != DiscordAsset.AssetType.CUSTOM) {
                             asset.setUrl(getDiscordAssetUrl(clientId, asset.getId(), false));
                         }

@@ -68,7 +68,7 @@ public class ModLogger {
         if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§c " + logMessage);
         } else {
-            logInstance.error(logMessage, logArguments);
+            getLogInstance().error(logMessage, logArguments);
         }
     }
 
@@ -82,7 +82,7 @@ public class ModLogger {
         if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§e " + logMessage);
         } else {
-            logInstance.warn(logMessage, logArguments);
+            getLogInstance().warn(logMessage, logArguments);
         }
     }
 
@@ -96,7 +96,7 @@ public class ModLogger {
         if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r " + logMessage);
         } else {
-            logInstance.info(logMessage, logArguments);
+            getLogInstance().info(logMessage, logArguments);
         }
     }
 

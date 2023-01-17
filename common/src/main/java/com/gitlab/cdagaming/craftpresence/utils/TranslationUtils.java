@@ -164,7 +164,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     /**
      * The Event to Run on each Client Tick, if passed initialization events
      * <p>
-     * Comprises of Synchronizing Data, and Updating Translation Data as needed
+     * Consists of Synchronizing Data, and Updating Translation Data as needed
      */
     void onTick() {
         final String currentLanguageId = getCurrentLanguage();

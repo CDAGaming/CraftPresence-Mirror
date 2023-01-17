@@ -99,7 +99,7 @@ public class TileEntityUtils implements Module {
      */
     public List<String> CURRENT_MAIN_HAND_ITEM_TAGS = Lists.newArrayList();
     /**
-     * The Player's Current Off Hand Item's Nbt Tags, if any
+     * The Player's Current Offhand Item's Nbt Tags, if any
      */
     public List<String> CURRENT_OFFHAND_ITEM_TAGS = Lists.newArrayList();
     /**
@@ -123,7 +123,7 @@ public class TileEntityUtils implements Module {
      */
     private ItemStack CURRENT_MAIN_HAND_ITEM;
     /**
-     * The Player's Current Off Hand Item, if any
+     * The Player's Current Offhand Item, if any
      */
     private ItemStack CURRENT_OFFHAND_ITEM;
     /**
@@ -147,7 +147,7 @@ public class TileEntityUtils implements Module {
      */
     private String CURRENT_MAIN_HAND_ITEM_NAME;
     /**
-     * The Player's Current Off Hand Item Name, if any
+     * The Player's Current Offhand Item Name, if any
      */
     private String CURRENT_OFFHAND_ITEM_NAME;
     /**
@@ -171,7 +171,7 @@ public class TileEntityUtils implements Module {
      */
     private NBTTagCompound CURRENT_MAIN_HAND_ITEM_TAG;
     /**
-     * The Player's Current Off Hand Item's Tag, if any
+     * The Player's Current Offhand Item's Tag, if any
      */
     private NBTTagCompound CURRENT_OFFHAND_ITEM_TAG;
     /**

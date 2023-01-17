@@ -80,7 +80,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unchecked")
 public class DiscordUtils {
     /**
-     * A mapping of the arguments that have overriden module data
+     * A mapping of the arguments that have overwritten module data
      */
     private final Map<String, ModuleData> overrideData = Maps.newHashMap();
     /**
@@ -166,11 +166,11 @@ public class DiscordUtils {
      */
     public String PARTY_ID;
     /**
-     * The Current Size of the Party Session, if in a Party
+     * The Current Size of the Party Session, while applicable
      */
     public int PARTY_SIZE;
     /**
-     * The Maximum Size of the Party Session, if in a Party
+     * The Maximum Size of the Party Session, while applicable
      */
     public int PARTY_MAX;
     /**
@@ -179,7 +179,7 @@ public class DiscordUtils {
      */
     public PartyPrivacy PARTY_PRIVACY = PartyPrivacy.Public;
     /**
-     * The Current Party Join Secret Key, if in a Party
+     * The Current Party Join Secret Key, while applicable
      */
     public String JOIN_SECRET;
     /**
@@ -203,7 +203,7 @@ public class DiscordUtils {
      */
     public byte INSTANCE;
     /**
-     * An Instance of the {@link Starscript} engine, responsible for parsing and compining expressions
+     * An Instance of the {@link Starscript} engine, responsible for parsing and combining expressions
      */
     public Starscript scriptEngine = new Starscript();
     /**
@@ -211,7 +211,7 @@ public class DiscordUtils {
      */
     public IPCClient ipcInstance;
     /**
-     * Whether Discord is currently awaiting a response to a Ask to Join or Spectate Request, if any
+     * Whether Discord is currently awaiting a response to an Ask to Join or Spectate Request, if any
      */
     public boolean awaitingReply = false;
     /**
@@ -452,7 +452,7 @@ public class DiscordUtils {
 
         if (result == null || result.hasErrors()) {
             if (result != null) {
-                ModUtils.LOG.error("A parser exception has occured:");
+                ModUtils.LOG.error("A parser exception has occurred:");
                 ModUtils.LOG.error("Original: \"" + data + "\"");
                 ModUtils.LOG.error("Errors:");
                 for (Error error : result.errors) {
@@ -481,7 +481,7 @@ public class DiscordUtils {
                     script.decompile(output);
                 }
             } catch (Throwable ex) {
-                ModUtils.LOG.error("A compiler exception has occured:");
+                ModUtils.LOG.error("A compiler exception has occurred:");
                 ModUtils.LOG.error("Original: \"" + data + "\"");
                 if (output != null) {
                     try {
@@ -1051,7 +1051,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
+     * Attempts to locate the specified Image, and if not existent, use the alternative String, and null if allowed
      *
      * @param allowNull   If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
      * @param showLogging Whether to display logging for this function
@@ -1112,7 +1112,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
+     * Attempts to locate the specified Image, and if not existent, use the alternative String, and null if allowed
      *
      * @param argumentName The Specified Argument to interpret
      * @param allowNull    If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
@@ -1124,7 +1124,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Attempts to lookup the specified Image, and if not existent, use the alternative String, and null if allowed
+     * Attempts to locate the specified Image, and if not existent, use the alternative String, and null if allowed
      *
      * @param allowNull   If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
      * @param evalStrings The Specified Icon Key(s) to search for from the {@link DiscordUtils#CLIENT_ID} Assets
@@ -1293,7 +1293,7 @@ public class DiscordUtils {
                 .setButtons(BUTTONS)
                 .build();
 
-        // Format Data to UTF_8 after Sent to RPC (RPC has it's own Encoding)
+        // Format Data to UTF_8 after Sent to RPC (RPC has its own Encoding)
         GAME_STATE = StringUtils.convertString(GAME_STATE, "UTF-8", false);
         DETAILS = StringUtils.convertString(DETAILS, "UTF-8", false);
 

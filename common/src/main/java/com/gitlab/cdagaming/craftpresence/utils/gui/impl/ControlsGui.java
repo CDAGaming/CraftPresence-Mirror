@@ -152,7 +152,7 @@ public class ControlsGui extends PaginatedScreen {
      * Setup Rendering Queues for different parts of the Screen
      */
     private void setupScreenData() {
-        // Clear any Prior Data before-hand
+        // Clear any Prior Data beforehand
         preRenderQueue.clear();
         postRenderQueue.clear();
 

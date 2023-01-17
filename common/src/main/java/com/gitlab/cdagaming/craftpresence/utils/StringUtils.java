@@ -147,7 +147,7 @@ public class StringUtils {
     /**
      * Converts a String and it's bytes to that of the Specified Charset
      *
-     * @param original The original String to interpet
+     * @param original The original String to interpret
      * @param encoding The Charset to encode the String under
      * @param decode   If we are Decoding an already encoded String
      * @return The converted UTF_8 String, if successful
@@ -559,7 +559,7 @@ public class StringUtils {
     }
 
     /**
-     * Whether the specified string contains alpha-numeric characters
+     * Whether the specified string contains alphanumeric characters
      *
      * @param original The original String to evaluate
      * @return the processed result
@@ -1018,7 +1018,7 @@ public class StringUtils {
             // character is not space then it shows that
             // current letter is the starting of the word
             // We only replace however, whilst the times
-            // remaining is more then 0 or is -1 (Infinite)
+            // remaining is more than 0 or is -1 (Infinite)
             if (charIndex == ' ' && str.charAt(index) != ' ' && (timesLeft > 0 || timesLeft == -1)) {
                 s.append(Character.toUpperCase(str.charAt(index)));
                 if (timesLeft > 0) {
@@ -1178,6 +1178,25 @@ public class StringUtils {
             return getField(foundClass, instance, fieldNames);
         }
         return null;
+    }
+
+    /**
+     * Retrieves the Specified Field(s) via Reflection
+     *
+     * @param classToAccess The class to access with the field(s)
+     * @param instance      An Instance of the Class, if needed
+     * @param fieldNames    A List of Field Names to search for
+     * @return The Found Field Data, if any
+     */
+    public static Object getField(Object classToAccess, Object instance, String... fieldNames) {
+        if (classToAccess instanceof String) {
+            return getField((String) classToAccess, instance, fieldNames);
+        } else {
+            return getField(
+                    classToAccess instanceof Class<?> ? (Class<?>) classToAccess : classToAccess.getClass(),
+                    instance, fieldNames
+            );
+        }
     }
 
     /**
