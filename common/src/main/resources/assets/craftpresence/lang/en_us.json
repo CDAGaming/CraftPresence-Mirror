@@ -467,7 +467,7 @@
   "craftpresence.logger.error.discord.assets.fallback": "Asset name \"%1$s\" does not exist, attempting to use an alternative icon \"%2$s\"...",
   "craftpresence.logger.error.discord.assets.cached": "Asset name \"%1$s\" does not exist, using cached icon \"%2$s\"...",
   "craftpresence.logger.error.discord.assets.default": "Failed to assign an alternative icon for asset name \"%1$s\", using default/randomized icon \"%2$s\"...",
-  "craftpresence.logger.warning.config.disabled.enablejoinrequest": "Join request support is disabled in your config. Please enable it to accept and send join requests in Discord!",
+  "craftpresence.logger.warning.config.disabled.enable_join_request": "Join request support is disabled in your config. Please enable it to accept and send join requests in Discord!",
   "craftpresence.logger.warning.config.empty.client_id": "Your Client ID is empty, things may not work well...",
   "craftpresence.logger.warning.debug_mode": "You are running CraftPresence in a debugging environment, some features may not function properly!",
   "craftpresence.logger.warning.updater.homepage": "Unable to locate homepage for this application...",
