@@ -35,7 +35,6 @@ import java.io.File;
  *
  * @author CDAGaming
  */
-@SuppressWarnings({"DuplicatedCode", "ConstantConditions", "PointlessBooleanExpression"})
 public class ModUtils {
     /**
      * The Application's Name
@@ -110,6 +109,7 @@ public class ModUtils {
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
      */
+    @SuppressWarnings("PointlessBooleanExpression")
     public final static boolean IS_LEGACY_HARD = IS_LEGACY_ALPHA || false;
     /**
      * If this Application is within the Soft Floor of Legacy Mode

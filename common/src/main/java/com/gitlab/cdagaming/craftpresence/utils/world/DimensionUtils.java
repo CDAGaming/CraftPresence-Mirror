@@ -44,6 +44,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class DimensionUtils implements Module {
     /**
      * A List of the detected Dimension Type's

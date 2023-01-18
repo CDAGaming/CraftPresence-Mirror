@@ -59,6 +59,7 @@ public class StringUtils {
     /**
      * The Character to be interpreted as the start to a Formatting Character
      */
+    @SuppressWarnings("UnnecessaryUnicodeEscape")
     public static final char COLOR_CHAR = '\u00A7';
     /**
      * The character set representing data that is too large to display

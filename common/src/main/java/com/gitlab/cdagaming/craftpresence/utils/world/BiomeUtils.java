@@ -42,6 +42,7 @@ import java.util.List;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class BiomeUtils implements Module {
     /**
      * A List of the detected Biome Type's

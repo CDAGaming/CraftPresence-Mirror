@@ -47,7 +47,6 @@ import java.util.TimerTask;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("ConstantConditions")
 public class CraftPresence {
     /**
      * Whether Pack Data could be found and parsed

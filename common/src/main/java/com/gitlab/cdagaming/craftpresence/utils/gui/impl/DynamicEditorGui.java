@@ -36,6 +36,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.BiConsumer;
 
+@SuppressWarnings("DuplicatedCode")
 public class DynamicEditorGui extends ExtendedScreen {
     private final TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, onRemoveEntry;
     private final BiConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
@@ -175,7 +176,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             secondaryInput = addControl(
                     new ExtendedTextControl(
                             getFontRenderer(),
-                            (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex++),
+                            (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex),
                             180, 20
                     )
             );

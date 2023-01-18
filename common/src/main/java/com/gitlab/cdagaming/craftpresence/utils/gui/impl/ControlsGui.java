@@ -227,7 +227,7 @@ public class ControlsGui extends PaginatedScreen {
 
     /**
      * Sets a New KeyCode for the currently queued entry data
-     * Entry Data format -> buttonToModify, Config Field to Edit
+     * Format -> buttonToModify, Config Field to Edit
      *
      * @param keyCode The New KeyCode for modifying
      */

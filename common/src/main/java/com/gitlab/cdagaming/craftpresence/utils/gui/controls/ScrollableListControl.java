@@ -493,6 +493,7 @@ public class ScrollableListControl extends GuiSlot {
                     identifierName = target != null ? MappingUtils.getCanonicalName(target) : originalName;
                     break;
                 }
+                case None:
                 default: {
                     identifierName = originalName;
                     break;

@@ -353,7 +353,7 @@ public class ImageUtils {
      * ByteStream: Parsing with a direct or String representation of a Byte array, to be put
      * into an ByteArrayInputStream. (Byte Buffer can be used with Base64 representation or direct byte conversion)
      * <p>
-     * Url: Parsing with a direct or string representation of a Url, to be converted
+     * Url: Parsing with a direct or string representation of a {@link URL}, to be converted
      * to an InputStream
      * <p>
      * Unknown: Unknown property, experience can be iffy using this

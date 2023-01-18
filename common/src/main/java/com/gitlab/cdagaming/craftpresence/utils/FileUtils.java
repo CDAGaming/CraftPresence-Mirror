@@ -160,7 +160,7 @@ public class FileUtils {
     }
 
     /**
-     * Downloads a File from a Url, then stores it at the target location
+     * Downloads a File from a {@link URL}, then stores it at the target location
      *
      * @param urlString The Download Link
      * @param file      The destination and filename to store the download as

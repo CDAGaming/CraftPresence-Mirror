@@ -46,6 +46,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class EntityUtils implements Module {
     /**
      * Whether this module is active and currently in use
@@ -318,8 +319,6 @@ public class EntityUtils implements Module {
                 ENTITY_NAMES.add(entityRidingEntry);
             }
         }
-
-        verifyEntities();
     }
 
     @Override
@@ -340,12 +339,5 @@ public class EntityUtils implements Module {
     @Override
     public void setInUse(boolean state) {
         this.isInUse = state;
-    }
-
-    /**
-     * Verifies, Synchronizes and Removes any Invalid Items and Blocks from their Lists
-     */
-    private void verifyEntities() {
-        // Add Verification here as needed
     }
 }

@@ -39,6 +39,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
+@SuppressWarnings("DuplicatedCode")
 public class MainGui extends ExtendedScreen {
     private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, commandGUIButton;
 

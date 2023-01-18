@@ -44,7 +44,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
 public class TileEntityUtils implements Module {
     /**
      * A List of the detected Block Names
