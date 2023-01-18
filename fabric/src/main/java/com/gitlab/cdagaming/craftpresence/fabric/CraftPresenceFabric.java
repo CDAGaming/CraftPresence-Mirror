@@ -44,6 +44,9 @@ public class CraftPresenceFabric implements ClientModInitializer {
         setupIntegrations();
     }
 
+    /**
+     * Setup external integrations and attachments to the primary application
+     */
     public void setupIntegrations() {
         // N/A
     }

@@ -134,7 +134,7 @@ shadowJar {
     dependsOn(project(":common").tasks.shadowJar)
     from zipTree(project(":common").tasks.shadowJar.archivePath)
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier.set "dev-shadow"
 
     // Meta Exclusions
     exclude '**/DEPENDENCIES*'
@@ -160,7 +160,7 @@ shadowJar {
 remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "forge"
+    archiveClassifier.set "forge"
 }
 
 jar {
@@ -169,7 +169,7 @@ jar {
             attributes 'FMLAT': 'accesstransformer.cfg'
         }
     }
-    classifier "dev"
+    archiveClassifier.set "dev"
 }
 
 sourcesJar {

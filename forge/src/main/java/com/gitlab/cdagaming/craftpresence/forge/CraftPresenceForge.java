@@ -51,6 +51,9 @@ public class CraftPresenceForge {
         setupIntegrations();
     }
 
+    /**
+     * Setup external integrations and attachments to the primary application
+     */
     public void setupIntegrations() {
         if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
             CommandUtils.modules.put("integration.replaymod", new ReplayModUtils());

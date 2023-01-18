@@ -27,12 +27,34 @@ package com.gitlab.cdagaming.craftpresence.config;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 public abstract class Module {
+    /**
+     * Retrieve the default instance for this {@link Module}
+     *
+     * @return the default instance of this {@link Module}
+     */
     protected abstract Module getDefaults();
 
+    /**
+     * Retrieve the specified property for this {@link Module}
+     *
+     * @param name the name of the property
+     * @return the property value, if found
+     */
     protected abstract Object getProperty(final String name);
 
+    /**
+     * Sets the specified property for this {@link Module}
+     *
+     * @param name the name of the property
+     * @param value the property value to assign
+     */
     protected abstract void setProperty(final String name, final Object value);
 
+    /**
+     * Resets the specified property to that which matches the default instance for this {@link Module}
+     *
+     * @param name the name of the property
+     */
     public void resetProperty(final String name) {
         setProperty(name, getDefaults().getProperty(name));
     }

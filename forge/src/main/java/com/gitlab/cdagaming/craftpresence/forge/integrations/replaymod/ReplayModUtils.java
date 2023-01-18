@@ -38,7 +38,14 @@ import com.replaymod.render.rendering.VideoRenderer;
 
 import java.util.List;
 
-@SuppressWarnings("ConstantConditions")
+/**
+ * Extension of {@link com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils} designed for ReplayMod
+ * <p>
+ * Source: <a href="https://replaymod.com/">Click Here</a>
+ *
+ * @author CDAGaming
+ */
+@SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
 public class ReplayModUtils implements Module {
     /**
      * Whether this module is active and currently in use

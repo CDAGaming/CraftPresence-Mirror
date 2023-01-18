@@ -69,22 +69,47 @@ public interface Module {
         // N/A
     }
 
+    /**
+     * Returns whether the module is currently enabled
+     *
+     * @return {@link Boolean#TRUE} if this module is enabled
+     */
     default boolean isEnabled() {
         return true;
     }
 
+    /**
+     * Sets whether the module is currently enabled
+     *
+     * @param state the new enabled state
+     */
     default void setEnabled(boolean state) {
         // N/A
     }
 
+    /**
+     * Returns whether the module is currently active and in use
+     *
+     * @return {@link Boolean#TRUE} if this module is currently active and in use
+     */
     default boolean isInUse() {
         return true;
     }
 
+    /**
+     * Sets whether the module is currently active and in use
+     *
+     * @param state the new inUse state
+     */
     default void setInUse(boolean state) {
         // N/A
     }
 
+    /**
+     * Determines whether the module can currently be loaded
+     *
+     * @return {@link Boolean#TRUE} if this module can currently be loaded
+     */
     default boolean canBeLoaded() {
         return CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
     }

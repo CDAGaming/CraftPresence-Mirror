@@ -800,6 +800,7 @@ public class DiscordUtils {
     /**
      * Retrieves the argument within the specified type that matches the specified string format
      *
+     * @param key The input to interpret
      * @return The entry that satisfies the method conditions, or null
      */
     public Supplier<Value> getArgument(final String key) {
