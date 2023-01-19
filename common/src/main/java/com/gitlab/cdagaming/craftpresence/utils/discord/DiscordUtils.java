@@ -1010,12 +1010,13 @@ public class DiscordUtils {
 
         if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                 !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-            final String playerIcon = compileData(String.format(
-                    CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
-                    StringUtils.getOrDefault(uniqueId, playerName)
-            )).get().toString();
             if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(playerName)) {
-                CraftPresence.CONFIG.displaySettings.dynamicIcons.put(playerName, playerIcon);
+                CraftPresence.CONFIG.displaySettings.dynamicIcons.put(playerName,
+                        compileData(String.format(
+                                CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                                StringUtils.getOrDefault(uniqueId, playerName)
+                        )).get().toString()
+                );
                 DiscordAssetUtils.syncCustomAssets();
                 CraftPresence.CONFIG.save();
             }
