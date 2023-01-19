@@ -165,9 +165,8 @@ subprojects {
 
     gradle.projectsEvaluated {
         tasks.withType(Javadoc).configureEach {
-            exclude "${classPath}/config/category/**"
-            exclude "${classPath}/config/element/**"
-            exclude "${classPath}/config/gui/**"
+            exclude "**/*Gui.java"
+            exclude "${classPath}/config/**"
             exclude "${classPath}/integrations/**"
         }
     }

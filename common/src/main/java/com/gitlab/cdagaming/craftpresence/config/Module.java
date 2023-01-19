@@ -26,6 +26,11 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
+/**
+ * Module Section defining properties to be used in a configuration
+ *
+ * @author CDAGaming
+ */
 public abstract class Module {
     /**
      * Retrieve the default instance for this {@link Module}
@@ -45,7 +50,7 @@ public abstract class Module {
     /**
      * Sets the specified property for this {@link Module}
      *
-     * @param name the name of the property
+     * @param name  the name of the property
      * @param value the property value to assign
      */
     protected abstract void setProperty(final String name, final Object value);

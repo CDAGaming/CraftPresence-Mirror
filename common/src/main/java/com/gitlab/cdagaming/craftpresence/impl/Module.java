@@ -26,6 +26,11 @@ package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 
+/**
+ * Module Section defining properties to be used for Rich Presence Displays
+ *
+ * @author CDAGaming
+ */
 public interface Module {
     /**
      * Clears FULL Data from this Module
