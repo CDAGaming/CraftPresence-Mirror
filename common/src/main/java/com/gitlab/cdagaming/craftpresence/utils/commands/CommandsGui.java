@@ -42,7 +42,6 @@ import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.meteordev.starscript.value.Value;
-import org.meteordev.starscript.value.ValueMap;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -54,7 +53,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class CommandsGui extends ExtendedScreen {
     private static String[] executionCommandArgs;
@@ -276,47 +274,9 @@ public class CommandsGui extends ExtendedScreen {
                     if (executionCommandArgs.length == 1) {
                         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.search");
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
-                        final ValueMap globals = CraftPresence.CLIENT.scriptEngine.getGlobals();
-                        final List<String> results = Lists.newArrayList();
-                        if (executionCommandArgs[1].startsWith("type:")) {
-                            final String type = executionCommandArgs[1].replaceFirst("type:", "").toLowerCase();
-                            results.addAll(globals.keys().stream().filter(e -> {
-                                        final Value data = globals.get(e).get();
-                                        switch (type) {
-                                            case "function":
-                                                return data.isFunction();
-                                            case "object":
-                                                return data.isObject();
-                                            case "bool":
-                                            case "boolean":
-                                                return data.isBool();
-                                            case "map":
-                                                return data.isMap();
-                                            case "int":
-                                            case "integer":
-                                            case "float":
-                                            case "double":
-                                            case "number":
-                                                return data.isNumber();
-                                            case "text":
-                                            case "string":
-                                                return data.isString();
-                                            case "empty":
-                                            case "null":
-                                                return data.isNull();
-                                            case "any":
-                                            case "all":
-                                                return true;
-                                            default:
-                                                return false;
-                                        }
-                                    }
-                            ).collect(Collectors.toList()));
-                        } else if (executionCommandArgs[1].equalsIgnoreCase("all")) {
-                            results.addAll(CraftPresence.CLIENT.getArgumentEntries(false));
-                        } else {
-                            results.addAll(CraftPresence.CLIENT.getArgumentEntries(false, executionCommandArgs[1]));
-                        }
+                        final List<String> results = Lists.newArrayList(
+                                CraftPresence.CLIENT.getArgumentEntries(false, executionCommandArgs[1])
+                        );
 
                         if (!results.isEmpty()) {
                             CraftPresence.GUIS.openScreen(new SelectorGui(

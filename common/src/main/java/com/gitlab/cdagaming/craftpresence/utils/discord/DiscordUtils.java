@@ -781,20 +781,58 @@ public class DiscordUtils {
 
             for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
                 final String item = entry.getKey();
+                final Supplier<Value> data = entry.getValue();
                 boolean addToList = args == null || args.length < 1 || args[0] == null;
                 if (!addToList) {
-                    for (String argument : args) {
-                        if (!StringUtils.isNullOrEmpty(argument) && item.startsWith(argument)) {
+                    for (String name : args) {
+                        if (name.startsWith("type:")) {
+                            final String type = name.replaceFirst("type:", "").toLowerCase();
+                            if (matchesType(type, data.get())) {
+                                addToList = true;
+                                break;
+                            }
+                        } else if (!StringUtils.isNullOrEmpty(name) && item.startsWith(name)) {
                             addToList = true;
                             break;
                         }
                     }
                 }
                 if (addToList) {
-                    list.put(item, entry.getValue());
+                    list.put(item, data);
                 }
             }
             return list;
+        }
+    }
+
+    public boolean matchesType(final String type, final Value data) {
+        switch (type) {
+            case "function":
+                return data.isFunction();
+            case "object":
+                return data.isObject();
+            case "bool":
+            case "boolean":
+                return data.isBool();
+            case "map":
+                return data.isMap();
+            case "int":
+            case "integer":
+            case "float":
+            case "double":
+            case "number":
+                return data.isNumber();
+            case "text":
+            case "string":
+                return data.isString();
+            case "empty":
+            case "null":
+                return data.isNull();
+            case "any":
+            case "all":
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -1030,6 +1068,17 @@ public class DiscordUtils {
         // Sync the Default Icon Argument
         syncArgument("general.icon", CraftPresence.CONFIG.generalSettings.defaultIcon);
         syncPackArguments();
+        syncScriptArguments();
+    }
+
+    /**
+     * Synchronizes and Updates Placeholder data from the script engine in this module
+     */
+    public void syncScriptArguments() {
+        final ValueMap map = scriptEngine.getGlobals();
+        for (String name : map.keys()) {
+            placeholderData.putIfAbsent(name, map.get(name));
+        }
     }
 
     /**
