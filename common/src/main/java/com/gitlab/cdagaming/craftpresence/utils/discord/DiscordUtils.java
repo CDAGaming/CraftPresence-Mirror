@@ -785,14 +785,16 @@ public class DiscordUtils {
                 boolean addToList = args == null || args.length < 1 || args[0] == null;
                 if (!addToList) {
                     for (String name : args) {
-                        if (name.startsWith("type:")) {
-                            final String type = name.replaceFirst("type:", "").toLowerCase();
-                            if (matchesType(type, data.get())) {
-                                addToList = true;
-                                break;
-                            }
-                        } else if (!StringUtils.isNullOrEmpty(name) && item.startsWith(name)) {
-                            addToList = true;
+                        if (!StringUtils.isNullOrEmpty(name)) {
+                            addToList = item.startsWith(name) ||
+                                    (name.equalsIgnoreCase("type:all") || name.equalsIgnoreCase("all")) ||
+                                    (name.startsWith("type:") && matchesType(
+                                            name.replaceFirst("type:", "").toLowerCase(),
+                                            data.get()
+                                    ));
+                        }
+
+                        if (addToList) {
                             break;
                         }
                     }
@@ -1075,9 +1077,11 @@ public class DiscordUtils {
      * Synchronizes and Updates Placeholder data from the script engine in this module
      */
     public void syncScriptArguments() {
-        final ValueMap map = scriptEngine.getGlobals();
-        for (String name : map.keys()) {
-            placeholderData.putIfAbsent(name, map.get(name));
+        synchronized (placeholderData) {
+            final ValueMap map = scriptEngine.getGlobals();
+            for (String name : map.keys()) {
+                placeholderData.put(name, map.get(name));
+            }
         }
     }
 
