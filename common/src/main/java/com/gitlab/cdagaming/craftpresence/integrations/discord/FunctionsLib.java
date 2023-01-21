@@ -58,6 +58,14 @@ public class FunctionsLib {
         // DiscordUtils
         ss.set("getResult", FunctionsLib::getResult);
         ss.set("randomAsset", FunctionsLib::randomAsset);
+        ss.set("isValidId", FunctionsLib::isValidId);
+        ss.set("isValidAsset", FunctionsLib::isValidAsset);
+        ss.set("isCustomAsset", FunctionsLib::isCustomAsset);
+        ss.set("getAsset", FunctionsLib::getAsset);
+        ss.set("getAssetKey", FunctionsLib::getAssetKey);
+        ss.set("getAssetId", FunctionsLib::getAssetId);
+        ss.set("getAssetType", FunctionsLib::getAssetType);
+        ss.set("getAssetUrl", FunctionsLib::getAssetUrl);
 
         // StringUtils
         ss.set("rgbaToHex", FunctionsLib::rgbaToHex);
@@ -149,6 +157,54 @@ public class FunctionsLib {
         if (argCount != 1)
             ss.error("getResult() can only be used with one argument, got %d.", argCount);
         return Value.string(CraftPresence.CLIENT.getResult(ss.pop().toString()));
+    }
+
+    public static Value isValidId(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("isValidId() can only be used with one argument, got %d.", argCount);
+        return Value.bool(DiscordAssetUtils.isValidId(ss.pop().toString()));
+    }
+
+    public static Value isValidAsset(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("isValidAsset() can only be used with one argument, got %d.", argCount);
+        return Value.bool(DiscordAssetUtils.contains(ss.pop().toString()));
+    }
+
+    public static Value isCustomAsset(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("isCustomAsset() can only be used with one argument, got %d.", argCount);
+        return Value.bool(DiscordAssetUtils.isCustom(ss.pop().toString()));
+    }
+
+    public static Value getAsset(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("getAsset() can only be used with one argument, got %d.", argCount);
+        return Value.object(DiscordAssetUtils.get(ss.pop().toString()));
+    }
+
+    public static Value getAssetKey(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("getAssetKey() can only be used with one argument, got %d.", argCount);
+        return Value.string(DiscordAssetUtils.getKey(ss.pop().toString()));
+    }
+
+    public static Value getAssetId(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("getAssetId() can only be used with one argument, got %d.", argCount);
+        return Value.string(DiscordAssetUtils.getId(ss.pop().toString()));
+    }
+
+    public static Value getAssetType(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("getAssetType() can only be used with one argument, got %d.", argCount);
+        return Value.object(DiscordAssetUtils.getType(ss.pop().toString()));
+    }
+
+    public static Value getAssetUrl(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("getAssetUrl() can only be used with one argument, got %d.", argCount);
+        return Value.string(DiscordAssetUtils.getUrl(ss.pop().toString()));
     }
 
     public static Value getFirst(Starscript ss, int argCount) {
