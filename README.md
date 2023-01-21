@@ -222,7 +222,7 @@ The following functions are available for use anywhere in CraftPresence:
 * `hasWhitespace(input)` - Whether the specified string contains whitespace characters
 * `getJsonElement(url|jsonString, path=Object...)` - Retrieves the json element from the specified content, or null if
   unable
-* `asIcon(input)` - Converts a String into a Valid and Acceptable Icon Format
+* `asIcon(input, whitespaceIndex ?: '', lowerCase=Boolean ?: isCustomAsset)` - Converts a String into a Valid and Acceptable Icon Format
 * `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
 * `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
   able
@@ -234,7 +234,7 @@ The following functions are available for use anywhere in CraftPresence:
 * `asProperWord(input, avoid ?: false, skipSymbolReplacement ?: false, caseCheckTimes ?: -1)` - Converts input into a
   Properly Readable String
 * `replaceAnyCase(input, from, to)` - Replaces Data in a String with Case-Insensitivity
-* `hasAlphaNumeric(input)` - Whether the specified string contains alpha-numeric characters
+* `hasAlphaNumeric(input)` - Whether the specified string contains alphanumeric characters
 * `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
 * `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
 * `formatAddress(input, returnPort ?: false)` - Formats an IP Address based on Input

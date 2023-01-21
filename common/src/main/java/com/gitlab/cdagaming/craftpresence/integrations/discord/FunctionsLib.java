@@ -293,9 +293,21 @@ public class FunctionsLib {
     }
 
     public static Value asIcon(Starscript ss, int argCount) {
-        if (argCount != 1) ss.error("asIcon() requires 1 argument, got %d.", argCount);
+        if (argCount < 1 || argCount > 3)
+            ss.error("asIcon() can only be used with 1-3 arguments, got %d.", argCount);
+        Boolean lowerCase = null;
+        if (argCount == 3) {
+            lowerCase = ss.popBool("Third argument to asIcon() needs to be a boolean.");
+        }
+        String whitespaceIndex = "";
+        if (argCount >= 2) {
+            whitespaceIndex = ss.popString("Second argument to asIcon() needs to be a string.");
+        }
         String source = ss.popString("First argument to asIcon() needs to be a string.");
-        return Value.string(StringUtils.formatAsIcon(source));
+        if (lowerCase == null) {
+            lowerCase = !DiscordAssetUtils.isCustom(source);
+        }
+        return Value.string(StringUtils.formatAsIcon(source, whitespaceIndex, lowerCase));
     }
 
     public static Value asProperWord(Starscript ss, int argCount) {
