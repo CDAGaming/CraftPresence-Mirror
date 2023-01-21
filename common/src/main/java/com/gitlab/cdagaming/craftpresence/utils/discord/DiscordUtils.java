@@ -914,7 +914,6 @@ public class DiscordUtils {
         if (args != null && !args.isEmpty()) {
             for (Map.Entry<String, Supplier<Value>> argData : args.entrySet()) {
                 final String placeholderName = argData.getKey();
-                final Supplier<Value> placeholderValue = argData.getValue();
                 final String placeholderTranslation = String.format("%s.placeholders.%s.description",
                         ModUtils.MOD_ID,
                         placeholderName
@@ -946,13 +945,18 @@ public class DiscordUtils {
                     ));
                 }
 
-                if (addExtraData && placeholderValue != null) {
-                    final String tagValue = placeholderValue.get().toString();
-                    if (!StringUtils.isNullOrEmpty(tagValue)) {
-                        placeholderString.append(String.format("\\n ==> %s \"%s\"",
-                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
-                        ));
+                if (addExtraData) {
+                    final Supplier<Value> suppliedInfo = argData.getValue();
+
+                    if (suppliedInfo != null) {
+                        final Value rawValue = suppliedInfo.get();
+                        final String tagValue = rawValue.toString();
+                        if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
+                            placeholderString.append(String.format("\\n ==> %s \"%s\"",
+                                    ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                    (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
+                            ));
+                        }
                     }
                 }
             }

@@ -370,11 +370,12 @@ public class ScrollableListControl extends GuiSlot {
                     ));
                 }
                 if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {
-                    final Supplier<Value> placeholderValue = CraftPresence.CLIENT.getArgument(originalName);
+                    final Supplier<Value> suppliedInfo = CraftPresence.CLIENT.getArgument(originalName);
 
-                    if (placeholderValue != null) {
-                        final String tagValue = placeholderValue.get().toString();
-                        if (!StringUtils.isNullOrEmpty(tagValue)) {
+                    if (suppliedInfo != null) {
+                        final Value rawValue = suppliedInfo.get();
+                        final String tagValue = rawValue.toString();
+                        if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
                             hoverText.add(String.format("%s \"%s\"",
                                     ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
                                     (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
