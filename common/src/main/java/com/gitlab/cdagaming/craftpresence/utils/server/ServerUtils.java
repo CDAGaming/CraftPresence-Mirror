@@ -508,7 +508,7 @@ public class ServerUtils implements Module {
             final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
 
             resultData = primaryData != null ? primaryData : (alternateData != null ? alternateData : defaultData);
-            formattedIcon = StringUtils.formatAsIcon(currentIcon.replace(" ", "_"));
+            formattedIcon = StringUtils.formatAsIcon(currentIcon, "_");
 
             // Attempt to find alternative icons, if no overrides are present
             if (StringUtils.isNullOrEmpty(formattedIcon)) {
@@ -525,7 +525,7 @@ public class ServerUtils implements Module {
                     }
                     formattedIcon = formattedIP;
                 } else {
-                    formattedIcon = StringUtils.formatAsIcon(currentServer_Name.replace(" ", "_"));
+                    formattedIcon = StringUtils.formatAsIcon(currentServer_Name, "_");
                 }
             }
 
@@ -534,7 +534,7 @@ public class ServerUtils implements Module {
                 resultData = CraftPresence.CONFIG.statusMessages.lanData;
                 currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
                 final String dataIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
-                formattedIcon = StringUtils.formatAsIcon(dataIcon.replace(" ", "_"));
+                formattedIcon = StringUtils.formatAsIcon(dataIcon, "_");
             } else {
                 // NOTE: Server-Only Presence Updates
                 final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
@@ -563,7 +563,7 @@ public class ServerUtils implements Module {
             resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
             currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
             final String dataIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
-            formattedIcon = StringUtils.formatAsIcon(dataIcon.replace(" ", "_"));
+            formattedIcon = StringUtils.formatAsIcon(dataIcon, "_");
         }
         currentServerIcon = formattedIcon;
 

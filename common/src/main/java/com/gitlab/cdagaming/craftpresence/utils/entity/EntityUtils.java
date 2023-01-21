@@ -228,8 +228,8 @@ public class EntityUtils implements Module {
         final String currentTargetIcon = Config.isValidProperty(currentTargetData, "iconOverride") ? currentTargetData.getIconOverride() : CURRENT_TARGET_NAME;
         final String currentRidingIcon = Config.isValidProperty(currentRidingData, "iconOverride") ? currentRidingData.getIconOverride() : CURRENT_RIDING_NAME;
 
-        final String formattedTargetIcon = StringUtils.formatAsIcon(currentTargetIcon.replace(" ", "_"));
-        final String formattedRidingIcon = StringUtils.formatAsIcon(currentRidingIcon.replace(" ", "_"));
+        final String formattedTargetIcon = StringUtils.formatAsIcon(currentTargetIcon, "_");
+        final String formattedRidingIcon = StringUtils.formatAsIcon(currentRidingIcon, "_");
 
         CraftPresence.CLIENT.syncArgument("entity.default.icon", CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
 

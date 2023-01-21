@@ -97,6 +97,16 @@ public class DiscordAssetUtils {
     }
 
     /**
+     * Determines if the Specified Icon Key is present under the Custom Assets List
+     *
+     * @param key The Specified Icon Key to Check
+     * @return {@code true} if the Icon Key is present and able to be used
+     */
+    public static boolean isCustom(final String key) {
+        return contains(CUSTOM_ASSET_LIST, key);
+    }
+
+    /**
      * Retrieves the Specified {@link DiscordAsset} data from an Icon Key, if
      * present
      *
@@ -107,9 +117,8 @@ public class DiscordAssetUtils {
     public static DiscordAsset get(final Map<String, DiscordAsset> list, final String key) {
         String formattedKey = key;
         if (!StringUtils.isNullOrEmpty(formattedKey)) {
-            if (!list.equals(CUSTOM_ASSET_LIST) && !contains(CUSTOM_ASSET_LIST, formattedKey)) {
-                formattedKey = StringUtils.formatAsIcon(formattedKey.replace(" ", "_"));
-            }
+            formattedKey = StringUtils.formatAsIcon(formattedKey, "_",
+                    (e) -> !list.equals(CUSTOM_ASSET_LIST) && !isCustom(e));
 
             if (contains(list, formattedKey)) {
                 return list.get(formattedKey);

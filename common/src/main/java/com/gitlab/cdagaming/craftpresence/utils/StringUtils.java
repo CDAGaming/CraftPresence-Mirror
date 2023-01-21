@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.entity.Entity;
@@ -597,16 +598,18 @@ public class StringUtils {
     /**
      * Converts a String into a Valid and Acceptable Icon Format
      *
-     * @param original The original String to evaluate
+     * @param original        The original String to evaluate
+     * @param whitespaceIndex The string to replace whitespace with
+     * @param lowerCondition  The condition, that if true, makes the input lowercase
      * @return The converted and valid String, in an iconKey Format
      */
-    public static String formatAsIcon(final String original) {
+    public static String formatAsIcon(final String original, final String whitespaceIndex, final Predicate<String> lowerCondition) {
         String formattedKey = original;
         if (isNullOrEmpty(formattedKey)) {
             return formattedKey;
         } else {
             if (containsWhitespace(formattedKey)) {
-                formattedKey = formattedKey.replaceAll("\\s+", "");
+                formattedKey = formattedKey.replaceAll("\\s+", whitespaceIndex);
             }
             if (formattedKey.contains("'")) {
                 formattedKey = formattedKey.replaceAll("'", "");
@@ -626,8 +629,43 @@ public class StringUtils {
             if (STRIP_COLOR_PATTERN.matcher(formattedKey).find()) {
                 formattedKey = STRIP_COLOR_PATTERN.matcher(formattedKey).replaceAll("");
             }
-            return formattedKey.toLowerCase().trim();
+            if (lowerCondition.test(formattedKey)) {
+                formattedKey = formattedKey.toLowerCase();
+            }
+            return formattedKey.trim();
         }
+    }
+
+    /**
+     * Converts a String into a Valid and Acceptable Icon Format
+     *
+     * @param original        The original String to evaluate
+     * @param whitespaceIndex The string to replace whitespace with
+     * @return The converted and valid String, in an iconKey Format
+     */
+    public static String formatAsIcon(final String original, final String whitespaceIndex) {
+        return formatAsIcon(original, whitespaceIndex, (e) -> !DiscordAssetUtils.isCustom(e));
+    }
+
+    /**
+     * Converts a String into a Valid and Acceptable Icon Format
+     *
+     * @param original       The original String to evaluate
+     * @param lowerCondition The condition, that if true, makes the input lowercase
+     * @return The converted and valid String, in an iconKey Format
+     */
+    public static String formatAsIcon(final String original, final Predicate<String> lowerCondition) {
+        return formatAsIcon(original, "", lowerCondition);
+    }
+
+    /**
+     * Converts a String into a Valid and Acceptable Icon Format
+     *
+     * @param original The original String to evaluate
+     * @return The converted and valid String, in an iconKey Format
+     */
+    public static String formatAsIcon(final String original) {
+        return formatAsIcon(original, (e) -> !DiscordAssetUtils.isCustom(e));
     }
 
     /**
