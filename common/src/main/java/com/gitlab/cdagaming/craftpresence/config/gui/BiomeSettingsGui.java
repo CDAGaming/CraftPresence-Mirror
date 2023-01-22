@@ -159,7 +159,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 CraftPresence.GUIS.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                                                        CraftPresence.CLIENT.generateArgumentMessage("biome"))
+                                                                                        CraftPresence.CLIENT.generateArgumentMessage("biome."))
                                                                         ), screenInstance, true
                                                                 );
                                                             }
@@ -180,7 +180,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                 CraftPresence.GUIS.drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                                        CraftPresence.CLIENT.generateArgumentMessage("biome"))
+                                                        CraftPresence.CLIENT.generateArgumentMessage("biome."))
                                         ), this, true
                                 );
                             }
@@ -265,7 +265,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                    CraftPresence.CLIENT.generateArgumentMessage("biome"))
+                                    CraftPresence.CLIENT.generateArgumentMessage("biome."))
                     ), this, true
             );
         }
