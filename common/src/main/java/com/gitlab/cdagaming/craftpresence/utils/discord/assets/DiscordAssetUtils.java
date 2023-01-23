@@ -117,8 +117,9 @@ public class DiscordAssetUtils {
     public static DiscordAsset get(final Map<String, DiscordAsset> list, final String key) {
         String formattedKey = key;
         if (!StringUtils.isNullOrEmpty(formattedKey)) {
-            formattedKey = StringUtils.formatAsIcon(formattedKey, "_",
-                    (e) -> !list.equals(CUSTOM_ASSET_LIST) && !isCustom(e));
+            if (!list.equals(CUSTOM_ASSET_LIST) && !isCustom(formattedKey)) {
+                formattedKey = StringUtils.formatAsIcon(formattedKey, "_");
+            }
 
             if (contains(list, formattedKey)) {
                 return list.get(formattedKey);
