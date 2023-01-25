@@ -147,18 +147,26 @@ public class CommandUtils {
     }
 
     /**
-     * Synchronizes RPC Data towards that of being in a Loading State
+     * Synchronizes RPC Data related to the current Menu Module that's Active
+     *
+     * @param currentData the current Menu {@link ModuleData}
      */
-    public static void setLoadingPresence() {
-        final ModuleData currentData = CraftPresence.CONFIG.statusMessages.loadingData;
+    public static void syncMenuData(final ModuleData currentData) {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
+        final String formattedIcon = CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon);
 
         CraftPresence.CLIENT.clearPartyData(true, false);
         CraftPresence.CLIENT.syncOverride(currentData, "menu.message", "menu.icon");
         CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("menu.icon", CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon));
+        CraftPresence.CLIENT.syncArgument("menu.icon", formattedIcon);
+    }
 
+    /**
+     * Synchronizes RPC Data towards that of being in a Loading State
+     */
+    public static void setLoadingPresence() {
+        syncMenuData(CraftPresence.CONFIG.statusMessages.loadingData);
         isLoadingGame = true;
     }
 
@@ -172,14 +180,7 @@ public class CommandUtils {
             isLoadingGame = false;
         }
 
-        final ModuleData currentData = CraftPresence.CONFIG.statusMessages.mainMenuData;
-        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
-        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
-
-        CraftPresence.CLIENT.syncOverride(currentData, "menu.message", "menu.icon");
-        CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("menu.icon", CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon));
-
+        syncMenuData(CraftPresence.CONFIG.statusMessages.mainMenuData);
         isInMainMenu = true;
     }
 

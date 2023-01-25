@@ -508,10 +508,10 @@ public class ServerUtils implements Module {
             final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
 
             resultData = primaryData != null ? primaryData : (alternateData != null ? alternateData : defaultData);
-            formattedIcon = StringUtils.formatAsIcon(currentIcon, "_");
+            currentServerIcon = currentIcon;
 
             // Attempt to find alternative icons, if no overrides are present
-            if (StringUtils.isNullOrEmpty(formattedIcon)) {
+            if (StringUtils.isNullOrEmpty(currentServerIcon)) {
                 if (canUseEndpointIcon) {
                     if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(formattedIP)) {
                         CraftPresence.CONFIG.displaySettings.dynamicIcons.put(formattedIP,
@@ -523,9 +523,9 @@ public class ServerUtils implements Module {
                         DiscordAssetUtils.syncCustomAssets();
                         CraftPresence.CONFIG.save();
                     }
-                    formattedIcon = formattedIP;
+                    currentServerIcon = formattedIP;
                 } else {
-                    formattedIcon = StringUtils.formatAsIcon(currentServer_Name, "_");
+                    currentServerIcon = currentServer_Name;
                 }
             }
 
@@ -533,8 +533,7 @@ public class ServerUtils implements Module {
                 // NOTE: LAN-Only Presence Updates
                 resultData = CraftPresence.CONFIG.statusMessages.lanData;
                 currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
-                final String dataIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
-                formattedIcon = StringUtils.formatAsIcon(dataIcon, "_");
+                currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
             } else {
                 // NOTE: Server-Only Presence Updates
                 final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
@@ -562,14 +561,13 @@ public class ServerUtils implements Module {
             // NOTE: SinglePlayer-Only Presence Updates
             resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
             currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
-            final String dataIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
-            formattedIcon = StringUtils.formatAsIcon(dataIcon, "_");
+            currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
         }
-        currentServerIcon = formattedIcon;
+        formattedIcon = CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
         CraftPresence.CLIENT.syncOverride(resultData, "server.message", "server.icon");
         CraftPresence.CLIENT.syncArgument("server.message", currentServerMessage);
-        CraftPresence.CLIENT.syncArgument("server.icon", CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon));
+        CraftPresence.CLIENT.syncArgument("server.icon", formattedIcon);
         queuedForUpdate = false;
     }
 

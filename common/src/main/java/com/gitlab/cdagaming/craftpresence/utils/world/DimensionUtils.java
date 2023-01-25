@@ -150,7 +150,7 @@ public class DimensionUtils implements Module {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
         final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_DIMENSION_IDENTIFIER;
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-        final String formattedIcon = StringUtils.formatAsIcon(currentIcon, "_");
+        final String formattedIcon = CraftPresence.CLIENT.imageOf("dimension.icon", true, currentIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
         CraftPresence.CLIENT.syncArgument("dimension.default.icon", CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
@@ -158,7 +158,7 @@ public class DimensionUtils implements Module {
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "dimension.message", "dimension.icon");
         CraftPresence.CLIENT.syncArgument("dimension.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("dimension.icon", CraftPresence.CLIENT.imageOf("dimension.icon", true, formattedIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon));
+        CraftPresence.CLIENT.syncArgument("dimension.icon", formattedIcon);
     }
 
     /**

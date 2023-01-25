@@ -430,7 +430,7 @@ public class GuiUtils implements Module {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
         final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_GUI_NAME;
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-        final String formattedIcon = StringUtils.formatAsIcon(currentIcon, "_");
+        final String formattedIcon = CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
         CraftPresence.CLIENT.syncArgument("screen.default.icon", CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
@@ -440,7 +440,7 @@ public class GuiUtils implements Module {
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("screen.icon", CraftPresence.CLIENT.imageOf("screen.icon", true, formattedIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon));
+        CraftPresence.CLIENT.syncArgument("screen.icon", formattedIcon);
     }
 
     /**

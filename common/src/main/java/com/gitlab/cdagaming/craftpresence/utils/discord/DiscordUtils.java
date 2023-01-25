@@ -1124,23 +1124,25 @@ public class DiscordUtils {
         if (DiscordAssetUtils.syncCompleted && !StringUtils.isNullOrEmpty(evalStrings[0])) {
             final String primaryKey = evalStrings[0];
             if (!cachedImageData.containsKey(primaryKey)) {
-                final String defaultIcon = allowNull ? "" : (DiscordAssetUtils.contains(CraftPresence.CONFIG.generalSettings.defaultIcon) ? CraftPresence.CONFIG.generalSettings.defaultIcon : DiscordAssetUtils.getRandomAssetName());
+                final String defaultIcon = allowNull ? "" : StringUtils.getOrDefault(DiscordAssetUtils.getKey(CraftPresence.CONFIG.generalSettings.defaultIcon), DiscordAssetUtils.getRandomAssetName());
                 String finalKey = defaultIcon;
                 for (int i = 0; i < evalStrings.length; ) {
-                    final String evalString = evalStrings[i];
-                    if (DiscordAssetUtils.contains(evalString)) {
-                        if (showLogging && !evalString.equals(primaryKey)) {
-                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.fallback", primaryKey, evalString));
+                    final String currentString = evalStrings[i];
+                    final boolean isPrimaryEntry = currentString.equals(primaryKey);
+                    final DiscordAsset foundAsset = DiscordAssetUtils.get(currentString);
+                    if (foundAsset != null) {
+                        finalKey = foundAsset.getName();
+                        if (showLogging && !isPrimaryEntry) {
+                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.fallback", primaryKey, finalKey));
                         }
-                        finalKey = evalString;
                         break;
                     } else {
                         i++;
                         if (i < evalStrings.length) {
                             if (showLogging) {
-                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.fallback", evalString, evalStrings[i]));
-                                if (evalString.equals(primaryKey)) {
-                                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", evalString));
+                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.fallback", currentString, evalStrings[i]));
+                                if (isPrimaryEntry) {
+                                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", currentString));
                                 }
                             }
                         } else {

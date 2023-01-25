@@ -146,7 +146,7 @@ public class BiomeUtils implements Module {
         final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
         final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-        final String formattedIcon = StringUtils.formatAsIcon(currentIcon, "_");
+        final String formattedIcon = CraftPresence.CLIENT.imageOf("biome.icon", true, currentIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
 
         CraftPresence.CLIENT.syncArgument("biome.default.icon", CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
 
@@ -154,7 +154,7 @@ public class BiomeUtils implements Module {
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "biome.message", "biome.icon");
         CraftPresence.CLIENT.syncArgument("biome.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("biome.icon", CraftPresence.CLIENT.imageOf("biome.icon", true, formattedIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon));
+        CraftPresence.CLIENT.syncArgument("biome.icon", formattedIcon);
     }
 
     /**
