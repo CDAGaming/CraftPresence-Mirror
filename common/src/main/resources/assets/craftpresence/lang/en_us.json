@@ -344,7 +344,7 @@
   "craftpresence.placeholders.getJsonElement.description": "Retrieves the json element from the specified content, or null if unable",
   "craftpresence.placeholders.getJsonElement.usage": "getJsonElement(url|jsonString, path=Object...)",
   "craftpresence.placeholders.asIcon.description": "Converts a String into a Valid and Acceptable Icon Format",
-  "craftpresence.placeholders.asIcon.usage": "asIcon(input, whitespaceIndex ?: '', lowerCase=Boolean ?: isCustomAsset)",
+  "craftpresence.placeholders.asIcon.usage": "asIcon(input, whitespaceIndex ?: '')",
   "craftpresence.placeholders.rgbaToHex.description": "Converts the specified RGBA color into a Hexadecimal String",
   "craftpresence.placeholders.rgbaToHex.usage": "rgbaToHex(r,g,b,a ?: 255)",
   "craftpresence.placeholders.convertTime.description": "Convert the specified string into the specified date format, if able",
