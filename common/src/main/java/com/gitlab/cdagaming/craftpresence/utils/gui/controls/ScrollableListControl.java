@@ -51,7 +51,6 @@ import java.util.function.Supplier;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("unchecked")
 public class ScrollableListControl extends GuiSlot {
     /**
      * Mapping representing a link between the entries original name, and it's display name

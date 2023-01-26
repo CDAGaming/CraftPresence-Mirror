@@ -372,7 +372,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         synchronized (placeholderData) {
             final Map<String, Supplier<Value>> placeholders = Maps.newTreeMap(placeholderData);
             final String data = StringUtils.getOrDefault(input);
@@ -396,7 +397,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the processed string
      */
-    public VariableReplacementTransformer generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final VariableReplacementTransformer generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
         final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
         String data = StringUtils.getOrDefault(input);
 
@@ -508,7 +510,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final String getResult(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         final Value data = compileData(input, overrideId, plain, replacements).get();
         return !data.isNull() ? data.toString() : "";
     }
@@ -521,7 +524,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final Supplier<Value> compileData(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
         return compileData(input, overrideId, false, replacements);
     }
 
@@ -533,7 +537,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final String getResult(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
         return getResult(input, overrideId, false, replacements);
     }
 
@@ -545,7 +550,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final Supplier<Value> compileData(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         return compileData(input, null, plain, replacements);
     }
 
@@ -557,7 +563,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final String getResult(final String input, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         return getResult(input, null, plain, replacements);
     }
 
@@ -568,7 +575,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the supplier containing the output
      */
-    public Supplier<Value> compileData(final String input, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final Supplier<Value> compileData(final String input, final Pair<String, Supplier<String>>... replacements) {
         return compileData(input, false, replacements);
     }
 
@@ -579,7 +587,8 @@ public class DiscordUtils {
      * @param replacements A mapping of additional replacements to perform
      * @return the result of the supplier containing the output
      */
-    public String getResult(final String input, final Pair<String, Supplier<String>>... replacements) {
+    @SafeVarargs
+    public final String getResult(final String input, final Pair<String, Supplier<String>>... replacements) {
         return getResult(input, false, replacements);
     }
 
