@@ -807,6 +807,13 @@ public class DiscordUtils {
         }
     }
 
+    /**
+     * Whether the specified {@link Value} matches the specified type
+     *
+     * @param type The {@link Value} type to interpret
+     * @param data The {@link Value} to interpret
+     * @return {@link Boolean#TRUE} if both the type and its condition is satisfied
+     */
     public boolean matchesType(final String type, final Value data) {
         switch (type) {
             case "function":
