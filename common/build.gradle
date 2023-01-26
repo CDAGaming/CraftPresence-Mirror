@@ -27,9 +27,9 @@ minecraft {
 
 remapJar {
     if (isJarMod && protocol <= 2) { // MC a1.1.2_01 and below
-        targetNamespace = "searge"
+        target = "searge"
     } else {
-        targetNamespace = "named"
+        target = (isLegacy || protocol < 498) ? "mcp" : "mojmap"
     }
 }
 

@@ -65,15 +65,16 @@ processResources {
 }
 
 exportMappings {
+    def target = (isLegacy || protocol < 498) ? "mcp" : "mojmap"
     export("CLIENT") {
-        targetNamespace = ["named"]
+        targetNamespaces = [target]
         sourceNamespace = "intermediary"
         location = "$projectDir/src/main/resources/mappings-fabric.srg"
         type = "SRG"
     }
 
     export("COMBINED") {
-        targetNamespace = ["named"]
+        targetNamespaces = [target]
         sourceNamespace = "intermediary"
         location = "$projectDir/src/main/resources/mappings-fabric.srg"
         type = "SRG"

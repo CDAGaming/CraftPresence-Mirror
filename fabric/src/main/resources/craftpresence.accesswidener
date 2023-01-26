@@ -1,4 +1,4 @@
-accessWidener   v2  named
+accessWidener   v2  mcp
 
 accessible    field    net/minecraft/client/settings/KeyBinding    CATEGORY_ORDER    Ljava/util/Map;
 mutable    field    net/minecraft/client/settings/KeyBinding    CATEGORY_ORDER    Ljava/util/Map;
