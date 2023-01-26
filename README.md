@@ -233,7 +233,7 @@ The following functions are available for use anywhere in CraftPresence:
   Invokes the specified Method in the Target Class via Reflection
 * `asProperWord(input, avoid ?: false, skipSymbolReplacement ?: false, caseCheckTimes ?: -1)` - Converts input into a
   Properly Readable String
-* `replaceAnyCase(input, from, to)` - Replaces Data in a String with Case-Insensitivity
+* `replaceAnyCase(input, data=[from, to]...)` - Replaces Data in a String with Case-Insensitivity
 * `hasAlphaNumeric(input)` - Whether the specified string contains alphanumeric characters
 * `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
 * `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String

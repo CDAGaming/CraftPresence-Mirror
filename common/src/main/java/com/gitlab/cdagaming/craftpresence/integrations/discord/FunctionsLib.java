@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -39,6 +40,7 @@ import org.meteordev.starscript.value.Value;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -276,11 +278,32 @@ public class FunctionsLib {
     }
 
     public static Value replaceAnyCase(Starscript ss, int argCount) {
-        if (argCount != 3) ss.error("replaceAnyCase() requires 3 arguments, got %d.", argCount);
-        String to = ss.popString("Third argument to replaceAnyCase() needs to be a string.");
-        String from = ss.popString("Second argument to replaceAnyCase() needs to be a string.");
-        String source = ss.popString("First argument to replaceAnyCase() needs to be a string.");
-        return Value.string(StringUtils.replaceAnyCase(source, from, to));
+        final List<String> args = Lists.newArrayList();
+        if (argCount < 3)
+            ss.error("replaceAnyCase() requires at least 3 arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop().toString());
+        }
+        StringUtils.revlist(args);
+
+        // Parse, then remove the source string from arguments
+        String source = args.get(0);
+        args.remove(0);
+
+        Map<String, String> data = Maps.newHashMap();
+        String tempKey = null;
+        for (String param : args) {
+            if (StringUtils.isNullOrEmpty(tempKey)) {
+                tempKey = param;
+            } else {
+                data.put(tempKey, param);
+                tempKey = null;
+            }
+        }
+        if (!StringUtils.isNullOrEmpty(tempKey)) {
+            ss.error("Incomplete data supplied for replaceAnyCase(), please check input and documentation.");
+        }
+        return Value.string(StringUtils.sequentialReplaceAnyCase(source, data));
     }
 
     public static Value length(Starscript ss, int argCount) {

@@ -360,7 +360,7 @@
   "craftpresence.placeholders.asProperWord.description": "Converts input into a Properly Readable String",
   "craftpresence.placeholders.asProperWord.usage": "asProperWord(input, avoid ?: false, skipSymbolReplacement ?: false, caseCheckTimes ?: -1)",
   "craftpresence.placeholders.replaceAnyCase.description": "Replaces Data in a String with Case-Insensitivity",
-  "craftpresence.placeholders.replaceAnyCase.usage": "replaceAnyCase(input, from, to)",
+  "craftpresence.placeholders.replaceAnyCase.usage": "replaceAnyCase(input, data=[from, to]...)",
   "craftpresence.placeholders.hasAlphaNumeric.description": "Whether the specified string contains alphanumeric characters",
   "craftpresence.placeholders.hasAlphaNumeric.usage": "hasAlphaNumeric(input)",
   "craftpresence.placeholders.isColor.description": "Determines whether an inputted String classifies as a valid Color Code",
