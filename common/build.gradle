@@ -64,7 +64,9 @@ dependencies {
     // Java-Specific Dependencies
     shade("com.kohlschutter.junixsocket:junixsocket-common:${isLegacy ? "2.4.0" : "2.6.1"}")
     shade("com.kohlschutter.junixsocket:junixsocket-native-common:${isLegacy ? "2.4.0" : "2.6.1"}")
+    // Annotations
     implementation "com.google.code.findbugs:jsr305:3.0.2"
+    implementation "org.jetbrains:annotations:24.0.0"
 
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${rootProject.ipc_version}")
