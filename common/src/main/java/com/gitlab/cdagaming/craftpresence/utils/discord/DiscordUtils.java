@@ -618,7 +618,7 @@ public class DiscordUtils {
      * @param data The data to attach to the specified argument
      * @param args The Specified Arguments to Synchronize for
      */
-    public void syncOverride(ModuleData data, String... args) {
+    public void syncOverride(final ModuleData data, final String... args) {
         PresenceData presenceInfo = null;
         if (data != null && Config.getProperty(data, "data") != null) {
             presenceInfo = data.getData();
@@ -656,21 +656,11 @@ public class DiscordUtils {
     }
 
     /**
-     * Sync {@link ModuleData} overrides for the specified placeholder
-     *
-     * @param argumentName The Specified Argument to Synchronize for
-     * @param data         The data to attach to the specified argument
-     */
-    public void syncOverride(String argumentName, ModuleData data) {
-        syncOverride(data, argumentName);
-    }
-
-    /**
      * Remove {@link ModuleData} overrides for the specified placeholder
      *
      * @param args The Specified Argument(s) to interpret
      */
-    public void clearOverride(String... args) {
+    public void clearOverride(final String... args) {
         for (String argumentName : args) {
             if (!StringUtils.isNullOrEmpty(argumentName) && overrideData.containsKey(argumentName)) {
                 final ModuleData oldData = overrideData.get(argumentName);
@@ -692,7 +682,7 @@ public class DiscordUtils {
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
      */
-    public void syncArgument(String argumentName, Supplier<Value> data) {
+    public void syncArgument(final String argumentName, final Supplier<Value> data) {
         synchronized (placeholderData) {
             if (!StringUtils.isNullOrEmpty(argumentName)) {
                 scriptEngine.set(argumentName, data);
@@ -708,7 +698,7 @@ public class DiscordUtils {
      * @param data         The data to attach to the Specified Argument
      * @param plain        Whether the expression should be parsed as a plain string
      */
-    public void syncArgument(String argumentName, Object data, final boolean plain) {
+    public void syncArgument(final String argumentName, final Object data, final boolean plain) {
         syncArgument(argumentName, () -> {
             if (data instanceof Number) {
                 return Value.number(((Number) data).doubleValue());
@@ -732,7 +722,7 @@ public class DiscordUtils {
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
      */
-    public void syncArgument(String argumentName, Object data) {
+    public void syncArgument(final String argumentName, final Object data) {
         syncArgument(argumentName, data, false);
     }
 
@@ -741,7 +731,7 @@ public class DiscordUtils {
      *
      * @param args The Arguments to Initialize
      */
-    public void initArgument(String... args) {
+    public void initArgument(final String... args) {
         // Initialize Specified Arguments to Empty Data
         for (String argumentName : args) {
             syncArgument(argumentName, Value::null_);
@@ -879,7 +869,7 @@ public class DiscordUtils {
      * @param args The string formats to interpret
      * @return A List of the entries that satisfy the method conditions
      */
-    public List<String> getRawArgumentEntries(final String... args) {
+    public List<String> getArgumentEntries(final String... args) {
         return getArgumentEntries(false, args);
     }
 
@@ -1224,11 +1214,11 @@ public class DiscordUtils {
     /**
      * Clears Related Party Session Information from the RPC, and updates if needed
      *
-     * @param clearRequesterData Whether to clear Ask to Join / Spectate Request Data
-     * @param updateRPC          Whether to immediately update the RPC following changes
+     * @param clearRequestData Whether to clear Ask to Join / Spectate Request Data
+     * @param updateRPC        Whether to immediately update the RPC following changes
      */
-    public void clearPartyData(boolean clearRequesterData, boolean updateRPC) {
-        if (clearRequesterData) {
+    public void clearPartyData(final boolean clearRequestData, final boolean updateRPC) {
+        if (clearRequestData) {
             awaitingReply = false;
             REQUESTER_USER = null;
             CraftPresence.SYSTEM.TIMER = 0;
@@ -1247,7 +1237,7 @@ public class DiscordUtils {
      *
      * @param partyClearArgs Arguments for {@link DiscordUtils#clearPartyData(boolean, boolean)}
      */
-    public void clearPresenceData(Tuple<Boolean, Boolean, Boolean> partyClearArgs) {
+    public void clearPresenceData(final Tuple<Boolean, Boolean, Boolean> partyClearArgs) {
         GAME_STATE = "";
         DETAILS = "";
         LARGE_IMAGE_ASSET = null;
@@ -1323,8 +1313,8 @@ public class DiscordUtils {
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
         for (Map.Entry<String, Button> buttonElement : configData.buttons.entrySet()) {
-            JsonObject buttonObj = new JsonObject();
-            String overrideId = "button_" + (BUTTONS.size() + 1);
+            final JsonObject buttonObj = new JsonObject();
+            final String overrideId = "button_" + (BUTTONS.size() + 1);
             if (!StringUtils.isNullOrEmpty(buttonElement.getKey()) &&
                     !buttonElement.getKey().equalsIgnoreCase("default") &&
                     !StringUtils.isNullOrEmpty(buttonElement.getValue().label)) {

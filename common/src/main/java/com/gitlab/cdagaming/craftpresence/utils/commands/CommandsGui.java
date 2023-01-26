@@ -275,7 +275,7 @@ public class CommandsGui extends ExtendedScreen {
                         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.search");
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
                         final List<String> results = Lists.newArrayList(
-                                CraftPresence.CLIENT.getArgumentEntries(false, executionCommandArgs[1])
+                                CraftPresence.CLIENT.getArgumentEntries(executionCommandArgs[1])
                         );
 
                         if (!results.isEmpty()) {
