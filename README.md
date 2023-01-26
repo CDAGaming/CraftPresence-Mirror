@@ -238,6 +238,14 @@ The following functions are available for use anywhere in CraftPresence:
 * `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
 * `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
 * `formatAddress(input, returnPort ?: false)` - Formats an IP Address based on Input
+* `getAsset(input)` - Retrieves the Specified DiscordAsset data from an Icon Key, if present
+* `getAssetId(input)` - Retrieves the Parsed Icon ID from the specified key, if present
+* `getAssetKey(input)` - Retrieves the Parsed Icon Key from the specified key, if present
+* `getAssetType(input)` - Retrieves the Parsed Image Type from the specified key, if present
+* `getAssetUrl(input)` - Retrieves the Parsed Image Url from the specified key, if present
+* `isCustomAsset(input)` - Determines if the Specified Icon Key is present under the Custom Assets List
+* `isValidAsset(input)` - Determines if the Specified Icon Key is present under the Current Client ID
+* `isValidId(input)` - Determines if the specified Client ID is valid
 * `nullOrEmpty(input, allowWhitespace ?: false)` - Determines whether a String classifies as NULL or EMPTY
 * `length(input)` - Returns the length of the specified string
 * `toCamelCase(input)` - Converts a String into a Valid and Acceptable Camel-Case Format
