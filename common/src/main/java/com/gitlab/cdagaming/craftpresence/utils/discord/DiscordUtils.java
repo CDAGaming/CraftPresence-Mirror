@@ -78,7 +78,6 @@ import java.util.function.Supplier;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("unchecked")
 public class DiscordUtils {
     /**
      * A mapping of the arguments that have overwritten module data
