@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 /**
  * Migration from SimpleRPC (Hypherion) Config to our {@link Config} format
  */
-@SuppressWarnings({"unchecked", "SameParameterValue"})
+@SuppressWarnings("unchecked")
 public class HypherConverter implements DataMigrator {
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
@@ -305,6 +305,14 @@ public class HypherConverter implements DataMigrator {
             this.configVersion = configVersion;
             this.serverEntryVersion = serverEntryVersion;
             this.replayModVersion = replayModVersion;
+        }
+
+        @Override
+        public String toString() {
+            return "ConfigFlag[key=" + (StringUtils.getOrDefault(name(), "N/A")) +
+                    "; configVersion=" + configVersion +
+                    "; serverEntryVersion=" + serverEntryVersion +
+                    "; replayModVersion=" + replayModVersion + "]";
         }
     }
 }
