@@ -107,7 +107,7 @@ public class CommandsGui extends ExtendedScreen {
      *
      * @param original The Original String to check against
      * @param region   The region to check for a match
-     * @return {@code true} if the region matches the start of the string
+     * @return {@code Boolean#TRUE} if the region matches the start of the string
      */
     private static boolean doesStringStartWith(String original, String region) {
         return region.regionMatches(true, 0, original, 0, original.length());

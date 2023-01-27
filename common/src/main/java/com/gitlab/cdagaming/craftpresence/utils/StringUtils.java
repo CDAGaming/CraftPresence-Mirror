@@ -428,7 +428,7 @@ public class StringUtils {
      *
      * @param entry           The String to evaluate
      * @param allowWhitespace Whether to allow whitespace strings
-     * @return {@code true} if Entry is classified as NULL or EMPTY
+     * @return {@link Boolean#TRUE} if Entry is classified as NULL or EMPTY
      */
     public static boolean isNullOrEmpty(String entry, final boolean allowWhitespace) {
         if (entry != null) {
@@ -441,7 +441,7 @@ public class StringUtils {
      * Determines whether a String classifies as NULL or EMPTY
      *
      * @param entry The String to evaluate
-     * @return {@code true} if Entry is classified as NULL or EMPTY
+     * @return {@link Boolean#TRUE} if Entry is classified as NULL or EMPTY
      */
     public static boolean isNullOrEmpty(final String entry) {
         return isNullOrEmpty(entry, false);
@@ -451,7 +451,7 @@ public class StringUtils {
      * Determines whether the Object's String Interpretation classifies as a valid Boolean
      *
      * @param entry The Object to evaluate
-     * @return {@code true} if Entry is classified as a valid Boolean
+     * @return {@link Boolean#TRUE} if Entry is classified as a valid Boolean
      */
     public static boolean isValidBoolean(final Object entry) {
         return entry != null && isValidBoolean(entry.toString());
@@ -461,7 +461,7 @@ public class StringUtils {
      * Determines whether a String classifies as a valid Boolean
      *
      * @param entry The String to evaluate
-     * @return {@code true} if Entry is classified as a valid Boolean
+     * @return {@link Boolean#TRUE} if Entry is classified as a valid Boolean
      */
     public static boolean isValidBoolean(final String entry) {
         return !isNullOrEmpty(entry) && (entry.equalsIgnoreCase("true") || entry.equalsIgnoreCase("false"));
@@ -471,7 +471,7 @@ public class StringUtils {
      * Determines whether an inputted String classifies as a valid Color Code
      *
      * @param entry The String to evaluate
-     * @return {@code true} if Entry is classified as a valid Color Code
+     * @return {@link Boolean#TRUE} if Entry is classified as a valid Color Code
      */
     public static boolean isValidColorCode(final String entry) {
         return !isNullOrEmpty(entry) && ((entry.startsWith("#") || entry.length() == 6) || entry.startsWith("0x") || getValidInteger(entry).getFirst());
@@ -1128,7 +1128,7 @@ public class StringUtils {
      *
      * @param data  The Array of Strings to check within
      * @param index The index to check
-     * @return {@code true} if the index element exists in the list with a non-null value
+     * @return {@link Boolean#TRUE} if the index element exists in the list with a non-null value
      */
     public static boolean elementExists(final String[] data, final int index) {
         return elementExists(Arrays.asList(data), index);
@@ -1139,7 +1139,7 @@ public class StringUtils {
      *
      * @param data  The List of Strings to check within
      * @param index The index to check
-     * @return {@code true} if the index element exists in the list with a non-null value
+     * @return {@link Boolean#TRUE} if the index element exists in the list with a non-null value
      */
     public static boolean elementExists(final List<String> data, final int index) {
         boolean result;

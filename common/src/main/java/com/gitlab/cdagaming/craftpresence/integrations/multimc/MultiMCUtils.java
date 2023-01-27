@@ -63,7 +63,7 @@ public class MultiMCUtils {
      * Determines if the Configuration Data has the specified property
      *
      * @param key The property to search for
-     * @return {@code true} if the property exists in the Configuration Data
+     * @return {@link Boolean#TRUE} if the property exists in the Configuration Data
      */
     public static boolean contains(String key) {
         return configFile.containsKey(key);

@@ -152,7 +152,7 @@ public class ScrollableListControl extends GuiSlot {
      *
      * @param mouseX The Mouse's Current X Position
      * @param mouseY The Mouse's Current Y Position
-     * @return {@code true} if the Mouse Position is within the bounds of the list
+     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the list
      */
     public boolean isWithinBounds(int mouseX, int mouseY) {
         return CraftPresence.GUIS.isMouseWithin(mouseX, mouseY, top, bottom, left, right);
@@ -185,7 +185,7 @@ public class ScrollableListControl extends GuiSlot {
      * Whether the Specified Slot Number is the Currently Selected Slot
      *
      * @param slotIndex The Slot's ID Number to check
-     * @return {@code true} if the Slot Number is the Currently Selected Slot
+     * @return {@link Boolean#TRUE} if the Slot Number is the Currently Selected Slot
      */
     @Override
     public boolean isSelected(int slotIndex) {

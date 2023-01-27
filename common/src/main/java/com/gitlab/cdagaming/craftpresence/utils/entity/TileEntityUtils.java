@@ -265,7 +265,7 @@ public class TileEntityUtils implements Module {
      * Determines whether the Specified Item classifies as NULL or EMPTY
      *
      * @param item The Item to Evaluate
-     * @return {@code true} if the Item classifies as NULL or EMPTY
+     * @return {@link Boolean#TRUE} if the Item classifies as NULL or EMPTY
      */
     private boolean isEmpty(final Item item) {
         return item == null || isEmpty(getDefaultInstance(item));
@@ -275,7 +275,7 @@ public class TileEntityUtils implements Module {
      * Determines whether the Specified Block classifies as NULL or EMPTY
      *
      * @param block The Block to evaluate
-     * @return {@code true} if the Block classifies as NULL or EMPTY
+     * @return {@link Boolean#TRUE} if the Block classifies as NULL or EMPTY
      */
     private boolean isEmpty(final Block block) {
         return block == null || isEmpty(Item.getItemFromBlock(block));
@@ -295,7 +295,7 @@ public class TileEntityUtils implements Module {
      * Determines whether the Specified ItemStack classifies as NULL or EMPTY
      *
      * @param itemStack The ItemStack to evaluate
-     * @return {@code true} if the ItemStack classifies as NULL or EMPTY
+     * @return {@link Boolean#TRUE} if the ItemStack classifies as NULL or EMPTY
      */
     private boolean isEmpty(final ItemStack itemStack) {
         if (itemStack == null || itemStack.equals(EMPTY_STACK)) {

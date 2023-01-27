@@ -85,7 +85,7 @@ public class KeyUtils {
      * 1) Is Not Contained or Listed within {@link KeyUtils#invalidKeys}
      *
      * @param sourceKeyCode The Source KeyCode to Check
-     * @return {@code true} if and only if a Valid KeyCode
+     * @return {@link Boolean#TRUE} if and only if a Valid KeyCode
      */
     public static boolean isValidKeyCode(int sourceKeyCode) {
         return !invalidKeys.contains(sourceKeyCode);
@@ -97,7 +97,7 @@ public class KeyUtils {
      * 1) Is Not Contained or Listed within {@link KeyUtils#clearKeys}
      *
      * @param sourceKeyCode The Source KeyCode to Check
-     * @return {@code true} if and only if a Valid KeyCode
+     * @return {@link Boolean#TRUE} if and only if a Valid KeyCode
      */
     public static boolean isValidClearCode(int sourceKeyCode) {
         if (clearKeys.isEmpty()) {
@@ -174,7 +174,7 @@ public class KeyUtils {
     /**
      * Retrieve if the keybindings are successfully registered to necessary systems
      *
-     * @return {@code true} if and only if the keybindings are successfully registered
+     * @return {@link Boolean#TRUE} if and only if the keybindings are successfully registered
      */
     public boolean areKeysRegistered() {
         return keysRegistered;

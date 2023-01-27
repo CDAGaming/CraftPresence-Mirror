@@ -67,7 +67,7 @@ public class DiscordAssetUtils {
      * Determines if the specified Client ID is valid
      *
      * @param clientId The id to interpret
-     * @return {@code true} if the client ID is valid
+     * @return {@link Boolean#TRUE} if the client ID is valid
      */
     public static boolean isValidId(final String clientId) {
         return !StringUtils.isNullOrEmpty(clientId) &&
@@ -80,7 +80,7 @@ public class DiscordAssetUtils {
      *
      * @param list The list to iterate through
      * @param key  The Specified Icon Key to Check
-     * @return {@code true} if the Icon Key is present and able to be used
+     * @return {@link Boolean#TRUE} if the Icon Key is present and able to be used
      */
     public static boolean contains(final Map<String, DiscordAsset> list, final String key) {
         return !StringUtils.isNullOrEmpty(key) && list.containsKey(key);
@@ -90,7 +90,7 @@ public class DiscordAssetUtils {
      * Determines if the Specified Icon Key is present under the Current Client ID
      *
      * @param key The Specified Icon Key to Check
-     * @return {@code true} if the Icon Key is present and able to be used
+     * @return {@link Boolean#TRUE} if the Icon Key is present and able to be used
      */
     public static boolean contains(final String key) {
         return contains(ASSET_LIST, key);
@@ -100,7 +100,7 @@ public class DiscordAssetUtils {
      * Determines if the Specified Icon Key is present under the Custom Assets List
      *
      * @param key The Specified Icon Key to Check
-     * @return {@code true} if the Icon Key is present and able to be used
+     * @return {@link Boolean#TRUE} if the Icon Key is present and able to be used
      */
     public static boolean isCustom(final String key) {
         return contains(CUSTOM_ASSET_LIST, key);
