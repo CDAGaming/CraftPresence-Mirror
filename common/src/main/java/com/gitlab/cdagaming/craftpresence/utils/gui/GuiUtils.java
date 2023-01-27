@@ -227,6 +227,21 @@ public class GuiUtils implements Module {
     /**
      * Determines if the Mouse is over an element, following the defined Arguments
      *
+     * @param mouseX   The Mouse's Current X Position
+     * @param mouseY   The Mouse's Current Y Position
+     * @param topIn    The top-most boundary of the zone
+     * @param bottomIn The bottom-most boundary of the zone
+     * @param leftIn   The left-most boundary of the zone
+     * @param rightIn  The right-most boundary of the zone
+     * @return {@code true} if the Mouse Position is within the bounds of the object, and thus is over it
+     */
+    public boolean isMouseWithin(final double mouseX, final double mouseY, final double topIn, final double bottomIn, final double leftIn, final double rightIn) {
+        return mouseY >= topIn && mouseY <= bottomIn && mouseX >= leftIn && mouseX <= rightIn;
+    }
+
+    /**
+     * Determines if the Mouse is over an element, following the defined Arguments
+     *
      * @param mouseX        The Mouse's Current X Position
      * @param mouseY        The Mouse's Current Y Position
      * @param elementX      The Object's starting X Position

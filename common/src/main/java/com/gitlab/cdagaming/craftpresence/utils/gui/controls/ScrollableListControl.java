@@ -148,6 +148,17 @@ public class ScrollableListControl extends GuiSlot {
     }
 
     /**
+     * Retrieves whether the specified position is within list bounds
+     *
+     * @param mouseX The Mouse's Current X Position
+     * @param mouseY The Mouse's Current Y Position
+     * @return {@code true} if the Mouse Position is within the bounds of the list
+     */
+    public boolean isWithinBounds(int mouseX, int mouseY) {
+        return CraftPresence.GUIS.isMouseWithin(mouseX, mouseY, top, bottom, left, right);
+    }
+
+    /**
      * Retrieves the Amount of Items in the List
      *
      * @return The Amount of Items in the List
@@ -400,7 +411,8 @@ public class ScrollableListControl extends GuiSlot {
         }
         getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 
-        if (CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn)) {
+        final boolean isOverEntry = CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn);
+        if (isWithinBounds(mouseXIn, mouseYIn) && isOverEntry) {
             currentHoverText = hoverText;
         }
     }
