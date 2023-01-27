@@ -1,9 +1,10 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.gradle.internal.jvm.Jvm
 
 import java.nio.file.Files
 
 plugins {
-    id 'xyz.wagyourtail.unimined' version '0.3.13-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '0.3.14-SNAPSHOT' apply false
     id "com.diffplug.spotless" version "6.13.0" apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
@@ -207,14 +208,15 @@ subprojects {
                 }
                 var classpath = project.sourceSets.main.runtimeClasspath
                 var classpathString = classpath.files.collect { it.absolutePath }.join(File.pathSeparator)
-                var javahome = System.getProperty("java.home")
+                var javahome = Jvm.current().getJavaHome().getAbsolutePath()
                 var javaexe = javahome + File.separator + "bin" + File.separator + "java"
                 if (System.getProperty("os.name").toLowerCase().contains("win") && !System.getProperty("os.name").toLowerCase().contains("darwin")) {
                     javaexe += ".exe"
                 }
+                var destDir = compileJava.destinationDirectory.getAsFile().getOrNull()
                 var processBuilder = new ProcessBuilder(
                         javaexe,
-                        "-Dretrolambda.inputDir=${compileJava.destinationDirectory.toString().replace("\\", "\\\\").replace(" ", "\\ ")}",
+                        "-Dretrolambda.inputDir=${destDir.toString().replace("\\", "\\\\").replace(" ", "\\ ")}",
                         "-Dretrolambda.classpath=${classpathString.replace("\\", "\\\\").replace(" ", "\\ ")}",
                         "-Dretrolambda.defaultMethods=true",
                         "-Dretrolambda.bytecodeVersion=51",
@@ -222,7 +224,7 @@ subprojects {
                         "-jar",
                         retrolambdaFile.absolutePath.toString().replace("\\", "\\\\").replace(" ", "\\ "),
                 )
-                var outputLog = new File("${rootProject.buildDir}/retrolambda/${project.path.replace(":", "_")}output.log")
+                var outputLog = new File("${rootProject.buildDir}/retrolambda/${project.path.replace(":", "_")}-output.log")
                 processBuilder.redirectOutput(outputLog)
                 processBuilder.redirectError(outputLog)
                 var process = processBuilder.start()
