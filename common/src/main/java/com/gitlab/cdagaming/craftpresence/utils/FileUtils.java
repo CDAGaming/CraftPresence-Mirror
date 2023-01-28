@@ -360,7 +360,12 @@ public class FileUtils {
      * @return the valid {@link Class} or null
      */
     public static Class<?> findValidClass(ClassLoader loader, final boolean init, final String... paths) {
+        final List<String> classList = Lists.newArrayList(paths);
         for (String path : paths) {
+            StringUtils.addEntriesNotPresent(classList, MappingUtils.getUnmappedClassesMatching(path, true));
+        }
+
+        for (String path : classList) {
             try {
                 if (loader == null) {
                     return Class.forName(path);

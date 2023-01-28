@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 /**
  * Mapping Utilities used to convert between different Mojang Mapping Types
@@ -104,20 +105,42 @@ public class MappingUtils {
     /**
      * Retrieve a list of unmapped class names matching the specified argument
      *
-     * @param start The string to interpret
+     * @param start          The string to interpret
+     * @param matchCondition The condition that, when satisfied, will add to the resulting list
      * @return the resulting list of unmapped class names
      */
-    public static Set<String> getUnmappedClassesMatching(String start) {
+    public static Set<String> getUnmappedClassesMatching(String start, BiPredicate<String, String> matchCondition) {
         final Set<String> matches = new HashSet<>();
         start = start.replace(".", "/");
 
         for (Map.Entry<String, String> entry : getClassMap().entrySet()) {
-            if (entry.getValue().startsWith(start)) {
+            if (matchCondition.test(entry.getValue(), start)) {
                 matches.add(entry.getKey().replace("/", "."));
             }
         }
 
         return matches;
+    }
+
+    /**
+     * Retrieve a list of unmapped class names matching the specified argument
+     *
+     * @param start The string to interpret
+     * @param exact Whether to only return exact matches (using startsWith by default)
+     * @return the resulting list of unmapped class names
+     */
+    public static Set<String> getUnmappedClassesMatching(String start, boolean exact) {
+        return getUnmappedClassesMatching(start, exact ? String::equals : String::startsWith);
+    }
+
+    /**
+     * Retrieve a list of unmapped class names matching the specified argument
+     *
+     * @param start The string to interpret
+     * @return the resulting list of unmapped class names
+     */
+    public static Set<String> getUnmappedClassesMatching(String start) {
+        return getUnmappedClassesMatching(start, false);
     }
 
     /**

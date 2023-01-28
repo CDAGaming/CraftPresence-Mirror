@@ -155,7 +155,13 @@ public class ScrollableListControl extends GuiSlot {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the list
      */
     public boolean isWithinBounds(int mouseX, int mouseY) {
-        return CraftPresence.GUIS.isMouseWithin(mouseX, mouseY, top, bottom, left, right);
+        return CraftPresence.GUIS.isMouseWithin(
+                mouseX, mouseY,
+                top,
+                bottom,
+                left,
+                right
+        );
     }
 
     /**
