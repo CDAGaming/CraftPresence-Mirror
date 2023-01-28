@@ -73,6 +73,12 @@ subprojects {
         }
     }
 
+    remapJar {
+        if (isJarMod) {
+            setEnv("CLIENT")
+        }
+    }
+
     repositories {
         flatDir {
             dirs "$rootDir/libs"
