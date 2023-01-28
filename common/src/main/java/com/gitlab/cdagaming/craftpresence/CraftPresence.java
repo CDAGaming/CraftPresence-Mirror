@@ -144,10 +144,25 @@ public class CraftPresence {
     private boolean initialized = false;
 
     /**
+     * If specified, this callback runs on initial launch, once initialized
+     */
+    private final Runnable initCallback;
+
+    /**
+     * Begins Scheduling Ticks on Class Initialization
+     *
+     * @param callback The callback to run upon post-initialization
+     */
+    public CraftPresence(Runnable callback) {
+        this.initCallback = callback;
+        scheduleTick();
+    }
+
+    /**
      * Begins Scheduling Ticks on Class Initialization
      */
     public CraftPresence() {
-        scheduleTick();
+        this(null);
     }
 
     /**
@@ -207,6 +222,9 @@ public class CraftPresence {
                 ex.printStackTrace();
             }
         } finally {
+            if (initCallback != null) {
+                initCallback.run();
+            }
             initialized = true;
         }
     }

@@ -40,8 +40,7 @@ public class CraftPresenceFabric implements ClientModInitializer {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-fabric.srg");
-        new CraftPresence();
-        setupIntegrations();
+        new CraftPresence(this::setupIntegrations);
     }
 
     /**
