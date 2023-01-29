@@ -39,11 +39,16 @@ CraftPresence will detect whether your Launch Directory contains:
 * A MCUpdater Instance (instance.json)
 * A Technic installedPacks File (installedPacks)
 
-If using any of these launchers, it'll put the packs name in your display as well as show its icon (when not in a
-server).
+If using any of these launchers, note the following:
 
-Note: In v1.6.0 and above, it'll instead parse the Pack's name into the `&PACK&` placeholder, that you can configure for
-usage in the RPC
+* Prior to v1.6.0, it'll put the packs name in your display as well as show its icon (when not in a
+  server)
+* From v1.6.0 until v2.0.0, it'll instead parse the Pack's name into the `&PACK&` placeholder, that you can configure
+  for
+  usage in the RPC
+* In v2.0, the pack's info is instead parsed into the `pack.name` and `pack.icon` placeholders, that you can configure
+  for
+  usage in the RPC
 
 As an example, this is how the mod will convert a pack's name to an iconKey:
 

@@ -137,16 +137,14 @@ public class CraftPresence {
      * Whether {@link ModUtils#IS_VERBOSE} has been overridden pre-setup
      */
     public static boolean isVerboseStatusOverridden = false;
-
-    /**
-     * Whether the Mod has completed its Initialization Phase
-     */
-    private boolean initialized = false;
-
     /**
      * If specified, this callback runs on initial launch, once initialized
      */
     private final Runnable initCallback;
+    /**
+     * Whether the Mod has completed its Initialization Phase
+     */
+    private boolean initialized = false;
 
     /**
      * Begins Scheduling Ticks on Class Initialization

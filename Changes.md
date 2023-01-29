@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.0.0 Beta 1 (02/09/2023)
+## v2.0.0 Beta 1 (01/31/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-beta.1)_
@@ -9,11 +9,13 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 * Java 7 is no longer supported! (You should be using at least Java 8 by now!)
     * The mod will still display as using Java 7 bytecode on legacy versions, but will be utilizing Java 8 APIs
-    * The mod will crash on initialization with a `RuntimeException` when used on anything below Java 8
+    * The mod will crash on initialization with a `UnsupportedOperationException` when used on anything below Java 8
 * Reworked the way placeholders are interpreted to utilize [Starscript](https://github.com/MeteorDevelopment/starscript)
     * This integration will allow for significantly more flexibility and overall control over placeholders and how they
       can be used
     * Due to this change, all placeholder names have been adjusted (See the `Placeholders` section of this changelog)
+    * Over 40+ new functions have also been added, including Reflection, JSON, and additional backend utilities for
+      users to create custom placeholders with!
     * Additionally, the `allowPlaceholderOperators` option has been removed, due to being redundant
     * Several new commands, such as `/cp compile` and `/cp search` have also been implemented
 * Adjusted module logic to perform within their own sub-threads, in an effort to avoid waiting on them to retrieve data
@@ -42,9 +44,11 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
       Discord Asset List, and doing similar activity for the player's head icon.
 * Multiple Accessibility improvements have been made to the GUI in an effort to be more descriptive and user-friendly
 * Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
-* Added support for transferring a Simple RPC (By HypherionSA) config to CraftPresence (With permission, of course!)
+* Added support for transferring
+  a [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) config to
+  CraftPresence (With permission, of course!)
 * Removed the ViveCraft Message Option and Fallback Placeholder Message
-    * Alpha Note: The ViveCraft Option will be replaced by something before v2.0 fully releases!
+    * Developer Note: You can now use Starscript functions to make custom placeholders for specific brands
 * UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
     * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
 * Backend: Increased the default text limit for all `ExtendedTextControl`'s
@@ -61,7 +65,7 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 * Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
   the `buttonBackgroundColor` setting
 * Fixed issues that could occur when `setControlMessage` was fired with a null argument
-* Fixed the UUID placeholders in `&IGN&` being available, even if it wasn't a valid UUID
+* Fixed the UUID placeholders in `&IGN&` (Now known as `player.*`) being available, even if it wasn't a valid UUID
 * Fixed a regression in MultiMC-type instance detection from `v1.9.0` that caused a normal error to not be suppressed
   properly
 * Fixed multiple issues preventing the ability to hide placeholder output depending on a per-module value
