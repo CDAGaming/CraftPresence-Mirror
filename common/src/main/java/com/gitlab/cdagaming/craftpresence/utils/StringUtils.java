@@ -107,15 +107,15 @@ public class StringUtils {
     public static Color getColorFromHex(final String hexColor) {
         try {
             if (hexColor.length() == 7 && !StringUtils.isNullOrEmpty(hexColor.substring(1))) {
-                int r = Integer.valueOf(hexColor.substring(1, 3), 16);
-                int g = Integer.valueOf(hexColor.substring(3, 5), 16);
-                int b = Integer.valueOf(hexColor.substring(5, 7), 16);
+                final int r = Integer.valueOf(hexColor.substring(1, 3), 16);
+                final int g = Integer.valueOf(hexColor.substring(3, 5), 16);
+                final int b = Integer.valueOf(hexColor.substring(5, 7), 16);
 
                 return new Color(r, g, b);
             } else if (hexColor.length() == 6 && !hexColor.startsWith("#")) {
-                int r = Integer.valueOf(hexColor.substring(0, 2), 16);
-                int g = Integer.valueOf(hexColor.substring(2, 4), 16);
-                int b = Integer.valueOf(hexColor.substring(4, 6), 16);
+                final int r = Integer.valueOf(hexColor.substring(0, 2), 16);
+                final int g = Integer.valueOf(hexColor.substring(2, 4), 16);
+                final int b = Integer.valueOf(hexColor.substring(4, 6), 16);
 
                 return new Color(r, g, b);
             } else {
@@ -133,7 +133,7 @@ public class StringUtils {
      * @param encoding The Charset to encode the bytes under
      * @return The processed byte array
      */
-    public static byte[] getBytes(String original, String encoding) {
+    public static byte[] getBytes(final String original, final String encoding) {
         try {
             if (!StringUtils.isNullOrEmpty(encoding)) {
                 return original.getBytes(encoding);
@@ -153,7 +153,7 @@ public class StringUtils {
      * @param decode   If we are Decoding an already encoded String
      * @return The converted UTF_8 String, if successful
      */
-    public static String convertString(String original, String encoding, boolean decode) {
+    public static String convertString(final String original, final String encoding, final boolean decode) {
         try {
             if (decode) {
                 return new String(getBytes(original, null), encoding);
@@ -172,7 +172,7 @@ public class StringUtils {
      * @param places The amount of places to round upon
      * @return The rounded Double value
      */
-    public static double roundDouble(double value, int places) {
+    public static double roundDouble(final double value, final int places) {
         if (places < 0) {
             return value;
         }
@@ -187,7 +187,7 @@ public class StringUtils {
      * @param color The original Java Color Type to interpret
      * @return The converted hexadecimal String
      */
-    public static String getHexFromColor(Color color) {
+    public static String getHexFromColor(final Color color) {
         return "0x" + toSafeHexValue(color.getAlpha()) + toSafeHexValue(color.getRed()) + toSafeHexValue(color.getGreen()) + toSafeHexValue(color.getBlue());
     }
 
@@ -197,8 +197,8 @@ public class StringUtils {
      * @param number The original number
      * @return The converted and compatible hexadecimal String
      */
-    private static String toSafeHexValue(int number) {
-        StringBuilder builder = new StringBuilder(Integer.toHexString(number & 0xff));
+    private static String toSafeHexValue(final int number) {
+        final StringBuilder builder = new StringBuilder(Integer.toHexString(number & 0xff));
         while (builder.length() < 2) {
             builder.append("0");
         }
@@ -579,8 +579,8 @@ public class StringUtils {
         if (isNullOrEmpty(original)) {
             return original;
         } else {
-            String[] words = original.split("[\\W_]+");
-            StringBuilder builder = new StringBuilder();
+            final String[] words = original.split("[\\W_]+");
+            final StringBuilder builder = new StringBuilder();
             for (int i = 0; i < words.length; i++) {
                 String word = words[i];
                 if (i == 0) {
@@ -738,7 +738,7 @@ public class StringUtils {
      * @param <T>      The list type
      * @return the resulting list
      */
-    public static <T> List<T> addEntriesNotPresent(List<T> original, List<T> newList) {
+    public static <T> List<T> addEntriesNotPresent(final List<T> original, List<T> newList) {
         for (T entry : newList) {
             if (!original.contains(entry)) {
                 original.add(entry);
@@ -756,7 +756,7 @@ public class StringUtils {
      * @param <T>      The list type
      * @return the resulting list
      */
-    public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, List<T> newList) {
+    public static <T> List<T> addEntriesNotPresent(final List<T> original, final Predicate<? super T> filter, List<T> newList) {
         newList = newList.stream().filter(filter).collect(Collectors.toList());
         return addEntriesNotPresent(original, newList);
     }
@@ -769,7 +769,7 @@ public class StringUtils {
      * @param <T>      The list type
      * @return the resulting list
      */
-    public static <T> List<T> addEntriesNotPresent(List<T> original, Set<T> newList) {
+    public static <T> List<T> addEntriesNotPresent(final List<T> original, Set<T> newList) {
         return addEntriesNotPresent(original, Lists.newArrayList(newList));
     }
 
@@ -782,7 +782,7 @@ public class StringUtils {
      * @param <T>      The list type
      * @return the resulting list
      */
-    public static <T> List<T> addEntriesNotPresent(List<T> original, Predicate<? super T> filter, Set<T> newList) {
+    public static <T> List<T> addEntriesNotPresent(final List<T> original, final Predicate<? super T> filter, Set<T> newList) {
         newList = newList.stream().filter(filter).collect(Collectors.toSet());
         return addEntriesNotPresent(original, newList);
     }
@@ -971,16 +971,15 @@ public class StringUtils {
      * @param text The original String to evaluate
      * @return The formatting and color codes found within the input
      */
-    public static String getFormatFromString(String text) {
+    public static String getFormatFromString(final String text) {
+        final int stringLength = text.length();
         StringBuilder s = new StringBuilder();
         int index = -1;
-        int stringLength = text.length();
 
         while ((index = text.indexOf(167, index + 1)) != -1) {
             if (index < stringLength - 1) {
-                char currentCharacter = text.charAt(index + 1);
-
-                String charString = String.valueOf(currentCharacter);
+                final char currentCharacter = text.charAt(index + 1);
+                final String charString = String.valueOf(currentCharacter);
                 if (STRIP_COLOR_PATTERN.matcher(charString).find()) {
                     s = new StringBuilder(COLOR_CHAR + charString);
                 }
@@ -1053,7 +1052,7 @@ public class StringUtils {
      * @param str The String to capitalize
      * @return The capitalized output string
      */
-    public static String capitalizeWord(String str) {
+    public static String capitalizeWord(final String str) {
         return capitalizeWord(str, -1);
     }
 
@@ -1159,11 +1158,11 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      * @return The Found Field Data, if any
      */
-    public static Object getField(Class<?> classToAccess, Object instance, String... fieldNames) {
+    public static Object getField(final Class<?> classToAccess, final Object instance, final String... fieldNames) {
         for (String fieldName : fieldNames) {
             try {
                 if (hasField(classToAccess, fieldName)) {
-                    Field lookupField = classToAccess.getDeclaredField(fieldName);
+                    final Field lookupField = classToAccess.getDeclaredField(fieldName);
                     lookupField.setAccessible(true);
                     return lookupField.get(instance);
                 }
@@ -1184,7 +1183,7 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      * @return The Found Field Data, if any
      */
-    public static Object getField(String classToAccess, Object instance, String... fieldNames) {
+    public static Object getField(final String classToAccess, final Object instance, final String... fieldNames) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
             return getField(foundClass, instance, fieldNames);
@@ -1200,7 +1199,7 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      * @return The Found Field Data, if any
      */
-    public static Object getField(Object classToAccess, Object instance, String... fieldNames) {
+    public static Object getField(final Object classToAccess, final Object instance, final String... fieldNames) {
         if (classToAccess instanceof String) {
             return getField((String) classToAccess, instance, fieldNames);
         } else {
@@ -1244,16 +1243,17 @@ public class StringUtils {
      * @param instance      An Instance of the Class, if needed
      * @param fieldData     A Pair with the format of fieldName:valueToSet:modifierData
      */
-    public static void updateField(Class<?> classToAccess, Object instance, Tuple<?, ?, ?>... fieldData) {
-        for (Tuple<?, ?, ?> currentData : fieldData) {
+    @SafeVarargs
+    public static void updateField(final Class<?> classToAccess, final Object instance, final Tuple<String, Object, Integer>... fieldData) {
+        for (Tuple<String, Object, Integer> currentData : fieldData) {
             try {
-                Field lookupField = classToAccess.getDeclaredField(currentData.getFirst().toString());
+                final Field lookupField = classToAccess.getDeclaredField(currentData.getFirst());
                 lookupField.setAccessible(true);
 
                 if (currentData.getThird() != null) {
-                    Field modifiersField = Field.class.getDeclaredField("modifiers");
+                    final Field modifiersField = Field.class.getDeclaredField("modifiers");
                     modifiersField.setAccessible(true);
-                    modifiersField.setInt(lookupField, lookupField.getModifiers() & Integer.parseInt(currentData.getThird().toString()));
+                    modifiersField.setInt(lookupField, lookupField.getModifiers() & currentData.getThird());
                 }
 
                 lookupField.set(instance, currentData.getSecond());
@@ -1275,7 +1275,8 @@ public class StringUtils {
      * @param instance      An Instance of the Class, if needed
      * @param fieldData     A Pair with the format of fieldName:valueToSet:modifierData
      */
-    public static void updateField(String classToAccess, Object instance, Tuple<?, ?, ?>... fieldData) {
+    @SafeVarargs
+    public static void updateField(final String classToAccess, final Object instance, final Tuple<String, Object, Integer>... fieldData) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
             updateField(foundClass, instance, fieldData);
