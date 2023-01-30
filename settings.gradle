@@ -29,7 +29,9 @@ pluginManagement {
 }
 
 include('common')
-include('fabric')
-include('forge')
+
+for (String loaderName : rootProject.enabled_platforms.split(",")) {
+    include(loaderName)
+}
 
 rootProject.name = 'craftpresence'
