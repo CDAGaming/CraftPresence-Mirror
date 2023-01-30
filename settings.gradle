@@ -30,7 +30,7 @@ pluginManagement {
 
 include('common')
 
-for (String loaderName : rootProject.enabled_platforms.split(",")) {
+for (String loaderName : enabled_platforms.split(",")) {
     include(loaderName)
 }
 
