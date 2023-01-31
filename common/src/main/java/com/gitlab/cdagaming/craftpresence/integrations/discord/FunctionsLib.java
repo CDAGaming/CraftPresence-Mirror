@@ -446,12 +446,12 @@ public class FunctionsLib {
         String fieldName;
         Object instance, result = null;
         if (argCount == 2) {
-            fieldName = ss.popString("Second argument to getField() needs to be a string.");
-            instance = ss.popObject("First argument to getField() needs to be an object.");
+            fieldName = ss.popString("Second argument to getField(instance, fieldName) needs to be a string.");
+            instance = CraftPresence.CLIENT.fromValue(ss.pop());
             result = StringUtils.getField(instance.getClass(), instance, fieldName);
         } else {
-            fieldName = ss.popString("Third argument to getField() needs to be a string.");
-            instance = ss.popObject("Second argument to getField() needs to be an object.");
+            fieldName = ss.popString("Third argument to getField(classObj, instance, fieldName) needs to be a string.");
+            instance = CraftPresence.CLIENT.fromValue(ss.pop());
 
             Value classObject = ss.pop();
             if (classObject.isObject()) {
@@ -572,19 +572,7 @@ public class FunctionsLib {
                         parameterTypes.add(classObj);
                     }
                 } else {
-                    if (data.isBool()) {
-                        parameters.add(data.getBool());
-                    } else if (data.isNumber()) {
-                        parameters.add(data.getNumber());
-                    } else if (data.isString()) {
-                        parameters.add(data.getString());
-                    } else if (data.isObject()) {
-                        parameters.add(data.getObject());
-                    } else if (data.isNull()) {
-                        parameters.add(null);
-                    } else {
-                        ss.error("Object argument for executeMethod() parameters is not in a supported type.");
-                    }
+                    parameters.add(CraftPresence.CLIENT.fromValue(data));
                 }
                 classMode = !classMode;
             }

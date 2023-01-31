@@ -707,21 +707,7 @@ public class DiscordUtils {
      * @param plain        Whether the expression should be parsed as a plain string
      */
     public void syncArgument(final String argumentName, final Object data, final boolean plain) {
-        syncArgument(argumentName, () -> {
-            if (data instanceof Number) {
-                return Value.number(((Number) data).doubleValue());
-            } else if (data instanceof Boolean) {
-                return Value.bool((Boolean) data);
-            } else if (data instanceof ValueMap) {
-                return Value.map((ValueMap) data);
-            } else if (data instanceof SFunction) {
-                return Value.function((SFunction) data);
-            } else if (data instanceof String) {
-                return compileData(data.toString(), plain).get();
-            } else {
-                return data != null ? Value.object(data) : Value.null_();
-            }
-        });
+        syncArgument(argumentName, () -> toValue(data, plain));
     }
 
     /**
@@ -763,6 +749,51 @@ public class DiscordUtils {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Converts a {@link Value} to its {@link Object} representation
+     *
+     * @param data the data to interpret
+     * @return the {@link Object} representation
+     */
+    public Object fromValue(final Value data) {
+        if (data.isNumber()) {
+            return data.getNumber();
+        } else if (data.isBool()) {
+            return data.getBool();
+        } else if (data.isMap()) {
+            return data.getMap();
+        } else if (data.isFunction()) {
+            return data.getFunction();
+        } else if (data.isString()) {
+            return data.getString();
+        } else {
+            return data.isObject() ? data.getObject() : null;
+        }
+    }
+
+    /**
+     * Converts an {@link Object} to its {@link Value} representation
+     *
+     * @param data  the data to interpret
+     * @param plain If true, when the data is a string, determines the expression should be parsed as a plain string
+     * @return the {@link Value} representation
+     */
+    public Value toValue(final Object data, final boolean plain) {
+        if (data instanceof Number) {
+            return Value.number(((Number) data).doubleValue());
+        } else if (data instanceof Boolean) {
+            return Value.bool((Boolean) data);
+        } else if (data instanceof ValueMap) {
+            return Value.map((ValueMap) data);
+        } else if (data instanceof SFunction) {
+            return Value.function((SFunction) data);
+        } else if (data instanceof String) {
+            return compileData(data.toString(), plain).get();
+        } else {
+            return data != null ? Value.object(data) : Value.null_();
         }
     }
 
