@@ -24,6 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
+import com.google.common.base.Throwables;
+import sun.misc.Unsafe;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -31,13 +36,6 @@ import java.lang.reflect.Modifier;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import sun.misc.Unsafe;
-
-import com.google.common.base.Throwables;
 
 /**
  * Utilities for {@link java.lang.reflect.Field} reflection, compatible with Java 8-19. Can read and write to final
@@ -47,8 +45,6 @@ public class FieldReflectionUtils {
 
     private static final Unsafe UNSAFE;
     private static final MethodHandles.Lookup mhLookup = MethodHandles.lookup();
-
-    private FieldReflectionUtils() {}
 
     static {
         try {
@@ -60,16 +56,33 @@ public class FieldReflectionUtils {
         }
     }
 
+    private FieldReflectionUtils() {
+    }
+
+    /**
+     * Creates a type-safe fields accessor for the given class.
+     */
+    @Nonnull
+    public static <T> ClassFields<T> ofClass(@Nonnull Class<T> klass) {
+        return new ClassFields<>(Objects.requireNonNull(klass));
+    }
+
     /**
      * How to look up a field in the class?
      */
     public enum LookupType {
 
-        /** Look at the public API (using {@link Class#getField(String)}) */
+        /**
+         * Look at the public API (using {@link Class#getField(String)})
+         */
         PUBLIC,
-        /** Look at the fields declared in the exact class specified (using {@link Class#getDeclaredField(String)}) */
+        /**
+         * Look at the fields declared in the exact class specified (using {@link Class#getDeclaredField(String)})
+         */
         DECLARED,
-        /** Like {@link LookupType#DECLARED}, but also look in superclasses */
+        /**
+         * Like {@link LookupType#DECLARED}, but also look in superclasses
+         */
         DECLARED_IN_HIERARCHY;
 
         /**
@@ -102,14 +115,6 @@ public class FieldReflectionUtils {
             }
             return null;
         }
-    }
-
-    /**
-     * Creates a type-safe fields accessor for the given class.
-     */
-    @Nonnull
-    public static <T> ClassFields<T> ofClass(@Nonnull Class<T> klass) {
-        return new ClassFields<>(Objects.requireNonNull(klass));
     }
 
     public static class ClassFields<C> {

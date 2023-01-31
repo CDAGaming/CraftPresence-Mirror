@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.config.element;
 
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
