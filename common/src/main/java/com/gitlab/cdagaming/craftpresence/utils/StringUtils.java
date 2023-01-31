@@ -1244,19 +1244,14 @@ public class StringUtils {
      * @param fieldData     A Pair with the format of fieldName:valueToSet:modifierData
      */
     @SafeVarargs
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static void updateField(final Class<?> classToAccess, final Object instance, final Tuple<String, Object, Integer>... fieldData) {
+        final FieldReflectionUtils.ClassFields classFields = FieldReflectionUtils.ofClass(classToAccess);
         for (Tuple<String, Object, Integer> currentData : fieldData) {
             try {
-                final Field lookupField = classToAccess.getDeclaredField(currentData.getFirst());
-                lookupField.setAccessible(true);
+                FieldReflectionUtils.ClassFields.Field lookupField = classFields.getUntypedField(FieldReflectionUtils.LookupType.DECLARED, currentData.getFirst());
+                lookupField.setValue(instance, currentData.getSecond());
 
-                if (currentData.getThird() != null) {
-                    final Field modifiersField = Field.class.getDeclaredField("modifiers");
-                    modifiersField.setAccessible(true);
-                    modifiersField.setInt(lookupField, lookupField.getModifiers() & currentData.getThird());
-                }
-
-                lookupField.set(instance, currentData.getSecond());
                 if (ModUtils.IS_VERBOSE) {
                     ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.update.dynamic", currentData.toString(), classToAccess.getName()));
                 }
