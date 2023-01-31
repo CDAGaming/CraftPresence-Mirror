@@ -484,7 +484,7 @@ public class FunctionsLib {
         if (argCount != 2) ss.error("hasField() requires 2 arguments, got %d.", argCount);
         String b = ss.popString("Second argument to hasField() needs to be a string.");
         String a = ss.popString("First argument to hasField() needs to be a string.");
-        return Value.bool(StringUtils.hasField(a, b));
+        return Value.bool(StringUtils.getValidField(a, b).getFirst());
     }
 
     public static Value executeMethod(Starscript ss, int argCount) {

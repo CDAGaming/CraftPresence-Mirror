@@ -452,9 +452,9 @@ public final class Config extends Module implements Serializable {
                 Map data = new HashMap((Map) fieldData.getSecond());
                 data.put(fieldData.getThird(), value);
 
-                StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), new Tuple<>(parentData.getThird(), data, null));
+                StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), new Pair<>(parentData.getThird(), data));
             } else {
-                StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Tuple<>(fieldData.getThird(), value, null));
+                StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Pair<>(fieldData.getThird(), value));
             }
         }
     }

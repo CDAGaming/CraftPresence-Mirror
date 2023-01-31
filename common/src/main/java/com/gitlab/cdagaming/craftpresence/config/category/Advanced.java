@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
@@ -76,6 +76,6 @@ public class Advanced extends Module implements Serializable {
 
     @Override
     public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(Advanced.class, this, new Tuple<>(name, value, null));
+        StringUtils.updateField(Advanced.class, this, new Pair<>(name, value));
     }
 }

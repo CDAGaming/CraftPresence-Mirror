@@ -34,7 +34,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 
 import java.awt.*;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -50,6 +49,7 @@ import java.util.stream.Collectors;
  *
  * @author CDAGaming
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class StringUtils {
     /**
      * The unknown identifier for Base64 data
@@ -1159,20 +1159,12 @@ public class StringUtils {
      * @return The Found Field Data, if any
      */
     public static Object getField(final Class<?> classToAccess, final Object instance, final String... fieldNames) {
-        for (String fieldName : fieldNames) {
-            try {
-                if (hasField(classToAccess, fieldName)) {
-                    final Field lookupField = classToAccess.getDeclaredField(fieldName);
-                    lookupField.setAccessible(true);
-                    return lookupField.get(instance);
-                }
-            } catch (Throwable ex) {
-                if (ModUtils.IS_VERBOSE) {
-                    ex.printStackTrace();
-                }
-            }
+        final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, fieldNames);
+        if (result.getFirst()) {
+            return result.getSecond().getValue(instance);
+        } else {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -1214,26 +1206,44 @@ public class StringUtils {
      * Retrieves whether the specified class contains the specified field name
      *
      * @param classToAccess The class to access with the field(s)
-     * @param fieldName     The Field name to search for
+     * @param fieldNames    A List of Field Names to search for
      * @return whether the specified class contains the specified field name
      */
-    public static boolean hasField(final Class<?> classToAccess, final String fieldName) {
-        return Lists.newArrayList(classToAccess.getDeclaredFields()).stream().anyMatch(f -> f.getName().equals(fieldName));
+    public static Pair<Boolean, FieldReflectionUtils.ClassFields.Field> getValidField(final Class<?> classToAccess, final String... fieldNames) {
+        final FieldReflectionUtils.ClassFields classFields = FieldReflectionUtils.ofClass(classToAccess);
+        final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = new Pair<>(false, null);
+        for (String fieldName : fieldNames) {
+            try {
+                final FieldReflectionUtils.ClassFields.Field lookupField = classFields.getUntypedField(
+                        FieldReflectionUtils.LookupType.DECLARED, fieldName
+                );
+                if (lookupField != null) {
+                    result.setFirst(true);
+                    result.setSecond(lookupField);
+                    break;
+                }
+            } catch (Throwable ex) {
+                if (ModUtils.IS_VERBOSE) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return result;
     }
 
     /**
      * Retrieves whether the specified class contains the specified field name
      *
      * @param classToAccess The class to access with the field(s)
-     * @param fieldName     The Field name to search for
+     * @param fieldNames    A List of Field Names to search for
      * @return whether the specified class contains the specified field name
      */
-    public static boolean hasField(final String classToAccess, final String fieldName) {
+    public static Pair<Boolean, FieldReflectionUtils.ClassFields.Field> getValidField(final String classToAccess, final String... fieldNames) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
-            return hasField(foundClass, fieldName);
+            return getValidField(foundClass, fieldNames);
         }
-        return false;
+        return new Pair<>(false, null);
     }
 
     /**
@@ -1241,23 +1251,16 @@ public class StringUtils {
      *
      * @param classToAccess The class to access with the field(s)
      * @param instance      An Instance of the Class, if needed
-     * @param fieldData     A Pair with the format of fieldName:valueToSet:modifierData
+     * @param fieldData     A Pair with the format of fieldName:valueToSet
      */
     @SafeVarargs
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void updateField(final Class<?> classToAccess, final Object instance, final Tuple<String, Object, Integer>... fieldData) {
-        final FieldReflectionUtils.ClassFields classFields = FieldReflectionUtils.ofClass(classToAccess);
-        for (Tuple<String, Object, Integer> currentData : fieldData) {
-            try {
-                FieldReflectionUtils.ClassFields.Field lookupField = classFields.getUntypedField(FieldReflectionUtils.LookupType.DECLARED, currentData.getFirst());
-                lookupField.setValue(instance, currentData.getSecond());
-
+    public static void updateField(final Class<?> classToAccess, final Object instance, final Pair<String, Object>... fieldData) {
+        for (Pair<String, Object> currentData : fieldData) {
+            final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, currentData.getFirst());
+            if (result.getFirst()) {
+                result.getSecond().setValue(instance, currentData.getSecond());
                 if (ModUtils.IS_VERBOSE) {
                     ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.update.dynamic", currentData.toString(), classToAccess.getName()));
-                }
-            } catch (Exception ex) {
-                if (ModUtils.IS_VERBOSE) {
-                    ex.printStackTrace();
                 }
             }
         }
@@ -1271,7 +1274,7 @@ public class StringUtils {
      * @param fieldData     A Pair with the format of fieldName:valueToSet:modifierData
      */
     @SafeVarargs
-    public static void updateField(final String classToAccess, final Object instance, final Tuple<String, Object, Integer>... fieldData) {
+    public static void updateField(final String classToAccess, final Object instance, final Pair<String, Object>... fieldData) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
             updateField(foundClass, instance, fieldData);
