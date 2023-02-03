@@ -279,7 +279,6 @@
   "craftpresence.placeholders.general.icon.description": "The default display icon",
   "craftpresence.placeholders.general.version.description": "The Minecraft version label",
   "craftpresence.placeholders.general.mods.description": "The amount of mods currently in your mods folder",
-  "craftpresence.placeholders.general.time.description": "The Current RPC Starting Timestamp",
   "craftpresence.placeholders.menu.message.description": "The main menu's display data, while applicable",
   "craftpresence.placeholders.menu.icon.description": "The main menu's display icon, while applicable",
   "craftpresence.placeholders.pack.name.description": "The currently detected pack's name",
