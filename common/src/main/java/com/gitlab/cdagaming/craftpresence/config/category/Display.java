@@ -43,7 +43,8 @@ public class Display extends Module implements Serializable {
             .setLargeImage("{getFirst(menu.icon, dimension.icon)}",
                     "{getFirst(menu.message, dimension.message)}")
             .setSmallImage("{getFirst(server.icon, pack.icon)}",
-                    "{getOrDefault(server.message)} {getOrDefault(pack.name)}");
+                    "{getOrDefault(server.message)} {getOrDefault(pack.name)}")
+            .setStartTime("{general.time}");
     public Map<String, String> dynamicIcons = new HashMap<String, String>() {
         private static final long serialVersionUID = 4900744874595923346L;
 

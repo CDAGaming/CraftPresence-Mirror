@@ -52,7 +52,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
     private final boolean isDefaultModule;
     private final Consumer<PresenceData> onChangedCallback;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
-            smallImageKeyFormat, largeImageKeyFormat;
+            smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
 
     PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
@@ -163,10 +163,28 @@ public class PresenceSettingsGui extends PaginatedScreen {
         smallImageKeyFormat.setControlMessage(PRESENCE.smallImageKey);
         largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
 
+        startTimeFormat = addControl(
+                new ExtendedTextControl(
+                        getFontRenderer(),
+                        calc2, CraftPresence.GUIS.getButtonY(3),
+                        180, 20
+                ), startPage + 1
+        );
+        endTimeFormat = addControl(
+                new ExtendedTextControl(
+                        getFontRenderer(),
+                        calc2, CraftPresence.GUIS.getButtonY(4),
+                        180, 20
+                ), startPage + 1
+        );
+
+        startTimeFormat.setControlMessage(PRESENCE.startTimestamp);
+        endTimeFormat.setControlMessage(PRESENCE.endTimestamp);
+
         // Button Messages Button
         addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(3),
+                        calc1, CraftPresence.GUIS.getButtonY(5),
                         180, 20,
                         "gui.config.name.display.button_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -247,7 +265,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         // Dynamic Icons Button
         addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(3),
+                        calc2, CraftPresence.GUIS.getButtonY(5),
                         180, 20,
                         "gui.config.name.display.dynamic_icons",
                         () -> CraftPresence.GUIS.openScreen(
@@ -344,7 +362,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
         // Dynamic Variables Button
         addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(4),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(6),
                         180, 20,
                         "gui.config.name.display.dynamic_variables",
                         () -> CraftPresence.GUIS.openScreen(
@@ -462,6 +480,16 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.smallImageKey = smallImageKeyFormat.getControlMessage();
                     }
+                    if (!startTimeFormat.getControlMessage().equals(PRESENCE.startTimestamp)) {
+                        CraftPresence.CONFIG.hasChanged = true;
+                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                        PRESENCE.startTimestamp = startTimeFormat.getControlMessage();
+                    }
+                    if (!endTimeFormat.getControlMessage().equals(PRESENCE.endTimestamp)) {
+                        CraftPresence.CONFIG.hasChanged = true;
+                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                        PRESENCE.endTimestamp = endTimeFormat.getControlMessage();
+                    }
                     if (onChangedCallback != null) {
                         onChangedCallback.accept(PRESENCE);
                     }
@@ -480,6 +508,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
         final String smallImageFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.small_image_message");
         final String smallImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.small_image_key");
         final String largeImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.large_image_key");
+        final String startTimeFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.start_timestamp");
+        final String endTimeFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.end_timestamp");
 
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
@@ -491,6 +521,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
 
         renderString(smallImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF, startPage + 1);
         renderString(largeImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
+        renderString(startTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage + 1);
+        renderString(endTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage + 1);
 
         super.preRender();
     }
@@ -503,6 +535,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
         final String smallImageFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.small_image_message");
         final String smallImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.small_image_key");
         final String largeImageKeyFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.large_image_key");
+        final String startTimeFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.start_timestamp");
+        final String endTimeFormatTitle = ModUtils.TRANSLATOR.translate("gui.config.name.display.end_timestamp");
         if (currentPage == startPage) {
             final boolean hoveringOverDetails = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(detailsFormatTitle), getFontHeight());
             final boolean hoveringOverGameState = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(gameStateFormatTitle), getFontHeight());
@@ -522,13 +556,25 @@ public class PresenceSettingsGui extends PaginatedScreen {
         if (currentPage == (startPage + 1)) {
             final boolean hoveringOverSmallImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(smallImageKeyFormatTitle), getFontHeight());
             final boolean hoveringOverLargeImageFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(largeImageKeyFormatTitle), getFontHeight());
-            if (isDefaultModule && (hoveringOverSmallImageFormat || hoveringOverLargeImageFormat)) {
-                CraftPresence.GUIS.drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
-                                        CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                        ), this, true
-                );
+            final boolean hoveringOverStartTimeFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(startTimeFormatTitle), getFontHeight());
+            final boolean hoveringOverEndTimeFormat = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), getStringWidth(endTimeFormatTitle), getFontHeight());
+
+            if (isDefaultModule) {
+                if (hoveringOverSmallImageFormat || hoveringOverLargeImageFormat) {
+                    CraftPresence.GUIS.drawMultiLineString(
+                            StringUtils.splitTextByNewLine(
+                                    ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
+                                            CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
+                            ), this, true
+                    );
+                } else if (hoveringOverStartTimeFormat || hoveringOverEndTimeFormat) {
+                    CraftPresence.GUIS.drawMultiLineString(
+                            StringUtils.splitTextByNewLine(
+                                    ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
+                                            CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
+                            ), this, true
+                    );
+                }
             }
         }
     }

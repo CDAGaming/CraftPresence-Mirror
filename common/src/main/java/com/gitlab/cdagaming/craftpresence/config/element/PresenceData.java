@@ -45,6 +45,8 @@ public class PresenceData extends Module implements Serializable {
     public String largeImageText = "";
     public String smallImageKey = "";
     public String smallImageText = "";
+    public String startTimestamp = "";
+    public String endTimestamp = "";
     public Map<String, Button> buttons = new HashMap<String, Button>() {
         private static final long serialVersionUID = -1738414795267027009L;
 
@@ -64,6 +66,7 @@ public class PresenceData extends Module implements Serializable {
             setGameState(other.gameState);
             setLargeImage(other.largeImageKey, other.largeImageText);
             setSmallImage(other.smallImageKey, other.smallImageText);
+            setTimes(other.startTimestamp, other.endTimestamp);
             for (Map.Entry<String, Button> data : other.buttons.entrySet()) {
                 addButton(data.getKey(), data.getValue());
             }
@@ -102,6 +105,20 @@ public class PresenceData extends Module implements Serializable {
         this.smallImageKey = imageKey;
         this.smallImageText = imageText;
         return this;
+    }
+
+    public PresenceData setTimes(String startTimestamp, String endTimestamp) {
+        this.startTimestamp = startTimestamp;
+        this.endTimestamp = endTimestamp;
+        return this;
+    }
+
+    public PresenceData setStartTime(String timestamp) {
+        return setTimes(timestamp, this.endTimestamp);
+    }
+
+    public PresenceData setEndTime(String timestamp) {
+        return setTimes(this.startTimestamp, timestamp);
     }
 
     public PresenceData addButton(String name, Button button) {
@@ -150,7 +167,8 @@ public class PresenceData extends Module implements Serializable {
                 ((p.largeImageKey == null && largeImageKey == null) || (p.largeImageKey != null && p.largeImageKey.equals(largeImageKey))) &&
                 ((p.largeImageText == null && largeImageText == null) || (p.largeImageText != null && p.largeImageText.equals(largeImageText))) &&
                 ((p.smallImageKey == null && smallImageKey == null) || (p.smallImageKey != null && p.smallImageKey.equals(smallImageKey))) &&
-                ((p.smallImageText == null && smallImageText == null) || (p.smallImageText != null && p.smallImageText.equals(smallImageText))) &&
+                ((p.startTimestamp == null && startTimestamp == null) || (p.startTimestamp != null && p.startTimestamp.equals(startTimestamp))) &&
+                ((p.endTimestamp == null && endTimestamp == null) || (p.endTimestamp != null && p.endTimestamp.equals(endTimestamp))) &&
                 areButtonsEqual;
     }
 }

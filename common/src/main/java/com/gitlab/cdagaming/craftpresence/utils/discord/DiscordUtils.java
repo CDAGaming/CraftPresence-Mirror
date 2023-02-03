@@ -183,7 +183,9 @@ public class DiscordUtils {
      */
     public String JOIN_SECRET;
     /**
-     * The Current Ending Unix Timestamp from Epoch, used for Time Until if combined with {@link DiscordUtils#START_TIMESTAMP}
+     * The Current Ending Unix Timestamp from Epoch
+     * <p>
+     * Used for Time Until if combined with {@link DiscordUtils#START_TIMESTAMP}
      */
     public long END_TIMESTAMP;
     /**
@@ -256,14 +258,14 @@ public class DiscordUtils {
      */
     public synchronized void init(final boolean debugMode, final boolean verboseMode, final boolean updateTimestamp) {
         try {
-            // Update Start Timestamp onInit, if needed
-            if (updateTimestamp) {
-                updateTimestamp();
-            }
-
             // Create IPC Instance and Listener and Make a Connection if possible
             scriptEngine = new Starscript();
             FunctionsLib.init(scriptEngine);
+
+            // Update Start Timestamp onInit, if needed
+            if (updateTimestamp) {
+                syncTimestamp("general.time");
+            }
 
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
             ipcInstance.setListener(new ModIPCListener());
@@ -612,11 +614,14 @@ public class DiscordUtils {
     }
 
     /**
-     * Updates the Starting Unix Timestamp, if allowed
+     * Updates the specified placeholder(s) with a Unix Timestamp
+     *
+     * @param args The Specified Arguments to Synchronize for
      */
-    public void updateTimestamp() {
-        if (CraftPresence.CONFIG.generalSettings.showTime) {
-            START_TIMESTAMP = System.currentTimeMillis() / 1000L;
+    public void syncTimestamp(final String... args) {
+        final long newTimestamp = System.currentTimeMillis() / 1000L;
+        for (String argumentName : args) {
+            syncArgument(argumentName, newTimestamp);
         }
     }
 
@@ -1348,6 +1353,20 @@ public class DiscordUtils {
 
         LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
         SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+
+        final Pair<Boolean, Long> startData = StringUtils.getValidLong(
+                getResult(configData.startTimestamp, "startTimestamp")
+        );
+        if (startData.getFirst()) {
+            START_TIMESTAMP = startData.getSecond();
+            final Pair<Boolean, Long> endData = StringUtils.getValidLong(
+                    getResult(configData.endTimestamp, "endTimestamp")
+            );
+            END_TIMESTAMP = endData.getFirst() ? endData.getSecond() : 0;
+        } else {
+            START_TIMESTAMP = 0;
+            END_TIMESTAMP = 0;
+        }
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
