@@ -266,15 +266,6 @@ public class DiscordUtils {
             scriptEngine = new Starscript();
             FunctionsLib.init(scriptEngine);
 
-            // Update Start Timestamp onInit, if needed
-            final long newStartTime = System.currentTimeMillis() / 1000L;
-            if (updateTimestamp) {
-                syncArgument("general.time", newStartTime);
-            } else {
-                syncArgument("general.time", lastStartTime > 0 ? lastStartTime : newStartTime);
-            }
-
-            lastStartTime = newStartTime;
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
             ipcInstance.setListener(new ModIPCListener());
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
@@ -299,6 +290,15 @@ public class DiscordUtils {
             placeholderData.clear();
         }
         CommandUtils.isInMainMenu = false;
+
+        // Update Start Timestamp onInit, if needed
+        final long newStartTime = System.currentTimeMillis() / 1000L;
+        if (updateTimestamp) {
+            syncArgument("general.time", newStartTime);
+        } else {
+            syncArgument("general.time", lastStartTime > 0 ? lastStartTime : newStartTime);
+        }
+        lastStartTime = newStartTime;
     }
 
     /**
