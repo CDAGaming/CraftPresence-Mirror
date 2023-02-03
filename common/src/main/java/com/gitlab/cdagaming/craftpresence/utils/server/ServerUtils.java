@@ -477,7 +477,7 @@ public class ServerUtils implements Module {
         CraftPresence.CLIENT.syncArgument("server.default.icon", CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
         ModuleData resultData = new ModuleData();
-        String formattedIcon = "";
+        String formattedIcon;
         if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
             // Player Amount Arguments
             CraftPresence.CLIENT.syncArgument("server.players.current", currentPlayers);
@@ -620,7 +620,7 @@ public class ServerUtils implements Module {
 
     @Override
     public void setInUse(boolean state) {
-        if (state && this.isInUse != state) {
+        if (state && !this.isInUse) {
             CraftPresence.CLIENT.syncTimestamp("server.time");
         }
         this.isInUse = state;

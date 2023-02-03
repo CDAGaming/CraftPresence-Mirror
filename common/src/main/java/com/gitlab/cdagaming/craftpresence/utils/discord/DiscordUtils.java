@@ -293,11 +293,10 @@ public class DiscordUtils {
 
         // Update Start Timestamp onInit, if needed
         final long newStartTime = System.currentTimeMillis() / 1000L;
-        if (updateTimestamp) {
-            syncArgument("general.time", newStartTime);
-        } else {
-            syncArgument("general.time", lastStartTime > 0 ? lastStartTime : newStartTime);
-        }
+        syncArgument("general.time", !updateTimestamp && lastStartTime > 0 ?
+                lastStartTime :
+                newStartTime
+        );
         lastStartTime = newStartTime;
     }
 
