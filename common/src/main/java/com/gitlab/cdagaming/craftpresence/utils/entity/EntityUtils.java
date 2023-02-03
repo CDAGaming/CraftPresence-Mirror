@@ -192,6 +192,10 @@ public class EntityUtils implements Module {
                 CURRENT_TARGET_TAGS = NEW_CURRENT_TARGET_TAGS;
             }
             CURRENT_TARGET_NAME = NEW_CURRENT_TARGET_NAME;
+
+            if (CURRENT_TARGET != null) {
+                CraftPresence.CLIENT.syncTimestamp("entity.target.time");
+            }
         }
 
         if (hasRidingChanged) {
@@ -203,6 +207,10 @@ public class EntityUtils implements Module {
                 CURRENT_RIDING_TAGS = NEW_CURRENT_RIDING_TAGS;
             }
             CURRENT_RIDING_NAME = NEW_CURRENT_RIDING_NAME;
+
+            if (CURRENT_RIDING != null) {
+                CraftPresence.CLIENT.syncTimestamp("entity.riding.time");
+            }
         }
 
         if (hasTargetChanged || hasRidingChanged) {

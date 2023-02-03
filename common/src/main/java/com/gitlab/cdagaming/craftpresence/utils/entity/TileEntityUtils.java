@@ -361,6 +361,10 @@ public class TileEntityUtils implements Module {
                 CURRENT_MAIN_HAND_ITEM_TAGS = NEW_CURRENT_MAIN_HAND_ITEM_TAGS;
             }
             CURRENT_MAIN_HAND_ITEM_NAME = NEW_CURRENT_MAIN_HAND_ITEM_NAME;
+
+            if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
+                CraftPresence.CLIENT.syncTimestamp("item.main_hand.time")
+            }
         }
 
         if (hasOffHandChanged) {
@@ -372,6 +376,10 @@ public class TileEntityUtils implements Module {
                 CURRENT_OFFHAND_ITEM_TAGS = NEW_CURRENT_OFFHAND_ITEM_TAGS;
             }
             CURRENT_OFFHAND_ITEM_NAME = NEW_CURRENT_OFFHAND_ITEM_NAME;
+
+            if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
+                CraftPresence.CLIENT.syncTimestamp("item.off_hand.time")
+            }
         }
 
         if (hasHelmetChanged) {
@@ -383,6 +391,10 @@ public class TileEntityUtils implements Module {
                 CURRENT_HELMET_TAGS = NEW_CURRENT_HELMET_TAGS;
             }
             CURRENT_HELMET_NAME = NEW_CURRENT_HELMET_NAME;
+
+            if (!isEmpty(CURRENT_HELMET)) {
+                CraftPresence.CLIENT.syncTimestamp("item.helmet.time")
+            }
         }
 
         if (hasChestChanged) {
@@ -394,6 +406,10 @@ public class TileEntityUtils implements Module {
                 CURRENT_CHEST_TAGS = NEW_CURRENT_CHEST_TAGS;
             }
             CURRENT_CHEST_NAME = NEW_CURRENT_CHEST_NAME;
+
+            if (!isEmpty(CURRENT_CHEST)) {
+                CraftPresence.CLIENT.syncTimestamp("item.chestplate.time")
+            }
         }
 
         if (hasLegsChanged) {
@@ -405,6 +421,10 @@ public class TileEntityUtils implements Module {
                 CURRENT_LEGS_TAGS = NEW_CURRENT_LEGS_TAGS;
             }
             CURRENT_LEGS_NAME = NEW_CURRENT_LEGS_NAME;
+
+            if (!isEmpty(CURRENT_LEGS)) {
+                CraftPresence.CLIENT.syncTimestamp("item.leggings.time")
+            }
         }
 
         if (hasBootsChanged) {
@@ -416,6 +436,10 @@ public class TileEntityUtils implements Module {
                 CURRENT_BOOTS_TAGS = NEW_CURRENT_BOOTS_TAGS;
             }
             CURRENT_BOOTS_NAME = NEW_CURRENT_BOOTS_NAME;
+
+            if (!isEmpty(CURRENT_BOOTS)) {
+                CraftPresence.CLIENT.syncTimestamp("item.boots.time")
+            }
         }
 
         if (hasMainHandChanged || hasOffHandChanged ||
