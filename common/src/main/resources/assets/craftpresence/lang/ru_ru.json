@@ -158,6 +158,8 @@
   "gui.config.name.display.game_state_message": "Формат состояния",
   "gui.config.name.display.small_image_key": "Формат малого изображения",
   "gui.config.name.display.large_image_key": "Формат большого изображения",
+  "gui.config.name.display.start_timestamp": "Start Timestamp",
+  "gui.config.name.display.end_timestamp": "End Timestamp",
   "gui.config.name.display.button_messages": "Сообщения с кнопками",
   "gui.config.name.display.dynamic_icons": "Динамические значки",
   "gui.config.name.display.dynamic_variables": "Dynamic Variables",
