@@ -231,6 +231,10 @@ public class DiscordUtils {
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
      */
     private RichPresence currentPresence;
+    /**
+     * The duration or timestamp of the last running instance
+     */
+    private long lastStartTime;
 
     /**
      * Setup any Critical Methods needed for the RPC
@@ -263,10 +267,14 @@ public class DiscordUtils {
             FunctionsLib.init(scriptEngine);
 
             // Update Start Timestamp onInit, if needed
+            final long newStartTime = System.currentTimeMillis() / 1000L;
             if (updateTimestamp) {
-                syncTimestamp("general.time");
+                syncArgument("general.time", newStartTime);
+            } else {
+                syncArgument("general.time", lastStartTime > 0 ? lastStartTime : newStartTime);
             }
 
+            lastStartTime = newStartTime;
             ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
             ipcInstance.setListener(new ModIPCListener());
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
