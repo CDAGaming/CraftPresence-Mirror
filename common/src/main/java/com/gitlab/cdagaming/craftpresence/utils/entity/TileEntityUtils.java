@@ -363,7 +363,7 @@ public class TileEntityUtils implements Module {
             CURRENT_MAIN_HAND_ITEM_NAME = NEW_CURRENT_MAIN_HAND_ITEM_NAME;
 
             if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
-                CraftPresence.CLIENT.syncTimestamp("item.main_hand.time")
+                CraftPresence.CLIENT.syncTimestamp("item.main_hand.time");
             }
         }
 
@@ -378,7 +378,7 @@ public class TileEntityUtils implements Module {
             CURRENT_OFFHAND_ITEM_NAME = NEW_CURRENT_OFFHAND_ITEM_NAME;
 
             if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
-                CraftPresence.CLIENT.syncTimestamp("item.off_hand.time")
+                CraftPresence.CLIENT.syncTimestamp("item.off_hand.time");
             }
         }
 
@@ -393,7 +393,7 @@ public class TileEntityUtils implements Module {
             CURRENT_HELMET_NAME = NEW_CURRENT_HELMET_NAME;
 
             if (!isEmpty(CURRENT_HELMET)) {
-                CraftPresence.CLIENT.syncTimestamp("item.helmet.time")
+                CraftPresence.CLIENT.syncTimestamp("item.helmet.time");
             }
         }
 
@@ -408,7 +408,7 @@ public class TileEntityUtils implements Module {
             CURRENT_CHEST_NAME = NEW_CURRENT_CHEST_NAME;
 
             if (!isEmpty(CURRENT_CHEST)) {
-                CraftPresence.CLIENT.syncTimestamp("item.chestplate.time")
+                CraftPresence.CLIENT.syncTimestamp("item.chestplate.time");
             }
         }
 
@@ -423,7 +423,7 @@ public class TileEntityUtils implements Module {
             CURRENT_LEGS_NAME = NEW_CURRENT_LEGS_NAME;
 
             if (!isEmpty(CURRENT_LEGS)) {
-                CraftPresence.CLIENT.syncTimestamp("item.leggings.time")
+                CraftPresence.CLIENT.syncTimestamp("item.leggings.time");
             }
         }
 
@@ -438,7 +438,7 @@ public class TileEntityUtils implements Module {
             CURRENT_BOOTS_NAME = NEW_CURRENT_BOOTS_NAME;
 
             if (!isEmpty(CURRENT_BOOTS)) {
-                CraftPresence.CLIENT.syncTimestamp("item.boots.time")
+                CraftPresence.CLIENT.syncTimestamp("item.boots.time");
             }
         }
 
