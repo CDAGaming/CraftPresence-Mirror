@@ -233,7 +233,6 @@ public class Legacy2Modern implements DataMigrator {
             .put("detectMultimcInstance", "generalSettings.detectMultiMCManifest")
             .put("detectMcupdaterInstance", "generalSettings.detectMCUpdaterInstance")
             .put("detectTechnicPack", "generalSettings.detectTechnicPack")
-            .put("showElapsedTime", "generalSettings.showTime")
             .put("detectBiomeData", "generalSettings.detectBiomeData")
             .put("detectDimensionData", "generalSettings.detectDimensionData")
             .put("detectWorldData", "generalSettings.detectWorldData")

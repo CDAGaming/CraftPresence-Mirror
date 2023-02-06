@@ -44,7 +44,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
     private final General CONFIG;
     private ExtendedButtonControl proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
-            detectMCUpdaterInstanceButton, detectTechnicPackButton, showTimeButton,
+            detectMCUpdaterInstanceButton, detectTechnicPackButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
             enableJoinRequestButton, resetTimeOnInitButton, autoRegisterButton;
     private ExtendedTextControl clientId;
@@ -166,15 +166,15 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        showTimeButton = addControl(
+        detectDimensionDataButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(5, -20),
-                        "gui.config.name.general.show_time",
-                        CONFIG.showTime,
+                        "gui.config.name.general.detect_dimension_data",
+                        CONFIG.detectDimensionData,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.show_time")
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
                                 ), this, true
                         )
                 )
@@ -192,15 +192,15 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        detectDimensionDataButton = addControl(
+        enableJoinRequestButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(6, -30),
-                        "gui.config.name.general.detect_dimension_data",
-                        CONFIG.detectDimensionData,
+                        "gui.config.name.general.enable_join_request",
+                        CONFIG.enableJoinRequests,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
                                 ), this, true
                         )
                 )
@@ -218,15 +218,15 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        enableJoinRequestButton = addControl(
+        autoRegisterButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(7, -40),
-                        "gui.config.name.general.enable_join_request",
-                        CONFIG.enableJoinRequests,
+                        "gui.config.name.general.auto_register",
+                        CONFIG.autoRegister,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.auto_register")
                                 ), this, true
                         )
                 )
@@ -240,19 +240,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
-                                ), this, true
-                        )
-                )
-        );
-        autoRegisterButton = addControl(
-                new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(8, -50),
-                        "gui.config.name.general.auto_register",
-                        CONFIG.autoRegister,
-                        null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.auto_register")
                                 ), this, true
                         )
                 )
@@ -311,11 +298,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectTechnicPack = detectTechnicPackButton.isChecked();
-                            }
-                            if (showTimeButton.isChecked() != CONFIG.showTime) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CONFIG.showTime = showTimeButton.isChecked();
                             }
                             if (detectBiomeDataButton.isChecked() != CONFIG.detectBiomeData) {
                                 CraftPresence.CONFIG.hasChanged = true;
