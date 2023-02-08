@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -95,30 +96,6 @@ public class TileEntityUtils implements Module {
      */
     public Map<String, ResourceLocation> TILE_ENTITY_RESOURCES = Maps.newHashMap();
     /**
-     * The Player's Current Main Hand Item's Nbt Tags, if any
-     */
-    public List<String> CURRENT_MAIN_HAND_ITEM_TAGS = Lists.newArrayList();
-    /**
-     * The Player's Current Offhand Item's Nbt Tags, if any
-     */
-    public List<String> CURRENT_OFFHAND_ITEM_TAGS = Lists.newArrayList();
-    /**
-     * The Player's Currently equipped Helmet's Nbt Tags, if any
-     */
-    public List<String> CURRENT_HELMET_TAGS = Lists.newArrayList();
-    /**
-     * The Player's Currently equipped Chest's Nbt Tags, if any
-     */
-    public List<String> CURRENT_CHEST_TAGS = Lists.newArrayList();
-    /**
-     * The Player's Currently equipped Leggings Nbt Tags, if any
-     */
-    public List<String> CURRENT_LEGS_TAGS = Lists.newArrayList();
-    /**
-     * The Player's Currently equipped Boots Nbt Tags, if any
-     */
-    public List<String> CURRENT_BOOTS_TAGS = Lists.newArrayList();
-    /**
      * The Player's Current Main Hand Item, if any
      */
     private ItemStack CURRENT_MAIN_HAND_ITEM;
@@ -167,29 +144,29 @@ public class TileEntityUtils implements Module {
      */
     private String CURRENT_BOOTS_NAME;
     /**
-     * The Player's Current Main Hand Item's Tag, if any
+     * The Player's Current Main Hand Item's Nbt Data, if any
      */
-    private NBTTagCompound CURRENT_MAIN_HAND_ITEM_TAG;
+    private NBTTagCompound CURRENT_MAIN_HAND_ITEM_DATA;
     /**
-     * The Player's Current Offhand Item's Tag, if any
+     * The Player's Current Offhand Item's Nbt Data, if any
      */
-    private NBTTagCompound CURRENT_OFFHAND_ITEM_TAG;
+    private NBTTagCompound CURRENT_OFFHAND_ITEM_DATA;
     /**
-     * The Player's Currently equipped Helmet's Tag, if any
+     * The Player's Currently equipped Helmet's Nbt Data, if any
      */
-    private NBTTagCompound CURRENT_HELMET_TAG;
+    private NBTTagCompound CURRENT_HELMET_DATA;
     /**
-     * The Player's Currently equipped Chest's Tag, if any
+     * The Player's Currently equipped Chest's Nbt Data, if any
      */
-    private NBTTagCompound CURRENT_CHEST_TAG;
+    private NBTTagCompound CURRENT_CHEST_DATA;
     /**
-     * The Player's Currently equipped Leggings Tag, if any
+     * The Player's Currently equipped Leggings Nbt Data, if any
      */
-    private NBTTagCompound CURRENT_LEGS_TAG;
+    private NBTTagCompound CURRENT_LEGS_DATA;
     /**
-     * The Player's Currently equipped Boots Tag, if any
+     * The Player's Currently equipped Boots Nbt Data, if any
      */
-    private NBTTagCompound CURRENT_BOOTS_TAG;
+    private NBTTagCompound CURRENT_BOOTS_DATA;
 
     @Override
     public void emptyData() {
@@ -220,19 +197,12 @@ public class TileEntityUtils implements Module {
         CURRENT_LEGS_NAME = null;
         CURRENT_BOOTS_NAME = null;
 
-        CURRENT_MAIN_HAND_ITEM_TAG = null;
-        CURRENT_OFFHAND_ITEM_TAG = null;
-        CURRENT_HELMET_TAG = null;
-        CURRENT_CHEST_TAG = null;
-        CURRENT_LEGS_TAG = null;
-        CURRENT_BOOTS_TAG = null;
-
-        CURRENT_MAIN_HAND_ITEM_TAGS.clear();
-        CURRENT_OFFHAND_ITEM_TAGS.clear();
-        CURRENT_HELMET_TAGS.clear();
-        CURRENT_CHEST_TAGS.clear();
-        CURRENT_LEGS_TAGS.clear();
-        CURRENT_BOOTS_TAGS.clear();
+        CURRENT_MAIN_HAND_ITEM_DATA = null;
+        CURRENT_OFFHAND_ITEM_DATA = null;
+        CURRENT_HELMET_DATA = null;
+        CURRENT_CHEST_DATA = null;
+        CURRENT_LEGS_DATA = null;
+        CURRENT_BOOTS_DATA = null;
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("item", "data.item");
@@ -320,6 +290,13 @@ public class TileEntityUtils implements Module {
         final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory.get(1);
         final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory.get(0);
 
+        final NBTTagCompound NEW_CURRENT_MAIN_HAND_ITEM_DATA = NbtUtils.getNbt(NEW_CURRENT_MAIN_HAND_ITEM);
+        final NBTTagCompound NEW_CURRENT_OFFHAND_ITEM_DATA = NbtUtils.getNbt(NEW_CURRENT_OFFHAND_ITEM);
+        final NBTTagCompound NEW_CURRENT_HELMET_DATA = NbtUtils.getNbt(NEW_CURRENT_HELMET);
+        final NBTTagCompound NEW_CURRENT_CHEST_DATA = NbtUtils.getNbt(NEW_CURRENT_CHEST);
+        final NBTTagCompound NEW_CURRENT_LEGS_DATA = NbtUtils.getNbt(NEW_CURRENT_LEGS);
+        final NBTTagCompound NEW_CURRENT_BOOTS_DATA = NbtUtils.getNbt(NEW_CURRENT_BOOTS);
+
         final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
                 StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getDisplayName()) : "";
         final String NEW_CURRENT_OFFHAND_ITEM_NAME = !isEmpty(NEW_CURRENT_OFFHAND_ITEM) ?
@@ -335,31 +312,26 @@ public class TileEntityUtils implements Module {
 
         final boolean hasMainHandChanged = (!isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) &&
                 !NEW_CURRENT_MAIN_HAND_ITEM.equals(CURRENT_MAIN_HAND_ITEM) || !NEW_CURRENT_MAIN_HAND_ITEM_NAME.equals(CURRENT_MAIN_HAND_ITEM_NAME)) ||
-                (isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) && !isEmpty(CURRENT_MAIN_HAND_ITEM));
+                (isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) && !isEmpty(CURRENT_MAIN_HAND_ITEM)) || !NEW_CURRENT_MAIN_HAND_ITEM_DATA.equals(CURRENT_MAIN_HAND_ITEM_DATA);
         final boolean hasOffHandChanged = (!isEmpty(NEW_CURRENT_OFFHAND_ITEM) &&
                 !NEW_CURRENT_OFFHAND_ITEM.equals(CURRENT_OFFHAND_ITEM) || !NEW_CURRENT_OFFHAND_ITEM_NAME.equals(CURRENT_OFFHAND_ITEM_NAME)) ||
-                (isEmpty(NEW_CURRENT_OFFHAND_ITEM) && !isEmpty(CURRENT_OFFHAND_ITEM));
+                (isEmpty(NEW_CURRENT_OFFHAND_ITEM) && !isEmpty(CURRENT_OFFHAND_ITEM)) || !NEW_CURRENT_OFFHAND_ITEM_DATA.equals(CURRENT_OFFHAND_ITEM_DATA);
         final boolean hasHelmetChanged = (!isEmpty(NEW_CURRENT_HELMET) &&
                 !NEW_CURRENT_HELMET.equals(CURRENT_HELMET) || !NEW_CURRENT_HELMET_NAME.equals(CURRENT_HELMET_NAME)) ||
-                (isEmpty(NEW_CURRENT_HELMET) && !isEmpty(CURRENT_HELMET));
+                (isEmpty(NEW_CURRENT_HELMET) && !isEmpty(CURRENT_HELMET)) || !NEW_CURRENT_HELMET_DATA.equals(CURRENT_HELMET_DATA);
         final boolean hasChestChanged = (!isEmpty(NEW_CURRENT_CHEST) &&
                 !NEW_CURRENT_CHEST.equals(CURRENT_CHEST) || !NEW_CURRENT_CHEST_NAME.equals(CURRENT_CHEST_NAME)) ||
-                (isEmpty(NEW_CURRENT_CHEST) && !isEmpty(CURRENT_CHEST));
+                (isEmpty(NEW_CURRENT_CHEST) && !isEmpty(CURRENT_CHEST)) || !NEW_CURRENT_CHEST_DATA.equals(CURRENT_CHEST_DATA);
         final boolean hasLegsChanged = (!isEmpty(NEW_CURRENT_LEGS) &&
                 !NEW_CURRENT_LEGS.equals(CURRENT_LEGS) || !NEW_CURRENT_LEGS_NAME.equals(CURRENT_LEGS_NAME)) ||
-                (isEmpty(NEW_CURRENT_LEGS) && !isEmpty(CURRENT_LEGS));
+                (isEmpty(NEW_CURRENT_LEGS) && !isEmpty(CURRENT_LEGS)) || !NEW_CURRENT_LEGS_DATA.equals(CURRENT_LEGS_DATA);
         final boolean hasBootsChanged = (!isEmpty(NEW_CURRENT_BOOTS) &&
                 !NEW_CURRENT_BOOTS.equals(CURRENT_BOOTS) || !NEW_CURRENT_BOOTS_NAME.equals(CURRENT_BOOTS_NAME)) ||
-                (isEmpty(NEW_CURRENT_BOOTS) && !isEmpty(CURRENT_BOOTS));
+                (isEmpty(NEW_CURRENT_BOOTS) && !isEmpty(CURRENT_BOOTS)) || !NEW_CURRENT_BOOTS_DATA.equals(CURRENT_BOOTS_DATA);
 
         if (hasMainHandChanged) {
             CURRENT_MAIN_HAND_ITEM = NEW_CURRENT_MAIN_HAND_ITEM;
-            CURRENT_MAIN_HAND_ITEM_TAG = !isEmpty(CURRENT_MAIN_HAND_ITEM) ? CURRENT_MAIN_HAND_ITEM.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_MAIN_HAND_ITEM_TAGS = CURRENT_MAIN_HAND_ITEM_TAG != null ? Lists.newArrayList(CURRENT_MAIN_HAND_ITEM_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_MAIN_HAND_ITEM_TAGS.equals(CURRENT_MAIN_HAND_ITEM_TAGS)) {
-                CURRENT_MAIN_HAND_ITEM_TAGS = NEW_CURRENT_MAIN_HAND_ITEM_TAGS;
-            }
+            CURRENT_MAIN_HAND_ITEM_DATA = NEW_CURRENT_MAIN_HAND_ITEM_DATA;
             CURRENT_MAIN_HAND_ITEM_NAME = NEW_CURRENT_MAIN_HAND_ITEM_NAME;
 
             if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
@@ -369,12 +341,7 @@ public class TileEntityUtils implements Module {
 
         if (hasOffHandChanged) {
             CURRENT_OFFHAND_ITEM = NEW_CURRENT_OFFHAND_ITEM;
-            CURRENT_OFFHAND_ITEM_TAG = !isEmpty(CURRENT_OFFHAND_ITEM) ? CURRENT_OFFHAND_ITEM.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_OFFHAND_ITEM_TAGS = CURRENT_OFFHAND_ITEM_TAG != null ? Lists.newArrayList(CURRENT_OFFHAND_ITEM_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_OFFHAND_ITEM_TAGS.equals(CURRENT_OFFHAND_ITEM_TAGS)) {
-                CURRENT_OFFHAND_ITEM_TAGS = NEW_CURRENT_OFFHAND_ITEM_TAGS;
-            }
+            CURRENT_OFFHAND_ITEM_DATA = NEW_CURRENT_OFFHAND_ITEM_DATA;
             CURRENT_OFFHAND_ITEM_NAME = NEW_CURRENT_OFFHAND_ITEM_NAME;
 
             if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
@@ -384,12 +351,7 @@ public class TileEntityUtils implements Module {
 
         if (hasHelmetChanged) {
             CURRENT_HELMET = NEW_CURRENT_HELMET;
-            CURRENT_HELMET_TAG = !isEmpty(CURRENT_HELMET) ? CURRENT_HELMET.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_HELMET_TAGS = CURRENT_HELMET_TAG != null ? Lists.newArrayList(CURRENT_HELMET_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_HELMET_TAGS.equals(CURRENT_HELMET_TAGS)) {
-                CURRENT_HELMET_TAGS = NEW_CURRENT_HELMET_TAGS;
-            }
+            CURRENT_HELMET_DATA = NEW_CURRENT_HELMET_DATA;
             CURRENT_HELMET_NAME = NEW_CURRENT_HELMET_NAME;
 
             if (!isEmpty(CURRENT_HELMET)) {
@@ -399,12 +361,7 @@ public class TileEntityUtils implements Module {
 
         if (hasChestChanged) {
             CURRENT_CHEST = NEW_CURRENT_CHEST;
-            CURRENT_CHEST_TAG = !isEmpty(CURRENT_CHEST) ? CURRENT_CHEST.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_CHEST_TAGS = CURRENT_CHEST_TAG != null ? Lists.newArrayList(CURRENT_CHEST_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_CHEST_TAGS.equals(CURRENT_CHEST_TAGS)) {
-                CURRENT_CHEST_TAGS = NEW_CURRENT_CHEST_TAGS;
-            }
+            CURRENT_CHEST_DATA = NEW_CURRENT_CHEST_DATA;
             CURRENT_CHEST_NAME = NEW_CURRENT_CHEST_NAME;
 
             if (!isEmpty(CURRENT_CHEST)) {
@@ -414,12 +371,7 @@ public class TileEntityUtils implements Module {
 
         if (hasLegsChanged) {
             CURRENT_LEGS = NEW_CURRENT_LEGS;
-            CURRENT_LEGS_TAG = !isEmpty(CURRENT_LEGS) ? CURRENT_LEGS.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_LEGS_TAGS = CURRENT_LEGS_TAG != null ? Lists.newArrayList(CURRENT_LEGS_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_LEGS_TAGS.equals(CURRENT_LEGS_TAGS)) {
-                CURRENT_LEGS_TAGS = NEW_CURRENT_LEGS_TAGS;
-            }
+            CURRENT_LEGS_DATA = NEW_CURRENT_LEGS_DATA;
             CURRENT_LEGS_NAME = NEW_CURRENT_LEGS_NAME;
 
             if (!isEmpty(CURRENT_LEGS)) {
@@ -429,12 +381,7 @@ public class TileEntityUtils implements Module {
 
         if (hasBootsChanged) {
             CURRENT_BOOTS = NEW_CURRENT_BOOTS;
-            CURRENT_BOOTS_TAG = !isEmpty(CURRENT_BOOTS) ? CURRENT_BOOTS.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_BOOTS_TAGS = CURRENT_BOOTS_TAG != null ? Lists.newArrayList(CURRENT_BOOTS_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_BOOTS_TAGS.equals(CURRENT_BOOTS_TAGS)) {
-                CURRENT_BOOTS_TAGS = NEW_CURRENT_BOOTS_TAGS;
-            }
+            CURRENT_BOOTS_DATA = NEW_CURRENT_BOOTS_DATA;
             CURRENT_BOOTS_NAME = NEW_CURRENT_BOOTS_NAME;
 
             if (!isEmpty(CURRENT_BOOTS)) {
@@ -480,11 +427,7 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.main_hand.class", CURRENT_MAIN_HAND_ITEM.getClass());
             CraftPresence.CLIENT.syncArgument("item.main_hand.name", CURRENT_MAIN_HAND_ITEM_NAME);
             CraftPresence.CLIENT.syncArgument("item.main_hand.message", mainItemMessage);
-            if (!CURRENT_MAIN_HAND_ITEM_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_MAIN_HAND_ITEM_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.item.main_hand." + tagName, CURRENT_MAIN_HAND_ITEM_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.item.main_hand.", CURRENT_MAIN_HAND_ITEM_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.main_hand", "data.item.main_hand");
         }
@@ -494,11 +437,7 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.off_hand.class", CURRENT_OFFHAND_ITEM.getClass());
             CraftPresence.CLIENT.syncArgument("item.off_hand.name", CURRENT_OFFHAND_ITEM_NAME);
             CraftPresence.CLIENT.syncArgument("item.off_hand.message", offHandItemMessage);
-            if (!CURRENT_OFFHAND_ITEM_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_OFFHAND_ITEM_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.item.off_hand." + tagName, CURRENT_OFFHAND_ITEM_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.item.off_hand.", CURRENT_OFFHAND_ITEM_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.off_hand", "data.item.off_hand");
         }
@@ -508,11 +447,7 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.helmet.class", CURRENT_HELMET.getClass());
             CraftPresence.CLIENT.syncArgument("item.helmet.name", CURRENT_HELMET_NAME);
             CraftPresence.CLIENT.syncArgument("item.helmet.message", helmetMessage);
-            if (!CURRENT_HELMET_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_HELMET_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.item.helmet." + tagName, CURRENT_HELMET_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.item.helmet.", CURRENT_HELMET_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.helmet", "data.item.helmet");
         }
@@ -522,11 +457,7 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.chestplate.class", CURRENT_CHEST.getClass());
             CraftPresence.CLIENT.syncArgument("item.chestplate.name", CURRENT_CHEST_NAME);
             CraftPresence.CLIENT.syncArgument("item.chestplate.message", chestMessage);
-            if (!CURRENT_CHEST_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_CHEST_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.item.chestplate." + tagName, CURRENT_CHEST_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.item.chestplate.", CURRENT_CHEST_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.chestplate", "data.item.chestplate");
         }
@@ -536,11 +467,7 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.leggings.class", CURRENT_LEGS.getClass());
             CraftPresence.CLIENT.syncArgument("item.leggings.name", CURRENT_LEGS_NAME);
             CraftPresence.CLIENT.syncArgument("item.leggings.message", legsMessage);
-            if (!CURRENT_LEGS_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_LEGS_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.item.leggings." + tagName, CURRENT_LEGS_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.item.leggings.", CURRENT_LEGS_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.leggings", "data.item.leggings");
         }
@@ -550,11 +477,7 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.boots.class", CURRENT_BOOTS.getClass());
             CraftPresence.CLIENT.syncArgument("item.boots.name", CURRENT_BOOTS_NAME);
             CraftPresence.CLIENT.syncArgument("item.boots.message", bootsMessage);
-            if (!CURRENT_BOOTS_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_BOOTS_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.item.boots." + tagName, CURRENT_BOOTS_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.item.boots.", CURRENT_BOOTS_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.boots", "data.item.boots");
         }

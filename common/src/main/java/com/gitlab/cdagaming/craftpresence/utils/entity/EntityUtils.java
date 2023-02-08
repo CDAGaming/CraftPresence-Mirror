@@ -146,8 +146,8 @@ public class EntityUtils implements Module {
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
-        final NBTTagCompound NEW_CURRENT_TARGET_DATA = NbtUtils.getEntityNbt(NEW_CURRENT_TARGET);
-        final NBTTagCompound NEW_CURRENT_RIDING_DATA = NbtUtils.getEntityNbt(NEW_CURRENT_RIDING);
+        final NBTTagCompound NEW_CURRENT_TARGET_DATA = NbtUtils.getNbt(NEW_CURRENT_TARGET);
+        final NBTTagCompound NEW_CURRENT_RIDING_DATA = NbtUtils.getNbt(NEW_CURRENT_RIDING);
 
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
 

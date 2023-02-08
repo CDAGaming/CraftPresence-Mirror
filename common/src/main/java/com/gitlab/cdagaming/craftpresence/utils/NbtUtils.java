@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 
 import java.util.Collection;
@@ -50,13 +51,47 @@ public class NbtUtils {
         }
     }
 
-    public static NBTTagCompound getEntityNbt(final Entity entity) {
+    public static NBTTagCompound getNbt(final Object data) {
+        if (data instanceof Entity) {
+            return getNbt((Entity) data);
+        } else if (data instanceof ItemStack) {
+            return getNbt((ItemStack) data);
+        }
+        return null;
+    }
+
+    public static NBTTagCompound getNbt(final Entity entity) {
         NBTTagCompound result = new NBTTagCompound();
         return entity != null ? entity.writeToNBT(result) : result;
     }
 
-    public static NBTBase getEntityNbt(final Entity entity, final String... path) {
-        NBTTagCompound root = getEntityNbt(entity);
+    public static NBTTagCompound getNbt(final ItemStack stack) {
+        NBTTagCompound result = new NBTTagCompound();
+        return stack != null ? stack.writeToNBT(result) : result;
+    }
+
+    public static NBTBase getNbt(final Object data, final String... path) {
+        if (data instanceof Entity) {
+            return getNbt((Entity) data, path);
+        } else if (data instanceof ItemStack) {
+            return getNbt((ItemStack) data, path);
+        }
+        return null;
+    }
+
+    public static NBTBase getNbt(final Entity entity, final String... path) {
+        return getNbt(
+                getNbt(entity), path
+        );
+    }
+
+    public static NBTBase getNbt(final ItemStack stack, final String... path) {
+        return getNbt(
+                getNbt(stack), path
+        );
+    }
+
+    public static NBTBase getNbt(final NBTTagCompound root, final String... path) {
         if (path == null || path.length == 0) {
             return root;
         } else {

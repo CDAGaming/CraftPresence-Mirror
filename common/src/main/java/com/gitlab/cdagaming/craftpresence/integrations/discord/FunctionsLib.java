@@ -35,7 +35,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.entity.Entity;
 import org.meteordev.starscript.StandardLib;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
@@ -240,16 +239,13 @@ public class FunctionsLib {
 
         // Parse, then remove the source entity from arguments, if valid
         Value source = args.get(0);
-        Entity entity = null;
+        Object data = null;
         if (source.isObject()) {
-            Object data = source.getObject();
-            if (data instanceof Entity) {
-                entity = (Entity) data;
-            }
+            data = source.getObject();
         }
 
-        if (entity == null) {
-            ss.error("First argument to getNbt() needs to be a valid entity.");
+        if (data == null) {
+            ss.error("First argument to getNbt() needs to be a valid Entity or ItemStack object.");
         }
         args.remove(0);
 
@@ -258,7 +254,7 @@ public class FunctionsLib {
             path.add(info.toString());
         }
         final Object result = NbtUtils.parseTag(
-                NbtUtils.getEntityNbt(entity, path.toArray(new String[0]))
+                NbtUtils.getNbt(data, path.toArray(new String[0]))
         );
         return result != null ? Value.object(result) : Value.null_();
     }
