@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -34,6 +35,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.entity.Entity;
 import org.meteordev.starscript.StandardLib;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
@@ -56,6 +58,7 @@ public class FunctionsLib {
         ss.set("getJsonElement", FunctionsLib::getJsonElement);
         ss.set("randomString", FunctionsLib::randomString);
         ss.set("getFirst", FunctionsLib::getFirst);
+        ss.set("getNbt", FunctionsLib::getNbt);
 
         // DiscordUtils
         ss.set("getResult", FunctionsLib::getResult);
@@ -224,6 +227,40 @@ public class FunctionsLib {
             }
         }
         return Value.null_();
+    }
+
+    public static Value getNbt(Starscript ss, int argCount) {
+        final List<Value> args = Lists.newArrayList();
+        if (argCount < 1)
+            ss.error("getNbt() requires one or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop());
+        }
+        StringUtils.revlist(args);
+
+        // Parse, then remove the source entity from arguments, if valid
+        Value source = args.get(0);
+        Entity entity = null;
+        if (source.isObject()) {
+            Object data = source.getObject();
+            if (data instanceof Entity) {
+                entity = (Entity) data;
+            }
+        }
+
+        if (entity == null) {
+            ss.error("First argument to getNbt() needs to be a valid entity.");
+        }
+        args.remove(0);
+
+        final List<String> path = Lists.newArrayList();
+        for (Value info : args) {
+            path.add(info.toString());
+        }
+        final Object result = NbtUtils.parseTag(
+                NbtUtils.getEntityNbt(entity, path.toArray(new String[0]))
+        );
+        return result != null ? Value.object(result) : Value.null_();
     }
 
     public static Value randomAsset(Starscript ss, int argCount) {

@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -77,14 +78,6 @@ public class EntityUtils implements Module {
      */
     public Map<String, String> PLAYER_BINDINGS = Maps.newHashMap();
     /**
-     * The Player's Currently Targeted Entity's Nbt Tags, if any
-     */
-    public List<String> CURRENT_TARGET_TAGS = Lists.newArrayList();
-    /**
-     * The Player's Currently Riding Entity's Nbt Tags, if any
-     */
-    public List<String> CURRENT_RIDING_TAGS = Lists.newArrayList();
-    /**
      * The Player's Current Target Entity, if any
      */
     public Entity CURRENT_TARGET;
@@ -93,13 +86,13 @@ public class EntityUtils implements Module {
      */
     public Entity CURRENT_RIDING;
     /**
-     * The Player's Current Targeted Entity's Tag, if any
+     * The Player's Current Targeted Entity's NBT Data, if any
      */
-    private NBTTagCompound CURRENT_TARGET_TAG;
+    private NBTTagCompound CURRENT_TARGET_DATA;
     /**
-     * The Player's Current Riding Entity's Tag, if any
+     * The Player's Current Riding Entity's NBT Data, if any
      */
-    private NBTTagCompound CURRENT_RIDING_TAG;
+    private NBTTagCompound CURRENT_RIDING_DATA;
 
     @Override
     public void emptyData() {
@@ -115,11 +108,8 @@ public class EntityUtils implements Module {
         CURRENT_RIDING = null;
         CURRENT_TARGET_NAME = null;
         CURRENT_RIDING_NAME = null;
-        CURRENT_TARGET_TAG = null;
-        CURRENT_RIDING_TAG = null;
-
-        CURRENT_TARGET_TAGS.clear();
-        CURRENT_RIDING_TAGS.clear();
+        CURRENT_TARGET_DATA = null;
+        CURRENT_RIDING_DATA = null;
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("entity", "data.entity");
@@ -156,6 +146,9 @@ public class EntityUtils implements Module {
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
+        final NBTTagCompound NEW_CURRENT_TARGET_DATA = NbtUtils.getEntityNbt(NEW_CURRENT_TARGET);
+        final NBTTagCompound NEW_CURRENT_RIDING_DATA = NbtUtils.getEntityNbt(NEW_CURRENT_RIDING);
+
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
 
         // Note: Unlike getEntities, this does NOT require Server Module to be enabled
@@ -178,19 +171,14 @@ public class EntityUtils implements Module {
 
         final boolean hasTargetChanged = (NEW_CURRENT_TARGET != null &&
                 !NEW_CURRENT_TARGET.equals(CURRENT_TARGET) || !NEW_CURRENT_TARGET_NAME.equals(CURRENT_TARGET_NAME)) ||
-                (NEW_CURRENT_TARGET == null && CURRENT_TARGET != null);
+                (NEW_CURRENT_TARGET == null && CURRENT_TARGET != null) || !NEW_CURRENT_TARGET_DATA.equals(CURRENT_TARGET_DATA);
         final boolean hasRidingChanged = (NEW_CURRENT_RIDING != null &&
                 !NEW_CURRENT_RIDING.equals(CURRENT_RIDING) || !NEW_CURRENT_RIDING_NAME.equals(CURRENT_RIDING_NAME)) ||
-                (NEW_CURRENT_RIDING == null && CURRENT_RIDING != null);
+                (NEW_CURRENT_RIDING == null && CURRENT_RIDING != null) || !NEW_CURRENT_RIDING_DATA.equals(CURRENT_RIDING_DATA);
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
-            CURRENT_TARGET_TAG = CURRENT_TARGET != null ? CURRENT_TARGET.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_TARGET_TAGS = CURRENT_TARGET_TAG != null ? Lists.newArrayList(CURRENT_TARGET_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_TARGET_TAGS.equals(CURRENT_TARGET_TAGS)) {
-                CURRENT_TARGET_TAGS = NEW_CURRENT_TARGET_TAGS;
-            }
+            CURRENT_TARGET_DATA = NEW_CURRENT_TARGET_DATA;
             CURRENT_TARGET_NAME = NEW_CURRENT_TARGET_NAME;
 
             if (CURRENT_TARGET != null) {
@@ -200,12 +188,7 @@ public class EntityUtils implements Module {
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
-            CURRENT_RIDING_TAG = CURRENT_RIDING != null ? CURRENT_RIDING.writeToNBT(new NBTTagCompound()) : null;
-            final List<String> NEW_CURRENT_RIDING_TAGS = CURRENT_RIDING_TAG != null ? Lists.newArrayList(CURRENT_RIDING_TAG.getKeySet()) : Lists.newArrayList();
-
-            if (!NEW_CURRENT_RIDING_TAGS.equals(CURRENT_RIDING_TAGS)) {
-                CURRENT_RIDING_TAGS = NEW_CURRENT_RIDING_TAGS;
-            }
+            CURRENT_RIDING_DATA = NEW_CURRENT_RIDING_DATA;
             CURRENT_RIDING_NAME = NEW_CURRENT_RIDING_NAME;
 
             if (CURRENT_RIDING != null) {
@@ -246,11 +229,7 @@ public class EntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.entity.target.instance", CURRENT_TARGET);
             CraftPresence.CLIENT.syncArgument("data.entity.target.class", CURRENT_TARGET.getClass());
             CraftPresence.CLIENT.syncArgument("entity.target.name", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME));
-            if (!CURRENT_TARGET_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_TARGET_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.entity.target." + tagName, CURRENT_TARGET_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.entity.target.", CURRENT_TARGET_DATA);
 
             CraftPresence.CLIENT.syncOverride(currentTargetData != null ? currentTargetData : defaultTargetData, "entity.target.message", "entity.target.icon");
             CraftPresence.CLIENT.syncArgument("entity.target.message", currentTargetMessage);
@@ -263,11 +242,7 @@ public class EntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.entity.riding.instance", CURRENT_RIDING);
             CraftPresence.CLIENT.syncArgument("data.entity.riding.class", CURRENT_RIDING.getClass());
             CraftPresence.CLIENT.syncArgument("entity.riding.name", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME));
-            if (!CURRENT_RIDING_TAGS.isEmpty()) {
-                for (String tagName : CURRENT_RIDING_TAGS) {
-                    CraftPresence.CLIENT.syncArgument("data.entity.riding." + tagName, CURRENT_RIDING_TAG.getTag(tagName).toString(), true);
-                }
-            }
+            NbtUtils.parseTags("data.entity.riding.", CURRENT_RIDING_DATA);
 
             CraftPresence.CLIENT.syncOverride(currentRidingData != null ? currentRidingData : defaultRidingData, "entity.riding.message", "entity.riding.icon");
             CraftPresence.CLIENT.syncArgument("entity.riding.message", currentRidingMessage);
