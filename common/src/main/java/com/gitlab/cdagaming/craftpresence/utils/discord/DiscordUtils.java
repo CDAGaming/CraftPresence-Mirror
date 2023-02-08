@@ -1075,6 +1075,8 @@ public class DiscordUtils {
     public void syncPlaceholders() {
         // Sync Internal Values
         syncArgument("_general.instance", CraftPresence.instance);
+        syncArgument("_general.player", CraftPresence.player);
+        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.world : null);
         syncArgument("_config.instance", CraftPresence.CONFIG);
         for (Map.Entry<String, Module> module : CommandUtils.modules.entrySet()) {
             String name = module.getKey();
