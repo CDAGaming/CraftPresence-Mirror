@@ -33,7 +33,18 @@ import net.minecraft.nbt.*;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Utilities for interpreting NBT and related Data Types
+ *
+ * @author CDAGaming
+ */
 public class NbtUtils {
+    /**
+     * Sync the specified NBT data with Discord Utilities
+     *
+     * @param prefix The prefix to synchronize arguments as
+     * @param data   The data to interpret
+     */
     public static void parseTags(final String prefix, final NBTTagCompound data) {
         if (data != null) {
             for (String key : data.getKeySet()) {
@@ -51,6 +62,12 @@ public class NbtUtils {
         }
     }
 
+    /**
+     * Attempt to retrieve the NBT Tag with the specified path
+     *
+     * @param data The data to interpret
+     * @return the resulting NBT Tag, or null if not found
+     */
     public static NBTTagCompound getNbt(final Object data) {
         if (data instanceof Entity) {
             return getNbt((Entity) data);
@@ -60,16 +77,35 @@ public class NbtUtils {
         return null;
     }
 
+    /**
+     * Attempt to retrieve the NBT Tag with the specified path
+     *
+     * @param entity The Entity data to interpret
+     * @return the resulting NBT Tag, or null if not found
+     */
     public static NBTTagCompound getNbt(final Entity entity) {
         NBTTagCompound result = new NBTTagCompound();
         return entity != null ? entity.writeToNBT(result) : result;
     }
 
+    /**
+     * Attempt to retrieve the NBT Tag with the specified path
+     *
+     * @param stack The ItemStack data to interpret
+     * @return the resulting NBT Tag, or null if not found
+     */
     public static NBTTagCompound getNbt(final ItemStack stack) {
         NBTTagCompound result = new NBTTagCompound();
         return stack != null ? stack.writeToNBT(result) : result;
     }
 
+    /**
+     * Attempt to retrieve the NBT Tag with the specified path
+     *
+     * @param data The data to interpret
+     * @param path The path to traverse from the root tag
+     * @return the resulting NBT Tag, or null if not found
+     */
     public static NBTBase getNbt(final Object data, final String... path) {
         if (data instanceof Entity) {
             return getNbt((Entity) data, path);
@@ -79,18 +115,39 @@ public class NbtUtils {
         return null;
     }
 
+    /**
+     * Attempt to retrieve the NBT Tag with the specified path
+     *
+     * @param entity The Entity data to interpret
+     * @param path   The path to traverse from the root tag
+     * @return the resulting NBT Tag, or null if not found
+     */
     public static NBTBase getNbt(final Entity entity, final String... path) {
         return getNbt(
                 getNbt(entity), path
         );
     }
 
+    /**
+     * Attempt to retrieve the NBT Tag with the specified path
+     *
+     * @param stack The ItemStack data to interpret
+     * @param path  The path to traverse from the root tag
+     * @return the resulting NBT Tag, or null if not found
+     */
     public static NBTBase getNbt(final ItemStack stack, final String... path) {
         return getNbt(
                 getNbt(stack), path
         );
     }
 
+    /**
+     * Attempt to retrieve the NBT Tag with the specified path
+     *
+     * @param root The root NBT Tag to interpret
+     * @param path The path to traverse from the root tag
+     * @return the resulting NBT Tag, or null if not found
+     */
     public static NBTBase getNbt(final NBTTagCompound root, final String... path) {
         if (path == null || path.length == 0) {
             return root;
@@ -113,6 +170,12 @@ public class NbtUtils {
         }
     }
 
+    /**
+     * Convert the specified NBT Tag into it's Primitive Equivalent
+     *
+     * @param tag The nbt tag to interpret
+     * @return the primitive equivalent of the NBT Tag data
+     */
     public static Object parseTag(final NBTBase tag) {
         if (tag == null) {
             return null;
