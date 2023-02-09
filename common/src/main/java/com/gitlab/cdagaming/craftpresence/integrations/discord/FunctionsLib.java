@@ -39,7 +39,6 @@ import org.meteordev.starscript.value.Value;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Standard library with some default functions and variables.

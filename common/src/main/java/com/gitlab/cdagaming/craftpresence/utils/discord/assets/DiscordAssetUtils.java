@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Utilities related to locating and Parsing available Discord Assets
