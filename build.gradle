@@ -5,7 +5,7 @@ import java.nio.file.Files
 
 plugins {
     id 'xyz.wagyourtail.unimined' version '0.4.0-SNAPSHOT' apply false
-    id "com.diffplug.spotless" version "6.13.0" apply false
+    id "com.diffplug.spotless" version "6.14.1" apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
@@ -46,10 +46,16 @@ subprojects {
     group = rootProject.group
     archivesBaseName = "${mod_name}"
 
+    Jvm currentJvm = Jvm.current();
+    JavaVersion sourceVersion = currentJvm.getJavaVersion()
     JavaVersion targetVersion = JavaVersion.VERSION_1_8
 
-    sourceCompatibility = targetVersion
-    targetCompatibility = targetVersion
+    boolean is_modern_jvm = sourceVersion.isJava9Compatible()
+
+    if (!is_modern_jvm) {
+        sourceCompatibility = sourceVersion
+        targetCompatibility = targetVersion
+    }
 
     java {
         withSourcesJar()
@@ -157,6 +163,9 @@ subprojects {
         if ((isLegacy && protocol >= 39) || !isLegacy) {
             mappings "${rootProject.fabric_group}:intermediary:${rootProject.mc_version}:v2"
         }
+
+        // Allow using jdk.unsupported classes like sun.misc.Unsafe in the compiled code, working around JDK-8206937.
+        compileOnly("me.eigenraven.java8unsupported:java-8-unsupported-shim:1.0.0")
     }
 
     tasks.withType(JavaCompile).configureEach {
@@ -165,9 +174,7 @@ subprojects {
         // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
         // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
         // We'll use that if it's available, but otherwise we'll use the older option.
-        //
-        // This code is only used on Java 9+ due to https://bugs.openjdk.org/browse/JDK-8206937
-        if (JavaVersion.current().isJava9Compatible() && targetVersion > JavaVersion.VERSION_1_8) {
+        if (is_modern_jvm) {
             it.options.release.set(Integer.parseInt(targetVersion.getMajorVersion()))
         }
     }
@@ -206,6 +213,10 @@ subprojects {
 
         if (isLegacy) {
             doLast {
+                getLogger().info("Processing source via RetroLambda...")
+                if (sourceVersion >= JavaVersion.VERSION_12) {
+                    getLogger().warn("WARNING: Only Java 11 and below are supported with RetroLambda processing.")
+                }
                 var retrolambaJar = new URL("https://oss.sonatype.org/content/groups/public/net/orfjackal/retrolambda/retrolambda/2.5.7/retrolambda-2.5.7.jar")
                 var retrolambdaFile = new File("${rootProject.buildDir}/retrolambda/retrolambda.jar")
                 if (!retrolambdaFile.exists()) {
@@ -216,7 +227,7 @@ subprojects {
                 }
                 var classpath = project.sourceSets.main.runtimeClasspath
                 var classpathString = classpath.files.collect { it.absolutePath }.join(File.pathSeparator)
-                var javahome = Jvm.current().getJavaHome().getAbsolutePath()
+                var javahome = currentJvm.getJavaHome().getAbsolutePath()
                 var javaexe = javahome + File.separator + "bin" + File.separator + "java"
                 if (System.getProperty("os.name").toLowerCase().contains("win") && !System.getProperty("os.name").toLowerCase().contains("darwin")) {
                     javaexe += ".exe"
@@ -239,6 +250,8 @@ subprojects {
                 process.waitFor()
                 if (process.exitValue() != 0) {
                     throw new GradleException("RetroLambda failed with exit code " + process.exitValue())
+                } else {
+                    getLogger().info("Source processing via RetroLambda completed successfully!")
                 }
             }
         }
