@@ -355,8 +355,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         if (data != null && !data.isEmpty()) {
             for (InputStream in : data) {
                 if (in != null) {
-                    final BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName(encoding)));
-                    try {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName(encoding)))) {
                         String currentString;
                         while ((currentString = reader.readLine()) != null) {
                             currentString = currentString.trim();

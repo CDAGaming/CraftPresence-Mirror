@@ -488,8 +488,4 @@ public class Legacy2Modern implements DataMigrator {
     private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, Predicate<String> typeCheck) {
         return generatePair(original, name, typeCheck, (e) -> true);
     }
-
-    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name) {
-        return generatePair(original, name, (e) -> true);
-    }
 }

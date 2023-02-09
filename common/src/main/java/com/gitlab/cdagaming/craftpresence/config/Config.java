@@ -491,4 +491,9 @@ public final class Config extends Module implements Serializable {
         Config p = (Config) obj;
         return toString().equals(p.toString());
     }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

@@ -141,4 +141,9 @@ public class Pair<U, V> {
     public String toString() {
         return "Pair[key=" + (this.getFirst() != null ? this.getFirst().toString() : "N/A") + "; value=" + (this.getSecond() != null ? this.getSecond().toString() : "N/A") + "]";
     }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

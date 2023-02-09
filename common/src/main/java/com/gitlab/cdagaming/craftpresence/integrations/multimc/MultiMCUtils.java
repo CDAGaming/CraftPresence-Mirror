@@ -84,9 +84,8 @@ public class MultiMCUtils {
      */
     public static void loadInstance() {
         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.instance.init"));
-        try {
-            final InputStream STREAM = Files.newInputStream(Paths.get(instanceFile));
-            configFile.load(STREAM);
+        try (InputStream inputStream = Files.newInputStream(Paths.get(instanceFile))) {
+            configFile.load(inputStream);
 
             INSTANCE_NAME = get("name");
 

@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * System and General Use Utilities
@@ -37,6 +38,10 @@ import java.util.List;
  * @author CDAGaming
  */
 public class SystemUtils {
+    /**
+     * An instance of a random number generator, used for select parts of the mod
+     */
+    public static final Random RANDOM = new Random();
     /**
      * The minimum time to wait by default (In Seconds) before callbacks refresh
      */

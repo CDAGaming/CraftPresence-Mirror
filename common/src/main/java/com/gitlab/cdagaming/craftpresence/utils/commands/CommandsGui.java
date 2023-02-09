@@ -611,7 +611,7 @@ public class CommandsGui extends ExtendedScreen {
                         outputData.close();
                     }
                 } catch (Exception ex) {
-                    ModUtils.LOG.debugError(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
+                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
                     if (ModUtils.IS_VERBOSE) {
                         ex.printStackTrace();
                     }

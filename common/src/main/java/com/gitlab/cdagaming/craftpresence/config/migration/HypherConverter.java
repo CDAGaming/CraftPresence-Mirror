@@ -49,9 +49,9 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("unchecked")
 public class HypherConverter implements DataMigrator {
+    private final static String EMPTY_QUOTES = "{''}";
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
-    private final String EMPTY_QUOTES = "{''}";
     // oldName -> newName
     private final Map<String, String> placeholderMappings = ImmutableMap.<String, String>builder()
             .put("%player%", "{player.name}")

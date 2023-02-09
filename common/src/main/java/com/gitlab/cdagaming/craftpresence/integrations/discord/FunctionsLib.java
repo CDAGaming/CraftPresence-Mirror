@@ -25,10 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
+import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -271,7 +268,7 @@ public class FunctionsLib {
             args.add(ss.pop().toString());
         }
         StringUtils.revlist(args);
-        return Value.string(args.get(new Random().nextInt(argCount)));
+        return Value.string(args.get(SystemUtils.RANDOM.nextInt(argCount)));
     }
 
     public static Value rgbaToHex(Starscript ss, int argCount) {

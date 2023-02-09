@@ -82,4 +82,9 @@ public abstract class Module {
         Module p = (Module) obj;
         return toString().equals(p.toString());
     }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }
