@@ -222,12 +222,12 @@ public class KeyUtils {
     void onTick() {
         if (!keysRegistered) {
             if (CraftPresence.instance.gameSettings != null) {
-                for (String keyName : KEY_MAPPINGS.keySet()) {
-                    KeyBinding mapping = KEY_MAPPINGS.get(keyName).getFirst();
-                    Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
+                for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
+                    final KeyBinding mapping = entry.getValue().getFirst();
+                    final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
                     if (!categoryMap.containsKey(mapping.getKeyCategory())) {
-                        Optional<Integer> largest = categoryMap.values().stream().max(Integer::compareTo);
-                        int largestInt = largest.orElse(0);
+                        final Optional<Integer> largest = categoryMap.values().stream().max(Integer::compareTo);
+                        final int largestInt = largest.orElse(0);
                         categoryMap.put(mapping.getKeyCategory(), largestInt + 1);
                     }
                     CraftPresence.instance.gameSettings.keyBindings = ArrayUtils.add(CraftPresence.instance.gameSettings.keyBindings, mapping);
@@ -242,8 +242,9 @@ public class KeyUtils {
             final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
             try {
-                for (String keyName : KEY_MAPPINGS.keySet()) {
-                    final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
+                for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
+                    final String keyName = entry.getKey();
+                    final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                     final KeyBinding keyBind = keyData.getFirst();
                     final Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
                     final int currentBind = keyBind.getKeyCode();
@@ -318,13 +319,14 @@ public class KeyUtils {
     public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getKeyMappings(final FilterMode mode, final List<String> filterData) {
         final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> filteredMappings = Maps.newHashMap();
 
-        for (String keyName : KEY_MAPPINGS.keySet()) {
+        for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
+            final String keyName = entry.getKey();
             if (mode == FilterMode.None ||
                     mode == FilterMode.Category ||
                     mode == FilterMode.Id ||
                     (mode == FilterMode.Name && filterData.contains(keyName))
             ) {
-                final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = KEY_MAPPINGS.get(keyName);
+                final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                 if (mode == FilterMode.None ||
                         (mode == FilterMode.Category && filterData.contains(keyData.getFirst().getKeyCategory())) ||
                         (mode == FilterMode.Id && filterData.contains(keyData.getFirst().getKeyDescription())) ||

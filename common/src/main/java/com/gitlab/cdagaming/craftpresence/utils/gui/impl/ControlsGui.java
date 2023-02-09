@@ -101,8 +101,9 @@ public class ControlsGui extends PaginatedScreen {
 
         super.preRender();
 
-        for (Integer pageNumber : preRenderQueue.keySet()) {
-            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = preRenderQueue.get(pageNumber);
+        for (Map.Entry<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> entry : preRenderQueue.entrySet()) {
+            final Integer pageNumber = entry.getKey();
+            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
             for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
                 renderString(ModUtils.TRANSLATOR.translate(elementData.getFirst()), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), elementData.getThird(), pageNumber);
             }
@@ -111,8 +112,9 @@ public class ControlsGui extends PaginatedScreen {
 
     @Override
     public void postRender() {
-        for (Integer pageNumber : postRenderQueue.keySet()) {
-            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = postRenderQueue.get(pageNumber);
+        for (Map.Entry<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> entry : postRenderQueue.entrySet()) {
+            final Integer pageNumber = entry.getKey();
+            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
             for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
                 if (currentPage == pageNumber && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
                     CraftPresence.GUIS.drawMultiLineString(
@@ -138,8 +140,9 @@ public class ControlsGui extends PaginatedScreen {
      * Sort Key Mappings via their categories, used for placement into gui
      */
     private void sortMappings() {
-        for (String keyName : keyMappings.keySet()) {
-            final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
+        for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
+            final String keyName = entry.getKey();
+            final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
             if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
                 categorizedNames.put(keyData.getFirst().getKeyCategory(), Lists.newArrayList(keyName));
             } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
@@ -157,8 +160,9 @@ public class ControlsGui extends PaginatedScreen {
         postRenderQueue.clear();
 
         final int renderPosition = (getScreenWidth() / 2) + 3;
-        for (String categoryName : categorizedNames.keySet()) {
+        for (Map.Entry<String, List<String>> entry : categorizedNames.entrySet()) {
             syncPageData();
+            final String categoryName = entry.getKey();
             final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((getScreenWidth() / 2f) - (getStringWidth(categoryName) / 2f), (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
             if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                 preRenderQueue.put(currentAllocatedPage, Lists.newArrayList());
@@ -167,7 +171,7 @@ public class ControlsGui extends PaginatedScreen {
                 preRenderQueue.get(currentAllocatedPage).add(categoryData);
             }
 
-            final List<String> keyNames = categorizedNames.get(categoryName);
+            final List<String> keyNames = entry.getValue();
             currentAllocatedRow++;
 
             for (String keyName : keyNames) {

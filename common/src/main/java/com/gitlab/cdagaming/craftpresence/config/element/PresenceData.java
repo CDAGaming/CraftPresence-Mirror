@@ -154,8 +154,9 @@ public class PresenceData extends Module implements Serializable {
         PresenceData p = (PresenceData) obj;
         boolean areButtonsEqual = buttons.size() == p.buttons.size();
         if (areButtonsEqual) {
-            for (String key : buttons.keySet()) {
-                if (!p.buttons.containsKey(key) || !p.buttons.get(key).equals(buttons.get(key))) {
+            for (Map.Entry<String, Button> entry : buttons.entrySet()) {
+                final String key = entry.getKey();
+                if (!p.buttons.containsKey(key) || !p.buttons.get(key).equals(entry.getValue())) {
                     areButtonsEqual = false;
                     break;
                 }
