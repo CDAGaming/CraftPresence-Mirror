@@ -11,6 +11,11 @@ if (!isJarMod) {
     canUseATs = accessWidenerFile != null && (!isLegacy || protocol > 60)
 }
 
+// Note: Required for proper mixin remaps
+mods {
+    modRemapper.setRemapMixins("TINY_HARD")
+}
+
 minecraft {
     if (isJarMod) {
         jarMod {
