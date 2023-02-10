@@ -202,7 +202,7 @@ public class NbtUtils {
                 final NBTTagList list = ((NBTTagList) tag);
                 final List<Object> converted = Lists.newArrayList();
                 if (!list.isEmpty()) {
-                    for (int i = 0; i <= list.tagCount(); i++) {
+                    for (int i = 0; i < list.tagCount(); i++) {
                         converted.add(parseTag(list.get(i)));
                     }
                 }
