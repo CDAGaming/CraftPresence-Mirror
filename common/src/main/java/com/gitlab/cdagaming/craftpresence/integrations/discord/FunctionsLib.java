@@ -54,6 +54,7 @@ public class FunctionsLib {
         ss.set("randomString", FunctionsLib::randomString);
         ss.set("getFirst", FunctionsLib::getFirst);
         ss.set("getNbt", FunctionsLib::getNbt);
+        ss.set("isWithinValue", FunctionsLib::isWithinValue);
 
         // DiscordUtils
         ss.set("getResult", FunctionsLib::getResult);
@@ -253,6 +254,85 @@ public class FunctionsLib {
                 NbtUtils.getNbt(data, path.toArray(new String[0]))
         );
         return result != null ? Value.object(result) : Value.null_();
+    }
+
+    public static Value isWithinValue(Starscript ss, int argCount) {
+        final List<Value> args = Lists.newArrayList();
+        if (argCount < 3 || argCount > 6)
+            ss.error("isWithinValue() can only be used with 3-6 arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop());
+        }
+        StringUtils.revlist(args);
+
+        Value currentArg;
+
+        currentArg = args.get(0);
+        args.remove(0);
+
+        double value = 0;
+        if (currentArg.isNumber()) {
+            value = currentArg.getNumber();
+        } else {
+            ss.error("First argument to isWithinValue() needs to be a number.");
+        }
+
+        currentArg = args.get(0);
+        args.remove(0);
+
+        double min = value;
+        if (currentArg.isNumber()) {
+            min = currentArg.getNumber();
+        } else {
+            ss.error("Second argument to isWithinValue() needs to be a number.");
+        }
+
+        currentArg = args.get(0);
+        args.remove(0);
+
+        double max = min;
+        if (currentArg.isNumber()) {
+            max = currentArg.getNumber();
+        } else {
+            ss.error("Third argument to isWithinValue() needs to be a number.");
+        }
+
+        // Optional arguments
+        boolean contains_min = false;
+        boolean contains_max = false;
+        boolean check_sanity = true;
+
+        if (argCount >= 5) {
+            currentArg = args.get(0);
+            args.remove(0);
+
+            if (currentArg.isBool()) {
+                contains_min = currentArg.getBool();
+            } else {
+                ss.error("Fourth argument to isWithinValue() needs to be a boolean.");
+            }
+
+            currentArg = args.get(0);
+            args.remove(0);
+
+            if (currentArg.isBool()) {
+                contains_max = currentArg.getBool();
+            } else {
+                ss.error("Fifth argument to isWithinValue() needs to be a boolean.");
+            }
+
+            if (argCount == 6) {
+                currentArg = args.get(0);
+                args.remove(0);
+
+                if (currentArg.isBool()) {
+                    check_sanity = currentArg.getBool();
+                } else {
+                    ss.error("Sixth argument to isWithinValue() needs to be a boolean.");
+                }
+            }
+        }
+        return Value.bool(StringUtils.isWithinValue(value, min, max, contains_min, contains_max, check_sanity));
     }
 
     public static Value randomAsset(Starscript ss, int argCount) {

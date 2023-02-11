@@ -52,7 +52,7 @@ import java.util.Map;
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public final class Config extends Module implements Serializable {
     // Constants
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
     private static final long serialVersionUID = -4853238501768086595L;
     public static int MC_VERSION;
     private static List<String> keyCodeTriggers;
@@ -195,7 +195,7 @@ public final class Config extends Module implements Serializable {
         isNewFile = false;
     }
 
-    public JsonElement handleMigrations(JsonElement rawJson, int oldVer, final int newVer) {
+    public JsonElement handleMigrations(JsonElement rawJson, final int oldVer, final int newVer) {
         if (isNewFile) {
             final File legacyFile = new File(ModUtils.configDir + File.separator + ModUtils.MOD_ID + ".properties");
             if (legacyFile.exists()) {
@@ -219,6 +219,25 @@ public final class Config extends Module implements Serializable {
 
         // Config Layers for prior existing files (Or recently made ones)
         if (!isNewFile) {
+            int currentVer = oldVer;
+            if (currentVer < newVer) {
+                if (ModUtils.IS_VERBOSE) {
+                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.outdated", currentVer, newVer));
+                }
+
+                if (StringUtils.isWithinValue(currentVer, 1, 2, true, true)) {
+                    // Schema Changes (v1 -> v2)
+                    //  - Property Migration: `generalSettings.showTime` -> `displaySettings.presenceData.startTimestamp`
+                    final boolean showTime = rawJson.getAsJsonObject()
+                            .getAsJsonObject("generalSettings")
+                            .getAsJsonPrimitive("showTime").getAsBoolean();
+                    displaySettings.presenceData.startTimestamp = showTime ? "{general.time}" : "";
+                    currentVer = 2;
+                }
+
+                save();
+            }
+
             // Refresh the raw json contents, in case of any changes
             try {
                 rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);

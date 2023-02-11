@@ -166,6 +166,75 @@ public class StringUtils {
     }
 
     /**
+     * Determines whether the specified value is within the specified range
+     *
+     * @param value        The specified value to interpret
+     * @param min          The minimum the value is allowed to be
+     * @param max          The maximum the value is allowed to be
+     * @param contains_min Whether the range should include the min value
+     * @param contains_max Whether the range should include the max value
+     * @param check_sanity Whether to sanity check the min and max values
+     * @return whether the specified value is within range
+     */
+    public static boolean isWithinValue(final double value,
+                                        double min, double max,
+                                        final boolean contains_min, final boolean contains_max,
+                                        final boolean check_sanity) {
+        // Sanity checks
+        if (check_sanity) {
+            if (min > max) {
+                min = max;
+            }
+            if (max < min) {
+                max = min;
+            }
+            if (min < 0) {
+                min = 0;
+            }
+            if (max < 0) {
+                max = 0;
+            }
+        }
+        // Contains Checks
+        if (!contains_min) {
+            min = min + 1;
+        }
+        if (!contains_max) {
+            max = max - 1;
+        }
+        return (value >= min && value <= max);
+    }
+
+    /**
+     * Determines whether the specified value is within the specified range
+     *
+     * @param value        The specified value to interpret
+     * @param min          The minimum the value is allowed to be
+     * @param max          The maximum the value is allowed to be
+     * @param contains_min Whether the range should include the min value
+     * @param contains_max Whether the range should include the max value
+     * @return whether the specified value is within range
+     */
+    public static boolean isWithinValue(final double value,
+                                        double min, double max,
+                                        final boolean contains_min, final boolean contains_max) {
+        return isWithinValue(value, min, max, contains_min, contains_max, true);
+    }
+
+    /**
+     * Determines whether the specified value is within the specified range
+     *
+     * @param value The specified value to interpret
+     * @param min   The minimum the value is allowed to be
+     * @param max   The maximum the value is allowed to be
+     * @return whether the specified value is within range
+     */
+    public static boolean isWithinValue(final double value,
+                                        double min, double max) {
+        return isWithinValue(value, min, max, false, false);
+    }
+
+    /**
      * Rounds a Double to the defined decimal place, if possible
      *
      * @param value  the original value to round
