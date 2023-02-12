@@ -44,7 +44,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * Migration from v1 (v1.x) to v2 (v2.0 - Schema 1) Configs
+ * Migration from v1 (v1.x) to v2 (v2.0 - Latest Schema) Configs
  */
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public class Legacy2Modern implements DataMigrator {
@@ -445,8 +445,8 @@ public class Legacy2Modern implements DataMigrator {
             if (!configFile.delete()) {
                 ModUtils.LOG.error("Failed to remove: " + configFile.getName());
             }
-            // Force Schema Version to 1, to ensure other migrations function
-            instance._schemaVersion = 1;
+            // Force Schema Version to the latest schema, before saving
+            instance._schemaVersion = Config.VERSION;
             instance.save();
         }
         return instance;

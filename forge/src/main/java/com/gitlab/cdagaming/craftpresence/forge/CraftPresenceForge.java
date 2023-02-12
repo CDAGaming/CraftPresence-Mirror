@@ -37,17 +37,23 @@ import net.minecraftforge.fml.common.Mod;
  *
  * @author CDAGaming
  */
-@Mod(modid = ModUtils.MOD_ID, name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = ModUtils.UPDATE_JSON, acceptedMinecraftVersions = "*")
+@Mod(modid = "craftpresence", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = ModUtils.UPDATE_JSON, acceptedMinecraftVersions = "*")
 public class CraftPresenceForge {
     /**
      * Begins Scheduling Ticks on Class Initialization
      */
+    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     public CraftPresenceForge() {
         if (MappingUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-forge.srg");
-        new CraftPresence(this::setupIntegrations);
+        new CraftPresence(new Runnable() {
+            @Override
+            public void run() {
+                setupIntegrations();
+            }
+        });
     }
 
     /**
