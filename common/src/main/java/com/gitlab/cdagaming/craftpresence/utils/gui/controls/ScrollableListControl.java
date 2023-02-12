@@ -310,105 +310,103 @@ public class ScrollableListControl extends GuiSlot {
         String displayName = entryAliases.getOrDefault(originalName, originalName);
         int xOffset = xPos;
 
-        if (!CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements) {
-            ResourceLocation texture = new ResourceLocation("");
-            String assetUrl;
+        ResourceLocation texture = new ResourceLocation("");
+        String assetUrl;
 
-            if (renderType == RenderType.ServerData) {
-                final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
+        if (renderType == RenderType.ServerData) {
+            final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
-                if (data != null) {
-                    assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
-                    texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
-                } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
-                        !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
-                    final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
-                    final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
-                                    CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
-                                    originalName
-                            ),
-                            new Pair<>("server.address.short", () -> formattedIP),
-                            new Pair<>("server.address.full", () -> originalName)
-                    ).get().toString();
-                    texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
-                    if (currentScreen.isDebugMode()) {
-                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
-                    }
-                }
-            } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
-                assetUrl = DiscordAssetUtils.getUrl(
-                        renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
-                        originalName
-                );
+            if (data != null) {
+                assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
+                texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
+            } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                    !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
+                final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
+                final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
+                                CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
+                                originalName
+                        ),
+                        new Pair<>("server.address.short", () -> formattedIP),
+                        new Pair<>("server.address.full", () -> originalName)
+                ).get().toString();
+                texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                 if (currentScreen.isDebugMode()) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
+                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
-                texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
-            } else if (renderType == RenderType.EntityData) {
-                final boolean isPlayer = CraftPresence.ENTITIES.PLAYER_BINDINGS.containsKey(originalName);
-                final boolean isValidUuid = StringUtils.isValidUuid(originalName);
-                if (isPlayer && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
-                        !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-                    final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
-                                    CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
-                                    originalName
-                            ),
-                            new Pair<>("player.name", () -> originalName),
-                            new Pair<>("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
-                            new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
-                    ).get().toString();
-                    texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
-                    if (currentScreen.isDebugMode()) {
-                        hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
-                    }
+            }
+        } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
+            assetUrl = DiscordAssetUtils.getUrl(
+                    renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
+                    originalName
+            );
+            if (currentScreen.isDebugMode()) {
+                hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
+            }
+            texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
+        } else if (renderType == RenderType.EntityData) {
+            final boolean isPlayer = CraftPresence.ENTITIES.PLAYER_BINDINGS.containsKey(originalName);
+            final boolean isValidUuid = StringUtils.isValidUuid(originalName);
+            if (isPlayer && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                    !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
+                                CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                                originalName
+                        ),
+                        new Pair<>("player.name", () -> originalName),
+                        new Pair<>("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
+                        new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
+                ).get().toString();
+                texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
+                if (currentScreen.isDebugMode()) {
+                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
-            } else if (renderType == RenderType.ItemData) {
-                texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
-            } else if (renderType == RenderType.Placeholder) {
-                final String placeholderTranslation = String.format("%s.placeholders.%s.description",
-                        ModUtils.MOD_ID,
-                        originalName
-                );
-                final String placeholderUsage = String.format("%s.placeholders.%s.usage",
-                        ModUtils.MOD_ID,
-                        originalName
-                );
-                if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
-                    hoverText.add(String.format("%s \"%s\"",
-                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.description"),
-                            ModUtils.TRANSLATOR.translate(placeholderTranslation)
-                    ));
-                }
-                if (ModUtils.TRANSLATOR.hasTranslation(placeholderUsage)) {
-                    hoverText.add(String.format("%s \"%s\"",
-                            ModUtils.TRANSLATOR.translate("gui.config.message.editor.usage"),
-                            ModUtils.TRANSLATOR.translate(placeholderUsage)
-                    ));
-                }
-                if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {
-                    final Supplier<Value> suppliedInfo = CraftPresence.CLIENT.getArgument(originalName);
+            }
+        } else if (renderType == RenderType.ItemData) {
+            texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
+        } else if (renderType == RenderType.Placeholder) {
+            final String placeholderTranslation = String.format("%s.placeholders.%s.description",
+                    ModUtils.MOD_ID,
+                    originalName
+            );
+            final String placeholderUsage = String.format("%s.placeholders.%s.usage",
+                    ModUtils.MOD_ID,
+                    originalName
+            );
+            if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
+                hoverText.add(String.format("%s \"%s\"",
+                        ModUtils.TRANSLATOR.translate("gui.config.message.editor.description"),
+                        ModUtils.TRANSLATOR.translate(placeholderTranslation)
+                ));
+            }
+            if (ModUtils.TRANSLATOR.hasTranslation(placeholderUsage)) {
+                hoverText.add(String.format("%s \"%s\"",
+                        ModUtils.TRANSLATOR.translate("gui.config.message.editor.usage"),
+                        ModUtils.TRANSLATOR.translate(placeholderUsage)
+                ));
+            }
+            if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {
+                final Supplier<Value> suppliedInfo = CraftPresence.CLIENT.getArgument(originalName);
 
-                    if (suppliedInfo != null) {
-                        final Value rawValue = suppliedInfo.get();
-                        final String tagValue = rawValue.toString();
-                        if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
-                            hoverText.add(String.format("%s \"%s\"",
-                                    ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                    (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
-                            ));
-                        }
+                if (suppliedInfo != null) {
+                    final Value rawValue = suppliedInfo.get();
+                    final String tagValue = rawValue.toString();
+                    if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
+                        hoverText.add(String.format("%s \"%s\"",
+                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
+                        ));
                     }
                 }
             }
+        }
 
-            if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
-                CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
-                if (currentScreen.isDebugMode()) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
-                }
-                // Note: 35 Added to xOffset to accommodate for Image Size
-                xOffset += 35;
+        if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
+            CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
+            if (currentScreen.isDebugMode()) {
+                hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
             }
+            // Note: 35 Added to xOffset to accommodate for Image Size
+            xOffset += 35;
         }
 
         final String identifierName = renderType.getIdentifier(originalName);
