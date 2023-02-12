@@ -34,19 +34,13 @@ import net.fabricmc.api.ClientModInitializer;
  * @author CDAGaming
  */
 public class CraftPresenceFabric implements ClientModInitializer {
-    @SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
     @Override
     public void onInitializeClient() {
         if (MappingUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-fabric.srg");
-        new CraftPresence(new Runnable() {
-            @Override
-            public void run() {
-                setupIntegrations();
-            }
-        });
+        new CraftPresence(this::setupIntegrations);
     }
 
     /**
