@@ -96,8 +96,8 @@ public class MappingUtils {
      * @return the resulting mapped class path
      */
     public static String getMappedPath(String input) {
-        if (getClassMap().containsKey(input)) {
-            return getClassMap().get(input).replace("/", ".");
+        if (classMap.containsKey(input)) {
+            return classMap.get(input).replace("/", ".");
         }
         return input;
     }
@@ -113,7 +113,7 @@ public class MappingUtils {
         final Set<String> matches = new HashSet<>();
         start = start.replace(".", "/");
 
-        for (Map.Entry<String, String> entry : getClassMap().entrySet()) {
+        for (Map.Entry<String, String> entry : classMap.entrySet()) {
             if (matchCondition.test(entry.getValue(), start)) {
                 matches.add(entry.getKey().replace("/", "."));
             }
@@ -151,7 +151,7 @@ public class MappingUtils {
      * @return the mapped class name
      */
     public static String getClassName(Class<?> object, boolean simpleName) {
-        String result = getClassMap().get(
+        String result = classMap.get(
                 object.getName().replace(".", "/")
         );
         if (result == null) {
