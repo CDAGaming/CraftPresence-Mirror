@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.integrations;
 
 import com.google.common.base.Throwables;
 import sun.misc.Unsafe;
