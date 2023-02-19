@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.0.0 Beta 2 (02/23/2023)
+## v2.0.0 Beta 2 (02/21/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-beta.1)_
@@ -280,7 +280,7 @@ lower.
 
 Please keep in mind the following:
 
-* Ports for MC 1.6.4 and lower will now show Images for `ServerData` type Scroll Lists, as Mojang did not implement the
+* Ports for MC 1.6.4 and lower will not show Image Previews in Scroll Lists, as Mojang did not implement the
   logic for this until MC 1.7 and above
 * The MC a1.1.2_01 Port has its Dimension and Biome Modules **disabled**, as Mojang did not implement the logic for this
   until MC a1.2.x and above
