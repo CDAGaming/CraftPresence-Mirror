@@ -28,9 +28,11 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.Serializable;
 
+@SuppressFBWarnings("UCF_USELESS_CONTROL_FLOW_NEXT_LINE")
 public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
     private static Accessibility DEFAULT;

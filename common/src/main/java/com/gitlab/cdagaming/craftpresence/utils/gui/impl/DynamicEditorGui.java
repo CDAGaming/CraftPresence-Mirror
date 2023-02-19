@@ -43,7 +43,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
     public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
-    public String additionalNote, resetText;
+    public String resetText;
     public ModuleData defaultData, originalData, currentData;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
@@ -85,7 +85,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     public void initializeUi() {
         int controlIndex = 1;
         if (!initialized) {
-            this.resetText = "gui.config.message.button.remove";
+            resetText = "gui.config.message.button.remove";
             if (isNewValue) {
                 mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
                 if (onNewInit != null) {
@@ -222,10 +222,6 @@ public class DynamicEditorGui extends ExtendedScreen {
         renderString(primaryText, (getScreenWidth() / 2f) - 130, primaryInput.getControlPosY() + 5, 0xFFFFFF);
         if (willRenderSecondaryInput) {
             renderString(secondaryText, (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
-        }
-
-        if (!StringUtils.isNullOrEmpty(additionalNote)) {
-            renderString(additionalNote, (getScreenWidth() / 2f) - (getStringWidth(additionalNote) / 2f), (getScreenHeight() - 45), 0xFFFFFF);
         }
 
         proceedButton.setControlMessage(

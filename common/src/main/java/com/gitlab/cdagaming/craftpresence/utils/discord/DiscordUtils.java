@@ -55,6 +55,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -78,6 +79,7 @@ import java.util.function.Supplier;
  *
  * @author CDAGaming
  */
+@SuppressFBWarnings("UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
 public class DiscordUtils {
     /**
      * A mapping of the arguments that have overwritten module data

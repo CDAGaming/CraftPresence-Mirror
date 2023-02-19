@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.ClientBrandRetriever;
 
 import java.io.File;
@@ -35,6 +36,7 @@ import java.io.File;
  *
  * @author CDAGaming
  */
+@SuppressFBWarnings("MS_SHOULD_BE_FINAL")
 public class ModUtils {
     /**
      * The Application's Name

@@ -26,7 +26,9 @@ package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * KeyCode Conversion Layer used to translate between other Keyboard Data Types
@@ -39,7 +41,7 @@ public class KeyConverter {
      * Note: Characters that are Unavailable in lwjgl3 are listed as lwjgl3's Unknown Keycode (-1)
      * Format: LWJGL2 Key;[LWJGL3 Key, Universal Key Name]
      */
-    public static final HashMap<Integer, Pair<Integer, String>> toGlfw = new HashMap<Integer, Pair<Integer, String>>() {
+    public static final Map<Integer, Pair<Integer, String>> toGlfw = Collections.unmodifiableMap(new HashMap<Integer, Pair<Integer, String>>() {
         /**
          * The serialized unique version identifier
          */
@@ -176,14 +178,14 @@ public class KeyConverter {
             put(222, new Pair<>(-1, "Power"));
             put(223, new Pair<>(-1, "Sleep"));
         }
-    };
+    });
 
     /**
      * Mapping from lwjgl3 to lwjgl2
      * Note: Characters that are Unavailable in lwjgl2 are listed as lwjgl2's Unknown Keycode (0)
      * Format: LWJGL3 Key;[LWJGL2 Key, Universal Key Name]
      */
-    public static final HashMap<Integer, Pair<Integer, String>> fromGlfw = new HashMap<Integer, Pair<Integer, String>>() {
+    public static final Map<Integer, Pair<Integer, String>> fromGlfw = Collections.unmodifiableMap(new HashMap<Integer, Pair<Integer, String>>() {
         /**
          * The serialized unique version identifier
          */
@@ -312,7 +314,7 @@ public class KeyConverter {
             put(347, new Pair<>(220, "Right Meta"));
             put(348, new Pair<>(0, "KEY_MENU"));
         }
-    };
+    });
 
     /**
      * Converts a KeyCode using the Specified Conversion Mode, if possible

@@ -86,6 +86,10 @@ public class CraftPresence {
      */
     public static final GuiUtils GUIS = new GuiUtils();
     /**
+     * The {@link SystemUtils} Instance for this Mod
+     */
+    public static final SystemUtils SYSTEM = new SystemUtils();
+    /**
      * Whether Pack Data could be found and parsed
      */
     public static boolean packFound = false;
@@ -105,10 +109,6 @@ public class CraftPresence {
      * The {@link Config} Instance for this Mod
      */
     public static Config CONFIG;
-    /**
-     * The {@link SystemUtils} Instance for this Mod
-     */
-    public static SystemUtils SYSTEM;
     /**
      * Whether {@link ModUtils#IS_DEV} has been overridden pre-setup
      */
@@ -136,7 +136,6 @@ public class CraftPresence {
         // Initialize Dynamic Mappings
         MappingUtils.getClassMap();
 
-        SYSTEM = new SystemUtils();
         initCallback = callback;
         scheduleTick();
     }
