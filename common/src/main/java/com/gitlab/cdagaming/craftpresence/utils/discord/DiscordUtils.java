@@ -492,8 +492,9 @@ public class DiscordUtils {
                     script.decompile(output);
                 }
             } catch (Throwable ex) {
-                ModUtils.LOG.error("A compiler exception has occurred:");
+                ModUtils.LOG.error("A compiler exception has occurred (" + ex.getClass().getSimpleName() + "):");
                 ModUtils.LOG.error("Original: \"" + data + "\"");
+                final List<String> splitEx = StringUtils.splitTextByNewLine(ex.getMessage());
                 if (output != null) {
                     try {
                         output.append(ex.getMessage()).append('\n');
@@ -502,6 +503,11 @@ public class DiscordUtils {
                 }
                 if (ModUtils.IS_VERBOSE) {
                     ex.printStackTrace();
+                } else {
+                    ModUtils.LOG.error("Message: \"" + splitEx.get(0) + "\"");
+                    if (splitEx.size() > 1) {
+                        ModUtils.LOG.error("Please enable verbose mode to see full exception.");
+                    }
                 }
                 return Value.null_();
             }
@@ -1209,7 +1215,7 @@ public class DiscordUtils {
             } else {
                 result = cachedImageData.get(primaryKey);
                 if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
-                    if (showLogging && !result.equals(primaryKey)) {
+                    if (ModUtils.IS_VERBOSE && !result.equals(primaryKey)) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
                         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
                     }
