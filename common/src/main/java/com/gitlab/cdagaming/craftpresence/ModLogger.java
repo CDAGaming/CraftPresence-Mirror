@@ -65,7 +65,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void error(final String logMessage, Object... logArguments) {
-        if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat) {
+        if (canShowAsChat()) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§c " + logMessage);
         } else {
             getLogInstance().error(logMessage, logArguments);
@@ -79,7 +79,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void warn(final String logMessage, Object... logArguments) {
-        if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat) {
+        if (canShowAsChat()) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§e " + logMessage);
         } else {
             getLogInstance().warn(logMessage, logArguments);
@@ -93,7 +93,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void info(final String logMessage, Object... logArguments) {
-        if (CraftPresence.player != null && !CraftPresence.CONFIG.hasChanged && !CraftPresence.closing && CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat) {
+        if (canShowAsChat()) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r " + logMessage);
         } else {
             getLogInstance().info(logMessage, logArguments);
@@ -134,5 +134,17 @@ public class ModLogger {
         if (ModUtils.IS_DEV) {
             error("[DEBUG] " + logMessage, logArguments);
         }
+    }
+
+    /**
+     * Whether the logger can show output as chat messages
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean canShowAsChat() {
+        return CraftPresence.player != null &&
+                !CraftPresence.CONFIG.hasChanged &&
+                !CraftPresence.SYSTEM.IS_GAME_CLOSING &&
+                CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat;
     }
 }

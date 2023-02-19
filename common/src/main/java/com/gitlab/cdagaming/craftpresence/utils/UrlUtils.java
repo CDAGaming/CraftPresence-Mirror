@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -205,6 +206,7 @@ public class UrlUtils {
      *
      * @param targetUrl The URL to Open, as a URI
      */
+    @SuppressFBWarnings("REC_CATCH_EXCEPTION")
     @SuppressWarnings("RedundantArrayCreation")
     public static void openUrl(final URI targetUrl) {
         try {

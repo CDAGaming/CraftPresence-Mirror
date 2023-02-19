@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
 import me.hypherionmc.moonconfig.core.file.FileConfig;
 import net.minecraft.client.gui.GuiDownloadTerrain;
@@ -103,6 +104,7 @@ public class HypherConverter implements DataMigrator {
         this.replayModPath = entry.getValue() + "simple-rpc-replaymod.toml";
     }
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     @Override
     public Config apply(Config instance, JsonElement rawJson, Object... args) {
         ModUtils.LOG.info("Simple RPC (By: HypherionSA) config data found, attempting to migrate settings to CraftPresence...");

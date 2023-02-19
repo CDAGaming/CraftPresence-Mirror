@@ -46,13 +46,13 @@ import java.util.function.Predicate;
 
 public class ControlsGui extends PaginatedScreen {
 
+    private static final int maxElementsPerPage = 7, startRow = 1;
     // Format: See KeyUtils#KEY_MAPPINGS
     private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = Maps.newHashMap();
     // Format: pageNumber:[elementText:[xPos:yPos]:color]
     private final Map<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> preRenderQueue = Maps.newHashMap(), postRenderQueue = Maps.newHashMap();
-    private static final int maxElementsPerPage = 7, startRow = 1;
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;

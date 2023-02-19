@@ -27,9 +27,11 @@ package com.gitlab.cdagaming.craftpresence.integrations.curse.impl;
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.List;
 
+@SuppressFBWarnings("URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD")
 public class CachedScan {
 
     @SerializedName("folderName")

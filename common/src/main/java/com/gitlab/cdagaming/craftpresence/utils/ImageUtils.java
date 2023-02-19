@@ -79,7 +79,7 @@ public class ImageUtils {
             @Override
             public void run() {
                 try {
-                    while (!CraftPresence.closing) {
+                    while (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
                         final Pair<String, Pair<InputType, Object>> request = urlRequests.take();
                         boolean isGif = request.getFirst().endsWith(".gif");
 

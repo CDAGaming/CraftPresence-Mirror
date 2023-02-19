@@ -89,6 +89,10 @@ public class SystemUtils {
      */
     public boolean HAS_GAME_LOADED = false;
     /**
+     * If the Mod is Currently Closing and Clearing Data
+     */
+    public boolean IS_GAME_CLOSING = false;
+    /**
      * The Current Epoch Unix Timestamp in Milliseconds
      */
     public long CURRENT_TIMESTAMP;

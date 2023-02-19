@@ -244,7 +244,7 @@ public class DiscordUtils {
         final Thread shutdownThread = new Thread("CraftPresence-ShutDown-Handler") {
             @Override
             public void run() {
-                CraftPresence.closing = true;
+                CraftPresence.SYSTEM.IS_GAME_CLOSING = true;
                 CraftPresence.timerObj.cancel();
 
                 shutDown();

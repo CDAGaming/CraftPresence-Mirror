@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -483,6 +484,7 @@ public class TileEntityUtils implements Module {
         }
     }
 
+    @SuppressFBWarnings("DE_MIGHT_IGNORE")
     @Override
     public void getAllData() {
         for (Block block : Block.REGISTRY) {

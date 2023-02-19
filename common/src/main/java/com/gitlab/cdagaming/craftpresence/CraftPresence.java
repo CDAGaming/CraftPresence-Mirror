@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -46,87 +47,68 @@ import java.util.TimerTask;
  *
  * @author CDAGaming
  */
+@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CraftPresence {
+    /**
+     * Timer Instance for this Class, used for Scheduling Events
+     */
+    public static final Timer timerObj = new Timer(CraftPresence.class.getSimpleName());
+    /**
+     * The {@link KeyUtils} Instance for this Mod
+     */
+    public static final KeyUtils KEYBINDINGS = new KeyUtils();
+    /**
+     * The {@link DiscordUtils} Instance for this Mod
+     */
+    public static final DiscordUtils CLIENT = new DiscordUtils();
+    /**
+     * The {@link ServerUtils} Instance for this Mod
+     */
+    public static final ServerUtils SERVER = new ServerUtils();
+    /**
+     * The {@link BiomeUtils} Instance for this Mod
+     */
+    public static final BiomeUtils BIOMES = new BiomeUtils();
+    /**
+     * The {@link DimensionUtils} Instance for this Mod
+     */
+    public static final DimensionUtils DIMENSIONS = new DimensionUtils();
+    /**
+     * The {@link EntityUtils} Instance for this Mod
+     */
+    public static final EntityUtils ENTITIES = new EntityUtils();
+    /**
+     * The {@link TileEntityUtils} Instance for this Mod
+     */
+    public static final TileEntityUtils TILE_ENTITIES = new TileEntityUtils();
+    /**
+     * The {@link GuiUtils} Instance for this Mod
+     */
+    public static final GuiUtils GUIS = new GuiUtils();
     /**
      * Whether Pack Data could be found and parsed
      */
     public static boolean packFound = false;
-
-    /**
-     * If the Mod is Currently Closing and Clearing Data
-     */
-    public static boolean closing = false;
-
-    /**
-     * Timer Instance for this Class, used for Scheduling Events
-     */
-    public static Timer timerObj = new Timer(CraftPresence.class.getSimpleName());
-
     /**
      * The Minecraft Instance attached to this Mod
      */
     public static Minecraft instance;
-
     /**
      * The Minecraft Instance Session attached to this Mod
      */
     public static Session session;
-
     /**
      * The Current Player detected from the Minecraft Instance
      */
     public static EntityPlayer player;
-
     /**
      * The {@link Config} Instance for this Mod
      */
     public static Config CONFIG;
-
     /**
      * The {@link SystemUtils} Instance for this Mod
      */
-    public static SystemUtils SYSTEM = new SystemUtils();
-
-    /**
-     * The {@link KeyUtils} Instance for this Mod
-     */
-    public static KeyUtils KEYBINDINGS = new KeyUtils();
-
-    /**
-     * The {@link DiscordUtils} Instance for this Mod
-     */
-    public static DiscordUtils CLIENT = new DiscordUtils();
-
-    /**
-     * The {@link ServerUtils} Instance for this Mod
-     */
-    public static ServerUtils SERVER = new ServerUtils();
-
-    /**
-     * The {@link BiomeUtils} Instance for this Mod
-     */
-    public static BiomeUtils BIOMES = new BiomeUtils();
-
-    /**
-     * The {@link DimensionUtils} Instance for this Mod
-     */
-    public static DimensionUtils DIMENSIONS = new DimensionUtils();
-
-    /**
-     * The {@link EntityUtils} Instance for this Mod
-     */
-    public static EntityUtils ENTITIES = new EntityUtils();
-
-    /**
-     * The {@link TileEntityUtils} Instance for this Mod
-     */
-    public static TileEntityUtils TILE_ENTITIES = new TileEntityUtils();
-
-    /**
-     * The {@link GuiUtils} Instance for this Mod
-     */
-    public static GuiUtils GUIS = new GuiUtils();
-
+    public static SystemUtils SYSTEM;
     /**
      * Whether {@link ModUtils#IS_DEV} has been overridden pre-setup
      */
@@ -151,7 +133,11 @@ public class CraftPresence {
      * @param callback The callback to run upon post-initialization
      */
     public CraftPresence(Runnable callback) {
-        this.initCallback = callback;
+        // Initialize Dynamic Mappings
+        MappingUtils.getClassMap();
+
+        SYSTEM = new SystemUtils();
+        initCallback = callback;
         scheduleTick();
     }
 
@@ -168,9 +154,6 @@ public class CraftPresence {
      * Consists of Data Initialization and RPC Setup
      */
     private void init() {
-        // Initialize Dynamic Mappings
-        MappingUtils.getClassMap();
-
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
         ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.warning.debug_mode"));
         ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", SYSTEM.OS_NAME, SYSTEM.OS_ARCH, SYSTEM.IS_64_BIT));
@@ -189,9 +172,7 @@ public class CraftPresence {
             }
         });
 
-        SYSTEM = new SystemUtils();
         CONFIG = Config.getInstance();
-
         CommandUtils.init();
 
         // Synchronize Developer and Verbose Modes with Config Options, if they were not already true
@@ -230,7 +211,7 @@ public class CraftPresence {
      * Schedules the Next Tick to Occur if not currently closing
      */
     private void scheduleTick() {
-        if (!closing) {
+        if (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
             timerObj.schedule(
                     new TimerTask() {
                         @Override
@@ -249,7 +230,7 @@ public class CraftPresence {
      * Consists of Synchronizing Data, and Updating RPC Data as needed
      */
     private void clientTick() {
-        if (!closing) {
+        if (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
             instance = Minecraft.getMinecraft();
             if (initialized) {
                 session = instance.getSession();
