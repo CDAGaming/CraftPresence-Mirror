@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.codec.binary.Base64;
@@ -74,6 +75,7 @@ public class ImageUtils {
 
     static {
         urlQueue = new Thread("Url Queue") {
+            @SuppressFBWarnings("DM_DEFAULT_ENCODING")
             @Override
             public void run() {
                 try {

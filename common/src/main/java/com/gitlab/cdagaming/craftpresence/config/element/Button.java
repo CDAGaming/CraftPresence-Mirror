@@ -37,12 +37,12 @@ public class Button extends Module implements Serializable {
     public String label;
     public String url;
 
-    public Button(String label, String url) {
+    public Button(final String label, final String url) {
         this.label = label;
         this.url = url;
     }
 
-    public Button(Button other) {
+    public Button(final Button other) {
         this(other.label, other.url);
     }
 
@@ -51,7 +51,7 @@ public class Button extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Button("", "");
         }
-        return DEFAULT;
+        return new Button(DEFAULT);
     }
 
     @Override

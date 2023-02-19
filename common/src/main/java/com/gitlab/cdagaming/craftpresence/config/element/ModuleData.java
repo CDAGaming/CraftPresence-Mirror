@@ -38,17 +38,17 @@ public class ModuleData extends Module implements Serializable {
     private String iconOverride;
     private PresenceData data;
 
-    public ModuleData(String textOverride, String iconOverride, PresenceData data) {
-        this.textOverride = textOverride;
-        this.iconOverride = iconOverride;
-        this.data = data;
+    public ModuleData(final String textOverride, final String iconOverride, final PresenceData data) {
+        setTextOverride(textOverride);
+        setIconOverride(iconOverride);
+        setData(data);
     }
 
-    public ModuleData(ModuleData other) {
-        this(other.textOverride, other.iconOverride, new PresenceData(other.data));
+    public ModuleData(final ModuleData other) {
+        this(other.textOverride, other.iconOverride, other.data);
     }
 
-    public ModuleData(String textOverride, String iconOverride) {
+    public ModuleData(final String textOverride, final String iconOverride) {
         this(textOverride, iconOverride, null);
     }
 
@@ -61,14 +61,14 @@ public class ModuleData extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new ModuleData();
         }
-        return DEFAULT;
+        return new ModuleData(DEFAULT);
     }
 
     public String getTextOverride() {
         return textOverride;
     }
 
-    public ModuleData setTextOverride(String textOverride) {
+    public ModuleData setTextOverride(final String textOverride) {
         this.textOverride = textOverride;
         return this;
     }
@@ -77,17 +77,17 @@ public class ModuleData extends Module implements Serializable {
         return iconOverride;
     }
 
-    public ModuleData setIconOverride(String iconOverride) {
+    public ModuleData setIconOverride(final String iconOverride) {
         this.iconOverride = iconOverride;
         return this;
     }
 
     public PresenceData getData() {
-        return data;
+        return new PresenceData(data);
     }
 
-    public ModuleData setData(PresenceData data) {
-        this.data = data;
+    public ModuleData setData(final PresenceData data) {
+        this.data = new PresenceData(data);
         return this;
     }
 

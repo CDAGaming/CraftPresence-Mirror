@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.integrations.FieldReflectionUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
@@ -134,6 +135,7 @@ public class StringUtils {
      * @param encoding The Charset to encode the bytes under
      * @return The processed byte array
      */
+    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public static byte[] getBytes(final String original, final String encoding) {
         try {
             if (!StringUtils.isNullOrEmpty(encoding)) {
@@ -154,6 +156,7 @@ public class StringUtils {
      * @param decode   If we are Decoding an already encoded String
      * @return The converted UTF_8 String, if successful
      */
+    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public static String convertString(final String original, final String encoding, final boolean decode) {
         try {
             if (decode) {

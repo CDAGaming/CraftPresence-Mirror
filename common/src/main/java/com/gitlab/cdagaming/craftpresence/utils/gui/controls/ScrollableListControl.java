@@ -457,7 +457,7 @@ public class ScrollableListControl extends GuiSlot {
         /**
          * The Identifier Type linked to this Render Type
          */
-        public IdentifierType identifierType = IdentifierType.None;
+        private IdentifierType identifierType = IdentifierType.None;
 
         /**
          * Whether this Render Mode can render images

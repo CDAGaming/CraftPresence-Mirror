@@ -58,7 +58,7 @@ public class PresenceData extends Module implements Serializable {
         }
     };
 
-    public PresenceData(PresenceData other) {
+    public PresenceData(final PresenceData other) {
         if (other != null) {
             enabled = other.enabled;
             useAsMain = other.useAsMain;
@@ -82,51 +82,51 @@ public class PresenceData extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new PresenceData();
         }
-        return DEFAULT;
+        return new PresenceData(DEFAULT);
     }
 
-    public PresenceData setDetails(String details) {
+    public PresenceData setDetails(final String details) {
         this.details = details;
         return this;
     }
 
-    public PresenceData setGameState(String gameState) {
+    public PresenceData setGameState(final String gameState) {
         this.gameState = gameState;
         return this;
     }
 
-    public PresenceData setLargeImage(String imageKey, String imageText) {
+    public PresenceData setLargeImage(final String imageKey, final String imageText) {
         this.largeImageKey = imageKey;
         this.largeImageText = imageText;
         return this;
     }
 
-    public PresenceData setSmallImage(String imageKey, String imageText) {
+    public PresenceData setSmallImage(final String imageKey, final String imageText) {
         this.smallImageKey = imageKey;
         this.smallImageText = imageText;
         return this;
     }
 
-    public PresenceData setTimes(String startTimestamp, String endTimestamp) {
+    public PresenceData setTimes(final String startTimestamp, final String endTimestamp) {
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
         return this;
     }
 
-    public PresenceData setStartTime(String timestamp) {
+    public PresenceData setStartTime(final String timestamp) {
         return setTimes(timestamp, this.endTimestamp);
     }
 
-    public PresenceData setEndTime(String timestamp) {
+    public PresenceData setEndTime(final String timestamp) {
         return setTimes(this.startTimestamp, timestamp);
     }
 
-    public PresenceData addButton(String name, Button button) {
+    public PresenceData addButton(final String name, final Button button) {
         this.buttons.put(name, button);
         return this;
     }
 
-    public PresenceData removeButton(String name) {
+    public PresenceData removeButton(final String name) {
         this.buttons.remove(name);
         return this;
     }
