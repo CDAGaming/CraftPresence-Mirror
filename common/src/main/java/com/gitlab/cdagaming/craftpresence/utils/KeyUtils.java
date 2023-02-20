@@ -188,7 +188,7 @@ public class KeyUtils {
      * @return The unfiltered key mappings
      */
     public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getRawKeyMappings() {
-        return KEY_MAPPINGS;
+        return Maps.newHashMap(KEY_MAPPINGS);
     }
 
     /**

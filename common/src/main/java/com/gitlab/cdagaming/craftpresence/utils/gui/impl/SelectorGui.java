@@ -71,7 +71,7 @@ public class SelectorGui extends ExtendedScreen {
      */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         super(parentScreen);
-        itemList = originalList = list;
+        itemList = originalList = Lists.newArrayList(list);
         originalValue = currentValue;
         this.mainTitle = mainTitle;
         this.attributeName = attributeName;
@@ -238,12 +238,13 @@ public class SelectorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
+        final List<String> originalItems = Lists.newArrayList(originalList);
         final List<String> modifiedList = Lists.newArrayList();
 
         if (!searchBox.getControlMessage().isEmpty()) {
             if (!searchBox.getControlMessage().equals(searchTerm)) {
                 searchTerm = searchBox.getControlMessage();
-                for (String item : originalList) {
+                for (String item : originalItems) {
                     if (!modifiedList.contains(item)) {
                         final List<String> entriesToCheck = Lists.newArrayList(item);
                         if (scrollList.entryAliases.containsKey(item)) {
@@ -261,10 +262,10 @@ public class SelectorGui extends ExtendedScreen {
                 itemList = modifiedList;
             }
         } else {
-            itemList = originalList;
+            itemList = originalItems;
         }
 
-        if (!itemList.equals(originalList) && !itemList.contains(scrollList.currentValue)) {
+        if (!itemList.equals(originalItems) && !itemList.contains(scrollList.currentValue)) {
             if (originalValue != null && itemList.contains(originalValue)) {
                 scrollList.currentValue = originalValue;
             } else {

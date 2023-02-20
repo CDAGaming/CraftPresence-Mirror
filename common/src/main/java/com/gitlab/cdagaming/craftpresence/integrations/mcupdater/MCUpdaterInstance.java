@@ -82,7 +82,7 @@ public class MCUpdaterInstance {
      * @return A List of relative files for the Instance
      */
     public List<Object> getInstanceFiles() {
-        return instanceFiles;
+        return Lists.newArrayList(instanceFiles);
     }
 
     /**
@@ -91,7 +91,7 @@ public class MCUpdaterInstance {
      * @param instanceFiles The new List of related files for this Instance
      */
     public void setInstanceFiles(List<Object> instanceFiles) {
-        this.instanceFiles = instanceFiles;
+        this.instanceFiles = Lists.newArrayList(instanceFiles);
     }
 
     /**
@@ -100,7 +100,7 @@ public class MCUpdaterInstance {
      * @return The List of Optional Mods related to this Instance
      */
     public Map<String, Boolean> getOptionalMods() {
-        return this.optionalMods;
+        return Maps.newHashMap(this.optionalMods);
     }
 
     /**
@@ -109,7 +109,7 @@ public class MCUpdaterInstance {
      * @param optionalMods The new List of Optional Mods related to this Instance
      */
     public void setOptionalMods(Map<String, Boolean> optionalMods) {
-        this.optionalMods = optionalMods;
+        this.optionalMods = Maps.newHashMap(optionalMods);
     }
 
     /**
@@ -174,7 +174,7 @@ public class MCUpdaterInstance {
      * @return The list of Jar Mods related to this Instance
      */
     public List<Object> getJarMods() {
-        return jarMods;
+        return Lists.newArrayList(jarMods);
     }
 
     /**
@@ -183,7 +183,7 @@ public class MCUpdaterInstance {
      * @param jarMods The new list of Jar Mods related to this Instance
      */
     public void setJarMods(List<Object> jarMods) {
-        this.jarMods = jarMods;
+        this.jarMods = Lists.newArrayList(jarMods);
     }
 
     /**

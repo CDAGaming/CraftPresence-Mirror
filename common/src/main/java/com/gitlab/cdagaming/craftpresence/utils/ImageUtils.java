@@ -38,6 +38,9 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -340,6 +343,19 @@ public class ImageUtils {
      */
     public static boolean isTextureNull(final ResourceLocation location) {
         return location == null || (StringUtils.isNullOrEmpty(location.getNamespace()) || StringUtils.isNullOrEmpty(location.getPath()));
+    }
+
+    /**
+     * Perform a deep-copy on the specified {@link BufferedImage}
+     *
+     * @param bi the target {@link BufferedImage}
+     * @return the copied {@link BufferedImage}
+     */
+    public static BufferedImage deepCopy(final BufferedImage bi) {
+        final ColorModel cm = bi.getColorModel();
+        final boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        final WritableRaster raster = bi.copyData(bi.getRaster().createCompatibleWritableRaster());
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null).getSubimage(0, 0, bi.getWidth(), bi.getHeight());
     }
 
     /**

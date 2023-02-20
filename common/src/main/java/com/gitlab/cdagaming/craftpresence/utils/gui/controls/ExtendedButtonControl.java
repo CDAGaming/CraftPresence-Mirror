@@ -300,7 +300,7 @@ public class ExtendedButtonControl extends GuiButton {
      * @return The Optional Arguments assigned within this Control, if any
      */
     public String[] getOptionalArgs() {
-        return optionalArgs;
+        return optionalArgs.clone();
     }
 
     /**

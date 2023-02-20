@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.impl;
 
+import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,8 +35,6 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class ImageFrame {
      * @param height   The height of this image
      */
     public ImageFrame(final BufferedImage image, final int delay, final String disposal, final int width, final int height) {
-        this.image = image;
+        this.image = ImageUtils.deepCopy(image);
         this.delay = delay;
         this.disposal = disposal;
         this.width = width;
@@ -217,10 +216,7 @@ public class ImageFrame {
                     }
 
                     if (from != null) {
-                        final ColorModel model = from.getColorModel();
-                        final boolean alpha = from.isAlphaPremultiplied();
-                        final WritableRaster raster = from.copyData(null);
-                        master = new BufferedImage(model, raster, alpha, null);
+                        master = ImageUtils.deepCopy(from);
                     }
                 } else if (disposal.equals("restoreToBackgroundColor") && backgroundColor != null && (!hasBackground || frameIndex > 1)) {
                     master.createGraphics().fillRect(lastX, lastY, frames.get(frameIndex - 1).getWidth(), frames.get(frameIndex - 1).getHeight());
@@ -231,10 +227,7 @@ public class ImageFrame {
                 lastY = y;
             }
 
-            final ColorModel model = master.getColorModel();
-            final boolean alpha = master.isAlphaPremultiplied();
-            final WritableRaster raster = master.copyData(null);
-            final BufferedImage copy = new BufferedImage(model, raster, alpha, null);
+            final BufferedImage copy = ImageUtils.deepCopy(master);
             frames.add(new ImageFrame(copy, delay, disposal, image.getWidth(), image.getHeight()));
 
             master.flush();
@@ -250,7 +243,7 @@ public class ImageFrame {
      * @return The current buffered image being stored
      */
     public BufferedImage getImage() {
-        return image;
+        return ImageUtils.deepCopy(image);
     }
 
     /**
