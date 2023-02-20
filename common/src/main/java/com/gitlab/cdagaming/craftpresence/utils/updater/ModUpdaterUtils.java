@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.updater;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.integrations.versioning.VersionComparator;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
@@ -195,18 +196,19 @@ public class ModUpdaterUtils {
                     }
 
                     // Update Current Update State
-                    final int recommendedState = compareVersions(currentVersion, targetRecommendedVersion);
-                    final int latestState = compareVersions(currentVersion, targetLatestVersion);
+                    final VersionComparator cmp = new VersionComparator();
+                    final int recommendedState = cmp.compare(currentVersion, targetRecommendedVersion);
+                    final int latestState = cmp.compare(currentVersion, targetLatestVersion);
 
                     if (recommendedState == 0) {
                         currentState = UpdateState.UP_TO_DATE;
                         targetVersion = targetRecommendedVersion;
                     } else {
-                        if (recommendedState == -1) {
+                        if (recommendedState < 0) {
                             currentState = UpdateState.OUTDATED;
                             targetVersion = targetRecommendedVersion;
                         } else {
-                            if (latestState == 0 || latestState == 1) {
+                            if (latestState == 0 || latestState > 0) {
                                 currentState = UpdateState.BETA;
                             } else {
                                 currentState = UpdateState.BETA_OUTDATED;
@@ -250,47 +252,6 @@ public class ModUpdaterUtils {
                 callback.run();
             }
         }
-    }
-
-    /**
-     * Compare a Set of Version Numbers to see if one is higher then another
-     *
-     * @param version1 The First Version Number to Iterate
-     * @param version2 The Second Version Number to Iterate
-     * @return 0 if Identical; -1 if Second is Higher; 1 if First is higher
-     */
-    private int compareVersions(final String version1, final String version2) {
-        if (version1.equals(version2)) return 0;
-
-        final String[] versionSet1 = version1.split("\\.");
-        final String[] versionSet2 = version2.split("\\.");
-
-        int i = 0;
-
-        // Most efficient way to skip past equal version sub-parts
-        while (i < versionSet1.length && i < versionSet2.length && versionSet1[i].equals(versionSet2[i])) i++;
-
-        // If we didn't reach the end,
-
-        if (i < versionSet1.length && i < versionSet2.length)
-            // have to use integer comparison to avoid the "10"<"1" problem
-            return Integer.valueOf(versionSet1[i]).compareTo(Integer.valueOf(versionSet2[i]));
-
-        if (i < versionSet1.length) { // end of version2, check if version1 is all 0's
-            boolean allZeros = true;
-            for (int j = i; allZeros & (j < versionSet1.length); j++)
-                allZeros = (Integer.parseInt(versionSet1[j]) == 0);
-            return allZeros ? 0 : -1;
-        }
-
-        if (i < versionSet2.length) { // end of version1, check if version2 is all 0's
-            boolean allZeros = true;
-            for (int j = i; allZeros & (j < versionSet2.length); j++)
-                allZeros = (Integer.parseInt(versionSet2[j]) == 0);
-            return allZeros ? 0 : 1;
-        }
-
-        return 0; // Should never happen (identical strings.)
     }
 
     /**

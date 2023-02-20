@@ -133,9 +133,6 @@ public class CraftPresence {
      * @param callback The callback to run upon post-initialization
      */
     public CraftPresence(Runnable callback) {
-        // Initialize Dynamic Mappings
-        MappingUtils.getClassMap();
-
         initCallback = callback;
         scheduleTick();
     }
@@ -153,6 +150,9 @@ public class CraftPresence {
      * Consists of Data Initialization and RPC Setup
      */
     private void init() {
+        // Initialize Dynamic Mappings
+        MappingUtils.getClassMap();
+
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
         ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.warning.debug_mode"));
         ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", SYSTEM.OS_NAME, SYSTEM.OS_ARCH, SYSTEM.IS_64_BIT));
@@ -210,7 +210,7 @@ public class CraftPresence {
      * Schedules the Next Tick to Occur if not currently closing
      */
     private void scheduleTick() {
-        if (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
+        if (!SYSTEM.IS_GAME_CLOSING) {
             timerObj.schedule(
                     new TimerTask() {
                         @Override
@@ -229,7 +229,7 @@ public class CraftPresence {
      * Consists of Synchronizing Data, and Updating RPC Data as needed
      */
     private void clientTick() {
-        if (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
+        if (!SYSTEM.IS_GAME_CLOSING) {
             instance = Minecraft.getMinecraft();
             if (initialized) {
                 session = instance.getSession();
