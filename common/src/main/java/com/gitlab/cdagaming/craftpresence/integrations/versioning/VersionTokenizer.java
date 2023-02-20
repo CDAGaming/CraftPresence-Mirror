@@ -57,6 +57,19 @@ public class VersionTokenizer {
     private boolean hasValue;
 
     /**
+     * Initialize the tokenizer, with the specified arguments
+     *
+     * @param versionString The specified version string
+     */
+    public VersionTokenizer(String versionString) {
+        if (versionString == null)
+            throw new IllegalArgumentException("versionString is null");
+
+        this.versionString = versionString;
+        length = versionString.length();
+    }
+
+    /**
      * Retrieve the characterized identifier, based on position
      *
      * @return the resulting integer
@@ -81,19 +94,6 @@ public class VersionTokenizer {
      */
     public boolean hasValue() {
         return hasValue;
-    }
-
-    /**
-     * Initialize the tokenizer, with the specified arguments
-     *
-     * @param versionString The specified version string
-     */
-    public VersionTokenizer(String versionString) {
-        if (versionString == null)
-            throw new IllegalArgumentException("versionString is null");
-
-        this.versionString = versionString;
-        length = versionString.length();
     }
 
     /**

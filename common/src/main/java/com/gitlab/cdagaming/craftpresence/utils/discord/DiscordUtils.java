@@ -1179,7 +1179,7 @@ public class DiscordUtils {
     public String imageOf(final boolean allowNull, final boolean showLogging, final String... evalStrings) {
         // Ensures Assets were fully synced from the Client ID before running
         String result;
-        if (DiscordAssetUtils.syncCompleted && !StringUtils.isNullOrEmpty(evalStrings[0])) {
+        if (!DiscordAssetUtils.ASSET_LIST.isEmpty() && !StringUtils.isNullOrEmpty(evalStrings[0])) {
             final String primaryKey = evalStrings[0];
             if (!cachedImageData.containsKey(primaryKey)) {
                 final String defaultIcon = allowNull ? "" : StringUtils.getOrDefault(DiscordAssetUtils.getKey(CraftPresence.CONFIG.generalSettings.defaultIcon), DiscordAssetUtils.getRandomAssetName());

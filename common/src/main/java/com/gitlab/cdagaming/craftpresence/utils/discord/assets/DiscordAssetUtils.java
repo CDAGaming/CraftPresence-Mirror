@@ -42,6 +42,15 @@ import java.util.Map;
  */
 public class DiscordAssetUtils {
     /**
+     * Mapping storing the Icon Keys and Asset Data attached to the Current Client
+     * ID
+     */
+    public static final Map<String, DiscordAsset> ASSET_LIST = Maps.newHashMap();
+    /**
+     * Mapping storing the Icon Keys and Asset Data attached from dynamic data
+     */
+    public static final Map<String, DiscordAsset> CUSTOM_ASSET_LIST = Maps.newHashMap();
+    /**
      * The endpoint url for the Discord Applications backend
      */
     private static final String applicationEndpoint = "https://discord.com/api/oauth2/applications/";
@@ -49,19 +58,6 @@ public class DiscordAssetUtils {
      * The endpoint url for the Discord Application Assets backend
      */
     private static final String assetsEndpoint = "https://cdn.discordapp.com/app-assets/";
-    /**
-     * If the Asset Check had completed
-     */
-    public static boolean syncCompleted = false;
-    /**
-     * Mapping storing the Icon Keys and Asset Data attached to the Current Client
-     * ID
-     */
-    public static Map<String, DiscordAsset> ASSET_LIST = Maps.newHashMap();
-    /**
-     * Mapping storing the Icon Keys and Asset Data attached from dynamic data
-     */
-    public static Map<String, DiscordAsset> CUSTOM_ASSET_LIST = Maps.newHashMap();
 
     /**
      * Determines if the specified Client ID is valid
@@ -240,15 +236,6 @@ public class DiscordAssetUtils {
     public static void emptyData() {
         ASSET_LIST.clear();
         CUSTOM_ASSET_LIST.clear();
-
-        clearClientData();
-    }
-
-    /**
-     * Clears Runtime Client Data from this Module (PARTIAL Clear)
-     */
-    public static void clearClientData() {
-        syncCompleted = false;
     }
 
     /**
@@ -338,7 +325,7 @@ public class DiscordAssetUtils {
 
             if (filterToMain) {
                 // Setup Data
-                ASSET_LIST = Maps.newHashMap();
+                ASSET_LIST.clear();
                 if (assets != null) {
                     for (DiscordAsset asset : assets) {
                         // Ensure URL is set beforehand for non-custom Assets
@@ -361,7 +348,6 @@ public class DiscordAssetUtils {
             }
             return null;
         } finally {
-            syncCompleted = true;
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.detected", String.valueOf(ASSET_LIST.size())));
         }
     }
@@ -370,7 +356,7 @@ public class DiscordAssetUtils {
      * Synchronize and detect any dynamic assets available for this instance
      */
     public static void syncCustomAssets() {
-        CUSTOM_ASSET_LIST = Maps.newHashMap();
+        CUSTOM_ASSET_LIST.clear();
         for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.displaySettings.dynamicIcons.entrySet()) {
             if (!StringUtils.isNullOrEmpty(iconData.getKey()) && !StringUtils.isNullOrEmpty(iconData.getValue())) {
                 final DiscordAsset asset = new DiscordAsset()

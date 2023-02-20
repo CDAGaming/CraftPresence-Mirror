@@ -45,16 +45,6 @@ import java.util.TreeMap;
  */
 public class CommandUtils {
     /**
-     * Whether you are on the Main Menu in Minecraft
-     */
-    public static boolean isInMainMenu = false;
-
-    /**
-     * Whether you are on the Loading Stage in Minecraft
-     */
-    public static boolean isLoadingGame = false;
-
-    /**
      * A mapping of the currently loaded Rich Presence Modules
      */
     public static final TreeMap<String, Module> modules = new TreeMap<String, Module>() {
@@ -69,6 +59,14 @@ public class CommandUtils {
             put("_screen", CraftPresence.GUIS);
         }
     };
+    /**
+     * Whether you are on the Main Menu in Minecraft
+     */
+    public static boolean isInMainMenu = false;
+    /**
+     * Whether you are on the Loading Stage in Minecraft
+     */
+    public static boolean isLoadingGame = false;
 
     /**
      * Reloads and Synchronizes Data, as needed, and performs onTick Events
@@ -99,21 +97,22 @@ public class CommandUtils {
      * @param flushOverride Whether to refresh RPC assets
      */
     public static void rebootRPC(boolean flushOverride) {
+        final String clientId = CraftPresence.CONFIG.generalSettings.clientId;
         flushOverride = flushOverride || !CraftPresence.CLIENT.CLIENT_ID.equals(
-                CraftPresence.CONFIG.generalSettings.clientId
+                clientId
         );
         CraftPresence.CLIENT.shutDown();
 
         if (flushOverride) {
             DiscordAssetUtils.emptyData();
-            CraftPresence.CLIENT.CLIENT_ID = CraftPresence.CONFIG.generalSettings.clientId;
-        } else {
-            DiscordAssetUtils.clearClientData();
+            CraftPresence.CLIENT.CLIENT_ID = clientId;
         }
-        if (!CraftPresence.CLIENT.PREFERRED_CLIENT.equals(DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel))) {
-            CraftPresence.CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
+
+        final DiscordBuild preferredBuild = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
+        if (!CraftPresence.CLIENT.PREFERRED_CLIENT.equals(preferredBuild)) {
+            CraftPresence.CLIENT.PREFERRED_CLIENT = preferredBuild;
         }
-        DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.generalSettings.clientId, true);
+        DiscordAssetUtils.loadAssets(clientId, true);
         CraftPresence.CLIENT.init(CraftPresence.CONFIG.generalSettings.resetTimeOnInit);
     }
 
