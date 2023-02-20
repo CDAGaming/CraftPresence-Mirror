@@ -58,8 +58,8 @@ public class VersionComparator implements Comparator<Object>, Serializable {
         int number1 = 0, number2 = 0;
         String suffix1 = "", suffix2 = "";
 
-        while (tokenizer1.MoveNext()) {
-            if (!tokenizer2.MoveNext()) {
+        while (tokenizer1.next()) {
+            if (!tokenizer2.next()) {
                 do {
                     number1 = tokenizer1.getNumber();
                     suffix1 = tokenizer1.getSuffix();
@@ -68,7 +68,7 @@ public class VersionComparator implements Comparator<Object>, Serializable {
                         return 1;
                     }
                 }
-                while (tokenizer1.MoveNext());
+                while (tokenizer1.next());
 
                 // Version one is longer than version two, but zero
                 return 0;
@@ -100,7 +100,7 @@ public class VersionComparator implements Comparator<Object>, Serializable {
             if (result != 0) return result;
 
         }
-        if (tokenizer2.MoveNext()) {
+        if (tokenizer2.next()) {
             do {
                 number2 = tokenizer2.getNumber();
                 suffix2 = tokenizer2.getSuffix();
@@ -109,7 +109,7 @@ public class VersionComparator implements Comparator<Object>, Serializable {
                     return -1;
                 }
             }
-            while (tokenizer2.MoveNext());
+            while (tokenizer2.next());
 
             // Version two is longer than version one, but zero
             return 0;

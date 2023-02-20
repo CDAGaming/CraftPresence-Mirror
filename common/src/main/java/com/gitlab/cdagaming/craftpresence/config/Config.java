@@ -54,7 +54,7 @@ public final class Config extends Module implements Serializable {
     // Constants
     public static final int VERSION = 2;
     private static final long serialVersionUID = -4853238501768086595L;
-    public static int MC_VERSION;
+    private static int MC_VERSION;
     private static List<String> keyCodeTriggers;
     private static List<String> languageTriggers;
     private static final Config INSTANCE = loadOrCreate();

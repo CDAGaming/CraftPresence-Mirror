@@ -57,7 +57,7 @@ public class CommandUtils {
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
-    public static TreeMap<String, Module> modules = new TreeMap<String, Module>() {
+    public static final TreeMap<String, Module> modules = new TreeMap<String, Module>() {
         private static final long serialVersionUID = 510350212503123679L;
 
         {

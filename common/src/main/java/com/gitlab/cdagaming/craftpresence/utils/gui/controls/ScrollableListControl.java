@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
@@ -424,6 +425,7 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * The Rendering Type for this Scroll List
      */
+    @SuppressFBWarnings("ME_ENUM_FIELD_SETTER")
     public enum RenderType {
         /**
          * Constant for the "Discord Asset" Rendering Mode.

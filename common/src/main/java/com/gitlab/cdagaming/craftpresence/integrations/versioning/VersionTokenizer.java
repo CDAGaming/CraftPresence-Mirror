@@ -33,28 +33,28 @@ public class VersionTokenizer {
     /**
      * The effected string being interpreted
      */
-    private final String _versionString;
+    private final String versionString;
     /**
      * The length of the token string
      */
-    private final int _length;
+    private final int length;
 
     /**
      * The current token iteration position
      */
-    private int _position;
+    private int position;
     /**
      * The characterized identifier, based on position
      */
-    private int _number;
+    private int number;
     /**
      * The character suffix for the token string, if any
      */
-    private String _suffix;
+    private String suffix;
     /**
      * Whether parsable values still remain in this token
      */
-    private boolean _hasValue;
+    private boolean hasValue;
 
     /**
      * Retrieve the characterized identifier, based on position
@@ -62,7 +62,7 @@ public class VersionTokenizer {
      * @return the resulting integer
      */
     public int getNumber() {
-        return _number;
+        return number;
     }
 
     /**
@@ -71,7 +71,7 @@ public class VersionTokenizer {
      * @return the resulting string
      */
     public String getSuffix() {
-        return _suffix;
+        return suffix;
     }
 
     /**
@@ -80,7 +80,7 @@ public class VersionTokenizer {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public boolean hasValue() {
-        return _hasValue;
+        return hasValue;
     }
 
     /**
@@ -92,8 +92,8 @@ public class VersionTokenizer {
         if (versionString == null)
             throw new IllegalArgumentException("versionString is null");
 
-        _versionString = versionString;
-        _length = versionString.length();
+        this.versionString = versionString;
+        length = versionString.length();
     }
 
     /**
@@ -101,35 +101,35 @@ public class VersionTokenizer {
      *
      * @return {@link Boolean#TRUE} if we have more values to iterate through
      */
-    public boolean MoveNext() {
-        _number = 0;
-        _suffix = "";
-        _hasValue = false;
+    public boolean next() {
+        number = 0;
+        suffix = "";
+        hasValue = false;
 
         // No more characters
-        if (_position >= _length)
+        if (position >= length)
             return false;
 
-        _hasValue = true;
+        hasValue = true;
 
-        while (_position < _length) {
-            char c = _versionString.charAt(_position);
+        while (position < length) {
+            char c = versionString.charAt(position);
             if (c < '0' || c > '9') break;
-            _number = _number * 10 + (c - '0');
-            _position++;
+            number = number * 10 + (c - '0');
+            position++;
         }
 
-        int suffixStart = _position;
+        int suffixStart = position;
 
-        while (_position < _length) {
-            char c = _versionString.charAt(_position);
+        while (position < length) {
+            char c = versionString.charAt(position);
             if (c == '.') break;
-            _position++;
+            position++;
         }
 
-        _suffix = _versionString.substring(suffixStart, _position);
+        suffix = versionString.substring(suffixStart, position);
 
-        if (_position < _length) _position++;
+        if (position < length) position++;
 
         return true;
     }
