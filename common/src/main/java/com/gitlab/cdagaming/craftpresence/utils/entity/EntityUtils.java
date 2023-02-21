@@ -285,13 +285,15 @@ public class EntityUtils implements Module {
         // If Server Data is enabled, allow Uuid's to count as entities
         if (CraftPresence.SERVER.enabled) {
             for (NetworkPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
-                final String uuidString = playerInfo.getGameProfile().getId().toString();
-                if (!StringUtils.isNullOrEmpty(uuidString)) {
-                    if (!ENTITY_NAMES.contains(uuidString)) {
-                        ENTITY_NAMES.add(uuidString);
-                    }
-                    if (!PLAYER_BINDINGS.containsKey(uuidString)) {
-                        PLAYER_BINDINGS.put(uuidString, playerInfo.getGameProfile().getName());
+                if (playerInfo != null) {
+                    final String uuidString = playerInfo.getGameProfile().getId().toString();
+                    if (!StringUtils.isNullOrEmpty(uuidString)) {
+                        if (!ENTITY_NAMES.contains(uuidString)) {
+                            ENTITY_NAMES.add(uuidString);
+                        }
+                        if (!PLAYER_BINDINGS.containsKey(uuidString)) {
+                            PLAYER_BINDINGS.put(uuidString, playerInfo.getGameProfile().getName());
+                        }
                     }
                 }
             }
