@@ -72,7 +72,7 @@ public class Gui extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Gui();
         }
-        return DEFAULT;
+        return copy(DEFAULT);
     }
 
     @Override

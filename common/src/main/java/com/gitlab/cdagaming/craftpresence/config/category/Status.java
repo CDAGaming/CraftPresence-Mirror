@@ -57,7 +57,7 @@ public class Status extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Status();
         }
-        return DEFAULT;
+        return copy(DEFAULT);
     }
 
     @Override

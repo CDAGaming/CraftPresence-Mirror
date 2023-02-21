@@ -55,7 +55,7 @@ public class General extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new General();
         }
-        return DEFAULT;
+        return copy(DEFAULT);
     }
 
     @Override

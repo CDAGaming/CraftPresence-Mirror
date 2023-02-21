@@ -54,7 +54,7 @@ public class Dimension extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Dimension();
         }
-        return DEFAULT;
+        return copy(DEFAULT);
     }
 
     @Override

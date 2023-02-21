@@ -56,7 +56,7 @@ public class Server extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Server();
         }
-        return DEFAULT;
+        return copy(DEFAULT);
     }
 
     @Override

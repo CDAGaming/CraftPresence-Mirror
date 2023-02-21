@@ -75,7 +75,7 @@ public final class Config extends Module implements Serializable {
     public Display displaySettings = new Display();
 
     public static Config getInstance() {
-        return INSTANCE;
+        return copy(INSTANCE);
     }
 
     public static String getConfigPath() {
@@ -179,7 +179,7 @@ public final class Config extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Config();
         }
-        return DEFAULT;
+        return copy(DEFAULT);
     }
 
     public void applyData() {

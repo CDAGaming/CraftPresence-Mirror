@@ -31,12 +31,14 @@ import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -92,6 +94,48 @@ public class FileUtils {
     public static <T> T getJsonData(String data, Class<T> classObj, Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
         return builder.create().fromJson(data, classObj);
+    }
+
+    /**
+     * Retrieves Raw Data and Converts it into a Parsed Json Syntax
+     *
+     * @param data    The File to access
+     * @param typeObj The target type to base the output on
+     * @param <T>     The Result and Class Type
+     * @param args    The Command Arguments to parse
+     * @return The Parsed Json as the Class Type's Syntax
+     * @throws Exception If Unable to read the File
+     */
+    public static <T> T getJsonData(File data, Type typeObj, Modifiers... args) throws Exception {
+        return getJsonData(fileToString(data, "UTF-8"), typeObj, args);
+    }
+
+    /**
+     * Retrieves Raw Data and Converts it into a Parsed Json Syntax
+     *
+     * @param data    The json string to access
+     * @param typeObj The target type to base the output on
+     * @param <T>     The Result and Class Type
+     * @param args    The Command Arguments to parse
+     * @return The Parsed Json as the Class Type's Syntax
+     */
+    public static <T> T getJsonData(String data, Type typeObj, Modifiers... args) {
+        final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
+        return builder.create().fromJson(data, typeObj);
+    }
+
+    /**
+     * Retrieves Raw Data and Converts it into a Parsed Json Syntax
+     *
+     * @param data The data to access
+     * @param <T>  The Result and Class Type
+     * @param args The Command Arguments to parse
+     * @return The Parsed Json as the Class Type's Syntax
+     */
+    public static <T> T getJsonData(T data, Modifiers... args) {
+        final Type type = new TypeToken<T>() {
+        }.getType();
+        return getJsonData(data.toString(), type, args);
     }
 
     /**

@@ -33,6 +33,17 @@ import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
  */
 public abstract class Module {
     /**
+     * Copies a module to a new instance, via it's JSON representation
+     *
+     * @param instance A {@link Module} instance to interpret
+     * @param <T>      Type representation for the specified instance, must extend {@link Module}
+     * @return the copied instance data
+     */
+    protected static <T extends Module> T copy(T instance) {
+        return FileUtils.getJsonData(instance);
+    }
+
+    /**
      * Retrieve the default instance for this {@link Module}
      *
      * @return the default instance of this {@link Module}

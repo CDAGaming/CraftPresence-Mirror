@@ -66,7 +66,7 @@ public class Advanced extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Advanced();
         }
-        return DEFAULT;
+        return copy(DEFAULT);
     }
 
     @Override
