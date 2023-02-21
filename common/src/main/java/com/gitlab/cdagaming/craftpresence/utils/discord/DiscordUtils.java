@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
@@ -1086,11 +1085,6 @@ public class DiscordUtils {
         syncArgument("_general.player", CraftPresence.player);
         syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.world : null);
         syncArgument("_config.instance", CraftPresence.CONFIG);
-        for (Map.Entry<String, Module> module : CommandUtils.modules.entrySet()) {
-            String name = module.getKey();
-            name = (name.startsWith("_") ? "" : "_") + name;
-            syncArgument(name + ".instance", module.getValue());
-        }
         // Sync Custom Variables
         removeArguments("custom.");
         for (Map.Entry<String, String> entry : CraftPresence.CONFIG.displaySettings.dynamicVariables.entrySet()) {
@@ -1337,9 +1331,7 @@ public class DiscordUtils {
             lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
-            for (Module module : CommandUtils.modules.values()) {
-                module.clearClientData();
-            }
+            CommandUtils.clearModuleData();
 
             CraftPresence.SYSTEM.HAS_LOADED = false;
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
@@ -1462,6 +1454,7 @@ public class DiscordUtils {
      * Perform any needed Tick events, tied to {@link SystemUtils#MINIMUM_REFRESH_RATE} ticks
      */
     public void onTick() {
+        CommandUtils.syncModuleArguments();
         syncPlaceholders();
 
         // Menu Tick Event

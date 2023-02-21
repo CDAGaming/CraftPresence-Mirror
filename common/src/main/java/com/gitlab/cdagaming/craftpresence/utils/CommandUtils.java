@@ -37,6 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -44,12 +45,12 @@ import java.util.TreeMap;
  *
  * @author CDAGaming
  */
-@SuppressFBWarnings({"MS_CANNOT_BE_FINAL", "MS_MUTABLE_COLLECTION"})
+@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CommandUtils {
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
-    public static final TreeMap<String, Module> modules = new TreeMap<String, Module>() {
+    private static final TreeMap<String, Module> modules = new TreeMap<String, Module>() {
         private static final long serialVersionUID = 510350212503123679L;
 
         {
@@ -88,6 +89,36 @@ public class CommandUtils {
     public static boolean isVerboseMode() {
         return ModUtils.IS_VERBOSE_FLAG ||
                 (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
+    }
+
+    /**
+     * Synchronizes Module Placeholder Data, meant for RPC usage
+     */
+    public static void syncModuleArguments() {
+        for (Map.Entry<String, Module> module : modules.entrySet()) {
+            String name = module.getKey();
+            name = (name.startsWith("_") ? "" : "_") + name;
+            CraftPresence.CLIENT.syncArgument(name + ".instance", module.getValue());
+        }
+    }
+
+    /**
+     * Clears Runtime Client Data from all active Modules (PARTIAL Clear)
+     */
+    public static void clearModuleData() {
+        for (Module module : modules.values()) {
+            module.clearClientData();
+        }
+    }
+
+    /**
+     * Adds a module for ticking and RPC Syncronization
+     *
+     * @param moduleId The name of the module
+     * @param instance The instance of the module
+     */
+    public static void addModule(final String moduleId, final Module instance) {
+        modules.put(moduleId, instance);
     }
 
     /**
