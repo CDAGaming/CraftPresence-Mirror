@@ -31,7 +31,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
@@ -127,15 +126,14 @@ public class FileUtils {
     /**
      * Retrieves Raw Data and Converts it into a Parsed Json Syntax
      *
-     * @param data The data to access
-     * @param <T>  The Result and Class Type
-     * @param args The Command Arguments to parse
+     * @param data     The data to access
+     * @param classObj The target class to base the output on
+     * @param <T>      The Result and Class Type
+     * @param args     The Command Arguments to parse
      * @return The Parsed Json as the Class Type's Syntax
      */
-    public static <T> T getJsonData(T data, Modifiers... args) {
-        final Type type = new TypeToken<T>() {
-        }.getType();
-        return getJsonData(data.toString(), type, args);
+    public static <T> T getJsonData(T data, Class<T> classObj, Modifiers... args) {
+        return getJsonData(data.toString(), classObj, args);
     }
 
     /**
@@ -168,7 +166,7 @@ public class FileUtils {
             writer = new OutputStreamWriter(outputStream, Charset.forName(encoding));
             builder.create().toJson(json, writer);
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
@@ -182,7 +180,7 @@ public class FileUtils {
             }
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
@@ -225,7 +223,7 @@ public class FileUtils {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.loaded", file.getName(), file.getAbsolutePath(), urlString));
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.download", file.getName(), urlString, file.getAbsolutePath()));
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
@@ -246,7 +244,7 @@ public class FileUtils {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.dll.loaded", file.getName()));
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.dll", file.getName()));
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
@@ -287,7 +285,7 @@ public class FileUtils {
     public static int getModCount() {
         // Mod is within ClassLoader if in a Dev Environment
         // and is thus automatically counted if this is the case
-        int modCount = ModUtils.IS_DEV ? 1 : 0;
+        int modCount = CommandUtils.isDebugMode() ? 1 : 0;
         final File[] mods = new File(ModUtils.modsDir).listFiles();
 
         if (mods != null) {
@@ -553,7 +551,7 @@ public class FileUtils {
                         }
                         jarFile.close();
                     } catch (Throwable ex) {
-                        if (ModUtils.IS_VERBOSE) {
+                        if (CommandUtils.isVerboseMode()) {
                             ex.printStackTrace();
                         }
                     }

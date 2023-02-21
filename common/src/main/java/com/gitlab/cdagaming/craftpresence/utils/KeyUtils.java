@@ -279,7 +279,7 @@ public class KeyUtils {
                     }
                 }
             } catch (Throwable ex) {
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
             }
@@ -303,7 +303,7 @@ public class KeyUtils {
             syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
             }
         }

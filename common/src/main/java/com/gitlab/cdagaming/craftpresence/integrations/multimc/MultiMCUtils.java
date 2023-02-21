@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.multimc;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.File;
@@ -99,7 +100,7 @@ public class MultiMCUtils {
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.file.instance"));
 
-            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) || ModUtils.IS_VERBOSE) {
+            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) || CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }

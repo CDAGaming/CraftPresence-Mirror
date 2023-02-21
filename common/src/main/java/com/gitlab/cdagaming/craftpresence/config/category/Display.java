@@ -74,7 +74,7 @@ public class Display extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Display();
         }
-        return copy(DEFAULT);
+        return copy(DEFAULT, Display.class);
     }
 
     @Override

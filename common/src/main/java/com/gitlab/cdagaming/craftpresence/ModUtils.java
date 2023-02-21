@@ -36,6 +36,7 @@ import java.io.File;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("ConstantValue")
 @SuppressFBWarnings("MS_SHOULD_BE_FINAL")
 public class ModUtils {
     /**
@@ -120,17 +121,17 @@ public class ModUtils {
     @SuppressWarnings("PointlessBooleanExpression")
     public final static boolean IS_LEGACY_SOFT = IS_LEGACY_HARD || false;
     /**
+     * If this Application is flagged to be run in a Developer or Debug State
+     */
+    public static final boolean IS_DEV_FLAG;
+    /**
+     * If this Application is flagged to be running in a de-obfuscated or Developer environment
+     */
+    public static final boolean IS_VERBOSE_FLAG;
+    /**
      * Whether to forcibly block any tooltips related to this Application from rendering
      */
     public static boolean forceBlockTooltipRendering = false;
-    /**
-     * If this Application should be run in a Developer or Debug State
-     */
-    public static boolean IS_DEV = false;
-    /**
-     * If this Application is running in a de-obfuscated or Developer environment
-     */
-    public static boolean IS_VERBOSE = false;
 
     static {
         NAME = "@MOD_NAME@";
@@ -138,6 +139,8 @@ public class ModUtils {
         VERSION_TYPE = "@VERSION_TYPE@";
         MCVersion = "@MC_VERSION@";
         MCProtocolID = Integer.parseInt("@MC_PROTOCOL@");
+        IS_DEV_FLAG = Boolean.parseBoolean("@IS_DEV@");
+        IS_VERBOSE_FLAG = Boolean.parseBoolean("@IS_VERBOSE@");
         TRANSLATOR = new TranslationUtils(MOD_ID, true);
         UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
     }

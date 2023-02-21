@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -332,7 +333,7 @@ public class Legacy2Modern implements DataMigrator {
             properties.load(configReader);
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         } finally {
@@ -438,7 +439,7 @@ public class Legacy2Modern implements DataMigrator {
             }
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         } finally {

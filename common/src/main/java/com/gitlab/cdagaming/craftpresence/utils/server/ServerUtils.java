@@ -33,6 +33,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
@@ -447,7 +448,7 @@ public class ServerUtils implements Module {
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         } finally {
@@ -591,7 +592,7 @@ public class ServerUtils implements Module {
                 }
             }
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }

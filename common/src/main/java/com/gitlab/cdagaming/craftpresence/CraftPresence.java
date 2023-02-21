@@ -110,15 +110,6 @@ public class CraftPresence {
      */
     public static Config CONFIG;
     /**
-     * Whether {@link ModUtils#IS_DEV} has been overridden pre-setup
-     */
-    public static boolean isDevStatusOverridden = false;
-
-    /**
-     * Whether {@link ModUtils#IS_VERBOSE} has been overridden pre-setup
-     */
-    public static boolean isVerboseStatusOverridden = false;
-    /**
      * If specified, this callback runs on initial launch, once initialized
      */
     private final Runnable initCallback;
@@ -174,20 +165,6 @@ public class CraftPresence {
         CONFIG = Config.getInstance();
         CommandUtils.init();
 
-        // Synchronize Developer and Verbose Modes with Config Options, if they were not already true
-        // If it is true (IE Modified from their Default Value), set the overridden flag to remember later
-        if (!ModUtils.IS_DEV) {
-            ModUtils.IS_DEV = CONFIG.advancedSettings.debugMode || ModUtils.IS_VERBOSE;
-        } else {
-            isDevStatusOverridden = true;
-        }
-
-        if (!ModUtils.IS_VERBOSE) {
-            ModUtils.IS_VERBOSE = CONFIG.advancedSettings.verboseMode;
-        } else {
-            isVerboseStatusOverridden = true;
-        }
-
         try {
             CLIENT.CLIENT_ID = CONFIG.generalSettings.clientId;
             CLIENT.AUTO_REGISTER = CONFIG.generalSettings.autoRegister;
@@ -195,7 +172,7 @@ public class CraftPresence {
             CLIENT.init(true);
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.load"));
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         } finally {
@@ -234,9 +211,6 @@ public class CraftPresence {
             if (initialized) {
                 session = instance.getSession();
                 player = instance.player;
-                // Synchronize Developer and Verbose Modes with Config Options, if they were not overridden pre-setup
-                ModUtils.IS_DEV = !isDevStatusOverridden ? CONFIG.advancedSettings.debugMode : ModUtils.IS_DEV;
-                ModUtils.IS_VERBOSE = !isVerboseStatusOverridden ? CONFIG.advancedSettings.verboseMode : ModUtils.IS_VERBOSE;
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {

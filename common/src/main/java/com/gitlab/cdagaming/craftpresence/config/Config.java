@@ -75,7 +75,7 @@ public final class Config extends Module implements Serializable {
     public Display displaySettings = new Display();
 
     public static Config getInstance() {
-        return copy(INSTANCE);
+        return copy(INSTANCE, Config.class);
     }
 
     public static String getConfigPath() {
@@ -106,7 +106,7 @@ public final class Config extends Module implements Serializable {
         } catch (Exception ex) {
             if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class)) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
 
@@ -179,7 +179,7 @@ public final class Config extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Config();
         }
-        return copy(DEFAULT);
+        return copy(DEFAULT, Config.class);
     }
 
     public void applyData() {
@@ -221,7 +221,7 @@ public final class Config extends Module implements Serializable {
         if (!isNewFile) {
             int currentVer = oldVer;
             if (currentVer < newVer) {
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.outdated", currentVer, newVer));
                 }
 
@@ -243,7 +243,7 @@ public final class Config extends Module implements Serializable {
                 rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
             } catch (Exception ex) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
             }

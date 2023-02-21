@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.curse.impl.CurseInstance;
 import com.gitlab.cdagaming.craftpresence.integrations.curse.impl.Manifest;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
@@ -68,7 +69,7 @@ public class CurseUtils {
                 // As Most if not all types of Curse Packs contain this file
                 // Though it is considered a fallback due to how much it's parsing
                 ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.manifest.fallback"));
-                if (ex.getClass() != FileNotFoundException.class || ModUtils.IS_VERBOSE) {
+                if (ex.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
 
@@ -76,7 +77,7 @@ public class CurseUtils {
             } catch (Exception ex2) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.file.manifest"));
 
-                if (ex2.getClass() != FileNotFoundException.class || ModUtils.IS_VERBOSE) {
+                if (ex2.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
                     ex2.printStackTrace();
                 }
             }

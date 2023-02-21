@@ -569,7 +569,7 @@ public class CommandsGui extends ExtendedScreen {
                         bw.newLine();
                         bw.newLine();
                     } catch (Exception ex) {
-                        if (ModUtils.IS_VERBOSE) {
+                        if (CommandUtils.isVerboseMode()) {
                             ex.printStackTrace();
                         }
                         hasError = true;
@@ -590,7 +590,7 @@ public class CommandsGui extends ExtendedScreen {
                             bw.write("* " + assetName + " => " + assetUrl);
                             bw.newLine();
                         } catch (Exception ex) {
-                            if (ModUtils.IS_VERBOSE) {
+                            if (CommandUtils.isVerboseMode()) {
                                 ex.printStackTrace();
                             }
                             hasError = true;
@@ -612,7 +612,7 @@ public class CommandsGui extends ExtendedScreen {
                     }
                 } catch (Exception ex) {
                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
-                    if (ModUtils.IS_VERBOSE) {
+                    if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
                     }
                 }

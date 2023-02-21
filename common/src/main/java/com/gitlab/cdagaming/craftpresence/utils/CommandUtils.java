@@ -68,6 +68,16 @@ public class CommandUtils {
      */
     public static boolean isLoadingGame = false;
 
+    public static boolean isDebugMode() {
+        return ModUtils.IS_DEV_FLAG ||
+                isVerboseMode() || (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.debugMode);
+    }
+
+    public static boolean isVerboseMode() {
+        return ModUtils.IS_VERBOSE_FLAG ||
+                (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
+    }
+
     /**
      * Reloads and Synchronizes Data, as needed, and performs onTick Events
      *
@@ -79,7 +89,7 @@ public class CommandUtils {
             ModUtils.TRANSLATOR.syncTranslations();
         }
         CraftPresence.SYSTEM.onTick();
-        CraftPresence.instance.addScheduledTask(() -> CraftPresence.KEYBINDINGS.onTick());
+        CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
 
         for (Module module : modules.values()) {
             if (module.canBeLoaded()) {

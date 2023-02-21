@@ -1296,7 +1296,7 @@ public class StringUtils {
                     break;
                 }
             } catch (Throwable ex) {
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
             }
@@ -1332,7 +1332,7 @@ public class StringUtils {
             final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, currentData.getFirst());
             if (result.getFirst()) {
                 result.getSecond().setValue(instance, currentData.getSecond());
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.update.dynamic", currentData.toString(), classToAccess.getName()));
                 }
             }
@@ -1371,7 +1371,7 @@ public class StringUtils {
             lookupMethod.setAccessible(true);
             result = lookupMethod.invoke(instance, parameters);
         } catch (Throwable ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }

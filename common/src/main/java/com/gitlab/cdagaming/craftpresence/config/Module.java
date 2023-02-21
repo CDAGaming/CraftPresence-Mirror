@@ -36,11 +36,12 @@ public abstract class Module {
      * Copies a module to a new instance, via it's JSON representation
      *
      * @param instance A {@link Module} instance to interpret
+     * @param classObj The target class to base the output on
      * @param <T>      Type representation for the specified instance, must extend {@link Module}
      * @return the copied instance data
      */
-    protected static <T extends Module> T copy(T instance) {
-        return FileUtils.getJsonData(instance);
+    protected static <T extends Module> T copy(T instance, Class<T> classObj) {
+        return FileUtils.getJsonData(instance, classObj);
     }
 
     /**

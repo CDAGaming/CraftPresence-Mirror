@@ -586,7 +586,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", CraftPresence.isDevStatusOverridden)
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", ModUtils.IS_DEV_FLAG)
                                 ), this, true
                         )
                 )
@@ -599,7 +599,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", CraftPresence.isVerboseStatusOverridden)
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", ModUtils.IS_VERBOSE_FLAG)
                                 ), this, true
                         )
                 )

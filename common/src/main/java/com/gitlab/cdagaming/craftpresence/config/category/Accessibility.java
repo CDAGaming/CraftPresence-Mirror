@@ -52,7 +52,7 @@ public class Accessibility extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Accessibility();
         }
-        return copy(DEFAULT);
+        return copy(DEFAULT, Accessibility.class);
     }
 
     @Override

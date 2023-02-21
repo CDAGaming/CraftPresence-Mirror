@@ -180,7 +180,7 @@ public class UrlUtils {
         try {
             openUrl(new URI(targetUrl));
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
@@ -195,7 +195,7 @@ public class UrlUtils {
         try {
             openUrl(targetUrl.toURI());
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
@@ -230,7 +230,7 @@ public class UrlUtils {
                 }
             } catch (Exception ex) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.web", targetUrl.toString()));
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
             }

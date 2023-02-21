@@ -281,7 +281,7 @@ public class DiscordUtils {
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_JOIN_REQUEST);
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_SPECTATE);
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
@@ -309,7 +309,7 @@ public class DiscordUtils {
      * @param updateTimestamp Whether to update the starting timestamp
      */
     public synchronized void init(final boolean debugMode, final boolean updateTimestamp) {
-        init(debugMode, ModUtils.IS_VERBOSE, updateTimestamp);
+        init(debugMode, CommandUtils.isVerboseMode(), updateTimestamp);
     }
 
     /**
@@ -318,7 +318,7 @@ public class DiscordUtils {
      * @param updateTimestamp Whether to update the starting timestamp
      */
     public synchronized void init(final boolean updateTimestamp) {
-        init(ModUtils.IS_DEV, updateTimestamp);
+        init(CommandUtils.isDebugMode(), updateTimestamp);
     }
 
     /**
@@ -503,7 +503,7 @@ public class DiscordUtils {
                     } catch (Exception ignored) {
                     }
                 }
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 } else {
                     ModUtils.LOG.error("Message: \"" + splitEx.get(0) + "\"");
@@ -1217,7 +1217,7 @@ public class DiscordUtils {
             } else {
                 result = cachedImageData.get(primaryKey);
                 if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
-                    if (ModUtils.IS_VERBOSE && !result.equals(primaryKey)) {
+                    if (CommandUtils.isVerboseMode() && !result.equals(primaryKey)) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
                         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
                     }
@@ -1322,7 +1322,7 @@ public class DiscordUtils {
             try {
                 ipcInstance.close();
             } catch (Exception ex) {
-                if (ModUtils.IS_VERBOSE) {
+                if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
             }

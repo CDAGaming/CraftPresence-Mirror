@@ -64,7 +64,7 @@ public class Entity extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Entity();
         }
-        return copy(DEFAULT);
+        return copy(DEFAULT, Entity.class);
     }
 
     @Override

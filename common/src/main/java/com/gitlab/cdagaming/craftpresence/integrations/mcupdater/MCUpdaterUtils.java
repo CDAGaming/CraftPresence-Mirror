@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.mcupdater;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
@@ -59,7 +60,7 @@ public class MCUpdaterUtils {
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.file.mcupdater"));
 
-            if (ex.getClass() != FileNotFoundException.class || ModUtils.IS_VERBOSE) {
+            if (ex.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }

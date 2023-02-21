@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
@@ -123,7 +122,7 @@ public class ImageUtils {
                                             try {
                                                 bufferData.getSecond().add(frame);
                                             } catch (Exception ex) {
-                                                if (ModUtils.IS_VERBOSE) {
+                                                if (CommandUtils.isVerboseMode()) {
                                                     ex.printStackTrace();
                                                 }
                                             }
@@ -135,14 +134,14 @@ public class ImageUtils {
                                     cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
                                 }
                             } catch (Exception ex) {
-                                if (ModUtils.IS_VERBOSE) {
+                                if (CommandUtils.isVerboseMode()) {
                                     ex.printStackTrace();
                                 }
                             }
                         }
                     }
                 } catch (Exception ex) {
-                    if (ModUtils.IS_VERBOSE) {
+                    if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
                     }
                 }
@@ -162,7 +161,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(textureName, new URL(url));
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
             return new ResourceLocation("");
@@ -180,7 +179,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(textureName, new Pair<>(InputType.Url, url));
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
             return new ResourceLocation("");
@@ -198,7 +197,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(textureName, new Pair<>(InputType.FileData, url));
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
             return new ResourceLocation("");
@@ -247,7 +246,7 @@ public class ImageUtils {
                 try {
                     urlRequests.put(new Pair<>(textureName, stream));
                 } catch (Exception ex) {
-                    if (ModUtils.IS_VERBOSE) {
+                    if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
                     }
                 }
@@ -288,7 +287,7 @@ public class ImageUtils {
                     }
                     return cachedTexture;
                 } catch (Exception ex) {
-                    if (ModUtils.IS_VERBOSE) {
+                    if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
                     }
                     return new ResourceLocation("");
@@ -323,7 +322,7 @@ public class ImageUtils {
         try {
             return Base64.decodeBase64(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
         } catch (Exception ex) {
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
 

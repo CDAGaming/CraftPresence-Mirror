@@ -54,7 +54,7 @@ public class Biome extends Module implements Serializable {
         if (DEFAULT == null) {
             DEFAULT = new Biome();
         }
-        return copy(DEFAULT);
+        return copy(DEFAULT, Biome.class);
     }
 
     @Override

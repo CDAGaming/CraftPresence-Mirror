@@ -200,6 +200,8 @@ subprojects {
         inputs.property "versionLabel", "${versionLabel}"
         inputs.property "mcVersion", "${mc_version}"
         inputs.property "mcProtocol", "${mc_protocol}"
+        inputs.property "isDevState", "${isDevState}"
+        inputs.property "isVerboseState", "${isVerboseState}"
 
         from sourceSets.main.java
         filter(ReplaceTokens, tokens: [
@@ -207,7 +209,9 @@ subprojects {
                 VERSION_ID  : "${baseVersionLabel}".toString(),
                 VERSION_TYPE: deploymentType,
                 MC_VERSION  : mc_version,
-                MC_PROTOCOL : mc_protocol
+                MC_PROTOCOL : mc_protocol,
+                IS_DEV      : isDevState,
+                IS_VERBOSE  : isVerboseState
         ])
         into copyDir
     }

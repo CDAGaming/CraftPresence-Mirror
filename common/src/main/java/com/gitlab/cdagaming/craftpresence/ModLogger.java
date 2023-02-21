@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence;
 
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,7 +108,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void debugInfo(final String logMessage, Object... logArguments) {
-        if (ModUtils.IS_DEV) {
+        if (CommandUtils.isDebugMode()) {
             info("[DEBUG] " + logMessage, logArguments);
         }
     }
@@ -119,7 +120,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void debugWarn(final String logMessage, Object... logArguments) {
-        if (ModUtils.IS_DEV) {
+        if (CommandUtils.isDebugMode()) {
             warn("[DEBUG] " + logMessage, logArguments);
         }
     }
@@ -131,7 +132,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void debugError(final String logMessage, Object... logArguments) {
-        if (ModUtils.IS_DEV) {
+        if (CommandUtils.isDebugMode()) {
             error("[DEBUG] " + logMessage, logArguments);
         }
     }

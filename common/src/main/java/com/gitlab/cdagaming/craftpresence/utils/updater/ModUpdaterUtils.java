@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.updater;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.versioning.VersionComparator;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
@@ -243,7 +244,7 @@ public class ModUpdaterUtils {
             // Log Failure and Set Update State to FAILED
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
 
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
             currentState = UpdateState.FAILED;

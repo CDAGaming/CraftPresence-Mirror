@@ -137,7 +137,7 @@ public class SystemUtils {
             IS_64_BIT = x64.contains(OS_ARCH);
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.system"));
-            if (ModUtils.IS_VERBOSE) {
+            if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }

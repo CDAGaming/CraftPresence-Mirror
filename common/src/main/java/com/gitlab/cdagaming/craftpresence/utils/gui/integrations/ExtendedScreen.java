@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -94,8 +94,8 @@ public class ExtendedScreen extends GuiScreen {
         mc = CraftPresence.instance;
         currentScreen = this;
         this.parentScreen = parentScreen;
-        setDebugMode(ModUtils.IS_DEV);
-        setVerboseMode(ModUtils.IS_VERBOSE);
+        setDebugMode(CommandUtils.isDebugMode());
+        setVerboseMode(CommandUtils.isVerboseMode());
     }
 
     /**
