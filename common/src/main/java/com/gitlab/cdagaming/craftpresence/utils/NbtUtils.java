@@ -46,9 +46,11 @@ public class NbtUtils {
      * @param data   The data to interpret
      */
     public static void parseTags(final String prefix, final NBTTagCompound data) {
+        CraftPresence.CLIENT.removeArguments(prefix);
+
         if (data != null) {
             for (String key : data.getKeySet()) {
-                final String name = prefix + key;
+                final String name = prefix + "." + key;
                 final Object rootResult = parseTag(data.getTag(key));
                 if (rootResult instanceof Collection<?>) {
                     final Collection<?> subArgs = (Collection<?>) rootResult;

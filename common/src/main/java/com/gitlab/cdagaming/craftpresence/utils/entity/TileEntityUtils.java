@@ -313,81 +313,105 @@ public class TileEntityUtils implements Module {
 
         final boolean hasMainHandChanged = (!isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) &&
                 !NEW_CURRENT_MAIN_HAND_ITEM.equals(CURRENT_MAIN_HAND_ITEM) || !NEW_CURRENT_MAIN_HAND_ITEM_NAME.equals(CURRENT_MAIN_HAND_ITEM_NAME)) ||
-                (isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) && !isEmpty(CURRENT_MAIN_HAND_ITEM)) || !NEW_CURRENT_MAIN_HAND_ITEM_DATA.equals(CURRENT_MAIN_HAND_ITEM_DATA);
+                (isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) && !isEmpty(CURRENT_MAIN_HAND_ITEM));
+        final boolean hasMainHandNBTChanged = !NEW_CURRENT_MAIN_HAND_ITEM_DATA.equals(CURRENT_MAIN_HAND_ITEM_DATA);
         final boolean hasOffHandChanged = (!isEmpty(NEW_CURRENT_OFFHAND_ITEM) &&
                 !NEW_CURRENT_OFFHAND_ITEM.equals(CURRENT_OFFHAND_ITEM) || !NEW_CURRENT_OFFHAND_ITEM_NAME.equals(CURRENT_OFFHAND_ITEM_NAME)) ||
-                (isEmpty(NEW_CURRENT_OFFHAND_ITEM) && !isEmpty(CURRENT_OFFHAND_ITEM)) || !NEW_CURRENT_OFFHAND_ITEM_DATA.equals(CURRENT_OFFHAND_ITEM_DATA);
+                (isEmpty(NEW_CURRENT_OFFHAND_ITEM) && !isEmpty(CURRENT_OFFHAND_ITEM));
+        final boolean hasOffhandNBTChanged = !NEW_CURRENT_OFFHAND_ITEM_DATA.equals(CURRENT_OFFHAND_ITEM_DATA);
         final boolean hasHelmetChanged = (!isEmpty(NEW_CURRENT_HELMET) &&
                 !NEW_CURRENT_HELMET.equals(CURRENT_HELMET) || !NEW_CURRENT_HELMET_NAME.equals(CURRENT_HELMET_NAME)) ||
-                (isEmpty(NEW_CURRENT_HELMET) && !isEmpty(CURRENT_HELMET)) || !NEW_CURRENT_HELMET_DATA.equals(CURRENT_HELMET_DATA);
+                (isEmpty(NEW_CURRENT_HELMET) && !isEmpty(CURRENT_HELMET));
+        final boolean hasHelmetNBTChanged = !NEW_CURRENT_HELMET_DATA.equals(CURRENT_HELMET_DATA);
         final boolean hasChestChanged = (!isEmpty(NEW_CURRENT_CHEST) &&
                 !NEW_CURRENT_CHEST.equals(CURRENT_CHEST) || !NEW_CURRENT_CHEST_NAME.equals(CURRENT_CHEST_NAME)) ||
-                (isEmpty(NEW_CURRENT_CHEST) && !isEmpty(CURRENT_CHEST)) || !NEW_CURRENT_CHEST_DATA.equals(CURRENT_CHEST_DATA);
+                (isEmpty(NEW_CURRENT_CHEST) && !isEmpty(CURRENT_CHEST));
+        final boolean hasChestNBTChanged = !NEW_CURRENT_CHEST_DATA.equals(CURRENT_CHEST_DATA);
         final boolean hasLegsChanged = (!isEmpty(NEW_CURRENT_LEGS) &&
                 !NEW_CURRENT_LEGS.equals(CURRENT_LEGS) || !NEW_CURRENT_LEGS_NAME.equals(CURRENT_LEGS_NAME)) ||
-                (isEmpty(NEW_CURRENT_LEGS) && !isEmpty(CURRENT_LEGS)) || !NEW_CURRENT_LEGS_DATA.equals(CURRENT_LEGS_DATA);
+                (isEmpty(NEW_CURRENT_LEGS) && !isEmpty(CURRENT_LEGS));
+        final boolean hasLegsNBTChanged = !NEW_CURRENT_LEGS_DATA.equals(CURRENT_LEGS_DATA);
         final boolean hasBootsChanged = (!isEmpty(NEW_CURRENT_BOOTS) &&
                 !NEW_CURRENT_BOOTS.equals(CURRENT_BOOTS) || !NEW_CURRENT_BOOTS_NAME.equals(CURRENT_BOOTS_NAME)) ||
-                (isEmpty(NEW_CURRENT_BOOTS) && !isEmpty(CURRENT_BOOTS)) || !NEW_CURRENT_BOOTS_DATA.equals(CURRENT_BOOTS_DATA);
+                (isEmpty(NEW_CURRENT_BOOTS) && !isEmpty(CURRENT_BOOTS));
+        final boolean hasBootsNBTChanged = !NEW_CURRENT_BOOTS_DATA.equals(CURRENT_BOOTS_DATA);
 
         if (hasMainHandChanged) {
             CURRENT_MAIN_HAND_ITEM = NEW_CURRENT_MAIN_HAND_ITEM;
-            CURRENT_MAIN_HAND_ITEM_DATA = NEW_CURRENT_MAIN_HAND_ITEM_DATA;
             CURRENT_MAIN_HAND_ITEM_NAME = NEW_CURRENT_MAIN_HAND_ITEM_NAME;
 
             if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
                 CraftPresence.CLIENT.syncTimestamp("item.main_hand.time");
             }
         }
+        if (hasMainHandNBTChanged) {
+            CURRENT_MAIN_HAND_ITEM_DATA = NEW_CURRENT_MAIN_HAND_ITEM_DATA;
+            NbtUtils.parseTags("data.item.main_hand.nbt", CURRENT_MAIN_HAND_ITEM_DATA);
+        }
 
         if (hasOffHandChanged) {
             CURRENT_OFFHAND_ITEM = NEW_CURRENT_OFFHAND_ITEM;
-            CURRENT_OFFHAND_ITEM_DATA = NEW_CURRENT_OFFHAND_ITEM_DATA;
             CURRENT_OFFHAND_ITEM_NAME = NEW_CURRENT_OFFHAND_ITEM_NAME;
 
             if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
                 CraftPresence.CLIENT.syncTimestamp("item.off_hand.time");
             }
         }
+        if (hasOffhandNBTChanged) {
+            CURRENT_OFFHAND_ITEM_DATA = NEW_CURRENT_OFFHAND_ITEM_DATA;
+            NbtUtils.parseTags("data.item.off_hand.nbt", CURRENT_OFFHAND_ITEM_DATA);
+        }
 
         if (hasHelmetChanged) {
             CURRENT_HELMET = NEW_CURRENT_HELMET;
-            CURRENT_HELMET_DATA = NEW_CURRENT_HELMET_DATA;
             CURRENT_HELMET_NAME = NEW_CURRENT_HELMET_NAME;
 
             if (!isEmpty(CURRENT_HELMET)) {
                 CraftPresence.CLIENT.syncTimestamp("item.helmet.time");
             }
         }
+        if (hasHelmetNBTChanged) {
+            CURRENT_HELMET_DATA = NEW_CURRENT_HELMET_DATA;
+            NbtUtils.parseTags("data.item.helmet.nbt", CURRENT_HELMET_DATA);
+        }
 
         if (hasChestChanged) {
             CURRENT_CHEST = NEW_CURRENT_CHEST;
-            CURRENT_CHEST_DATA = NEW_CURRENT_CHEST_DATA;
             CURRENT_CHEST_NAME = NEW_CURRENT_CHEST_NAME;
 
             if (!isEmpty(CURRENT_CHEST)) {
                 CraftPresence.CLIENT.syncTimestamp("item.chestplate.time");
             }
         }
+        if (hasChestNBTChanged) {
+            CURRENT_CHEST_DATA = NEW_CURRENT_CHEST_DATA;
+            NbtUtils.parseTags("data.item.chestplate.nbt", CURRENT_CHEST_DATA);
+        }
 
         if (hasLegsChanged) {
             CURRENT_LEGS = NEW_CURRENT_LEGS;
-            CURRENT_LEGS_DATA = NEW_CURRENT_LEGS_DATA;
             CURRENT_LEGS_NAME = NEW_CURRENT_LEGS_NAME;
 
             if (!isEmpty(CURRENT_LEGS)) {
                 CraftPresence.CLIENT.syncTimestamp("item.leggings.time");
             }
         }
+        if (hasLegsNBTChanged) {
+            CURRENT_LEGS_DATA = NEW_CURRENT_LEGS_DATA;
+            NbtUtils.parseTags("data.item.leggings.nbt", CURRENT_LEGS_DATA);
+        }
 
         if (hasBootsChanged) {
             CURRENT_BOOTS = NEW_CURRENT_BOOTS;
-            CURRENT_BOOTS_DATA = NEW_CURRENT_BOOTS_DATA;
             CURRENT_BOOTS_NAME = NEW_CURRENT_BOOTS_NAME;
 
             if (!isEmpty(CURRENT_BOOTS)) {
                 CraftPresence.CLIENT.syncTimestamp("item.boots.time");
             }
+        }
+        if (hasBootsNBTChanged) {
+            CURRENT_BOOTS_DATA = NEW_CURRENT_BOOTS_DATA;
+            NbtUtils.parseTags("data.item.boots.nbt", CURRENT_BOOTS_DATA);
         }
 
         if (hasMainHandChanged || hasOffHandChanged ||
@@ -428,7 +452,6 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.main_hand.class", CURRENT_MAIN_HAND_ITEM.getClass());
             CraftPresence.CLIENT.syncArgument("item.main_hand.name", CURRENT_MAIN_HAND_ITEM_NAME);
             CraftPresence.CLIENT.syncArgument("item.main_hand.message", mainItemMessage);
-            NbtUtils.parseTags("data.item.main_hand.", CURRENT_MAIN_HAND_ITEM_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.main_hand", "data.item.main_hand");
         }
@@ -438,7 +461,6 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.off_hand.class", CURRENT_OFFHAND_ITEM.getClass());
             CraftPresence.CLIENT.syncArgument("item.off_hand.name", CURRENT_OFFHAND_ITEM_NAME);
             CraftPresence.CLIENT.syncArgument("item.off_hand.message", offHandItemMessage);
-            NbtUtils.parseTags("data.item.off_hand.", CURRENT_OFFHAND_ITEM_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.off_hand", "data.item.off_hand");
         }
@@ -448,7 +470,6 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.helmet.class", CURRENT_HELMET.getClass());
             CraftPresence.CLIENT.syncArgument("item.helmet.name", CURRENT_HELMET_NAME);
             CraftPresence.CLIENT.syncArgument("item.helmet.message", helmetMessage);
-            NbtUtils.parseTags("data.item.helmet.", CURRENT_HELMET_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.helmet", "data.item.helmet");
         }
@@ -458,7 +479,6 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.chestplate.class", CURRENT_CHEST.getClass());
             CraftPresence.CLIENT.syncArgument("item.chestplate.name", CURRENT_CHEST_NAME);
             CraftPresence.CLIENT.syncArgument("item.chestplate.message", chestMessage);
-            NbtUtils.parseTags("data.item.chestplate.", CURRENT_CHEST_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.chestplate", "data.item.chestplate");
         }
@@ -478,7 +498,6 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.boots.class", CURRENT_BOOTS.getClass());
             CraftPresence.CLIENT.syncArgument("item.boots.name", CURRENT_BOOTS_NAME);
             CraftPresence.CLIENT.syncArgument("item.boots.message", bootsMessage);
-            NbtUtils.parseTags("data.item.boots.", CURRENT_BOOTS_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.boots", "data.item.boots");
         }

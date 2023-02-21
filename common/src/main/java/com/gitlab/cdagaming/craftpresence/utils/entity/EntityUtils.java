@@ -171,29 +171,37 @@ public class EntityUtils implements Module {
 
         final boolean hasTargetChanged = (NEW_CURRENT_TARGET != null &&
                 !NEW_CURRENT_TARGET.equals(CURRENT_TARGET) || !NEW_CURRENT_TARGET_NAME.equals(CURRENT_TARGET_NAME)) ||
-                (NEW_CURRENT_TARGET == null && CURRENT_TARGET != null) || !NEW_CURRENT_TARGET_DATA.equals(CURRENT_TARGET_DATA);
+                (NEW_CURRENT_TARGET == null && CURRENT_TARGET != null);
+        final boolean hasTargetNBTChanged = !NEW_CURRENT_TARGET_DATA.equals(CURRENT_TARGET_DATA);
         final boolean hasRidingChanged = (NEW_CURRENT_RIDING != null &&
                 !NEW_CURRENT_RIDING.equals(CURRENT_RIDING) || !NEW_CURRENT_RIDING_NAME.equals(CURRENT_RIDING_NAME)) ||
-                (NEW_CURRENT_RIDING == null && CURRENT_RIDING != null) || !NEW_CURRENT_RIDING_DATA.equals(CURRENT_RIDING_DATA);
+                (NEW_CURRENT_RIDING == null && CURRENT_RIDING != null);
+        final boolean hasRidingNBTChanged = !NEW_CURRENT_RIDING_DATA.equals(CURRENT_RIDING_DATA);
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
-            CURRENT_TARGET_DATA = NEW_CURRENT_TARGET_DATA;
             CURRENT_TARGET_NAME = NEW_CURRENT_TARGET_NAME;
 
             if (CURRENT_TARGET != null) {
                 CraftPresence.CLIENT.syncTimestamp("entity.target.time");
             }
         }
+        if (hasTargetNBTChanged) {
+            CURRENT_TARGET_DATA = NEW_CURRENT_TARGET_DATA;
+            NbtUtils.parseTags("data.entity.target.nbt", CURRENT_TARGET_DATA);
+        }
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
-            CURRENT_RIDING_DATA = NEW_CURRENT_RIDING_DATA;
             CURRENT_RIDING_NAME = NEW_CURRENT_RIDING_NAME;
 
             if (CURRENT_RIDING != null) {
                 CraftPresence.CLIENT.syncTimestamp("entity.riding.time");
             }
+        }
+        if (hasRidingNBTChanged) {
+            CURRENT_RIDING_DATA = NEW_CURRENT_RIDING_DATA;
+            NbtUtils.parseTags("data.entity.riding.nbt", CURRENT_RIDING_DATA);
         }
 
         if (hasTargetChanged || hasRidingChanged) {
@@ -229,7 +237,6 @@ public class EntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.entity.target.instance", CURRENT_TARGET);
             CraftPresence.CLIENT.syncArgument("data.entity.target.class", CURRENT_TARGET.getClass());
             CraftPresence.CLIENT.syncArgument("entity.target.name", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME));
-            NbtUtils.parseTags("data.entity.target.", CURRENT_TARGET_DATA);
 
             CraftPresence.CLIENT.syncOverride(currentTargetData != null ? currentTargetData : defaultTargetData, "entity.target.message", "entity.target.icon");
             CraftPresence.CLIENT.syncArgument("entity.target.message", currentTargetMessage);
@@ -242,7 +249,6 @@ public class EntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.entity.riding.instance", CURRENT_RIDING);
             CraftPresence.CLIENT.syncArgument("data.entity.riding.class", CURRENT_RIDING.getClass());
             CraftPresence.CLIENT.syncArgument("entity.riding.name", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME));
-            NbtUtils.parseTags("data.entity.riding.", CURRENT_RIDING_DATA);
 
             CraftPresence.CLIENT.syncOverride(currentRidingData != null ? currentRidingData : defaultRidingData, "entity.riding.message", "entity.riding.icon");
             CraftPresence.CLIENT.syncArgument("entity.riding.message", currentRidingMessage);

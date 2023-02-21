@@ -177,7 +177,7 @@ related systems:
     * `*.instance` and `*.class` placeholders added to relevant `Gui`, `Entity`, and `Tile Entity` Modules
 * Removed (or moved) Placeholders:
     * NBT placeholders have moved from being module only as `&[tagName]&` to being able to be used anywhere with
-      a `nbt.[module].[tagName]` format
+      a `data.[module].nbt.[tagName]` format
     * `player.position.*` and `player.health.*` placeholders now identify as `Double` instead of Strings
     * `server.players.*` placeholders now identify as `Integer` instead of Strings
 
