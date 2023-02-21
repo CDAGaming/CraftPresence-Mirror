@@ -44,7 +44,7 @@ import java.util.TreeMap;
  *
  * @author CDAGaming
  */
-@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
+@SuppressFBWarnings({"MS_CANNOT_BE_FINAL", "MS_MUTABLE_COLLECTION"})
 public class CommandUtils {
     /**
      * A mapping of the currently loaded Rich Presence Modules

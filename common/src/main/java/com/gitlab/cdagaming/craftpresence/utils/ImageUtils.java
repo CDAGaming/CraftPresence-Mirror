@@ -34,7 +34,6 @@ import com.google.common.collect.Queues;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -48,6 +47,7 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -320,7 +320,7 @@ public class ImageUtils {
      */
     public static byte[] decodeBase64(final String input, final String encoding, final boolean useDecodingMethod, final boolean repeatCycle) {
         try {
-            return Base64.decodeBase64(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
+            return Base64.getDecoder().decode(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
         } catch (Exception ex) {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
