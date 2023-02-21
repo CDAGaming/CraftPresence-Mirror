@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.curse.impl.Manifest;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +42,7 @@ import java.io.FileNotFoundException;
  *
  * @author CDAGaming
  */
+@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CurseUtils {
     /**
      * The Curse Pack Instance Name

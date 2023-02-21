@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.TreeMap;
 
@@ -43,6 +44,7 @@ import java.util.TreeMap;
  *
  * @author CDAGaming
  */
+@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CommandUtils {
     /**
      * A mapping of the currently loaded Rich Presence Modules
@@ -68,11 +70,21 @@ public class CommandUtils {
      */
     public static boolean isLoadingGame = false;
 
+    /**
+     * Determines if this Application is running in a Developer or Debug State
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
     public static boolean isDebugMode() {
         return ModUtils.IS_DEV_FLAG ||
                 isVerboseMode() || (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.debugMode);
     }
 
+    /**
+     * Determines if this Application is running in a de-obfuscated or Developer environment
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
     public static boolean isVerboseMode() {
         return ModUtils.IS_VERBOSE_FLAG ||
                 (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
