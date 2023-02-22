@@ -159,7 +159,7 @@ public class DimensionUtils implements Module {
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "dimension.message", "dimension.icon");
         CraftPresence.CLIENT.syncArgument("dimension.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("dimension.icon", formattedIcon);
-        CraftPresence.CLIENT.syncTimestamp("dimension.time");
+        CraftPresence.CLIENT.syncTimestamp("data.dimension.time");
     }
 
     /**

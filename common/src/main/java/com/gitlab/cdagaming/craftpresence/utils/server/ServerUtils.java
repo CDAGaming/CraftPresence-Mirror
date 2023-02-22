@@ -622,7 +622,7 @@ public class ServerUtils implements Module {
     @Override
     public void setInUse(boolean state) {
         if (state && !this.isInUse) {
-            CraftPresence.CLIENT.syncTimestamp("server.time");
+            CraftPresence.CLIENT.syncTimestamp("data.server.time");
         }
         this.isInUse = state;
     }

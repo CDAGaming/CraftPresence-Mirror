@@ -183,7 +183,7 @@ public class EntityUtils implements Module {
             CURRENT_TARGET_NAME = NEW_CURRENT_TARGET_NAME;
 
             if (CURRENT_TARGET != null) {
-                CraftPresence.CLIENT.syncTimestamp("entity.target.time");
+                CraftPresence.CLIENT.syncTimestamp("data.entity.target.time");
             }
         }
         if (hasTargetNBTChanged) {
@@ -196,7 +196,7 @@ public class EntityUtils implements Module {
             CURRENT_RIDING_NAME = NEW_CURRENT_RIDING_NAME;
 
             if (CURRENT_RIDING != null) {
-                CraftPresence.CLIENT.syncTimestamp("entity.riding.time");
+                CraftPresence.CLIENT.syncTimestamp("data.entity.riding.time");
             }
         }
         if (hasRidingNBTChanged) {

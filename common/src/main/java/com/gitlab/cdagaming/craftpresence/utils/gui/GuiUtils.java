@@ -456,7 +456,7 @@ public class GuiUtils implements Module {
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("screen.icon", formattedIcon);
-        CraftPresence.CLIENT.syncTimestamp("screen.time");
+        CraftPresence.CLIENT.syncTimestamp("data.screen.time");
     }
 
     /**

@@ -155,7 +155,7 @@ public class BiomeUtils implements Module {
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "biome.message", "biome.icon");
         CraftPresence.CLIENT.syncArgument("biome.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("biome.icon", formattedIcon);
-        CraftPresence.CLIENT.syncTimestamp("biome.time");
+        CraftPresence.CLIENT.syncTimestamp("data.biome.time");
     }
 
     /**

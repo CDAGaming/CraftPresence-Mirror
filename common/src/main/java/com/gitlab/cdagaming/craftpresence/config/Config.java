@@ -231,7 +231,7 @@ public final class Config extends Module implements Serializable {
                     final boolean showTime = rawJson.getAsJsonObject()
                             .getAsJsonObject("generalSettings")
                             .getAsJsonPrimitive("showTime").getAsBoolean();
-                    displaySettings.presenceData.startTimestamp = showTime ? "{general.time}" : "";
+                    displaySettings.presenceData.startTimestamp = showTime ? "{data.general.time}" : "";
                     currentVer = 2;
                 }
 
