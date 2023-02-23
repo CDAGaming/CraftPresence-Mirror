@@ -55,6 +55,7 @@ import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -462,11 +463,14 @@ public class DiscordUtils {
         } catch (Throwable ignored) {
         }
 
+        final String originalPrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.original");
+        final String messagePrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
+        final String verbosePrefix = ModUtils.TRANSLATOR.translate("craftpresence.logger.error.verbose");
         if (result == null || result.hasErrors()) {
             if (result != null) {
-                ModUtils.LOG.error("A parser exception has occurred:");
-                ModUtils.LOG.error("Original: \"" + data + "\"");
-                ModUtils.LOG.error("Errors:");
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.parser"));
+                ModUtils.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
+                ModUtils.LOG.error(messagePrefix);
                 for (Error error : result.errors) {
                     if (output != null) {
                         try {
@@ -493,21 +497,34 @@ public class DiscordUtils {
                     script.decompile(output);
                 }
             } catch (Throwable ex) {
-                ModUtils.LOG.error("A compiler exception has occurred (" + ex.getClass().getSimpleName() + "):");
-                ModUtils.LOG.error("Original: \"" + data + "\"");
-                final List<String> splitEx = StringUtils.splitTextByNewLine(ex.getMessage());
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.compiler"));
+                ModUtils.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
+                final List<String> splitEx = StringUtils.splitTextByNewLine(ExceptionUtils.getStackTrace(ex));
+                // Dispatch to Appendable WriteStream if possible
                 if (output != null) {
                     try {
-                        output.append(ex.getMessage()).append('\n');
+                        if (CommandUtils.isVerboseMode()) {
+                            for (String line : splitEx) {
+                                line = line.replace("\t", "    ");
+                                output.append(line).append('\n');
+                            }
+                        } else {
+                            output.append(splitEx.get(0)).append('\n');
+                            if (splitEx.size() > 1) {
+                                output.append('\n').append(verbosePrefix).append('\n');
+                            }
+                        }
                     } catch (Exception ignored) {
                     }
                 }
+                // Perform the same to Logging, so the same information is available on both ends
                 if (CommandUtils.isVerboseMode()) {
+                    ModUtils.LOG.error(messagePrefix);
                     ex.printStackTrace();
                 } else {
-                    ModUtils.LOG.error("Message: \"" + splitEx.get(0) + "\"");
+                    ModUtils.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
                     if (splitEx.size() > 1) {
-                        ModUtils.LOG.error("Please enable verbose mode to see full exception.");
+                        ModUtils.LOG.error(verbosePrefix);
                     }
                 }
                 return Value.null_();
