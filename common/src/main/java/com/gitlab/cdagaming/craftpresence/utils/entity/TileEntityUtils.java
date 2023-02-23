@@ -488,7 +488,6 @@ public class TileEntityUtils implements Module {
             CraftPresence.CLIENT.syncArgument("data.item.leggings.class", CURRENT_LEGS.getClass());
             CraftPresence.CLIENT.syncArgument("item.leggings.name", CURRENT_LEGS_NAME);
             CraftPresence.CLIENT.syncArgument("item.leggings.message", legsMessage);
-            NbtUtils.parseTags("data.item.leggings.", CURRENT_LEGS_DATA);
         } else {
             CraftPresence.CLIENT.removeArguments("item.leggings", "data.item.leggings");
         }
