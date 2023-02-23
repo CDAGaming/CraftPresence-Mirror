@@ -1138,6 +1138,9 @@ public class StringUtils {
     public static List<String> splitTextByNewLine(final String original) {
         if (!isNullOrEmpty(original)) {
             String formattedText = original;
+            if (formattedText.contains("\r\n")) {
+                formattedText = original.replace("\r\n", "&newline&");
+            }
             if (formattedText.contains("\n")) {
                 formattedText = original.replace("\n", "&newline&");
             }
