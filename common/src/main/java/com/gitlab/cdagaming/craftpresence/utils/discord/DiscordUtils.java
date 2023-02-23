@@ -237,6 +237,10 @@ public class DiscordUtils {
      * The duration or timestamp of the last running instance
      */
     private long lastStartTime;
+    /**
+     * The duration or timestamp of the current running instance
+     */
+    private long currentStartTime;
 
     /**
      * Setup any Critical Methods needed for the RPC
@@ -295,10 +299,9 @@ public class DiscordUtils {
 
         // Update Start Timestamp onInit, if needed
         final long newStartTime = System.currentTimeMillis() / 1000L;
-        syncArgument("data.general.time", !updateTimestamp && lastStartTime > 0 ?
+        currentStartTime = !updateTimestamp && lastStartTime > 0 ?
                 lastStartTime :
-                newStartTime
-        );
+                newStartTime;
         lastStartTime = newStartTime;
     }
 
@@ -1139,6 +1142,9 @@ public class DiscordUtils {
 
         syncArgument("general.version", ModUtils.MCVersion);
         syncArgument("general.brand", ModUtils.BRAND);
+
+        // Sync any advanced arguments
+        syncArgument("data.general.time", currentStartTime);
 
         // Sync the Default Icon Argument
         syncArgument("general.icon", CraftPresence.CONFIG.generalSettings.defaultIcon);
