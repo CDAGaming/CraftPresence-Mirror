@@ -463,7 +463,7 @@ public class Legacy2Modern implements DataMigrator {
             final Predicate<String> typeCheck = entry.getSecond();
             final Predicate<String> optionCheck = entry.getThird();
             if (typeCheck.test(argumentType) && optionCheck.test(originalName) && result.toLowerCase().contains(original.toLowerCase())) {
-                ModUtils.LOG.info(String.format("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue));
+                ModUtils.LOG.info("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue);
                 result = StringUtils.replaceAnyCase(result, original, newValue);
             }
         }
@@ -475,7 +475,7 @@ public class Legacy2Modern implements DataMigrator {
                 split[0] = split[0].replaceAll("[{}]", "");
                 split[1] = split[1].replaceAll("[{}]", "");
                 final String replacement = String.format("{getOrDefault(%1$s, %2$s)}", split[0], split[1]);
-                ModUtils.LOG.info(String.format("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, match, replacement));
+                ModUtils.LOG.info("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, match, replacement);
                 result = result.replace(match, replacement);
             }
         }

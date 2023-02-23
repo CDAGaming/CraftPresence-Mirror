@@ -111,7 +111,7 @@ public class HypherConverter implements DataMigrator {
         try (FileConfig conf = FileConfig.of(configPath)) {
             conf.load();
             configVersion = conf.get("general.version");
-            ModUtils.LOG.debugInfo(String.format("Main Config file found (Version: %d, File Version: %d), interpreting data...", configVersion, fileVersion));
+            ModUtils.LOG.debugInfo("Main Config file found (Version: %d, File Version: %d), interpreting data...", configVersion, fileVersion);
 
             // Main Conversion
             instance.generalSettings.clientId = conf.get("general.applicationID").toString();
@@ -172,7 +172,7 @@ public class HypherConverter implements DataMigrator {
             try (FileConfig conf = FileConfig.of(serverEntriesFile)) {
                 conf.load();
                 serverEntryVersion = conf.get("version");
-                ModUtils.LOG.debugInfo(String.format("Server Entries file found (Version: %d, File Version: %d), interpreting data...", serverEntryVersion, fileVersion));
+                ModUtils.LOG.debugInfo("Server Entries file found (Version: %d, File Version: %d), interpreting data...", serverEntryVersion, fileVersion);
 
                 final boolean areOverridesEnabled = conf.get("enabled");
                 if (conf.get("entry") != null) {
@@ -191,7 +191,7 @@ public class HypherConverter implements DataMigrator {
             try (FileConfig conf = FileConfig.of(replayModFile)) {
                 conf.load();
                 replayModVersion = conf.get("general.version");
-                ModUtils.LOG.debugInfo(String.format("Replay Mod Integration file found (Version: %d, File Version: %d), interpreting data...", replayModVersion, fileVersion));
+                ModUtils.LOG.debugInfo("Replay Mod Integration file found (Version: %d, File Version: %d), interpreting data...", replayModVersion, fileVersion);
 
                 instance.advancedSettings.enablePerGui = true;
                 instance.advancedSettings.guiSettings.guiData.put("GuiReplayViewer", new ModuleData()

@@ -66,10 +66,11 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void error(final String logMessage, Object... logArguments) {
+        final String message = String.format(logMessage, logArguments);
         if (canShowAsChat()) {
-            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§c " + logMessage);
+            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§c " + message);
         } else {
-            getLogInstance().error(logMessage, logArguments);
+            getLogInstance().error(message);
         }
     }
 
@@ -80,10 +81,11 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void warn(final String logMessage, Object... logArguments) {
+        final String message = String.format(logMessage, logArguments);
         if (canShowAsChat()) {
-            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§e " + logMessage);
+            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§e " + message);
         } else {
-            getLogInstance().warn(logMessage, logArguments);
+            getLogInstance().warn(message);
         }
     }
 
@@ -94,10 +96,11 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void info(final String logMessage, Object... logArguments) {
+        final String message = String.format(logMessage, logArguments);
         if (canShowAsChat()) {
-            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r " + logMessage);
+            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r " + message);
         } else {
-            getLogInstance().info(logMessage, logArguments);
+            getLogInstance().info(message);
         }
     }
 
