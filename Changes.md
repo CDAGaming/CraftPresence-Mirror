@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.0.0 Beta 2 (02/23/2023)
+## v2.0.0 Beta 2 (02/24/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-beta.3)_
@@ -236,6 +236,7 @@ between future Alpha releases.
 
 The following known issues are present in this build:
 
+* Some RPC flickering may be present in some circumstances (Primarily due to the override system rewrite)
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:

@@ -52,7 +52,7 @@ public class FieldReflectionUtils {
             theUnsafe.setAccessible(true);
             UNSAFE = (Unsafe) theUnsafe.get(null);
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            throw new UnsupportedOperationException(e);
         }
     }
 
@@ -112,6 +112,8 @@ public class FieldReflectionUtils {
                         }
                     }
                     break;
+                default:
+                    return null;
             }
             return null;
         }
@@ -418,7 +420,7 @@ public class FieldReflectionUtils {
                     }
                     this.setAccessor = Objects.requireNonNull(setAccessor);
                 } catch (IllegalAccessException e) {
-                    throw new RuntimeException(
+                    throw new UnsupportedOperationException(
                             "Couldn't create a Field accessor for " + klass.getName() + "#" + javaField.getName(),
                             e);
                 }

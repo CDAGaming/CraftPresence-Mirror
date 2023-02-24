@@ -67,8 +67,8 @@ public class LockObject {
             then.run();
             return;
         }
-        if (Thread.currentThread() == lockThread) {
-            throw new RuntimeException("Attempted to wait on thread that's locking.");
+        if (Thread.currentThread().equals(lockThread)) {
+            throw new UnsupportedOperationException("Attempted to wait on thread that's locking.");
         }
         while (!unlocked) this.wait();
         then.run();
