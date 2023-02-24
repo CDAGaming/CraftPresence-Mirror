@@ -1508,7 +1508,5 @@ public class DiscordUtils {
                 STATUS = DiscordStatus.Ready;
             }
         }
-
-        updatePresence();
     }
 }

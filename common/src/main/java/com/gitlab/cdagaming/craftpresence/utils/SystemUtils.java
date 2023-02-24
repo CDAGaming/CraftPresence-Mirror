@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.LockObject;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -48,6 +49,10 @@ public class SystemUtils {
      * The minimum time to wait by default (In Seconds) before callbacks refresh
      */
     public static final int MINIMUM_REFRESH_RATE = 2;
+    /**
+     * An instance of {@link LockObject} to await certain tasks
+     */
+    public final LockObject TICK_LOCK = new LockObject();
     /**
      * The Current Time Remaining on the Timer
      */
@@ -135,6 +140,8 @@ public class SystemUtils {
             // Calculate if 64-Bit Architecture
             final List<String> x64 = Lists.newArrayList("amd64", "x86_64");
             IS_64_BIT = x64.contains(OS_ARCH);
+
+            TICK_LOCK.unlock();
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.system"));
             if (CommandUtils.isVerboseMode()) {
@@ -168,11 +175,25 @@ public class SystemUtils {
                 if (HAS_LOADED && !HAS_GAME_LOADED && CraftPresence.instance.currentScreen != null) {
                     HAS_GAME_LOADED = true;
                 }
-                CraftPresence.CLIENT.onTick();
                 refreshedCallbacks = true;
             }
         } else {
             refreshedCallbacks = false;
+        }
+    }
+
+    /**
+     * The Event to Run on each Client Tick, after passing initialization events
+     * <p>
+     * Consists of Scheduling awaited tasks, after a successfull {@link SystemUtils#onTick()}
+     */
+    void postTick() {
+        if (refreshedCallbacks) {
+            try {
+                TICK_LOCK.waitForUnlock(CraftPresence.CLIENT::updatePresence);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

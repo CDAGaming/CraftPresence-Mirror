@@ -134,13 +134,20 @@ public class CommandUtils {
         CraftPresence.SYSTEM.onTick();
         CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
 
-        for (Module module : modules.values()) {
-            if (module.canBeLoaded()) {
-                module.onTick();
-                if (forceUpdateRPC && module.isInUse()) {
-                    module.updatePresence();
+        CraftPresence.SYSTEM.TICK_LOCK.lock();
+        try {
+            for (Module module : modules.values()) {
+                if (module.canBeLoaded()) {
+                    module.onTick();
+                    if (forceUpdateRPC && module.isInUse()) {
+                        module.updatePresence();
+                    }
                 }
             }
+            CraftPresence.CLIENT.onTick();
+        } finally {
+            CraftPresence.SYSTEM.TICK_LOCK.unlock();
+            CraftPresence.SYSTEM.postTick();
         }
     }
 
