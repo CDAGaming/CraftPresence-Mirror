@@ -36,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -127,6 +128,14 @@ public class ServerUtils implements Module {
      */
     private String currentWorldName;
     /**
+     * The Current World's Weather Name
+     */
+    private String currentWeatherName;
+    /**
+     * The Current World's Weather Duration
+     */
+    private long currentWeatherDuration;
+    /**
      * The Amount of Players in the Current Server the Player is in
      */
     private int currentPlayers;
@@ -194,6 +203,8 @@ public class ServerUtils implements Module {
         currentHealth = new Pair<>(0.0D, 0.0D);
         currentDifficulty = null;
         currentWorldName = null;
+        currentWeatherName = null;
+        currentWeatherDuration = 0L;
         currentServerMessage = "";
         currentServerIcon = "";
         canUseEndpointIcon = false;
@@ -322,6 +333,19 @@ public class ServerUtils implements Module {
                     "";
             if (!newDifficulty.equals(currentDifficulty)) {
                 currentDifficulty = newDifficulty;
+                queuedForUpdate = true;
+            }
+
+            // `world.weather.name`, `world.weather.duration` Argument = Current Weather Data of the World
+            final Pair<String, Long> newWeatherData = EntityUtils.getWeather(CraftPresence.player);
+            final String newWeatherName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData.getFirst());
+            final Long newWeatherDuration = newWeatherData.getSecond();
+            if (!newWeatherName.equals(currentWeatherName)) {
+                currentWeatherName = newWeatherName;
+                queuedForUpdate = true;
+            }
+            if (!newWeatherDuration.equals(currentWeatherDuration)) {
+                currentWeatherDuration = newWeatherDuration;
                 queuedForUpdate = true;
             }
 
@@ -470,6 +494,8 @@ public class ServerUtils implements Module {
 
         // World Data Arguments
         CraftPresence.CLIENT.syncArgument("world.difficulty", StringUtils.getOrDefault(currentDifficulty));
+        CraftPresence.CLIENT.syncArgument("world.weather.name", StringUtils.getOrDefault(currentWeatherName));
+        CraftPresence.CLIENT.syncArgument("world.weather.duration", currentWeatherDuration);
         CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
         CraftPresence.CLIENT.syncArgument("world.time24", StringUtils.getOrDefault(timeString24));
         CraftPresence.CLIENT.syncArgument("world.time12", StringUtils.getOrDefault(timeString12));

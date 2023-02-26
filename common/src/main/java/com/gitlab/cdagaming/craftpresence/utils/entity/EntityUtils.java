@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -36,6 +37,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.WorldInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -240,8 +243,41 @@ public class EntityUtils implements Module {
      * @param original The original entity string name
      * @return The formatted entity display name to use
      */
-    public String getEntityName(final Entity entity, final String original) {
+    public static String getEntityName(final Entity entity, final String original) {
         return StringUtils.isValidUuid(original) ? entity.getName() : original;
+    }
+
+    /**
+     * Retrieve the weather, utilizing the world
+     * @param worldObj The world object to interpret
+     * @return the current weather data
+     */
+    public static Pair<String, Long> getWeather(final World worldObj) {
+        String name = "clear";
+        long duration = 0L;
+        if (worldObj != null) {
+            final WorldInfo info = worldObj.getWorldInfo();
+            if (info.isThundering()) {
+                name = "thunder";
+                duration = info.getThunderTime();
+            } else if (info.isRaining()) {
+                name = "rain";
+                duration = info.getRainTime();
+            } else {
+                name = "clear";
+                duration = info.getCleanWeatherTime();
+            }
+        }
+        return new Pair<>(name, duration);
+    }
+
+    /**
+     * Retrieve the weather, utilizing the entity's world
+     * @param entity The entity to interpret
+     * @return the current weather data
+     */
+    public static Pair<String, Long> getWeather(final Entity entity) {
+        return getWeather(entity != null ? entity.world : null);
     }
 
     @Override

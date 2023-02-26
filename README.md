@@ -171,6 +171,8 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `entity.riding.icon` - The currently riding entity's icon
 * World Placeholders:
     * `world.difficulty` - The current world's difficulty
+    * `world.weather.name` - The current world's weather name
+    * `world.weather.duration` - The current world's weather duration
     * `world.name` - The name of the current world
     * `world.time24` - The current world's in-game time (24-hour format)
     * `world.time12` - The current world's in-game time (12-hour format)

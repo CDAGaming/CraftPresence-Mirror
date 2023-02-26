@@ -240,7 +240,6 @@ The following known issues are present in this build:
 * The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
-    * `%weather%` is also unimplemented at this time, and will also parse as `{''}`
 
 #### 1.13.x Build Info
 

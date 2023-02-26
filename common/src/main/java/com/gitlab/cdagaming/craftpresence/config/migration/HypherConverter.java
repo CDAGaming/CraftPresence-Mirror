@@ -71,7 +71,7 @@ public class HypherConverter implements DataMigrator {
             .put("%gametime12%", "{world.time12}")
             .put("%gametime%", "{world.time24}")
             .put("%day%", "{world.day}")
-            .put("%weather%", EMPTY_QUOTES) // TODO
+            .put("%weather%", "{world.weather.name}")
             .put("%replayframe%", "{replaymod.frames.current}")
             .put("%replaytotal%", "{replaymod.frames.total}")
             .put("%replaytime%", "{replaymod.time.current}")
