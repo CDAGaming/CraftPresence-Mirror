@@ -135,6 +135,7 @@ The following placeholders are available for use anywhere in CraftPresence:
 * Pack Placeholders:
     * `pack.name` - The currently detected pack's name
     * `pack.icon` - The currently detected pack's icon
+    * `pack.type` - The currently detected pack's type
 * Player Placeholders:
     * `player.name` - Your username
     * `player.uuid.short` - Your UUID (Trimmed Format)
@@ -200,13 +201,10 @@ The following placeholders are available for use anywhere in CraftPresence:
         * Module Order: `biome, dimension, entity, item, screen, server, <...>`
     * `data.entity.target.instance` - An instance of the currently targeted entity
     * `data.entity.target.class` - The class object for the currently targeted entity
-    * `data.entity.target.nbt.[tagName]` - The nbt tag `tagName`, for the currently targeted entity, if said NBT exists
     * `data.entity.riding.instance` - An instance of the currently riding entity
     * `data.entity.riding.class` - The class object for the currently riding entity
-    * `data.entity.riding.nbt.[tagName]` - The nbt tag `tagName`, for the currently riding entity, if said NBT exists
     * `data.item.[slotId].instance` - An instance of the current `slotId`
     * `data.item.[slotId].class` - The class object for the current `slotId`
-    * `data.item.[slotId].nbt.[tagName]` - The nbt tag `tagName`, within the current `slotId`, if said NBT exists
     * `data.screen.instance` - An instance of the current Gui Screen
     * `data.screen.class` - The class object for the current Gui Screen
     * `data.server.motd.line.[number]` - Retrieves a specific line of `server.motd.raw`

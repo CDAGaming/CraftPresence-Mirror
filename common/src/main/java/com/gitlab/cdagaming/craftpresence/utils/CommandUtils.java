@@ -167,7 +167,7 @@ public class CommandUtils {
      * @param moduleId The name of the module
      * @param instance The instance of the module
      */
-    public static void addPackModule(final String moduleId, final Pack instance) {
+    public static void addModule(final String moduleId, final Pack instance) {
         packModules.put(moduleId, instance);
     }
 

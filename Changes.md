@@ -176,8 +176,7 @@ related systems:
     * `player.icon` added if `allowEndpointIcons` is active and a valid `playerSkinEndpoint` is supplied
     * `*.instance` and `*.class` placeholders added to relevant `Gui`, `Entity`, and `Tile Entity` Modules
 * Removed (or moved) Placeholders:
-    * NBT placeholders have moved from being module only as `&[tagName]&` to being able to be used anywhere with
-      a `data.[module].nbt.[tagName]` format
+    * NBT placeholders have been removed for the entity and item modules, replaced by the `getNbt` function
     * `player.position.*` and `player.health.*` placeholders now identify as `Double` instead of Strings
     * `server.players.*` placeholders now identify as `Integer` instead of Strings
 
