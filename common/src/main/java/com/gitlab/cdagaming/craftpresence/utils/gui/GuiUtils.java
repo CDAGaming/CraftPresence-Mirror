@@ -71,10 +71,6 @@ public class GuiUtils implements Module {
      */
     public boolean configGUIOpened = false;
     /**
-     * Whether this module is active and currently in use
-     */
-    public boolean isInUse = false;
-    /**
      * If an Element is being focused on in a GUI or if a GUI is currently open
      * <p>Conditions depend on Game Version
      */
@@ -84,29 +80,33 @@ public class GuiUtils implements Module {
      */
     public boolean enabled = false;
     /**
-     * Whether this module has performed an initial retrieval of items
-     */
-    public boolean hasScanned = false;
-    /**
-     * The Last Used Control ID
-     */
-    public int lastIndex = 0;
-    /**
      * A List of the detected Gui Screen Names
      */
     public List<String> GUI_NAMES = Lists.newArrayList();
     /**
-     * The name of the Current Gui the player is in
-     */
-    public String CURRENT_GUI_NAME;
-    /**
-     * The Class Type of the Current Gui the player is in
-     */
-    public Class<?> CURRENT_GUI_CLASS;
-    /**
      * The Current Instance of the Gui the player is in
      */
     public GuiScreen CURRENT_SCREEN;
+    /**
+     * Whether this module is active and currently in use
+     */
+    private boolean isInUse = false;
+    /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    private boolean hasScanned = false;
+    /**
+     * The Last Used Control ID
+     */
+    private int lastIndex = 0;
+    /**
+     * The name of the Current Gui the player is in
+     */
+    private String CURRENT_GUI_NAME;
+    /**
+     * The Class Type of the Current Gui the player is in
+     */
+    private Class<?> CURRENT_GUI_CLASS;
 
     /**
      * Gets the Default/Global Font Renderer

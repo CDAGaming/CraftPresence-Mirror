@@ -75,17 +75,9 @@ public class TileEntityUtils implements Module {
      */
     private final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
     /**
-     * Whether this module is active and currently in use
-     */
-    public boolean isInUse = false;
-    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
-    /**
-     * Whether this module has performed an initial retrieval of items
-     */
-    public boolean hasScanned = false;
     /**
      * A List of the detected Entity (Blocks + Items) Names
      */
@@ -94,6 +86,14 @@ public class TileEntityUtils implements Module {
      * A List storing a mapping of Tile Entity textures, mapped as entityName:entityTexture
      */
     public Map<String, ResourceLocation> TILE_ENTITY_RESOURCES = Maps.newHashMap();
+    /**
+     * Whether this module is active and currently in use
+     */
+    private boolean isInUse = false;
+    /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    private boolean hasScanned = false;
     /**
      * The Player's Current Main Hand Item, if any
      */

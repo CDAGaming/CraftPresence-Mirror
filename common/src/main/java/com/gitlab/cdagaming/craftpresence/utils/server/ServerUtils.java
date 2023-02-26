@@ -56,17 +56,9 @@ import java.util.Map;
  */
 public class ServerUtils implements Module {
     /**
-     * Whether this module is active and currently in use
-     */
-    public boolean isInUse = false;
-    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
-    /**
-     * Whether this module has performed an initial retrieval of items
-     */
-    public boolean hasScanned = false;
     /**
      * The Current Player Map, if available
      */
@@ -79,6 +71,14 @@ public class ServerUtils implements Module {
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = Maps.newHashMap();
+    /**
+     * Whether this module is active and currently in use
+     */
+    private boolean isInUse = false;
+    /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    private boolean hasScanned = false;
     /**
      * The IP Address of the Current Server the Player is in
      */

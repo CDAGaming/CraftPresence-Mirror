@@ -48,29 +48,29 @@ import java.util.List;
 @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
 public class ReplayModUtils implements Module {
     /**
-     * Whether this module is active and currently in use
-     */
-    public boolean isInUse = false;
-    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
     /**
+     * Whether this module is active and currently in use
+     */
+    private boolean isInUse = false;
+    /**
      * Whether this module has performed an initial retrieval of items
      */
-    public boolean hasScanned = false;
+    private boolean hasScanned = false;
     /**
      * The name of the Current Gui the player is in
      */
-    public String CURRENT_GUI_NAME;
+    private String CURRENT_GUI_NAME;
     /**
      * The Class Type of the Current Gui the player is in
      */
-    public Class<?> CURRENT_GUI_CLASS;
+    private Class<?> CURRENT_GUI_CLASS;
     /**
      * The Current Instance of the Gui the player is in
      */
-    public AbstractGuiContainer<?> CURRENT_SCREEN;
+    private AbstractGuiContainer<?> CURRENT_SCREEN;
 
     @Override
     public void emptyData() {

@@ -51,25 +51,9 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class EntityUtils implements Module {
     /**
-     * Whether this module is active and currently in use
-     */
-    public boolean isInUse = false;
-    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
-    /**
-     * Whether this module has performed an initial retrieval of items
-     */
-    public boolean hasScanned = false;
-    /**
-     * The Player's Currently Targeted Entity Name, if any
-     */
-    public String CURRENT_TARGET_NAME;
-    /**
-     * The Player's Currently Riding Entity Name, if any
-     */
-    public String CURRENT_RIDING_NAME;
     /**
      * A List of the detected Entity Names
      */
@@ -79,13 +63,75 @@ public class EntityUtils implements Module {
      */
     public Map<String, String> PLAYER_BINDINGS = Maps.newHashMap();
     /**
+     * Whether this module is active and currently in use
+     */
+    private boolean isInUse = false;
+    /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    private boolean hasScanned = false;
+    /**
+     * The Player's Currently Targeted Entity Name, if any
+     */
+    private String CURRENT_TARGET_NAME;
+    /**
+     * The Player's Currently Riding Entity Name, if any
+     */
+    private String CURRENT_RIDING_NAME;
+    /**
      * The Player's Current Target Entity, if any
      */
-    public Entity CURRENT_TARGET;
+    private Entity CURRENT_TARGET;
     /**
      * The Player's Current Riding Entity, if any
      */
-    public Entity CURRENT_RIDING;
+    private Entity CURRENT_RIDING;
+
+    /**
+     * Retrieves the entities display name, derived from the original supplied name
+     *
+     * @param entity   The entity to interpret
+     * @param original The original entity string name
+     * @return The formatted entity display name to use
+     */
+    public static String getEntityName(final Entity entity, final String original) {
+        return StringUtils.isValidUuid(original) ? entity.getName() : original;
+    }
+
+    /**
+     * Retrieve the weather, utilizing the world
+     *
+     * @param worldObj The world object to interpret
+     * @return the current weather data
+     */
+    public static Pair<String, Long> getWeather(final World worldObj) {
+        String name = "clear";
+        long duration = 0L;
+        if (worldObj != null) {
+            final WorldInfo info = worldObj.getWorldInfo();
+            if (info.isThundering()) {
+                name = "thunder";
+                duration = info.getThunderTime();
+            } else if (info.isRaining()) {
+                name = "rain";
+                duration = info.getRainTime();
+            } else {
+                name = "clear";
+                duration = info.getCleanWeatherTime();
+            }
+        }
+        return new Pair<>(name, duration);
+    }
+
+    /**
+     * Retrieve the weather, utilizing the entity's world
+     *
+     * @param entity The entity to interpret
+     * @return the current weather data
+     */
+    public static Pair<String, Long> getWeather(final Entity entity) {
+        return getWeather(entity != null ? entity.world : null);
+    }
 
     @Override
     public void emptyData() {
@@ -234,50 +280,6 @@ public class EntityUtils implements Module {
         } else {
             CraftPresence.CLIENT.removeArguments("entity.riding", "data.entity.riding");
         }
-    }
-
-    /**
-     * Retrieves the entities display name, derived from the original supplied name
-     *
-     * @param entity   The entity to interpret
-     * @param original The original entity string name
-     * @return The formatted entity display name to use
-     */
-    public static String getEntityName(final Entity entity, final String original) {
-        return StringUtils.isValidUuid(original) ? entity.getName() : original;
-    }
-
-    /**
-     * Retrieve the weather, utilizing the world
-     * @param worldObj The world object to interpret
-     * @return the current weather data
-     */
-    public static Pair<String, Long> getWeather(final World worldObj) {
-        String name = "clear";
-        long duration = 0L;
-        if (worldObj != null) {
-            final WorldInfo info = worldObj.getWorldInfo();
-            if (info.isThundering()) {
-                name = "thunder";
-                duration = info.getThunderTime();
-            } else if (info.isRaining()) {
-                name = "rain";
-                duration = info.getRainTime();
-            } else {
-                name = "clear";
-                duration = info.getCleanWeatherTime();
-            }
-        }
-        return new Pair<>(name, duration);
-    }
-
-    /**
-     * Retrieve the weather, utilizing the entity's world
-     * @param entity The entity to interpret
-     * @return the current weather data
-     */
-    public static Pair<String, Long> getWeather(final Entity entity) {
-        return getWeather(entity != null ? entity.world : null);
     }
 
     @Override

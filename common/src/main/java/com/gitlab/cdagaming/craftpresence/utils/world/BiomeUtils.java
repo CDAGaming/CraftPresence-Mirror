@@ -49,21 +49,21 @@ public class BiomeUtils implements Module {
      */
     private final List<Biome> BIOME_TYPES = Lists.newArrayList();
     /**
-     * Whether this module is active and currently in use
-     */
-    public boolean isInUse = false;
-    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
     /**
-     * Whether this module has performed an initial retrieval of items
-     */
-    public boolean hasScanned = false;
-    /**
      * A List of the detected Biome Names
      */
     public List<String> BIOME_NAMES = Lists.newArrayList();
+    /**
+     * Whether this module is active and currently in use
+     */
+    private boolean isInUse = false;
+    /**
+     * Whether this module has performed an initial retrieval of items
+     */
+    private boolean hasScanned = false;
     /**
      * The Name of the Current Biome the Player is in
      */
