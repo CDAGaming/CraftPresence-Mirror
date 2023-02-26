@@ -74,6 +74,10 @@ public class DimensionUtils implements Module {
      * The alternative name for the Current Dimension the Player is in, if any
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
+    /**
+     * The Player's Current Dimension, if any
+     */
+    private WorldProvider CURRENT_DIMENSION;
 
     @Override
     public void emptyData() {
@@ -85,6 +89,7 @@ public class DimensionUtils implements Module {
 
     @Override
     public void clearClientData() {
+        CURRENT_DIMENSION = null;
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
 
@@ -126,6 +131,7 @@ public class DimensionUtils implements Module {
         final String newDimension_Identifier = StringUtils.getOrDefault(newDimension_primaryIdentifier, newDimension_alternativeIdentifier);
 
         if (!newDimensionName.equals(CURRENT_DIMENSION_NAME) || !newDimension_Identifier.equals(CURRENT_DIMENSION_IDENTIFIER)) {
+            CURRENT_DIMENSION = newProvider;
             CURRENT_DIMENSION_NAME = StringUtils.getOrDefault(newDimensionName, newDimension_Identifier);
             CURRENT_DIMENSION_IDENTIFIER = newDimension_Identifier;
 
@@ -154,6 +160,8 @@ public class DimensionUtils implements Module {
 
         CraftPresence.CLIENT.syncArgument("dimension.default.icon", CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
+        CraftPresence.CLIENT.syncArgument("data.dimension.instance", CURRENT_DIMENSION);
+        CraftPresence.CLIENT.syncArgument("data.dimension.class", CURRENT_DIMENSION.getClass());
         CraftPresence.CLIENT.syncArgument("dimension.name", CURRENT_DIMENSION_NAME);
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "dimension.message", "dimension.icon");

@@ -72,6 +72,10 @@ public class BiomeUtils implements Module {
      * The alternative name for the Current Biome the Player is in, if any
      */
     private String CURRENT_BIOME_IDENTIFIER;
+    /**
+     * The Player's Current Biome, if any
+     */
+    private Biome CURRENT_BIOME;
 
     @Override
     public void emptyData() {
@@ -83,6 +87,7 @@ public class BiomeUtils implements Module {
 
     @Override
     public void clearClientData() {
+        CURRENT_BIOME = null;
         CURRENT_BIOME_NAME = null;
         CURRENT_BIOME_IDENTIFIER = null;
 
@@ -123,6 +128,7 @@ public class BiomeUtils implements Module {
         final String newBiome_Identifier = StringUtils.getOrDefault(newBiome_primaryIdentifier, newBiome_alternativeIdentifier);
 
         if (!newBiomeName.equals(CURRENT_BIOME_NAME) || !newBiome_Identifier.equals(CURRENT_BIOME_IDENTIFIER)) {
+            CURRENT_BIOME = newBiome;
             CURRENT_BIOME_NAME = StringUtils.getOrDefault(newBiomeName, newBiome_Identifier);
             CURRENT_BIOME_IDENTIFIER = newBiome_Identifier;
 
@@ -150,6 +156,8 @@ public class BiomeUtils implements Module {
 
         CraftPresence.CLIENT.syncArgument("biome.default.icon", CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
 
+        CraftPresence.CLIENT.syncArgument("data.biome.instance", CURRENT_BIOME);
+        CraftPresence.CLIENT.syncArgument("data.biome.class", CURRENT_BIOME.getClass());
         CraftPresence.CLIENT.syncArgument("biome.name", CURRENT_BIOME_NAME);
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "biome.message", "biome.icon");
