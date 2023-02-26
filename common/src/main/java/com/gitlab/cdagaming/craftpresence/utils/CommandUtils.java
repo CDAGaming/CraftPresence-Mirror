@@ -29,10 +29,11 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.integrations.curse.CurseUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.mcupdater.MCUpdaterUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.CurseUtils;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater.MCUpdaterUtils;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.multimc.MultiMCUtils;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -60,6 +61,19 @@ public class CommandUtils {
             put("_entity", CraftPresence.ENTITIES);
             put("_server", CraftPresence.SERVER);
             put("_screen", CraftPresence.GUIS);
+        }
+    };
+    /**
+     * A mapping of the currently loaded Pack Extension Modules
+     */
+    private static final TreeMap<String, Pack> packModules = new TreeMap<String, Pack>() {
+        private static final long serialVersionUID = -5725537163152878757L;
+
+        {
+            put("curse", new CurseUtils());
+            put("multimc", new MultiMCUtils());
+            put("mcupdater", new MCUpdaterUtils());
+            put("technic", new TechnicUtils());
         }
     };
     /**
@@ -103,6 +117,32 @@ public class CommandUtils {
     }
 
     /**
+     * Synchronizes the `pack` Arguments, based on any found Launcher Pack/Instance Data
+     */
+    public static void syncPackArguments() {
+        boolean foundPack = false;
+        for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
+            final String type = pack.getKey();
+            final Pack data = pack.getValue();
+
+            if (data.hasPackName()) {
+                CraftPresence.CLIENT.syncArgument("pack.type", type);
+                CraftPresence.CLIENT.syncArgument("pack.name", data.getPackName());
+                CraftPresence.CLIENT.syncArgument("pack.icon",
+                        CraftPresence.CLIENT.imageOf("pack.icon", true, data.getPackIcon())
+                );
+
+                foundPack = true;
+                break;
+            }
+        }
+
+        if (!foundPack) {
+            CraftPresence.CLIENT.removeArguments("pack");
+        }
+    }
+
+    /**
      * Clears Runtime Client Data from all active Modules (PARTIAL Clear)
      */
     public static void clearModuleData() {
@@ -119,6 +159,16 @@ public class CommandUtils {
      */
     public static void addModule(final String moduleId, final Module instance) {
         modules.put(moduleId, instance);
+    }
+
+    /**
+     * Adds a module for ticking and RPC Syncronization
+     *
+     * @param moduleId The name of the module
+     * @param instance The instance of the module
+     */
+    public static void addPackModule(final String moduleId, final Pack instance) {
+        packModules.put(moduleId, instance);
     }
 
     /**
@@ -188,20 +238,18 @@ public class CommandUtils {
      * (In this case, Pack Data and Available RPC Icons)
      */
     public static void init() {
-        if (CraftPresence.CONFIG.generalSettings.detectCurseManifest && !CraftPresence.packFound) {
-            CurseUtils.loadManifest();
-        }
-        if (CraftPresence.CONFIG.generalSettings.detectMultiMCManifest && !CraftPresence.packFound) {
-            MultiMCUtils.loadInstance();
-        }
-        if (CraftPresence.CONFIG.generalSettings.detectMCUpdaterInstance && !CraftPresence.packFound) {
-            MCUpdaterUtils.loadInstance();
-        }
-        if (CraftPresence.CONFIG.generalSettings.detectTechnicPack && !CraftPresence.packFound) {
-            TechnicUtils.loadPack();
+        for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
+            final String type = pack.getKey();
+            final Pack data = pack.getValue();
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
+            if (data.load()) {
+                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
+                break; // Only iterate until the first pack is found
+            } else {
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
+            }
         }
         DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.generalSettings.clientId, true);
-
         CraftPresence.KEYBINDINGS.register();
     }
 

@@ -22,16 +22,14 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.curse;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.curse;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.curse.impl.CurseInstance;
-import com.gitlab.cdagaming.craftpresence.integrations.curse.impl.Manifest;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl.CurseInstance;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl.Manifest;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,56 +40,42 @@ import java.io.FileNotFoundException;
  *
  * @author CDAGaming
  */
-@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
-public class CurseUtils {
-    /**
-     * The Curse Pack Instance Name
-     */
-    public static String INSTANCE_NAME;
+public class CurseUtils extends Pack {
+    @Override
+    public boolean isEnabled() {
+        return CraftPresence.CONFIG.generalSettings.detectCurseManifest;
+    }
 
-    /**
-     * Attempts to retrieve and load Manifest/Instance Information, if any
-     */
-    public static void loadManifest() {
-        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.manifest.init"));
-
-        Manifest manifest = null;
-        CurseInstance instance = null;
-
+    @Override
+    public boolean load() {
         try {
             // Attempt to Gain Curse Pack Info from the manifest.json file
             // This will typically work on released/exported/imported packs
             // But will fail with Custom/User-Created Packs
             // Note: This additionally works in the same way for GDLauncher packs of the same nature
-            manifest = FileUtils.getJsonData(new File("manifest.json"), Manifest.class);
+            final Manifest manifest = FileUtils.getJsonData(new File("manifest.json"), Manifest.class);
+            if (manifest != null) {
+                setPackName(manifest.name);
+            }
         } catch (Exception ex) {
             try {
                 // If it fails to get the information from the manifest.json
                 // Attempt to read Pack info from the minecraftinstance.json file
                 // As Most if not all types of Curse Packs contain this file
                 // Though it is considered a fallback due to how much it's parsing
-                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.manifest.fallback"));
                 if (ex.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
-
-                instance = FileUtils.getJsonData(new File("minecraftinstance.json"), CurseInstance.class);
+                final CurseInstance instance = FileUtils.getJsonData(new File("minecraftinstance.json"), CurseInstance.class);
+                if (instance != null) {
+                    setPackName(instance.name);
+                }
             } catch (Exception ex2) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.file.manifest"));
-
                 if (ex2.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
                     ex2.printStackTrace();
                 }
             }
-        } finally {
-            if (manifest != null || instance != null) {
-                INSTANCE_NAME = manifest != null ? manifest.name : instance.name;
-
-                if (!StringUtils.isNullOrEmpty(INSTANCE_NAME)) {
-                    CraftPresence.packFound = true;
-                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.manifest.loaded", INSTANCE_NAME));
-                }
-            }
         }
+        return hasPackName();
     }
 }

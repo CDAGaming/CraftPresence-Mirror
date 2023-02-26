@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.curse.impl;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;

@@ -22,60 +22,50 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.curse.impl;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class InstalledModPack {
+import java.util.List;
 
-    @SerializedName("addonID")
+@SuppressFBWarnings("URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD")
+public class CachedScan {
+
+    @SerializedName("folderName")
     @Expose
-    public Integer addonID;
-    @SerializedName("gameInstanceID")
+    public String folderName;
+    @SerializedName("fingerprint")
     @Expose
-    public String gameInstanceID;
-    @SerializedName("installedFile")
+    public Long fingerprint;
+    @SerializedName("fileDateHash")
     @Expose
-    public InstalledFile installedFile;
-    @SerializedName("dateInstalled")
+    public Long fileDateHash;
+    @SerializedName("sectionID")
     @Expose
-    public String dateInstalled;
-    @SerializedName("dateUpdated")
+    public Integer sectionID;
+    @SerializedName("individualFingerprints")
     @Expose
-    public String dateUpdated;
-    @SerializedName("dateLastUpdateAttempted")
-    @Expose
-    public String dateLastUpdateAttempted;
+    public List<Long> individualFingerprints = Lists.newArrayList();
     @SerializedName("status")
     @Expose
     public Integer status;
-    @SerializedName("preferenceAutoInstallUpdates")
+    @SerializedName("timestamp")
     @Expose
-    public Boolean preferenceAutoInstallUpdates;
-    @SerializedName("preferenceAlternateFile")
+    public String timestamp;
+    @SerializedName("lastWriteTimeUtc")
     @Expose
-    public Boolean preferenceAlternateFile;
-    @SerializedName("preferenceIsIgnored")
+    public String lastWriteTimeUtc;
+    @SerializedName("queryTimestamp")
     @Expose
-    public Boolean preferenceIsIgnored;
-    @SerializedName("isModified")
+    public String queryTimestamp;
+    @SerializedName("fileCount")
     @Expose
-    public Boolean isModified;
-    @SerializedName("isWorkingCopy")
+    public Integer fileCount;
+    @SerializedName("fileSize")
     @Expose
-    public Boolean isWorkingCopy;
-    @SerializedName("isFuzzyMatch")
-    @Expose
-    public Boolean isFuzzyMatch;
-    @SerializedName("preferenceReleaseType")
-    @Expose
-    public Object preferenceReleaseType;
-    @SerializedName("manifestName")
-    @Expose
-    public Object manifestName;
-    @SerializedName("installedTargets")
-    @Expose
-    public Object installedTargets;
+    public Integer fileSize;
 
 }

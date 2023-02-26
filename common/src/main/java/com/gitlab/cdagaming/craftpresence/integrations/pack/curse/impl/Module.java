@@ -22,45 +22,21 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.curse.impl;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+public class Module {
 
-public class Manifest {
-
-    @SerializedName("minecraft")
+    @SerializedName("foldername")
     @Expose
-    public Minecraft minecraft;
-    @SerializedName("manifestType")
+    public String foldername;
+    @SerializedName("fingerprint")
     @Expose
-    public String manifestType;
-    @SerializedName("manifestVersion")
+    public Integer fingerprint;
+    @SerializedName("type")
     @Expose
-    public Integer manifestVersion;
-    @SerializedName("name")
-    @Expose
-    public String name;
-    @SerializedName("version")
-    @Expose
-    public String version;
-    @SerializedName("author")
-    @Expose
-    public String author;
-    @SerializedName("description")
-    @Expose
-    public Object description;
-    @SerializedName("projectID")
-    @Expose
-    public Integer projectID;
-    @SerializedName("files")
-    @Expose
-    public List<File> files = Lists.newArrayList();
-    @SerializedName("overrides")
-    @Expose
-    public String overrides;
+    public Integer type;
 
 }

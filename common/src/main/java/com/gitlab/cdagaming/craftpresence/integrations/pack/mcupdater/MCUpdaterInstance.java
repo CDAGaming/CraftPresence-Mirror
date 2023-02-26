@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.mcupdater;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

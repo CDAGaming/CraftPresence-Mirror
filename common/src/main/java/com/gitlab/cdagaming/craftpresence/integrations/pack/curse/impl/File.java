@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.curse.impl;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Module {
+public class File {
 
-    @SerializedName("foldername")
+    @SerializedName("projectID")
     @Expose
-    public String foldername;
-    @SerializedName("fingerprint")
+    public Integer projectID;
+    @SerializedName("fileID")
     @Expose
-    public Integer fingerprint;
-    @SerializedName("type")
+    public Integer fileID;
+    @SerializedName("required")
     @Expose
-    public Integer type;
+    public Boolean required;
 
 }

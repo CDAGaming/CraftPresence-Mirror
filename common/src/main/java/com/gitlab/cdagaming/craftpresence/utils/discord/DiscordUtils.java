@@ -34,11 +34,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.integrations.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
-import com.gitlab.cdagaming.craftpresence.integrations.mcupdater.MCUpdaterUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.multimc.MultiMCUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -1069,37 +1065,6 @@ public class DiscordUtils {
     }
 
     /**
-     * Synchronizes the `pack` Argument, based on any found Launcher Pack/Instance Data
-     */
-    private void syncPackArguments() {
-        String foundPackName = "", foundPackIcon = "";
-
-        if (!StringUtils.isNullOrEmpty(CurseUtils.INSTANCE_NAME)) {
-            foundPackName = CurseUtils.INSTANCE_NAME;
-            foundPackIcon = foundPackName;
-        } else if (!StringUtils.isNullOrEmpty(MultiMCUtils.INSTANCE_NAME)) {
-            foundPackName = MultiMCUtils.INSTANCE_NAME;
-            foundPackIcon = MultiMCUtils.ICON_KEY;
-        } else if (MCUpdaterUtils.instance != null && !StringUtils.isNullOrEmpty(MCUpdaterUtils.instance.getPackName())) {
-            foundPackName = MCUpdaterUtils.instance.getPackName();
-            foundPackIcon = foundPackName;
-        } else if (!StringUtils.isNullOrEmpty(TechnicUtils.PACK_NAME)) {
-            foundPackName = TechnicUtils.PACK_NAME;
-            foundPackIcon = TechnicUtils.ICON_NAME;
-        }
-
-        if (!StringUtils.isNullOrEmpty(foundPackName)) {
-            syncArgument("pack.name", foundPackName);
-            syncArgument("pack.icon", imageOf(
-                    "pack.icon", true,
-                    !StringUtils.isNullOrEmpty(foundPackIcon) ? StringUtils.formatAsIcon(foundPackIcon) : ""
-            ));
-        } else {
-            removeArguments("pack");
-        }
-    }
-
-    /**
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
@@ -1151,7 +1116,6 @@ public class DiscordUtils {
 
         // Sync the Default Icon Argument
         syncArgument("general.icon", CraftPresence.CONFIG.generalSettings.defaultIcon);
-        syncPackArguments();
         syncScriptArguments();
     }
 
@@ -1482,6 +1446,7 @@ public class DiscordUtils {
      */
     public void onTick() {
         CommandUtils.syncModuleArguments();
+        CommandUtils.syncPackArguments();
         syncPlaceholders();
 
         // Menu Tick Event

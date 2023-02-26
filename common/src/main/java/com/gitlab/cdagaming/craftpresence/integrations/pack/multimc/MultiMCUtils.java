@@ -22,49 +22,48 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.mcupdater;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.multimc;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
- * Set of Utilities used to Parse MCUpdater Instance Information
+ * Set of Utilities used to Parse MultiMC Instance Information
  *
  * @author CDAGaming
  */
-@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
-public class MCUpdaterUtils {
-    /**
-     * The MCUpdater Instance Data, if any
-     */
-    public static MCUpdaterInstance instance;
+public class MultiMCUtils extends Pack {
+    @Override
+    public boolean isEnabled() {
+        return CraftPresence.CONFIG.generalSettings.detectMultiMCManifest;
+    }
 
-    /**
-     * Attempts to retrieve and load Pack Information, if any
-     */
-    public static void loadInstance() {
-        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.mcupdater.init"));
+    @Override
+    public boolean load() {
+        final String instanceFile = new File(CraftPresence.SYSTEM.USER_DIR).getParent() + File.separator + "instance.cfg";
 
-        try {
-            instance = FileUtils.getJsonData(new File("instance.json"), MCUpdaterInstance.class);
+        try (InputStream inputStream = Files.newInputStream(Paths.get(instanceFile))) {
+            final Properties configFile = new Properties();
+            configFile.load(inputStream);
 
-            if (instance != null && !StringUtils.isNullOrEmpty(instance.getPackName())) {
-                CraftPresence.packFound = true;
-                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.mcupdater.loaded", instance.getPackName()));
-            }
+            final String tempIconKey = configFile.getProperty("iconKey"), defaultIconName = "default", defaultIconKey = "infinity";
+            setPackName(configFile.getProperty("name"));
+            setPackIcon(!StringUtils.isNullOrEmpty(tempIconKey) && !tempIconKey.equals(defaultIconName) ? tempIconKey : defaultIconKey);
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.file.mcupdater"));
-
-            if (ex.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
+            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) || CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
+        return hasPackName() && hasPackIcon();
     }
 }

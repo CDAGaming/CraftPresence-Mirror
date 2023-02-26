@@ -22,50 +22,36 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.curse.impl;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import java.util.List;
+public class SyncProfile {
 
-@SuppressFBWarnings("URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD")
-public class CachedScan {
-
-    @SerializedName("folderName")
+    @SerializedName("PreferenceEnabled")
     @Expose
-    public String folderName;
-    @SerializedName("fingerprint")
+    public Boolean preferenceEnabled;
+    @SerializedName("PreferenceAutoSync")
     @Expose
-    public Long fingerprint;
-    @SerializedName("fileDateHash")
+    public Boolean preferenceAutoSync;
+    @SerializedName("PreferenceAutoDelete")
     @Expose
-    public Long fileDateHash;
-    @SerializedName("sectionID")
+    public Boolean preferenceAutoDelete;
+    @SerializedName("PreferenceBackupSavedVariables")
     @Expose
-    public Integer sectionID;
-    @SerializedName("individualFingerprints")
+    public Boolean preferenceBackupSavedVariables;
+    @SerializedName("GameInstanceGuid")
     @Expose
-    public List<Long> individualFingerprints = Lists.newArrayList();
-    @SerializedName("status")
+    public String gameInstanceGuid;
+    @SerializedName("SyncProfileID")
     @Expose
-    public Integer status;
-    @SerializedName("timestamp")
+    public Integer syncProfileID;
+    @SerializedName("SavedVariablesProfile")
     @Expose
-    public String timestamp;
-    @SerializedName("lastWriteTimeUtc")
+    public Object savedVariablesProfile;
+    @SerializedName("LastSyncDate")
     @Expose
-    public String lastWriteTimeUtc;
-    @SerializedName("queryTimestamp")
-    @Expose
-    public String queryTimestamp;
-    @SerializedName("fileCount")
-    @Expose
-    public Integer fileCount;
-    @SerializedName("fileSize")
-    @Expose
-    public Integer fileSize;
+    public String lastSyncDate;
 
 }

@@ -90,10 +90,6 @@ public class CraftPresence {
      */
     public static final SystemUtils SYSTEM = new SystemUtils();
     /**
-     * Whether Pack Data could be found and parsed
-     */
-    public static boolean packFound = false;
-    /**
      * The Minecraft Instance attached to this Mod
      */
     public static Minecraft instance;

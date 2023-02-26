@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.technic;
+package com.gitlab.cdagaming.craftpresence.integrations.pack.technic;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
