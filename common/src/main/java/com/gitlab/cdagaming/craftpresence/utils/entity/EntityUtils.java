@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -36,7 +35,6 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
@@ -85,14 +83,6 @@ public class EntityUtils implements Module {
      * The Player's Current Riding Entity, if any
      */
     public Entity CURRENT_RIDING;
-    /**
-     * The Player's Current Targeted Entity's NBT Data, if any
-     */
-    private NBTTagCompound CURRENT_TARGET_DATA;
-    /**
-     * The Player's Current Riding Entity's NBT Data, if any
-     */
-    private NBTTagCompound CURRENT_RIDING_DATA;
 
     @Override
     public void emptyData() {
@@ -108,8 +98,6 @@ public class EntityUtils implements Module {
         CURRENT_RIDING = null;
         CURRENT_TARGET_NAME = null;
         CURRENT_RIDING_NAME = null;
-        CURRENT_TARGET_DATA = null;
-        CURRENT_RIDING_DATA = null;
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("entity", "data.entity");
@@ -146,9 +134,6 @@ public class EntityUtils implements Module {
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
-        final NBTTagCompound NEW_CURRENT_TARGET_DATA = NbtUtils.getNbt(NEW_CURRENT_TARGET);
-        final NBTTagCompound NEW_CURRENT_RIDING_DATA = NbtUtils.getNbt(NEW_CURRENT_RIDING);
-
         String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
 
         // Note: Unlike getEntities, this does NOT require Server Module to be enabled
@@ -172,11 +157,9 @@ public class EntityUtils implements Module {
         final boolean hasTargetChanged = (NEW_CURRENT_TARGET != null &&
                 !NEW_CURRENT_TARGET.equals(CURRENT_TARGET) || !NEW_CURRENT_TARGET_NAME.equals(CURRENT_TARGET_NAME)) ||
                 (NEW_CURRENT_TARGET == null && CURRENT_TARGET != null);
-        final boolean hasTargetNBTChanged = !NEW_CURRENT_TARGET_DATA.equals(CURRENT_TARGET_DATA);
         final boolean hasRidingChanged = (NEW_CURRENT_RIDING != null &&
                 !NEW_CURRENT_RIDING.equals(CURRENT_RIDING) || !NEW_CURRENT_RIDING_NAME.equals(CURRENT_RIDING_NAME)) ||
                 (NEW_CURRENT_RIDING == null && CURRENT_RIDING != null);
-        final boolean hasRidingNBTChanged = !NEW_CURRENT_RIDING_DATA.equals(CURRENT_RIDING_DATA);
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
@@ -186,10 +169,6 @@ public class EntityUtils implements Module {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.target.time");
             }
         }
-        if (hasTargetNBTChanged) {
-            CURRENT_TARGET_DATA = NEW_CURRENT_TARGET_DATA;
-            NbtUtils.parseTags("data.entity.target.nbt", CURRENT_TARGET_DATA);
-        }
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
@@ -198,10 +177,6 @@ public class EntityUtils implements Module {
             if (CURRENT_RIDING != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.riding.time");
             }
-        }
-        if (hasRidingNBTChanged) {
-            CURRENT_RIDING_DATA = NEW_CURRENT_RIDING_DATA;
-            NbtUtils.parseTags("data.entity.riding.nbt", CURRENT_RIDING_DATA);
         }
 
         if (hasTargetChanged || hasRidingChanged) {

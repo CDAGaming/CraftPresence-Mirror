@@ -24,13 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,31 +37,6 @@ import java.util.List;
  * @author CDAGaming
  */
 public class NbtUtils {
-    /**
-     * Sync the specified NBT data with Discord Utilities
-     *
-     * @param prefix The prefix to synchronize arguments as
-     * @param data   The data to interpret
-     */
-    public static void parseTags(final String prefix, final NBTTagCompound data) {
-        CraftPresence.CLIENT.removeArguments(prefix);
-
-        if (data != null) {
-            for (String key : data.getKeySet()) {
-                final String name = prefix + "." + key;
-                final Object rootResult = parseTag(data.getTag(key));
-                if (rootResult instanceof Collection<?>) {
-                    final Collection<?> subArgs = (Collection<?>) rootResult;
-                    final Object[] subArray = subArgs.toArray();
-                    for (int i = 0; i < subArray.length; i++) {
-                        CraftPresence.CLIENT.syncArgument(name + "[" + i + "]", subArray[i], true);
-                    }
-                }
-                CraftPresence.CLIENT.syncArgument(name, rootResult, true);
-            }
-        }
-    }
-
     /**
      * Attempt to retrieve the NBT Tag with the specified path
      *

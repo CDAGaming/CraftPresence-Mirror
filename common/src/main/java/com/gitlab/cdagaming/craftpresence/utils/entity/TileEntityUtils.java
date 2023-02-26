@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -35,7 +34,6 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
@@ -144,30 +142,6 @@ public class TileEntityUtils implements Module {
      * The Player's Currently Equipped Boots Name, if any
      */
     private String CURRENT_BOOTS_NAME;
-    /**
-     * The Player's Current Main Hand Item's Nbt Data, if any
-     */
-    private NBTTagCompound CURRENT_MAIN_HAND_ITEM_DATA;
-    /**
-     * The Player's Current Offhand Item's Nbt Data, if any
-     */
-    private NBTTagCompound CURRENT_OFFHAND_ITEM_DATA;
-    /**
-     * The Player's Currently equipped Helmet's Nbt Data, if any
-     */
-    private NBTTagCompound CURRENT_HELMET_DATA;
-    /**
-     * The Player's Currently equipped Chest's Nbt Data, if any
-     */
-    private NBTTagCompound CURRENT_CHEST_DATA;
-    /**
-     * The Player's Currently equipped Leggings Nbt Data, if any
-     */
-    private NBTTagCompound CURRENT_LEGS_DATA;
-    /**
-     * The Player's Currently equipped Boots Nbt Data, if any
-     */
-    private NBTTagCompound CURRENT_BOOTS_DATA;
 
     @Override
     public void emptyData() {
@@ -197,13 +171,6 @@ public class TileEntityUtils implements Module {
         CURRENT_CHEST_NAME = null;
         CURRENT_LEGS_NAME = null;
         CURRENT_BOOTS_NAME = null;
-
-        CURRENT_MAIN_HAND_ITEM_DATA = null;
-        CURRENT_OFFHAND_ITEM_DATA = null;
-        CURRENT_HELMET_DATA = null;
-        CURRENT_CHEST_DATA = null;
-        CURRENT_LEGS_DATA = null;
-        CURRENT_BOOTS_DATA = null;
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("item", "data.item");
@@ -291,13 +258,6 @@ public class TileEntityUtils implements Module {
         final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory.get(1);
         final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory.get(0);
 
-        final NBTTagCompound NEW_CURRENT_MAIN_HAND_ITEM_DATA = NbtUtils.getNbt(NEW_CURRENT_MAIN_HAND_ITEM);
-        final NBTTagCompound NEW_CURRENT_OFFHAND_ITEM_DATA = NbtUtils.getNbt(NEW_CURRENT_OFFHAND_ITEM);
-        final NBTTagCompound NEW_CURRENT_HELMET_DATA = NbtUtils.getNbt(NEW_CURRENT_HELMET);
-        final NBTTagCompound NEW_CURRENT_CHEST_DATA = NbtUtils.getNbt(NEW_CURRENT_CHEST);
-        final NBTTagCompound NEW_CURRENT_LEGS_DATA = NbtUtils.getNbt(NEW_CURRENT_LEGS);
-        final NBTTagCompound NEW_CURRENT_BOOTS_DATA = NbtUtils.getNbt(NEW_CURRENT_BOOTS);
-
         final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
                 StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getDisplayName()) : "";
         final String NEW_CURRENT_OFFHAND_ITEM_NAME = !isEmpty(NEW_CURRENT_OFFHAND_ITEM) ?
@@ -314,27 +274,21 @@ public class TileEntityUtils implements Module {
         final boolean hasMainHandChanged = (!isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) &&
                 !NEW_CURRENT_MAIN_HAND_ITEM.equals(CURRENT_MAIN_HAND_ITEM) || !NEW_CURRENT_MAIN_HAND_ITEM_NAME.equals(CURRENT_MAIN_HAND_ITEM_NAME)) ||
                 (isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) && !isEmpty(CURRENT_MAIN_HAND_ITEM));
-        final boolean hasMainHandNBTChanged = !NEW_CURRENT_MAIN_HAND_ITEM_DATA.equals(CURRENT_MAIN_HAND_ITEM_DATA);
         final boolean hasOffHandChanged = (!isEmpty(NEW_CURRENT_OFFHAND_ITEM) &&
                 !NEW_CURRENT_OFFHAND_ITEM.equals(CURRENT_OFFHAND_ITEM) || !NEW_CURRENT_OFFHAND_ITEM_NAME.equals(CURRENT_OFFHAND_ITEM_NAME)) ||
                 (isEmpty(NEW_CURRENT_OFFHAND_ITEM) && !isEmpty(CURRENT_OFFHAND_ITEM));
-        final boolean hasOffhandNBTChanged = !NEW_CURRENT_OFFHAND_ITEM_DATA.equals(CURRENT_OFFHAND_ITEM_DATA);
         final boolean hasHelmetChanged = (!isEmpty(NEW_CURRENT_HELMET) &&
                 !NEW_CURRENT_HELMET.equals(CURRENT_HELMET) || !NEW_CURRENT_HELMET_NAME.equals(CURRENT_HELMET_NAME)) ||
                 (isEmpty(NEW_CURRENT_HELMET) && !isEmpty(CURRENT_HELMET));
-        final boolean hasHelmetNBTChanged = !NEW_CURRENT_HELMET_DATA.equals(CURRENT_HELMET_DATA);
         final boolean hasChestChanged = (!isEmpty(NEW_CURRENT_CHEST) &&
                 !NEW_CURRENT_CHEST.equals(CURRENT_CHEST) || !NEW_CURRENT_CHEST_NAME.equals(CURRENT_CHEST_NAME)) ||
                 (isEmpty(NEW_CURRENT_CHEST) && !isEmpty(CURRENT_CHEST));
-        final boolean hasChestNBTChanged = !NEW_CURRENT_CHEST_DATA.equals(CURRENT_CHEST_DATA);
         final boolean hasLegsChanged = (!isEmpty(NEW_CURRENT_LEGS) &&
                 !NEW_CURRENT_LEGS.equals(CURRENT_LEGS) || !NEW_CURRENT_LEGS_NAME.equals(CURRENT_LEGS_NAME)) ||
                 (isEmpty(NEW_CURRENT_LEGS) && !isEmpty(CURRENT_LEGS));
-        final boolean hasLegsNBTChanged = !NEW_CURRENT_LEGS_DATA.equals(CURRENT_LEGS_DATA);
         final boolean hasBootsChanged = (!isEmpty(NEW_CURRENT_BOOTS) &&
                 !NEW_CURRENT_BOOTS.equals(CURRENT_BOOTS) || !NEW_CURRENT_BOOTS_NAME.equals(CURRENT_BOOTS_NAME)) ||
                 (isEmpty(NEW_CURRENT_BOOTS) && !isEmpty(CURRENT_BOOTS));
-        final boolean hasBootsNBTChanged = !NEW_CURRENT_BOOTS_DATA.equals(CURRENT_BOOTS_DATA);
 
         if (hasMainHandChanged) {
             CURRENT_MAIN_HAND_ITEM = NEW_CURRENT_MAIN_HAND_ITEM;
@@ -343,10 +297,6 @@ public class TileEntityUtils implements Module {
             if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.main_hand.time");
             }
-        }
-        if (hasMainHandNBTChanged) {
-            CURRENT_MAIN_HAND_ITEM_DATA = NEW_CURRENT_MAIN_HAND_ITEM_DATA;
-            NbtUtils.parseTags("data.item.main_hand.nbt", CURRENT_MAIN_HAND_ITEM_DATA);
         }
 
         if (hasOffHandChanged) {
@@ -357,10 +307,6 @@ public class TileEntityUtils implements Module {
                 CraftPresence.CLIENT.syncTimestamp("data.item.off_hand.time");
             }
         }
-        if (hasOffhandNBTChanged) {
-            CURRENT_OFFHAND_ITEM_DATA = NEW_CURRENT_OFFHAND_ITEM_DATA;
-            NbtUtils.parseTags("data.item.off_hand.nbt", CURRENT_OFFHAND_ITEM_DATA);
-        }
 
         if (hasHelmetChanged) {
             CURRENT_HELMET = NEW_CURRENT_HELMET;
@@ -369,10 +315,6 @@ public class TileEntityUtils implements Module {
             if (!isEmpty(CURRENT_HELMET)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.helmet.time");
             }
-        }
-        if (hasHelmetNBTChanged) {
-            CURRENT_HELMET_DATA = NEW_CURRENT_HELMET_DATA;
-            NbtUtils.parseTags("data.item.helmet.nbt", CURRENT_HELMET_DATA);
         }
 
         if (hasChestChanged) {
@@ -383,10 +325,6 @@ public class TileEntityUtils implements Module {
                 CraftPresence.CLIENT.syncTimestamp("data.item.chestplate.time");
             }
         }
-        if (hasChestNBTChanged) {
-            CURRENT_CHEST_DATA = NEW_CURRENT_CHEST_DATA;
-            NbtUtils.parseTags("data.item.chestplate.nbt", CURRENT_CHEST_DATA);
-        }
 
         if (hasLegsChanged) {
             CURRENT_LEGS = NEW_CURRENT_LEGS;
@@ -396,10 +334,6 @@ public class TileEntityUtils implements Module {
                 CraftPresence.CLIENT.syncTimestamp("data.item.leggings.time");
             }
         }
-        if (hasLegsNBTChanged) {
-            CURRENT_LEGS_DATA = NEW_CURRENT_LEGS_DATA;
-            NbtUtils.parseTags("data.item.leggings.nbt", CURRENT_LEGS_DATA);
-        }
 
         if (hasBootsChanged) {
             CURRENT_BOOTS = NEW_CURRENT_BOOTS;
@@ -408,10 +342,6 @@ public class TileEntityUtils implements Module {
             if (!isEmpty(CURRENT_BOOTS)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.boots.time");
             }
-        }
-        if (hasBootsNBTChanged) {
-            CURRENT_BOOTS_DATA = NEW_CURRENT_BOOTS_DATA;
-            NbtUtils.parseTags("data.item.boots.nbt", CURRENT_BOOTS_DATA);
         }
 
         if (hasMainHandChanged || hasOffHandChanged ||
