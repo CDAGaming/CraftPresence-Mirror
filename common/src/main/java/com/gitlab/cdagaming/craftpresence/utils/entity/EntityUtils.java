@@ -35,13 +35,13 @@ import com.google.common.collect.Maps;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Entity Utilities used to Parse Entity Data and handle related RPC Events
@@ -90,12 +90,33 @@ public class EntityUtils implements Module {
     /**
      * Retrieves the entities display name, derived from the original supplied name
      *
-     * @param entity   The entity to interpret
-     * @param original The original entity string name
+     * @param entity      The entity to interpret
+     * @param stripColors Whether the resulting name should have its formatting stripped
      * @return The formatted entity display name to use
      */
-    public static String getEntityName(final Entity entity, final String original) {
-        return StringUtils.isValidUuid(original) ? entity.getName() : original;
+    public static String getEntityName(final Entity entity, final boolean stripColors) {
+        String result = "";
+        if (entity != null) {
+            result = StringUtils.getOrDefault(
+                    entity.getDisplayName().getFormattedText(),
+                    entity.getName()
+            );
+        }
+
+        if (stripColors) {
+            result = StringUtils.stripColors(result);
+        }
+        return result;
+    }
+
+    /**
+     * Retrieves the entities display name, derived from the original supplied name
+     *
+     * @param entity The entity to interpret
+     * @return The formatted entity display name to use
+     */
+    public static String getEntityName(final Entity entity) {
+        return getEntityName(entity, true);
     }
 
     /**
@@ -180,39 +201,18 @@ public class EntityUtils implements Module {
 
     @Override
     public void updateData() {
+        CraftPresence.instance.entityRenderer.getMouseOver(
+                CraftPresence.instance.getRenderPartialTicks()
+        );
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
-        String NEW_CURRENT_TARGET_NAME, NEW_CURRENT_RIDING_NAME;
-
-        // Note: Unlike getEntities, this does NOT require Server Module to be enabled
-        // Users are still free to manually add Uuid's as they please for this module
-        if (NEW_CURRENT_TARGET instanceof EntityPlayer) {
-            final EntityPlayer NEW_CURRENT_PLAYER_TARGET = (EntityPlayer) NEW_CURRENT_TARGET;
-            NEW_CURRENT_TARGET_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_TARGET.getGameProfile().getId().toString());
-        } else {
-            NEW_CURRENT_TARGET_NAME = NEW_CURRENT_TARGET != null ?
-                    StringUtils.stripColors(NEW_CURRENT_TARGET.getDisplayName().getFormattedText()) : "";
-        }
-
-        if (NEW_CURRENT_RIDING instanceof EntityPlayer) {
-            final EntityPlayer NEW_CURRENT_PLAYER_RIDING = (EntityPlayer) NEW_CURRENT_RIDING;
-            NEW_CURRENT_RIDING_NAME = StringUtils.stripColors(NEW_CURRENT_PLAYER_RIDING.getGameProfile().getId().toString());
-        } else {
-            NEW_CURRENT_RIDING_NAME = NEW_CURRENT_RIDING != null ?
-                    StringUtils.stripColors(NEW_CURRENT_RIDING.getDisplayName().getFormattedText()) : "";
-        }
-
-        final boolean hasTargetChanged = (NEW_CURRENT_TARGET != null &&
-                !NEW_CURRENT_TARGET.equals(CURRENT_TARGET) || !NEW_CURRENT_TARGET_NAME.equals(CURRENT_TARGET_NAME)) ||
-                (NEW_CURRENT_TARGET == null && CURRENT_TARGET != null);
-        final boolean hasRidingChanged = (NEW_CURRENT_RIDING != null &&
-                !NEW_CURRENT_RIDING.equals(CURRENT_RIDING) || !NEW_CURRENT_RIDING_NAME.equals(CURRENT_RIDING_NAME)) ||
-                (NEW_CURRENT_RIDING == null && CURRENT_RIDING != null);
+        final boolean hasTargetChanged = !Objects.equals(NEW_CURRENT_TARGET, CURRENT_TARGET);
+        final boolean hasRidingChanged = !Objects.equals(NEW_CURRENT_RIDING, CURRENT_RIDING);
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
-            CURRENT_TARGET_NAME = NEW_CURRENT_TARGET_NAME;
+            CURRENT_TARGET_NAME = getEntityName(CURRENT_TARGET);
 
             if (CURRENT_TARGET != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.target.time");
@@ -221,7 +221,7 @@ public class EntityUtils implements Module {
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
-            CURRENT_RIDING_NAME = NEW_CURRENT_RIDING_NAME;
+            CURRENT_RIDING_NAME = getEntityName(CURRENT_RIDING);
 
             if (CURRENT_RIDING != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.riding.time");
@@ -260,7 +260,7 @@ public class EntityUtils implements Module {
         if (CURRENT_TARGET != null) {
             CraftPresence.CLIENT.syncArgument("data.entity.target.instance", CURRENT_TARGET);
             CraftPresence.CLIENT.syncArgument("data.entity.target.class", CURRENT_TARGET.getClass());
-            CraftPresence.CLIENT.syncArgument("entity.target.name", getEntityName(CURRENT_TARGET, CURRENT_TARGET_NAME));
+            CraftPresence.CLIENT.syncArgument("entity.target.name", CURRENT_TARGET_NAME);
 
             CraftPresence.CLIENT.syncOverride(currentTargetData != null ? currentTargetData : defaultTargetData, "entity.target.message", "entity.target.icon");
             CraftPresence.CLIENT.syncArgument("entity.target.message", currentTargetMessage);
@@ -272,7 +272,7 @@ public class EntityUtils implements Module {
         if (CURRENT_RIDING != null) {
             CraftPresence.CLIENT.syncArgument("data.entity.riding.instance", CURRENT_RIDING);
             CraftPresence.CLIENT.syncArgument("data.entity.riding.class", CURRENT_RIDING.getClass());
-            CraftPresence.CLIENT.syncArgument("entity.riding.name", getEntityName(CURRENT_RIDING, CURRENT_RIDING_NAME));
+            CraftPresence.CLIENT.syncArgument("entity.riding.name", CURRENT_RIDING_NAME);
 
             CraftPresence.CLIENT.syncOverride(currentRidingData != null ? currentRidingData : defaultRidingData, "entity.riding.message", "entity.riding.icon");
             CraftPresence.CLIENT.syncArgument("entity.riding.message", currentRidingMessage);

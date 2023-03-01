@@ -1247,10 +1247,12 @@ public class DiscordUtils {
     public boolean isImageInUse(final String... evalStrings) {
         final PresenceData configData = getPresenceData();
         for (String evalString : evalStrings) {
-            if (configData.largeImageKey.contains(evalString) ||
-                    configData.smallImageKey.contains(evalString)
-            ) {
-                return true;
+            if (!StringUtils.isNullOrEmpty(evalString)) {
+                if (configData.largeImageKey.contains(evalString) ||
+                        configData.smallImageKey.contains(evalString)
+                ) {
+                    return true;
+                }
             }
         }
         return false;
