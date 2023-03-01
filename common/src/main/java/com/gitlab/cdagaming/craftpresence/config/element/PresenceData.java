@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class PresenceData extends Module implements Serializable {
     private static final long serialVersionUID = -7560029890988753870L;
@@ -163,13 +164,13 @@ public class PresenceData extends Module implements Serializable {
             }
         }
 
-        return ((p.details == null && details == null) || (p.details != null && p.details.equals(details))) &&
-                ((p.gameState == null && gameState == null) || (p.gameState != null && p.gameState.equals(gameState))) &&
-                ((p.largeImageKey == null && largeImageKey == null) || (p.largeImageKey != null && p.largeImageKey.equals(largeImageKey))) &&
-                ((p.largeImageText == null && largeImageText == null) || (p.largeImageText != null && p.largeImageText.equals(largeImageText))) &&
-                ((p.smallImageKey == null && smallImageKey == null) || (p.smallImageKey != null && p.smallImageKey.equals(smallImageKey))) &&
-                ((p.startTimestamp == null && startTimestamp == null) || (p.startTimestamp != null && p.startTimestamp.equals(startTimestamp))) &&
-                ((p.endTimestamp == null && endTimestamp == null) || (p.endTimestamp != null && p.endTimestamp.equals(endTimestamp))) &&
+        return Objects.equals(p.details, details) &&
+                Objects.equals(p.gameState, gameState) &&
+                Objects.equals(p.largeImageKey, largeImageKey) &&
+                Objects.equals(p.largeImageText, largeImageText) &&
+                Objects.equals(p.smallImageKey, smallImageKey) &&
+                Objects.equals(p.startTimestamp, startTimestamp) &&
+                Objects.equals(p.endTimestamp, endTimestamp) &&
                 areButtonsEqual;
     }
 
