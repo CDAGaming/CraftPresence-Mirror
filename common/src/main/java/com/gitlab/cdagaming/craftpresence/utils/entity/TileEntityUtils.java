@@ -44,8 +44,15 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-@SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
 public class TileEntityUtils implements Module {
+    /**
+     * An Instance of an Empty Item
+     */
+    public static final Item EMPTY_ITEM = null;
+    /**
+     * An Instance of an Empty ItemStack
+     */
+    public static final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
     /**
      * A List of the detected Block Names
      */
@@ -66,14 +73,6 @@ public class TileEntityUtils implements Module {
      * A List of the detected Tile Entity (Blocks + Items) Class Names
      */
     private final List<String> TILE_ENTITY_CLASSES = Lists.newArrayList();
-    /**
-     * An Instance of an Empty Item
-     */
-    private final Item EMPTY_ITEM = null;
-    /**
-     * An Instance of an Empty ItemStack
-     */
-    private final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -143,6 +142,108 @@ public class TileEntityUtils implements Module {
      */
     private String CURRENT_BOOTS_NAME;
 
+    /**
+     * Retrieve or convert the specified object to an {@link ItemStack}
+     *
+     * @param data the data to interpret
+     * @return the converted or retrieved {@link ItemStack}
+     */
+    public static ItemStack getStackFrom(Object data) {
+        ItemStack itemStack = null;
+        if (data != null) {
+            if (data instanceof Block) {
+                data = Item.getItemFromBlock((Block) data);
+            }
+            if (data instanceof Item) {
+                data = getDefaultInstance((Item) data);
+            }
+            if (data instanceof ItemStack) {
+                itemStack = (ItemStack) data;
+            }
+        }
+        return itemStack;
+    }
+
+    /**
+     * Determines whether the Specified {@link ItemStack} classifies as NULL or EMPTY
+     *
+     * @param data The {@link ItemStack} to evaluate
+     * @return {@link Boolean#TRUE} if the ItemStack classifies as NULL or EMPTY
+     */
+    public static boolean isEmpty(final Object data) {
+        final ItemStack itemStack = getStackFrom(data);
+        if (itemStack == null || itemStack.equals(EMPTY_STACK)) {
+            return true;
+        } else if (itemStack.getItem() != EMPTY_ITEM && itemStack.getItem() != Items.AIR) {
+            if (itemStack.getCount() <= 0) {
+                return true;
+            } else {
+                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Returns the Default Variant of the Specified Item
+     *
+     * @param itemIn The Item to evaluate
+     * @return The default variant of the item
+     */
+    public static ItemStack getDefaultInstance(final Item itemIn) {
+        return new ItemStack(itemIn);
+    }
+
+    /**
+     * Retrieves the entities display name, derived from the original supplied name
+     *
+     * @param data        The {@link ItemStack} to interpret
+     * @param stripColors Whether the resulting name should have its formatting stripped
+     * @return The formatted entity display name to use
+     */
+    public static String getName(final Object data, final boolean stripColors) {
+        final ItemStack itemStack = getStackFrom(data);
+        String result = "";
+        if (!isEmpty(itemStack)) {
+            result = StringUtils.getOrDefault(
+                    itemStack.getDisplayName()
+            );
+        }
+
+        if (stripColors) {
+            result = StringUtils.stripColors(result);
+        }
+        return result;
+    }
+
+    /**
+     * Retrieves the entities display name, derived from the original supplied name
+     *
+     * @param entity The entity to interpret
+     * @return The formatted entity display name to use
+     */
+    public static String getName(final Object entity) {
+        return getName(entity, true);
+    }
+
+    /**
+     * Returns whether the specified name contains raw data
+     *
+     * @param name The name to interpret
+     * @return {@link Boolean#TRUE} if the condition is satisfied
+     */
+    public static boolean isRawTE(final String name) {
+        if (!StringUtils.isNullOrEmpty(name)) {
+            final String lowerName = name.toLowerCase();
+            return lowerName.contains("tile.") ||
+                    lowerName.contains("item.") ||
+                    lowerName.contains(".") ||
+                    lowerName.contains(".name");
+        }
+        return false;
+    }
+
     @Override
     public void emptyData() {
         hasScanned = false;
@@ -199,56 +300,6 @@ public class TileEntityUtils implements Module {
         }
     }
 
-    /**
-     * Determines whether the Specified Item classifies as NULL or EMPTY
-     *
-     * @param item The Item to Evaluate
-     * @return {@link Boolean#TRUE} if the Item classifies as NULL or EMPTY
-     */
-    private boolean isEmpty(final Item item) {
-        return item == null || isEmpty(getDefaultInstance(item));
-    }
-
-    /**
-     * Determines whether the Specified Block classifies as NULL or EMPTY
-     *
-     * @param block The Block to evaluate
-     * @return {@link Boolean#TRUE} if the Block classifies as NULL or EMPTY
-     */
-    private boolean isEmpty(final Block block) {
-        return block == null || isEmpty(Item.getItemFromBlock(block));
-    }
-
-    /**
-     * Returns the Default Variant of the Specified Item
-     *
-     * @param itemIn The Item to evaluate
-     * @return The default variant of the item
-     */
-    private ItemStack getDefaultInstance(final Item itemIn) {
-        return new ItemStack(itemIn);
-    }
-
-    /**
-     * Determines whether the Specified ItemStack classifies as NULL or EMPTY
-     *
-     * @param itemStack The ItemStack to evaluate
-     * @return {@link Boolean#TRUE} if the ItemStack classifies as NULL or EMPTY
-     */
-    private boolean isEmpty(final ItemStack itemStack) {
-        if (itemStack == null || itemStack.equals(EMPTY_STACK)) {
-            return true;
-        } else if (itemStack.getItem() != EMPTY_ITEM && itemStack.getItem() != Items.AIR) {
-            if (itemStack.getCount() <= 0) {
-                return true;
-            } else {
-                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
-            }
-        } else {
-            return true;
-        }
-    }
-
     @Override
     public void updateData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
@@ -258,41 +309,16 @@ public class TileEntityUtils implements Module {
         final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory.get(1);
         final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory.get(0);
 
-        final String NEW_CURRENT_MAIN_HAND_ITEM_NAME = !isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) ?
-                StringUtils.stripColors(NEW_CURRENT_MAIN_HAND_ITEM.getDisplayName()) : "";
-        final String NEW_CURRENT_OFFHAND_ITEM_NAME = !isEmpty(NEW_CURRENT_OFFHAND_ITEM) ?
-                StringUtils.stripColors(NEW_CURRENT_OFFHAND_ITEM.getDisplayName()) : "";
-        final String NEW_CURRENT_HELMET_NAME = !isEmpty(NEW_CURRENT_HELMET) ?
-                StringUtils.stripColors(NEW_CURRENT_HELMET.getDisplayName()) : "";
-        final String NEW_CURRENT_CHEST_NAME = !isEmpty(NEW_CURRENT_CHEST) ?
-                StringUtils.stripColors(NEW_CURRENT_CHEST.getDisplayName()) : "";
-        final String NEW_CURRENT_LEGS_NAME = !isEmpty(NEW_CURRENT_LEGS) ?
-                StringUtils.stripColors(NEW_CURRENT_LEGS.getDisplayName()) : "";
-        final String NEW_CURRENT_BOOTS_NAME = !isEmpty(NEW_CURRENT_BOOTS) ?
-                StringUtils.stripColors(NEW_CURRENT_BOOTS.getDisplayName()) : "";
-
-        final boolean hasMainHandChanged = (!isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) &&
-                !NEW_CURRENT_MAIN_HAND_ITEM.equals(CURRENT_MAIN_HAND_ITEM) || !NEW_CURRENT_MAIN_HAND_ITEM_NAME.equals(CURRENT_MAIN_HAND_ITEM_NAME)) ||
-                (isEmpty(NEW_CURRENT_MAIN_HAND_ITEM) && !isEmpty(CURRENT_MAIN_HAND_ITEM));
-        final boolean hasOffHandChanged = (!isEmpty(NEW_CURRENT_OFFHAND_ITEM) &&
-                !NEW_CURRENT_OFFHAND_ITEM.equals(CURRENT_OFFHAND_ITEM) || !NEW_CURRENT_OFFHAND_ITEM_NAME.equals(CURRENT_OFFHAND_ITEM_NAME)) ||
-                (isEmpty(NEW_CURRENT_OFFHAND_ITEM) && !isEmpty(CURRENT_OFFHAND_ITEM));
-        final boolean hasHelmetChanged = (!isEmpty(NEW_CURRENT_HELMET) &&
-                !NEW_CURRENT_HELMET.equals(CURRENT_HELMET) || !NEW_CURRENT_HELMET_NAME.equals(CURRENT_HELMET_NAME)) ||
-                (isEmpty(NEW_CURRENT_HELMET) && !isEmpty(CURRENT_HELMET));
-        final boolean hasChestChanged = (!isEmpty(NEW_CURRENT_CHEST) &&
-                !NEW_CURRENT_CHEST.equals(CURRENT_CHEST) || !NEW_CURRENT_CHEST_NAME.equals(CURRENT_CHEST_NAME)) ||
-                (isEmpty(NEW_CURRENT_CHEST) && !isEmpty(CURRENT_CHEST));
-        final boolean hasLegsChanged = (!isEmpty(NEW_CURRENT_LEGS) &&
-                !NEW_CURRENT_LEGS.equals(CURRENT_LEGS) || !NEW_CURRENT_LEGS_NAME.equals(CURRENT_LEGS_NAME)) ||
-                (isEmpty(NEW_CURRENT_LEGS) && !isEmpty(CURRENT_LEGS));
-        final boolean hasBootsChanged = (!isEmpty(NEW_CURRENT_BOOTS) &&
-                !NEW_CURRENT_BOOTS.equals(CURRENT_BOOTS) || !NEW_CURRENT_BOOTS_NAME.equals(CURRENT_BOOTS_NAME)) ||
-                (isEmpty(NEW_CURRENT_BOOTS) && !isEmpty(CURRENT_BOOTS));
+        final boolean hasMainHandChanged = NEW_CURRENT_MAIN_HAND_ITEM != CURRENT_MAIN_HAND_ITEM;
+        final boolean hasOffHandChanged = NEW_CURRENT_OFFHAND_ITEM != CURRENT_OFFHAND_ITEM;
+        final boolean hasHelmetChanged = NEW_CURRENT_HELMET != CURRENT_HELMET;
+        final boolean hasChestChanged = NEW_CURRENT_CHEST != CURRENT_CHEST;
+        final boolean hasLegsChanged = NEW_CURRENT_LEGS != CURRENT_LEGS;
+        final boolean hasBootsChanged = NEW_CURRENT_BOOTS != CURRENT_BOOTS;
 
         if (hasMainHandChanged) {
             CURRENT_MAIN_HAND_ITEM = NEW_CURRENT_MAIN_HAND_ITEM;
-            CURRENT_MAIN_HAND_ITEM_NAME = NEW_CURRENT_MAIN_HAND_ITEM_NAME;
+            CURRENT_MAIN_HAND_ITEM_NAME = getName(CURRENT_MAIN_HAND_ITEM);
 
             if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.main_hand.time");
@@ -301,7 +327,7 @@ public class TileEntityUtils implements Module {
 
         if (hasOffHandChanged) {
             CURRENT_OFFHAND_ITEM = NEW_CURRENT_OFFHAND_ITEM;
-            CURRENT_OFFHAND_ITEM_NAME = NEW_CURRENT_OFFHAND_ITEM_NAME;
+            CURRENT_OFFHAND_ITEM_NAME = getName(CURRENT_OFFHAND_ITEM);
 
             if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.off_hand.time");
@@ -310,7 +336,7 @@ public class TileEntityUtils implements Module {
 
         if (hasHelmetChanged) {
             CURRENT_HELMET = NEW_CURRENT_HELMET;
-            CURRENT_HELMET_NAME = NEW_CURRENT_HELMET_NAME;
+            CURRENT_HELMET_NAME = getName(CURRENT_HELMET);
 
             if (!isEmpty(CURRENT_HELMET)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.helmet.time");
@@ -319,7 +345,7 @@ public class TileEntityUtils implements Module {
 
         if (hasChestChanged) {
             CURRENT_CHEST = NEW_CURRENT_CHEST;
-            CURRENT_CHEST_NAME = NEW_CURRENT_CHEST_NAME;
+            CURRENT_CHEST_NAME = getName(CURRENT_CHEST);
 
             if (!isEmpty(CURRENT_CHEST)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.chestplate.time");
@@ -328,7 +354,7 @@ public class TileEntityUtils implements Module {
 
         if (hasLegsChanged) {
             CURRENT_LEGS = NEW_CURRENT_LEGS;
-            CURRENT_LEGS_NAME = NEW_CURRENT_LEGS_NAME;
+            CURRENT_LEGS_NAME = getName(CURRENT_LEGS);
 
             if (!isEmpty(CURRENT_LEGS)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.leggings.time");
@@ -337,7 +363,7 @@ public class TileEntityUtils implements Module {
 
         if (hasBootsChanged) {
             CURRENT_BOOTS = NEW_CURRENT_BOOTS;
-            CURRENT_BOOTS_NAME = NEW_CURRENT_BOOTS_NAME;
+            CURRENT_BOOTS_NAME = getName(CURRENT_BOOTS);
 
             if (!isEmpty(CURRENT_BOOTS)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.boots.time");
@@ -356,13 +382,13 @@ public class TileEntityUtils implements Module {
         // Retrieve Messages
         final String defaultItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault("default", "");
 
-        String offHandItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME);
-        String mainItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, CURRENT_MAIN_HAND_ITEM_NAME);
+        final String offHandItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME);
+        final String mainItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, CURRENT_MAIN_HAND_ITEM_NAME);
 
-        String helmetMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_HELMET_NAME, CURRENT_HELMET_NAME);
-        String chestMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_CHEST_NAME, CURRENT_CHEST_NAME);
-        String legsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_LEGS_NAME, CURRENT_LEGS_NAME);
-        String bootsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME);
+        final String helmetMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_HELMET_NAME, CURRENT_HELMET_NAME);
+        final String chestMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_CHEST_NAME, CURRENT_CHEST_NAME);
+        final String legsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_LEGS_NAME, CURRENT_LEGS_NAME);
+        final String bootsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME);
 
         CraftPresence.CLIENT.syncArgument("item.message.default", defaultItemMessage);
         CraftPresence.CLIENT.syncArgument("item.message.holding", String.format("[%s, %s]",
@@ -529,30 +555,11 @@ public class TileEntityUtils implements Module {
      * Verifies, Synchronizes and Removes any Invalid Items and Blocks from their Lists
      */
     public void verifyEntities() {
-        List<String> removingBlocks = Lists.newArrayList();
-        List<String> removingItems = Lists.newArrayList();
-        for (String itemName : ITEM_NAMES) {
-            if (!StringUtils.isNullOrEmpty(itemName)) {
-                final String lowerItemName = itemName.toLowerCase();
-                if (lowerItemName.contains("tile.") || lowerItemName.contains("item.") || lowerItemName.contains(".") || lowerItemName.contains(".name")) {
-                    removingItems.add(itemName);
-                }
-            }
-        }
-
-        for (String blockName : BLOCK_NAMES) {
-            if (!StringUtils.isNullOrEmpty(blockName)) {
-                final String lowerBlockName = blockName.toLowerCase();
-                if (lowerBlockName.contains("tile.") || lowerBlockName.contains("item.") || lowerBlockName.contains(".") || lowerBlockName.contains(".name")) {
-                    removingBlocks.add(blockName);
-                }
-            }
-        }
-
-        ITEM_NAMES.removeAll(removingItems);
+        ITEM_NAMES.removeIf(TileEntityUtils::isRawTE);
         ITEM_NAMES.removeAll(BLOCK_NAMES);
+
+        BLOCK_NAMES.removeIf(TileEntityUtils::isRawTE);
         BLOCK_NAMES.removeAll(ITEM_NAMES);
-        BLOCK_NAMES.removeAll(removingBlocks);
 
         StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, BLOCK_NAMES);
         StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, ITEM_NAMES);
