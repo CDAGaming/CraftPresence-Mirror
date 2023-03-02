@@ -634,11 +634,23 @@ public class FunctionsLib {
         if (argCount < 1) ss.error("getFields() can only be used with one argument, got %d.", argCount);
         final Value data = getClass(ss, argCount);
         if (!data.isNull()) {
+            final StringBuilder sb = new StringBuilder();
             final Class<?> result = (Class<?>) data.getObject();
-            final String fieldNames = result + ": [" + Arrays.stream(result.getFields())
-                    .map(Field::getName)
-                    .collect(Collectors.joining(", ")) + "]";
-            return Value.string(fieldNames);
+
+            sb.append(result).append(": [");
+            final Field[] fields = result.getFields();
+            for (int i = 0; i < fields.length; i++) {
+                final Field field = fields[i];
+                final String name = field.getType() + " " + field.getName();
+                sb.append(name);
+
+                // if not the last item
+                if (i < fields.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]");
+            return Value.string(sb.toString());
         } else {
             ss.error("First argument to getFields() needs to be a valid class-compatible object.");
         }
@@ -649,11 +661,27 @@ public class FunctionsLib {
         if (argCount < 1) ss.error("getMethods() can only be used with one argument, got %d.", argCount);
         final Value data = getClass(ss, argCount);
         if (!data.isNull()) {
+            final StringBuilder sb = new StringBuilder();
             final Class<?> result = (Class<?>) data.getObject();
-            final String methodNames = result + ": [" + Arrays.stream(result.getMethods())
-                    .map(Method::getName)
-                    .collect(Collectors.joining(", ")) + "]";
-            return Value.string(methodNames);
+
+            sb.append(result).append(": [");
+            final Method[] methods = result.getMethods();
+            for (int i = 0; i < methods.length; i++) {
+                final Method method = methods[i];
+                final String name = method.getReturnType() + " " + method.getName();
+                final Class<?>[] paramTypes = method.getParameterTypes();
+                final String paramTypeNames = Arrays.stream(paramTypes)
+                        .map(Class::toString)
+                        .collect(Collectors.joining(", "));
+                sb.append(name).append("(").append(paramTypeNames).append(")");
+
+                // if not the last item
+                if (i < methods.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]");
+            return Value.string(sb.toString());
         } else {
             ss.error("First argument to getMethods() needs to be a valid class-compatible object.");
         }
