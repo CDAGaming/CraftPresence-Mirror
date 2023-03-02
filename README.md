@@ -247,7 +247,8 @@ The following functions are available for use anywhere in CraftPresence:
   value
 * `getResult(input)` - Perform recursive conversion on the specified input
 * `hasAlphaNumeric(input)` - Whether the specified string contains alphanumeric characters
-* `hasField(classObj=Object|String|Class, fieldName)` - Retrieves whether the specified class contains the specified field name
+* `hasField(classObj=Object|String|Class, fieldName)` - Retrieves whether the specified class contains the specified
+  field name
 * `hasWhitespace(input)` - Whether the specified string contains whitespace characters
 * `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
 * `isCustomAsset(input)` - Determines if the Specified Icon Key is present under the Custom Assets List
@@ -266,7 +267,8 @@ The following functions are available for use anywhere in CraftPresence:
 * `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
 * `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
 * `toCamelCase(input)` - Converts a String into a Valid and Acceptable Camel-Case Format
-* `translate(input=String, args=Object...)` - Translates an Unlocalized String, based on the translations retrieved for the current language
+* `translate(input=String, args=Object...)` - Translates an Unlocalized String, based on the translations retrieved for
+  the current language
 
 ## Versions of CraftPresence
 
