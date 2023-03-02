@@ -217,49 +217,56 @@ The following placeholders are available for use anywhere in CraftPresence:
 
 The following functions are available for use anywhere in CraftPresence:
 
-* `getClass(reference=Object|String)` - Attempt to retrieve a class object, via the string path or object reference
-* `getOrDefault(target, alternative ?: '')` - Retrieve the primary value if non-empty; Otherwise, use the secondary
-  value
-* `minify(input, length)` - Reduces the Length of a String to the Specified Length
-* `getFirst(args)` - Retrieve the first non-null string from the specified arguments, or return null
-* `formatIdentifier(target, formatToId ?: false, avoid ?: false)` - Converts an Identifier into a properly formatted and
-  interpretable Name
-* `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
-* `getField(classObj=Object|String|Class ?: instance.getClass(), instance=Object, fieldName=String)` - Retrieves the
-  Specified Field(s) via Reflection
-* `isUuid(input)` - Checks via Regex whether the specified String classifies as a valid Uuid
-* `hasWhitespace(input)` - Whether the specified string contains whitespace characters
-* `getJsonElement(url|jsonString, path=Object...)` - Retrieves the json element from the specified content, or null if
-  unable
 * `asIcon(input, whitespaceIndex ?: '')` - Converts a String into a Valid and Acceptable Icon Format
-* `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
-* `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
-  able
-* `randomString(args)` - Retrieves a random element from the specified arguments, as a string
-* `randomAsset()` - Attempts to retrieve a Random Icon Key from the available assets
-* `capitalizeWords(input, timesToCheck ?: -1)` - Capitalizes the words within a specified string
-* `executeMethod(classToAccess=Object|String|Class, instance=Object ?: null, methodName, <parameterType, parameter>...)` -
-  Invokes the specified Method in the Target Class via Reflection
+* `asIdentifier(target, formatToId ?: false, avoid ?: false)` - Converts an Identifier into a properly formatted and
+  interpretable Name
 * `asProperWord(input, avoid ?: false, skipSymbolReplacement ?: false, caseCheckTimes ?: -1)` - Converts input into a
   Properly Readable String
-* `replaceAnyCase(input, data=[from, to]...)` - Replaces Data in a String with Case-Insensitivity
-* `hasAlphaNumeric(input)` - Whether the specified string contains alphanumeric characters
-* `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
-* `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
+* `capitalizeWords(input, timesToCheck ?: -1)` - Capitalizes the words within a specified string
+* `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
+  able
+* `executeMethod(classToAccess=Object|String|Class, instance=Object ?: null, methodName, <parameterType, parameter>...)` -
+  Invokes the specified Method in the Target Class via Reflection
+* `format(input=String, args=Object...)` - Returns a formatted string using the specified format string and arguments
 * `formatAddress(input, returnPort ?: false)` - Formats an IP Address based on Input
 * `getAsset(input)` - Retrieves the Specified DiscordAsset data from an Icon Key, if present
 * `getAssetId(input)` - Retrieves the Parsed Icon ID from the specified key, if present
 * `getAssetKey(input)` - Retrieves the Parsed Icon Key from the specified key, if present
 * `getAssetType(input)` - Retrieves the Parsed Image Type from the specified key, if present
 * `getAssetUrl(input)` - Retrieves the Parsed Image Url from the specified key, if present
+* `getClass(reference=Object|String)` - Attempt to retrieve a class object, via the string path or object reference
+* `getField(classObj=Object|String|Class ?: instance.getClass(), instance=Object, fieldName=String)` - Retrieves the
+  Specified Field(s) via Reflection
+* `getFields(classObj=Object|String|Class)` - Retrieve the available field names for a class object
+* `getFirst(args)` - Retrieve the first non-null string from the specified arguments, or return null
+* `getJsonElement(url|jsonString, path=Object...)` - Retrieves the json element from the specified content, or null if
+  unable
+* `getMethods(classObj=Object|String|Class)` - Retrieve the available method names for a class object
+* `getNbt(data=Entity|ItemStack, path=String...)` - Attempt to retrieve the NBT Tag with the specified path
+* `getOrDefault(target, alternative ?: '')` - Retrieve the primary value if non-empty; Otherwise, use the secondary
+  value
+* `getResult(input)` - Perform recursive conversion on the specified input
+* `hasAlphaNumeric(input)` - Whether the specified string contains alphanumeric characters
+* `hasField(classObj=Object|String|Class, fieldName)` - Retrieves whether the specified class contains the specified field name
+* `hasWhitespace(input)` - Whether the specified string contains whitespace characters
+* `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
 * `isCustomAsset(input)` - Determines if the Specified Icon Key is present under the Custom Assets List
+* `isUuid(input)` - Checks via Regex whether the specified String classifies as a valid Uuid
 * `isValidAsset(input)` - Determines if the Specified Icon Key is present under the Current Client ID
 * `isValidId(input)` - Determines if the specified Client ID is valid
-* `nullOrEmpty(input, allowWhitespace ?: false)` - Determines whether a String classifies as NULL or EMPTY
+* `isWithinValue(value, min, max, contains_min ?: false, contains_max ?: false, check_sanity ?: true)` - Determines
+  whether the specified value is within the specified range
 * `length(input)` - Returns the length of the specified string
+* `minify(input, length)` - Reduces the Length of a String to the Specified Length
+* `nullOrEmpty(input, allowWhitespace ?: false)` - Determines whether a String classifies as NULL or EMPTY
+* `randomAsset()` - Attempts to retrieve a Random Icon Key from the available assets
+* `randomString(args)` - Retrieves a random element from the specified arguments, as a string
+* `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
+* `replaceAnyCase(input, data=[from, to]...)` - Replaces Data in a String with Case-Insensitivity
+* `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
+* `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
 * `toCamelCase(input)` - Converts a String into a Valid and Acceptable Camel-Case Format
-* `getResult(input)` - Perform recursive conversion on the specified input
-* `hasField(classToAccess, fieldName)` - Retrieves whether the specified class contains the specified field name
+* `translate(input=String, args=Object...)` - Translates an Unlocalized String, based on the translations retrieved for the current language
 
 ## Versions of CraftPresence
 

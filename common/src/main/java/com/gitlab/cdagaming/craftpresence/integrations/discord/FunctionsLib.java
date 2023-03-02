@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
@@ -37,19 +38,28 @@ import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
 
 import java.awt.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Standard library with some default functions and variables.
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class FunctionsLib {
     public static void init(Starscript ss) {
         StandardLib.init(ss);
 
         // General Functions
+        ss.set("format", FunctionsLib::format);
+        ss.set("translate", FunctionsLib::translate);
+        ss.set("getFields", FunctionsLib::getFields);
+        ss.set("getMethods", FunctionsLib::getMethods);
         ss.set("getJsonElement", FunctionsLib::getJsonElement);
         ss.set("randomString", FunctionsLib::randomString);
         ss.set("getFirst", FunctionsLib::getFirst);
@@ -92,6 +102,76 @@ public class FunctionsLib {
         ss.set("hasField", FunctionsLib::hasField);
         ss.set("executeMethod", FunctionsLib::executeMethod);
         ss.set("stripColors", FunctionsLib::stripColors);
+    }
+
+    public static Value format(Starscript ss, int argCount) {
+        final List<Value> args = Lists.newArrayList();
+        if (argCount < 1)
+            ss.error("format() requires one or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop());
+        }
+        StringUtils.revlist(args);
+
+        // Parse, then remove the source entity from arguments, if valid
+        Value source = args.get(0);
+        String data = null;
+        if (source.isString()) {
+            data = source.getString();
+        }
+
+        if (data == null) {
+            ss.error("First argument to format() needs to be a valid String.");
+        }
+        args.remove(0);
+
+        String result;
+        // Parse remaining data into an Objects List
+        if (!args.isEmpty() && data != null) {
+            final List<Object> value = Lists.newArrayList();
+            for (Value info : args) {
+                value.add(CraftPresence.CLIENT.fromValue(info));
+            }
+            result = String.format(data, value.toArray(new Object[0]));
+        } else {
+            result = data;
+        }
+        return !StringUtils.isNullOrEmpty(result) ? Value.string(result) : Value.null_();
+    }
+
+    public static Value translate(Starscript ss, int argCount) {
+        final List<Value> args = Lists.newArrayList();
+        if (argCount < 1)
+            ss.error("translate() requires one or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop());
+        }
+        StringUtils.revlist(args);
+
+        // Parse, then remove the source entity from arguments, if valid
+        Value source = args.get(0);
+        String data = null;
+        if (source.isString()) {
+            data = source.getString();
+        }
+
+        if (data == null) {
+            ss.error("First argument to translate() needs to be a valid String.");
+        }
+        args.remove(0);
+
+        String result;
+        // Parse remaining data into an Objects List
+        if (!args.isEmpty() && data != null) {
+            final List<Object> value = Lists.newArrayList();
+            for (Value info : args) {
+                value.add(CraftPresence.CLIENT.fromValue(info));
+            }
+            result = ModUtils.TRANSLATOR.translate(data, value.toArray(new Object[0]));
+        } else {
+            result = ModUtils.TRANSLATOR.translate(data);
+        }
+        return !StringUtils.isNullOrEmpty(result) ? Value.string(result) : Value.null_();
     }
 
     public static Value getJsonElement(Starscript ss, int argCount) {
@@ -550,6 +630,36 @@ public class FunctionsLib {
         return Value.string(StringUtils.capitalizeWord(target, timesToCheck));
     }
 
+    public static Value getFields(Starscript ss, int argCount) {
+        if (argCount < 1) ss.error("getFields() can only be used with one argument, got %d.", argCount);
+        final Value data = getClass(ss, argCount);
+        if (!data.isNull()) {
+            final Class<?> result = (Class<?>) data.getObject();
+            final String fieldNames = result + ": [" + Arrays.stream(result.getFields())
+                    .map(Field::getName)
+                    .collect(Collectors.joining(", ")) + "]";
+            return Value.string(fieldNames);
+        } else {
+            ss.error("First argument to getFields() needs to be a valid class-compatible object.");
+        }
+        return Value.null_();
+    }
+
+    public static Value getMethods(Starscript ss, int argCount) {
+        if (argCount < 1) ss.error("getMethods() can only be used with one argument, got %d.", argCount);
+        final Value data = getClass(ss, argCount);
+        if (!data.isNull()) {
+            final Class<?> result = (Class<?>) data.getObject();
+            final String methodNames = result + ": [" + Arrays.stream(result.getMethods())
+                    .map(Method::getName)
+                    .collect(Collectors.joining(", ")) + "]";
+            return Value.string(methodNames);
+        } else {
+            ss.error("First argument to getMethods() needs to be a valid class-compatible object.");
+        }
+        return Value.null_();
+    }
+
     public static Value getField(Starscript ss, int argCount) {
         if (argCount < 2 || argCount > 3) ss.error("getField() can only be used with 2-3 arguments, got %d.", argCount);
         String fieldName;
@@ -576,7 +686,7 @@ public class FunctionsLib {
     }
 
     public static Value getClass(Starscript ss, int argCount) {
-        if (argCount != 1) ss.error("getClass() requires 1 argument, got %d.", argCount);
+        if (argCount < 1) ss.error("getClass() can only be used with one argument, got %d.", argCount);
         Value value = ss.pop();
         Class<?> result = null;
         if (value.isObject()) {
@@ -584,7 +694,7 @@ public class FunctionsLib {
         } else if (value.isString()) {
             result = FileUtils.findValidClass(value.getString());
         } else {
-            ss.error("First argument to getClass() needs to be an object or string.");
+            ss.error("First argument to getClass() needs to be a valid class-compatible object.");
         }
         return result != null ? Value.object(result) : Value.null_();
     }
@@ -592,8 +702,14 @@ public class FunctionsLib {
     public static Value hasField(Starscript ss, int argCount) {
         if (argCount != 2) ss.error("hasField() requires 2 arguments, got %d.", argCount);
         String b = ss.popString("Second argument to hasField() needs to be a string.");
-        String a = ss.popString("First argument to hasField() needs to be a string.");
-        return Value.bool(StringUtils.getValidField(a, b).getFirst());
+        final Value data = getClass(ss, argCount);
+        if (!data.isNull()) {
+            final Class<?> result = (Class<?>) data.getObject();
+            return Value.bool(StringUtils.getValidField(result, b).getFirst());
+        } else {
+            ss.error("First argument to hasField() needs to be a valid class-compatible object.");
+        }
+        return Value.null_();
     }
 
     public static Value executeMethod(Starscript ss, int argCount) {
