@@ -94,7 +94,7 @@ public class EntityUtils implements Module {
      * @param stripColors Whether the resulting name should have its formatting stripped
      * @return The formatted entity display name to use
      */
-    public static String getEntityName(final Entity entity, final boolean stripColors) {
+    public static String getName(final Entity entity, final boolean stripColors) {
         String result = "";
         if (entity != null) {
             result = StringUtils.getOrDefault(
@@ -115,8 +115,8 @@ public class EntityUtils implements Module {
      * @param entity The entity to interpret
      * @return The formatted entity display name to use
      */
-    public static String getEntityName(final Entity entity) {
-        return getEntityName(entity, true);
+    public static String getName(final Entity entity) {
+        return getName(entity, true);
     }
 
     /**
@@ -212,7 +212,7 @@ public class EntityUtils implements Module {
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
-            CURRENT_TARGET_NAME = getEntityName(CURRENT_TARGET);
+            CURRENT_TARGET_NAME = getName(CURRENT_TARGET);
 
             if (CURRENT_TARGET != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.target.time");
@@ -221,7 +221,7 @@ public class EntityUtils implements Module {
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
-            CURRENT_RIDING_NAME = getEntityName(CURRENT_RIDING);
+            CURRENT_RIDING_NAME = getName(CURRENT_RIDING);
 
             if (CURRENT_RIDING != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.riding.time");
