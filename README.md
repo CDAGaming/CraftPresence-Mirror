@@ -225,6 +225,7 @@ The following functions are available for use anywhere in CraftPresence:
 * `capitalizeWords(input, timesToCheck ?: -1)` - Capitalizes the words within a specified string
 * `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
   able
+* `convertWorldTime(worldTime=number)` - Converts a Raw World Time Long into a Readable 24-Hour Time String
 * `executeMethod(classToAccess=Object|String|Class, instance=Object ?: null, methodName, <parameterType, parameter>...)` -
   Invokes the specified Method in the Target Class via Reflection
 * `format(input=String, args=Object...)` - Returns a formatted string using the specified format string and arguments

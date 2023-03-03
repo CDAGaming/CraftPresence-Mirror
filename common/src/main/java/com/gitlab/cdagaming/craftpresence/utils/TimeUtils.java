@@ -59,7 +59,7 @@ public class TimeUtils {
      * @param worldTime The raw World Time
      * @return The converted and readable 24-hour time string
      */
-    public static String getTimeString(final long worldTime) {
+    public static String convertWorldTime(final long worldTime) {
         int ticks = (int) (worldTime % 24000);
         ticks += 6000;
         if (ticks > 24000) ticks -= 24000;
