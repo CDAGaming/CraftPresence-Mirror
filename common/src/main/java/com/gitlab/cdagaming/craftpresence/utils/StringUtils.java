@@ -37,8 +37,6 @@ import net.minecraft.util.text.TextComponentString;
 
 import java.awt.*;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
@@ -1060,25 +1058,6 @@ public class StringUtils {
         }
 
         return s.toString();
-    }
-
-    /**
-     * Convert the specified string into the specified date format, if able
-     *
-     * @param original        The original string to interpret
-     * @param originalPattern The original date format pattern to interpret
-     * @param newPattern      The new date format pattern to interpret
-     * @return The converted and parsed time string
-     */
-    public static String convertTime(final String original, final String originalPattern, final String newPattern) {
-        try {
-            final DateFormat oldFormat = new SimpleDateFormat(originalPattern);
-            final Date oldInfo = oldFormat.parse(original);
-            final DateFormat newFormat = new SimpleDateFormat(newPattern);
-            return newFormat.format(oldInfo);
-        } catch (Exception ex) {
-            return original;
-        }
     }
 
     /**

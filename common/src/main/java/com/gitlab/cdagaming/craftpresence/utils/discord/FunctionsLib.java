@@ -616,7 +616,7 @@ public class FunctionsLib {
         String newPattern = ss.popString("Third argument to convertTime() needs to be a string.");
         String originalPattern = ss.popString("Second argument to convertTime() needs to be a string.");
         String target = ss.popString("First argument to convertTime() needs to be a string.");
-        return Value.string(StringUtils.convertTime(target, originalPattern, newPattern));
+        return Value.string(TimeUtils.convertTime(target, originalPattern, newPattern));
     }
 
     public static Value capitalizeWords(Starscript ss, int argCount) {

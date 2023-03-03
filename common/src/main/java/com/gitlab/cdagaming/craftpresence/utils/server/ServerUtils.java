@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.google.common.collect.Lists;
@@ -359,10 +360,10 @@ public class ServerUtils implements Module {
             }
 
             // 'world.time' Argument = Current Time in World
-            final String newGameTime = CraftPresence.player != null ? getTimeString(CraftPresence.player.world.getWorldTime()) : null;
+            final String newGameTime = CraftPresence.player != null ? TimeUtils.getTimeString(CraftPresence.player.world.getWorldTime()) : null;
             if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString24)) {
                 timeString24 = newGameTime;
-                timeString12 = StringUtils.convertTime(newGameTime, "HH:mm", "hh:mm aa");
+                timeString12 = TimeUtils.convertTime(newGameTime, "HH:mm", "hh:mm aa");
                 queuedForUpdate = true;
             }
 
@@ -394,20 +395,6 @@ public class ServerUtils implements Module {
         if (queuedForUpdate) {
             updatePresence();
         }
-    }
-
-    /**
-     * Converts a Raw World Time Long into a Readable 24-Hour Time String
-     *
-     * @param worldTime The raw World Time
-     * @return The converted and readable 24-hour time string
-     */
-    private String getTimeString(final long worldTime) {
-        int ticks = (int) (worldTime % 24000);
-        ticks += 6000;
-        if (ticks > 24000) ticks -= 24000;
-
-        return String.format("%02d:%02d", ticks / 1000, (int) (ticks % 1000 / 1000.0 * 60));
     }
 
     /**
