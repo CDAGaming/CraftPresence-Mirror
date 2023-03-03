@@ -36,6 +36,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.*;
@@ -1203,6 +1204,62 @@ public class StringUtils {
             result = false;
         }
         return result;
+    }
+
+    /**
+     * Retrieve the list of fields present in the specified class
+     *
+     * @param classToAccess The class object to interpret
+     * @return the output String
+     */
+    public static String getFieldList(final Class<?> classToAccess) {
+        final StringBuilder sb = new StringBuilder();
+        if (classToAccess != null) {
+            sb.append(classToAccess).append(": [");
+            final Field[] fields = classToAccess.getFields();
+            for (int i = 0; i < fields.length; i++) {
+                final Field field = fields[i];
+                final String name = field.getType() + " " + field.getName();
+                sb.append(name);
+
+                // if not the last item
+                if (i < fields.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Retrieve the list of methods present in the specified class
+     *
+     * @param classToAccess The class object to interpret
+     * @return the output String
+     */
+    public static String getMethodList(final Class<?> classToAccess) {
+        final StringBuilder sb = new StringBuilder();
+        if (classToAccess != null) {
+            sb.append(classToAccess).append(": [");
+            final Method[] methods = classToAccess.getMethods();
+            for (int i = 0; i < methods.length; i++) {
+                final Method method = methods[i];
+                final String name = method.getReturnType() + " " + method.getName();
+                final Class<?>[] paramTypes = method.getParameterTypes();
+                final String paramTypeNames = Arrays.stream(paramTypes)
+                        .map(Class::toString)
+                        .collect(Collectors.joining(", "));
+                sb.append(name).append("(").append(paramTypeNames).append(")");
+
+                // if not the last item
+                if (i < methods.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]");
+        }
+        return sb.toString();
     }
 
     /**
