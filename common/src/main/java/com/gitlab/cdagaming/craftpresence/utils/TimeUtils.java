@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Time String Utilities for interpreting and converting between differing Time Formats
@@ -35,22 +36,78 @@ import java.util.Date;
  */
 public class TimeUtils {
     /**
-     * Convert the specified string into the specified date format, if able
+     * Format a Date String using the specified timezone and format.
      *
-     * @param original        The original string to interpret
-     * @param originalPattern The original date format pattern to interpret
-     * @param newPattern      The new date format pattern to interpret
-     * @return The converted and parsed time string
+     * @param toFormat   Target format string.
+     * @param toTimeZone Target timezone string.
+     * @param date       The {@link Date} info to interpret.
+     * @return Date String in the target timezone and format.
      */
-    public static String convertTime(final String original, final String originalPattern, final String newPattern) {
-        try {
-            final DateFormat oldFormat = new SimpleDateFormat(originalPattern);
-            final Date oldInfo = oldFormat.parse(original);
-            final DateFormat newFormat = new SimpleDateFormat(newPattern);
-            return newFormat.format(oldInfo);
-        } catch (Exception ex) {
-            return original;
+    public static String dateToString(final String toFormat, final String toTimeZone, final Date date) {
+        final DateFormat toFormatter = new SimpleDateFormat(toFormat);
+        if (!StringUtils.isNullOrEmpty(toTimeZone)) {
+            toFormatter.setTimeZone(TimeZone.getTimeZone(toTimeZone));
         }
+        return date != null ? toFormatter.format(date) : "";
+    }
+
+    /**
+     * Format a Date String from one timezone and format into a valid {@link Date} instance.
+     *
+     * @param dateString   Date String in the original timezone and format.
+     * @param fromFormat   Original format string.
+     * @param fromTimeZone Original timezone string.
+     * @return Date String in the target timezone and format.
+     */
+    public static Date stringToDate(final String dateString, final String fromFormat, final String fromTimeZone) {
+        try {
+            final DateFormat fromFormatter = new SimpleDateFormat(fromFormat);
+            if (!StringUtils.isNullOrEmpty(fromTimeZone)) {
+                fromFormatter.setTimeZone(TimeZone.getTimeZone(fromTimeZone));
+            }
+            return fromFormatter.parse(dateString);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Convert a Date String from one timezone to another timezone and format.
+     *
+     * @param dateString   Date String in the original timezone and format.
+     * @param fromFormat   Original format string.
+     * @param fromTimeZone Original timezone string.
+     * @param toFormat     Target format string.
+     * @param toTimeZone   Target timezone string.
+     * @return Date String in the target timezone and format.
+     */
+    public static String convertTime(final String dateString, final String fromFormat, final String fromTimeZone, final String toFormat, final String toTimeZone) {
+        return dateToString(toFormat, toTimeZone, stringToDate(dateString, fromFormat, fromTimeZone));
+    }
+
+    /**
+     * Convert a Date String from one timezone to another timezone and format.
+     *
+     * @param dateString Date String in the original timezone and format.
+     * @param fromFormat Original format string.
+     * @param toFormat   Target format string.
+     * @return Date String in the target timezone and format.
+     */
+    public static String convertTime(final String dateString, final String fromFormat, final String toFormat) {
+        return convertTime(dateString, fromFormat, null, toFormat, null);
+    }
+
+    /**
+     * Convert a Date String from one timezone to another timezone and format.
+     *
+     * @param dateString   Date String in the original timezone and format.
+     * @param fromFormat   Original format string.
+     * @param fromTimeZone Original timezone string.
+     * @param toTimeZone   Target timezone string.
+     * @return Date String in the target timezone and format.
+     */
+    public static String convertTime(final String dateString, final String fromFormat, final String fromTimeZone, final String toTimeZone) {
+        return convertTime(dateString, fromFormat, fromTimeZone, fromFormat, toTimeZone);
     }
 
     /**
@@ -65,5 +122,33 @@ public class TimeUtils {
         if (ticks > 24000) ticks -= 24000;
 
         return String.format("%02d:%02d", ticks / 1000, (int) (ticks % 1000 / 1000.0 * 60));
+    }
+
+    /**
+     * Convert Epoch Timestamp to Date String in the given format and timezone.
+     *
+     * @param epochTime Epoch Timestamp in seconds.
+     * @param format    Date format string.
+     * @param timeZone  Timezone string.
+     * @return Date String in the specified format and timezone.
+     */
+    public static String epochToDate(final long epochTime, final String format, final String timeZone) {
+        // Convert seconds to milliseconds
+        return dateToString(format, timeZone, new Date(epochTime * 1000L));
+    }
+
+    /**
+     * Convert Date String to Epoch Timestamp in seconds.
+     *
+     * @param dateString Date String in the given format and timezone.
+     * @param format     Date format string.
+     * @param timeZone   Timezone string.
+     * @return Epoch Timestamp in seconds.
+     */
+    public static long dateToEpoch(final String dateString, final String format, final String timeZone) {
+        final Date date = stringToDate(dateString, format, timeZone);
+
+        // Convert milliseconds to seconds
+        return date != null ? (date.getTime() / 1000L) : 0L;
     }
 }
