@@ -155,20 +155,40 @@ public class TimeUtils {
 
     /**
      * Retrieve the current time
+     *
      * @return the current timestamp, as an {@link Instant}
      */
     public static Instant getCurrentTime() {
         return Instant.now();
     }
 
+    /**
+     * Retrieve the {@link Duration} between two {@link Temporal} points in time
+     *
+     * @param start The starting {@link Temporal} point
+     * @param end   The ending {@link Temporal} point
+     * @return the {@link Duration} between the two points
+     */
     public static Duration getDuration(final Temporal start, final Temporal end) {
         return Duration.between(start, end);
     }
 
+    /**
+     * Retrieve the {@link Duration} from the {@link Temporal} point in time to the current time
+     *
+     * @param start The {@link Temporal} point to interpret
+     * @return the {@link Duration} between the two points
+     */
     public static Duration getDurationFrom(final Temporal start) {
         return getDuration(start, getCurrentTime());
     }
 
+    /**
+     * Retrieve the {@link Duration} to the {@link Temporal} point in time from the current time
+     *
+     * @param end The {@link Temporal} point to interpret
+     * @return the {@link Duration} between the two points
+     */
     public static Duration getDurationTo(final Temporal end) {
         return getDuration(getCurrentTime(), end);
     }
