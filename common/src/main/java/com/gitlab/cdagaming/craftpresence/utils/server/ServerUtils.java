@@ -363,7 +363,7 @@ public class ServerUtils implements Module {
             final String newGameTime = CraftPresence.player != null ? TimeUtils.convertWorldTime(CraftPresence.player.world.getWorldTime()) : null;
             if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString24)) {
                 timeString24 = newGameTime;
-                timeString12 = TimeUtils.convertTime(newGameTime, "HH:mm", "hh:mm aa");
+                timeString12 = TimeUtils.convertTime(newGameTime, "HH:mm", "hh:mm a");
                 queuedForUpdate = true;
             }
 
