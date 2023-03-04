@@ -3,6 +3,8 @@
 Completely customize the way others see you play Minecraft via Discord's Rich Presence API & the DiscordIPC API
 by [jagrosh](https://github.com/jagrosh)!
 
+**This mod identifies as Client Side ONLY (IE it will crash if run on the Server's side)**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Crowdin](https://badges.crowdin.net/craftpresence/localized.svg)](https://crowdin.com/project/craftpresence)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5e0667f7208b49ecab1a6affbfa6cbf7)](https://www.codacy.com/gl/CDAGaming/CraftPresence/dashboard?utm_source=gitlab.com&amp;utm_medium=referral&amp;utm_content=CDAGaming/CraftPresence&amp;utm_campaign=Badge_Grade)
