@@ -3,8 +3,6 @@
 Completely customize the way others see you play Minecraft via Discord's Rich Presence API & the DiscordIPC API
 by [jagrosh](https://github.com/jagrosh)!
 
-**This mod identifies as Client Side ONLY (IE it will crash if run on the Server's side)**
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Crowdin](https://badges.crowdin.net/craftpresence/localized.svg)](https://crowdin.com/project/craftpresence)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5e0667f7208b49ecab1a6affbfa6cbf7)](https://www.codacy.com/gl/CDAGaming/CraftPresence/dashboard?utm_source=gitlab.com&amp;utm_medium=referral&amp;utm_content=CDAGaming/CraftPresence&amp;utm_campaign=Badge_Grade)
@@ -16,8 +14,10 @@ by [jagrosh](https://github.com/jagrosh)!
 [![Modrinth-Downloads](https://modrinth-utils.vercel.app/api/badge/downloads?id=DFqQfIBR&logo=true)](https://modrinth.com/mod/craftpresence)
 [![Modrinth-Availability](https://modrinth-utils.vercel.app/api/badge/versions?id=DFqQfIBR&logo=true)](https://modrinth.com/mod/craftpresence)
 
-## Port Notes
+## General Notes
 
+* CraftPresence identifies as a **Client Side Only** mod
+    * This means it **will** crash if run on the Server's side
 * Some versions of CraftPresence for Minecraft 1.14.x and above require
   the [FabricMC ModLoader](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 * Some versions of CraftPresence for Minecraft 1.13.x require
