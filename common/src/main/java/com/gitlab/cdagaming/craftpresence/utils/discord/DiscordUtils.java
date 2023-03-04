@@ -34,10 +34,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
+import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.common.collect.Lists;
@@ -293,7 +290,7 @@ public class DiscordUtils {
         CommandUtils.isInMainMenu = false;
 
         // Update Start Timestamp onInit, if needed
-        final long newStartTime = System.currentTimeMillis() / 1000L;
+        final long newStartTime = TimeUtils.getCurrentTime().getEpochSecond();
         currentStartTime = !updateTimestamp && lastStartTime > 0 ?
                 lastStartTime :
                 newStartTime;
@@ -648,7 +645,7 @@ public class DiscordUtils {
      * @param args The Specified Arguments to Synchronize for
      */
     public void syncTimestamp(final String... args) {
-        final long newTimestamp = System.currentTimeMillis() / 1000L;
+        final long newTimestamp = TimeUtils.getCurrentTime().getEpochSecond();
         for (String argumentName : args) {
             syncArgument(argumentName, newTimestamp);
         }

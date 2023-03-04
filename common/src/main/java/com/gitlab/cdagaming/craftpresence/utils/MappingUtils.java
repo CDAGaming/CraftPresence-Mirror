@@ -30,6 +30,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -75,14 +76,14 @@ public class MappingUtils {
             try {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, filePath)))) {
                     ModUtils.LOG.info("Loading Mappings...");
-                    long time = System.nanoTime();
+                    final Instant time = TimeUtils.getCurrentTime();
                     for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                         String[] parts = line.split(" ");
                         if (parts[0].equals("CL:")) {
                             cm.put(parts[1], parts[2]);
                         }
                     }
-                    ModUtils.LOG.info("Loaded Mappings in " + (System.nanoTime() - time) / 1000000 + "ms");
+                    ModUtils.LOG.info("Loaded Mappings in " + TimeUtils.getDurationFrom(time).toMillis() + "ms");
                 }
             } catch (Throwable e) {
                 e.printStackTrace();

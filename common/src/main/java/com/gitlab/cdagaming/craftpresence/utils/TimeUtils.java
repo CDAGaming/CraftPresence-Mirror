@@ -24,10 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 
 /**
  * Time String Utilities for interpreting and converting between differing Time Formats
@@ -40,32 +41,32 @@ public class TimeUtils {
      *
      * @param toFormat   Target format string.
      * @param toTimeZone Target timezone string.
-     * @param date       The {@link Date} info to interpret.
+     * @param date       The {@link Instant} info to interpret.
      * @return Date String in the target timezone and format.
      */
-    public static String dateToString(final String toFormat, final String toTimeZone, final Date date) {
-        final DateFormat toFormatter = new SimpleDateFormat(toFormat);
+    public static String dateToString(final String toFormat, final String toTimeZone, final Instant date) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(toFormat);
         if (!StringUtils.isNullOrEmpty(toTimeZone)) {
-            toFormatter.setTimeZone(TimeZone.getTimeZone(toTimeZone));
+            formatter.withZone(ZoneId.of(toTimeZone));
         }
-        return date != null ? toFormatter.format(date) : "";
+        return date != null ? formatter.format(date) : "";
     }
 
     /**
-     * Format a Date String from one timezone and format into a valid {@link Date} instance.
+     * Format a Date String from one timezone and format into a valid {@link Instant} instance.
      *
      * @param dateString   Date String in the original timezone and format.
      * @param fromFormat   Original format string.
      * @param fromTimeZone Original timezone string.
      * @return Date String in the target timezone and format.
      */
-    public static Date stringToDate(final String dateString, final String fromFormat, final String fromTimeZone) {
+    public static Instant stringToDate(final String dateString, final String fromFormat, final String fromTimeZone) {
         try {
-            final DateFormat fromFormatter = new SimpleDateFormat(fromFormat);
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(fromFormat);
             if (!StringUtils.isNullOrEmpty(fromTimeZone)) {
-                fromFormatter.setTimeZone(TimeZone.getTimeZone(fromTimeZone));
+                formatter.withZone(ZoneId.of(fromTimeZone));
             }
-            return fromFormatter.parse(dateString);
+            return formatter.parse(dateString, Instant::from);
         } catch (Exception ex) {
             return null;
         }
@@ -134,7 +135,7 @@ public class TimeUtils {
      */
     public static String epochToDate(final long epochTime, final String format, final String timeZone) {
         // Convert seconds to milliseconds
-        return dateToString(format, timeZone, new Date(epochTime * 1000L));
+        return dateToString(format, timeZone, Instant.ofEpochSecond(epochTime));
     }
 
     /**
@@ -146,9 +147,29 @@ public class TimeUtils {
      * @return Epoch Timestamp in seconds.
      */
     public static long dateToEpoch(final String dateString, final String format, final String timeZone) {
-        final Date date = stringToDate(dateString, format, timeZone);
+        final Instant date = stringToDate(dateString, format, timeZone);
 
         // Convert milliseconds to seconds
-        return date != null ? (date.getTime() / 1000L) : 0L;
+        return date != null ? date.getEpochSecond() : 0L;
+    }
+
+    /**
+     * Retrieve the current time
+     * @return the current timestamp, as an {@link Instant}
+     */
+    public static Instant getCurrentTime() {
+        return Instant.now();
+    }
+
+    public static Duration getDuration(final Temporal start, final Temporal end) {
+        return Duration.between(start, end);
+    }
+
+    public static Duration getDurationFrom(final Temporal start) {
+        return getDuration(start, getCurrentTime());
+    }
+
+    public static Duration getDurationTo(final Temporal end) {
+        return getDuration(getCurrentTime(), end);
     }
 }

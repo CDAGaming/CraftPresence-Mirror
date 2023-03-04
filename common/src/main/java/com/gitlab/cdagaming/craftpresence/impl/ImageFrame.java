@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
+import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -306,6 +307,6 @@ public class ImageFrame {
      * @return Whether this frame has rendered up to or past the delay
      */
     public boolean shouldRenderNext() {
-        return System.currentTimeMillis() - getRenderTime() > getDelay() * 10L;
+        return TimeUtils.getCurrentTime().toEpochMilli() - getRenderTime() > getDelay() * 10L;
     }
 }

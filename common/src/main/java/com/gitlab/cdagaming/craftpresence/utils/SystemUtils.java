@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Random;
 
@@ -102,7 +103,7 @@ public class SystemUtils {
     /**
      * The Current Epoch Unix Timestamp in Milliseconds
      */
-    public long CURRENT_TIMESTAMP;
+    public Instant CURRENT_INSTANT;
     /**
      * Whether the Timer is Currently Active
      */
@@ -116,7 +117,7 @@ public class SystemUtils {
     /**
      * The Beginning Unix Timestamp to count down from
      */
-    private long BEGINNING_TIMESTAMP;
+    private Instant BEGINNING_INSTANT;
     /**
      * The Elapsed Time since the application started (In Seconds)
      */
@@ -134,7 +135,7 @@ public class SystemUtils {
             IS_LINUX = OS_NAME.startsWith("Linux") || OS_NAME.startsWith("LINUX");
             IS_MAC = OS_NAME.startsWith("Mac");
             IS_WINDOWS = OS_NAME.startsWith("Windows");
-            CURRENT_TIMESTAMP = System.currentTimeMillis();
+            CURRENT_INSTANT = TimeUtils.getCurrentTime();
             ELAPSED_TIME = 0;
 
             // Calculate if 64-Bit Architecture
@@ -156,7 +157,7 @@ public class SystemUtils {
      * Consists of Synchronizing Data, and Updating Timer-Related Data as needed
      */
     void onTick() {
-        ELAPSED_TIME = (System.currentTimeMillis() - CURRENT_TIMESTAMP) / 1000L;
+        ELAPSED_TIME = TimeUtils.getDurationFrom(CURRENT_INSTANT).getSeconds();
 
         if (TIMER > 0) {
             if (!isTiming) {
@@ -185,7 +186,7 @@ public class SystemUtils {
     /**
      * The Event to Run on each Client Tick, after passing initialization events
      * <p>
-     * Consists of Scheduling awaited tasks, after a successfull {@link SystemUtils#onTick()}
+     * Consists of Scheduling awaited tasks, after a successful {@link SystemUtils#onTick()}
      */
     void postTick() {
         if (refreshedCallbacks) {
@@ -211,10 +212,10 @@ public class SystemUtils {
     }
 
     /**
-     * Begins the Timer, counting down from {@link SystemUtils#BEGINNING_TIMESTAMP}
+     * Begins the Timer, counting down from {@link SystemUtils#BEGINNING_INSTANT}
      */
     private void startTimer() {
-        BEGINNING_TIMESTAMP = System.currentTimeMillis() + (TIMER * 1000L);
+        BEGINNING_INSTANT = TimeUtils.getCurrentTime().plusSeconds(TIMER);
         isTiming = true;
     }
 
@@ -223,7 +224,7 @@ public class SystemUtils {
      */
     private void checkTimer() {
         if (TIMER > 0) {
-            long remainingTime = (BEGINNING_TIMESTAMP - System.currentTimeMillis()) / 1000L;
+            final long remainingTime = BEGINNING_INSTANT.getEpochSecond() - TimeUtils.getCurrentTime().getEpochSecond();
             TIMER = (int) remainingTime;
         } else if (isTiming) {
             isTiming = false;
