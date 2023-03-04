@@ -363,6 +363,8 @@
   "craftpresence.placeholders.rgbaToHex.usage": "rgbaToHex(r,g,b,a ?: 255)",
   "craftpresence.placeholders.convertTime.description": "Convert the specified string into the specified date format, if able",
   "craftpresence.placeholders.convertTime.usage": "convertTime(input, originalPattern, newPattern)",
+  "craftpresence.placeholders.convertWorldTime.description": "Converts a Raw World Time Long into a Readable 24-Hour Time String",
+  "craftpresence.placeholders.convertWorldTime.usage": "convertWorldTime(worldTime=number)",
   "craftpresence.placeholders.randomString.description": "Retrieves a random element from the specified arguments, as a string",
   "craftpresence.placeholders.randomString.usage": "randomString(args)",
   "craftpresence.placeholders.randomAsset.description": "Attempts to retrieve a Random Icon Key from the available assets",
