@@ -135,9 +135,9 @@ public class TimeUtils {
      * @param timeZone  Timezone string.
      * @return Date String in the specified format and timezone.
      */
-    public static String epochToDate(final long epochTime, final String format, final String timeZone) {
+    public static String epochToString(final long epochTime, final String format, final String timeZone) {
         // Convert seconds to milliseconds
-        return dateToString(format, timeZone, Instant.ofEpochSecond(epochTime));
+        return dateToString(format, timeZone, fromEpoch(epochTime));
     }
 
     /**
@@ -148,11 +148,17 @@ public class TimeUtils {
      * @param timeZone   Timezone string.
      * @return Epoch Timestamp in seconds.
      */
-    public static long dateToEpoch(final String dateString, final String format, final String timeZone) {
-        final Instant date = stringToDate(dateString, format, timeZone);
+    public static long stringToEpoch(final String dateString, final String format, final String timeZone) {
+        return toEpoch(stringToDate(dateString, format, timeZone));
+    }
 
+    public static Instant fromEpoch(final long epochTime) {
+        return Instant.ofEpochSecond(epochTime);
+    }
+
+    public static long toEpoch(final Instant data) {
         // Convert milliseconds to seconds
-        return date != null ? date.getEpochSecond() : 0L;
+        return data != null ? data.getEpochSecond() : 0L;
     }
 
     /**
