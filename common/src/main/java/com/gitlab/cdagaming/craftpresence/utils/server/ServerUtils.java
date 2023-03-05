@@ -47,8 +47,10 @@ import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Server Utilities used to Parse Server Data and handle related RPC Events
@@ -108,6 +110,10 @@ public class ServerUtils implements Module {
      * The Current Server RPC Icon being used, with Arguments
      */
     private String currentServerIcon = "";
+    /**
+     * The current {@link Instant} representing the Current World Time
+     */
+    private Instant worldTimeInstant;
     /**
      * The Current Formatted World Time (24-hour Format), as a String
      */
@@ -209,6 +215,7 @@ public class ServerUtils implements Module {
         currentServerMessage = "";
         currentServerIcon = "";
         canUseEndpointIcon = false;
+        worldTimeInstant = null;
         timeString24 = null;
         timeString12 = null;
         dayString = null;
@@ -223,7 +230,7 @@ public class ServerUtils implements Module {
             requestedServerData = null;
         }
 
-        CraftPresence.CLIENT.removeArguments("server", "world", "player");
+        CraftPresence.CLIENT.removeArguments("server", "world", "data.world", "player");
         CraftPresence.CLIENT.clearOverride("server.message", "server.icon");
         CraftPresence.CLIENT.clearPartyData(true, false);
     }
@@ -360,10 +367,11 @@ public class ServerUtils implements Module {
             }
 
             // 'world.time' Argument = Current Time in World
-            final String newGameTime = CraftPresence.player != null ? TimeUtils.convertWorldTime(CraftPresence.player.world.getWorldTime()) : null;
-            if (!StringUtils.isNullOrEmpty(newGameTime) && !newGameTime.equals(timeString24)) {
-                timeString24 = newGameTime;
-                timeString12 = TimeUtils.convertTime(newGameTime, "HH:mm", "hh:mm a");
+            final Instant newTimeInstant = CraftPresence.player != null ? TimeUtils.convertTime(CraftPresence.player.world.getWorldTime()) : null;
+            if (!Objects.equals(newTimeInstant, worldTimeInstant)) {
+                timeString24 = TimeUtils.dateToString("HH:mm", newTimeInstant);
+                timeString12 = TimeUtils.dateToString("hh:mm a", newTimeInstant);
+                worldTimeInstant = newTimeInstant;
                 queuedForUpdate = true;
             }
 
@@ -484,9 +492,14 @@ public class ServerUtils implements Module {
         CraftPresence.CLIENT.syncArgument("world.weather.name", StringUtils.getOrDefault(currentWeatherName));
         CraftPresence.CLIENT.syncArgument("world.weather.duration", currentWeatherDuration);
         CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
-        CraftPresence.CLIENT.syncArgument("world.time24", StringUtils.getOrDefault(timeString24));
-        CraftPresence.CLIENT.syncArgument("world.time12", StringUtils.getOrDefault(timeString12));
         CraftPresence.CLIENT.syncArgument("world.day", StringUtils.getOrDefault(dayString));
+        if (worldTimeInstant != null) {
+            CraftPresence.CLIENT.syncArgument("world.time.24", timeString24);
+            CraftPresence.CLIENT.syncArgument("world.time.12", timeString12);
+            CraftPresence.CLIENT.syncArgument("data.world.time.instance", worldTimeInstant);
+        } else {
+            CraftPresence.CLIENT.removeArguments("world.time", "data.world.time");
+        }
 
         CraftPresence.CLIENT.syncArgument("server.default.icon", CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 

@@ -74,10 +74,6 @@ public class FunctionsLib {
         ss.set("getAssetType", FunctionsLib::getAssetType);
         ss.set("getAssetUrl", FunctionsLib::getAssetUrl);
 
-        // TimeUtils
-        ss.set("convertTime", FunctionsLib::convertTime);
-        ss.set("convertWorldTime", FunctionsLib::convertWorldTime);
-
         // StringUtils
         ss.set("rgbaToHex", FunctionsLib::rgbaToHex);
         ss.set("getOrDefault", FunctionsLib::getOrDefault);
@@ -608,20 +604,6 @@ public class FunctionsLib {
         }
         String target = ss.popString("First argument to asIdentifier() needs to be a string.");
         return Value.string(StringUtils.formatIdentifier(target, formatToId, avoid));
-    }
-
-    public static Value convertTime(Starscript ss, int argCount) {
-        if (argCount != 3) ss.error("convertTime() requires 3 arguments, got %d.", argCount);
-        String newPattern = ss.popString("Third argument to convertTime() needs to be a string.");
-        String originalPattern = ss.popString("Second argument to convertTime() needs to be a string.");
-        String target = ss.popString("First argument to convertTime() needs to be a string.");
-        return Value.string(TimeUtils.convertTime(target, originalPattern, newPattern));
-    }
-
-    public static Value convertWorldTime(Starscript ss, int argCount) {
-        if (argCount != 1) ss.error("getTimeString() requires 1 argument, got %d.", argCount);
-        long worldTime = (long) ss.popNumber("First argument to getTimeString() needs to be a number.");
-        return Value.string(TimeUtils.convertWorldTime(worldTime));
     }
 
     public static Value capitalizeWords(Starscript ss, int argCount) {

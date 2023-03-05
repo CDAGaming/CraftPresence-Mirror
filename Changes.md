@@ -152,9 +152,9 @@ related systems:
     * `&SERVER:WORLDINFO:WORLDNAME&`, `&WORLDINFO:WORLDNAME&` (From Server Settings), `&WORLDNAME&` (
       From `worldDataPlaceholder`) => `world.name`
     * `&SERVER:WORLDINFO:WORLDTIME&`, `&WORLDINFO:WORLDTIME&` (From Server Settings), `&WORLDTIME&` (
-      From `worldDataPlaceholder`) => `world.time24`
+      From `worldDataPlaceholder`) => `world.time.24`
     * `&SERVER:WORLDINFO:WORLDTIME12&`, `&WORLDINFO:WORLDTIME12&` (From Server Settings), `&WORLDTIME12&` (
-      From `worldDataPlaceholder`) => `world.time12`
+      From `worldDataPlaceholder`) => `world.time.12`
     * `&SERVER:WORLDINFO:WORLDDAY&`, `&WORLDINFO:WORLDDAY&` (From Server Settings), `&WORLDDAY&` (
       From `worldDataPlaceholder`) => `world.day`
     * `&SCREEN:SCREEN&`, `&SCREEN&` (From Gui Settings) => `screen.name`
@@ -172,7 +172,7 @@ related systems:
     * `&ITEM&` (From Item Settings) => `item.message.holding`
 * Added Placeholders:
     * `data.server.motd.line.*` added to display only the specified line from `server.motd.raw`
-    * `world.time12` added to display `world.time24` in an `xx:xx AM/PM` format
+    * `world.time.12` added to display `world.time.24` in an `xx:xx AM/PM` format
     * `player.icon` added if `allowEndpointIcons` is active and a valid `playerSkinEndpoint` is supplied
     * `*.instance` and `*.class` placeholders added to relevant `Gui`, `Entity`, and `Tile Entity` Modules
 * Removed (or moved) Placeholders:

@@ -24,9 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
@@ -48,10 +46,25 @@ public class TimeUtils {
      */
     public static String dateToString(final String toFormat, final String toTimeZone, final Instant date) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(toFormat);
-        if (!StringUtils.isNullOrEmpty(toTimeZone)) {
-            formatter.withZone(ZoneId.of(toTimeZone));
+        if (date != null && !StringUtils.isNullOrEmpty(toTimeZone)) {
+            final ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
+                    date, ZoneId.of("UTC")
+            ).withZoneSameInstant(ZoneId.of(toTimeZone));
+            return formatter.format(zonedDateTime);
+        } else {
+            return date != null ? formatter.format(date.atZone(ZoneOffset.UTC)) : "";
         }
-        return date != null ? formatter.format(date) : "";
+    }
+
+    /**
+     * Format a Date String using the specified timezone and format.
+     *
+     * @param toFormat Target format string.
+     * @param date     The {@link Instant} info to interpret.
+     * @return Date String in the target timezone and format.
+     */
+    public static String dateToString(final String toFormat, final Instant date) {
+        return dateToString(toFormat, null, date);
     }
 
     /**
@@ -64,14 +77,25 @@ public class TimeUtils {
      */
     public static Instant stringToDate(final String dateString, final String fromFormat, final String fromTimeZone) {
         try {
-            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(fromFormat);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(fromFormat);
             if (!StringUtils.isNullOrEmpty(fromTimeZone)) {
-                formatter.withZone(ZoneId.of(fromTimeZone));
+                formatter = formatter.withZone(ZoneId.of(fromTimeZone));
             }
             return formatter.parse(dateString, Instant::from);
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    /**
+     * Format a Date String from one timezone and format into a valid {@link Instant} instance.
+     *
+     * @param dateString Date String in the original timezone and format.
+     * @param fromFormat Original format string.
+     * @return Date String in the target timezone and format.
+     */
+    public static Instant stringToDate(final String dateString, final String fromFormat) {
+        return stringToDate(dateString, fromFormat, null);
     }
 
     /**
@@ -116,15 +140,50 @@ public class TimeUtils {
     /**
      * Converts a Raw World Time Long into a Readable 24-Hour Time String
      *
+     * @param worldTime      The raw World Time
+     * @param tickOffset     The amount of time to offset the dayTicks (worldTime % ticksPerDay)
+     * @param ticksPerDay    The ticks per game day
+     * @param ticksPerHour   The ticks per game hour
+     * @param ticksPerMinute The ticks per game minute
+     * @return The converted and readable 24-hour time string
+     */
+    public static Instant convertTime(final long worldTime, final long tickOffset, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
+        long dayTicks = worldTime % ticksPerDay;
+        dayTicks += tickOffset;
+
+        final long hourTicks = dayTicks % ticksPerHour;
+        final long minuteTicks = hourTicks % ticksPerMinute;
+
+        final long hours = dayTicks / ticksPerHour;
+        final long minutes = hourTicks / ticksPerMinute;
+        final long seconds = minuteTicks * (60 / ticksPerMinute);
+
+        final long millis = ((hours * 60L + minutes) * 60L + seconds) * 1000L;
+
+        return Instant.ofEpochMilli(millis);
+    }
+
+    /**
+     * Converts a Raw World Time Long into a Readable 24-Hour Time String
+     *
+     * @param worldTime      The raw World Time
+     * @param ticksPerDay    The ticks per game day
+     * @param ticksPerHour   The ticks per game hour
+     * @param ticksPerMinute The ticks per game minute
+     * @return The converted and readable 24-hour time string
+     */
+    public static Instant convertTime(final long worldTime, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
+        return convertTime(worldTime, 0L, ticksPerDay, ticksPerHour, ticksPerMinute);
+    }
+
+    /**
+     * Converts a Raw World Time Long into a Readable 24-Hour Time String
+     *
      * @param worldTime The raw World Time
      * @return The converted and readable 24-hour time string
      */
-    public static String convertWorldTime(final long worldTime) {
-        int ticks = (int) (worldTime % 24000);
-        ticks += 6000;
-        if (ticks > 24000) ticks -= 24000;
-
-        return String.format("%02d:%02d", ticks / 1000, (int) (ticks % 1000 / 1000.0 * 60));
+    public static Instant convertTime(final long worldTime) {
+        return convertTime(worldTime, 6000L, 24000L, 1000L, 16L);
     }
 
     /**
