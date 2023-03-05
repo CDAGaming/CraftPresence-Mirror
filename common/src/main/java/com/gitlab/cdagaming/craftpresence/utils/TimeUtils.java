@@ -28,7 +28,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
 
 /**
  * Time String Utilities for interpreting and converting between differing Time Formats
@@ -191,5 +193,39 @@ public class TimeUtils {
      */
     public static Duration getDurationTo(final Temporal end) {
         return getDuration(getCurrentTime(), end);
+    }
+
+    /**
+     * Retrieves the {@link ChronoUnit} from a string, if any
+     *
+     * @param name The string to interpret
+     * @return the resulting {@link ChronoUnit} if any
+     */
+    public static TemporalUnit getUnitFrom(final String name) {
+        return ChronoUnit.valueOf(name.toUpperCase());
+    }
+
+    /**
+     * Modify the specified {@link Temporal} with the specified arguments
+     *
+     * @param temporal the original {@link Temporal}
+     * @param amount   the amount of the specified unit to add, may be negative
+     * @param unit     the unit of the amount to add, can not be null
+     * @return an object of the same type with the specified period added, if not null
+     */
+    public static Temporal appendTime(final Temporal temporal, final long amount, final TemporalUnit unit) {
+        return temporal.plus(amount, unit);
+    }
+
+    /**
+     * Modify the specified {@link Temporal} with the specified arguments
+     *
+     * @param temporal the original {@link Temporal}
+     * @param amount   the amount of the specified unit to add, may be negative
+     * @param unit     the unit of the amount to add, can not be null
+     * @return an object of the same type with the specified period added, if not null
+     */
+    public static Temporal appendTime(final Temporal temporal, final long amount, final String unit) {
+        return appendTime(temporal, amount, getUnitFrom(unit));
     }
 }
