@@ -39,12 +39,12 @@ public class TimeUtils {
     /**
      * Format a Date String using the specified timezone and format.
      *
+     * @param date       The {@link Instant} info to interpret.
      * @param toFormat   Target format string.
      * @param toTimeZone Target timezone string.
-     * @param date       The {@link Instant} info to interpret.
      * @return Date String in the target timezone and format.
      */
-    public static String dateToString(final String toFormat, final String toTimeZone, final Instant date) {
+    public static String toString(final Instant date, final String toFormat, final String toTimeZone) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(toFormat);
         if (date != null && !StringUtils.isNullOrEmpty(toTimeZone)) {
             final ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
@@ -59,12 +59,12 @@ public class TimeUtils {
     /**
      * Format a Date String using the specified timezone and format.
      *
-     * @param toFormat Target format string.
      * @param date     The {@link Instant} info to interpret.
+     * @param toFormat Target format string.
      * @return Date String in the target timezone and format.
      */
-    public static String dateToString(final String toFormat, final Instant date) {
-        return dateToString(toFormat, null, date);
+    public static String toString(final Instant date, final String toFormat) {
+        return toString(date, toFormat, null);
     }
 
     /**
@@ -75,7 +75,7 @@ public class TimeUtils {
      * @param fromTimeZone Original timezone string.
      * @return Date String in the target timezone and format.
      */
-    public static Instant stringToDate(final String dateString, final String fromFormat, final String fromTimeZone) {
+    public static Instant toInstance(final String dateString, final String fromFormat, final String fromTimeZone) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(fromFormat);
             if (!StringUtils.isNullOrEmpty(fromTimeZone)) {
@@ -94,8 +94,8 @@ public class TimeUtils {
      * @param fromFormat Original format string.
      * @return Date String in the target timezone and format.
      */
-    public static Instant stringToDate(final String dateString, final String fromFormat) {
-        return stringToDate(dateString, fromFormat, null);
+    public static Instant toInstance(final String dateString, final String fromFormat) {
+        return toInstance(dateString, fromFormat, null);
     }
 
     /**
@@ -109,31 +109,31 @@ public class TimeUtils {
      * @return Date String in the target timezone and format.
      */
     public static String convertTime(final String dateString, final String fromFormat, final String fromTimeZone, final String toFormat, final String toTimeZone) {
-        return dateToString(toFormat, toTimeZone, stringToDate(dateString, fromFormat, fromTimeZone));
+        return toString(toInstance(dateString, fromFormat, fromTimeZone), toFormat, toTimeZone);
     }
 
     /**
-     * Convert a Date String from one timezone to another timezone and format.
+     * Convert a Date String from one format to another format.
      *
-     * @param dateString Date String in the original timezone and format.
+     * @param dateString Date String in the original format.
      * @param fromFormat Original format string.
      * @param toFormat   Target format string.
      * @return Date String in the target timezone and format.
      */
-    public static String convertTime(final String dateString, final String fromFormat, final String toFormat) {
+    public static String convertFormat(final String dateString, final String fromFormat, final String toFormat) {
         return convertTime(dateString, fromFormat, null, toFormat, null);
     }
 
     /**
-     * Convert a Date String from one timezone to another timezone and format.
+     * Convert a Date String from one timezone to another timezone.
      *
-     * @param dateString   Date String in the original timezone and format.
+     * @param dateString   Date String in the original timezone.
      * @param fromFormat   Original format string.
      * @param fromTimeZone Original timezone string.
      * @param toTimeZone   Target timezone string.
      * @return Date String in the target timezone and format.
      */
-    public static String convertTime(final String dateString, final String fromFormat, final String fromTimeZone, final String toTimeZone) {
+    public static String convertZone(final String dateString, final String fromFormat, final String fromTimeZone, final String toTimeZone) {
         return convertTime(dateString, fromFormat, fromTimeZone, fromFormat, toTimeZone);
     }
 
@@ -147,7 +147,7 @@ public class TimeUtils {
      * @param ticksPerMinute The ticks per game minute
      * @return The converted and readable 24-hour time string
      */
-    public static Instant convertTime(final long worldTime, final long tickOffset, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
+    public static Instant fromWorldTime(final long worldTime, final long tickOffset, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
         long dayTicks = worldTime % ticksPerDay;
         dayTicks += tickOffset;
 
@@ -172,8 +172,8 @@ public class TimeUtils {
      * @param ticksPerMinute The ticks per game minute
      * @return The converted and readable 24-hour time string
      */
-    public static Instant convertTime(final long worldTime, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
-        return convertTime(worldTime, 0L, ticksPerDay, ticksPerHour, ticksPerMinute);
+    public static Instant fromWorldTime(final long worldTime, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
+        return fromWorldTime(worldTime, 0L, ticksPerDay, ticksPerHour, ticksPerMinute);
     }
 
     /**
@@ -182,8 +182,8 @@ public class TimeUtils {
      * @param worldTime The raw World Time
      * @return The converted and readable 24-hour time string
      */
-    public static Instant convertTime(final long worldTime) {
-        return convertTime(worldTime, 6000L, 24000L, 1000L, 16L);
+    public static Instant fromWorldTime(final long worldTime) {
+        return fromWorldTime(worldTime, 6000L, 24000L, 1000L, 16L);
     }
 
     /**
@@ -196,7 +196,7 @@ public class TimeUtils {
      */
     public static String epochToString(final long epochTime, final String format, final String timeZone) {
         // Convert seconds to milliseconds
-        return dateToString(format, timeZone, fromEpoch(epochTime));
+        return toString(fromEpoch(epochTime), format, timeZone);
     }
 
     /**
@@ -220,7 +220,7 @@ public class TimeUtils {
      * @return Epoch Timestamp in seconds.
      */
     public static long stringToEpoch(final String dateString, final String format, final String timeZone) {
-        return toEpoch(stringToDate(dateString, format, timeZone));
+        return toEpoch(toInstance(dateString, format, timeZone));
     }
 
     /**

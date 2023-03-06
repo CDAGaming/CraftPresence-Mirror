@@ -367,10 +367,10 @@ public class ServerUtils implements Module {
             }
 
             // 'world.time' Argument = Current Time in World
-            final Instant newTimeInstant = CraftPresence.player != null ? TimeUtils.convertTime(CraftPresence.player.world.getWorldTime()) : null;
+            final Instant newTimeInstant = CraftPresence.player != null ? TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()) : null;
             if (!Objects.equals(newTimeInstant, worldTimeInstant)) {
-                timeString24 = TimeUtils.dateToString("HH:mm", newTimeInstant);
-                timeString12 = TimeUtils.dateToString("hh:mm a", newTimeInstant);
+                timeString24 = TimeUtils.toString(newTimeInstant, "HH:mm");
+                timeString12 = TimeUtils.toString(newTimeInstant, "hh:mm a");
                 worldTimeInstant = newTimeInstant;
                 queuedForUpdate = true;
             }
