@@ -200,6 +200,18 @@ public class TimeUtils {
     }
 
     /**
+     * Convert Epoch Timestamp to Date String in the given format and timezone.
+     *
+     * @param epochTime Epoch Timestamp in seconds.
+     * @param format    Date format string.
+     * @return Date String in the specified format and timezone.
+     */
+    public static String epochToString(final long epochTime, final String format) {
+        // Convert seconds to milliseconds
+        return epochToString(epochTime, format, null);
+    }
+
+    /**
      * Convert Date String to Epoch Timestamp in seconds.
      *
      * @param dateString Date String in the given format and timezone.
@@ -209,6 +221,17 @@ public class TimeUtils {
      */
     public static long stringToEpoch(final String dateString, final String format, final String timeZone) {
         return toEpoch(stringToDate(dateString, format, timeZone));
+    }
+
+    /**
+     * Convert Date String to Epoch Timestamp in seconds.
+     *
+     * @param dateString Date String in the given format and timezone.
+     * @param format     Date format string.
+     * @return Epoch Timestamp in seconds.
+     */
+    public static long stringToEpoch(final String dateString, final String format) {
+        return stringToEpoch(dateString, format, null);
     }
 
     public static Instant fromEpoch(final long epochTime) {
