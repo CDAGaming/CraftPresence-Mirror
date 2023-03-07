@@ -247,10 +247,10 @@ public class FileUtils {
         final boolean parentDirPresent = file.getParentFile().exists() || file.getParentFile().mkdirs();
         final boolean fileAvailable = (file.exists() && file.isFile()) || file.createNewFile();
         if (!parentDirPresent) {
-            throw new Exception("Failed to setup parent directory @ " + parentDir.getAbsolutePath());
+            throw new UnsupportedOperationException("Failed to setup parent directory @ " + parentDir.getAbsolutePath());
         }
         if (!fileAvailable) {
-            throw new Exception("Failed to setup target file (Unable to create or is not a file) @ " + file.getAbsolutePath());
+            throw new UnsupportedOperationException("Failed to setup target file (Unable to create or is not a file) @ " + file.getAbsolutePath());
         }
 
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
