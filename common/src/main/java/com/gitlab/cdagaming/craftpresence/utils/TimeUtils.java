@@ -24,6 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -147,9 +149,11 @@ public class TimeUtils {
      * @param ticksPerMinute The ticks per game minute
      * @return The converted and readable 24-hour time string
      */
-    public static Instant fromWorldTime(final long worldTime, final long tickOffset, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
+    public static Pair<Long, Instant> fromWorldTime(final long worldTime, final long tickOffset, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
+        long days = worldTime / ticksPerDay;
         long dayTicks = worldTime % ticksPerDay;
         dayTicks += tickOffset;
+        if (dayTicks > ticksPerDay) dayTicks -= ticksPerDay;
 
         final long hourTicks = dayTicks % ticksPerHour;
         final long minuteTicks = hourTicks % ticksPerMinute;
@@ -160,7 +164,7 @@ public class TimeUtils {
 
         final long millis = ((hours * 60L + minutes) * 60L + seconds) * 1000L;
 
-        return Instant.ofEpochMilli(millis);
+        return new Pair<>(days, Instant.ofEpochMilli(millis));
     }
 
     /**
@@ -172,7 +176,7 @@ public class TimeUtils {
      * @param ticksPerMinute The ticks per game minute
      * @return The converted and readable 24-hour time string
      */
-    public static Instant fromWorldTime(final long worldTime, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
+    public static Pair<Long, Instant> fromWorldTime(final long worldTime, final long ticksPerDay, final long ticksPerHour, final long ticksPerMinute) {
         return fromWorldTime(worldTime, 0L, ticksPerDay, ticksPerHour, ticksPerMinute);
     }
 
@@ -182,7 +186,7 @@ public class TimeUtils {
      * @param worldTime The raw World Time
      * @return The converted and readable 24-hour time string
      */
-    public static Instant fromWorldTime(final long worldTime) {
+    public static Pair<Long, Instant> fromWorldTime(final long worldTime) {
         return fromWorldTime(worldTime, 6000L, 24000L, 1000L, 16L);
     }
 

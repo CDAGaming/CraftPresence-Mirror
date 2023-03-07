@@ -50,7 +50,6 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Server Utilities used to Parse Server Data and handle related RPC Events
@@ -111,9 +110,9 @@ public class ServerUtils implements Module {
      */
     private String currentServerIcon = "";
     /**
-     * The current {@link Instant} representing the Current World Time
+     * The current World Time data
      */
-    private Instant worldTimeInstant;
+    private Pair<Long, Instant> worldTimeData = new Pair<>();
     /**
      * The Current Formatted World Time (24-hour Format), as a String
      */
@@ -125,7 +124,7 @@ public class ServerUtils implements Module {
     /**
      * The Current Formatted World Days, as a String
      */
-    private String dayString;
+    private long dayCount;
     /**
      * The Current World's Difficulty
      */
@@ -215,10 +214,10 @@ public class ServerUtils implements Module {
         currentServerMessage = "";
         currentServerIcon = "";
         canUseEndpointIcon = false;
-        worldTimeInstant = null;
+        worldTimeData = new Pair<>();
         timeString24 = null;
         timeString12 = null;
-        dayString = null;
+        dayCount = 0L;
         currentPlayers = 0;
         maxPlayers = 0;
 
@@ -317,17 +316,21 @@ public class ServerUtils implements Module {
             // `player` Sub-Arguments
 
             // `player.position` Argument = Current Coordinates of Player
-            final double newX = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.posX : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
-            final double newY = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.posY : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
-            final double newZ = StringUtils.roundDouble(CraftPresence.player != null ? CraftPresence.player.posZ : 0.0D, CraftPresence.CONFIG.advancedSettings.roundSize);
-            final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(newX, newY, newZ);
+            final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(
+                    StringUtils.roundDouble(CraftPresence.player.posX, CraftPresence.CONFIG.advancedSettings.roundSize),
+                    StringUtils.roundDouble(CraftPresence.player.posY, CraftPresence.CONFIG.advancedSettings.roundSize),
+                    StringUtils.roundDouble(CraftPresence.player.posZ, CraftPresence.CONFIG.advancedSettings.roundSize)
+            );
             if (!newCoordinates.equals(currentCoordinates)) {
                 currentCoordinates = newCoordinates;
                 queuedForUpdate = true;
             }
 
             // 'player.health' Argument = Current and Maximum Health of Player
-            final Pair<Double, Double> newHealth = CraftPresence.player != null ? new Pair<>(StringUtils.roundDouble(CraftPresence.player.getHealth(), 0), StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)) : new Pair<>(0.0D, 0.0D);
+            final Pair<Double, Double> newHealth = new Pair<>(
+                    StringUtils.roundDouble(CraftPresence.player.getHealth(), 0),
+                    StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
+            );
             if (!newHealth.equals(currentHealth)) {
                 currentHealth = newHealth;
                 queuedForUpdate = true;
@@ -336,15 +339,15 @@ public class ServerUtils implements Module {
             // 'world' Sub-Arguments
 
             // 'world.difficulty' Argument = Current Difficulty of the World
-            final String newDifficulty = CraftPresence.player != null ?
-                    (CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() ? ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") : CraftPresence.player.world.getDifficulty().name()) :
-                    "";
+            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() ?
+                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") :
+                    CraftPresence.player.world.getDifficulty().name();
             if (!newDifficulty.equals(currentDifficulty)) {
                 currentDifficulty = newDifficulty;
                 queuedForUpdate = true;
             }
 
-            // `world.weather.name`, `world.weather.duration` Argument = Current Weather Data of the World
+            // `world.weather` Arguments = Current Weather Data of the World
             final Pair<String, Long> newWeatherData = EntityUtils.getWeather(CraftPresence.player);
             final String newWeatherName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData.getFirst());
             final Long newWeatherDuration = newWeatherData.getSecond();
@@ -366,19 +369,13 @@ public class ServerUtils implements Module {
                 queuedForUpdate = true;
             }
 
-            // 'world.time' Argument = Current Time in World
-            final Instant newTimeInstant = CraftPresence.player != null ? TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()) : null;
-            if (!Objects.equals(newTimeInstant, worldTimeInstant)) {
-                timeString24 = TimeUtils.toString(newTimeInstant, "HH:mm");
-                timeString12 = TimeUtils.toString(newTimeInstant, "hh:mm a");
-                worldTimeInstant = newTimeInstant;
-                queuedForUpdate = true;
-            }
-
-            // 'world.day' Argument = Current Amount of Days in World
-            final String newGameDay = CraftPresence.player != null ? String.format("%d", CraftPresence.player.world.getWorldTime() / 24000L) : null;
-            if (!StringUtils.isNullOrEmpty(newGameDay) && !newGameDay.equals(dayString)) {
-                dayString = newGameDay;
+            // 'world.time' Arguments = Current Time Data of the World
+            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime());
+            if (!newTimeData.equals(worldTimeData)) {
+                dayCount = newTimeData.getFirst();
+                timeString24 = TimeUtils.toString(newTimeData.getSecond(), "HH:mm");
+                timeString12 = TimeUtils.toString(newTimeData.getSecond(), "hh:mm a");
+                worldTimeData = newTimeData;
                 queuedForUpdate = true;
             }
 
@@ -492,11 +489,11 @@ public class ServerUtils implements Module {
         CraftPresence.CLIENT.syncArgument("world.weather.name", StringUtils.getOrDefault(currentWeatherName));
         CraftPresence.CLIENT.syncArgument("world.weather.duration", currentWeatherDuration);
         CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
-        CraftPresence.CLIENT.syncArgument("world.day", StringUtils.getOrDefault(dayString));
-        if (worldTimeInstant != null) {
+        if (worldTimeData != null) {
+            CraftPresence.CLIENT.syncArgument("world.time.day", dayCount);
             CraftPresence.CLIENT.syncArgument("world.time.24", timeString24);
             CraftPresence.CLIENT.syncArgument("world.time.12", timeString12);
-            CraftPresence.CLIENT.syncArgument("data.world.time.instance", worldTimeInstant);
+            CraftPresence.CLIENT.syncArgument("data.world.time.instance", worldTimeData);
         } else {
             CraftPresence.CLIENT.removeArguments("world.time", "data.world.time");
         }

@@ -178,7 +178,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `world.name` - The name of the current world
     * `world.time.24` - The current world's in-game time (24-hour format)
     * `world.time.12` - The current world's in-game time (12-hour format)
-    * `world.day` - The current world's in-game day count
+    * `world.time.day` - The current world's in-game day count
 * Server Placeholders:
     * `server.message` - The current server's display data, while in-game
     * `server.icon` - The current server icon

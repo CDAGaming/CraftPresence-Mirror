@@ -180,9 +180,9 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&WORLDINFO:WORLDTIME12&", "{world.time.12}", IS_TEXT, IS_SERVER_MODULE),
             generatePair("&WORLDTIME12&", "{world.time.12}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
             //
-            generatePair("&SERVER:WORLDINFO:WORLDDAY&", "{world.day}", IS_TEXT),
-            generatePair("&WORLDINFO:WORLDDAY&", "{world.day}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&WORLDDAY&", "{world.day}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&SERVER:WORLDINFO:WORLDDAY&", "{world.time.day}", IS_TEXT),
+            generatePair("&WORLDINFO:WORLDDAY&", "{world.time.day}", IS_TEXT, IS_SERVER_MODULE),
+            generatePair("&WORLDDAY&", "{world.time.day}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
             //
             generatePair("&SCREEN:SCREEN&", "{screen.name}", IS_TEXT),
             generatePair("&SCREEN&", "{screen.name}", IS_TEXT, IS_SCREEN_MODULE),

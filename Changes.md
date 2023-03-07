@@ -156,7 +156,7 @@ related systems:
     * `&SERVER:WORLDINFO:WORLDTIME12&`, `&WORLDINFO:WORLDTIME12&` (From Server Settings), `&WORLDTIME12&` (
       From `worldDataPlaceholder`) => `world.time.12`
     * `&SERVER:WORLDINFO:WORLDDAY&`, `&WORLDINFO:WORLDDAY&` (From Server Settings), `&WORLDDAY&` (
-      From `worldDataPlaceholder`) => `world.day`
+      From `worldDataPlaceholder`) => `world.time.day`
     * `&SCREEN:SCREEN&`, `&SCREEN&` (From Gui Settings) => `screen.name`
     * `&SCREEN:ICON&`, `&ICON&` (From Gui Settings) => `screen.icon`
     * `&SCREEN:CLASS&`, `&CLASS&` (From Gui Settings) => `data.screen.class`
