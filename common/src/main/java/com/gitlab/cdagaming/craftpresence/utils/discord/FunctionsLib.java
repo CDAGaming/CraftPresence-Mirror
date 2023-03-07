@@ -201,7 +201,7 @@ public class FunctionsLib {
             JsonElement element;
             if (needsIndex) {
                 result = element = result.getAsJsonArray().get(
-                        StringUtils.getValidInteger(part).getSecond()
+                        StringUtils.getValidInteger(part).getRight()
                 );
             } else {
                 result = element = contents.get(part);
@@ -684,7 +684,7 @@ public class FunctionsLib {
         final Value data = getClass(ss, argCount);
         if (!data.isNull()) {
             final Class<?> result = (Class<?>) data.getObject();
-            return Value.bool(StringUtils.getValidField(result, b).getFirst());
+            return Value.bool(StringUtils.getValidField(result, b).getLeft());
         } else {
             ss.error("First argument to hasField() needs to be a valid class-compatible object.");
         }

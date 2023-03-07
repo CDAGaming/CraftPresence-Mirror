@@ -26,14 +26,16 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -69,7 +71,7 @@ public class ImageUtils {
      * <p>
      * Format: textureName;[[textureInputType, textureObj], [textureIndex, imageData], textureData]
      */
-    private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = Maps.newHashMap();
+    private static final Map<String, MutableTriple<Pair<InputType, Object>, MutablePair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = Maps.newHashMap();
     /**
      * The thread used for Url Image Events to take place within
      */
@@ -83,15 +85,15 @@ public class ImageUtils {
                 try {
                     while (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
                         final Pair<String, Pair<InputType, Object>> request = urlRequests.take();
-                        boolean isGif = request.getFirst().endsWith(".gif");
+                        boolean isGif = request.getLeft().endsWith(".gif");
 
-                        final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(request.getFirst()).getSecond();
+                        final MutablePair<Integer, List<ImageFrame>> bufferData = cachedImages.get(request.getLeft()).getMiddle();
                         if (bufferData != null) {
                             // Retrieve Data from external source
                             try {
                                 final InputStream streamData;
-                                final Object originData = request.getSecond().getSecond();
-                                switch (request.getSecond().getFirst()) {
+                                final Object originData = request.getRight().getRight();
+                                switch (request.getRight().getLeft()) {
                                     case FileData:
                                         streamData = Files.newInputStream(((File) originData).toPath());
                                         break;
@@ -99,11 +101,11 @@ public class ImageUtils {
                                         streamData = Files.newInputStream(Paths.get(originData.toString()));
                                         break;
                                     case ByteStream:
-                                        final Tuple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());
-                                        final byte[] dataSet = base64Data.getFirst() ?
-                                                decodeBase64(base64Data.getThird(), "UTF-8", false, false) : (originData instanceof byte[] ? (byte[]) originData : originData.toString().getBytes());
+                                        final Triple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());
+                                        final byte[] dataSet = base64Data.getLeft() ?
+                                                decodeBase64(base64Data.getRight(), "UTF-8", false, false) : (originData instanceof byte[] ? (byte[]) originData : originData.toString().getBytes());
                                         streamData = dataSet != null ? new ByteArrayInputStream(dataSet) : null;
-                                        isGif = base64Data.getSecond().contains("gif");
+                                        isGif = base64Data.getMiddle().contains("gif");
                                         break;
                                     case Url:
                                         streamData = UrlUtils.getURLStream(originData instanceof URL ? (URL) originData : new URL(originData.toString()));
@@ -120,7 +122,7 @@ public class ImageUtils {
 
                                         for (ImageFrame frame : frames) {
                                             try {
-                                                bufferData.getSecond().add(frame);
+                                                bufferData.getRight().add(frame);
                                             } catch (Exception ex) {
                                                 if (CommandUtils.isVerboseMode()) {
                                                     ex.printStackTrace();
@@ -128,10 +130,10 @@ public class ImageUtils {
                                             }
                                         }
                                     } else {
-                                        bufferData.getSecond().add(new ImageFrame(ImageIO.read(streamData)));
+                                        bufferData.getRight().add(new ImageFrame(ImageIO.read(streamData)));
                                     }
-                                    cachedImages.get(request.getFirst()).setSecond(bufferData);
-                                    cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
+                                    cachedImages.get(request.getLeft()).setMiddle(bufferData);
+                                    cachedImages.get(request.getLeft()).setRight(new ArrayList<>(bufferData.getRight().size()));
                                 }
                             } catch (Exception ex) {
                                 if (CommandUtils.isVerboseMode()) {
@@ -177,7 +179,7 @@ public class ImageUtils {
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final URL url) {
         try {
-            return getTextureFromUrl(textureName, new Pair<>(InputType.Url, url));
+            return getTextureFromUrl(textureName, Pair.of(InputType.Url, url));
         } catch (Exception ex) {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
@@ -195,7 +197,7 @@ public class ImageUtils {
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final File url) {
         try {
-            return getTextureFromUrl(textureName, new Pair<>(InputType.FileData, url));
+            return getTextureFromUrl(textureName, Pair.of(InputType.FileData, url));
         } catch (Exception ex) {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
@@ -222,7 +224,7 @@ public class ImageUtils {
             } else {
                 return getTextureFromUrl(
                         textureName,
-                        new Pair<>(StringUtils.isBase64(url.toString()).getFirst() ? InputType.ByteStream : InputType.FileStream, url.toString())
+                        Pair.of(StringUtils.isBase64(url.toString()).getLeft() ? InputType.ByteStream : InputType.FileStream, url.toString())
                 );
             }
         }
@@ -237,14 +239,14 @@ public class ImageUtils {
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final Pair<InputType, Object> stream) {
         synchronized (cachedImages) {
-            if (!cachedImages.containsKey(textureName) || !cachedImages.get(textureName).getFirst().equals(stream)) {
+            if (!cachedImages.containsKey(textureName) || !cachedImages.get(textureName).getLeft().equals(stream)) {
                 // Setup Initial data if not present (Or reset if the stream has changed)
                 //
                 // Note that the ResourceLocation needs to be
                 // initially null here for compatibility reasons
-                cachedImages.put(textureName, new Tuple<>(stream, new Pair<>(0, Lists.newArrayList()), null));
+                cachedImages.put(textureName, MutableTriple.of(stream, MutablePair.of(0, Lists.newArrayList()), null));
                 try {
-                    urlRequests.put(new Pair<>(textureName, stream));
+                    urlRequests.put(Pair.of(textureName, stream));
                 } catch (Exception ex) {
                     if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
@@ -252,24 +254,24 @@ public class ImageUtils {
                 }
             }
 
-            final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(textureName).getSecond();
+            final MutablePair<Integer, List<ImageFrame>> bufferData = cachedImages.get(textureName).getMiddle();
 
-            if (bufferData == null || bufferData.getSecond() == null || bufferData.getSecond().isEmpty()) {
+            if (bufferData == null || bufferData.getRight() == null || bufferData.getRight().isEmpty()) {
                 return new ResourceLocation("");
             } else if (textureName != null) {
-                final boolean shouldRepeat = textureName.endsWith(".gif") || stream.getSecond().toString().contains("gif");
-                final boolean doesContinue = bufferData.getFirst() < bufferData.getSecond().size() - 1;
+                final boolean shouldRepeat = textureName.endsWith(".gif") || stream.getRight().toString().contains("gif");
+                final boolean doesContinue = bufferData.getLeft() < bufferData.getRight().size() - 1;
 
-                final List<ResourceLocation> resources = cachedImages.get(textureName).getThird();
-                if (bufferData.getFirst() < resources.size()) {
-                    final ResourceLocation texLocation = resources.get(bufferData.getFirst());
-                    if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
+                final List<ResourceLocation> resources = cachedImages.get(textureName).getRight();
+                if (bufferData.getLeft() < resources.size()) {
+                    final ResourceLocation texLocation = resources.get(bufferData.getLeft());
+                    if (bufferData.getRight().get(bufferData.getLeft()).shouldRenderNext()) {
                         if (doesContinue) {
-                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(
+                            bufferData.getRight().get(bufferData.left += 1).setRenderTime(
                                     TimeUtils.getCurrentTime().toEpochMilli()
                             );
                         } else if (shouldRepeat) {
-                            bufferData.getSecond().get(bufferData.setFirst(0)).setRenderTime(
+                            bufferData.getRight().get(bufferData.left = 0).setRenderTime(
                                     TimeUtils.getCurrentTime().toEpochMilli()
                             );
                         }
@@ -277,15 +279,15 @@ public class ImageUtils {
                     return texLocation;
                 }
                 try {
-                    final DynamicTexture dynTexture = new DynamicTexture(bufferData.getSecond().get(bufferData.getFirst()).getImage());
-                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName.toLowerCase() + (shouldRepeat ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
-                    if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
+                    final DynamicTexture dynTexture = new DynamicTexture(bufferData.getRight().get(bufferData.getLeft()).getImage());
+                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName.toLowerCase() + (shouldRepeat ? "_" + cachedImages.get(textureName).getMiddle().getLeft() : ""), dynTexture);
+                    if (bufferData.getRight().get(bufferData.getLeft()).shouldRenderNext()) {
                         if (doesContinue) {
-                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(
+                            bufferData.getRight().get(bufferData.left += 1).setRenderTime(
                                     TimeUtils.getCurrentTime().toEpochMilli()
                             );
                         } else if (shouldRepeat) {
-                            bufferData.setFirst(0);
+                            bufferData.setLeft(0);
                         }
                     }
                     if (!resources.contains(cachedTexture)) {
@@ -312,7 +314,7 @@ public class ImageUtils {
      */
     public static boolean isExternalImage(final String input) {
         return !StringUtils.isNullOrEmpty(input) &&
-                (input.toLowerCase().startsWith("http") || StringUtils.isBase64(input).getFirst() || input.toLowerCase().startsWith("file://"));
+                (input.toLowerCase().startsWith("http") || StringUtils.isBase64(input).getLeft() || input.toLowerCase().startsWith("file://"));
     }
 
     /**

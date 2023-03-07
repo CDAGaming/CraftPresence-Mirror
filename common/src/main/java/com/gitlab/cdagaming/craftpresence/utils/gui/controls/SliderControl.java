@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import net.minecraft.client.Minecraft;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 
@@ -85,7 +85,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      */
     public SliderControl(int buttonId, Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString) {
-        super(buttonId, positionData.getFirst(), positionData.getSecond(), dimensions.getFirst(), dimensions.getSecond(), "");
+        super(buttonId, positionData.getLeft(), positionData.getRight(), dimensions.getLeft(), dimensions.getRight(), "");
 
         setSliderValue(startValue);
         this.minValue = minValue;
@@ -127,8 +127,8 @@ public class SliderControl extends ExtendedButtonControl {
      * @param events        The events to occur when this control is modified
      */
     public SliderControl(int buttonId, Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Pair<Runnable, Runnable> events) {
-        this(buttonId, positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, events.getFirst());
-        setOnHover(events.getSecond());
+        this(buttonId, positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, events.getLeft());
+        setOnHover(events.getRight());
     }
 
     /**
@@ -143,7 +143,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      */
     public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString) {
-        this(CraftPresence.GUIS.getNextIndex(), positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<>());
+        this(CraftPresence.GUIS.getNextIndex(), positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString);
     }
 
     /**
@@ -176,8 +176,8 @@ public class SliderControl extends ExtendedButtonControl {
      * @param events        The events to occur when this control is modified
      */
     public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Pair<Runnable, Runnable> events) {
-        this(positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, events.getFirst());
-        setOnHover(events.getSecond());
+        this(positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, events.getLeft());
+        setOnHover(events.getRight());
     }
 
     /**
@@ -192,9 +192,9 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      * @param events        The events to occur when this control is modified
      */
-    public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Tuple<Runnable, Runnable, Runnable> events) {
-        this(positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<>(events.getFirst(), events.getSecond()));
-        setOnSlide(events.getThird());
+    public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Triple<Runnable, Runnable, Runnable> events) {
+        this(positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, Pair.of(events.getLeft(), events.getMiddle()));
+        setOnSlide(events.getRight());
     }
 
     /**

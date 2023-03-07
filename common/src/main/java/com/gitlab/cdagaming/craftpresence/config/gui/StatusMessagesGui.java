@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Status;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -40,6 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.gui.GuiScreen;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
 
@@ -48,37 +48,37 @@ public class StatusMessagesGui extends PaginatedScreen {
     private final Status CONFIG;
     // nameTranslation, [configPath,commentTranslation]
     private final Map<String, Pair<String, Runnable>> eventMappings = ImmutableMap.<String, Pair<String, Runnable>>builder()
-            .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
+            .put("gui.config.name.status_messages.main_menu_message", Pair.of(
                     "mainMenuData", () -> CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                    ), this, true
-            )
+                            StringUtils.splitTextByNewLine(
+                                    ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
+                                            CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
+                            ), this, true
+                    )
             ))
-            .put("gui.config.name.status_messages.loading_message", new Pair<>(
+            .put("gui.config.name.status_messages.loading_message", Pair.of(
                     "loadingData", () -> CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                    ), this, true
-            )
+                            StringUtils.splitTextByNewLine(
+                                    ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
+                                            CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
+                            ), this, true
+                    )
             ))
-            .put("gui.config.name.status_messages.lan_message", new Pair<>(
+            .put("gui.config.name.status_messages.lan_message", Pair.of(
                     "lanData", () -> CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                    ), this, true
-            )
+                            StringUtils.splitTextByNewLine(
+                                    ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
+                                            CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
+                            ), this, true
+                    )
             ))
-            .put("gui.config.name.status_messages.single_player_message", new Pair<>(
+            .put("gui.config.name.status_messages.single_player_message", Pair.of(
                     "singleplayerData", () -> CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                    ), this, true
-            )
+                            StringUtils.splitTextByNewLine(
+                                    ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
+                                            CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
+                            ), this, true
+                    )
             ))
             .build();
 
@@ -109,7 +109,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                             entry.getKey(),
                             () -> CraftPresence.GUIS.openScreen(
                                     new DynamicEditorGui(
-                                            currentScreen, entry.getValue().getFirst(),
+                                            currentScreen, entry.getValue().getLeft(),
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing new data
                                                 screenInstance.defaultData = (ModuleData) CONFIG.getDefaults().getProperty(attributeName);
@@ -170,7 +170,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                             }
                                     )
                             ),
-                            entry.getValue().getSecond()
+                            entry.getValue().getRight()
                     ), startPage
             );
 

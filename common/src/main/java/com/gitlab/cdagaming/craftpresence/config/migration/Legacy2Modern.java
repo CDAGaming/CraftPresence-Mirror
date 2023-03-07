@@ -28,13 +28,13 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,7 +64,7 @@ public class Legacy2Modern implements DataMigrator {
     private final Predicate<String> IS_ENTITY_RIDING_MODULE = (e) -> e.equals("entityRidingMessages");
 
     // oldName -> newName:replaceCondition
-    private final List<Tuple<Pair<String, String>, Predicate<String>, Predicate<String>>> placeholderMappings = Arrays.asList(
+    private final List<Triple<Pair<String, String>, Predicate<String>, Predicate<String>>> placeholderMappings = Arrays.asList(
             generatePair("&DEFAULT&", "{general.icon}", IS_ICON),
             generatePair("&MAINMENU&", "{menu.message}", IS_TEXT),
             generatePair("&MAINMENU&", "{menu.icon}", IS_ICON),
@@ -355,10 +355,10 @@ public class Legacy2Modern implements DataMigrator {
                                 StringUtils.isValidBoolean(originalValue)) {
                             newValue = Boolean.parseBoolean(originalValue.toString());
                         } else if ((expectedClass == int.class || expectedClass == Integer.class) &&
-                                StringUtils.getValidInteger(originalValue).getFirst()) {
+                                StringUtils.getValidInteger(originalValue).getLeft()) {
                             final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(originalValue);
-                            if (boolData.getFirst()) {
-                                newValue = boolData.getSecond();
+                            if (boolData.getLeft()) {
+                                newValue = boolData.getRight();
                             }
                         } else if (currentValue instanceof Map) {
                             final String convertedString = StringUtils.removeMatches(StringUtils.getMatches("\\[([^\\s]+?)\\]", originalValue), null, 1);
@@ -389,12 +389,12 @@ public class Legacy2Modern implements DataMigrator {
                                         final String[] part = entry.split(splitCharacter);
                                         if (!StringUtils.isNullOrEmpty(part[0])) {
                                             if (expectedSecondaryClass == Pair.class) {
-                                                newData.put(part[0], new Pair<>(
+                                                newData.put(part[0], Pair.of(
                                                         part.length >= 2 ? process(part[1], originalName, "text") : null,
                                                         part.length >= 3 ? process(part[2], originalName, "icon") : null
                                                 ));
-                                            } else if (expectedSecondaryClass == Tuple.class) {
-                                                newData.put(part[0], new Tuple<>(
+                                            } else if (expectedSecondaryClass == Triple.class) {
+                                                newData.put(part[0], Triple.of(
                                                         part.length >= 2 ? process(part[1], originalName, "text") : null,
                                                         part.length >= 3 ? process(part[2], originalName, "text") : null,
                                                         part.length >= 4 ? process(part[3], originalName, "text") : null
@@ -456,12 +456,12 @@ public class Legacy2Modern implements DataMigrator {
     private String process(final String input, final String originalName, final String argumentType) {
         String result = input;
 
-        for (Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> entry : placeholderMappings) {
-            final Pair<String, String> replacer = entry.getFirst();
-            final String original = replacer.getFirst();
-            String newValue = replacer.getSecond();
-            final Predicate<String> typeCheck = entry.getSecond();
-            final Predicate<String> optionCheck = entry.getThird();
+        for (Triple<Pair<String, String>, Predicate<String>, Predicate<String>> entry : placeholderMappings) {
+            final Pair<String, String> replacer = entry.getLeft();
+            final String original = replacer.getLeft();
+            String newValue = replacer.getRight();
+            final Predicate<String> typeCheck = entry.getMiddle();
+            final Predicate<String> optionCheck = entry.getRight();
             if (typeCheck.test(argumentType) && optionCheck.test(originalName) && result.toLowerCase().contains(original.toLowerCase())) {
                 ModUtils.LOG.info("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue);
                 result = StringUtils.replaceAnyCase(result, original, newValue);
@@ -469,8 +469,8 @@ public class Legacy2Modern implements DataMigrator {
         }
 
         final Pair<String, List<String>> operatorMatches = StringUtils.getMatches("\\{[^{}]*}[|]\\{[^{}]*}", result);
-        if (!operatorMatches.getSecond().isEmpty()) {
-            for (String match : operatorMatches.getSecond()) {
+        if (!operatorMatches.getRight().isEmpty()) {
+            for (String match : operatorMatches.getRight()) {
                 final String[] split = match.split("\\|");
                 split[0] = split[0].replaceAll("[{}]", "");
                 split[1] = split[1].replaceAll("[{}]", "");
@@ -482,11 +482,11 @@ public class Legacy2Modern implements DataMigrator {
         return result;
     }
 
-    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, Predicate<String> typeCheck, Predicate<String> optionCheck) {
-        return new Tuple<>(new Pair<>(original, name), typeCheck, optionCheck);
+    private Triple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, Predicate<String> typeCheck, Predicate<String> optionCheck) {
+        return Triple.of(Pair.of(original, name), typeCheck, optionCheck);
     }
 
-    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, Predicate<String> typeCheck) {
+    private Triple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, Predicate<String> typeCheck) {
         return generatePair(original, name, typeCheck, (e) -> true);
     }
 }

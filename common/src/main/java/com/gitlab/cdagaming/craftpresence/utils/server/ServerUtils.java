@@ -29,8 +29,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
@@ -46,10 +44,13 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Server Utilities used to Parse Server Data and handle related RPC Events
@@ -112,7 +113,7 @@ public class ServerUtils implements Module {
     /**
      * The current World Time data
      */
-    private Pair<Long, Instant> worldTimeData = new Pair<>();
+    private Pair<Long, Instant> worldTimeData;
     /**
      * The Current Formatted World Time (24-hour Format), as a String
      */
@@ -157,11 +158,11 @@ public class ServerUtils implements Module {
      * Mapping storing the Current X, Y and Z Position of the Player in a World
      * Format: Position (X, Y, Z)
      */
-    private Tuple<Double, Double, Double> currentCoordinates = new Tuple<>(0.0D, 0.0D, 0.0D);
+    private Triple<Double, Double, Double> currentCoordinates;
     /**
      * Mapping storing the Current and Maximum Health the Player currently has in a World
      */
-    private Pair<Double, Double> currentHealth = new Pair<>(0.0D, 0.0D);
+    private Pair<Double, Double> currentHealth;
     /**
      * The Current Server Connection Data and Info
      */
@@ -205,8 +206,8 @@ public class ServerUtils implements Module {
         currentServer_Name = null;
         currentServerData = null;
         currentConnection = null;
-        currentCoordinates = new Tuple<>(0.0D, 0.0D, 0.0D);
-        currentHealth = new Pair<>(0.0D, 0.0D);
+        currentCoordinates = null;
+        currentHealth = null;
         currentDifficulty = null;
         currentWorldName = null;
         currentWeatherName = null;
@@ -214,7 +215,7 @@ public class ServerUtils implements Module {
         currentServerMessage = "";
         currentServerIcon = "";
         canUseEndpointIcon = false;
-        worldTimeData = new Pair<>();
+        worldTimeData = null;
         timeString24 = null;
         timeString12 = null;
         dayCount = 0L;
@@ -316,22 +317,22 @@ public class ServerUtils implements Module {
             // `player` Sub-Arguments
 
             // `player.position` Argument = Current Coordinates of Player
-            final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(
+            final Triple<Double, Double, Double> newCoordinates = Triple.of(
                     StringUtils.roundDouble(CraftPresence.player.posX, CraftPresence.CONFIG.advancedSettings.roundSize),
                     StringUtils.roundDouble(CraftPresence.player.posY, CraftPresence.CONFIG.advancedSettings.roundSize),
                     StringUtils.roundDouble(CraftPresence.player.posZ, CraftPresence.CONFIG.advancedSettings.roundSize)
             );
-            if (!newCoordinates.equals(currentCoordinates)) {
+            if (!Objects.equals(newCoordinates, currentCoordinates)) {
                 currentCoordinates = newCoordinates;
                 queuedForUpdate = true;
             }
 
             // 'player.health' Argument = Current and Maximum Health of Player
-            final Pair<Double, Double> newHealth = new Pair<>(
+            final Pair<Double, Double> newHealth = Pair.of(
                     StringUtils.roundDouble(CraftPresence.player.getHealth(), 0),
                     StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
             );
-            if (!newHealth.equals(currentHealth)) {
+            if (!Objects.equals(newHealth, currentHealth)) {
                 currentHealth = newHealth;
                 queuedForUpdate = true;
             }
@@ -349,8 +350,8 @@ public class ServerUtils implements Module {
 
             // `world.weather` Arguments = Current Weather Data of the World
             final Pair<String, Long> newWeatherData = EntityUtils.getWeather(CraftPresence.player);
-            final String newWeatherName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData.getFirst());
-            final Long newWeatherDuration = newWeatherData.getSecond();
+            final String newWeatherName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData.getLeft());
+            final Long newWeatherDuration = newWeatherData.getRight();
             if (!newWeatherName.equals(currentWeatherName)) {
                 currentWeatherName = newWeatherName;
                 queuedForUpdate = true;
@@ -371,10 +372,10 @@ public class ServerUtils implements Module {
 
             // 'world.time' Arguments = Current Time Data of the World
             final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime());
-            if (!newTimeData.equals(worldTimeData)) {
-                dayCount = newTimeData.getFirst();
-                timeString24 = TimeUtils.toString(newTimeData.getSecond(), "HH:mm");
-                timeString12 = TimeUtils.toString(newTimeData.getSecond(), "hh:mm a");
+            if (!Objects.equals(newTimeData, worldTimeData)) {
+                dayCount = newTimeData.getLeft();
+                timeString24 = TimeUtils.toString(newTimeData.getRight(), "HH:mm");
+                timeString12 = TimeUtils.toString(newTimeData.getRight(), "hh:mm a");
                 worldTimeData = newTimeData;
                 queuedForUpdate = true;
             }
@@ -431,14 +432,14 @@ public class ServerUtils implements Module {
      * @param secret The secret key to test against for validity
      */
     public void verifyAndJoin(final String secret) {
-        String[] boolParts = secret.split(";");
-        String[] stringParts = boolParts[0].split("-");
-        boolean containsValidClientID = StringUtils.elementExists(stringParts, 0) && (stringParts[0].length() >= 18 && StringUtils.getValidLong(stringParts[0]).getFirst());
-        boolean containsServerName = StringUtils.elementExists(boolParts, 1) && StringUtils.elementExists(stringParts, 1) && Boolean.parseBoolean(boolParts[1]);
-        boolean containsServerIP = StringUtils.elementExists(boolParts, 2) && StringUtils.elementExists(stringParts, 2) && Boolean.parseBoolean(boolParts[2]);
-        String serverName = containsServerName ? stringParts[1] : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-        String serverIP = containsServerIP ? stringParts[2] : "";
-        boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
+        final String[] boolParts = secret.split(";");
+        final String[] stringParts = boolParts[0].split("-");
+        final boolean containsValidClientID = StringUtils.elementExists(stringParts, 0) && (stringParts[0].length() >= 18 && StringUtils.getValidLong(stringParts[0]).getLeft());
+        final boolean containsServerName = StringUtils.elementExists(boolParts, 1) && StringUtils.elementExists(stringParts, 1) && Boolean.parseBoolean(boolParts[1]);
+        final boolean containsServerIP = StringUtils.elementExists(boolParts, 2) && StringUtils.elementExists(stringParts, 2) && Boolean.parseBoolean(boolParts[2]);
+        final String serverName = containsServerName ? stringParts[1] : CraftPresence.CONFIG.serverSettings.fallbackServerName;
+        final String serverIP = containsServerIP ? stringParts[2] : "";
+        final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
             if (CraftPresence.CONFIG.generalSettings.enableJoinRequests) {
@@ -477,12 +478,12 @@ public class ServerUtils implements Module {
         // Form General Argument Lists & Sub Argument Lists
         canUseEndpointIcon = false;
 
-        CraftPresence.CLIENT.syncArgument("player.position.x", currentCoordinates.getFirst());
-        CraftPresence.CLIENT.syncArgument("player.position.y", currentCoordinates.getSecond());
-        CraftPresence.CLIENT.syncArgument("player.position.z", currentCoordinates.getThird());
+        CraftPresence.CLIENT.syncArgument("player.position.x", currentCoordinates.getLeft());
+        CraftPresence.CLIENT.syncArgument("player.position.y", currentCoordinates.getMiddle());
+        CraftPresence.CLIENT.syncArgument("player.position.z", currentCoordinates.getRight());
 
-        CraftPresence.CLIENT.syncArgument("player.health.current", currentHealth.getFirst());
-        CraftPresence.CLIENT.syncArgument("player.health.max", currentHealth.getSecond());
+        CraftPresence.CLIENT.syncArgument("player.health.current", currentHealth.getLeft());
+        CraftPresence.CLIENT.syncArgument("player.health.max", currentHealth.getRight());
 
         // World Data Arguments
         CraftPresence.CLIENT.syncArgument("world.difficulty", StringUtils.getOrDefault(currentDifficulty));

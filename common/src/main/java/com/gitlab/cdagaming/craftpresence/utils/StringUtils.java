@@ -25,8 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.integrations.FieldReflectionUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -34,6 +32,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -342,7 +342,7 @@ public class StringUtils {
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final Object original, final int flags) {
-        return original != null ? getMatches(regexValue, original.toString(), flags) : new Pair<>("", Lists.newArrayList());
+        return original != null ? getMatches(regexValue, original.toString(), flags) : Pair.of("", Lists.newArrayList());
     }
 
     /**
@@ -376,7 +376,7 @@ public class StringUtils {
             }
         }
 
-        return new Pair<>(original, matches);
+        return Pair.of(original, matches);
     }
 
     /**
@@ -402,8 +402,8 @@ public class StringUtils {
         String finalString = "";
 
         if (matchData != null) {
-            finalString = matchData.getFirst();
-            final List<String> matchList = matchData.getSecond();
+            finalString = matchData.getLeft();
+            final List<String> matchList = matchData.getRight();
 
             if (!matchList.isEmpty()) {
                 int foundMatches = 0;
@@ -417,7 +417,7 @@ public class StringUtils {
                         for (Pair<String, String> parsedArgument : parsedMatchData) {
                             // If found a matching argument to the match, and the parsed argument is null
                             // Remove the match without counting it as a found match
-                            if (parsedArgument.getFirst().equalsIgnoreCase(match) && isNullOrEmpty(parsedArgument.getSecond())) {
+                            if (parsedArgument.getLeft().equalsIgnoreCase(match) && isNullOrEmpty(parsedArgument.getRight())) {
                                 finalString = finalString.replaceFirst(match, "");
                                 alreadyRemoved = true;
                                 break;
@@ -546,7 +546,7 @@ public class StringUtils {
      * @return {@link Boolean#TRUE} if Entry is classified as a valid Color Code
      */
     public static boolean isValidColorCode(final String entry) {
-        return !isNullOrEmpty(entry) && ((entry.startsWith("#") || entry.length() == 6) || entry.startsWith("0x") || getValidInteger(entry).getFirst());
+        return !isNullOrEmpty(entry) && ((entry.startsWith("#") || entry.length() == 6) || entry.startsWith("0x") || getValidInteger(entry).getLeft());
     }
 
     /**
@@ -556,7 +556,7 @@ public class StringUtils {
      * @return A Pair with the format of isValid:parsedIntegerIfTrue
      */
     public static Pair<Boolean, Integer> getValidInteger(final Object entry) {
-        return entry != null ? getValidInteger(entry.toString()) : new Pair<>(false, 0);
+        return entry != null ? getValidInteger(entry.toString()) : Pair.of(false, 0);
     }
 
     /**
@@ -566,20 +566,14 @@ public class StringUtils {
      * @return A Pair with the format of isValid:parsedIntegerIfTrue
      */
     public static Pair<Boolean, Integer> getValidInteger(final String entry) {
-        final Pair<Boolean, Integer> finalSet = new Pair<>();
-
         if (!isNullOrEmpty(entry)) {
             try {
-                finalSet.setSecond(Integer.parseInt(entry));
-                finalSet.setFirst(true);
-            } catch (Exception ex) {
-                finalSet.setFirst(false);
+                return Pair.of(true, Integer.parseInt(entry));
+            } catch (Exception ignored) {
             }
-        } else {
-            finalSet.setFirst(false);
         }
 
-        return finalSet;
+        return Pair.of(false, 0);
     }
 
     /**
@@ -589,20 +583,13 @@ public class StringUtils {
      * @return A Pair with the format of isValid:parsedLongIfTrue
      */
     public static Pair<Boolean, Long> getValidLong(final String entry) {
-        final Pair<Boolean, Long> finalSet = new Pair<>();
-
         if (!isNullOrEmpty(entry)) {
             try {
-                finalSet.setSecond(Long.parseLong(entry));
-                finalSet.setFirst(true);
-            } catch (Exception ex) {
-                finalSet.setFirst(false);
+                return Pair.of(true, Long.parseLong(entry));
+            } catch (Exception ignored) {
             }
-        } else {
-            finalSet.setFirst(false);
         }
-
-        return finalSet;
+        return Pair.of(false, 0L);
     }
 
     /**
@@ -719,9 +706,8 @@ public class StringUtils {
      * @param original The original string
      * @return Base64 data in the format of isBase64:imageId:formattedImageString
      */
-    public static Tuple<Boolean, String, String> isBase64(final String original) {
+    public static Triple<Boolean, String, String> isBase64(final String original) {
         String formattedKey = original, imageIdentifier = "";
-        final Tuple<Boolean, String, String> finalData = new Tuple<>(false, imageIdentifier, formattedKey);
 
         if (!isNullOrEmpty(formattedKey)) {
             if (formattedKey.contains(",")) {
@@ -729,11 +715,13 @@ public class StringUtils {
                 imageIdentifier = splitData[0];
                 formattedKey = splitData[1];
             }
-            finalData.setFirst(BASE64_PATTERN.matcher(imageIdentifier + "," + formattedKey).find());
-            finalData.setSecond(imageIdentifier);
-            finalData.setThird(formattedKey);
+            return Triple.of(
+                    BASE64_PATTERN.matcher(imageIdentifier + "," + formattedKey).find(),
+                    imageIdentifier,
+                    formattedKey
+            );
         }
-        return finalData;
+        return Triple.of(false, imageIdentifier, formattedKey);
     }
 
     /**
@@ -1272,8 +1260,8 @@ public class StringUtils {
      */
     public static Object getField(final Class<?> classToAccess, final Object instance, final String... fieldNames) {
         final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, fieldNames);
-        if (result.getFirst()) {
-            return result.getSecond().getValue(instance);
+        if (result.getLeft()) {
+            return result.getRight().getValue(instance);
         } else {
             return null;
         }
@@ -1323,16 +1311,13 @@ public class StringUtils {
      */
     public static Pair<Boolean, FieldReflectionUtils.ClassFields.Field> getValidField(final Class<?> classToAccess, final String... fieldNames) {
         final FieldReflectionUtils.ClassFields classFields = FieldReflectionUtils.ofClass(classToAccess);
-        final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = new Pair<>(false, null);
         for (String fieldName : fieldNames) {
             try {
                 final FieldReflectionUtils.ClassFields.Field lookupField = classFields.getUntypedField(
                         FieldReflectionUtils.LookupType.DECLARED, fieldName
                 );
                 if (lookupField != null) {
-                    result.setFirst(true);
-                    result.setSecond(lookupField);
-                    break;
+                    return Pair.of(true, lookupField);
                 }
             } catch (Throwable ex) {
                 if (CommandUtils.isVerboseMode()) {
@@ -1340,7 +1325,7 @@ public class StringUtils {
                 }
             }
         }
-        return result;
+        return Pair.of(false, null);
     }
 
     /**
@@ -1355,7 +1340,7 @@ public class StringUtils {
         if (foundClass != null) {
             return getValidField(foundClass, fieldNames);
         }
-        return new Pair<>(false, null);
+        return Pair.of(false, null);
     }
 
     /**
@@ -1368,9 +1353,9 @@ public class StringUtils {
     @SafeVarargs
     public static void updateField(final Class<?> classToAccess, final Object instance, final Pair<String, Object>... fieldData) {
         for (Pair<String, Object> currentData : fieldData) {
-            final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, currentData.getFirst());
-            if (result.getFirst()) {
-                result.getSecond().setValue(instance, currentData.getSecond());
+            final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, currentData.getLeft());
+            if (result.getLeft()) {
+                result.getRight().setValue(instance, currentData.getRight());
                 if (CommandUtils.isVerboseMode()) {
                     ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.update.dynamic", currentData.toString(), classToAccess.getName()));
                 }
@@ -1429,12 +1414,12 @@ public class StringUtils {
     public static Map<String, Object> executeMethod(final Class<?> classToAccess, final Object instance, final Pair<String, Pair<Object[], Class<?>[]>>... methodData) {
         final Map<String, Object> results = Maps.newHashMap();
         for (Pair<String, Pair<Object[], Class<?>[]>> methodInstance : methodData) {
-            results.put(methodInstance.getFirst(), executeMethod(
+            results.put(methodInstance.getLeft(), executeMethod(
                     classToAccess,
                     instance,
-                    methodInstance.getFirst(),
-                    methodInstance.getSecond().getSecond(),
-                    methodInstance.getSecond().getFirst()
+                    methodInstance.getLeft(),
+                    methodInstance.getRight().getRight(),
+                    methodInstance.getRight().getLeft()
             ));
         }
         return results;

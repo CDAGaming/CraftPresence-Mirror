@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
@@ -38,6 +37,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -149,9 +149,9 @@ public class CraftPresence {
             if (ModUtils.UPDATER.isInvalidVersion) {
                 // If the Updater found our version to be an invalid one
                 // Then replace the Version ID, Name, and Type
-                StringUtils.updateField(ModUtils.class, null, new Pair<>("VERSION_ID", "v" + ModUtils.UPDATER.targetVersion));
-                StringUtils.updateField(ModUtils.class, null, new Pair<>("VERSION_TYPE", ModUtils.UPDATER.currentState.getDisplayName()));
-                StringUtils.updateField(ModUtils.class, null, new Pair<>("NAME", CraftPresence.class.getSimpleName()));
+                StringUtils.updateField(ModUtils.class, null, Pair.of("VERSION_ID", "v" + ModUtils.UPDATER.targetVersion));
+                StringUtils.updateField(ModUtils.class, null, Pair.of("VERSION_TYPE", ModUtils.UPDATER.currentState.getDisplayName()));
+                StringUtils.updateField(ModUtils.class, null, Pair.of("NAME", CraftPresence.class.getSimpleName()));
 
                 ModUtils.UPDATER.currentVersion = ModUtils.UPDATER.targetVersion;
                 ModUtils.UPDATER.isInvalidVersion = false;

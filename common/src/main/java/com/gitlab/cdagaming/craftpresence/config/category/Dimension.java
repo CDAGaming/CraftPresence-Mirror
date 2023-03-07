@@ -27,8 +27,8 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -64,6 +64,6 @@ public class Dimension extends Module implements Serializable {
 
     @Override
     public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(Dimension.class, this, new Pair<>(name, value));
+        StringUtils.updateField(Dimension.class, this, Pair.of(name, value));
     }
 }

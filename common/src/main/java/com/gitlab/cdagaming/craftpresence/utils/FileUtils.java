@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
@@ -35,6 +34,8 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -314,19 +315,19 @@ public class FileUtils {
             sourceData.addAll(getModClassNames());
         }
 
-        Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, Lists.newArrayList());
+        MutablePair<Boolean, List<Class<?>>> subClassData = MutablePair.of(false, Lists.newArrayList());
         for (Class<?> loadedInstance : getClasses(sourceData)) {
             for (Class<?> searchClass : searchList) {
-                subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getSecond());
+                subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getRight());
 
-                if (subClassData.getFirst()) {
+                if (subClassData.getLeft()) {
                     // If superclass data was found, add the scanned classes
                     // as well as the original class
                     if (!matchingClasses.contains(loadedInstance)) {
                         matchingClasses.add(loadedInstance);
                     }
 
-                    for (Class<?> subClassInfo : subClassData.getSecond()) {
+                    for (Class<?> subClassInfo : subClassData.getRight()) {
                         if (!matchingClasses.contains(subClassInfo)) {
                             matchingClasses.add(subClassInfo);
                         }
@@ -335,7 +336,7 @@ public class FileUtils {
                     break;
                 } else {
                     // If no superclass data found, reset for next data
-                    subClassData = new Pair<>(false, Lists.newArrayList());
+                    subClassData = MutablePair.of(false, Lists.newArrayList());
                 }
             }
         }
@@ -351,32 +352,32 @@ public class FileUtils {
      * @param scannedClasses The class hierarchy of scanned data
      * @return A pair with the format of isSubclassOf:scannedClasses
      */
-    protected static Pair<Boolean, List<Class<?>>> isSubclassOf(final Class<?> originalClass, final Class<?> superClass, final List<Class<?>> scannedClasses) {
+    protected static MutablePair<Boolean, List<Class<?>>> isSubclassOf(final Class<?> originalClass, final Class<?> superClass, final List<Class<?>> scannedClasses) {
         if (originalClass == null || superClass == null) {
             // Top of hierarchy, or no super class defined
-            return new Pair<>(false, scannedClasses);
+            return MutablePair.of(false, scannedClasses);
         } else if (originalClass.equals(superClass)) {
-            return new Pair<>(true, scannedClasses);
+            return MutablePair.of(true, scannedClasses);
         } else {
             // Attempt to see if things match with their deobfuscated names
             final String className = MappingUtils.getCanonicalName(originalClass);
             final String superClassName = MappingUtils.getCanonicalName(superClass);
             if (className.equals(superClassName)) {
-                return new Pair<>(true, scannedClasses);
+                return MutablePair.of(true, scannedClasses);
             } else {
                 // try the next level up the hierarchy and add this class to scanned history.
                 scannedClasses.add(originalClass);
                 final Pair<Boolean, List<Class<?>>> subClassInfo = isSubclassOf(originalClass.getSuperclass(), superClass, scannedClasses);
 
-                if (!subClassInfo.getFirst() && originalClass.getInterfaces() != null) {
+                if (!subClassInfo.getLeft() && originalClass.getInterfaces() != null) {
                     for (final Class<?> inter : originalClass.getInterfaces()) {
-                        if (isSubclassOf(inter, superClass, scannedClasses).getFirst()) {
-                            return new Pair<>(true, scannedClasses);
+                        if (isSubclassOf(inter, superClass, scannedClasses).getLeft()) {
+                            return MutablePair.of(true, scannedClasses);
                         }
                     }
                 }
 
-                return new Pair<>(subClassInfo.getFirst(), scannedClasses);
+                return MutablePair.of(subClassInfo.getLeft(), scannedClasses);
             }
         }
     }

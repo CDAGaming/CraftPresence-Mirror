@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -164,7 +164,7 @@ public class TimeUtils {
 
         final long millis = ((hours * 60L + minutes) * 60L + seconds) * 1000L;
 
-        return new Pair<>(days, Instant.ofEpochMilli(millis));
+        return Pair.of(days, Instant.ofEpochMilli(millis));
     }
 
     /**

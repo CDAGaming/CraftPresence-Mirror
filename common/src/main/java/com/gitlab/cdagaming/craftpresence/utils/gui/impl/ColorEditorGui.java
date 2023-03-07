@@ -26,8 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -35,6 +33,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.io.File;
@@ -89,12 +89,12 @@ public class ColorEditorGui extends PaginatedScreen {
 
         redText = addControl(
                 new SliderControl(
-                        new Pair<>(calc1, CraftPresence.GUIS.getButtonY(2)),
-                        new Pair<>(180, 20),
+                        Pair.of(calc1, CraftPresence.GUIS.getButtonY(2)),
+                        Pair.of(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         redTitle,
-                        new Tuple<>(
+                        Triple.of(
                                 this::syncValues,
                                 () -> {
                                 },
@@ -104,12 +104,12 @@ public class ColorEditorGui extends PaginatedScreen {
         );
         greenText = addControl(
                 new SliderControl(
-                        new Pair<>(calc2, CraftPresence.GUIS.getButtonY(2)),
-                        new Pair<>(180, 20),
+                        Pair.of(calc2, CraftPresence.GUIS.getButtonY(2)),
+                        Pair.of(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         greenTitle,
-                        new Tuple<>(
+                        Triple.of(
                                 this::syncValues,
                                 () -> {
                                 },
@@ -119,12 +119,12 @@ public class ColorEditorGui extends PaginatedScreen {
         );
         blueText = addControl(
                 new SliderControl(
-                        new Pair<>(calc1, CraftPresence.GUIS.getButtonY(3)),
-                        new Pair<>(180, 20),
+                        Pair.of(calc1, CraftPresence.GUIS.getButtonY(3)),
+                        Pair.of(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         blueTitle,
-                        new Tuple<>(
+                        Triple.of(
                                 this::syncValues,
                                 () -> {
                                 },
@@ -134,12 +134,12 @@ public class ColorEditorGui extends PaginatedScreen {
         );
         alphaText = addControl(
                 new SliderControl(
-                        new Pair<>(calc2, CraftPresence.GUIS.getButtonY(3)),
-                        new Pair<>(180, 20),
+                        Pair.of(calc2, CraftPresence.GUIS.getButtonY(3)),
+                        Pair.of(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
                         alphaTitle,
-                        new Tuple<>(
+                        Triple.of(
                                 this::syncValues,
                                 () -> {
                                 },
@@ -290,7 +290,7 @@ public class ColorEditorGui extends PaginatedScreen {
                         localValue = localColor.getRGB();
                     } catch (Exception ignored) {
                     }
-                } else if (StringUtils.getValidInteger(hexText.getControlMessage()).getFirst()) {
+                } else if (StringUtils.getValidInteger(hexText.getControlMessage()).getLeft()) {
                     localValue = Integer.decode(hexText.getControlMessage());
                 }
             }

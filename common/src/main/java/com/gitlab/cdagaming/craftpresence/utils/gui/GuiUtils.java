@@ -29,8 +29,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
@@ -48,6 +46,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -135,16 +135,16 @@ public class GuiUtils implements Module {
      * @param wrapWidth    The target width per line, to wrap the input around
      * @return The converted and wrapped version of the original input
      */
-    public static String wrapFormattedStringToWidth(final FontRenderer fontRenderer, String stringInput, int wrapWidth) {
-        int stringSizeToWidth = sizeStringToWidth(fontRenderer, stringInput, wrapWidth);
+    public static String wrapFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
+        final int stringSizeToWidth = sizeStringToWidth(fontRenderer, stringInput, wrapWidth);
 
         if (stringInput.length() <= stringSizeToWidth) {
             return stringInput;
         } else {
-            String subString = stringInput.substring(0, stringSizeToWidth);
-            char currentCharacter = stringInput.charAt(stringSizeToWidth);
-            boolean flag = Character.isSpaceChar(currentCharacter) || currentCharacter == '\n';
-            String s1 = StringUtils.getFormatFromString(subString) + stringInput.substring(stringSizeToWidth + (flag ? 1 : 0));
+            final String subString = stringInput.substring(0, stringSizeToWidth);
+            final char currentCharacter = stringInput.charAt(stringSizeToWidth);
+            final boolean flag = Character.isSpaceChar(currentCharacter) || currentCharacter == '\n';
+            final String s1 = StringUtils.getFormatFromString(subString) + stringInput.substring(stringSizeToWidth + (flag ? 1 : 0));
             return subString + "\n" + wrapFormattedStringToWidth(fontRenderer, s1, wrapWidth);
         }
     }
@@ -157,8 +157,8 @@ public class GuiUtils implements Module {
      * @param wrapWidth    The target width to wrap within
      * @return The expected wrapped width the String should be
      */
-    public static int sizeStringToWidth(final FontRenderer fontRenderer, String stringEntry, int wrapWidth) {
-        int stringLength = stringEntry.length();
+    public static int sizeStringToWidth(final FontRenderer fontRenderer, final String stringEntry, final int wrapWidth) {
+        final int stringLength = stringEntry.length();
         int charWidth = 0;
         int currentLine = 0;
         int currentIndex = -1;
@@ -194,7 +194,6 @@ public class GuiUtils implements Module {
             }
         }
 
-
         return currentLine != stringLength && currentIndex != -1 && currentIndex < currentLine ? currentIndex : currentLine;
     }
 
@@ -209,12 +208,12 @@ public class GuiUtils implements Module {
      * @param height The Height of the Object
      * @param zLevel The Z Level Position of the Object
      */
-    public void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, double zLevel) {
+    public void drawTexturedModalRect(final int x, final int y, final int u, final int v, final int width, final int height, final double zLevel) {
         final float uScale = 1f / 0x100;
         final float vScale = 1f / 0x100;
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         buffer.pos(x, y + height, zLevel).tex(u * uScale, ((v + height) * vScale)).endVertex();
         buffer.pos(x + width, y + height, zLevel).tex((u + width) * uScale, ((v + height) * vScale)).endVertex();
@@ -395,7 +394,7 @@ public class GuiUtils implements Module {
         final List<Class<?>> searchClasses = Lists.newArrayList(GuiScreen.class, GuiContainer.class);
 
         for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
-            String screenName = MappingUtils.getClassName(classObj);
+            final String screenName = MappingUtils.getClassName(classObj);
             if (!GUI_NAMES.contains(screenName)) {
                 GUI_NAMES.add(screenName);
             }
@@ -471,13 +470,13 @@ public class GuiUtils implements Module {
      * @param fontRenderer   The font renderer to use to render the String
      * @param withBackground Whether a background should display around and under the String, like a tooltip
      */
-    public void drawMultiLineString(final List<String> textToInput, int posX, int posY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer fontRenderer, boolean withBackground) {
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int screenWidth, final int screenHeight, final int maxTextWidth, final FontRenderer fontRenderer, final boolean withBackground) {
         if (CraftPresence.CONFIG.advancedSettings.renderTooltips && !ModUtils.forceBlockTooltipRendering && !textToInput.isEmpty() && fontRenderer != null) {
             List<String> textLines = textToInput;
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
-                int textLineWidth = fontRenderer.getStringWidth(textLine);
+                final int textLineWidth = fontRenderer.getStringWidth(textLine);
 
                 if (textLineWidth > tooltipTextWidth) {
                     tooltipTextWidth = textLineWidth;
@@ -507,11 +506,10 @@ public class GuiUtils implements Module {
             }
 
             if (needsWrap) {
+                final List<String> wrappedTextLines = Lists.newArrayList();
                 int wrappedTooltipWidth = 0;
-                List<String> wrappedTextLines = Lists.newArrayList();
                 for (int i = 0; i < textLines.size(); i++) {
-                    String textLine = textLines.get(i);
-                    List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLine, tooltipTextWidth));
+                    final List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLines.get(i), tooltipTextWidth));
                     if (i == 0) {
                         titleLinesCount = wrappedLine.size();
                     }
@@ -620,8 +618,8 @@ public class GuiUtils implements Module {
                     }
 
                     // Draw with Colors
-                    int borderColorCode = (borderColor.startsWith("#") ? StringUtils.getColorFromHex(borderColor).getRGB() : Integer.parseInt(borderColor));
-                    String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
+                    final int borderColorCode = (borderColor.startsWith("#") ? StringUtils.getColorFromHex(borderColor).getRGB() : Integer.parseInt(borderColor));
+                    final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
 
                     drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColor, borderColorEnd);
                     drawGradientRect(zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColor, borderColorEnd);
@@ -660,7 +658,7 @@ public class GuiUtils implements Module {
             }
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
-                String line = textLines.get(lineNumber);
+                final String line = textLines.get(lineNumber);
                 fontRenderer.drawStringWithShadow(line, tooltipX, tooltipY, -1);
 
                 if (lineNumber + 1 == titleLinesCount) {
@@ -685,7 +683,7 @@ public class GuiUtils implements Module {
      * @param screenInstance The screen instance to use to render the String
      * @param withBackground Whether a background should display around and under the String, like a tooltip
      */
-    public void drawMultiLineString(final List<String> textToInput, int posX, int posY, ExtendedScreen screenInstance, boolean withBackground) {
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final ExtendedScreen screenInstance, final boolean withBackground) {
         drawMultiLineString(textToInput,
                 posX, posY,
                 screenInstance.getScreenWidth(), screenInstance.getScreenHeight(),
@@ -702,7 +700,7 @@ public class GuiUtils implements Module {
      * @param screenInstance The screen instance to use to render the String
      * @param withBackground Whether a background should display around and under the String, like a tooltip
      */
-    public void drawMultiLineString(final List<String> textToInput, ExtendedScreen screenInstance, boolean withBackground) {
+    public void drawMultiLineString(final List<String> textToInput, final ExtendedScreen screenInstance, final boolean withBackground) {
         drawMultiLineString(textToInput, screenInstance.getMouseX(), screenInstance.getMouseY(), screenInstance, withBackground);
     }
 
@@ -717,7 +715,7 @@ public class GuiUtils implements Module {
         if (CraftPresence.instance.world != null) {
             drawGradientRect(300, 0, 0, width, height, "-1072689136", "-804253680");
         } else {
-            String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
+            final String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
             ResourceLocation texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
@@ -759,7 +757,7 @@ public class GuiUtils implements Module {
      * @param zLevel      The Z level position for the slider to render at
      * @param texLocation The game texture to render the slider as
      */
-    public void renderSlider(int x, int y, int u, int v, int width, int height, double zLevel, ResourceLocation texLocation) {
+    public void renderSlider(final int x, final int y, final int u, final int v, final int width, final int height, final double zLevel, final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
                 CraftPresence.instance.getTextureManager().bindTexture(texLocation);
@@ -783,7 +781,7 @@ public class GuiUtils implements Module {
      * @param zLevel      The Z level position for the button to render at
      * @param texLocation The game texture to render the button as
      */
-    public void renderButton(int x, int y, int width, int height, int hoverState, double zLevel, ResourceLocation texLocation) {
+    public void renderButton(final int x, final int y, final int width, final int height, final int hoverState, final double zLevel, final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
                 CraftPresence.instance.getTextureManager().bindTexture(texLocation);
@@ -814,7 +812,7 @@ public class GuiUtils implements Module {
      * @param tint        The Tinting Level of the Object
      * @param texLocation The game texture to render the object as
      */
-    public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, ResourceLocation texLocation) {
+    public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final ResourceLocation texLocation) {
         drawTextureRect(zLevel, xPos, yPos, width, height, tint, 32.0D, 32.0D, false, texLocation);
     }
 
@@ -832,7 +830,7 @@ public class GuiUtils implements Module {
      * @param shouldBeDark  Whether the Texture should display in a darker format
      * @param texLocation   The game texture to render the object as
      */
-    public void drawTextureRect(double zLevel, double xPos, double yPos, double width, double height, double tint, double widthDivider, double heightDivider, boolean shouldBeDark, ResourceLocation texLocation) {
+    public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final double widthDivider, final double heightDivider, final boolean shouldBeDark, final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
                 CraftPresence.instance.getTextureManager().bindTexture(texLocation);
@@ -844,15 +842,15 @@ public class GuiUtils implements Module {
         GL11.glDisable(GL11.GL_FOG);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        final Tuple<Integer, Integer, Integer> rgbData = new Tuple<>(shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255);
+        final Triple<Integer, Integer, Integer> rgbData = Triple.of(shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255);
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        buffer.pos(xPos, yPos + height, zLevel).tex(0.0D, (height / heightDivider + tint)).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
-        buffer.pos(xPos + width, yPos + height, zLevel).tex((width / widthDivider), (height / heightDivider + tint)).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
-        buffer.pos(xPos + width, yPos, zLevel).tex((width / widthDivider), tint).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
-        buffer.pos(xPos, yPos, zLevel).tex(0.0D, tint).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
+        buffer.pos(xPos, yPos + height, zLevel).tex(0.0D, (height / heightDivider + tint)).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
+        buffer.pos(xPos + width, yPos + height, zLevel).tex((width / widthDivider), (height / heightDivider + tint)).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
+        buffer.pos(xPos + width, yPos, zLevel).tex((width / widthDivider), tint).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
+        buffer.pos(xPos, yPos, zLevel).tex(0.0D, tint).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
         tessellator.draw();
     }
 
@@ -867,7 +865,7 @@ public class GuiUtils implements Module {
      * @param startColorCode The Starting Hexadecimal or RGBA Color Code
      * @param endColorCode   The ending Hexadecimal or RGBA Color Code
      */
-    public void drawGradientRect(float zLevel, double left, double top, double right, double bottom, String startColorCode, String endColorCode) {
+    public void drawGradientRect(final float zLevel, final double left, final double top, final double right, final double bottom, final String startColorCode, final String endColorCode) {
         Color startColorObj = null, endColorObj = null;
         int startColor = 0xFFFFFF, endColor = 0xFFFFFF;
         float startAlpha, startRed, startGreen, startBlue,
@@ -879,19 +877,19 @@ public class GuiUtils implements Module {
                 endColorObj = (!StringUtils.isNullOrEmpty(endColorCode) && endColorCode.startsWith("#")) ? StringUtils.getColorFromHex(endColorCode) : startColorObj;
             } else {
                 // Determine if Start Color Code is a Valid Number
-                Pair<Boolean, Integer> startColorData = StringUtils.getValidInteger(startColorCode),
+                final Pair<Boolean, Integer> startColorData = StringUtils.getValidInteger(startColorCode),
                         endColorData = StringUtils.getValidInteger(endColorCode);
 
                 // Check and ensure that at least one of the Color Codes are correct
-                if (startColorData.getFirst() || endColorData.getFirst()) {
-                    startColor = startColorData.getFirst() ? startColorData.getSecond() : endColor;
-                    endColor = endColorData.getFirst() ? endColorData.getSecond() : startColor;
+                if (startColorData.getLeft() || endColorData.getLeft()) {
+                    startColor = startColorData.getLeft() ? startColorData.getRight() : endColor;
+                    endColor = endColorData.getLeft() ? endColorData.getRight() : startColor;
                 }
             }
         }
 
-        int startColorInstance = startColorObj != null ? startColorObj.getRGB() : startColor;
-        int endColorInstance = endColorObj != null ? endColorObj.getRGB() : endColor;
+        final int startColorInstance = startColorObj != null ? startColorObj.getRGB() : startColor;
+        final int endColorInstance = endColorObj != null ? endColorObj.getRGB() : endColor;
 
         startAlpha = (startColorInstance >> 24 & 255) / 255.0F;
         startRed = (startColorInstance >> 16 & 255) / 255.0F;
@@ -910,8 +908,8 @@ public class GuiUtils implements Module {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glShadeModel(GL11.GL_SMOOTH);
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
         buffer.pos(right, top, zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
         buffer.pos(left, top, zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
@@ -938,8 +936,8 @@ public class GuiUtils implements Module {
      * @param zLevel             The Z Level position of the Object
      * @param texLocation        The game texture to render the object as
      */
-    public void drawContinuousTexturedBox(Pair<Integer, Integer> positionData, Pair<Integer, Integer> uVLevels, Pair<Integer, Integer> screenDimensions, Pair<Integer, Integer> textureDimensions,
-                                          Pair<Integer, Integer> verticalBorderData, Pair<Integer, Integer> sideBorderData, double zLevel, ResourceLocation texLocation) {
+    public void drawContinuousTexturedBox(final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> uVLevels, final Pair<Integer, Integer> screenDimensions, final Pair<Integer, Integer> textureDimensions,
+                                          final Pair<Integer, Integer> verticalBorderData, final Pair<Integer, Integer> sideBorderData, final double zLevel, final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
                 CraftPresence.instance.getTextureManager().bindTexture(texLocation);
@@ -950,31 +948,31 @@ public class GuiUtils implements Module {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        int x = positionData.getFirst();
-        int y = positionData.getSecond();
+        final int x = positionData.getLeft();
+        final int y = positionData.getRight();
 
-        int u = uVLevels.getFirst();
-        int v = uVLevels.getSecond();
+        final int u = uVLevels.getLeft();
+        final int v = uVLevels.getRight();
 
-        int width = screenDimensions.getFirst();
-        int height = screenDimensions.getSecond();
+        final int width = screenDimensions.getLeft();
+        final int height = screenDimensions.getRight();
 
-        int textureWidth = textureDimensions.getFirst();
-        int textureHeight = textureDimensions.getSecond();
+        final int textureWidth = textureDimensions.getLeft();
+        final int textureHeight = textureDimensions.getRight();
 
-        int topBorder = verticalBorderData.getFirst();
-        int bottomBorder = verticalBorderData.getSecond();
-        int leftBorder = sideBorderData.getFirst();
-        int rightBorder = sideBorderData.getSecond();
+        final int topBorder = verticalBorderData.getLeft();
+        final int bottomBorder = verticalBorderData.getRight();
+        final int leftBorder = sideBorderData.getLeft();
+        final int rightBorder = sideBorderData.getRight();
 
-        int fillerWidth = textureWidth - leftBorder - rightBorder;
-        int fillerHeight = textureHeight - topBorder - bottomBorder;
-        int canvasWidth = width - leftBorder - rightBorder;
-        int canvasHeight = height - topBorder - bottomBorder;
-        int xPasses = canvasWidth / fillerWidth;
-        int remainderWidth = canvasWidth % fillerWidth;
-        int yPasses = canvasHeight / fillerHeight;
-        int remainderHeight = canvasHeight % fillerHeight;
+        final int fillerWidth = textureWidth - leftBorder - rightBorder;
+        final int fillerHeight = textureHeight - topBorder - bottomBorder;
+        final int canvasWidth = width - leftBorder - rightBorder;
+        final int canvasHeight = height - topBorder - bottomBorder;
+        final int xPasses = canvasWidth / fillerWidth;
+        final int remainderWidth = canvasWidth % fillerWidth;
+        final int yPasses = canvasHeight / fillerHeight;
+        final int remainderHeight = canvasHeight % fillerHeight;
 
         // Draw Borders
         // Top Left
