@@ -304,7 +304,7 @@
   "craftpresence.placeholders.world.name.description": "The name of the current world",
   "craftpresence.placeholders.world.time.24.description": "The current world's in-game time (24-hour format)",
   "craftpresence.placeholders.world.time.12.description": "The current world's in-game time (12-hour format)",
-  "craftpresence.placeholders.world.day.description": "The current world's in-game day count",
+  "craftpresence.placeholders.world.time.day.description": "The current world's in-game day count",
   "craftpresence.placeholders.server.message.description": "The current server's display data, while in-game",
   "craftpresence.placeholders.server.icon.description": "The current server icon",
   "craftpresence.placeholders.server.default.icon.description": "The default server icon",
