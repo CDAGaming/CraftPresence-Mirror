@@ -49,12 +49,12 @@ dependencies {
     // Legacy Dependencies, based on Protocol Version
     if (isLegacy) {
         if (protocol <= 78) { // MC 1.6.4 and below
-            shade('commons-codec:commons-codec:1.15')
+            shade('commons-codec:commons-codec:1.9')
         }
         if (protocol <= 61) { // MC 1.5.2 and below
-            shade('org.apache.commons:commons-lang3:3.8.1')
-            shade('commons-io:commons-io:2.5')
-            shade('com.google.code.gson:gson:2.8.0')
+            shade('org.apache.commons:commons-lang3:3.1')
+            shade('commons-io:commons-io:2.4')
+            shade('com.google.code.gson:gson:2.2.2')
         }
         if (protocol <= 51) { // MC 1.4.7 and below
             shade('com.google.guava:guava:14.0-rc3')
