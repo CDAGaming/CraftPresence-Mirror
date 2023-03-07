@@ -53,7 +53,6 @@ dependencies {
         }
         if (protocol <= 61) { // MC 1.5.2 and below
             shade('org.apache.commons:commons-lang3:3.2')
-            shade('commons-io:commons-io:2.4')
             shade('com.google.code.gson:gson:2.2.2')
         }
         if (protocol <= 51) { // MC 1.4.7 and below

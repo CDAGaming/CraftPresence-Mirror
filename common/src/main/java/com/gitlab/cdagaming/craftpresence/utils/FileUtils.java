@@ -78,7 +78,7 @@ public class FileUtils {
      * @return The Parsed Json as the Class Type's Syntax
      * @throws Exception If Unable to read the File
      */
-    public static <T> T getJsonData(File data, Class<T> classObj, Modifiers... args) throws Exception {
+    public static <T> T getJsonData(final File data, final Class<T> classObj, final Modifiers... args) throws Exception {
         return getJsonData(fileToString(data, "UTF-8"), classObj, args);
     }
 
@@ -91,7 +91,7 @@ public class FileUtils {
      * @param args     The Command Arguments to parse
      * @return The Parsed Json as the Class Type's Syntax
      */
-    public static <T> T getJsonData(String data, Class<T> classObj, Modifiers... args) {
+    public static <T> T getJsonData(final String data, final Class<T> classObj, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
         return builder.create().fromJson(data, classObj);
     }
@@ -106,7 +106,7 @@ public class FileUtils {
      * @return The Parsed Json as the Class Type's Syntax
      * @throws Exception If Unable to read the File
      */
-    public static <T> T getJsonData(File data, Type typeObj, Modifiers... args) throws Exception {
+    public static <T> T getJsonData(final File data, final Type typeObj, final Modifiers... args) throws Exception {
         return getJsonData(fileToString(data, "UTF-8"), typeObj, args);
     }
 
@@ -119,7 +119,7 @@ public class FileUtils {
      * @param args    The Command Arguments to parse
      * @return The Parsed Json as the Class Type's Syntax
      */
-    public static <T> T getJsonData(String data, Type typeObj, Modifiers... args) {
+    public static <T> T getJsonData(final String data, final Type typeObj, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
         return builder.create().fromJson(data, typeObj);
     }
@@ -133,7 +133,7 @@ public class FileUtils {
      * @param args     The Command Arguments to parse
      * @return The Parsed Json as the Class Type's Syntax
      */
-    public static <T> T getJsonData(T data, Class<T> classObj, Modifiers... args) {
+    public static <T> T getJsonData(final T data, final Class<T> classObj, final Modifiers... args) {
         return getJsonData(data.toString(), classObj, args);
     }
 
@@ -144,7 +144,7 @@ public class FileUtils {
      * @param args The Command Arguments to parse
      * @return the resulting json string
      */
-    public static String toJsonData(Object obj, Modifiers... args) {
+    public static String toJsonData(final Object obj, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
         return builder.create().toJson(obj);
     }
@@ -157,7 +157,7 @@ public class FileUtils {
      * @param encoding The encoding to parse the output as
      * @param args     The Command Arguments to parse
      */
-    public static void writeJsonData(Object json, File file, String encoding, Modifiers... args) {
+    public static void writeJsonData(final Object json, final File file, final String encoding, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
         Writer writer = null;
         OutputStream outputStream = null;
@@ -193,7 +193,7 @@ public class FileUtils {
      * @param json The raw Input Json String
      * @return A Parsed and Valid JsonObject
      */
-    public static JsonObject parseJson(String json) {
+    public static JsonObject parseJson(final String json) {
         if (!StringUtils.isNullOrEmpty(json)) {
             final JsonParser dataParser = new JsonParser();
             return dataParser.parse(json).getAsJsonObject();
@@ -218,9 +218,7 @@ public class FileUtils {
                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.delete.file", file.getName()));
                 }
             }
-
-            final InputStream stream = UrlUtils.getURLStream(url);
-            org.apache.commons.io.FileUtils.copyInputStreamToFile(stream, file);
+            copyStreamToFile(UrlUtils.getURLStream(url), file);
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.loaded", file.getName(), file.getAbsolutePath(), urlString));
         } catch (Exception ex) {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.download", file.getName(), urlString, file.getAbsolutePath()));
@@ -231,6 +229,76 @@ public class FileUtils {
     }
 
     /**
+     * Copies bytes from an {@link InputStream} <code>source</code> to a file
+     * <code>destination</code>. The directories up to <code>destination</code>
+     * will be created if they don't already exist. <code>destination</code>
+     * will be overwritten if it already exists.
+     * The {@code source} stream is closed, if specified.
+     * See {@link #copyToFile(InputStream, File)} for a method that does not close the input stream.
+     *
+     * @param stream the <code>InputStream</code> to copy bytes from, must not be {@code null}, will be closed if specified
+     * @param file   the non-directory <code>File</code> to write bytes to
+     *               (possibly overwriting), must not be {@code null}
+     * @param close  whether to close the source stream, upon success
+     */
+    public static void copyStreamToFile(final InputStream stream, final File file, final boolean close) throws Exception {
+        // Create File and Parent Directories as needed
+        final File parentDir = file.getParentFile();
+        final boolean parentDirPresent = file.getParentFile().exists() || file.getParentFile().mkdirs();
+        final boolean fileAvailable = (file.exists() && file.isFile()) || file.createNewFile();
+        if (!parentDirPresent) {
+            throw new Exception("Failed to setup parent directory @ " + parentDir.getAbsolutePath());
+        }
+        if (!fileAvailable) {
+            throw new Exception("Failed to setup target file (Unable to create or is not a file) @ " + file.getAbsolutePath());
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = stream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+        }
+
+        if (close) {
+            stream.close();
+        }
+    }
+
+    /**
+     * Copies bytes from an {@link InputStream} <code>source</code> to a file
+     * <code>destination</code>. The directories up to <code>destination</code>
+     * will be created if they don't already exist. <code>destination</code>
+     * will be overwritten if it already exists.
+     * The {@code source} stream is closed upon success.
+     * See {@link #copyToFile(InputStream, File)} for a method that does not close the input stream.
+     *
+     * @param stream the <code>InputStream</code> to copy bytes from, must not be {@code null}, will be closed upon success
+     * @param file   the non-directory <code>File</code> to write bytes to
+     *               (possibly overwriting), must not be {@code null}
+     */
+    public static void copyStreamToFile(final InputStream stream, final File file) throws Exception {
+        copyStreamToFile(stream, file, true);
+    }
+
+    /**
+     * Copies bytes from an {@link InputStream} <code>source</code> to a file
+     * <code>destination</code>. The directories up to <code>destination</code>
+     * will be created if they don't already exist. <code>destination</code>
+     * will be overwritten if it already exists.
+     * The {@code source} stream remains open upon success.
+     * See {@link #copyStreamToFile(InputStream, File)} for a method that does close the input stream.
+     *
+     * @param stream the <code>InputStream</code> to copy bytes from, must not be {@code null}, will remain open upon success
+     * @param file   the non-directory <code>File</code> to write bytes to
+     *               (possibly overwriting), must not be {@code null}
+     */
+    public static void copyToFile(final InputStream stream, final File file) throws Exception {
+        copyStreamToFile(stream, file, false);
+    }
+
+    /**
      * Attempts to load the specified file as a DLL
      *
      * @param file The file to attempt to load
@@ -238,7 +306,7 @@ public class FileUtils {
     public static void loadFileAsDLL(final File file) {
         try {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.dll.init", file.getName()));
-            boolean isPermsSet = file.setReadable(true) && file.setWritable(true);
+            final boolean isPermsSet = file.setReadable(true) && file.setWritable(true);
             if (isPermsSet) {
                 System.load(file.getAbsolutePath());
             }
@@ -259,8 +327,15 @@ public class FileUtils {
      * @return The file's data as a String
      * @throws Exception If Unable to read the file
      */
-    public static String fileToString(File file, String encoding) throws Exception {
-        return org.apache.commons.io.FileUtils.readFileToString(file, Charset.forName(encoding));
+    public static String fileToString(final File file, final String encoding) throws Exception {
+        final StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(file.toPath()), Charset.forName(encoding)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append(System.lineSeparator());
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -269,7 +344,7 @@ public class FileUtils {
      * @param file The file to access
      * @return The file's extension String
      */
-    public static String getFileExtension(File file) {
+    public static String getFileExtension(final File file) {
         String name = file.getName();
         int lastIndexOf = name.lastIndexOf(".");
         if (lastIndexOf == -1) {
@@ -402,7 +477,7 @@ public class FileUtils {
      * @param paths  The class path(s) to interpret
      * @return the valid {@link Class} or null
      */
-    public static Class<?> findValidClass(ClassLoader loader, final boolean init, final String... paths) {
+    public static Class<?> findValidClass(final ClassLoader loader, final boolean init, final String... paths) {
         final List<String> classList = Lists.newArrayList(paths);
         for (String path : paths) {
             StringUtils.addEntriesNotPresent(classList, MappingUtils.getUnmappedClassesMatching(path, true));
@@ -594,7 +669,7 @@ public class FileUtils {
      * @param args     The Command Arguments to parse
      * @return The modified {@link GsonBuilder} instance
      */
-    public static GsonBuilder applyModifiers(final GsonBuilder instance, Modifiers... args) {
+    public static GsonBuilder applyModifiers(final GsonBuilder instance, final Modifiers... args) {
         for (Modifiers param : args) {
             switch (param) {
                 case DISABLE_ESCAPES:
