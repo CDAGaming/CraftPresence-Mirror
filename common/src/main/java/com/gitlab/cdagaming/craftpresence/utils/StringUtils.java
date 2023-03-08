@@ -160,6 +160,7 @@ public class StringUtils {
 
     /**
      * Retrieve the stacktrace from an {@link Throwable}
+     *
      * @param ex The exception to interpret
      * @return The string representation of the {@link Throwable}
      */
@@ -1224,8 +1225,8 @@ public class StringUtils {
      *
      * @param data  The Array to check within
      * @param index The index to check
+     * @param <T>   The identified list type
      * @return {@link Boolean#TRUE} if the index element exists in the list with a non-null value
-     * @param <T> The identified list type
      */
     public static <T> boolean elementExists(final T[] data, final int index) {
         return elementExists(Arrays.asList(data), index);
@@ -1236,8 +1237,8 @@ public class StringUtils {
      *
      * @param data  The List to check within
      * @param index The index to check
+     * @param <T>   The identified list type
      * @return {@link Boolean#TRUE} if the index element exists in the list with a non-null value
-     * @param <T> The identified list type
      */
     public static <T> boolean elementExists(final List<T> data, final int index) {
         boolean result;
@@ -1257,15 +1258,16 @@ public class StringUtils {
      * the new array is the same as that of the input array.
      *
      * <p>If the input array is {@code null}, a new one element array is returned
-     *  whose component type is the same as the element, unless the element itself is null,
-     *  in which case the return type is Object[]
-     * @param array the array to "add" the element to, may be {@code null}
-     * @param element  the object to add, may be {@code null}
+     * whose component type is the same as the element, unless the element itself is null,
+     * in which case the return type is Object[]
+     *
+     * @param array   the array to "add" the element to, may be {@code null}
+     * @param element the object to add, may be {@code null}
+     * @param <T>     the component type of the array
      * @return A new array containing the existing elements plus the new element
      * The returned array type will be that of the input array (unless null),
      * in which case it will have the same type as the element.
      * If both are null, an IllegalArgumentException is thrown
-     * @param <T> the component type of the array
      * @throws IllegalArgumentException if both arguments are null
      */
     public static <T> T[] addToArray(final T[] array, final T element) {
@@ -1281,7 +1283,7 @@ public class StringUtils {
      * Creates a new ArrayList containing the specified elements.
      *
      * @param elements the elements to include in the new ArrayList
-     * @param <T> the type of elements in the list
+     * @param <T>      the type of elements in the list
      * @return a new ArrayList containing the specified elements
      */
     public static <T> List<T> newArrayList(final T... elements) {
