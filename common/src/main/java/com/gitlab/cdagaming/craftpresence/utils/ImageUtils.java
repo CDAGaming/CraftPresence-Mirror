@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -68,7 +67,7 @@ public class ImageUtils {
      * <p>
      * Format: textureName;[[textureInputType, textureObj], [textureIndex, imageData], textureData]
      */
-    private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = Maps.newHashMap();
+    private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = StringUtils.newHashMap();
     /**
      * The thread used for Url Image Events to take place within
      */

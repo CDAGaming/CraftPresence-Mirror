@@ -38,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
-import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
@@ -72,7 +71,7 @@ public class ServerUtils implements Module {
     /**
      * A List of the detected Server Data from NBT
      */
-    public Map<String, ServerData> knownServerData = Maps.newHashMap();
+    public Map<String, ServerData> knownServerData = StringUtils.newHashMap();
     /**
      * Whether this module is active and currently in use
      */

@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
@@ -50,9 +49,9 @@ public class ControlsGui extends PaginatedScreen {
     // Format: See KeyUtils#KEY_MAPPINGS
     private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
-    private final Map<String, List<String>> categorizedNames = Maps.newHashMap();
+    private final Map<String, List<String>> categorizedNames = StringUtils.newHashMap();
     // Format: pageNumber:[elementText:[xPos:yPos]:color]
-    private final Map<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> preRenderQueue = Maps.newHashMap(), postRenderQueue = Maps.newHashMap();
+    private final Map<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> preRenderQueue = StringUtils.newHashMap(), postRenderQueue = StringUtils.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;

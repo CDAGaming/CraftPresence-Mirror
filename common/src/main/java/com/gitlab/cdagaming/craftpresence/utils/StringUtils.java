@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.integrations.FieldReflectionUtils;
-import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -1327,6 +1326,29 @@ public class StringUtils {
     }
 
     /**
+     * Creates a new instance of {@link HashMap} with the default initial capacity.
+     *
+     * @param <K> the type of keys maintained by the new map
+     * @param <V> the type of mapped values
+     * @return a new instance of {@link HashMap}
+     */
+    public static <K, V> Map<K, V> newHashMap() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Creates a new instance of {@link HashMap} that contains the same key-value mappings as the input map.
+     *
+     * @param <K> the type of keys maintained by the new map
+     * @param <V> the type of mapped values
+     * @param map the input map whose mappings are to be copied to the new map
+     * @return a new instance of {@link HashMap} that contains the same key-value mappings as the input map
+     */
+    public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map) {
+        return new HashMap<>(map);
+    }
+
+    /**
      * Retrieve the list of fields present in the specified class
      *
      * @param classToAccess The class object to interpret
@@ -1547,7 +1569,7 @@ public class StringUtils {
      */
     @SafeVarargs
     public static Map<String, Object> executeMethod(final Class<?> classToAccess, final Object instance, final Pair<String, Pair<Object[], Class<?>[]>>... methodData) {
-        final Map<String, Object> results = Maps.newHashMap();
+        final Map<String, Object> results = newHashMap();
         for (Pair<String, Pair<Object[], Class<?>[]>> methodInstance : methodData) {
             results.put(methodInstance.getFirst(), executeMethod(
                     classToAccess,

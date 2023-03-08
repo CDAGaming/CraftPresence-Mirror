@@ -74,7 +74,7 @@ public class DiscordUtils {
     /**
      * A mapping of the arguments that have overwritten module data
      */
-    private final Map<String, ModuleData> overrideData = Maps.newHashMap();
+    private final Map<String, ModuleData> overrideData = StringUtils.newHashMap();
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
@@ -84,7 +84,7 @@ public class DiscordUtils {
      * <p>Used to cache data for repeated images in other areas
      * <p>Format: evalKey, resultingKey
      */
-    private final Map<String, String> cachedImageData = Maps.newHashMap();
+    private final Map<String, String> cachedImageData = StringUtils.newHashMap();
     /**
      * The Current User, tied to the Rich Presence
      */

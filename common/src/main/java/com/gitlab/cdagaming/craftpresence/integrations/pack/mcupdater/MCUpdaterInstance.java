@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater;
 
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
@@ -74,7 +73,7 @@ public class MCUpdaterInstance {
     /**
      * A List of Optional Mods related to this Instance
      */
-    private Map<String, Boolean> optionalMods = Maps.newHashMap();
+    private Map<String, Boolean> optionalMods = StringUtils.newHashMap();
 
     /**
      * Gets the list of related files for this Instance
@@ -100,7 +99,7 @@ public class MCUpdaterInstance {
      * @return The List of Optional Mods related to this Instance
      */
     public Map<String, Boolean> getOptionalMods() {
-        return Maps.newHashMap(this.optionalMods);
+        return StringUtils.newHashMap(this.optionalMods);
     }
 
     /**
@@ -109,7 +108,7 @@ public class MCUpdaterInstance {
      * @param optionalMods The new List of Optional Mods related to this Instance
      */
     public void setOptionalMods(Map<String, Boolean> optionalMods) {
-        this.optionalMods = Maps.newHashMap(optionalMods);
+        this.optionalMods = StringUtils.newHashMap(optionalMods);
     }
 
     /**

@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -55,7 +54,7 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * Mapping representing a link between the entries original name, and it's display name
      */
-    public final Map<String, String> entryAliases = Maps.newHashMap();
+    public final Map<String, String> entryAliases = StringUtils.newHashMap();
     /**
      * The Currently Selected Value in the List
      */

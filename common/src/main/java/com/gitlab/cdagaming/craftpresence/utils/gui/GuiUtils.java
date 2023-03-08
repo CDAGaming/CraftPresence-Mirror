@@ -39,7 +39,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Maps;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -64,7 +63,7 @@ public class GuiUtils implements Module {
     /**
      * A List of the detected Gui Screen Classes
      */
-    public final Map<String, Class<?>> GUI_CLASSES = Maps.newHashMap();
+    public final Map<String, Class<?>> GUI_CLASSES = StringUtils.newHashMap();
     /**
      * If the Config GUI is currently open
      */

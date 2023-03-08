@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
@@ -67,11 +66,11 @@ public class KeyUtils {
      * <p>
      * Format: rawKeyField:[keyBindInstance:(runEvent,configEvent,vanillaPredicate):errorCallback]
      */
-    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> KEY_MAPPINGS = Maps.newHashMap();
+    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> KEY_MAPPINGS = StringUtils.newHashMap();
     /**
      * List of Keys that are in queue for later syncing operations
      */
-    public Map<String, Integer> keySyncQueue = Maps.newHashMap();
+    public Map<String, Integer> keySyncQueue = StringUtils.newHashMap();
     /**
      * Determines whether KeyBindings have been fully registered and attached to needed systems.
      */
@@ -186,7 +185,7 @@ public class KeyUtils {
      * @return The unfiltered key mappings
      */
     public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getRawKeyMappings() {
-        return Maps.newHashMap(KEY_MAPPINGS);
+        return StringUtils.newHashMap(KEY_MAPPINGS);
     }
 
     /**
@@ -315,7 +314,7 @@ public class KeyUtils {
      * @return The filtered key mappings
      */
     public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getKeyMappings(final FilterMode mode, final List<String> filterData) {
-        final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> filteredMappings = Maps.newHashMap();
+        final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> filteredMappings = StringUtils.newHashMap();
 
         for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
             final String keyName = entry.getKey();

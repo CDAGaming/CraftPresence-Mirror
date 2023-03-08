@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
-import com.google.common.collect.Maps;
 
 import java.util.Map;
 
@@ -46,11 +45,11 @@ public class DiscordAssetUtils {
      * Mapping storing the Icon Keys and Asset Data attached to the Current Client
      * ID
      */
-    public static final Map<String, DiscordAsset> ASSET_LIST = Maps.newHashMap();
+    public static final Map<String, DiscordAsset> ASSET_LIST = StringUtils.newHashMap();
     /**
      * Mapping storing the Icon Keys and Asset Data attached from dynamic data
      */
-    public static final Map<String, DiscordAsset> CUSTOM_ASSET_LIST = Maps.newHashMap();
+    public static final Map<String, DiscordAsset> CUSTOM_ASSET_LIST = StringUtils.newHashMap();
     /**
      * The endpoint url for the Discord Applications backend
      */

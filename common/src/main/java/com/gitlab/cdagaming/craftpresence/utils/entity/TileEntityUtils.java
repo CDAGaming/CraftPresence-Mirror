@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
@@ -83,7 +82,7 @@ public class TileEntityUtils implements Module {
     /**
      * A List storing a mapping of Tile Entity textures, mapped as entityName:entityTexture
      */
-    public Map<String, ResourceLocation> TILE_ENTITY_RESOURCES = Maps.newHashMap();
+    public Map<String, ResourceLocation> TILE_ENTITY_RESOURCES = StringUtils.newHashMap();
     /**
      * Whether this module is active and currently in use
      */

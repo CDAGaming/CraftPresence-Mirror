@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -473,7 +472,7 @@ public class FunctionsLib {
         String source = args.get(0);
         args.remove(0);
 
-        Map<String, String> data = Maps.newHashMap();
+        Map<String, String> data = StringUtils.newHashMap();
         String tempKey = null;
         for (String param : args) {
             if (StringUtils.isNullOrEmpty(tempKey)) {

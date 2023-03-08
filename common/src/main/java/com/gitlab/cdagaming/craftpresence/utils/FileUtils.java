@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -64,7 +63,7 @@ public class FileUtils {
     /**
      * The list of the currently detected class names
      */
-    private static final Map<String, Class<?>> CLASS_MAP = Maps.newHashMap();
+    private static final Map<String, Class<?>> CLASS_MAP = StringUtils.newHashMap();
 
     /**
      * Retrieves Raw Data and Converts it into a Parsed Json Syntax
@@ -571,7 +570,7 @@ public class FileUtils {
      */
     public static List<Class<?>> getClasses(final List<String> paths) {
         final List<Class<?>> results = StringUtils.newArrayList();
-        final Map<String, Set<String>> unmappedNames = Maps.newHashMap();
+        final Map<String, Set<String>> unmappedNames = StringUtils.newHashMap();
         for (String path : paths) {
             unmappedNames.put(path, MappingUtils.getUnmappedClassesMatching(path));
         }

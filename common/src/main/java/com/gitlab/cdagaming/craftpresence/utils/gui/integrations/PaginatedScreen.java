@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import com.google.common.collect.Maps;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -42,8 +41,8 @@ import java.util.Map;
  * The Paginated Gui Screen Implementation
  */
 public class PaginatedScreen extends ExtendedScreen {
-    private final Map<Integer, List<Gui>> paginatedControls = Maps.newHashMap();
-    private final Map<Integer, List<ScrollableListControl>> paginatedLists = Maps.newHashMap();
+    private final Map<Integer, List<Gui>> paginatedControls = StringUtils.newHashMap();
+    private final Map<Integer, List<ScrollableListControl>> paginatedLists = StringUtils.newHashMap();
     /**
      * The "Next Page" Button
      */

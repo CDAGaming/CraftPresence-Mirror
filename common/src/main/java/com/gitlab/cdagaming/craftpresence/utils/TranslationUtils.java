@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.google.common.collect.Maps;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -55,7 +54,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * <p>
      * Format: languageId:doesExist
      */
-    private final Map<String, Map<String, String>> requestMap = Maps.newHashMap();
+    private final Map<String, Map<String, String>> requestMap = StringUtils.newHashMap();
     /**
      * The current Language ID to Locate and Retrieve Translations
      */
@@ -349,7 +348,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding, List<InputStream> data) {
         boolean hasError = false, hadBefore = hasTranslationsFrom(languageId);
         requestMap.remove(languageId);
-        final Map<String, String> translationMap = Maps.newHashMap();
+        final Map<String, String> translationMap = StringUtils.newHashMap();
 
         if (data != null && !data.isEmpty()) {
             for (InputStream in : data) {

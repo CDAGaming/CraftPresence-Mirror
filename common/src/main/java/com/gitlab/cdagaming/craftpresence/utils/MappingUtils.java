@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.BufferedReader;
@@ -90,7 +89,7 @@ public class MappingUtils {
             }
             classMap = cm;
         }
-        return Maps.newHashMap(classMap);
+        return StringUtils.newHashMap(classMap);
     }
 
     /**
