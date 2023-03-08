@@ -75,7 +75,7 @@ public class FunctionsLib {
         // StringUtils
         ss.set("rgbaToHex", FunctionsLib::rgbaToHex);
         ss.set("getOrDefault", FunctionsLib::getOrDefault);
-        ss.set("replaceAnyCase", FunctionsLib::replaceAnyCase);
+        ss.set("replace", FunctionsLib::replace);
         ss.set("length", FunctionsLib::length);
         ss.set("minify", FunctionsLib::minify);
         ss.set("nullOrEmpty", FunctionsLib::nullOrEmpty);
@@ -459,33 +459,69 @@ public class FunctionsLib {
         return Value.string(StringUtils.getOrDefault(target, alternative));
     }
 
-    public static Value replaceAnyCase(Starscript ss, int argCount) {
+    public static Value replace(Starscript ss, int argCount) {
         final List<String> args = StringUtils.newArrayList();
         if (argCount < 3)
-            ss.error("replaceAnyCase() requires at least 3 arguments, got %d.", argCount);
+            ss.error("replace() requires at least 3 arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
-            args.add(ss.pop().toString());
+            args.add(ss.pop());
         }
         StringUtils.revlist(args);
 
+        Value currentArg;
+        String source = "";
+
         // Parse, then remove the source string from arguments
-        String source = args.get(0);
+        currentArg = args.get(0);
+        if (currentArg.isString()) {
+            source = currentArg.getString();
+        } else {
+            ss.error("First argument to replace() needs to be a string.");
+        }
         args.remove(0);
 
-        Map<String, String> data = StringUtils.newHashMap();
+        boolean matchCase = false;
+        boolean matchWholeWord = false;
+        boolean useRegex = true;
+
+        // Parse optional arguments (All-or-none style)
+        currentArg = args.get(0);
+        if (currentArg.isBool()) {
+            matchCase = currentArg.getBool();
+            args.remove(0);
+
+            currentArg = args.get(0);
+            if (currentArg.isBool()) {
+                matchWholeWord = currentArg.getBool();
+                args.remove(0);
+
+                currentArg = args.get(0);
+                if (currentArg.isBool()) {
+                    useRegex = currentArg.getBool();
+                    args.remove(0);
+                }
+            }
+        }
+
+        final Map<String, String> data = StringUtils.newHashMap();
         String tempKey = null;
-        for (String param : args) {
-            if (StringUtils.isNullOrEmpty(tempKey)) {
-                tempKey = param;
-            } else {
-                data.put(tempKey, param);
-                tempKey = null;
+        if (!args.isEmpty()) {
+            for (Value info : args) {
+                if (!info.isString()) ss.error("Incorrect type data supplied for replace(), please check input and documentation.");
+
+                final String param = info.getString();
+                if (StringUtils.isNullOrEmpty(tempKey)) {
+                    tempKey = param;
+                } else {
+                    data.put(tempKey, param);
+                    tempKey = null;
+                }
             }
         }
         if (!StringUtils.isNullOrEmpty(tempKey)) {
-            ss.error("Incomplete data supplied for replaceAnyCase(), please check input and documentation.");
+            ss.error("Incomplete data supplied for replace(), please check input and documentation.");
         }
-        return Value.string(StringUtils.sequentialReplace(source, false, false, true, data));
+        return Value.string(StringUtils.sequentialReplace(source, matchCase, matchWholeWord, useRegex, data));
     }
 
     public static Value length(Starscript ss, int argCount) {
