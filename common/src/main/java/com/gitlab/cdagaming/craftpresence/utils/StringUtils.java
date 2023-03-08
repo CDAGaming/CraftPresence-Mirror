@@ -148,6 +148,16 @@ public class StringUtils {
     }
 
     /**
+     * Converts a String to that of the Specified Charset, in byte form
+     *
+     * @param original The original String to interpret
+     * @return The processed byte array
+     */
+    public static byte[] getBytes(final String original) {
+        return getBytes(original, null);
+    }
+
+    /**
      * Converts a String and it's bytes to that of the Specified Charset
      *
      * @param original The original String to interpret
@@ -159,7 +169,7 @@ public class StringUtils {
     public static String convertString(final String original, final String encoding, final boolean decode) {
         try {
             if (decode) {
-                return new String(getBytes(original, null), encoding);
+                return new String(getBytes(original), encoding);
             } else {
                 return new String(getBytes(original, encoding));
             }
@@ -439,16 +449,31 @@ public class StringUtils {
     }
 
     /**
-     * Replaces Data in a String with Case-Insensitivity
+     * Replaces Data in a String
      *
      * @param source          The original String to replace within
      * @param targetToReplace The value to replace on
      * @param replaceWith     The value to replace the target with
      * @return The completed and replaced String
      */
-    public static String replaceAnyCase(final String source, final String targetToReplace, final String replaceWith) {
+    public static String replace(final String source, final String targetToReplace, final String replaceWith,
+                                 final boolean matchCase, final boolean matchWholeWord, final boolean useRegex) {
         if (!isNullOrEmpty(source)) {
-            return Pattern.compile(targetToReplace, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(source)
+            String patternString;
+            if (useRegex) {
+                patternString = targetToReplace;
+            } else {
+                if (matchWholeWord) {
+                    patternString = "(?i)\\b" + Pattern.quote(targetToReplace) + "\\b";
+                } else {
+                    patternString = Pattern.quote(targetToReplace);
+                }
+            }
+            int flags = Pattern.LITERAL;
+            if (!matchCase) {
+                flags |= Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
+            }
+            return Pattern.compile(patternString, flags).matcher(source)
                     .replaceAll(Matcher.quoteReplacement(replaceWith));
         } else {
             return "";
@@ -456,21 +481,21 @@ public class StringUtils {
     }
 
     /**
-     * Replaces Data in a sequential order, following Case-Insensitivity
+     * Replaces Data in a sequential order
      *
      * @param source      The original String to replace within
      * @param replaceArgs The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */
     @SafeVarargs
-    public static String sequentialReplaceAnyCase(final String source, final Map<String, String>... replaceArgs) {
+    public static String sequentialReplace(final String source, final boolean matchCase, final boolean matchWholeWord, final boolean useRegex, final Map<String, String>... replaceArgs) {
         if (!isNullOrEmpty(source)) {
             String finalResult = source;
 
             for (Map<String, String> replaceData : replaceArgs) {
                 if (!replaceData.isEmpty()) {
                     for (Map.Entry<String, String> replacementData : replaceData.entrySet()) {
-                        finalResult = replaceAnyCase(finalResult, replacementData.getKey(), replacementData.getValue());
+                        finalResult = replace(finalResult, replacementData.getKey(), replacementData.getValue(), matchCase, matchWholeWord, useRegex);
                     }
                 }
             }

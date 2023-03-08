@@ -103,7 +103,8 @@ public class ImageUtils {
                                     case ByteStream:
                                         final Triple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());
                                         final byte[] dataSet = base64Data.getLeft() ?
-                                                decodeBase64(base64Data.getRight(), "UTF-8", false, false) : (originData instanceof byte[] ? (byte[]) originData : originData.toString().getBytes());
+                                                decodeBase64(base64Data.getRight(), "UTF-8", false, false) :
+                                                (originData instanceof byte[] ? (byte[]) originData : StringUtils.getBytes(originData.toString()));
                                         streamData = dataSet != null ? new ByteArrayInputStream(dataSet) : null;
                                         isGif = base64Data.getMiddle().contains("gif");
                                         break;

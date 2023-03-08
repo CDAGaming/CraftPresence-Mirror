@@ -487,7 +487,7 @@ public class FunctionsLib {
         if (!StringUtils.isNullOrEmpty(tempKey)) {
             ss.error("Incomplete data supplied for replaceAnyCase(), please check input and documentation.");
         }
-        return Value.string(StringUtils.sequentialReplaceAnyCase(source, data));
+        return Value.string(StringUtils.sequentialReplace(source, false, false, true, data));
     }
 
     public static Value length(Starscript ss, int argCount) {

@@ -271,6 +271,25 @@ public class FileUtils {
      * <code>destination</code>. The directories up to <code>destination</code>
      * will be created if they don't already exist. <code>destination</code>
      * will be overwritten if it already exists.
+     * The {@code source} stream is closed, if specified.
+     * See {@link #copyToFile(InputStream, File)} for a method that does not close the input stream.
+     *
+     * @param stream the <code>InputStream</code> to copy bytes from, must not be {@code null}, will be closed if specified
+     * @param file   the non-directory <code>File</code> to write bytes to
+     *               (possibly overwriting), must not be {@code null}
+     * @param close  whether to close the source stream, upon success
+     */
+    public static void copyStreamToFile(final String stream, final File file, final boolean close) throws Exception {
+        copyStreamToFile(new ByteArrayInputStream(
+                StringUtils.getBytes(stream)
+        ), file, close);
+    }
+
+    /**
+     * Copies bytes from an {@link InputStream} <code>source</code> to a file
+     * <code>destination</code>. The directories up to <code>destination</code>
+     * will be created if they don't already exist. <code>destination</code>
+     * will be overwritten if it already exists.
      * The {@code source} stream is closed upon success.
      * See {@link #copyToFile(InputStream, File)} for a method that does not close the input stream.
      *
@@ -280,6 +299,24 @@ public class FileUtils {
      */
     public static void copyStreamToFile(final InputStream stream, final File file) throws Exception {
         copyStreamToFile(stream, file, true);
+    }
+
+    /**
+     * Copies bytes from an {@link InputStream} <code>source</code> to a file
+     * <code>destination</code>. The directories up to <code>destination</code>
+     * will be created if they don't already exist. <code>destination</code>
+     * will be overwritten if it already exists.
+     * The {@code source} stream is closed upon success.
+     * See {@link #copyToFile(InputStream, File)} for a method that does not close the input stream.
+     *
+     * @param stream the <code>InputStream</code> to copy bytes from, must not be {@code null}, will be closed upon success
+     * @param file   the non-directory <code>File</code> to write bytes to
+     *               (possibly overwriting), must not be {@code null}
+     */
+    public static void copyStreamToFile(final String stream, final File file) throws Exception {
+        copyStreamToFile(new ByteArrayInputStream(
+                StringUtils.getBytes(stream)
+        ), file);
     }
 
     /**

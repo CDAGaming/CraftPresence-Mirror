@@ -216,7 +216,7 @@ public class HypherConverter implements DataMigrator {
         }
         if (!StringUtils.isNullOrEmpty(result)) {
             for (Map.Entry<String, String> entry : placeholderMappings.entrySet()) {
-                result = StringUtils.replaceAnyCase(result, entry.getKey(), entry.getValue());
+                result = StringUtils.replace(result, entry.getKey(), entry.getValue(), false, false, true);
             }
         }
         return result;

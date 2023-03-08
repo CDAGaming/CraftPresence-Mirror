@@ -422,7 +422,7 @@ public class Legacy2Modern implements DataMigrator {
                         }
 
                         if (!currentValue.equals(newValue)) {
-                            ModUtils.LOG.info("Migrating modified legacy property " + originalName + " to JSON property " + newName);
+                            ModUtils.LOG.debugInfo("Migrating modified legacy property " + originalName + " to JSON property " + newName);
                             instance.setProperty(newName, newValue);
                         }
                     }
@@ -463,8 +463,8 @@ public class Legacy2Modern implements DataMigrator {
             final Predicate<String> typeCheck = entry.getMiddle();
             final Predicate<String> optionCheck = entry.getRight();
             if (typeCheck.test(argumentType) && optionCheck.test(originalName) && result.toLowerCase().contains(original.toLowerCase())) {
-                ModUtils.LOG.info("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue);
-                result = StringUtils.replaceAnyCase(result, original, newValue);
+                ModUtils.LOG.debugInfo("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue);
+                result = StringUtils.replace(result, original, newValue, false, false, true); // v1 Placeholders were case-insensitive
             }
         }
 
@@ -475,7 +475,7 @@ public class Legacy2Modern implements DataMigrator {
                 split[0] = split[0].replaceAll("[{}]", "");
                 split[1] = split[1].replaceAll("[{}]", "");
                 final String replacement = String.format("{getOrDefault(%1$s, %2$s)}", split[0], split[1]);
-                ModUtils.LOG.info("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, match, replacement);
+                ModUtils.LOG.debugInfo("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, match, replacement);
                 result = result.replace(match, replacement);
             }
         }
