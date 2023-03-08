@@ -25,8 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import net.minecraft.client.Minecraft;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 
@@ -143,7 +143,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
         setCurrentFontRender(mc.fontRenderer);
         if (visible) {
             hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            CraftPresence.GUIS.drawContinuousTexturedBox(Pair.of(getControlPosX(), getControlPosY()), Pair.of(0, 46), Pair.of(boxWidth, getControlHeight()), Pair.of(200, 20), Pair.of(2, 3), Pair.of(2, 2), zLevel, BUTTON_TEXTURES);
+            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, BUTTON_TEXTURES);
             mouseDragged(mc, mouseX, mouseY);
             int color = !isControlEnabled() ? 10526880 : 14737632;
 

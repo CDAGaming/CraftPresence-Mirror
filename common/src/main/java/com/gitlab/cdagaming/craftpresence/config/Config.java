@@ -34,12 +34,12 @@ import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -107,15 +107,15 @@ public final class Config extends Module implements Serializable {
                 }
             }
         }
-        return Pair.of(config, rawJson);
+        return new Pair<>(config, rawJson);
     }
 
     public static Config loadOrCreate(final boolean forceCreate) {
         setupCriticalData();
 
         final Pair<Config, JsonElement> data = read();
-        Config config = data.getLeft();
-        JsonElement rawJson = data.getRight();
+        Config config = data.getFirst();
+        JsonElement rawJson = data.getSecond();
 
         if (config == null) {
             config = new Config();
@@ -266,7 +266,7 @@ public final class Config extends Module implements Serializable {
             }
 
             // Refresh the raw json contents, in case of any changes
-            rawJson = read().getRight();
+            rawJson = read().getSecond();
         }
         return rawJson;
     }
@@ -315,17 +315,17 @@ public final class Config extends Module implements Serializable {
                                 shouldReset = true;
                             } else if ((expectedClass == int.class || expectedClass == Integer.class)) {
                                 final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(rawValue.getAsString());
-                                if (boolData.getLeft()) {
+                                if (boolData.getFirst()) {
                                     // This check will trigger if the Field Name contains KeyCode Triggers
                                     // If the Property Name contains these values, move onwards
                                     for (String keyTrigger : keyCodeTriggers) {
                                         if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
-                                            if (!KeyUtils.isValidKeyCode(boolData.getRight())) {
+                                            if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
                                                 shouldReset = true;
                                             } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
-                                                final int migratedKeyCode = KeyConverter.convertKey(boolData.getRight(), keyCodeMigrationId);
-                                                if (migratedKeyCode != boolData.getRight()) {
-                                                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getRight(), migratedKeyCode));
+                                                final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
+                                                if (migratedKeyCode != boolData.getSecond()) {
+                                                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
                                                     setProperty(migratedKeyCode, pathData);
                                                 }
                                             }
@@ -444,7 +444,7 @@ public final class Config extends Module implements Serializable {
                 FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
     }
 
-    public Pair<Object, Triple<Class<?>, Object, String>> lookupProperty(final String... path) {
+    public Pair<Object, Tuple<Class<?>, Object, String>> lookupProperty(final String... path) {
         Class<?> classObj = Config.class;
         Object instance = this;
         Object result = null;
@@ -468,11 +468,11 @@ public final class Config extends Module implements Serializable {
                 }
             }
         }
-        return Pair.of(result, Triple.of(classObj, instance, name));
+        return new Pair<>(result, new Tuple<>(classObj, instance, name));
     }
 
     public Object getProperty(final String... path) {
-        return lookupProperty(path).getLeft();
+        return lookupProperty(path).getFirst();
     }
 
     @Override
@@ -481,19 +481,19 @@ public final class Config extends Module implements Serializable {
     }
 
     public void setProperty(final Object value, final String... path) {
-        final Pair<Object, Triple<Class<?>, Object, String>> propertyData = lookupProperty(path);
-        if (propertyData.getLeft() != null) {
-            final Triple<Class<?>, Object, String> fieldData = propertyData.getRight();
-            if (fieldData.getMiddle() instanceof Map) {
+        final Pair<Object, Tuple<Class<?>, Object, String>> propertyData = lookupProperty(path);
+        if (propertyData.getFirst() != null) {
+            final Tuple<Class<?>, Object, String> fieldData = propertyData.getSecond();
+            if (fieldData.getSecond() instanceof Map) {
                 final String[] parentPath = Arrays.copyOf(path, path.length - 1);
-                final Triple<Class<?>, Object, String> parentData = lookupProperty(parentPath).getRight();
+                final Tuple<Class<?>, Object, String> parentData = lookupProperty(parentPath).getSecond();
 
-                Map data = new HashMap((Map) fieldData.getMiddle());
-                data.put(fieldData.getRight(), value);
+                Map data = new HashMap((Map) fieldData.getSecond());
+                data.put(fieldData.getThird(), value);
 
-                StringUtils.updateField(parentData.getLeft(), parentData.getMiddle(), Pair.of(parentData.getRight(), data));
+                StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), new Pair<>(parentData.getThird(), data));
             } else {
-                StringUtils.updateField(fieldData.getLeft(), fieldData.getMiddle(), Pair.of(fieldData.getRight(), value));
+                StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), new Pair<>(fieldData.getThird(), value));
             }
         }
     }

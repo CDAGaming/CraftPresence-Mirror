@@ -69,7 +69,7 @@ public class DiscordAssetUtils {
     public static boolean isValidId(final String clientId) {
         return !StringUtils.isNullOrEmpty(clientId) &&
                 clientId.length() >= 18 &&
-                StringUtils.getValidLong(clientId).getLeft();
+                StringUtils.getValidLong(clientId).getFirst();
     }
 
     /**

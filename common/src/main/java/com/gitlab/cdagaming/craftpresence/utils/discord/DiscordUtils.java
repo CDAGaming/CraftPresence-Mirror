@@ -30,6 +30,8 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.*;
@@ -46,9 +48,6 @@ import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -220,7 +219,7 @@ public class DiscordUtils {
      * <p>Used to prevent sending duplicate packets
      * <p>Format: lastAttemptedKey, lastResultingKey
      */
-    private MutablePair<String, String> lastRequestedImageData = new MutablePair<>();
+    private Pair<String, String> lastRequestedImageData = new Pair<>();
     /**
      * An Instance containing the Current Rich Presence Data
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
@@ -426,14 +425,14 @@ public class DiscordUtils {
         if (replacements != null) {
             for (Pair<String, Supplier<String>> replacement : replacements) {
                 if (replacement != null) {
-                    final Supplier<String> info = replacement.getRight();
+                    final Supplier<String> info = replacement.getSecond();
                     if (info != null) {
                         final String value = info.get();
                         if (placeholders.containsKey(value)) {
-                            transformer.addReplacer(replacement.getLeft(), info);
+                            transformer.addReplacer(replacement.getFirst(), info);
                         } else {
                             data = data.replace(
-                                    replacement.getLeft(),
+                                    replacement.getFirst(),
                                     !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
                             );
                         }
@@ -1197,15 +1196,15 @@ public class DiscordUtils {
                 result = finalKey;
             } else {
                 result = cachedImageData.get(primaryKey);
-                if (StringUtils.isNullOrEmpty(lastRequestedImageData.getLeft()) || !lastRequestedImageData.getLeft().equals(primaryKey)) {
+                if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
                     if (CommandUtils.isVerboseMode() && !result.equals(primaryKey)) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
                         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
                     }
                 }
             }
-            lastRequestedImageData.setLeft(primaryKey);
-            lastRequestedImageData.setRight(result);
+            lastRequestedImageData.setFirst(primaryKey);
+            lastRequestedImageData.setSecond(result);
         } else {
             result = "";
         }
@@ -1281,7 +1280,7 @@ public class DiscordUtils {
      *
      * @param partyClearArgs Arguments for {@link DiscordUtils#clearPartyData(boolean, boolean)}
      */
-    public void clearPresenceData(final Triple<Boolean, Boolean, Boolean> partyClearArgs) {
+    public void clearPresenceData(final Tuple<Boolean, Boolean, Boolean> partyClearArgs) {
         GAME_STATE = "";
         DETAILS = "";
         LARGE_IMAGE_ASSET = null;
@@ -1292,8 +1291,8 @@ public class DiscordUtils {
         SMALL_IMAGE_TEXT = "";
         BUTTONS = new JsonArray();
 
-        if (partyClearArgs.getLeft()) {
-            clearPartyData(partyClearArgs.getMiddle(), partyClearArgs.getRight());
+        if (partyClearArgs.getFirst()) {
+            clearPartyData(partyClearArgs.getSecond(), partyClearArgs.getThird());
         }
     }
 
@@ -1314,10 +1313,10 @@ public class DiscordUtils {
             STATUS = DiscordStatus.Disconnected;
             currentPresence = null;
             // Empty RPC Data
-            clearPresenceData(Triple.of(true, true, false));
+            clearPresenceData(new Tuple<>(true, true, false));
 
             CURRENT_USER = null;
-            lastRequestedImageData = new MutablePair<>();
+            lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
             CommandUtils.clearModuleData();
@@ -1355,12 +1354,12 @@ public class DiscordUtils {
         final Pair<Boolean, Long> startData = StringUtils.getValidLong(
                 getResult(configData.startTimestamp, "startTimestamp")
         );
-        if (startData.getLeft()) {
-            START_TIMESTAMP = startData.getRight();
+        if (startData.getFirst()) {
+            START_TIMESTAMP = startData.getSecond();
             final Pair<Boolean, Long> endData = StringUtils.getValidLong(
                     getResult(configData.endTimestamp, "endTimestamp")
             );
-            END_TIMESTAMP = endData.getLeft() ? endData.getRight() : 0;
+            END_TIMESTAMP = endData.getFirst() ? endData.getSecond() : 0;
         } else {
             START_TIMESTAMP = 0;
             END_TIMESTAMP = 0;

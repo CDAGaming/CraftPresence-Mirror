@@ -27,11 +27,11 @@ package com.gitlab.cdagaming.craftpresence.config.migration;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,8 +62,8 @@ public class TextReplacer implements DataMigrator {
         String result = original;
         if (placeholderMode) {
             final Pair<String, List<String>> expressions = StringUtils.getMatches("\\{[^{}]*\\}", original);
-            if (!expressions.getRight().isEmpty()) {
-                for (String match : expressions.getRight()) {
+            if (!expressions.getSecond().isEmpty()) {
+                for (String match : expressions.getSecond()) {
                     result = result.replace(match,
                             StringUtils.sequentialReplace(match, matchCase, matchWholeWorld, useRegex, replacers)
                     );

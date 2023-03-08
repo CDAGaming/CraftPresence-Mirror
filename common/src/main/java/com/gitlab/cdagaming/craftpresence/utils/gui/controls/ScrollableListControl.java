@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -40,7 +41,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.meteordev.starscript.value.Value;
 
 import java.util.List;
@@ -319,7 +319,7 @@ public class ScrollableListControl extends GuiSlot {
 
             if (data != null) {
                 assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
-                texture = ImageUtils.getTextureFromUrl(originalName, Pair.of(ImageUtils.InputType.ByteStream, assetUrl));
+                texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
             } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
                 final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
@@ -327,8 +327,8 @@ public class ScrollableListControl extends GuiSlot {
                                 CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
                                 originalName
                         ),
-                        Pair.of("server.address.short", () -> formattedIP),
-                        Pair.of("server.address.full", () -> originalName)
+                        new Pair<>("server.address.short", () -> formattedIP),
+                        new Pair<>("server.address.full", () -> originalName)
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                 if (currentScreen.isDebugMode()) {
@@ -353,9 +353,9 @@ public class ScrollableListControl extends GuiSlot {
                                 CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
                                 originalName
                         ),
-                        Pair.of("player.name", () -> originalName),
-                        Pair.of("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
-                        Pair.of("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
+                        new Pair<>("player.name", () -> originalName),
+                        new Pair<>("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
+                        new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                 if (currentScreen.isDebugMode()) {

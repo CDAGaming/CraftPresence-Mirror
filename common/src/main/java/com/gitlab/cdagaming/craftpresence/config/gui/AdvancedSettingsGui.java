@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -40,7 +41,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
-import org.apache.commons.lang3.tuple.Pair;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ExtendedScreen {
@@ -630,7 +630,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             if (!refreshRate.getControlMessage().equals(Integer.toString(CONFIG.refreshRate))) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getRight();
+                                CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
                             }
                             if (enableCommandsButton.isChecked() != CONFIG.enableCommands) {
                                 CraftPresence.CONFIG.hasChanged = true;
@@ -702,7 +702,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
 
         final Pair<Boolean, Integer> refreshRateData = StringUtils.getValidInteger(refreshRate.getControlMessage());
         proceedButton.setControlEnabled(
-                (refreshRateData.getLeft() && refreshRateData.getRight() >= SystemUtils.MINIMUM_REFRESH_RATE)
+                (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
         );
 
         guiMessagesButton.setControlEnabled(CraftPresence.GUIS.enabled);

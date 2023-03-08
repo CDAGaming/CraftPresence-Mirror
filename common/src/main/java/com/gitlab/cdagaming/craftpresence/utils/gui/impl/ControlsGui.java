@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -35,8 +37,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -49,15 +49,15 @@ public class ControlsGui extends PaginatedScreen {
 
     private static final int maxElementsPerPage = 7, startRow = 1;
     // Format: See KeyUtils#KEY_MAPPINGS
-    private final Map<String, Triple<KeyBinding, Triple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> keyMappings;
+    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = Maps.newHashMap();
     // Format: pageNumber:[elementText:[xPos:yPos]:color]
-    private final Map<Integer, List<Triple<String, Pair<Float, Float>, Integer>>> preRenderQueue = Maps.newHashMap(), postRenderQueue = Maps.newHashMap();
+    private final Map<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> preRenderQueue = Maps.newHashMap(), postRenderQueue = Maps.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
-    private Triple<ExtendedButtonControl, String, Triple<KeyBinding, Triple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
+    private Tuple<ExtendedButtonControl, String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
     private int currentAllocatedRow = startRow, currentAllocatedPage = startPage;
 
     public ControlsGui(GuiScreen parentScreen) {
@@ -102,25 +102,25 @@ public class ControlsGui extends PaginatedScreen {
 
         super.preRender();
 
-        for (Map.Entry<Integer, List<Triple<String, Pair<Float, Float>, Integer>>> entry : preRenderQueue.entrySet()) {
+        for (Map.Entry<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> entry : preRenderQueue.entrySet()) {
             final Integer pageNumber = entry.getKey();
-            final List<Triple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
-            for (Triple<String, Pair<Float, Float>, Integer> elementData : elementList) {
-                renderString(ModUtils.TRANSLATOR.translate(elementData.getLeft()), elementData.getMiddle().getLeft(), elementData.getMiddle().getRight(), elementData.getRight(), pageNumber);
+            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
+            for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
+                renderString(ModUtils.TRANSLATOR.translate(elementData.getFirst()), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), elementData.getThird(), pageNumber);
             }
         }
     }
 
     @Override
     public void postRender() {
-        for (Map.Entry<Integer, List<Triple<String, Pair<Float, Float>, Integer>>> entry : postRenderQueue.entrySet()) {
+        for (Map.Entry<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> entry : postRenderQueue.entrySet()) {
             final Integer pageNumber = entry.getKey();
-            final List<Triple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
-            for (Triple<String, Pair<Float, Float>, Integer> elementData : elementList) {
-                if (currentPage == pageNumber && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), elementData.getMiddle().getLeft(), elementData.getMiddle().getRight(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getLeft())), getFontHeight())) {
+            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
+            for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
+                if (currentPage == pageNumber && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
                     CraftPresence.GUIS.drawMultiLineString(
                             StringUtils.splitTextByNewLine(
-                                    ModUtils.TRANSLATOR.translate(elementData.getLeft().replace(".name", ".description"))
+                                    ModUtils.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))
                             ), this, true
                     );
                 }
@@ -141,13 +141,13 @@ public class ControlsGui extends PaginatedScreen {
      * Sort Key Mappings via their categories, used for placement into gui
      */
     private void sortMappings() {
-        for (Map.Entry<String, Triple<KeyBinding, Triple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
+        for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
-            final Triple<KeyBinding, Triple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
-            if (!categorizedNames.containsKey(keyData.getLeft().getKeyCategory())) {
-                categorizedNames.put(keyData.getLeft().getKeyCategory(), Lists.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.getLeft().getKeyCategory()).contains(keyName)) {
-                categorizedNames.get(keyData.getLeft().getKeyCategory()).add(keyName);
+            final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
+            if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
+                categorizedNames.put(keyData.getFirst().getKeyCategory(), Lists.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
+                categorizedNames.get(keyData.getFirst().getKeyCategory()).add(keyName);
             }
         }
     }
@@ -164,7 +164,7 @@ public class ControlsGui extends PaginatedScreen {
         for (Map.Entry<String, List<String>> entry : categorizedNames.entrySet()) {
             syncPageData();
             final String categoryName = entry.getKey();
-            final Triple<String, Pair<Float, Float>, Integer> categoryData = Triple.of(categoryName, Pair.of((getScreenWidth() / 2f) - (getStringWidth(categoryName) / 2f), (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+            final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((getScreenWidth() / 2f) - (getStringWidth(categoryName) / 2f), (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
             if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                 preRenderQueue.put(currentAllocatedPage, Lists.newArrayList());
             }
@@ -176,8 +176,8 @@ public class ControlsGui extends PaginatedScreen {
             currentAllocatedRow++;
 
             for (String keyName : keyNames) {
-                final Triple<KeyBinding, Triple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
-                final Triple<String, Pair<Float, Float>, Integer> positionData = Triple.of(keyData.getLeft().getKeyDescription(), Pair.of((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+                final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
+                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
                 if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                     preRenderQueue.put(currentAllocatedPage, Lists.newArrayList(positionData));
                 } else {
@@ -193,7 +193,7 @@ public class ControlsGui extends PaginatedScreen {
                 final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
                         renderPosition + 20, CraftPresence.GUIS.getButtonY(currentAllocatedRow),
                         120, 20,
-                        KeyUtils.getKeyName(keyData.getLeft().getKeyCode()),
+                        KeyUtils.getKeyName(keyData.getFirst().getKeyCode()),
                         keyName
                 );
                 keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton, keyData));
@@ -221,9 +221,9 @@ public class ControlsGui extends PaginatedScreen {
      * @param button  The Pressed upon KeyCode Button
      * @param keyData The key data attached to the entry
      */
-    private void setupEntryData(final ExtendedButtonControl button, final Triple<KeyBinding, Triple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
+    private void setupEntryData(final ExtendedButtonControl button, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
-            entryData = Triple.of(button, button.getOptionalArgs()[0], keyData);
+            entryData = new Tuple<>(button, button.getOptionalArgs()[0], keyData);
 
             backupKeyString = button.getControlMessage();
             button.setControlMessage("gui.config.message.editor.enter_key");
@@ -248,13 +248,13 @@ public class ControlsGui extends PaginatedScreen {
 
         // If KeyCode Field to modify is not null or empty, attempt to queue change
         try {
-            entryData.getRight().getMiddle().getMiddle().accept(keyToSubmit, false);
-            CraftPresence.KEYBINDINGS.keySyncQueue.put(entryData.getMiddle(), keyToSubmit);
+            entryData.getThird().getSecond().getSecond().accept(keyToSubmit, false);
+            CraftPresence.KEYBINDINGS.keySyncQueue.put(entryData.getSecond(), keyToSubmit);
             CraftPresence.CONFIG.hasChanged = true;
 
-            entryData.getLeft().setControlMessage(formattedKey);
+            entryData.getFirst().setControlMessage(formattedKey);
         } catch (Throwable ex) {
-            entryData.getLeft().setControlMessage(backupKeyString);
+            entryData.getFirst().setControlMessage(backupKeyString);
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }

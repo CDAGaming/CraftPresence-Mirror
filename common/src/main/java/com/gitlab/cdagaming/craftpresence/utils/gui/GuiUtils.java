@@ -29,6 +29,8 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
@@ -46,8 +48,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -842,15 +842,15 @@ public class GuiUtils implements Module {
         GL11.glDisable(GL11.GL_FOG);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        final Triple<Integer, Integer, Integer> rgbData = Triple.of(shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255);
+        final Tuple<Integer, Integer, Integer> rgbData = new Tuple<>(shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255);
 
         final Tessellator tessellator = Tessellator.getInstance();
         final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        buffer.pos(xPos, yPos + height, zLevel).tex(0.0D, (height / heightDivider + tint)).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
-        buffer.pos(xPos + width, yPos + height, zLevel).tex((width / widthDivider), (height / heightDivider + tint)).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
-        buffer.pos(xPos + width, yPos, zLevel).tex((width / widthDivider), tint).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
-        buffer.pos(xPos, yPos, zLevel).tex(0.0D, tint).color(rgbData.getLeft(), rgbData.getMiddle(), rgbData.getMiddle(), 255).endVertex();
+        buffer.pos(xPos, yPos + height, zLevel).tex(0.0D, (height / heightDivider + tint)).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
+        buffer.pos(xPos + width, yPos + height, zLevel).tex((width / widthDivider), (height / heightDivider + tint)).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
+        buffer.pos(xPos + width, yPos, zLevel).tex((width / widthDivider), tint).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
+        buffer.pos(xPos, yPos, zLevel).tex(0.0D, tint).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
         tessellator.draw();
     }
 
@@ -881,9 +881,9 @@ public class GuiUtils implements Module {
                         endColorData = StringUtils.getValidInteger(endColorCode);
 
                 // Check and ensure that at least one of the Color Codes are correct
-                if (startColorData.getLeft() || endColorData.getLeft()) {
-                    startColor = startColorData.getLeft() ? startColorData.getRight() : endColor;
-                    endColor = endColorData.getLeft() ? endColorData.getRight() : startColor;
+                if (startColorData.getFirst() || endColorData.getFirst()) {
+                    startColor = startColorData.getFirst() ? startColorData.getSecond() : endColor;
+                    endColor = endColorData.getFirst() ? endColorData.getSecond() : startColor;
                 }
             }
         }
@@ -948,22 +948,22 @@ public class GuiUtils implements Module {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        final int x = positionData.getLeft();
-        final int y = positionData.getRight();
+        final int x = positionData.getFirst();
+        final int y = positionData.getSecond();
 
-        final int u = uVLevels.getLeft();
-        final int v = uVLevels.getRight();
+        final int u = uVLevels.getFirst();
+        final int v = uVLevels.getSecond();
 
-        final int width = screenDimensions.getLeft();
-        final int height = screenDimensions.getRight();
+        final int width = screenDimensions.getFirst();
+        final int height = screenDimensions.getSecond();
 
-        final int textureWidth = textureDimensions.getLeft();
-        final int textureHeight = textureDimensions.getRight();
+        final int textureWidth = textureDimensions.getFirst();
+        final int textureHeight = textureDimensions.getSecond();
 
-        final int topBorder = verticalBorderData.getLeft();
-        final int bottomBorder = verticalBorderData.getRight();
-        final int leftBorder = sideBorderData.getLeft();
-        final int rightBorder = sideBorderData.getRight();
+        final int topBorder = verticalBorderData.getFirst();
+        final int bottomBorder = verticalBorderData.getSecond();
+        final int leftBorder = sideBorderData.getFirst();
+        final int rightBorder = sideBorderData.getSecond();
 
         final int fillerWidth = textureWidth - leftBorder - rightBorder;
         final int fillerHeight = textureHeight - topBorder - bottomBorder;
