@@ -5,6 +5,7 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -20,7 +21,7 @@ public class TextReplacer implements DataMigrator {
 
     public TextReplacer(final Map<String, String> replacers, final boolean placeholderMode,
                         final boolean matchCase, final boolean matchWholeWorld, final boolean useRegex) {
-        this.replacers = replacers;
+        this.replacers = Maps.newHashMap(replacers);
         this.placeholderMode = placeholderMode;
         this.matchCase = matchCase;
         this.matchWholeWorld = matchWholeWorld;

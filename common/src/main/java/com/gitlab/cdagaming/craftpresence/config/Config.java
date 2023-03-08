@@ -252,10 +252,10 @@ public final class Config extends Module implements Serializable {
                     //  - Placeholder: `world.day` -> `world.time.day`
                     new TextReplacer(
                             ImmutableMap.<String, String>builder()
-                            .put("world.time24", "world.time.24")
-                            .put("world.time12", "world.time.12")
-                            .put("world.day", "world.time.day")
-                            .build(),
+                                    .put("world.time24", "world.time.24")
+                                    .put("world.time12", "world.time.12")
+                                    .put("world.day", "world.time.day")
+                                    .build(),
                             true,
                             true, false, true
                     ).apply(this, rawJson);
