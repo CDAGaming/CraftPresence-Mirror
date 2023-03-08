@@ -48,9 +48,6 @@ dependencies {
 
     // Legacy Dependencies, based on Protocol Version
     if (isLegacy) {
-        if (protocol <= 78) { // MC 1.6.4 and below
-            shade('commons-codec:commons-codec:1.9')
-        }
         if (protocol <= 61) { // MC 1.5.2 and below
             shade('com.google.code.gson:gson:2.2.2')
         }
