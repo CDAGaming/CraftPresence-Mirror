@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
@@ -71,7 +70,7 @@ public class SelectorGui extends ExtendedScreen {
      */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         super(parentScreen);
-        itemList = originalList = Lists.newArrayList(list);
+        itemList = originalList = StringUtils.newArrayList(list);
         originalValue = currentValue;
         this.mainTitle = mainTitle;
         this.attributeName = attributeName;
@@ -97,7 +96,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, Lists.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
+        this(parentScreen, mainTitle, StringUtils.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
     }
 
     /**
@@ -238,15 +237,15 @@ public class SelectorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        final List<String> originalItems = Lists.newArrayList(originalList);
-        final List<String> modifiedList = Lists.newArrayList();
+        final List<String> originalItems = StringUtils.newArrayList(originalList);
+        final List<String> modifiedList = StringUtils.newArrayList();
 
         if (!searchBox.getControlMessage().isEmpty()) {
             if (!searchBox.getControlMessage().equals(searchTerm)) {
                 searchTerm = searchBox.getControlMessage();
                 for (String item : originalItems) {
                     if (!modifiedList.contains(item)) {
-                        final List<String> entriesToCheck = Lists.newArrayList(item);
+                        final List<String> entriesToCheck = StringUtils.newArrayList(item);
                         if (scrollList.entryAliases.containsKey(item)) {
                             entriesToCheck.add(scrollList.entryAliases.get(item));
                         }

@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.List;
@@ -64,12 +63,12 @@ public class MCUpdaterInstance {
     /**
      * A List of Related Files for this Instance
      */
-    private List<Object> instanceFiles = Lists.newArrayList();
+    private List<Object> instanceFiles = StringUtils.newArrayList();
 
     /**
      * A List of Jar Mods related to this Instance
      */
-    private List<Object> jarMods = Lists.newArrayList();
+    private List<Object> jarMods = StringUtils.newArrayList();
 
     /**
      * A List of Optional Mods related to this Instance
@@ -82,7 +81,7 @@ public class MCUpdaterInstance {
      * @return A List of relative files for the Instance
      */
     public List<Object> getInstanceFiles() {
-        return Lists.newArrayList(instanceFiles);
+        return StringUtils.newArrayList(instanceFiles);
     }
 
     /**
@@ -91,7 +90,7 @@ public class MCUpdaterInstance {
      * @param instanceFiles The new List of related files for this Instance
      */
     public void setInstanceFiles(List<Object> instanceFiles) {
-        this.instanceFiles = Lists.newArrayList(instanceFiles);
+        this.instanceFiles = StringUtils.newArrayList(instanceFiles);
     }
 
     /**
@@ -174,7 +173,7 @@ public class MCUpdaterInstance {
      * @return The list of Jar Mods related to this Instance
      */
     public List<Object> getJarMods() {
-        return Lists.newArrayList(jarMods);
+        return StringUtils.newArrayList(jarMods);
     }
 
     /**
@@ -183,7 +182,7 @@ public class MCUpdaterInstance {
      * @param jarMods The new list of Jar Mods related to this Instance
      */
     public void setJarMods(List<Object> jarMods) {
-        this.jarMods = Lists.newArrayList(jarMods);
+        this.jarMods = StringUtils.newArrayList(jarMods);
     }
 
     /**

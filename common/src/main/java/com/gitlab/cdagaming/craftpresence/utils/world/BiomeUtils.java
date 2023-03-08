@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Lists;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class BiomeUtils implements Module {
     /**
      * A List of the detected Biome Type's
      */
-    private final List<Biome> BIOME_TYPES = Lists.newArrayList();
+    private final List<Biome> BIOME_TYPES = StringUtils.newArrayList();
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -55,7 +54,7 @@ public class BiomeUtils implements Module {
     /**
      * A List of the detected Biome Names
      */
-    public List<String> BIOME_NAMES = Lists.newArrayList();
+    public List<String> BIOME_NAMES = StringUtils.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -172,7 +171,7 @@ public class BiomeUtils implements Module {
      * @return The detected Biome Types found
      */
     private List<Biome> getBiomeTypes() {
-        List<Biome> biomeTypes = Lists.newArrayList();
+        List<Biome> biomeTypes = StringUtils.newArrayList();
 
         if (Biome.REGISTRY != null) {
             for (Biome biome : Biome.REGISTRY) {

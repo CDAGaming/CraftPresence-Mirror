@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
@@ -86,7 +85,7 @@ public class TextReplacer implements DataMigrator {
         if (rawJson != null) {
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
                 final String rawName = pathPrefix + entry.getKey();
-                final List<String> configPath = Lists.newArrayList(path);
+                final List<String> configPath = StringUtils.newArrayList(path);
                 configPath.add(entry.getKey());
                 final String[] pathData = configPath.toArray(new String[0]);
 
@@ -104,7 +103,7 @@ public class TextReplacer implements DataMigrator {
 
                 if (shouldContinue) {
                     if (Module.class.isAssignableFrom(defaultValue.getClass())) {
-                        final List<String> paths = Lists.newArrayList(path);
+                        final List<String> paths = StringUtils.newArrayList(path);
                         paths.add(entry.getKey());
                         processElement(instance, entry.getValue(), paths.toArray(new String[0]));
                     } else if (currentValue instanceof String) {
@@ -118,7 +117,7 @@ public class TextReplacer implements DataMigrator {
                         final Map newData = new HashMap((Map) currentValue);
                         if (entry.getValue().isJsonObject()) {
                             for (Object dataEntry : newData.keySet()) {
-                                final List<String> paths = Lists.newArrayList(path);
+                                final List<String> paths = StringUtils.newArrayList(path);
                                 paths.add(entry.getKey());
                                 paths.add(dataEntry.toString());
                                 final JsonElement dataValue = entry.getValue().getAsJsonObject().get(dataEntry.toString());

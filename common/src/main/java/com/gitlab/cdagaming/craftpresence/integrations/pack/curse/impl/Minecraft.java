@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -42,7 +41,7 @@ public class Minecraft {
     public Object additionalJavaArgs;
     @SerializedName("modLoaders")
     @Expose
-    public List<ModLoader> modLoaders = Lists.newArrayList();
+    public List<ModLoader> modLoaders = StringUtils.newArrayList();
     @SerializedName("libraries")
     @Expose
     public Object libraries;

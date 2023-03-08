@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -67,7 +66,7 @@ public class CurseInstance {
     public Object customAuthor;
     @SerializedName("modpackOverrides")
     @Expose
-    public List<String> modpackOverrides = Lists.newArrayList();
+    public List<String> modpackOverrides = StringUtils.newArrayList();
     @SerializedName("isMemoryOverride")
     @Expose
     public Boolean isMemoryOverride;
@@ -88,7 +87,7 @@ public class CurseInstance {
     public String name;
     @SerializedName("cachedScans")
     @Expose
-    public List<CachedScan> cachedScans = Lists.newArrayList();
+    public List<CachedScan> cachedScans = StringUtils.newArrayList();
     @SerializedName("isValid")
     @Expose
     public Boolean isValid;
@@ -133,7 +132,7 @@ public class CurseInstance {
     public String installDate;
     @SerializedName("installedAddons")
     @Expose
-    public List<InstalledAddon> installedAddons = Lists.newArrayList();
+    public List<InstalledAddon> installedAddons = StringUtils.newArrayList();
     @SerializedName("isMigrated")
     @Expose
     public Boolean isMigrated;

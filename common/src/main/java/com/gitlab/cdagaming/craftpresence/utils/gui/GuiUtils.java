@@ -39,7 +39,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -82,7 +81,7 @@ public class GuiUtils implements Module {
     /**
      * A List of the detected Gui Screen Names
      */
-    public List<String> GUI_NAMES = Lists.newArrayList();
+    public List<String> GUI_NAMES = StringUtils.newArrayList();
     /**
      * The Current Instance of the Gui the player is in
      */
@@ -391,7 +390,7 @@ public class GuiUtils implements Module {
 
     @Override
     public void getAllData() {
-        final List<Class<?>> searchClasses = Lists.newArrayList(GuiScreen.class, GuiContainer.class);
+        final List<Class<?>> searchClasses = StringUtils.newArrayList(GuiScreen.class, GuiContainer.class);
 
         for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
             final String screenName = MappingUtils.getClassName(classObj);
@@ -506,7 +505,7 @@ public class GuiUtils implements Module {
             }
 
             if (needsWrap) {
-                final List<String> wrappedTextLines = Lists.newArrayList();
+                final List<String> wrappedTextLines = StringUtils.newArrayList();
                 int wrappedTooltipWidth = 0;
                 for (int i = 0; i < textLines.size(); i++) {
                     final List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLines.get(i), tooltipTextWidth));

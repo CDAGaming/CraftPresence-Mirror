@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class MessageGui extends ExtendedScreen {
      */
     public MessageGui(GuiScreen parentScreen, List<String> messageData) {
         super(parentScreen);
-        this.messageData = Lists.newArrayList(messageData);
+        this.messageData = StringUtils.newArrayList(messageData);
     }
 
     @Override

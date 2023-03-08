@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -162,7 +161,7 @@ public class PaginatedScreen extends ExtendedScreen {
     @Nonnull
     protected <T extends Gui> T addControl(@Nonnull T buttonIn, final int renderTarget) {
         if (!paginatedControls.containsKey(renderTarget)) {
-            paginatedControls.put(renderTarget, Lists.newArrayList(buttonIn));
+            paginatedControls.put(renderTarget, StringUtils.newArrayList(buttonIn));
             if (renderTarget > maxPages) {
                 maxPages = renderTarget;
             }
@@ -183,7 +182,7 @@ public class PaginatedScreen extends ExtendedScreen {
     @Nonnull
     protected <T extends ScrollableListControl> T addList(@Nonnull T buttonIn, final int renderTarget) {
         if (!paginatedLists.containsKey(renderTarget)) {
-            paginatedLists.put(renderTarget, Lists.newArrayList(buttonIn));
+            paginatedLists.put(renderTarget, StringUtils.newArrayList(buttonIn));
             if (renderTarget > maxPages) {
                 maxPages = renderTarget;
             }
@@ -200,9 +199,9 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     @Override
     public void preRender() {
-        final List<Gui> defaultButtons = Lists.newArrayList(previousPageButton, nextPageButton, backButton);
+        final List<Gui> defaultButtons = StringUtils.newArrayList(previousPageButton, nextPageButton, backButton);
         final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
-        final List<ScrollableListControl> listsToRender = paginatedLists.getOrDefault(currentPage, Lists.newArrayList());
+        final List<ScrollableListControl> listsToRender = paginatedLists.getOrDefault(currentPage, StringUtils.newArrayList());
 
         for (Gui extendedControl : extendedControls) {
             // Toggle visibility/disable element is not on page

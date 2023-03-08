@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -48,7 +47,7 @@ public class CachedScan {
     public Integer sectionID;
     @SerializedName("individualFingerprints")
     @Expose
-    public List<Long> individualFingerprints = Lists.newArrayList();
+    public List<Long> individualFingerprints = StringUtils.newArrayList();
     @SerializedName("status")
     @Expose
     public Integer status;

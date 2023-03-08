@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.block.Block;
@@ -56,23 +55,23 @@ public class TileEntityUtils implements Module {
     /**
      * A List of the detected Block Names
      */
-    public final List<String> BLOCK_NAMES = Lists.newArrayList();
+    public final List<String> BLOCK_NAMES = StringUtils.newArrayList();
     /**
      * A List of the detected Item Names
      */
-    public final List<String> ITEM_NAMES = Lists.newArrayList();
+    public final List<String> ITEM_NAMES = StringUtils.newArrayList();
     /**
      * A List of the detected Block Class Names
      */
-    private final List<String> BLOCK_CLASSES = Lists.newArrayList();
+    private final List<String> BLOCK_CLASSES = StringUtils.newArrayList();
     /**
      * A List of the detected Item Class Names
      */
-    private final List<String> ITEM_CLASSES = Lists.newArrayList();
+    private final List<String> ITEM_CLASSES = StringUtils.newArrayList();
     /**
      * A List of the detected Tile Entity (Blocks + Items) Class Names
      */
-    private final List<String> TILE_ENTITY_CLASSES = Lists.newArrayList();
+    private final List<String> TILE_ENTITY_CLASSES = StringUtils.newArrayList();
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -80,7 +79,7 @@ public class TileEntityUtils implements Module {
     /**
      * A List of the detected Entity (Blocks + Items) Names
      */
-    public List<String> TILE_ENTITY_NAMES = Lists.newArrayList();
+    public List<String> TILE_ENTITY_NAMES = StringUtils.newArrayList();
     /**
      * A List storing a mapping of Tile Entity textures, mapped as entityName:entityTexture
      */

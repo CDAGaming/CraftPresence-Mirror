@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.settings.KeyBinding;
@@ -57,12 +56,12 @@ public class KeyUtils {
      * LWJGL 2: ESC = 0x01
      * LWJGL 3: ESC = 256
      */
-    private static final List<Integer> clearKeys = Lists.newArrayList();
+    private static final List<Integer> clearKeys = StringUtils.newArrayList();
 
     /**
      * Allowed KeyCode Start Limit and Individual Filters
      */
-    private static final List<Integer> invalidKeys = Lists.newArrayList();
+    private static final List<Integer> invalidKeys = StringUtils.newArrayList();
     /**
      * Key Mappings for Vanilla MC KeyBind Schema
      * <p>
@@ -344,7 +343,7 @@ public class KeyUtils {
      * @return The filtered key mappings
      */
     public Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> getKeyMappings() {
-        return getKeyMappings(FilterMode.None, Lists.newArrayList());
+        return getKeyMappings(FilterMode.None, StringUtils.newArrayList());
     }
 
     /**

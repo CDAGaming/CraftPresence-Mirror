@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -100,7 +99,7 @@ public class FunctionsLib {
     }
 
     public static Value format(Starscript ss, int argCount) {
-        final List<Value> args = Lists.newArrayList();
+        final List<Value> args = StringUtils.newArrayList();
         if (argCount < 1)
             ss.error("format() requires one or more arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -123,7 +122,7 @@ public class FunctionsLib {
         String result;
         // Parse remaining data into an Objects List
         if (!args.isEmpty() && data != null) {
-            final List<Object> value = Lists.newArrayList();
+            final List<Object> value = StringUtils.newArrayList();
             for (Value info : args) {
                 value.add(CraftPresence.CLIENT.fromValue(info));
             }
@@ -135,7 +134,7 @@ public class FunctionsLib {
     }
 
     public static Value translate(Starscript ss, int argCount) {
-        final List<Value> args = Lists.newArrayList();
+        final List<Value> args = StringUtils.newArrayList();
         if (argCount < 1)
             ss.error("translate() requires one or more arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -158,7 +157,7 @@ public class FunctionsLib {
         String result;
         // Parse remaining data into an Objects List
         if (!args.isEmpty() && data != null) {
-            final List<Object> value = Lists.newArrayList();
+            final List<Object> value = StringUtils.newArrayList();
             for (Value info : args) {
                 value.add(CraftPresence.CLIENT.fromValue(info));
             }
@@ -170,7 +169,7 @@ public class FunctionsLib {
     }
 
     public static Value getJsonElement(Starscript ss, int argCount) {
-        final List<String> path = Lists.newArrayList();
+        final List<String> path = StringUtils.newArrayList();
         String source, json = "";
         JsonObject contents;
         JsonElement result;
@@ -284,7 +283,7 @@ public class FunctionsLib {
     }
 
     public static Value getFirst(Starscript ss, int argCount) {
-        final List<String> args = Lists.newArrayList();
+        final List<String> args = StringUtils.newArrayList();
         if (argCount < 1)
             ss.error("getFirst() requires one or more arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -301,7 +300,7 @@ public class FunctionsLib {
     }
 
     public static Value getNbt(Starscript ss, int argCount) {
-        final List<Value> args = Lists.newArrayList();
+        final List<Value> args = StringUtils.newArrayList();
         if (argCount < 1)
             ss.error("getNbt() requires one or more arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -321,7 +320,7 @@ public class FunctionsLib {
         }
         args.remove(0);
 
-        final List<String> path = Lists.newArrayList();
+        final List<String> path = StringUtils.newArrayList();
         for (Value info : args) {
             path.add(info.toString());
         }
@@ -332,7 +331,7 @@ public class FunctionsLib {
     }
 
     public static Value isWithinValue(Starscript ss, int argCount) {
-        final List<Value> args = Lists.newArrayList();
+        final List<Value> args = StringUtils.newArrayList();
         if (argCount < 3 || argCount > 6)
             ss.error("isWithinValue() can only be used with 3-6 arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -415,7 +414,7 @@ public class FunctionsLib {
     }
 
     public static Value randomString(Starscript ss, int argCount) {
-        final List<String> args = Lists.newArrayList();
+        final List<String> args = StringUtils.newArrayList();
         if (argCount < 1)
             ss.error("randomString() requires one or more arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -462,7 +461,7 @@ public class FunctionsLib {
     }
 
     public static Value replaceAnyCase(Starscript ss, int argCount) {
-        final List<String> args = Lists.newArrayList();
+        final List<String> args = StringUtils.newArrayList();
         if (argCount < 3)
             ss.error("replaceAnyCase() requires at least 3 arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -692,7 +691,7 @@ public class FunctionsLib {
     }
 
     public static Value executeMethod(Starscript ss, int argCount) {
-        final List<Value> args = Lists.newArrayList();
+        final List<Value> args = StringUtils.newArrayList();
         if (argCount < 2)
             ss.error("executeMethod() requires two or more arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
@@ -754,8 +753,8 @@ public class FunctionsLib {
         List<Object> parameters = null;
 
         if (!args.isEmpty()) {
-            parameterTypes = Lists.newArrayList();
-            parameters = Lists.newArrayList();
+            parameterTypes = StringUtils.newArrayList();
+            parameters = StringUtils.newArrayList();
 
             boolean classMode = true;
             for (Value data : args) {

@@ -36,7 +36,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Lists;
 import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -60,7 +59,7 @@ public class CommandsGui extends ExtendedScreen {
     private String executionString;
     private boolean blockInteractions = false;
     private String[] commandArgs, filteredCommandArgs;
-    private List<String> tabCompletions = Lists.newArrayList();
+    private List<String> tabCompletions = StringUtils.newArrayList();
 
     public CommandsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -85,7 +84,7 @@ public class CommandsGui extends ExtendedScreen {
      */
     private static List<String> getListOfStringsMatchingLastWord(String[] inputArgs, Collection<?> possibleCompletions) {
         String s = inputArgs[inputArgs.length - 1];
-        List<String> list = Lists.newArrayList();
+        List<String> list = StringUtils.newArrayList();
 
         if (!possibleCompletions.isEmpty()) {
             for (Object object : possibleCompletions) {
@@ -273,7 +272,7 @@ public class CommandsGui extends ExtendedScreen {
                     if (executionCommandArgs.length == 1) {
                         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.search");
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
-                        final List<String> results = Lists.newArrayList(
+                        final List<String> results = StringUtils.newArrayList(
                                 CraftPresence.CLIENT.getArgumentEntries(executionCommandArgs[1])
                         );
 
@@ -490,7 +489,7 @@ public class CommandsGui extends ExtendedScreen {
      * @return The Possible Tab Completions from the specified arguments
      */
     private List<String> getTabCompletions(final String[] args) {
-        final List<String> completions = Lists.newArrayList();
+        final List<String> completions = StringUtils.newArrayList();
 
         if (args.length == 1) {
             completions.add("?");

@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
@@ -57,7 +56,7 @@ public class EntityUtils implements Module {
     /**
      * A List of the detected Entity Names
      */
-    public List<String> ENTITY_NAMES = Lists.newArrayList();
+    public List<String> ENTITY_NAMES = StringUtils.newArrayList();
     /**
      * A Mapping representing the link between UUIDs and Player Names
      */

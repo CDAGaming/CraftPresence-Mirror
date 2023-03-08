@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Lists;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 
@@ -49,7 +48,7 @@ public class DimensionUtils implements Module {
     /**
      * A List of the detected Dimension Type's
      */
-    private final List<DimensionType> DIMENSION_TYPES = Lists.newArrayList();
+    private final List<DimensionType> DIMENSION_TYPES = StringUtils.newArrayList();
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -57,7 +56,7 @@ public class DimensionUtils implements Module {
     /**
      * A List of the detected Dimension Names
      */
-    public List<String> DIMENSION_NAMES = Lists.newArrayList();
+    public List<String> DIMENSION_NAMES = StringUtils.newArrayList();
     /**
      * Whether this module is active and currently in use
      */
@@ -176,7 +175,7 @@ public class DimensionUtils implements Module {
      * @return The detected Dimension Types found
      */
     private List<DimensionType> getDimensionTypes() {
-        List<DimensionType> dimensionTypes = Lists.newArrayList();
+        List<DimensionType> dimensionTypes = StringUtils.newArrayList();
         Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(DimensionType.class, null, "dimensionTypes");
 
         StringUtils.addEntriesNotPresent(dimensionTypes, DimensionType.values());

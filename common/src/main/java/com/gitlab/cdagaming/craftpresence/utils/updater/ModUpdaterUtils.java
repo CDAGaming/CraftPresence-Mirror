@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
-import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -46,11 +45,11 @@ public class ModUpdaterUtils {
     /**
      * Mapping for Storing Strings to be interpreted as unstable/bleeding-edge versions
      */
-    private final List<String> latestVersionTags = Lists.newArrayList("latest", "beta", "alpha", "bleeding-edge", "unstable", "rc", "release-candidate");
+    private final List<String> latestVersionTags = StringUtils.newArrayList("latest", "beta", "alpha", "bleeding-edge", "unstable", "rc", "release-candidate");
     /**
      * Mapping for Storing String to be interpreted as stable/recommended versions
      */
-    private final List<String> recommendedVersionTags = Lists.newArrayList("recommended", "stable", "release");
+    private final List<String> recommendedVersionTags = StringUtils.newArrayList("recommended", "stable", "release");
     /**
      * The Current Update State for this Mod Updater Instance
      */

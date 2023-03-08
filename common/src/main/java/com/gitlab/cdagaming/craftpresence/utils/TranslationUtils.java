@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -177,7 +176,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
                 }
 
                 // Sync All if we need to (Normally for initialization or reload purposes)
-                final List<String> requestedKeys = Lists.newArrayList(requestMap.keySet());
+                final List<String> requestedKeys = StringUtils.newArrayList(requestMap.keySet());
                 for (String key : requestedKeys) {
                     syncTranslations(key, false);
                 }
@@ -293,7 +292,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager, final String ext) {
         final String assetsPath = String.format("/assets/%s/", modId);
         final String langPath = String.format("lang/%s.%s", languageId, ext);
-        final List<InputStream> results = Lists.newArrayList(
+        final List<InputStream> results = StringUtils.newArrayList(
                 FileUtils.getResourceAsStream(TranslationUtils.class, assetsPath + langPath)
         );
 

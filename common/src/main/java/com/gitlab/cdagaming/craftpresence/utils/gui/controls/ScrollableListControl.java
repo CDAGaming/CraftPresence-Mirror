@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
@@ -64,7 +63,7 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * The Current Hover Text that should be displayed
      */
-    public List<String> currentHoverText = Lists.newArrayList();
+    public List<String> currentHoverText = StringUtils.newArrayList();
     /**
      * The Items available to select within the List Gui
      */
@@ -262,7 +261,7 @@ public class ScrollableListControl extends GuiSlot {
      */
     public void setList(List<String> itemList) {
         if (itemList == null) {
-            itemList = Lists.newArrayList();
+            itemList = StringUtils.newArrayList();
         }
         if (!itemList.equals(this.itemList)) {
             this.itemList = itemList;
@@ -279,7 +278,7 @@ public class ScrollableListControl extends GuiSlot {
     public void setupAliasData() {
         entryAliases.clear();
 
-        for (String originalName : Lists.newArrayList(itemList)) {
+        for (String originalName : StringUtils.newArrayList(itemList)) {
             String displayName = originalName;
             if (renderType == RenderType.EntityData) {
                 if (StringUtils.isValidUuid(originalName)) {
@@ -307,7 +306,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param mouseYIn     The Mouse's Current Y Position
      */
     public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn) {
-        final List<String> hoverText = Lists.newArrayList();
+        final List<String> hoverText = StringUtils.newArrayList();
         String displayName = entryAliases.getOrDefault(originalName, originalName);
         int xOffset = xPos;
 

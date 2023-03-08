@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 
 import java.io.File;
@@ -306,7 +305,7 @@ public class Legacy2Modern implements DataMigrator {
             .put("extraButtonMessages", "displaySettings.presenceData.buttons")
             .put("dynamicIcons", "displaySettings.dynamicIcons")
             .build();
-    private final List<String> excludedOptions = Lists.newArrayList(
+    private final List<String> excludedOptions = StringUtils.newArrayList(
             "schemaVersion", "splitCharacter",
             "guiBackgroundColor", "buttonBackgroundColor", "tooltipBackgroundColor", "tooltipBorderColor"
     );

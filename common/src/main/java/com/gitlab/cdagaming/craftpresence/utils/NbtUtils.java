@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
-import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
@@ -175,7 +174,7 @@ public class NbtUtils {
                 return ((NBTTagString) tag).getString();
             case 9: {
                 final NBTTagList list = ((NBTTagList) tag);
-                final List<Object> converted = Lists.newArrayList();
+                final List<Object> converted = StringUtils.newArrayList();
                 if (!list.isEmpty()) {
                     for (int i = 0; i < list.tagCount(); i++) {
                         converted.add(parseTag(list.get(i)));

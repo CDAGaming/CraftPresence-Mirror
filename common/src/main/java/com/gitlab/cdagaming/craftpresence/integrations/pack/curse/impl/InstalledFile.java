@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -66,19 +65,19 @@ public class InstalledFile {
     public Integer alternateFileId;
     @SerializedName("dependencies")
     @Expose
-    public List<Object> dependencies = Lists.newArrayList();
+    public List<Object> dependencies = StringUtils.newArrayList();
     @SerializedName("isAvailable")
     @Expose
     public Boolean isAvailable;
     @SerializedName("modules")
     @Expose
-    public List<Module> modules = Lists.newArrayList();
+    public List<Module> modules = StringUtils.newArrayList();
     @SerializedName("packageFingerprint")
     @Expose
     public Integer packageFingerprint;
     @SerializedName("gameVersion")
     @Expose
-    public List<String> gameVersion = Lists.newArrayList();
+    public List<String> gameVersion = StringUtils.newArrayList();
     @SerializedName("hasInstallScript")
     @Expose
     public Boolean hasInstallScript;

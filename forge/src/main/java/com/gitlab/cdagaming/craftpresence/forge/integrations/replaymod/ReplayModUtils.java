@@ -31,7 +31,6 @@ import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.Lists;
 import com.replaymod.lib.de.johni0702.minecraft.gui.container.*;
 import com.replaymod.render.gui.GuiVideoRenderer;
 import com.replaymod.render.rendering.VideoRenderer;
@@ -144,7 +143,7 @@ public class ReplayModUtils implements Module {
 
     @Override
     public void getAllData() {
-        final List<Class<?>> searchClasses = Lists.newArrayList(AbstractGuiContainer.class, AbstractGuiScreen.class, AbstractGuiOverlay.class);
+        final List<Class<?>> searchClasses = StringUtils.newArrayList(AbstractGuiContainer.class, AbstractGuiScreen.class, AbstractGuiOverlay.class);
 
         for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
             final String screenName = MappingUtils.getClassName(classObj);

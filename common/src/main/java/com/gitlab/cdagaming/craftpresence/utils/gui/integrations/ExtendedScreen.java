@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -58,11 +57,11 @@ public class ExtendedScreen extends GuiScreen {
     /**
      * Similar to buttonList, a list of compatible controls in this Screen
      */
-    protected final List<Gui> extendedControls = Lists.newArrayList();
+    protected final List<Gui> extendedControls = StringUtils.newArrayList();
     /**
      * Similar to buttonList, a list of compatible ScrollLists in this Screen
      */
-    protected final List<ScrollableListControl> extendedLists = Lists.newArrayList();
+    protected final List<ScrollableListControl> extendedLists = StringUtils.newArrayList();
     /**
      * Variable needed to ensure all buttons are initialized before rendering to prevent an NPE
      */

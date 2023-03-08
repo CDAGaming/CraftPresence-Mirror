@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -382,14 +381,14 @@ public class FileUtils {
      * @return The List of found class names from the search
      */
     public static List<Class<?>> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final boolean includeExtraClasses, final String... sourcePackages) {
-        final List<Class<?>> matchingClasses = Lists.newArrayList();
-        final List<String> sourceData = Lists.newArrayList(sourcePackages);
+        final List<Class<?>> matchingClasses = StringUtils.newArrayList();
+        final List<String> sourceData = StringUtils.newArrayList(sourcePackages);
 
         if (!sourceData.isEmpty() && includeExtraClasses) {
             sourceData.addAll(getModClassNames());
         }
 
-        Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, Lists.newArrayList());
+        Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, StringUtils.newArrayList());
         for (Class<?> loadedInstance : getClasses(sourceData)) {
             for (Class<?> searchClass : searchList) {
                 subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getSecond());
@@ -410,7 +409,7 @@ public class FileUtils {
                     break;
                 } else {
                     // If no superclass data found, reset for next data
-                    subClassData = new Pair<>(false, Lists.newArrayList());
+                    subClassData = new Pair<>(false, StringUtils.newArrayList());
                 }
             }
         }
@@ -465,7 +464,7 @@ public class FileUtils {
      * @return The List of found classes from the search
      */
     public static List<Class<?>> getClassNamesMatchingSuperType(final Class<?> searchTarget, final boolean includeExtraClasses, final String... sourcePackages) {
-        return getClassNamesMatchingSuperType(Lists.newArrayList(searchTarget), includeExtraClasses, sourcePackages);
+        return getClassNamesMatchingSuperType(StringUtils.newArrayList(searchTarget), includeExtraClasses, sourcePackages);
     }
 
     /**
@@ -477,7 +476,7 @@ public class FileUtils {
      * @return the valid {@link Class} or null
      */
     public static Class<?> findValidClass(final ClassLoader loader, final boolean init, final String... paths) {
-        final List<String> classList = Lists.newArrayList(paths);
+        final List<String> classList = StringUtils.newArrayList(paths);
         for (String path : paths) {
             StringUtils.addEntriesNotPresent(classList, MappingUtils.getUnmappedClassesMatching(path, true));
         }
@@ -571,7 +570,7 @@ public class FileUtils {
      * @return the resulting list
      */
     public static List<Class<?>> getClasses(final List<String> paths) {
-        final List<Class<?>> results = Lists.newArrayList();
+        final List<Class<?>> results = StringUtils.newArrayList();
         final Map<String, Set<String>> unmappedNames = Maps.newHashMap();
         for (String path : paths) {
             unmappedNames.put(path, MappingUtils.getUnmappedClassesMatching(path));
@@ -607,7 +606,7 @@ public class FileUtils {
      * @return The list of viewable Mod Class Names
      */
     public static List<String> getModClassNames() {
-        final List<String> classNames = Lists.newArrayList();
+        final List<String> classNames = StringUtils.newArrayList();
         final File[] mods = new File(ModUtils.modsDir).listFiles();
 
         if (mods != null) {
@@ -634,7 +633,7 @@ public class FileUtils {
             }
             return classNames;
         } else {
-            return Lists.newArrayList();
+            return StringUtils.newArrayList();
         }
     }
 

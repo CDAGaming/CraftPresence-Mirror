@@ -38,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.multiplayer.GuiConnecting;
@@ -65,11 +64,11 @@ public class ServerUtils implements Module {
     /**
      * The Current Player Map, if available
      */
-    public List<NetworkPlayerInfo> currentPlayerList = Lists.newArrayList();
+    public List<NetworkPlayerInfo> currentPlayerList = StringUtils.newArrayList();
     /**
      * A List of the detected Server Addresses
      */
-    public List<String> knownAddresses = Lists.newArrayList();
+    public List<String> knownAddresses = StringUtils.newArrayList();
     /**
      * A List of the detected Server Data from NBT
      */
@@ -97,7 +96,7 @@ public class ServerUtils implements Module {
     /**
      * The Message of the Day, split by new lines, of the Current Server the Player is in
      */
-    private List<String> currentServer_MOTD_Lines = Lists.newArrayList();
+    private List<String> currentServer_MOTD_Lines = StringUtils.newArrayList();
     /**
      * The Current Server RPC Message being used, with Arguments
      */
@@ -268,7 +267,7 @@ public class ServerUtils implements Module {
         final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
 
         if (!joinInProgress) {
-            final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? Lists.newArrayList(newConnection.getPlayerInfoMap()) : Lists.newArrayList();
+            final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
             final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
             final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
             final boolean newLANStatus = (CraftPresence.instance.isSingleplayer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());

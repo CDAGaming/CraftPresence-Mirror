@@ -38,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 
 import java.io.File;
@@ -153,8 +152,8 @@ public final class Config extends Module implements Serializable {
     public static void setupCriticalData() {
         // Setup other critical data
         MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
-        keyCodeTriggers = Lists.newArrayList("keycode", "keybinding");
-        languageTriggers = Lists.newArrayList("language", "lang", "langId", "languageId");
+        keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
+        languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     }
 
     public static Object getProperty(final Config instance, final String... path) {
@@ -282,7 +281,7 @@ public final class Config extends Module implements Serializable {
             final Object parentValue = getProperty(path);
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
                 final String rawName = pathPrefix + entry.getKey();
-                final List<String> configPath = Lists.newArrayList(path);
+                final List<String> configPath = StringUtils.newArrayList(path);
                 configPath.add(entry.getKey());
                 final String[] pathData = configPath.toArray(new String[0]);
 
@@ -302,7 +301,7 @@ public final class Config extends Module implements Serializable {
 
                 if (shouldContinue) {
                     if (Module.class.isAssignableFrom(defaultValue.getClass())) {
-                        final List<String> paths = Lists.newArrayList(path);
+                        final List<String> paths = StringUtils.newArrayList(path);
                         paths.add(entry.getKey());
                         handleVerification(entry.getValue(), keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
                     } else if (!rawName.contains("presence")) { // Avoidance Filter
@@ -344,7 +343,7 @@ public final class Config extends Module implements Serializable {
                                     setProperty(newData, pathData);
                                 } else if (entry.getValue().isJsonObject()) {
                                     for (Object dataEntry : newData.keySet()) {
-                                        final List<String> paths = Lists.newArrayList(path);
+                                        final List<String> paths = StringUtils.newArrayList(path);
                                         paths.add(entry.getKey());
                                         paths.add(dataEntry.toString());
                                         final JsonElement dataValue = entry.getValue().getAsJsonObject().get(dataEntry.toString());

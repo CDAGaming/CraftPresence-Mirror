@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.CommandsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
@@ -200,7 +199,7 @@ public class MainGui extends ExtendedScreen {
                 )
         );
         // Adding Controls Button
-        final List<String> controlInfo = Lists.newArrayList("key.craftpresence.category");
+        final List<String> controlInfo = StringUtils.newArrayList("key.craftpresence.category");
         KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
         if (ModUtils.IS_LEGACY_SOFT) {
             controlInfo.clear();

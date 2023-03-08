@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.integrations.FieldReflectionUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.entity.Entity;
@@ -369,7 +368,7 @@ public class StringUtils {
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final Object original, final int flags) {
-        return original != null ? getMatches(regexValue, original.toString(), flags) : new Pair<>("", Lists.newArrayList());
+        return original != null ? getMatches(regexValue, original.toString(), flags) : new Pair<>("", StringUtils.newArrayList());
     }
 
     /**
@@ -392,7 +391,7 @@ public class StringUtils {
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final String original, final int flags) {
-        final List<String> matches = Lists.newArrayList();
+        final List<String> matches = StringUtils.newArrayList();
 
         if (!isNullOrEmpty(original)) {
             final Pattern pattern = Pattern.compile(regexValue, flags);
@@ -884,7 +883,7 @@ public class StringUtils {
      * @return the resulting list
      */
     public static <T> List<T> addEntriesNotPresent(final List<T> original, Set<T> newList) {
-        return addEntriesNotPresent(original, Lists.newArrayList(newList));
+        return addEntriesNotPresent(original, StringUtils.newArrayList(newList));
     }
 
     /**
@@ -1172,9 +1171,9 @@ public class StringUtils {
             if (formattedText.contains("\\\\n+")) {
                 formattedText = original.replace("\\\\n+", "&newline&");
             }
-            return Lists.newArrayList(formattedText.split("&newline&"));
+            return StringUtils.newArrayList(formattedText.split("&newline&"));
         } else {
-            return Lists.newArrayList();
+            return StringUtils.newArrayList();
         }
     }
 

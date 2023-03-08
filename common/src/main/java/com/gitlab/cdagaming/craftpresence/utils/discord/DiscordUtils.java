@@ -37,7 +37,6 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -322,7 +321,7 @@ public class DiscordUtils {
      * @return the output list
      */
     public List<String> createButtonsList(final Map<String, Button> list) {
-        final List<String> result = Lists.newArrayList();
+        final List<String> result = StringUtils.newArrayList();
         for (String buttonEntry : list.keySet()) {
             if (!StringUtils.isNullOrEmpty(buttonEntry)) {
                 result.add(buttonEntry);
@@ -772,7 +771,7 @@ public class DiscordUtils {
      */
     public void removeArguments(final String... args) {
         synchronized (placeholderData) {
-            final List<String> items = Lists.newArrayList(placeholderData.keySet());
+            final List<String> items = StringUtils.newArrayList(placeholderData.keySet());
             for (String key : items) {
                 for (String format : args) {
                     if (key.startsWith(format)) {
@@ -928,7 +927,7 @@ public class DiscordUtils {
      */
     public List<String> getArgumentEntries(final boolean formatToLower, final String... args) {
         final Map<String, Supplier<Value>> list = getArguments(args);
-        final List<String> result = Lists.newArrayList();
+        final List<String> result = StringUtils.newArrayList();
         for (String item : list.keySet()) {
             result.add(formatToLower ? item.toLowerCase() : item);
         }
