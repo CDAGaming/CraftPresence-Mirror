@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations;
 
-import com.google.common.base.Throwables;
 import sun.misc.Unsafe;
 
 import javax.annotation.Nonnull;
@@ -339,7 +338,7 @@ public class FieldReflectionUtils {
                             try {
                                 return (F) exactGetterHandle.invokeExact();
                             } catch (Throwable e) {
-                                throw Throwables.propagate(e);
+                                throw new RuntimeException(e);
                             }
                         };
                     } else {
@@ -349,7 +348,7 @@ public class FieldReflectionUtils {
                             try {
                                 return (F) exactGetterHandle.invokeExact((Object) obj);
                             } catch (Throwable e) {
-                                throw Throwables.propagate(e);
+                                throw new RuntimeException(e);
                             }
                         };
                     }
@@ -365,7 +364,7 @@ public class FieldReflectionUtils {
                                 try {
                                     exactSetterHandle.invokeExact((Object) val);
                                 } catch (Throwable e) {
-                                    throw Throwables.propagate(e);
+                                    throw new RuntimeException(e);
                                 }
                             };
                         } else {
@@ -375,7 +374,7 @@ public class FieldReflectionUtils {
                                 try {
                                     exactSetterHandle.invokeExact((Object) obj, (Object) val);
                                 } catch (Throwable e) {
-                                    throw Throwables.propagate(e);
+                                    throw new RuntimeException(e);
                                 }
                             };
                         }
