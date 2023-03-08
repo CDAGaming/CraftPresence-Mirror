@@ -1344,8 +1344,43 @@ public class StringUtils {
      * @param map the input map whose mappings are to be copied to the new map
      * @return a new instance of {@link HashMap} that contains the same key-value mappings as the input map
      */
-    public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map) {
+    public static <K, V> Map<K, V> newHashMap(final Map<? extends K, ? extends V> map) {
         return new HashMap<>(map);
+    }
+
+    /**
+     * Creates a new instance of {@link TreeMap} that uses the natural ordering of its keys.
+     *
+     * @param <K> the type of keys maintained by the new map
+     * @param <V> the type of mapped values
+     * @return a new instance of {@link TreeMap}
+     */
+    public static <K extends Comparable<? super K>, V> TreeMap<K, V> newTreeMap() {
+        return new TreeMap<>();
+    }
+
+    /**
+     * Creates a new instance of {@link TreeMap} that uses the specified comparator to order its keys.
+     *
+     * @param <K>        the type of keys maintained by the new map
+     * @param <V>        the type of mapped values
+     * @param comparator the comparator to use for ordering the keys
+     * @return a new instance of {@link TreeMap}
+     */
+    public static <K, V> TreeMap<K, V> newTreeMap(final Comparator<? super K> comparator) {
+        return new TreeMap<>(comparator);
+    }
+
+    /**
+     * Creates a new instance of {@link TreeMap} that contains the same key-value mappings as the input map.
+     *
+     * @param <K> the type of keys maintained by the new map
+     * @param <V> the type of mapped values
+     * @param map the input map whose mappings are to be copied to the new map
+     * @return a new instance of {@link TreeMap} that contains the same key-value mappings as the input map
+     */
+    public static <K extends Comparable<? super K>, V> TreeMap<K, V> newTreeMap(Map<? extends K, ? extends V> map) {
+        return new TreeMap<>(map);
     }
 
     /**

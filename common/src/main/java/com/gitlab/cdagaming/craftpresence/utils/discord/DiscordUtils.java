@@ -37,7 +37,6 @@ import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
-import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
@@ -78,7 +77,7 @@ public class DiscordUtils {
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
-    private final TreeMap<String, Supplier<Value>> placeholderData = Maps.newTreeMap();
+    private final TreeMap<String, Supplier<Value>> placeholderData = StringUtils.newTreeMap();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to cache data for repeated images in other areas
@@ -378,7 +377,7 @@ public class DiscordUtils {
     @SafeVarargs
     public final Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
         synchronized (placeholderData) {
-            final Map<String, Supplier<Value>> placeholders = Maps.newTreeMap(placeholderData);
+            final Map<String, Supplier<Value>> placeholders = StringUtils.newTreeMap(placeholderData);
             final String data = StringUtils.getOrDefault(input);
 
             if (!plain) {
@@ -837,8 +836,8 @@ public class DiscordUtils {
      */
     public Map<String, Supplier<Value>> getArguments(final String... args) {
         synchronized (placeholderData) {
-            final Map<String, Supplier<Value>> items = Maps.newTreeMap(placeholderData);
-            final Map<String, Supplier<Value>> list = Maps.newTreeMap();
+            final Map<String, Supplier<Value>> items = StringUtils.newTreeMap(placeholderData);
+            final Map<String, Supplier<Value>> list = StringUtils.newTreeMap();
 
             for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
                 final String item = entry.getKey();

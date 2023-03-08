@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.google.common.collect.Queues;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
@@ -49,6 +48,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Image Utilities used to Parse External Image Data and rendering tasks
@@ -61,7 +61,7 @@ public class ImageUtils {
      * <p>
      * Format: textureName;[textureInputType, textureObj]
      */
-    private static final BlockingQueue<Pair<String, Pair<InputType, Object>>> urlRequests = Queues.newLinkedBlockingQueue();
+    private static final BlockingQueue<Pair<String, Pair<InputType, Object>>> urlRequests = new LinkedBlockingQueue<>();
     /**
      * Cached Images retrieved from URL Texture Retrieval
      * <p>

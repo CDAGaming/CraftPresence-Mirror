@@ -507,7 +507,8 @@ public class FunctionsLib {
         String tempKey = null;
         if (!args.isEmpty()) {
             for (Value info : args) {
-                if (!info.isString()) ss.error("Incorrect type data supplied for replace(), please check input and documentation.");
+                if (!info.isString())
+                    ss.error("Incorrect type data supplied for replace(), please check input and documentation.");
 
                 final String param = info.getString();
                 if (StringUtils.isNullOrEmpty(tempKey)) {
