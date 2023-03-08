@@ -47,7 +47,6 @@ import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -494,7 +493,7 @@ public class DiscordUtils {
             } catch (Throwable ex) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.compiler"));
                 ModUtils.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
-                final List<String> splitEx = StringUtils.splitTextByNewLine(ExceptionUtils.getStackTrace(ex));
+                final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
                 // Dispatch to Appendable WriteStream if possible
                 if (output != null) {
                     try {

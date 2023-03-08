@@ -34,7 +34,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.settings.KeyBinding;
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -230,7 +229,7 @@ public class KeyUtils {
                         final int largestInt = largest.orElse(0);
                         categoryMap.put(mapping.getKeyCategory(), largestInt + 1);
                     }
-                    CraftPresence.instance.gameSettings.keyBindings = ArrayUtils.add(CraftPresence.instance.gameSettings.keyBindings, mapping);
+                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, mapping);
                 }
                 keysRegistered = true;
             } else {

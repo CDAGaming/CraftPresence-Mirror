@@ -36,6 +36,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 
 import java.awt.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -155,6 +157,21 @@ public class StringUtils {
      */
     public static byte[] getBytes(final String original) {
         return getBytes(original, null);
+    }
+
+    /**
+     * Retrieve the stacktrace from an {@link Throwable}
+     * @param ex The exception to interpret
+     * @return The string representation of the {@link Throwable}
+     */
+    public static String getStackTrace(final Throwable ex) {
+        if (ex == null) {
+            return "";
+        }
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        return sw.toString();
     }
 
     /**
@@ -1206,28 +1223,58 @@ public class StringUtils {
     /**
      * Determines if the Specified index exists in the List with a non-null value
      *
-     * @param data  The Array of Strings to check within
+     * @param data  The Array to check within
      * @param index The index to check
      * @return {@link Boolean#TRUE} if the index element exists in the list with a non-null value
+     * @param <T> The identified list type
      */
-    public static boolean elementExists(final String[] data, final int index) {
+    public static <T> boolean elementExists(final T[] data, final int index) {
         return elementExists(Arrays.asList(data), index);
     }
 
     /**
      * Determines if the Specified index exists in the List with a non-null value
      *
-     * @param data  The List of Strings to check within
+     * @param data  The List to check within
      * @param index The index to check
      * @return {@link Boolean#TRUE} if the index element exists in the list with a non-null value
+     * @param <T> The identified list type
      */
-    public static boolean elementExists(final List<String> data, final int index) {
+    public static <T> boolean elementExists(final List<T> data, final int index) {
         boolean result;
         try {
-            result = data.size() >= index && !isNullOrEmpty(data.get(index));
+            result = data.size() >= index && data.get(index) != null;
         } catch (Exception ex) {
             result = false;
         }
+        return result;
+    }
+
+    /**
+     * <p>Copies the given array and adds the given element at the end of the new array.
+     *
+     * <p>The new array contains the same elements of the input
+     * array plus the given element in the last position. The component type of
+     * the new array is the same as that of the input array.
+     *
+     * <p>If the input array is {@code null}, a new one element array is returned
+     *  whose component type is the same as the element, unless the element itself is null,
+     *  in which case the return type is Object[]
+     * @param array the array to "add" the element to, may be {@code null}
+     * @param element  the object to add, may be {@code null}
+     * @return A new array containing the existing elements plus the new element
+     * The returned array type will be that of the input array (unless null),
+     * in which case it will have the same type as the element.
+     * If both are null, an IllegalArgumentException is thrown
+     * @param <T> the component type of the array
+     * @throws IllegalArgumentException if both arguments are null
+     */
+    public static <T> T[] addToArray(final T[] array, final T element) {
+        if (array == null) {
+            throw new IllegalArgumentException("Array cannot be null");
+        }
+        T[] result = Arrays.copyOf(array, array.length + 1);
+        result[array.length] = element;
         return result;
     }
 
