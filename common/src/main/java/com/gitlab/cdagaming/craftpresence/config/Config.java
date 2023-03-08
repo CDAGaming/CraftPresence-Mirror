@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
+import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.google.common.collect.ImmutableMap;
@@ -52,7 +53,7 @@ import java.util.Map;
 @SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public final class Config extends Module implements Serializable {
     // Constants
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
     private static final long serialVersionUID = -4853238501768086595L;
     private static int MC_VERSION;
     private static List<String> keyCodeTriggers;
@@ -243,6 +244,22 @@ public final class Config extends Module implements Serializable {
                             .getAsJsonPrimitive("showTime").getAsBoolean();
                     displaySettings.presenceData.startTimestamp = showTime ? "{data.general.time}" : "";
                     currentVer = 2;
+                }
+                if (StringUtils.isWithinValue(currentVer, 2, 3, true, false)) {
+                    // Schema Changes (v2 -> v3)
+                    //  - Placeholder: `world.time24` -> `world.time.24`
+                    //  - Placeholder: `world.time12` -> `world.time.12`
+                    //  - Placeholder: `world.day` -> `world.time.day`
+                    new TextReplacer(
+                            ImmutableMap.<String, String>builder()
+                            .put("world.time24", "world.time.24")
+                            .put("world.time12", "world.time.12")
+                            .put("world.day", "world.time.day")
+                            .build(),
+                            true,
+                            true, false, true
+                    ).apply(this, rawJson);
+                    currentVer = 3;
                 }
 
                 save();
