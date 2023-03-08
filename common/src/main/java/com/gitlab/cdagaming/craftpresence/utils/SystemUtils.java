@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.LockObject;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
-import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.time.Instant;
@@ -139,7 +138,7 @@ public class SystemUtils {
             ELAPSED_TIME = 0;
 
             // Calculate if 64-Bit Architecture
-            final List<String> x64 = Lists.newArrayList("amd64", "x86_64");
+            final List<String> x64 = StringUtils.newArrayList("amd64", "x86_64");
             IS_64_BIT = x64.contains(OS_ARCH);
 
             TICK_LOCK.unlock();

@@ -1279,6 +1279,17 @@ public class StringUtils {
     }
 
     /**
+     * Creates a new ArrayList containing the specified elements.
+     *
+     * @param elements the elements to include in the new ArrayList
+     * @param <T> the type of elements in the list
+     * @return a new ArrayList containing the specified elements
+     */
+    public static <T> List<T> newArrayList(final T... elements) {
+        return new ArrayList<>(Arrays.asList(elements));
+    }
+
+    /**
      * Retrieve the list of fields present in the specified class
      *
      * @param classToAccess The class object to interpret
