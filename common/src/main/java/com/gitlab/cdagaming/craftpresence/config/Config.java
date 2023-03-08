@@ -86,23 +86,14 @@ public final class Config extends Module implements Serializable {
         return new File(getConfigPath());
     }
 
-    public static Config loadOrCreate(final boolean forceCreate) {
+    public static Pair<Config, JsonElement> read() {
         Config config = null;
         JsonElement rawJson = null;
-        setupCriticalData();
 
         try {
             config = FileUtils.getJsonData(getConfigFile(), Config.class,
                     FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
             rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
-            boolean shouldBeNew = forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
-            if (shouldBeNew) {
-                config = new Config();
-                config.isNewFile = shouldBeNew;
-                config.hasChanged = config.hasClientPropertiesChanged = config.flushClientProperties = shouldBeNew;
-                config._schemaVersion = VERSION;
-                config._lastMCVersionId = MC_VERSION;
-            }
         } catch (Exception ex) {
             if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class)) {
                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
@@ -115,13 +106,32 @@ public final class Config extends Module implements Serializable {
                 }
             }
         }
+        return Pair.of(config, rawJson);
+    }
+
+    public static Config loadOrCreate(final boolean forceCreate) {
+        setupCriticalData();
+
+        final Pair<Config, JsonElement> data = read();
+        Config config = data.getLeft();
+        JsonElement rawJson = data.getRight();
 
         if (config == null) {
             config = new Config();
             config.isNewFile = true;
             config._schemaVersion = VERSION;
             config._lastMCVersionId = MC_VERSION;
+        } else {
+            boolean shouldBeNew = forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
+            if (shouldBeNew) {
+                config = new Config();
+                config.isNewFile = shouldBeNew;
+                config.hasChanged = config.hasClientPropertiesChanged = config.flushClientProperties = shouldBeNew;
+                config._schemaVersion = VERSION;
+                config._lastMCVersionId = MC_VERSION;
+            }
         }
+
         final boolean wasNewFile = config.isNewFile;
         config.handleSync(rawJson);
         if (!forceCreate) {
@@ -239,14 +249,7 @@ public final class Config extends Module implements Serializable {
             }
 
             // Refresh the raw json contents, in case of any changes
-            try {
-                rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
-            } catch (Exception ex) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                if (CommandUtils.isVerboseMode()) {
-                    ex.printStackTrace();
-                }
-            }
+            rawJson = read().getRight();
         }
         return rawJson;
     }
