@@ -225,9 +225,9 @@ public final class Config extends Module implements Serializable {
                     ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.outdated", currentVer, newVer));
                 }
 
-                if (StringUtils.isWithinValue(currentVer, 1, 2, true, true)) {
+                if (StringUtils.isWithinValue(currentVer, 1, 2, true, false)) {
                     // Schema Changes (v1 -> v2)
-                    //  - Property Migration: `generalSettings.showTime` -> `displaySettings.presenceData.startTimestamp`
+                    //  - Property: `generalSettings.showTime` -> `displaySettings.presenceData.startTimestamp`
                     final boolean showTime = rawJson.getAsJsonObject()
                             .getAsJsonObject("generalSettings")
                             .getAsJsonPrimitive("showTime").getAsBoolean();
