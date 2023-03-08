@@ -460,7 +460,7 @@ public class FunctionsLib {
     }
 
     public static Value replace(Starscript ss, int argCount) {
-        final List<String> args = StringUtils.newArrayList();
+        final List<Value> args = StringUtils.newArrayList();
         if (argCount < 3)
             ss.error("replace() requires at least 3 arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
