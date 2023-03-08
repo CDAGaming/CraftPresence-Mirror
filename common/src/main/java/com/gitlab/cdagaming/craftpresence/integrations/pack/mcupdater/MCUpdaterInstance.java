@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater;
 
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.common.collect.Maps;
 
 import java.util.List;

@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl;
 
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

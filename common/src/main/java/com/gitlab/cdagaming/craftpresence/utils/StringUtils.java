@@ -108,7 +108,7 @@ public class StringUtils {
      */
     public static Color getColorFromHex(final String hexColor) {
         try {
-            if (hexColor.length() == 7 && !StringUtils.isNullOrEmpty(hexColor.substring(1))) {
+            if (hexColor.length() == 7 && !isNullOrEmpty(hexColor.substring(1))) {
                 final int r = Integer.valueOf(hexColor.substring(1, 3), 16);
                 final int g = Integer.valueOf(hexColor.substring(3, 5), 16);
                 final int b = Integer.valueOf(hexColor.substring(5, 7), 16);
@@ -138,7 +138,7 @@ public class StringUtils {
     @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public static byte[] getBytes(final String original, final String encoding) {
         try {
-            if (!StringUtils.isNullOrEmpty(encoding)) {
+            if (!isNullOrEmpty(encoding)) {
                 return original.getBytes(encoding);
             } else {
                 return original.getBytes();
@@ -369,7 +369,7 @@ public class StringUtils {
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final Object original, final int flags) {
-        return original != null ? getMatches(regexValue, original.toString(), flags) : new Pair<>("", StringUtils.newArrayList());
+        return original != null ? getMatches(regexValue, original.toString(), flags) : new Pair<>("", newArrayList());
     }
 
     /**
@@ -392,7 +392,7 @@ public class StringUtils {
      * @return A Pair with the Format of originalString:listOfMatches
      */
     public static Pair<String, List<String>> getMatches(final String regexValue, final String original, final int flags) {
-        final List<String> matches = StringUtils.newArrayList();
+        final List<String> matches = newArrayList();
 
         if (!isNullOrEmpty(original)) {
             final Pattern pattern = Pattern.compile(regexValue, flags);
@@ -785,7 +785,7 @@ public class StringUtils {
      * @return Whether the specified String classifies as a valid Uuid
      */
     public static boolean isValidUuid(final String input) {
-        return !StringUtils.isNullOrEmpty(input) &&
+        return !isNullOrEmpty(input) &&
                 (input.contains("-") ? FULL_UUID_PATTERN : TRIMMED_UUID_PATTERN).matcher(input).find();
     }
 
@@ -799,7 +799,7 @@ public class StringUtils {
      * @return the resulting UUID
      */
     public static String getFromUuid(final String input, final boolean trimmed) {
-        if (!StringUtils.isValidUuid(input)) {
+        if (!isValidUuid(input)) {
             return input;
         }
         if (trimmed) {
@@ -884,7 +884,7 @@ public class StringUtils {
      * @return the resulting list
      */
     public static <T> List<T> addEntriesNotPresent(final List<T> original, Set<T> newList) {
-        return addEntriesNotPresent(original, StringUtils.newArrayList(newList));
+        return addEntriesNotPresent(original, newArrayList(newList));
     }
 
     /**
@@ -1172,9 +1172,9 @@ public class StringUtils {
             if (formattedText.contains("\\\\n+")) {
                 formattedText = original.replace("\\\\n+", "&newline&");
             }
-            return StringUtils.newArrayList(formattedText.split("&newline&"));
+            return newArrayList(formattedText.split("&newline&"));
         } else {
-            return StringUtils.newArrayList();
+            return newArrayList();
         }
     }
 
@@ -1286,8 +1286,44 @@ public class StringUtils {
      * @param <T>      the type of elements in the list
      * @return a new ArrayList containing the specified elements
      */
+    @SafeVarargs
     public static <T> List<T> newArrayList(final T... elements) {
         return new ArrayList<>(Arrays.asList(elements));
+    }
+
+    /**
+     * Creates a new ArrayList containing the specified elements.
+     *
+     * @return a new ArrayList containing the specified elements
+     */
+    public static <T> List<T> newArrayList() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Creates a new ArrayList containing the specified elements.
+     *
+     * @param iterator the elements to include in the new ArrayList
+     * @param <T>      the type of elements in the list
+     * @return a new ArrayList containing the specified elements
+     */
+    public static <T> List<T> newArrayList(final Iterator<T> iterator) {
+        final List<T> list = new ArrayList<>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
+        }
+        return list;
+    }
+
+    /**
+     * Creates a new ArrayList containing the specified elements.
+     *
+     * @param iterable the elements to include in the new ArrayList
+     * @param <T>      the type of elements in the list
+     * @return a new ArrayList containing the specified elements
+     */
+    public static <T> List<T> newArrayList(final Iterable<T> iterable) {
+        return newArrayList(iterable.iterator());
     }
 
     /**
