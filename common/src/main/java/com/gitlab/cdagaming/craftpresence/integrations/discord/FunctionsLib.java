@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils.discord;
+package com.gitlab.cdagaming.craftpresence.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
@@ -36,6 +36,7 @@ import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
 
 import java.awt.*;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +96,18 @@ public class FunctionsLib {
         ss.set("hasField", FunctionsLib::hasField);
         ss.set("executeMethod", FunctionsLib::executeMethod);
         ss.set("stripColors", FunctionsLib::stripColors);
+
+        // TimeUtils
+        ss.set("getCurrentTime", FunctionsLib::getCurrentTime);
+        ss.set("timeToEpoch", FunctionsLib::timeToEpoch); // toEpoch
+        ss.set("timeFromEpoch", FunctionsLib::timeFromEpoch); // fromEpoch
+        ss.set("dateToEpoch", FunctionsLib::dateToEpoch); // stringToEpoch
+        ss.set("epochToDate", FunctionsLib::epochToDate); // epochToString
+        ss.set("convertTimeZone", FunctionsLib::convertTimeZone); // convertZone
+        ss.set("convertTimeFormat", FunctionsLib::convertTimeFormat); // convertFormat
+        ss.set("convertTime", FunctionsLib::convertTime);
+        ss.set("timeFromString", FunctionsLib::timeFromString); // toInstance
+        ss.set("timeToString", FunctionsLib::timeToString); // toString
     }
 
     public static Value format(Starscript ss, int argCount) {
@@ -827,5 +840,102 @@ public class FunctionsLib {
         if (argCount != 1) ss.error("stripColors() requires 1 argument, got %d.", argCount);
         String a = ss.popString("Argument to stripColors() needs to be a string.");
         return Value.string(StringUtils.stripColors(a));
+    }
+
+    public static Value getCurrentTime(Starscript ss, int argCount) {
+        return Value.object(TimeUtils.getCurrentTime());
+    }
+
+    public static Value timeToEpoch(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("timeToEpoch() requires 1 argument, got %d.", argCount);
+        Object a = ss.popObject("Argument to timeToEpoch() needs to be an object.");
+        if (a instanceof Instant) {
+            return Value.number(TimeUtils.toEpoch((Instant) a));
+        } else {
+            ss.error("Argument to timeToEpoch() needs to be a valid Instant Object.");
+        }
+        return Value.null_();
+    }
+
+    public static Value timeFromEpoch(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("timeFromEpoch() requires 1 argument, got %d.", argCount);
+        double a = ss.popNumber("Argument to timeFromEpoch() needs to be a number.");
+        return Value.object(TimeUtils.fromEpoch((long) a));
+    }
+
+    public static Value dateToEpoch(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3) ss.error("dateToEpoch() can only be used with 2-3 arguments, got %d.", argCount);
+        String timeZone = null;
+        if (argCount == 3) {
+            timeZone = ss.popString("Third argument to dateToEpoch() needs to be a string.");
+        }
+        String format = ss.popString("Second argument to dateToEpoch() needs to be a string.");
+        String dateString = ss.popString("First argument to dateToEpoch() needs to be a string.");
+        return Value.number(TimeUtils.stringToEpoch(dateString, format, timeZone));
+    }
+
+    public static Value epochToDate(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3) ss.error("epochToDate() can only be used with 2-3 arguments, got %d.", argCount);
+        String timeZone = null;
+        if (argCount == 3) {
+            timeZone = ss.popString("Third argument to epochToDate() needs to be a string.");
+        }
+        String format = ss.popString("Second argument to epochToDate() needs to be a string.");
+        double dateString = ss.popNumber("First argument to epochToDate() needs to be a number.");
+        return Value.string(TimeUtils.epochToString((long) dateString, format, timeZone));
+    }
+
+    public static Value convertTimeZone(Starscript ss, int argCount) {
+        if (argCount != 4) ss.error("convertTimeZone() can only be used with 4 arguments, got %d.", argCount);
+        String toTimeZone = ss.popString("Fourth argument to convertTimeZone() needs to be a string.");
+        String fromTimeZone = ss.popString("Third argument to convertTimeZone() needs to be a string.");
+        String fromFormat = ss.popString("Second argument to convertTimeZone() needs to be a string.");
+        String dateString = ss.popString("First argument to convertTimeZone() needs to be a string.");
+        return Value.string(TimeUtils.convertZone(dateString, fromFormat, fromTimeZone, toTimeZone));
+    }
+
+    public static Value convertTimeFormat(Starscript ss, int argCount) {
+        if (argCount != 3) ss.error("convertTimeFormat() can only be used with 3 arguments, got %d.", argCount);
+        String toFormat = ss.popString("Third argument to convertTimeFormat() needs to be a string.");
+        String fromFormat = ss.popString("Second argument to convertTimeFormat() needs to be a string.");
+        String dateString = ss.popString("First argument to convertTimeFormat() needs to be a string.");
+        return Value.string(TimeUtils.convertFormat(dateString, fromFormat, toFormat));
+    }
+
+    public static Value convertTime(Starscript ss, int argCount) {
+        if (argCount != 5) ss.error("convertTime() can only be used with 5 arguments, got %d.", argCount);
+        String toTimeZone = ss.popString("Fifth argument to convertTime() needs to be a string.");
+        String toFormat = ss.popString("Fourth argument to convertTime() needs to be a string.");
+        String fromTimeZone = ss.popString("Third argument to convertTime() needs to be a string.");
+        String fromFormat = ss.popString("Second argument to convertTime() needs to be a string.");
+        String dateString = ss.popString("First argument to convertTime() needs to be a string.");
+        return Value.string(TimeUtils.convertTime(dateString, fromFormat, fromTimeZone, toFormat, toTimeZone));
+    }
+
+    public static Value timeFromString(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3) ss.error("timeFromString() can only be used with 2-3 arguments, got %d.", argCount);
+        String fromTimeZone = null;
+        if (argCount == 3) {
+            fromTimeZone = ss.popString("Third argument to timeFromString() needs to be a string.");
+        }
+        String fromFormat = ss.popString("Second argument to timeFromString() needs to be a string.");
+        String dateString = ss.popString("First argument to timeFromString() needs to be a string.");
+        return Value.object(TimeUtils.toInstance(dateString, fromFormat, fromTimeZone));
+    }
+
+    public static Value timeToString(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3) ss.error("timeToString() can only be used with 2-3 arguments, got %d.", argCount);
+        String toTimeZone = null;
+        if (argCount == 3) {
+            toTimeZone = ss.popString("Third argument to timeToString() needs to be a string.");
+        }
+        String toFormat = ss.popString("Second argument to timeToString() needs to be a string.");
+        Object date = ss.popObject("First argument to timeToString() needs to be an object.");
+        if (date instanceof Instant) {
+            return Value.string(TimeUtils.toString((Instant) date, toFormat, toTimeZone));
+        } else {
+            ss.error("First Argument to timeToString() needs to be a valid Instant Object.");
+        }
+        return Value.null_();
     }
 }
