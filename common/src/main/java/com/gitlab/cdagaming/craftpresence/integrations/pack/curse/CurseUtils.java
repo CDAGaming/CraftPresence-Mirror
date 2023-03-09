@@ -63,7 +63,7 @@ public class CurseUtils extends Pack {
                 // Attempt to read Pack info from the minecraftinstance.json file
                 // As Most if not all types of Curse Packs contain this file
                 // Though it is considered a fallback due to how much it's parsing
-                if (ex.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
+                if (showException(ex)) {
                     ex.printStackTrace();
                 }
                 final CurseInstance instance = FileUtils.getJsonData(new File("minecraftinstance.json"), CurseInstance.class);
@@ -71,7 +71,7 @@ public class CurseUtils extends Pack {
                     setPackName(instance.name);
                 }
             } catch (Exception ex2) {
-                if (ex2.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
+                if (showException(ex2)) {
                     ex2.printStackTrace();
                 }
             }

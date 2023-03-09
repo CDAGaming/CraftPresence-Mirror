@@ -60,7 +60,7 @@ public class MultiMCUtils extends Pack {
             setPackName(configFile.getProperty("name"));
             setPackIcon(!StringUtils.isNullOrEmpty(tempIconKey) && !tempIconKey.equals(defaultIconName) ? tempIconKey : defaultIconKey);
         } catch (Exception ex) {
-            if ((ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) || CommandUtils.isVerboseMode()) {
+            if (showException(ex)) {
                 ex.printStackTrace();
             }
         }

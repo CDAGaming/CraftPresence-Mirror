@@ -55,7 +55,7 @@ public class TechnicUtils extends Pack {
                 }
             }
         } catch (Exception ex) {
-            if (ex.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
+            if (showException(ex)) {
                 ex.printStackTrace();
             }
         }

@@ -53,7 +53,7 @@ public class MCUpdaterUtils extends Pack {
                 setPackName(instance.getPackName());
             }
         } catch (Exception ex) {
-            if (ex.getClass() != FileNotFoundException.class || CommandUtils.isVerboseMode()) {
+            if (showException(ex)) {
                 ex.printStackTrace();
             }
         }

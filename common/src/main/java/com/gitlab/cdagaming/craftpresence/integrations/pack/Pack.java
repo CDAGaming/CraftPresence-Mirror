@@ -24,7 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack;
 
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+
+import java.io.FileNotFoundException;
+import java.nio.file.NoSuchFileException;
 
 /**
  * Set of Utilities used to Parse Pack Instance Information
@@ -104,5 +108,18 @@ public abstract class Pack {
      */
     public boolean hasPackIcon() {
         return !StringUtils.isNullOrEmpty(packIcon);
+    }
+
+    /**
+     * Whether to display the specified pack exception
+     *
+     * @param ex The {@link Exception} to interpret
+     * @return {@link Boolean#TRUE} if operation is allowed
+     */
+    protected boolean showException(final Exception ex) {
+        return CommandUtils.isVerboseMode() || (
+                ex.getClass() != FileNotFoundException.class &&
+                        ex.getClass() != NoSuchFileException.class
+        );
     }
 }
