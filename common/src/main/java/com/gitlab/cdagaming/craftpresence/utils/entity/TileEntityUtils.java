@@ -471,7 +471,7 @@ public class TileEntityUtils implements Module {
     public void getAllData() {
         for (Block block : Block.REGISTRY) {
             if (!isEmpty(block)) {
-                final String blockName = block.getLocalizedName();
+                final String blockName = getName(block);
                 if (!BLOCK_NAMES.contains(blockName)) {
                     BLOCK_NAMES.add(blockName);
                 }
@@ -499,7 +499,8 @@ public class TileEntityUtils implements Module {
 
         for (Item item : Item.REGISTRY) {
             if (!isEmpty(item)) {
-                final String itemName = item.getItemStackDisplayName(getDefaultInstance(item));
+                final ItemStack stack = getStackFrom(item);
+                final String itemName = getName(stack);
                 if (!ITEM_NAMES.contains(itemName)) {
                     ITEM_NAMES.add(itemName);
                 }
@@ -511,7 +512,7 @@ public class TileEntityUtils implements Module {
                     try {
                         final ResourceLocation initialData = new ResourceLocation(
                                 CraftPresence.instance.getRenderItem().getItemModelMesher().getItemModel(
-                                        getDefaultInstance(item)
+                                        stack
                                 ).getParticleTexture().getIconName()
                         );
                         TILE_ENTITY_RESOURCES.put(itemName,
