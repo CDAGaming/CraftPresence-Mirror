@@ -137,10 +137,6 @@ public class ServerUtils implements Module {
      */
     private String currentWeatherName;
     /**
-     * The Current World's Weather Duration
-     */
-    private long currentWeatherDuration;
-    /**
      * The Amount of Players in the Current Server the Player is in
      */
     private int currentPlayers;
@@ -209,7 +205,6 @@ public class ServerUtils implements Module {
         currentDifficulty = null;
         currentWorldName = null;
         currentWeatherName = null;
-        currentWeatherDuration = 0L;
         currentServerMessage = "";
         currentServerIcon = "";
         canUseEndpointIcon = false;
@@ -347,15 +342,10 @@ public class ServerUtils implements Module {
             }
 
             // `world.weather` Arguments = Current Weather Data of the World
-            final Pair<String, Long> newWeatherData = EntityUtils.getWeather(CraftPresence.player);
-            final String newWeatherName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData.getFirst());
-            final Long newWeatherDuration = newWeatherData.getSecond();
+            final String newWeatherData = EntityUtils.getWeather(CraftPresence.player);
+            final String newWeatherName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
             if (!newWeatherName.equals(currentWeatherName)) {
                 currentWeatherName = newWeatherName;
-                queuedForUpdate = true;
-            }
-            if (!newWeatherDuration.equals(currentWeatherDuration)) {
-                currentWeatherDuration = newWeatherDuration;
                 queuedForUpdate = true;
             }
 
@@ -486,7 +476,6 @@ public class ServerUtils implements Module {
         // World Data Arguments
         CraftPresence.CLIENT.syncArgument("world.difficulty", StringUtils.getOrDefault(currentDifficulty));
         CraftPresence.CLIENT.syncArgument("world.weather.name", StringUtils.getOrDefault(currentWeatherName));
-        CraftPresence.CLIENT.syncArgument("world.weather.duration", currentWeatherDuration);
         CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
         if (worldTimeData != null) {
             CraftPresence.CLIENT.syncArgument("world.time.day", dayCount);

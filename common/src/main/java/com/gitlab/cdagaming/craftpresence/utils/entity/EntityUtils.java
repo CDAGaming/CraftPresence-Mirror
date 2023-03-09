@@ -123,23 +123,19 @@ public class EntityUtils implements Module {
      * @param worldObj The world object to interpret
      * @return the current weather data
      */
-    public static Pair<String, Long> getWeather(final World worldObj) {
+    public static String getWeather(final World worldObj) {
         String name = "clear";
-        long duration = 0L;
         if (worldObj != null) {
             final WorldInfo info = worldObj.getWorldInfo();
             if (info.isThundering()) {
                 name = "thunder";
-                duration = info.getThunderTime();
             } else if (info.isRaining()) {
                 name = "rain";
-                duration = info.getRainTime();
             } else {
                 name = "clear";
-                duration = info.getCleanWeatherTime();
             }
         }
-        return new Pair<>(name, duration);
+        return name;
     }
 
     /**
@@ -148,7 +144,7 @@ public class EntityUtils implements Module {
      * @param entity The entity to interpret
      * @return the current weather data
      */
-    public static Pair<String, Long> getWeather(final Entity entity) {
+    public static String getWeather(final Entity entity) {
         return getWeather(entity != null ? entity.world : null);
     }
 
