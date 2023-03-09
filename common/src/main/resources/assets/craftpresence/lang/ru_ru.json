@@ -300,7 +300,6 @@
   "craftpresence.placeholders.screen.default.icon.description": "The default Gui Screen icon",
   "craftpresence.placeholders.world.difficulty.description": "The current world's difficulty",
   "craftpresence.placeholders.world.weather.name.description": "The current world's weather name",
-  "craftpresence.placeholders.world.weather.duration.description": "The current world's weather duration",
   "craftpresence.placeholders.world.name.description": "The name of the current world",
   "craftpresence.placeholders.world.time.24.description": "The current world's in-game time (24-hour format)",
   "craftpresence.placeholders.world.time.12.description": "The current world's in-game time (12-hour format)",
