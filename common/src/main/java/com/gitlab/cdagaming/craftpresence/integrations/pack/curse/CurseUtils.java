@@ -28,11 +28,9 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl.CurseInstance;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl.Manifest;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 /**
  * Set of Utilities used to Parse Curse Manifest Information

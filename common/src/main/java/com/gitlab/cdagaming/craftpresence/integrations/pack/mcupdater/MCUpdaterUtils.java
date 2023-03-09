@@ -26,12 +26,10 @@ package com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 /**
  * Set of Utilities used to Parse MCUpdater Instance Information

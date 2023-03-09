@@ -26,11 +26,9 @@ package com.gitlab.cdagaming.craftpresence.integrations.pack.technic;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 /**
  * Set of Utilities used to Parse Technic Launcher Pack Information

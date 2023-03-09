@@ -864,7 +864,8 @@ public class FunctionsLib {
     }
 
     public static Value dateToEpoch(Starscript ss, int argCount) {
-        if (argCount < 2 || argCount > 3) ss.error("dateToEpoch() can only be used with 2-3 arguments, got %d.", argCount);
+        if (argCount < 2 || argCount > 3)
+            ss.error("dateToEpoch() can only be used with 2-3 arguments, got %d.", argCount);
         String timeZone = null;
         if (argCount == 3) {
             timeZone = ss.popString("Third argument to dateToEpoch() needs to be a string.");
@@ -875,7 +876,8 @@ public class FunctionsLib {
     }
 
     public static Value epochToDate(Starscript ss, int argCount) {
-        if (argCount < 2 || argCount > 3) ss.error("epochToDate() can only be used with 2-3 arguments, got %d.", argCount);
+        if (argCount < 2 || argCount > 3)
+            ss.error("epochToDate() can only be used with 2-3 arguments, got %d.", argCount);
         String timeZone = null;
         if (argCount == 3) {
             timeZone = ss.popString("Third argument to epochToDate() needs to be a string.");
@@ -913,7 +915,8 @@ public class FunctionsLib {
     }
 
     public static Value timeFromString(Starscript ss, int argCount) {
-        if (argCount < 2 || argCount > 3) ss.error("timeFromString() can only be used with 2-3 arguments, got %d.", argCount);
+        if (argCount < 2 || argCount > 3)
+            ss.error("timeFromString() can only be used with 2-3 arguments, got %d.", argCount);
         String fromTimeZone = null;
         if (argCount == 3) {
             fromTimeZone = ss.popString("Third argument to timeFromString() needs to be a string.");
@@ -924,7 +927,8 @@ public class FunctionsLib {
     }
 
     public static Value timeToString(Starscript ss, int argCount) {
-        if (argCount < 2 || argCount > 3) ss.error("timeToString() can only be used with 2-3 arguments, got %d.", argCount);
+        if (argCount < 2 || argCount > 3)
+            ss.error("timeToString() can only be used with 2-3 arguments, got %d.", argCount);
         String toTimeZone = null;
         if (argCount == 3) {
             toTimeZone = ss.popString("Third argument to timeToString() needs to be a string.");
