@@ -237,6 +237,7 @@ public class FileUtils {
      * @param file   the non-directory <code>File</code> to write bytes to
      *               (possibly overwriting), must not be {@code null}
      * @param close  whether to close the source stream, upon success
+     * @throws Exception If unable to complete event (Unable to create needed directories/files, etc)
      */
     public static void copyStreamToFile(final InputStream stream, final File file, final boolean close) throws Exception {
         // Create File and Parent Directories as needed
@@ -274,6 +275,7 @@ public class FileUtils {
      * @param stream the <code>InputStream</code> to copy bytes from, must not be {@code null}, will be closed upon success
      * @param file   the non-directory <code>File</code> to write bytes to
      *               (possibly overwriting), must not be {@code null}
+     * @throws Exception If unable to complete event (Unable to create needed directories/files, etc)
      */
     public static void copyStreamToFile(final InputStream stream, final File file) throws Exception {
         copyStreamToFile(stream, file, true);
@@ -290,6 +292,7 @@ public class FileUtils {
      * @param stream the <code>InputStream</code> to copy bytes from, must not be {@code null}, will remain open upon success
      * @param file   the non-directory <code>File</code> to write bytes to
      *               (possibly overwriting), must not be {@code null}
+     * @throws Exception If unable to complete event (Unable to create needed directories/files, etc)
      */
     public static void copyToFile(final InputStream stream, final File file) throws Exception {
         copyStreamToFile(stream, file, false);

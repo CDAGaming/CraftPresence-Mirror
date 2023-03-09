@@ -470,6 +470,9 @@ public class StringUtils {
      * @param source          The original String to replace within
      * @param targetToReplace The value to replace on
      * @param replaceWith     The value to replace the target with
+     * @param matchCase       Whether to match via exact-capitalization
+     * @param matchWholeWord  Whether to match the whole world
+     * @param useRegex        Whether to allow regex or to escape it
      * @return The completed and replaced String
      */
     public static String replace(final String source, final String targetToReplace, final String replaceWith,
@@ -499,8 +502,11 @@ public class StringUtils {
     /**
      * Replaces Data in a sequential order
      *
-     * @param source      The original String to replace within
-     * @param replaceArgs The replacement list to follow with the form of: targetToReplace:replaceWithValue
+     * @param source         The original String to replace within
+     * @param matchCase      Whether to match via exact-capitalization
+     * @param matchWholeWord Whether to match the whole world
+     * @param useRegex       Whether to allow regex or to escape it
+     * @param replaceArgs    The replacement list to follow with the form of: targetToReplace:replaceWithValue
      * @return The completed and replaced String
      */
     @SafeVarargs
@@ -1293,6 +1299,7 @@ public class StringUtils {
     /**
      * Creates a new ArrayList containing the specified elements.
      *
+     * @param <T> the type of elements in the list
      * @return a new ArrayList containing the specified elements
      */
     public static <T> List<T> newArrayList() {

@@ -238,10 +238,22 @@ public class TimeUtils {
         return stringToEpoch(dateString, format, null);
     }
 
+    /**
+     * Retrive a Time {@link Instant} from the specified epoch time
+     *
+     * @param epochTime The epoch time to interpret
+     * @return the converted {@link Instant} representing the epoch time
+     */
     public static Instant fromEpoch(final long epochTime) {
         return Instant.ofEpochSecond(epochTime);
     }
 
+    /**
+     * Gets the number of seconds from the Java Epoch, derived from specified args
+     *
+     * @param data The timestamp data to interpret
+     * @return the number of seconds from the Java Epoch, from specified args
+     */
     public static long toEpoch(final Instant data) {
         // Convert milliseconds to seconds
         return data != null ? data.getEpochSecond() : 0L;
