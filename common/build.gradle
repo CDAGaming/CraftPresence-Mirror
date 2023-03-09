@@ -51,9 +51,6 @@ dependencies {
         if (protocol <= 61) { // MC 1.5.2 and below
             shade('com.google.code.gson:gson:2.2.2')
         }
-        if (protocol <= 51) { // MC 1.4.7 and below
-            shade('com.google.guava:guava:14.0-rc3')
-        }
     }
 
     // Java-Specific Dependencies

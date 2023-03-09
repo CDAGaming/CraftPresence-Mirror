@@ -1379,7 +1379,7 @@ public class StringUtils {
      * @param map the input map whose mappings are to be copied to the new map
      * @return a new instance of {@link TreeMap} that contains the same key-value mappings as the input map
      */
-    public static <K extends Comparable<? super K>, V> TreeMap<K, V> newTreeMap(Map<? extends K, ? extends V> map) {
+    public static <K extends Comparable<? super K>, V> TreeMap<K, V> newTreeMap(final Map<? extends K, ? extends V> map) {
         return new TreeMap<>(map);
     }
 

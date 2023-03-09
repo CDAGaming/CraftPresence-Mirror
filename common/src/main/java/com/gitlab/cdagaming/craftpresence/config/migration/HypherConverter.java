@@ -29,8 +29,8 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
@@ -54,7 +54,7 @@ public class HypherConverter implements DataMigrator {
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
     // oldName -> newName
-    private final Map<String, String> placeholderMappings = ImmutableMap.<String, String>builder()
+    private final Map<String, String> placeholderMappings = new HashMapBuilder<String, String>()
             .put("%player%", "{player.name}")
             .put("%world%", "{dimension.name}")
             .put("%mods%", "{general.mods}")

@@ -28,11 +28,11 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 
 import java.io.File;
@@ -226,7 +226,7 @@ public class Legacy2Modern implements DataMigrator {
     );
 
     // oldName -> newName
-    private final Map<String, String> configNameMappings = ImmutableMap.<String, String>builder()
+    private final Map<String, String> configNameMappings = new HashMapBuilder<String, String>()
             .put("lastMcVersionId", "_lastMCVersionId")
             //
             .put("detectCurseManifest", "generalSettings.detectCurseManifest")

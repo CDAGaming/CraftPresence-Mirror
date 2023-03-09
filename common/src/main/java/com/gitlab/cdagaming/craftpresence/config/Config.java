@@ -33,11 +33,11 @@ import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 
 import java.io.File;
@@ -212,7 +212,7 @@ public final class Config extends Module implements Serializable {
                 new Legacy2Modern(legacyFile, "UTF-8").apply(this, rawJson);
             } else {
                 // fileVersion, configDirectories[main,server-entries]
-                final Map<Integer, String> hypherionFiles = ImmutableMap.<Integer, String>builder()
+                final Map<Integer, String> hypherionFiles = new HashMapBuilder<Integer, String>()
                         .put(0, ModUtils.configDir + File.separator)
                         .put(31, CraftPresence.SYSTEM.USER_DIR + File.separator + "simple-rpc" + File.separator)
                         .put(32, ModUtils.configDir + File.separator + "simple-rpc" + File.separator)
@@ -250,7 +250,7 @@ public final class Config extends Module implements Serializable {
                     //  - Placeholder: `world.time12` -> `world.time.12`
                     //  - Placeholder: `world.day` -> `world.time.day`
                     new TextReplacer(
-                            ImmutableMap.<String, String>builder()
+                            new HashMapBuilder<String, String>()
                                     .put("world.time24", "world.time.24")
                                     .put("world.time12", "world.time.12")
                                     .put("world.day", "world.time.day")

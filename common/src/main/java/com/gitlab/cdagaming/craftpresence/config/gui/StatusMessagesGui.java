@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Status;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -38,7 +39,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Map;
@@ -47,7 +47,7 @@ import java.util.Map;
 public class StatusMessagesGui extends PaginatedScreen {
     private final Status CONFIG;
     // nameTranslation, [configPath,commentTranslation]
-    private final Map<String, Pair<String, Runnable>> eventMappings = ImmutableMap.<String, Pair<String, Runnable>>builder()
+    private final Map<String, Pair<String, Runnable>> eventMappings = new HashMapBuilder<String, Pair<String, Runnable>>()
             .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
                     "mainMenuData", () -> CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
