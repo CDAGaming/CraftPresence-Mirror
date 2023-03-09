@@ -26,11 +26,11 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Advanced extends Module implements Serializable {
@@ -49,13 +49,9 @@ public class Advanced extends Module implements Serializable {
     public boolean includeExtraGuiClasses = false;
     public boolean allowPlaceholderPreviews = false;
     public Gui guiSettings = new Gui();
-    public Map<String, String> itemMessages = new HashMap<String, String>() {
-        private static final long serialVersionUID = -2477046332015336987L;
-
-        {
-            put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.item_messages"));
-        }
-    };
+    public Map<String, String> itemMessages = new HashMapBuilder<String, String>()
+            .put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.item_messages"))
+            .build();
     public Entity entitySettings = new Entity();
     public boolean allowEndpointIcons = true;
     public String serverIconEndpoint = "https://api.mcsrvstat.us/icon/{server.address.short}";

@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.impl.TreeMapBuilder;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater.MCUpdaterUtils;
@@ -39,7 +40,6 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -51,31 +51,23 @@ public class CommandUtils {
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
-    private static final TreeMap<String, Module> modules = new TreeMap<String, Module>() {
-        private static final long serialVersionUID = 510350212503123679L;
-
-        {
-            put("_biome", CraftPresence.BIOMES);
-            put("_dimension", CraftPresence.DIMENSIONS);
-            put("_item", CraftPresence.TILE_ENTITIES);
-            put("_entity", CraftPresence.ENTITIES);
-            put("_server", CraftPresence.SERVER);
-            put("_screen", CraftPresence.GUIS);
-        }
-    };
+    private static final Map<String, Module> modules = new TreeMapBuilder<String, Module>()
+            .put("_biome", CraftPresence.BIOMES)
+            .put("_dimension", CraftPresence.DIMENSIONS)
+            .put("_item", CraftPresence.TILE_ENTITIES)
+            .put("_entity", CraftPresence.ENTITIES)
+            .put("_server", CraftPresence.SERVER)
+            .put("_screen", CraftPresence.GUIS)
+            .build();
     /**
      * A mapping of the currently loaded Pack Extension Modules
      */
-    private static final TreeMap<String, Pack> packModules = new TreeMap<String, Pack>() {
-        private static final long serialVersionUID = -5725537163152878757L;
-
-        {
-            put("curse", new CurseUtils());
-            put("multimc", new MultiMCUtils());
-            put("mcupdater", new MCUpdaterUtils());
-            put("technic", new TechnicUtils());
-        }
-    };
+    private static final Map<String, Pack> packModules = new TreeMapBuilder<String, Pack>()
+            .put("curse", new CurseUtils())
+            .put("multimc", new MultiMCUtils())
+            .put("mcupdater", new MCUpdaterUtils())
+            .put("technic", new TechnicUtils())
+            .build();
     /**
      * Whether you are on the Main Menu in Minecraft
      */

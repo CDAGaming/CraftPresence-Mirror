@@ -27,37 +27,29 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Entity extends Module implements Serializable {
     private static final long serialVersionUID = -4294690176016925084L;
     private static Entity DEFAULT;
     public String fallbackEntityIcon = "unknown";
-    public Map<String, ModuleData> targetData = new HashMap<String, ModuleData>() {
-        private static final long serialVersionUID = 9059756640153589401L;
-
-        {
-            put("default", new ModuleData(
+    public Map<String, ModuleData> targetData = new HashMapBuilder<String, ModuleData>()
+            .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_target_messages"),
                     null // Defaults to the Entity Name if nothing is supplied
-            ));
-        }
-    };
-    public Map<String, ModuleData> ridingData = new HashMap<String, ModuleData>() {
-        private static final long serialVersionUID = 9059756640153589401L;
-
-        {
-            put("default", new ModuleData(
+            ))
+            .build();
+    public Map<String, ModuleData> ridingData = new HashMapBuilder<String, ModuleData>()
+            .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages"),
                     null // Defaults to the Entity Name if nothing is supplied
-            ));
-        }
-    };
+            ))
+            .build();
 
     @Override
     public Entity getDefaults() {

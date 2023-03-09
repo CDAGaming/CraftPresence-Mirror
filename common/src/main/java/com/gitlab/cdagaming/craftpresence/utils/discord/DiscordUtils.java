@@ -60,7 +60,6 @@ import org.meteordev.starscript.value.ValueMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Supplier;
 
 /**
@@ -77,7 +76,7 @@ public class DiscordUtils {
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
-    private final TreeMap<String, Supplier<Value>> placeholderData = StringUtils.newTreeMap();
+    private final Map<String, Supplier<Value>> placeholderData = StringUtils.newTreeMap();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to cache data for repeated images in other areas

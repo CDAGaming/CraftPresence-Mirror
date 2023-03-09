@@ -45,7 +45,6 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -335,8 +334,8 @@ public final class Config extends Module implements Serializable {
                                     shouldReset = true;
                                 }
                             } else if (currentValue instanceof Map) {
-                                final Map newData = new HashMap((Map) currentValue);
-                                final Map defaultData = new HashMap((Map) defaultValue);
+                                final Map newData = StringUtils.newHashMap((Map) currentValue);
+                                final Map defaultData = StringUtils.newHashMap((Map) defaultValue);
                                 if (!newData.containsKey("default")) {
                                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", rawName));
                                     newData.putAll(defaultData);
@@ -453,7 +452,7 @@ public final class Config extends Module implements Serializable {
             if (!StringUtils.isNullOrEmpty(path[i])) {
                 name = path[i];
                 if (instance instanceof Map) {
-                    result = new HashMap((Map) instance).get(name);
+                    result = StringUtils.newHashMap((Map) instance).get(name);
                 } else {
                     result = StringUtils.getField(classObj, instance, name);
                 }
@@ -487,7 +486,7 @@ public final class Config extends Module implements Serializable {
                 final String[] parentPath = Arrays.copyOf(path, path.length - 1);
                 final Tuple<Class<?>, Object, String> parentData = lookupProperty(parentPath).getSecond();
 
-                Map data = new HashMap((Map) fieldData.getSecond());
+                Map data = StringUtils.newHashMap((Map) fieldData.getSecond());
                 data.put(fieldData.getThird(), value);
 
                 StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), new Pair<>(parentData.getThird(), data));

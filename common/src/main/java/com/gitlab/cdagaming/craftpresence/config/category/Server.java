@@ -27,11 +27,11 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Server extends Module implements Serializable {
@@ -40,16 +40,12 @@ public class Server extends Module implements Serializable {
     public String fallbackServerIcon = "default";
     public String fallbackServerName = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_name");
     public String fallbackServerMotd = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_motd");
-    public Map<String, ModuleData> serverData = new HashMap<String, ModuleData>() {
-        private static final long serialVersionUID = -8733402938895322963L;
-
-        {
-            put("default", new ModuleData(
+    public Map<String, ModuleData> serverData = new HashMapBuilder<String, ModuleData>()
+            .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_messages"),
                     null // Defaults to the Server Name if nothing is supplied
-            ));
-        }
-    };
+            ))
+            .build();
 
     @Override
     public Server getDefaults() {

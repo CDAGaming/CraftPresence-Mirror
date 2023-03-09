@@ -32,11 +32,10 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.gson.JsonElement;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings("rawtypes")
 public class TextReplacer implements DataMigrator {
     final Map<String, String> replacers;
     final boolean placeholderMode, matchCase, matchWholeWorld, useRegex;
@@ -113,7 +112,7 @@ public class TextReplacer implements DataMigrator {
                             instance.setProperty((Object) processResult, pathData);
                         }
                     } else if (currentValue instanceof Map) {
-                        final Map newData = new HashMap((Map) currentValue);
+                        final Map newData = StringUtils.newHashMap((Map) currentValue);
                         if (entry.getValue().isJsonObject()) {
                             for (Object dataEntry : newData.keySet()) {
                                 final List<String> paths = StringUtils.newArrayList(path);

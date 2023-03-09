@@ -29,40 +29,40 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import java.util.Map;
 
 /**
- * A builder class for creating a new HashMap instance and adding key-value pairs to it.
+ * A builder class for creating a new TreeMap instance and adding key-value pairs to it.
  *
- * @param <K> the type of keys in the HashMap
- * @param <V> the type of values in the HashMap
+ * @param <K> the type of keys in the TreeMap
+ * @param <V> the type of values in the TreeMap
  * @author CDAGaming
  */
-public class HashMapBuilder<K, V> {
+public class TreeMapBuilder<K extends Comparable<K>, V> {
     private final Map<K, V> map;
 
     /**
-     * Constructs a new HashMapBuilder with a new HashMap instance.
+     * Constructs a new TreeMapBuilder with a new TreeMap instance.
      */
-    public HashMapBuilder() {
-        map = StringUtils.newHashMap();
+    public TreeMapBuilder() {
+        map = StringUtils.newTreeMap();
     }
 
     /**
-     * Adds a new key-value pair to the HashMap.
+     * Adds a new key-value pair to the TreeMap.
      *
-     * @param key   the key to add to the HashMap
-     * @param value the value to associate with the key in the HashMap
-     * @return a reference to this HashMapBuilder instance
+     * @param key   the key to add to the TreeMap
+     * @param value the value to associate with the key in the TreeMap
+     * @return a reference to this TreeMapBuilder instance
      */
-    public HashMapBuilder<K, V> put(K key, V value) {
+    public TreeMapBuilder<K, V> put(K key, V value) {
         map.put(key, value);
         return this;
     }
 
     /**
-     * Returns the final HashMap instance with all key-value pairs added using the builder.
+     * Returns the final TreeMap instance with all key-value pairs added using the builder.
      *
-     * @return the final HashMap instance
+     * @return the final TreeMap instance
      */
     public Map<K, V> build() {
-        return StringUtils.newHashMap(map);
+        return StringUtils.newTreeMap(map);
     }
 }

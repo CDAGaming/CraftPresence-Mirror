@@ -27,28 +27,24 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Gui extends Module implements Serializable {
     private static final long serialVersionUID = -5871047759131139250L;
     private static Gui DEFAULT;
     public String fallbackGuiIcon = "unknown";
-    public Map<String, ModuleData> guiData = new HashMap<String, ModuleData>() {
-        private static final long serialVersionUID = 8501237657847024714L;
-
-        {
-            put("default", new ModuleData(
+    public Map<String, ModuleData> guiData = new HashMapBuilder<String, ModuleData>()
+            .put("default", new ModuleData(
                     ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.gui_messages"),
                     null // Defaults to the Gui Screen Name if nothing is supplied
-            ));
-        }
-    };
+            ))
+            .build();
 
     public Gui() {
         if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {

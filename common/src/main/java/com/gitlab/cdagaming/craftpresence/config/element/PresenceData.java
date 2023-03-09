@@ -26,11 +26,11 @@ package com.gitlab.cdagaming.craftpresence.config.element;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,16 +48,12 @@ public class PresenceData extends Module implements Serializable {
     public String smallImageText = "";
     public String startTimestamp = "";
     public String endTimestamp = "";
-    public Map<String, Button> buttons = new HashMap<String, Button>() {
-        private static final long serialVersionUID = -1738414795267027009L;
-
-        {
-            put("default", new Button(
+    public Map<String, Button> buttons = new HashMapBuilder<String, Button>()
+            .put("default", new Button(
                     ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
                     ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
-            ));
-        }
-    };
+            ))
+            .build();
 
     public PresenceData(final PresenceData other) {
         if (other != null) {

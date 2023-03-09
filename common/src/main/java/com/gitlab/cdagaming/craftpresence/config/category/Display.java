@@ -27,11 +27,11 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Display extends Module implements Serializable {
@@ -45,29 +45,21 @@ public class Display extends Module implements Serializable {
             .setSmallImage("{getFirst(server.icon, pack.icon)}",
                     "{getOrDefault(server.message)} {getOrDefault(pack.name)}")
             .setStartTime("{data.general.time}");
-    public Map<String, String> dynamicIcons = new HashMap<String, String>() {
-        private static final long serialVersionUID = 4900744874595923346L;
-
-        {
-            put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"));
-        }
-    };
-    public Map<String, String> dynamicVariables = new HashMap<String, String>() {
-        private static final long serialVersionUID = 4900744874595923346L;
-
-        {
-            put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"));
-            put("pack", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.pack"));
-            put("players", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.players"));
-            put("player_info_out", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.out"));
-            put("player_info_in", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.in"));
-            put("player_info_coordinate", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.coordinate"));
-            put("player_info_health", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.health"));
-            put("player_info_items", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.items"));
-            put("world_info", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.world_info"));
-            put("mods", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.mods"));
-        }
-    };
+    public Map<String, String> dynamicIcons = new HashMapBuilder<String, String>()
+            .put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.image.url"))
+            .build();
+    public Map<String, String> dynamicVariables = new HashMapBuilder<String, String>()
+            .put("default", ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"))
+            .put("pack", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.pack"))
+            .put("players", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.players"))
+            .put("player_info_out", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.out"))
+            .put("player_info_in", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.in"))
+            .put("player_info_coordinate", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.coordinate"))
+            .put("player_info_health", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.health"))
+            .put("player_info_items", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.items"))
+            .put("world_info", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.world_info"))
+            .put("mods", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.mods"))
+            .build();
 
     @Override
     public Display getDefaults() {
