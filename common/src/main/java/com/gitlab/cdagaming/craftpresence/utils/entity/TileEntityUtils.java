@@ -150,7 +150,7 @@ public class TileEntityUtils implements Module {
         ItemStack itemStack = null;
         if (data != null) {
             if (data instanceof Block) {
-                data = Item.getItemFromBlock((Block) data);
+                data = getDefaultInstance((Block) data);
             }
             if (data instanceof Item) {
                 data = getDefaultInstance((Item) data);
@@ -181,6 +181,16 @@ public class TileEntityUtils implements Module {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Returns the Default Variant of the Specified Block
+     *
+     * @param blockIn The Block to evaluate
+     * @return The default variant of the item
+     */
+    public static ItemStack getDefaultInstance(final Block blockIn) {
+        return new ItemStack(blockIn);
     }
 
     /**

@@ -361,7 +361,7 @@ public class ServerUtils implements Module {
 
             // 'world.name' Argument = Current Name of the World
             final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
-            final String secondaryWorldName = CraftPresence.player != null ? CraftPresence.player.world.getWorldInfo().getWorldName() : ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name");
+            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             if (!newWorldName.equals(currentWorldName)) {
                 currentWorldName = newWorldName;
