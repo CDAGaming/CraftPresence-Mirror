@@ -11,8 +11,8 @@ by [jagrosh](https://github.com/jagrosh)!
 [![CurseForge-Downloads](https://cf.way2muchnoise.eu/full_craftpresence_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/craftpresence)
 [![CurseForge-Availability](https://cf.way2muchnoise.eu/versions/craftpresence.svg)](https://www.curseforge.com/minecraft/mc-mods/craftpresence)
 
-[![Modrinth-Downloads](https://modrinth-utils.vercel.app/api/badge/downloads?id=DFqQfIBR&logo=true)](https://modrinth.com/mod/craftpresence)
-[![Modrinth-Availability](https://modrinth-utils.vercel.app/api/badge/versions?id=DFqQfIBR&logo=true)](https://modrinth.com/mod/craftpresence)
+[![Modrinth-Downloads](ttps://img.shields.io/modrinth/dt/DFqQfIBR)](https://modrinth.com/mod/craftpresence)
+[![Modrinth-Availability](https://img.shields.io/modrinth/game-versions/DFqQfIBR)](https://modrinth.com/mod/craftpresence)
 
 ## General Notes
 
