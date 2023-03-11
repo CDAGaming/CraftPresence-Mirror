@@ -245,13 +245,13 @@ public final class Config extends Module implements Serializable {
                 }
                 if (StringUtils.isWithinValue(currentVer, 2, 3, true, false)) {
                     // Schema Changes (v2 -> v3)
-                    //  - Placeholder: `world.time24` -> `world.time.24`
-                    //  - Placeholder: `world.time12` -> `world.time.12`
+                    //  - Placeholder: `world.time24` -> `world.time.format_24`
+                    //  - Placeholder: `world.time12` -> `world.time.format_12`
                     //  - Placeholder: `world.day` -> `world.time.day`
                     new TextReplacer(
                             new HashMapBuilder<String, String>()
-                                    .put("world.time24", "world.time.24")
-                                    .put("world.time12", "world.time.12")
+                                    .put("world.time24", "world.time.format_24")
+                                    .put("world.time12", "world.time.format_12")
                                     .put("world.day", "world.time.day")
                                     .build(),
                             true,

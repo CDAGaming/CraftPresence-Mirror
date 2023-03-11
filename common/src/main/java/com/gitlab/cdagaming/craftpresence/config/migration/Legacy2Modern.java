@@ -171,13 +171,13 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&WORLDINFO:WORLDNAME&", "{world.name}", IS_TEXT, IS_SERVER_MODULE),
             generatePair("&WORLDNAME&", "{world.name}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
             //
-            generatePair("&SERVER:WORLDINFO:WORLDTIME&", "{world.time.24}", IS_TEXT),
-            generatePair("&WORLDINFO:WORLDTIME&", "{world.time.24}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&WORLDTIME&", "{world.time.24}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&SERVER:WORLDINFO:WORLDTIME&", "{world.time.format_24}", IS_TEXT),
+            generatePair("&WORLDINFO:WORLDTIME&", "{world.time.format_24}", IS_TEXT, IS_SERVER_MODULE),
+            generatePair("&WORLDTIME&", "{world.time.format_24}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
             //
-            generatePair("&SERVER:WORLDINFO:WORLDTIME12&", "{world.time.12}", IS_TEXT),
-            generatePair("&WORLDINFO:WORLDTIME12&", "{world.time.12}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&WORLDTIME12&", "{world.time.12}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&SERVER:WORLDINFO:WORLDTIME12&", "{world.time.format_12}", IS_TEXT),
+            generatePair("&WORLDINFO:WORLDTIME12&", "{world.time.format_12}", IS_TEXT, IS_SERVER_MODULE),
+            generatePair("&WORLDTIME12&", "{world.time.format_12}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
             //
             generatePair("&SERVER:WORLDINFO:WORLDDAY&", "{world.time.day}", IS_TEXT),
             generatePair("&WORLDINFO:WORLDDAY&", "{world.time.day}", IS_TEXT, IS_SERVER_MODULE),

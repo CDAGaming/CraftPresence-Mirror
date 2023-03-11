@@ -479,8 +479,8 @@ public class ServerUtils implements Module {
         CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
         if (worldTimeData != null) {
             CraftPresence.CLIENT.syncArgument("world.time.day", dayCount);
-            CraftPresence.CLIENT.syncArgument("world.time.24", timeString24);
-            CraftPresence.CLIENT.syncArgument("world.time.12", timeString12);
+            CraftPresence.CLIENT.syncArgument("world.time.format_24", timeString24);
+            CraftPresence.CLIENT.syncArgument("world.time.format_12", timeString12);
             CraftPresence.CLIENT.syncArgument("data.world.time.instance", worldTimeData);
         } else {
             CraftPresence.CLIENT.removeArguments("world.time", "data.world.time");
