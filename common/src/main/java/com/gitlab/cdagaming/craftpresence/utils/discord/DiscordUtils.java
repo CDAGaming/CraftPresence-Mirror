@@ -381,9 +381,10 @@ public class DiscordUtils {
             final String data = StringUtils.getOrDefault(input);
 
             if (!plain) {
-                return getCompileResult(data, null, generateTransformer(
+                final Pair<String, VariableReplacementTransformer> resultData = generateTransformer(
                         data, overrideId, placeholders, replacements
-                ));
+                );
+                return getCompileResult(resultData.getFirst(), null, resultData.getSecond());
             } else {
                 return () -> Value.string(data);
             }
@@ -397,10 +398,10 @@ public class DiscordUtils {
      * @param overrideId   The override identifier to interpret
      * @param placeholders A mapping of the placeholders currently available
      * @param replacements A mapping of additional replacements to perform
-     * @return the processed string
+     * @return the processed string, alongside the variable transformer
      */
     @SafeVarargs
-    public final VariableReplacementTransformer generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
+    public final Pair<String, VariableReplacementTransformer> generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
         final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
         String data = StringUtils.getOrDefault(input);
 
@@ -437,7 +438,7 @@ public class DiscordUtils {
                 }
             }
         }
-        return transformer;
+        return new Pair<>(data, transformer);
     }
 
     /**
