@@ -194,9 +194,11 @@ public class EntityUtils implements Module {
 
     @Override
     public void updateData() {
-        CraftPresence.instance.entityRenderer.getMouseOver(
-                1.0F
-        );
+        try {
+            CraftPresence.instance.entityRenderer.getMouseOver(
+                    1.0F
+            );
+        } catch (Throwable ignored) {}
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
