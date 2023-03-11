@@ -31,7 +31,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 
 import java.io.*;
@@ -59,7 +58,7 @@ public class FileUtils {
     /**
      * The list of the currently detected class names
      */
-    private static final ClassInfoList CLASS_LIST = new ClassInfoList();
+    private static final List<ClassInfo> CLASS_LIST = StringUtils.newArrayList();
     /**
      * The list of the currently detected class names
      */
@@ -533,7 +532,7 @@ public class FileUtils {
      *
      * @return a list of all known classes
      */
-    public static ClassInfoList getClassList() {
+    public static List<ClassInfo> getClassList() {
         if (CLASS_LIST.isEmpty()) {
             // Attempt to get all possible classes from the JVM Class Loader
             final ClassGraph graphInfo = new ClassGraph()
