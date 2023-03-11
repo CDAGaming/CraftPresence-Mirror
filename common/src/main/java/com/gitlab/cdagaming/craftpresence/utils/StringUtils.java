@@ -1400,7 +1400,7 @@ public class StringUtils {
         final StringBuilder sb = new StringBuilder();
         if (classToAccess != null) {
             sb.append(classToAccess).append(": [");
-            final Field[] fields = classToAccess.getFields();
+            final Field[] fields = classToAccess.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
                 final Field field = fields[i];
                 final String name = field.getType() + " " + field.getName();
@@ -1426,7 +1426,7 @@ public class StringUtils {
         final StringBuilder sb = new StringBuilder();
         if (classToAccess != null) {
             sb.append(classToAccess).append(": [");
-            final Method[] methods = classToAccess.getMethods();
+            final Method[] methods = classToAccess.getDeclaredMethods();
             for (int i = 0; i < methods.length; i++) {
                 final Method method = methods[i];
                 final String name = method.getReturnType() + " " + method.getName();
