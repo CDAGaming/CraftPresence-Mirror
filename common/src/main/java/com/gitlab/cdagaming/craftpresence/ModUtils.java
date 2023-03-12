@@ -146,11 +146,11 @@ public class ModUtils {
         MCProtocolID = Integer.parseInt("@MC_PROTOCOL@");
         IS_DEV_FLAG = Boolean.parseBoolean("@IS_DEV@");
         IS_VERBOSE_FLAG = Boolean.parseBoolean("@IS_VERBOSE@");
-        TRANSLATOR = new TranslationUtils(MOD_ID, true);
+        TRANSLATOR = new TranslationUtils(MOD_ID, true).build();
         final boolean hasVanillaTranslations = !IS_LEGACY_SOFT || MCProtocolID >= 7;
         RAW_TRANSLATOR = hasVanillaTranslations ? new TranslationUtils(
                 "minecraft", !IS_LEGACY_SOFT && MCProtocolID >= 353
-        ).setUsingAssetsPath(!IS_LEGACY_SOFT || MCProtocolID >= 72) : null;
+        ).setUsingAssetsPath(!IS_LEGACY_SOFT || MCProtocolID >= 72).build() : null;
         UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
     }
 }

@@ -130,10 +130,20 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         setUsingJson(useJson);
         setModId(modId);
         setEncoding(encoding);
+    }
+
+    /**
+     * Build and Perform Syncronization on this instance
+     *
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils build() {
         // Retrieve localized default translations
         syncTranslations(getDefaultLanguage());
+
         needsSync = true;
         needsInit = true;
+        return this;
     }
 
     /**
@@ -312,7 +322,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @return the interpreted list of valid {@link InputStream}'s
      */
     private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager, final String ext) {
-        final String assetsPath = usingAssetsPath ? String.format("/assets/%s/", modId) : "";
+        final String assetsPath = usingAssetsPath ? String.format("/assets/%s/", modId) : "/";
         final String langPath = String.format("lang/%s.%s", languageId, ext);
         final List<InputStream> results = StringUtils.newArrayList(
                 FileUtils.getResourceAsStream(TranslationUtils.class, assetsPath + langPath)
