@@ -1014,23 +1014,6 @@ public class StringUtils {
     }
 
     /**
-     * Returns whether the specified name contains raw data
-     *
-     * @param name The name to interpret
-     * @return {@link Boolean#TRUE} if the condition is satisfied
-     */
-    public static boolean isRawTE(final String name) {
-        if (!StringUtils.isNullOrEmpty(name)) {
-            final String lowerName = name.toLowerCase();
-            return lowerName.contains("tile.") ||
-                    lowerName.contains("item.") ||
-                    lowerName.contains(".") ||
-                    lowerName.contains(".name");
-        }
-        return false;
-    }
-
-    /**
      * Converts an Identifier into a properly formatted and interpretable Name
      * <p>
      * Note: Additional Logic in Place for Older MC Versions

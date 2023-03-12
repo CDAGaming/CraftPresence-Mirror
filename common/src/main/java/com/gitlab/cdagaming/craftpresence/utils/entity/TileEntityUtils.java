@@ -241,8 +241,15 @@ public class TileEntityUtils implements Module {
      * @param name The name to interpret
      * @return {@link Boolean#TRUE} if the condition is satisfied
      */
-    public boolean isRawTE(final String name) {
-        return StringUtils.isRawTE(name);
+    public static boolean isRawTE(final String name) {
+        if (!StringUtils.isNullOrEmpty(name)) {
+            final String lowerName = name.toLowerCase();
+            return lowerName.contains("tile.") ||
+                    lowerName.contains("item.") ||
+                    lowerName.contains(".") ||
+                    lowerName.contains(".name");
+        }
+        return false;
     }
 
     @Override
@@ -557,10 +564,18 @@ public class TileEntityUtils implements Module {
      * Verifies, Synchronizes and Removes any Invalid Items and Blocks from their Lists
      */
     public void verifyEntities() {
-        ITEM_NAMES.removeIf(this::isRawTE);
+        for (String item : StringUtils.newArrayList(ITEM_NAMES)) {
+            if (isRawTE(item)) {
+                ITEM_NAMES.remove(item);
+            }
+        }
         ITEM_NAMES.removeAll(BLOCK_NAMES);
 
-        BLOCK_NAMES.removeIf(this::isRawTE);
+        for (String item : StringUtils.newArrayList(BLOCK_NAMES)) {
+            if (isRawTE(item)) {
+                BLOCK_NAMES.remove(item);
+            }
+        }
         BLOCK_NAMES.removeAll(ITEM_NAMES);
 
         StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, BLOCK_NAMES);
