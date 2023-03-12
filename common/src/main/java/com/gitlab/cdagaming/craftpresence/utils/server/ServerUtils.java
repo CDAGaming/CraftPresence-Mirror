@@ -232,7 +232,7 @@ public class ServerUtils implements Module {
     public void onTick() {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : enabled;
-        final boolean needsUpdate = enabled && !hasScanned;
+        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
             new Thread(this::getAllData, "CraftPresence-Server-Lookup").start();

@@ -63,6 +63,7 @@ public class FileUtils {
      * The list of the currently detected class names
      */
     private static final Map<String, Class<?>> CLASS_MAP = StringUtils.newHashMap();
+    private static boolean ARE_CLASSES_LOADING = false;
 
     /**
      * Retrieves Raw Data and Converts it into a Parsed Json Syntax
@@ -527,13 +528,20 @@ public class FileUtils {
         return findValidClass(true, paths);
     }
 
+    public static boolean canScanClasses() {
+        return !ARE_CLASSES_LOADING;
+    }
+
     /**
-     * Retrieve and Cache all known classes within the Class Loader
+     * Clear the existing class list, then retrieve and cache all known classes within the Class Loader
      *
      * @return a list of all known classes
      */
-    public static List<ClassInfo> getClassList() {
-        if (CLASS_LIST.isEmpty()) {
+    public static List<ClassInfo> scanClasses() {
+        if (canScanClasses()) {
+            ARE_CLASSES_LOADING = true;
+            CLASS_LIST.clear();
+
             // Attempt to get all possible classes from the JVM Class Loader
             final ClassGraph graphInfo = new ClassGraph()
                     .enableClassInfo()
@@ -560,6 +568,20 @@ public class FileUtils {
                     }
                 }
             }
+
+            ARE_CLASSES_LOADING = false;
+        }
+        return CLASS_LIST;
+    }
+
+    /**
+     * Retrieve and Cache all known classes within the Class Loader
+     *
+     * @return a list of all known classes
+     */
+    public static List<ClassInfo> getClassList() {
+        if (CLASS_LIST.isEmpty()) {
+            scanClasses();
         }
         return CLASS_LIST;
     }

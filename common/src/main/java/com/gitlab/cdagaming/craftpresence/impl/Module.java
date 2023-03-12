@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 /**
  * Module Section defining properties to be used for Rich Presence Displays
@@ -117,5 +118,9 @@ public interface Module {
      */
     default boolean canBeLoaded() {
         return CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
+    }
+
+    default boolean canFetchData() {
+        return FileUtils.canScanClasses();
     }
 }

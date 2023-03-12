@@ -282,7 +282,7 @@ public class TileEntityUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : enabled;
-        final boolean needsUpdate = enabled && !hasScanned;
+        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
             new Thread(this::getAllData, "CraftPresence-TileEntity-Lookup").start();
