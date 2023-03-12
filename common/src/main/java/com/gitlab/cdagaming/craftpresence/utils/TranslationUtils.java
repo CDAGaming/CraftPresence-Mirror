@@ -72,6 +72,10 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      */
     private boolean usingJson = false;
     /**
+     * If using the modern "assets/xxx" file-path
+     */
+    private boolean usingAssetsPath = true;
+    /**
      * If this module needs a full sync
      */
     private boolean needsSync;
@@ -244,40 +248,59 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
+     * Toggles whether to use the modern "assets/xxx" file path when locating translations
+     *
+     * @param usingAssetsPath Toggles whether to use the modern "assets/xxx" file path
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setUsingAssetsPath(final boolean usingAssetsPath) {
+        this.usingAssetsPath = usingAssetsPath;
+        return this;
+    }
+
+    /**
      * Toggles whether to use .Lang or .Json Language Files
      *
      * @param usingJson Toggles whether to use .Json or .Lang, if present
+     * @return the current instance, for chain-building
      */
-    private void setUsingJson(final boolean usingJson) {
+    public TranslationUtils setUsingJson(final boolean usingJson) {
         this.usingJson = usingJson;
+        return this;
     }
 
     /**
      * Sets the Language ID to Retrieve Translations for, if present
      *
      * @param languageId The Language ID (Default: en_US)
+     * @return the current instance, for chain-building
      */
-    private void setLanguage(final String languageId) {
-        String result = StringUtils.getOrDefault(languageId, defaultLanguageId);
+    public TranslationUtils setLanguage(final String languageId) {
+        final String result = StringUtils.getOrDefault(languageId, defaultLanguageId);
         this.languageId = usingJson ? result.toLowerCase() : result;
+        return this;
     }
 
     /**
      * Sets the Charset Encoding to parse Translations in, if present
      *
      * @param encoding The Charset Encoding (Default: UTF-8)
+     * @return the current instance, for chain-building
      */
-    private void setEncoding(final String encoding) {
+    public TranslationUtils setEncoding(final String encoding) {
         this.encoding = StringUtils.getOrDefault(encoding, "UTF-8");
+        return this;
     }
 
     /**
      * Sets the Mod ID to target when locating Language Files
      *
      * @param modId The Mod ID to target
+     * @return the current instance, for chain-building
      */
-    private void setModId(final String modId) {
+    public TranslationUtils setModId(final String modId) {
         this.modId = StringUtils.getOrDefault(modId);
+        return this;
     }
 
     /**
@@ -289,14 +312,14 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @return the interpreted list of valid {@link InputStream}'s
      */
     private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager, final String ext) {
-        final String assetsPath = String.format("/assets/%s/", modId);
+        final String assetsPath = usingAssetsPath ? String.format("/assets/%s/", modId) : "";
         final String langPath = String.format("lang/%s.%s", languageId, ext);
         final List<InputStream> results = StringUtils.newArrayList(
                 FileUtils.getResourceAsStream(TranslationUtils.class, assetsPath + langPath)
         );
 
         try {
-            List<IResource> resources = resourceManager.getAllResources(new ResourceLocation(modId, langPath));
+            final List<IResource> resources = resourceManager.getAllResources(new ResourceLocation(modId, langPath));
             for (IResource resource : resources) {
                 results.add(resource.getInputStream());
             }
