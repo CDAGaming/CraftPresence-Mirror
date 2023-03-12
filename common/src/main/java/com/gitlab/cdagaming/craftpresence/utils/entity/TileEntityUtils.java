@@ -568,7 +568,7 @@ public class TileEntityUtils implements Module {
         for (String item : StringUtils.newArrayList(ITEM_NAMES)) {
             if (isRawTE(item)) {
                 ITEM_NAMES.remove(item);
-                if (ModUtils.RAW_TRANSLATOR != null) {
+                if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item)) {
                     ITEM_NAMES.add(ModUtils.RAW_TRANSLATOR.translate(item));
                 }
             }
@@ -577,7 +577,7 @@ public class TileEntityUtils implements Module {
         for (String item : StringUtils.newArrayList(BLOCK_NAMES)) {
             if (isRawTE(item)) {
                 BLOCK_NAMES.remove(item);
-                if (ModUtils.RAW_TRANSLATOR != null) {
+                if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item)) {
                     BLOCK_NAMES.add(ModUtils.RAW_TRANSLATOR.translate(item));
                 }
             }
