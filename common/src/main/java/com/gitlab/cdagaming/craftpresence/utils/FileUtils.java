@@ -63,6 +63,9 @@ public class FileUtils {
      * The list of the currently detected class names
      */
     private static final Map<String, Class<?>> CLASS_MAP = StringUtils.newHashMap();
+    /**
+     * Whether the class list from {@link FileUtils#scanClasses()} is being iterated upon
+     */
     private static boolean ARE_CLASSES_LOADING = false;
 
     /**
@@ -528,6 +531,11 @@ public class FileUtils {
         return findValidClass(true, paths);
     }
 
+    /**
+     * Return whether the class list from {@link FileUtils#scanClasses()} is being iterated upon
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
     public static boolean canScanClasses() {
         return !ARE_CLASSES_LOADING;
     }
