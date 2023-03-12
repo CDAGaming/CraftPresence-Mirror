@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -567,16 +568,20 @@ public class TileEntityUtils implements Module {
         for (String item : StringUtils.newArrayList(ITEM_NAMES)) {
             if (isRawTE(item)) {
                 ITEM_NAMES.remove(item);
+                if (ModUtils.RAW_TRANSLATOR != null) {
+                    ITEM_NAMES.add(ModUtils.RAW_TRANSLATOR.translate(item));
+                }
             }
         }
-        ITEM_NAMES.removeAll(BLOCK_NAMES);
 
         for (String item : StringUtils.newArrayList(BLOCK_NAMES)) {
             if (isRawTE(item)) {
                 BLOCK_NAMES.remove(item);
+                if (ModUtils.RAW_TRANSLATOR != null) {
+                    BLOCK_NAMES.add(ModUtils.RAW_TRANSLATOR.translate(item));
+                }
             }
         }
-        BLOCK_NAMES.removeAll(ITEM_NAMES);
 
         StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, BLOCK_NAMES);
         StringUtils.addEntriesNotPresent(TILE_ENTITY_NAMES, ITEM_NAMES);
