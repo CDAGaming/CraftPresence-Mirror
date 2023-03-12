@@ -53,6 +53,7 @@ public class FunctionsLib {
         // General Functions
         ss.set("format", FunctionsLib::format);
         ss.set("translate", FunctionsLib::translate);
+        ss.set("mcTranslate", FunctionsLib::mcTranslate);
         ss.set("getFields", FunctionsLib::getFields);
         ss.set("getMethods", FunctionsLib::getMethods);
         ss.set("getJsonElement", FunctionsLib::getJsonElement);
@@ -145,7 +146,7 @@ public class FunctionsLib {
         return !StringUtils.isNullOrEmpty(result) ? Value.string(result) : Value.null_();
     }
 
-    public static Value translate(Starscript ss, int argCount) {
+    public static Value translateFrom(TranslationUtils instance, Starscript ss, int argCount) {
         final List<Value> args = StringUtils.newArrayList();
         if (argCount < 1)
             ss.error("translate() requires one or more arguments, got %d.", argCount);
@@ -173,11 +174,21 @@ public class FunctionsLib {
             for (Value info : args) {
                 value.add(CraftPresence.CLIENT.fromValue(info));
             }
-            result = ModUtils.TRANSLATOR.translate(data, value.toArray(new Object[0]));
+            result = instance.translate(data, value.toArray(new Object[0]));
         } else {
-            result = ModUtils.TRANSLATOR.translate(data);
+            result = instance.translate(data);
         }
         return !StringUtils.isNullOrEmpty(result) ? Value.string(result) : Value.null_();
+    }
+
+    public static Value translate(Starscript ss, int argCount) {
+        if (ModUtils.TRANSLATOR == null) ss.error("No available translations, try again later.");
+        return translateFrom(ModUtils.TRANSLATOR, ss, argCount);
+    }
+
+    public static Value mcTranslate(Starscript ss, int argCount) {
+        if (ModUtils.RAW_TRANSLATOR == null) ss.error("No available translations, try again later.");
+        return translateFrom(ModUtils.RAW_TRANSLATOR, ss, argCount);
     }
 
     public static Value getJsonElement(Starscript ss, int argCount) {

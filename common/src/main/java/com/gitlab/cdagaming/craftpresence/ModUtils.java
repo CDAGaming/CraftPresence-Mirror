@@ -100,6 +100,11 @@ public class ModUtils {
     public static final TranslationUtils TRANSLATOR;
 
     /**
+     * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
+     */
+    public static final TranslationUtils RAW_TRANSLATOR;
+
+    /**
      * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
      */
     public static final ModUpdaterUtils UPDATER;
@@ -142,6 +147,10 @@ public class ModUtils {
         IS_DEV_FLAG = Boolean.parseBoolean("@IS_DEV@");
         IS_VERBOSE_FLAG = Boolean.parseBoolean("@IS_VERBOSE@");
         TRANSLATOR = new TranslationUtils(MOD_ID, true);
+        final boolean hasVanillaTranslations = !IS_LEGACY_SOFT || MCProtocolID >= 7;
+        RAW_TRANSLATOR = hasVanillaTranslations ? new TranslationUtils(
+                "minecraft", !IS_LEGACY_SOFT && MCProtocolID >= 353
+        ).setUsingAssetsPath(!IS_LEGACY_SOFT || MCProtocolID >= 72) : null;
         UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
     }
 }
