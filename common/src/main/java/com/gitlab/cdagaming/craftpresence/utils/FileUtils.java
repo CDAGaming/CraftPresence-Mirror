@@ -579,7 +579,7 @@ public class FileUtils {
 
             ARE_CLASSES_LOADING = false;
         }
-        return CLASS_LIST;
+        return StringUtils.newArrayList(CLASS_LIST);
     }
 
     /**
@@ -589,9 +589,9 @@ public class FileUtils {
      */
     public static List<ClassInfo> getClassList() {
         if (CLASS_LIST.isEmpty()) {
-            scanClasses();
+            return scanClasses();
         }
-        return CLASS_LIST;
+        return StringUtils.newArrayList(CLASS_LIST);
     }
 
     /**
