@@ -260,7 +260,8 @@ The following functions are available for use anywhere in CraftPresence:
 * `isWithinValue(value, min, max, contains_min ?: false, contains_max ?: false, check_sanity ?: true)` - Determines
   whether the specified value is within the specified range
 * `length(input)` - Returns the length of the specified string
-* `mcTranslate(input=String, args=Object...)` - Translates an Unlocalized String, based on the game translations retrieved for
+* `mcTranslate(input=String, args=Object...)` - Translates an Unlocalized String, based on the game translations
+  retrieved for
   the current language
 * `minify(input, length)` - Reduces the Length of a String to the Specified Length
 * `nullOrEmpty(input, allowWhitespace ?: false)` - Determines whether a String classifies as NULL or EMPTY
@@ -272,7 +273,8 @@ The following functions are available for use anywhere in CraftPresence:
 * `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
 * `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
 * `toCamelCase(input)` - Converts a String into a Valid and Acceptable Camel-Case Format
-* `translate(input=String, args=Object...)` - Translates an Unlocalized String, based on the mod translations retrieved for
+* `translate(input=String, args=Object...)` - Translates an Unlocalized String, based on the mod translations retrieved
+  for
   the current language
 
 ## Versions of CraftPresence

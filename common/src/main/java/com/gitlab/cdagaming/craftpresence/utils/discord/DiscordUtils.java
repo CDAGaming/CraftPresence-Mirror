@@ -240,8 +240,7 @@ public class DiscordUtils {
             @Override
             public void run() {
                 CraftPresence.SYSTEM.IS_GAME_CLOSING = true;
-                CraftPresence.timerObj.cancel();
-
+                CommandUtils.getThreadPool().shutdown();
                 shutDown();
             }
         };

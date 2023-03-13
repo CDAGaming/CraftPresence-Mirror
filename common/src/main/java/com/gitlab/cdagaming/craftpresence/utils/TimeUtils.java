@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Time String Utilities for interpreting and converting between differing Time Formats
@@ -305,8 +306,18 @@ public class TimeUtils {
      * @param name The string to interpret
      * @return the resulting {@link ChronoUnit} if any
      */
-    public static TemporalUnit getUnitFrom(final String name) {
+    public static TemporalUnit getChronoUnitFrom(final String name) {
         return ChronoUnit.valueOf(name.toUpperCase());
+    }
+
+    /**
+     * Retrieves the {@link ChronoUnit} from a string, if any
+     *
+     * @param name The string to interpret
+     * @return the resulting {@link ChronoUnit} if any
+     */
+    public static TimeUnit getTimeUnitFrom(final String name) {
+        return TimeUnit.valueOf(name.toUpperCase());
     }
 
     /**
@@ -330,6 +341,6 @@ public class TimeUtils {
      * @return an object of the same type with the specified period added, if not null
      */
     public static Temporal appendTime(final Temporal temporal, final long amount, final String unit) {
-        return appendTime(temporal, amount, getUnitFrom(unit));
+        return appendTime(temporal, amount, getChronoUnitFrom(unit));
     }
 }

@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -317,7 +318,9 @@ public class ExtendedButtonControl extends GuiButton {
      */
     public void onClick() {
         if (onPushEvent != null) {
-            onPushEvent.run();
+            setControlEnabled(false);
+            CommandUtils.getThreadPool().execute(onPushEvent);
+            setControlEnabled(true);
         }
     }
 

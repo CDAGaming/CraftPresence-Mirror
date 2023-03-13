@@ -40,6 +40,8 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -48,6 +50,10 @@ import java.util.Map;
  */
 @SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CommandUtils {
+    /**
+     * Timer Instance for this Class, used for Scheduling Events
+     */
+    private static final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
@@ -76,6 +82,15 @@ public class CommandUtils {
      * Whether you are on the Loading Stage in Minecraft
      */
     public static boolean isLoadingGame = false;
+
+    /**
+     * Retrieve the Timer Instance for this Class, used for Scheduling Events
+     *
+     * @return the Timer Instance for this Class
+     */
+    public static ScheduledExecutorService getThreadPool() {
+        return exec;
+    }
 
     /**
      * Determines if this Application is running in a Developer or Debug State

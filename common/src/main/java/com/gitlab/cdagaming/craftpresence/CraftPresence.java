@@ -39,9 +39,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * The Primary Application Class and Utilities
  *
@@ -49,10 +46,6 @@ import java.util.TimerTask;
  */
 @SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CraftPresence {
-    /**
-     * Timer Instance for this Class, used for Scheduling Events
-     */
-    public static final Timer timerObj = new Timer(CraftPresence.class.getSimpleName());
     /**
      * The {@link KeyUtils} Instance for this Mod
      */
@@ -184,14 +177,9 @@ public class CraftPresence {
      */
     private void scheduleTick() {
         if (!SYSTEM.IS_GAME_CLOSING) {
-            timerObj.schedule(
-                    new TimerTask() {
-                        @Override
-                        public void run() {
-                            clientTick();
-                        }
-                    },
-                    50
+            CommandUtils.getThreadPool().scheduleAtFixedRate(
+                    this::clientTick,
+                    0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
             );
         }
     }
@@ -215,8 +203,6 @@ public class CraftPresence {
                     init();
                 }
             }
-
-            scheduleTick();
         }
     }
 }
