@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.0.0 Beta 3 (03/??/2023)
+## v2.0.0 Beta 3 (03/14/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-beta.3)_
@@ -152,9 +152,9 @@ related systems:
     * `&SERVER:WORLDINFO:WORLDNAME&`, `&WORLDINFO:WORLDNAME&` (From Server Settings), `&WORLDNAME&` (
       From `worldDataPlaceholder`) => `world.name`
     * `&SERVER:WORLDINFO:WORLDTIME&`, `&WORLDINFO:WORLDTIME&` (From Server Settings), `&WORLDTIME&` (
-      From `worldDataPlaceholder`) => `world.time.24`
+      From `worldDataPlaceholder`) => `world.time.format_24`
     * `&SERVER:WORLDINFO:WORLDTIME12&`, `&WORLDINFO:WORLDTIME12&` (From Server Settings), `&WORLDTIME12&` (
-      From `worldDataPlaceholder`) => `world.time.12`
+      From `worldDataPlaceholder`) => `world.time.format_12`
     * `&SERVER:WORLDINFO:WORLDDAY&`, `&WORLDINFO:WORLDDAY&` (From Server Settings), `&WORLDDAY&` (
       From `worldDataPlaceholder`) => `world.time.day`
     * `&SCREEN:SCREEN&`, `&SCREEN&` (From Gui Settings) => `screen.name`
@@ -172,9 +172,9 @@ related systems:
     * `&ITEM&` (From Item Settings) => `item.message.holding`
 * Added Placeholders:
     * `data.server.motd.line.*` added to display only the specified line from `server.motd.raw`
-    * `world.time.12` added to display `world.time.24` in an `xx:xx AM/PM` format
+    * `world.time.format_12` added to display `world.time.format_24` in an `xx:xx AM/PM` format
     * `player.icon` added if `allowEndpointIcons` is active and a valid `playerSkinEndpoint` is supplied
-    * `*.instance` and `*.class` placeholders added to relevant `Gui`, `Entity`, and `Tile Entity` Modules
+    * `*.instance` and `*.class` placeholders added to relevant Modules
 * Removed (or moved) Placeholders:
     * NBT placeholders have been removed for the entity and item modules, replaced by the `getNbt` function
     * `player.position.*` and `player.health.*` placeholders now identify as `Double` instead of Strings
@@ -237,7 +237,6 @@ The following known issues are present in this build:
 
 * Some RPC flickering may be present in some circumstances (Primarily due to the override system rewrite)
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
-* The behavior for Resetting and Syncing a Local Config has been changed and may have issues!
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
 
