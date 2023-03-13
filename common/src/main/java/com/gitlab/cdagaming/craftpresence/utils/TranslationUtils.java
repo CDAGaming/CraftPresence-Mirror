@@ -133,20 +133,6 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     }
 
     /**
-     * Build and Perform Syncronization on this instance
-     *
-     * @return the current instance, used for chain-building
-     */
-    public TranslationUtils build() {
-        // Retrieve localized default translations
-        syncTranslations(getDefaultLanguage());
-
-        needsSync = true;
-        needsInit = true;
-        return this;
-    }
-
-    /**
      * Converts a Language Identifier using the Specified Conversion Mode, if possible
      * <p>
      * Note: If None is Used on a Valid Value, this function can be used as verification, if any
@@ -171,6 +157,20 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         }
 
         return resultId.trim();
+    }
+
+    /**
+     * Build and Perform Syncronization on this instance
+     *
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils build() {
+        // Retrieve localized default translations
+        syncTranslations(getDefaultLanguage());
+
+        needsSync = true;
+        needsInit = true;
+        return this;
     }
 
     /**
