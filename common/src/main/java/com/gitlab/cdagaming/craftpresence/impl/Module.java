@@ -120,6 +120,11 @@ public interface Module {
         return CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
     }
 
+    /**
+     * Determines whether {@link FileUtils} data can be accessed by the module
+     *
+     * @return {@link Boolean#TRUE} if this module can access {@link FileUtils} data
+     */
     default boolean canFetchData() {
         return FileUtils.canScanClasses();
     }
