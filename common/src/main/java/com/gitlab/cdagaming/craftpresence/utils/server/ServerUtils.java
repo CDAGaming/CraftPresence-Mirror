@@ -57,6 +57,15 @@ import java.util.Objects;
  */
 public class ServerUtils implements Module {
     /**
+     * The List of invalid MOTD (Message of the Day) Translations
+     */
+    private static final List<String> invalidMotds = StringUtils.newArrayList(
+            "multiplayer.status.cannot_connect",
+            "multiplayer.status.cannot_resolve",
+            "multiplayer.status.polling",
+            "multiplayer.status.pinging"
+    );
+    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
@@ -268,11 +277,8 @@ public class ServerUtils implements Module {
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
             final String newServer_Name = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-            final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isSingleplayer() && (newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverMOTD)) &&
-                    !(newServerData.serverMOTD.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.cannot_connect")) ||
-                            newServerData.serverMOTD.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.cannot_resolve")) ||
-                            newServerData.serverMOTD.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.polling")) ||
-                            newServerData.serverMOTD.equalsIgnoreCase(ModUtils.TRANSLATOR.translate("craftpresence.multiplayer.status.pinging"))) ? StringUtils.stripColors(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+            final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isSingleplayer() &&
+                    newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripColors(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
             if (newLANStatus != isOnLAN || ((newServerData != null && !newServerData.equals(currentServerData)) ||
                     (newServerData == null && currentServerData != null)) ||
@@ -389,6 +395,23 @@ public class ServerUtils implements Module {
         if (queuedForUpdate) {
             updatePresence();
         }
+    }
+
+    /**
+     * Whether the supplied server MOTD (Message of the Day) contains invalid characters
+     *
+     * @param serverMotd the server MOTD (Message of the day) to interpret
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    private boolean isInvalidMotd(final String serverMotd) {
+        for (String item : invalidMotds) {
+            if (ModUtils.TRANSLATOR != null && ModUtils.TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.TRANSLATOR.translate(item))) {
+                return true;
+            } else if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.RAW_TRANSLATOR.translate(item))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
