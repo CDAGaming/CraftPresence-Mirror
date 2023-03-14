@@ -9,7 +9,7 @@ plugins {
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
-def ext_versionInfoLabel = "${rootProject.deploymentType.equalsIgnoreCase("release") ? "" : "-${rootProject.versionLabel}"}"
+def ext_versionInfoLabel = "${rootProject.versionLabel.equalsIgnoreCase("release") ? "" : "-${rootProject.versionLabel}"}"
 def ext_baseVersionLabel = "${rootProject.versionId + ext_versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
 def ext_classPath = "${rootProject.group}".replace(".", "/") + "/${mod_name}".toLowerCase()
 
