@@ -4,8 +4,8 @@ import org.gradle.internal.jvm.Jvm
 import java.nio.file.Files
 
 plugins {
-    id 'xyz.wagyourtail.unimined' version '0.4.2-SNAPSHOT' apply false
-    id "com.diffplug.gradle.spotless" version "6.16.0" apply false
+    id 'xyz.wagyourtail.unimined' version '0.4.4-SNAPSHOT' apply false
+    id "com.diffplug.gradle.spotless" version "6.17.0" apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
