@@ -340,8 +340,8 @@ public class ServerUtils implements Module {
 
             // 'world.difficulty' Argument = Current Difficulty of the World
             final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() ?
-                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.mode.hardcore") :
-                    CraftPresence.player.world.getDifficulty().name();
+                    ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
+                    StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
             if (!newDifficulty.equals(currentDifficulty)) {
                 currentDifficulty = newDifficulty;
                 queuedForUpdate = true;

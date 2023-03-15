@@ -35,7 +35,6 @@
   "craftpresence.defaults.integrations.replaymod.editor": "{player.name} is editing a replay",
   "craftpresence.defaults.integrations.replaymod.renderer": "{player.name} is exporting a replay ({replaymod.frames.current}/{replaymod.frames.total} frames)",
   "craftpresence.defaults.integrations.replaymod.viewer": "{player.name} is browsing replays",
-  "craftpresence.defaults.mode.hardcore": "Hardcore",
   "craftpresence.defaults.placeholder.mods": "{general.mods} Mod(s)",
   "craftpresence.defaults.placeholder.pack": "{pack.name}",
   "craftpresence.defaults.placeholder.player_info.coordinate": "At {player.position.x}, {player.position.z}",
