@@ -46,7 +46,6 @@ import java.util.function.Predicate;
 /**
  * Migration from v1 (v1.x) to v2 (v2.0 - Latest Schema) Configs
  */
-@SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public class Legacy2Modern implements DataMigrator {
     private final File configFile;
     private final String encoding;
@@ -350,20 +349,20 @@ public class Legacy2Modern implements DataMigrator {
 
                     if (currentValue != null) {
                         expectedClass = currentValue.getClass();
-                        if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
+                        if (expectedClass == Boolean.class &&
                                 StringUtils.isValidBoolean(originalValue)) {
                             newValue = Boolean.parseBoolean(originalValue.toString());
-                        } else if ((expectedClass == int.class || expectedClass == Integer.class) &&
+                        } else if (expectedClass == Integer.class &&
                                 StringUtils.getValidInteger(originalValue).getFirst()) {
                             final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(originalValue);
                             if (boolData.getFirst()) {
                                 newValue = boolData.getSecond();
                             }
-                        } else if (currentValue instanceof Map) {
+                        } else if (currentValue instanceof Map<?, ?>) {
                             final String convertedString = StringUtils.removeMatches(StringUtils.getMatches("\\[([^\\s]+?)\\]", originalValue), null, 1);
                             final String[] oldArray;
 
-                            final Map newData = new HashMap((Map) currentValue);
+                            final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
                             final Class<?> expectedSecondaryClass = newData.get("default").getClass();
 
                             if (!StringUtils.isNullOrEmpty(convertedString) &&

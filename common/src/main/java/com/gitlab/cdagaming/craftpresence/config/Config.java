@@ -48,7 +48,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
 public final class Config extends Module implements Serializable {
     // Constants
     public static final int VERSION = 3;
@@ -115,20 +114,14 @@ public final class Config extends Module implements Serializable {
         Config config = data.getFirst();
         JsonElement rawJson = data.getSecond();
 
-        if (config == null) {
+        final boolean hasNoData = config == null;
+        final boolean isInvalidData = !hasNoData && (forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0));
+        if (hasNoData || isInvalidData) {
             config = new Config();
             config.isNewFile = true;
+            config.hasChanged = config.hasClientPropertiesChanged = config.flushClientProperties = isInvalidData;
             config._schemaVersion = VERSION;
             config._lastMCVersionId = MC_VERSION;
-        } else {
-            boolean shouldBeNew = forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0);
-            if (shouldBeNew) {
-                config = new Config();
-                config.isNewFile = shouldBeNew;
-                config.hasChanged = config.hasClientPropertiesChanged = config.flushClientProperties = shouldBeNew;
-                config._schemaVersion = VERSION;
-                config._lastMCVersionId = MC_VERSION;
-            }
         }
 
         final boolean wasNewFile = config.isNewFile;
@@ -308,10 +301,10 @@ public final class Config extends Module implements Serializable {
                             shouldReset = true;
                         } else {
                             final Class<?> expectedClass = currentValue.getClass();
-                            if ((expectedClass == boolean.class || expectedClass == Boolean.class) &&
+                            if (expectedClass == Boolean.class &&
                                     !StringUtils.isValidBoolean(rawValue.getAsString())) {
                                 shouldReset = true;
-                            } else if ((expectedClass == int.class || expectedClass == Integer.class)) {
+                            } else if (expectedClass == Integer.class) {
                                 final Pair<Boolean, Integer> boolData = StringUtils.getValidInteger(rawValue.getAsString());
                                 if (boolData.getFirst()) {
                                     // This check will trigger if the Field Name contains KeyCode Triggers
@@ -333,9 +326,9 @@ public final class Config extends Module implements Serializable {
                                 } else {
                                     shouldReset = true;
                                 }
-                            } else if (currentValue instanceof Map) {
-                                final Map newData = StringUtils.newHashMap((Map) currentValue);
-                                final Map defaultData = StringUtils.newHashMap((Map) defaultValue);
+                            } else if (currentValue instanceof Map<?, ?>) {
+                                final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
+                                final Map<Object, Object> defaultData = StringUtils.newHashMap((Map<?, ?>) defaultValue);
                                 if (!newData.containsKey("default")) {
                                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", rawName));
                                     newData.putAll(defaultData);
@@ -451,8 +444,8 @@ public final class Config extends Module implements Serializable {
         for (int i = 0; i < path.length; i++) {
             if (!StringUtils.isNullOrEmpty(path[i])) {
                 name = path[i];
-                if (instance instanceof Map) {
-                    result = StringUtils.newHashMap((Map) instance).get(name);
+                if (instance instanceof Map<?, ?>) {
+                    result = StringUtils.newHashMap((Map<?, ?>) instance).get(name);
                 } else {
                     result = StringUtils.getField(classObj, instance, name);
                 }
@@ -482,11 +475,11 @@ public final class Config extends Module implements Serializable {
         final Pair<Object, Tuple<Class<?>, Object, String>> propertyData = lookupProperty(path);
         if (propertyData.getFirst() != null) {
             final Tuple<Class<?>, Object, String> fieldData = propertyData.getSecond();
-            if (fieldData.getSecond() instanceof Map) {
+            if (fieldData.getSecond() instanceof Map<?, ?>) {
                 final String[] parentPath = Arrays.copyOf(path, path.length - 1);
                 final Tuple<Class<?>, Object, String> parentData = lookupProperty(parentPath).getSecond();
 
-                Map data = StringUtils.newHashMap((Map) fieldData.getSecond());
+                Map<Object, Object> data = StringUtils.newHashMap((Map<?, ?>) fieldData.getSecond());
                 data.put(fieldData.getThird(), value);
 
                 StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), new Pair<>(parentData.getThird(), data));

@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("rawtypes")
 public class TextReplacer implements DataMigrator {
     final Map<String, String> replacers;
     final boolean placeholderMode, matchCase, matchWholeWorld, useRegex;
@@ -111,8 +110,8 @@ public class TextReplacer implements DataMigrator {
                             ModUtils.LOG.debugInfo("Modified property \"%s\": \"%s\" => \"%s\"", rawName, originalResult, processResult);
                             instance.setProperty((Object) processResult, pathData);
                         }
-                    } else if (currentValue instanceof Map) {
-                        final Map newData = StringUtils.newHashMap((Map) currentValue);
+                    } else if (currentValue instanceof Map<?, ?>) {
+                        final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
                         if (entry.getValue().isJsonObject()) {
                             for (Object dataEntry : newData.keySet()) {
                                 final List<String> paths = StringUtils.newArrayList(path);
