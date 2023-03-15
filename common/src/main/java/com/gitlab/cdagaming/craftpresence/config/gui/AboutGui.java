@@ -74,6 +74,16 @@ public class AboutGui extends ExtendedScreen {
                 )
         );
 
+        // Adding Wiki Button
+        addControl(
+                new ExtendedButtonControl(
+                        (getScreenWidth() - 105), (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.wiki",
+                        () -> UrlUtils.openUrl(CraftPresence.CONFIG._README)
+                )
+        );
+
         super.initializeUi();
     }
 
