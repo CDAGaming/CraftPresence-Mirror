@@ -85,7 +85,7 @@ processResources.dependsOn exportMappings
 shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)
     dependsOn(project(":common").tasks.shadowJar)
-    from zipTree(project(":common").tasks.shadowJar.archivePath)
+    from zipTree(project(":common").tasks.shadowJar.archiveFile)
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set "dev-shadow"
 
