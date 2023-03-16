@@ -201,7 +201,6 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
-                                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                             CONFIG.fallbackBiomeIcon = currentValue;
                                         }, null
                                 )
@@ -221,7 +220,6 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         () -> {
                             if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 final ModuleData defaultBiomeData = CONFIG.biomeData.getOrDefault("default", new ModuleData());
                                 defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
                                 CONFIG.biomeData.put("default", defaultBiomeData);

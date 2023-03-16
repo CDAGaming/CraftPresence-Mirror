@@ -217,7 +217,6 @@ public class ServerSettingsGui extends ExtendedScreen {
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
-                                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                             CONFIG.fallbackServerIcon = currentValue;
                                         }, null
                                 )
@@ -237,17 +236,14 @@ public class ServerSettingsGui extends ExtendedScreen {
                         () -> {
                             if (!defaultName.getControlMessage().equals(CONFIG.fallbackServerName)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.fallbackServerName = defaultName.getControlMessage();
                             }
                             if (!defaultMOTD.getControlMessage().equals(CONFIG.fallbackServerMotd)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.fallbackServerMotd = defaultMOTD.getControlMessage();
                             }
                             if (!defaultMessage.getControlMessage().equals(defaultServerMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 final ModuleData defaultServerData = CONFIG.serverData.getOrDefault("default", new ModuleData());
                                 defaultServerData.setTextOverride(defaultMessage.getControlMessage());
                                 CONFIG.serverData.put("default", defaultServerData);

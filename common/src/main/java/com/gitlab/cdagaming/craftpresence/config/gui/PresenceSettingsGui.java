@@ -301,8 +301,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                                                CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CONFIG.dynamicIcons.put(attributeName, inputText);
                                                                 final DiscordAsset asset = new DiscordAsset()
                                                                         .setName(attributeName)
@@ -320,8 +318,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                                                CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CONFIG.dynamicIcons.remove(attributeName);
                                                                 if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
                                                                     DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
@@ -394,15 +390,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                                                CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CONFIG.dynamicVariables.put(attributeName, inputText);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                                                CraftPresence.CONFIG.flushClientProperties = true;
                                                                 CONFIG.dynamicVariables.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -440,54 +432,44 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 () -> {
                     if (!detailsFormat.getControlMessage().equals(PRESENCE.details)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.details = detailsFormat.getControlMessage();
                     }
                     if (!gameStateFormat.getControlMessage().equals(PRESENCE.gameState)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.gameState = gameStateFormat.getControlMessage();
                     }
                     if (!largeImageFormat.getControlMessage().equals(PRESENCE.largeImageText)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.largeImageText = largeImageFormat.getControlMessage();
                     }
                     if (!smallImageFormat.getControlMessage().equals(PRESENCE.smallImageText)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.smallImageText = smallImageFormat.getControlMessage();
                     }
                     if (!isDefaultModule) {
                         if (enabledCheckbox.isChecked() != PRESENCE.enabled) {
                             CraftPresence.CONFIG.hasChanged = true;
-                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                             PRESENCE.enabled = enabledCheckbox.isChecked();
                         }
                         if (useAsMainCheckbox.isChecked() != PRESENCE.useAsMain) {
                             CraftPresence.CONFIG.hasChanged = true;
-                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                             PRESENCE.useAsMain = useAsMainCheckbox.isChecked();
                         }
                     }
                     if (!largeImageKeyFormat.getControlMessage().equals(PRESENCE.largeImageKey)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.largeImageKey = largeImageKeyFormat.getControlMessage();
                     }
                     if (!smallImageKeyFormat.getControlMessage().equals(PRESENCE.smallImageKey)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.smallImageKey = smallImageKeyFormat.getControlMessage();
                     }
                     if (!startTimeFormat.getControlMessage().equals(PRESENCE.startTimestamp)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.startTimestamp = startTimeFormat.getControlMessage();
                     }
                     if (!endTimeFormat.getControlMessage().equals(PRESENCE.endTimestamp)) {
                         CraftPresence.CONFIG.hasChanged = true;
-                        CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                         PRESENCE.endTimestamp = endTimeFormat.getControlMessage();
                     }
                     if (onChangedCallback != null) {

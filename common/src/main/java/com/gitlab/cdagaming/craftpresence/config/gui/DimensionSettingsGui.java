@@ -202,7 +202,6 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
-                                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                             CONFIG.fallbackDimensionIcon = currentValue;
                                         }, null
                                 )
@@ -222,7 +221,6 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         () -> {
                             if (!defaultMessage.getControlMessage().equals(defaultDimensionMessage)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 final ModuleData defaultDimensionData = CONFIG.dimensionData.getOrDefault("default", new ModuleData());
                                 defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
                                 CONFIG.dimensionData.put("default", defaultDimensionData);

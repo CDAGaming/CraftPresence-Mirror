@@ -88,7 +88,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
-                                            CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                             CONFIG.defaultIcon = currentValue;
                                         }, null
                                 )
@@ -266,67 +265,58 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> {
                             if (!clientId.getControlMessage().equals(CONFIG.clientId)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.clientId = clientId.getControlMessage();
                             }
                             if (currentPartyPrivacy != CONFIG.partyPrivacyLevel) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.partyPrivacyLevel = currentPartyPrivacy;
                             }
                             if (currentPreferredClient != CONFIG.preferredClientLevel) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.preferredClientLevel = currentPreferredClient;
                             }
                             if (detectCurseManifestButton.isChecked() != CONFIG.detectCurseManifest) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectCurseManifest = detectCurseManifestButton.isChecked();
                             }
                             if (detectMultiMCManifestButton.isChecked() != CONFIG.detectMultiMCManifest) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectMultiMCManifest = detectMultiMCManifestButton.isChecked();
                             }
                             if (detectMCUpdaterInstanceButton.isChecked() != CONFIG.detectMCUpdaterInstance) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectMCUpdaterInstance = detectMCUpdaterInstanceButton.isChecked();
                             }
                             if (detectTechnicPackButton.isChecked() != CONFIG.detectTechnicPack) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectTechnicPack = detectTechnicPackButton.isChecked();
                             }
                             if (detectBiomeDataButton.isChecked() != CONFIG.detectBiomeData) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectBiomeData = detectBiomeDataButton.isChecked();
                             }
                             if (detectDimensionDataButton.isChecked() != CONFIG.detectDimensionData) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectDimensionData = detectDimensionDataButton.isChecked();
                             }
                             if (detectWorldDataButton.isChecked() != CONFIG.detectWorldData) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.detectWorldData = detectWorldDataButton.isChecked();
                             }
                             if (enableJoinRequestButton.isChecked() != CONFIG.enableJoinRequests) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.enableJoinRequests = enableJoinRequestButton.isChecked();
                             }
                             if (resetTimeOnInitButton.isChecked() != CONFIG.resetTimeOnInit) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.resetTimeOnInit = resetTimeOnInitButton.isChecked();
                             }
                             if (autoRegisterButton.isChecked() != CONFIG.autoRegister) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.autoRegister = autoRegisterButton.isChecked();
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);

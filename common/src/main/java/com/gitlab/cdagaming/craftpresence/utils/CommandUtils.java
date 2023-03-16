@@ -211,7 +211,7 @@ public class CommandUtils {
     /**
      * Restarts and Initializes the RPC Data
      *
-     * @param flushOverride Whether to refresh RPC assets
+     * @param flushOverride Whether to purge existing RPC assets, to be later refreshed
      */
     public static void rebootRPC(boolean flushOverride) {
         final String clientId = CraftPresence.CONFIG.generalSettings.clientId;

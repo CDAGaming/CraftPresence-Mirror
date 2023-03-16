@@ -57,7 +57,7 @@ public final class Config extends Module implements Serializable {
     private static List<String> languageTriggers;
     private static final Config INSTANCE = loadOrCreate();
     private static Config DEFAULT;
-    public transient boolean hasChanged = false, hasClientPropertiesChanged = false, flushClientProperties = false, isNewFile = false;
+    public transient boolean hasChanged = false, needsReboot = false, isNewFile = false;
     // Global Settings
     public String _README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
     public int _schemaVersion = 0;
@@ -119,7 +119,7 @@ public final class Config extends Module implements Serializable {
         if (hasNoData || isInvalidData) {
             config = new Config();
             config.isNewFile = true;
-            config.hasChanged = config.hasClientPropertiesChanged = config.flushClientProperties = isInvalidData;
+            config.hasChanged = config.needsReboot = isInvalidData;
             config._schemaVersion = VERSION;
             config._lastMCVersionId = MC_VERSION;
         }
@@ -186,12 +186,11 @@ public final class Config extends Module implements Serializable {
 
     public void applySettings() {
         if (hasChanged) {
-            if (hasClientPropertiesChanged) {
-                CommandUtils.rebootRPC(flushClientProperties);
-                hasClientPropertiesChanged = false;
+            if (needsReboot) {
+                CommandUtils.rebootRPC();
+                needsReboot = false;
             }
             CommandUtils.reloadData(true);
-            flushClientProperties = false;
             hasChanged = false;
         }
         isNewFile = false;

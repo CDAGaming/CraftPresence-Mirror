@@ -281,8 +281,7 @@ public class MainGui extends ExtendedScreen {
                             // Only Mark to Save if there have been Changes in the File
                             if (!CraftPresence.CONFIG.toString().equals(configData)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
-                                CraftPresence.CONFIG.flushClientProperties = true;
+                                CraftPresence.CONFIG.needsReboot = true;
 
                                 syncRenderStates();
                             }

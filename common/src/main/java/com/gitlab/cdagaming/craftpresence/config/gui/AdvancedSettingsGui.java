@@ -629,7 +629,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             }
                             if (!refreshRate.getControlMessage().equals(Integer.toString(CONFIG.refreshRate))) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
                             }
                             if (enableCommandsButton.isChecked() != CONFIG.enableCommands) {
@@ -638,17 +638,14 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             }
                             if (enablePerGuiButton.isChecked() != CONFIG.enablePerGui) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.enablePerGui = enablePerGuiButton.isChecked();
                             }
                             if (enablePerItemButton.isChecked() != CONFIG.enablePerItem) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.enablePerItem = enablePerItemButton.isChecked();
                             }
                             if (enablePerEntityButton.isChecked() != CONFIG.enablePerEntity) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
                                 CONFIG.enablePerEntity = enablePerEntityButton.isChecked();
                             }
                             if (renderTooltipsButton.isChecked() != CONFIG.renderTooltips) {
@@ -661,12 +658,12 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             }
                             if (debugModeButton.isChecked() != CONFIG.debugMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.debugMode = debugModeButton.isChecked();
                             }
                             if (verboseModeButton.isChecked() != CONFIG.verboseMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.hasClientPropertiesChanged = true;
+                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.verboseMode = verboseModeButton.isChecked();
                             }
                             if (allowPlaceholderPreviewsButton.isChecked() != CONFIG.allowPlaceholderPreviews) {
