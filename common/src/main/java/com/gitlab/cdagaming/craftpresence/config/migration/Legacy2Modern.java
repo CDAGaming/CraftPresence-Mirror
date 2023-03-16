@@ -460,7 +460,7 @@ public class Legacy2Modern implements DataMigrator {
         for (Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> entry : placeholderMappings) {
             final Pair<String, String> replacer = entry.getFirst();
             final String original = replacer.getFirst();
-            String newValue = replacer.getSecond();
+            final String newValue = replacer.getSecond();
             final Predicate<String> typeCheck = entry.getSecond();
             final Predicate<String> optionCheck = entry.getThird();
             if (typeCheck.test(argumentType) && optionCheck.test(originalName) && result.toLowerCase().contains(original.toLowerCase())) {
@@ -483,11 +483,11 @@ public class Legacy2Modern implements DataMigrator {
         return result;
     }
 
-    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, Predicate<String> typeCheck, Predicate<String> optionCheck) {
+    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, final Predicate<String> typeCheck, Predicate<String> optionCheck) {
         return new Tuple<>(new Pair<>(original, name), typeCheck, optionCheck);
     }
 
-    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, Predicate<String> typeCheck) {
+    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, final Predicate<String> typeCheck) {
         return generatePair(original, name, typeCheck, (e) -> true);
     }
 }
