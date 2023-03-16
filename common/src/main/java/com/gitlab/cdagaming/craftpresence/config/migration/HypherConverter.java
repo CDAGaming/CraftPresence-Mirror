@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.gson.JsonElement;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
+import me.hypherionmc.moonconfig.core.UnmodifiableConfig;
 import me.hypherionmc.moonconfig.core.file.FileConfig;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiMultiplayer;
@@ -50,6 +51,7 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("unchecked")
 public class HypherConverter implements DataMigrator {
+    private final static int LOWEST_SUPPORTED = 13;
     private final static String EMPTY_QUOTES = "{''}";
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
@@ -112,9 +114,16 @@ public class HypherConverter implements DataMigrator {
             conf.load();
             configVersion = conf.get("general.version");
             ModUtils.LOG.debugInfo("Main Config file found (Version: %d, File Version: %d), interpreting data...", configVersion, fileVersion);
+            if (configVersion < LOWEST_SUPPORTED) {
+                ModUtils.LOG.error("You are using an outdated Simple RPC config file (Must be at least v%d, you have v%d), skipping...", LOWEST_SUPPORTED, configVersion);
+                return instance;
+            }
 
             // Main Conversion
-            instance.generalSettings.clientId = conf.get("general.applicationID").toString();
+            final Object clientId = getProperty(conf, "general.applicationID", "general.clientID");
+            if (clientId != null) {
+                instance.generalSettings.clientId = clientId.toString();
+            }
             instance.advancedSettings.debugMode = conf.get("general.debugging");
             final boolean launcherIntegration = conf.get("general.launcherIntegration");
             instance.generalSettings.detectCurseManifest = launcherIntegration;
@@ -294,6 +303,15 @@ public class HypherConverter implements DataMigrator {
         return (configVersion < 0 || configVersion >= flag.configVersion) &&
                 (serverEntryVersion < 0 || serverEntryVersion >= flag.serverEntryVersion) &&
                 (replayModVersion < 0 || replayModVersion >= flag.replayModVersion);
+    }
+
+    private Object getProperty(final UnmodifiableConfig instance, final String... terms) {
+        for (String term : terms) {
+            if (instance.contains(term)) {
+                return instance.get(term);
+            }
+        }
+        return null;
     }
 
     private enum ConfigFlag {
