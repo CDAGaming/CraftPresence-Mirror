@@ -427,10 +427,16 @@ public final class Config extends Module implements Serializable {
         return !isNewFile ? handleVerification(rawJson, keyCodeMigrationId, languageMigrationId) : rawJson;
     }
 
-    public void save() {
+    public void save(final boolean shouldApply) {
         FileUtils.writeJsonData(this, getConfigFile(), "UTF-8",
                 FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
-        applySettings();
+        if (shouldApply) {
+            applySettings();
+        }
+    }
+
+    public void save() {
+        save(true);
     }
 
     public Pair<Object, Tuple<Class<?>, Object, String>> lookupProperty(final String... path) {
