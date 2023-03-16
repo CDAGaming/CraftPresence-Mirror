@@ -45,7 +45,6 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("DuplicatedCode")
 public class FunctionsLib {
     public static void init(Starscript ss) {
         StandardLib.init(ss);
@@ -111,10 +110,10 @@ public class FunctionsLib {
         ss.set("timeToString", FunctionsLib::timeToString); // toString
     }
 
-    public static Value format(Starscript ss, int argCount) {
+    public static Value parseWith(TranslationUtils instance, Starscript ss, int argCount) {
         final List<Value> args = StringUtils.newArrayList();
         if (argCount < 1)
-            ss.error("format() requires one or more arguments, got %d.", argCount);
+            ss.error("parseWith() requires one or more arguments, got %d.", argCount);
         for (int i = 0; i < argCount; i++) {
             args.add(ss.pop());
         }
@@ -128,7 +127,7 @@ public class FunctionsLib {
         }
 
         if (data == null) {
-            ss.error("First argument to format() needs to be a valid String.");
+            ss.error("First argument to parseWith() needs to be a valid String.");
         }
         args.remove(0);
 
@@ -139,56 +138,26 @@ public class FunctionsLib {
             for (Value info : args) {
                 value.add(CraftPresence.CLIENT.fromValue(info));
             }
-            result = String.format(data, value.toArray(new Object[0]));
+            Object[] formatArgs = value.toArray(new Object[0]);
+            result = instance != null ? instance.translate(data, formatArgs) : String.format(data, formatArgs);
         } else {
-            result = data;
+            result = instance != null ? instance.translate(data) : data;
         }
         return !StringUtils.isNullOrEmpty(result) ? Value.string(result) : Value.null_();
     }
 
-    public static Value translateFrom(TranslationUtils instance, Starscript ss, int argCount) {
-        final List<Value> args = StringUtils.newArrayList();
-        if (argCount < 1)
-            ss.error("translate() requires one or more arguments, got %d.", argCount);
-        for (int i = 0; i < argCount; i++) {
-            args.add(ss.pop());
-        }
-        StringUtils.revlist(args);
-
-        // Parse, then remove the source entity from arguments, if valid
-        Value source = args.get(0);
-        String data = null;
-        if (source.isString()) {
-            data = source.getString();
-        }
-
-        if (data == null) {
-            ss.error("First argument to translate() needs to be a valid String.");
-        }
-        args.remove(0);
-
-        String result;
-        // Parse remaining data into an Objects List
-        if (!args.isEmpty() && data != null) {
-            final List<Object> value = StringUtils.newArrayList();
-            for (Value info : args) {
-                value.add(CraftPresence.CLIENT.fromValue(info));
-            }
-            result = instance.translate(data, value.toArray(new Object[0]));
-        } else {
-            result = instance.translate(data);
-        }
-        return !StringUtils.isNullOrEmpty(result) ? Value.string(result) : Value.null_();
+    public static Value format(Starscript ss, int argCount) {
+        return parseWith(null, ss, argCount);
     }
 
     public static Value translate(Starscript ss, int argCount) {
-        if (ModUtils.TRANSLATOR == null) ss.error("No available translations, try again later.");
-        return translateFrom(ModUtils.TRANSLATOR, ss, argCount);
+        if (ModUtils.TRANSLATOR == null) ss.error("No available translations from mod data, try again later.");
+        return parseWith(ModUtils.TRANSLATOR, ss, argCount);
     }
 
     public static Value mcTranslate(Starscript ss, int argCount) {
-        if (ModUtils.RAW_TRANSLATOR == null) ss.error("No available translations, try again later.");
-        return translateFrom(ModUtils.RAW_TRANSLATOR, ss, argCount);
+        if (ModUtils.RAW_TRANSLATOR == null) ss.error("No available translations from game data, try again later.");
+        return parseWith(ModUtils.RAW_TRANSLATOR, ss, argCount);
     }
 
     public static Value getJsonElement(Starscript ss, int argCount) {
