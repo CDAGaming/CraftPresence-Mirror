@@ -19,7 +19,7 @@ by [jagrosh](https://github.com/jagrosh)!
 * CraftPresence identifies as a **Client Side-only** mod
     * This means it **will not run** on the Server's side.
     * Fabric and Quilt mod loaders will simply ignore the
-    mod, while other mod loaders may crash.
+      mod, while other mod loaders may crash.
 * Some versions of CraftPresence for Minecraft 1.14.x and above require
   the [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
   and the [Fabric mod loader](https://fabricmc.net/use/installer)
