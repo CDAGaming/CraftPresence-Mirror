@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -206,25 +205,32 @@ public class UrlUtils {
      *
      * @param targetUrl The URL to Open, as a URI
      */
-    @SuppressFBWarnings("REC_CATCH_EXCEPTION")
-    @SuppressWarnings("RedundantArrayCreation")
     public static void openUrl(final URI targetUrl) {
         try {
             // Attempt to use the Desktop Library from JDK 1.6+
-            Class<?> d = Class.forName("java.awt.Desktop");
-            d.getDeclaredMethod("browse",
-                    new Class<?>[]{URI.class}).invoke(
-                    d.getDeclaredMethod("getDesktop").invoke(null),
-                    new Object[]{targetUrl});
+            final Class<?> d = Class.forName("java.awt.Desktop");
+            StringUtils.executeMethod(
+                    d, StringUtils.executeMethod(
+                            d, null, "getDesktop",
+                            null, null
+                    ),
+                    "browse",
+                    new Class<?>[]{URI.class},
+                    new Object[]{targetUrl}
+            );
         } catch (Exception ignored) {
             // Library not available or failed; use alternatives depending on OS
             try {
                 if (OS_NAME.contains("Win")) {
                     Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + targetUrl.toString());
                 } else if (OS_NAME.startsWith("Mac")) {
-                    Class.forName("com.apple.eio.FileManager").getDeclaredMethod(
-                            "openURL", new Class<?>[]{String.class}).invoke(null,
-                            new Object[]{targetUrl.toString()});
+                    StringUtils.executeMethod(
+                            Class.forName("com.apple.eio.FileManager"),
+                            null,
+                            "openURL",
+                            new Class<?>[]{String.class},
+                            new Object[]{targetUrl.toString()}
+                    );
                 } else {
                     Runtime.getRuntime().exec("xdg-open " + targetUrl.toString());
                 }
