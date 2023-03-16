@@ -1,9 +1,9 @@
 # CraftPresence Changes
 
-## v2.0.0 Beta 3 (03/14/2023)
+## v2.0.0 Release Candidate 1 (03/30/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-beta.3)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-rc.1)_
 
 ### Changes
 
@@ -60,16 +60,17 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
     * Note: Different Loaders may have different screen names, depending on mappings
 * Fixed improper options being available in the Dynamic Editor Screen when adding data that was preliminary-supplied
   from other modules
-* Fixed interpreting Dynamic Icons with Spaces in them (`formatAsIcon` is now ignored for Custom Assets, but null checks
-  do remain)
+* Fixed interpreting Dynamic Icons with Spaces in them
+    * As part of this fix, `formatAsIcon` is now ignored for Custom Assets, but null checks
+      do remain
 * Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
-  the `buttonBackgroundColor` setting
-* Fixed issues that could occur when `setControlMessage` was fired with a null argument
+  `buttonBackgroundColor` setting
+* Backend: Fixed issues that could occur when `ExtendedTextControl#setControlMessage` was fired with a null argument
 * Fixed the UUID placeholders in `&IGN&` (Now known as `player.*`) being available, even if it wasn't a valid UUID
 * Fixed a regression in MultiMC-type instance detection from `v1.9.0` that caused a normal error to not be suppressed
   properly
-* Fixed multiple issues preventing the ability to hide placeholder output depending on a per-module value
-    * IE You can set the `textOverride` to be an empty string in the frontend, and the mod will respect that
+* Fixed multiple issues that were preventing the ability to hide placeholder output depending on a per-module value
+    * IE You can now set the `textOverride` to be an empty string in the frontend, and the mod will respect that
 * Fixed preliminary-supplied data being able to be removed via the Dynamic Editor Screen
     * Only the config entry should have been effected, not the actual module data list
 * Fixed Out-Of-Bound issues when there are less than 3 or 4 search results in a Scrollable List
@@ -225,17 +226,16 @@ ___
 
 #### Known Issues
 
-This release represents a work-in-progress build of CraftPresence's v2.0 release, planned for 2023.
+This release represents a work-in-progress build of CraftPresence's v2.0 release.
 It does not in any way, shape, or form represent a final product, in either it's backend or frontend implementation.
 
 Despite configuration compatibility being ensured between v1.8.x/v1.9.x and v2.0,
 caution is advised to ensure the best experience, while also baring in mind that features can change, be added, or
 outright removed without forewarning and without compatibility
-between future Alpha releases.
+between future work-in-progress releases.
 
 The following known issues are present in this build:
 
-* Some RPC flickering may be present in some circumstances (Primarily due to the override system rewrite)
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
@@ -251,10 +251,9 @@ contains the following differences to take Note of:
 Starting in v1.5.0, The 1.13 Rift Port of CraftPresence was deprecated in favor of the 1.13.2 Rift Port.
 
 Starting in v1.7.0, The aforementioned KeyCode warning is now void, due to new systems introduced to convert keybindings
-between LWJGL versions, and this message will be removed in v1.7.1.
+between LWJGL versions.
 
-Note: Due to Maven Troubles on behalf of the Rift Team, Rift Versions are no longer supported as of v1.6.1, though the
-differences do still take effect for Forge.
+Starting in v1.6.1, Rift Versions are no longer supported, though the differences do still take effect for Forge.
 
 #### 1.14+ Build Info
 
