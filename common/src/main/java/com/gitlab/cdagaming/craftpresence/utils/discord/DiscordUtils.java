@@ -349,7 +349,8 @@ public class DiscordUtils {
         return StringUtils.getOrDefault(
                 input, fallback,
                 StringUtils.NULL_OR_EMPTY.negate()
-                        .and(e -> StringUtils.getBytes(e, "UTF-8").length < length)
+                        .and(e -> input.length() >= 2) // Discord String Length Limits
+                        .and(e -> StringUtils.getBytes(e, "UTF-8").length < length) // Discord Byte Length Limits
         ).trim();
     }
 
