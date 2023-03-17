@@ -92,7 +92,8 @@ subprojects {
             name = "Forge"
             url = "https://maven.minecraftforge.net/"
             metadataSources {
-                it.artifact()
+                mavenPom()
+                artifact()
             }
         }
         maven {
