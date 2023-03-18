@@ -39,6 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -355,10 +356,45 @@ public class GuiUtils implements Module {
     /**
      * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
      *
+     * @param mc           The current game instance
+     * @param targetScreen The target Gui Screen to display
+     */
+    public void openScreen(final Minecraft mc, final GuiScreen targetScreen) {
+        mc.addScheduledTask(() -> mc.displayGuiScreen(targetScreen));
+    }
+
+    /**
+     * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
+     *
      * @param targetScreen The target Gui Screen to display
      */
     public void openScreen(final GuiScreen targetScreen) {
-        CraftPresence.instance.addScheduledTask(() -> CraftPresence.instance.displayGuiScreen(targetScreen));
+        openScreen(CraftPresence.instance, targetScreen);
+    }
+
+    /**
+     * Adds a Scheduled/Queued Task to Close the Current Screen and/or redirect to the Specified Screen
+     *
+     * @param mc           The current game instance
+     * @param targetScreen The target Gui Screen to display
+     */
+    public void closeScreen(final Minecraft mc, final GuiScreen targetScreen) {
+        mc.addScheduledTask(() -> {
+            if (mc.player != null) {
+                mc.player.closeScreen();
+            } else {
+                openScreen(mc, targetScreen);
+            }
+        });
+    }
+
+    /**
+     * Adds a Scheduled/Queued Task to Close the Current Screen and/or redirect to the Specified Screen
+     *
+     * @param targetScreen The target Gui Screen to display
+     */
+    public void closeScreen(final GuiScreen targetScreen) {
+        closeScreen(CraftPresence.instance, targetScreen);
     }
 
     @Override
