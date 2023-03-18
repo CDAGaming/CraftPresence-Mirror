@@ -372,31 +372,6 @@ public class GuiUtils implements Module {
         openScreen(CraftPresence.instance, targetScreen);
     }
 
-    /**
-     * Adds a Scheduled/Queued Task to Close the Current Screen and/or redirect to the Specified Screen
-     *
-     * @param mc           The current game instance
-     * @param targetScreen The target Gui Screen to display
-     */
-    public void closeScreen(final Minecraft mc, final GuiScreen targetScreen) {
-        mc.addScheduledTask(() -> {
-            if (mc.player != null) {
-                mc.player.closeScreen();
-            } else {
-                openScreen(mc, targetScreen);
-            }
-        });
-    }
-
-    /**
-     * Adds a Scheduled/Queued Task to Close the Current Screen and/or redirect to the Specified Screen
-     *
-     * @param targetScreen The target Gui Screen to display
-     */
-    public void closeScreen(final GuiScreen targetScreen) {
-        closeScreen(CraftPresence.instance, targetScreen);
-    }
-
     @Override
     public void updateData() {
         if (CraftPresence.instance.currentScreen == null) {
