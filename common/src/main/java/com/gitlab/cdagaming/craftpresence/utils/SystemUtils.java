@@ -28,8 +28,8 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.LockObject;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Random;
@@ -39,7 +39,6 @@ import java.util.Random;
  *
  * @author CDAGaming
  */
-@SuppressFBWarnings("URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD")
 public class SystemUtils {
     /**
      * An instance of a random number generator, used for select parts of the mod
@@ -50,6 +49,34 @@ public class SystemUtils {
      */
     public static final int MINIMUM_REFRESH_RATE = 2;
     /**
+     * The Name of the User's Operating System
+     */
+    public static final String OS_NAME = System.getProperty("os.name");
+    /**
+     * The Architecture of the User's System
+     */
+    public static final String OS_ARCH = System.getProperty("os.arch");
+    /**
+     * The Directory the Application is running in
+     */
+    public static final String USER_DIR = System.getProperty("user.dir");
+    /**
+     * If the {@link SystemUtils#OS_NAME} can be classified as LINUX
+     */
+    public static final boolean IS_LINUX = OS_NAME.startsWith("Linux") || OS_NAME.startsWith("LINUX");
+    /**
+     * If the {@link SystemUtils#OS_NAME} can be classified as MAC
+     */
+    public static final boolean IS_MAC = OS_NAME.startsWith("Mac");
+    /**
+     * If the {@link SystemUtils#OS_NAME} can be classified as WINDOWS
+     */
+    public static final boolean IS_WINDOWS = OS_NAME.startsWith("Windows");
+    /**
+     * If the {@link SystemUtils#OS_ARCH} is 64-bit or x64
+     */
+    public static final boolean IS_64_BIT = OS_ARCH.contains("amd64") || OS_ARCH.contains("x86_64");
+    /**
      * An instance of {@link LockObject} to await certain tasks
      */
     public final LockObject TICK_LOCK = new LockObject();
@@ -57,34 +84,6 @@ public class SystemUtils {
      * The Current Time Remaining on the Timer
      */
     public int TIMER = 0;
-    /**
-     * The Name of the User's Operating System
-     */
-    public String OS_NAME;
-    /**
-     * The Architecture of the User's System
-     */
-    public String OS_ARCH;
-    /**
-     * The Directory the Application is running in
-     */
-    public String USER_DIR;
-    /**
-     * If the {@link SystemUtils#OS_NAME} can be classified as LINUX
-     */
-    public boolean IS_LINUX = false;
-    /**
-     * If the {@link SystemUtils#OS_NAME} can be classified as MAC
-     */
-    public boolean IS_MAC = false;
-    /**
-     * If the {@link SystemUtils#OS_NAME} can be classified as WINDOWS
-     */
-    public boolean IS_WINDOWS = false;
-    /**
-     * If the {@link SystemUtils#OS_ARCH} is 64-bit or x64
-     */
-    public boolean IS_64_BIT = false;
     /**
      * If Loading of critical data has been completed<p>
      * Becomes true after callbacks synchronize once if previously false
@@ -127,19 +126,8 @@ public class SystemUtils {
      */
     public SystemUtils() {
         try {
-            OS_NAME = System.getProperty("os.name");
-            OS_ARCH = System.getProperty("os.arch");
-            USER_DIR = System.getProperty("user.dir");
-
-            IS_LINUX = OS_NAME.startsWith("Linux") || OS_NAME.startsWith("LINUX");
-            IS_MAC = OS_NAME.startsWith("Mac");
-            IS_WINDOWS = OS_NAME.startsWith("Windows");
             CURRENT_INSTANT = TimeUtils.getCurrentTime();
             ELAPSED_TIME = 0;
-
-            // Calculate if 64-Bit Architecture
-            final List<String> x64 = StringUtils.newArrayList("amd64", "x86_64");
-            IS_64_BIT = x64.contains(OS_ARCH);
 
             TICK_LOCK.unlock();
         } catch (Exception ex) {
@@ -148,6 +136,137 @@ public class SystemUtils {
                 ex.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Attempt to browse to the specified command utilizing the OS-Specific APIs
+     *
+     * @param cmd The command to interpret
+     * @return {@link Boolean#TRUE} upon success
+     */
+    public static boolean browseWithSystem(final String cmd) {
+        if (IS_LINUX) {
+            if (isXDG()) {
+                if (runCommand("xdg-open", "%s", cmd)) {
+                    return true;
+                }
+            }
+            if (isKDE()) {
+                if (runCommand("kde-open", "%s", cmd)) {
+                    return true;
+                }
+            }
+            if (isGNOME()) {
+                if (runCommand("gnome-open", "%s", cmd)) {
+                    return true;
+                }
+            }
+            if (runCommand("kde-open", "%s", cmd)) {
+                return true;
+            }
+            if (runCommand("gnome-open", "%s", cmd)) {
+                return true;
+            }
+        }
+
+        if (IS_MAC) {
+            if (runCommand("open", "%s", cmd)) {
+                return true;
+            }
+        }
+
+        if (IS_WINDOWS) {
+            if (runCommand("explorer", "%s", cmd)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Attempt to execute the specified command utilizing the OS-Specific APIs
+     *
+     * @param command The command to interpret
+     * @param args    The arguments to interpret
+     * @param file    The file or extra data to interpret
+     * @return {@link Boolean#TRUE} upon success
+     */
+    private static boolean runCommand(final String command, final String args, final String file) {
+        ModUtils.LOG.debugInfo("Trying to exec: [cmd=\"%s\", args=\"%s\", file=\"%s\"", command, args, file);
+        final String[] parts = prepareCommand(command, args, file);
+
+        try {
+            final Process p = Runtime.getRuntime().exec(parts);
+
+            try {
+                int retval = p.exitValue();
+                if (retval == 0) {
+                    ModUtils.LOG.error("Process ended immediately.");
+                } else {
+                    ModUtils.LOG.error("Process crashed.");
+                }
+                return false;
+            } catch (IllegalThreadStateException itse) {
+                ModUtils.LOG.error("Process is running.");
+                return true;
+            }
+        } catch (IOException e) {
+            ModUtils.LOG.error("Error running command.", e);
+            return false;
+        }
+    }
+
+    /**
+     * Attempt to prepare the specified command for {@link SystemUtils#runCommand(String, String, String)}
+     *
+     * @param command The command to interpret
+     * @param args    The arguments to interpret
+     * @param file    The file or extra data to interpret
+     * @return {@link Boolean#TRUE} upon success
+     */
+    private static String[] prepareCommand(final String command, final String args, final String file) {
+        final List<String> parts = StringUtils.newArrayList();
+        parts.add(command);
+
+        if (args != null) {
+            for (String s : args.split(" ")) {
+                s = String.format(s, file); // put in the filename thing
+                parts.add(s.trim());
+            }
+        }
+
+        return parts.toArray(new String[0]);
+    }
+
+    /**
+     * Checks if the current session is running under the XDG session protocol.
+     *
+     * @return {@link Boolean#TRUE} if the session is running under XDG, false otherwise.
+     */
+    public static boolean isXDG() {
+        final String xdgSessionId = System.getenv("XDG_SESSION_ID");
+        return xdgSessionId != null && !xdgSessionId.isEmpty();
+    }
+
+    /**
+     * Checks if the current desktop environment is GNOME.
+     *
+     * @return {@link Boolean#TRUE} if the desktop environment is GNOME, false otherwise.
+     */
+    public static boolean isGNOME() {
+        final String gdmSession = System.getenv("GDMSESSION");
+        return gdmSession != null && gdmSession.toLowerCase().contains("gnome");
+    }
+
+    /**
+     * Checks if the current desktop environment is KDE.
+     *
+     * @return {@link Boolean#TRUE} if the desktop environment is KDE, false otherwise.
+     */
+    public static boolean isKDE() {
+        final String gdmSession = System.getenv("GDMSESSION");
+        return gdmSession != null && gdmSession.toLowerCase().contains("kde");
     }
 
     /**

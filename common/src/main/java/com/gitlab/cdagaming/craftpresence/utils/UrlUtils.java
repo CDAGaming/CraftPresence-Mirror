@@ -47,10 +47,6 @@ public class UrlUtils {
      */
     private static final String USER_AGENT = ModUtils.MOD_ID + "/" + ModUtils.MCVersion;
     /**
-     * The Operating System Name
-     */
-    private static final String OS_NAME = System.getProperty("os.name");
-    /**
      * The GSON Json Builder to Use while Parsing Json
      */
     private static final Gson GSON = new GsonBuilder().create();
@@ -174,72 +170,78 @@ public class UrlUtils {
      * Opens the Specified Url in a Browser, if able
      *
      * @param targetUrl The URL to Open, as a String
+     * @return {@link Boolean#TRUE} upon success
      */
-    public static void openUrl(final String targetUrl) {
+    public static boolean openUrl(final String targetUrl) {
         try {
-            openUrl(new URI(targetUrl));
+            return openUrl(new URI(targetUrl));
         } catch (Exception ex) {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
+            return false;
         }
     }
 
     /**
      * Opens the Specified Url in a Browser, if able
      *
-     * @param targetUrl The URL to Open, as a URL
+     * @param targetUrl The URL to Open, as a {@link URL}
+     * @return {@link Boolean#TRUE} upon success
      */
-    public static void openUrl(final URL targetUrl) {
+    public static boolean openUrl(final URL targetUrl) {
         try {
-            openUrl(targetUrl.toURI());
+            return openUrl(targetUrl.toURI());
         } catch (Exception ex) {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
+            return false;
         }
     }
 
     /**
      * Opens the Specified Url in a Browser, if able
      *
-     * @param targetUrl The URL to Open, as a URI
+     * @param targetUrl The URL to Open, as a {@link URI}
+     * @return {@link Boolean#TRUE} upon success
      */
-    public static void openUrl(final URI targetUrl) {
+    public static boolean openUrl(final URI targetUrl) {
+        if (browseWithDesktop(targetUrl)) {
+            return true;
+        }
+        if (SystemUtils.browseWithSystem(targetUrl.toString())) {
+            return true;
+        }
+        ModUtils.LOG.warn("Failed to browse %s", targetUrl);
+        return false;
+    }
+
+    /**
+     * Attempt to browse to the specified {@link URI} utilizing the Java AWT Desktop API
+     *
+     * @param uri The URL to Open, as a {@link URI}
+     * @return {@link Boolean#TRUE} upon success
+     */
+    public static boolean browseWithDesktop(final URI uri) {
         try {
-            // Attempt to use the Desktop Library from JDK 1.6+
-            final Class<?> d = Class.forName("java.awt.Desktop");
-            StringUtils.executeMethod(
-                    d, StringUtils.executeMethod(
-                            d, null, "getDesktop",
-                            null, null
-                    ),
-                    "browse",
-                    new Class<?>[]{URI.class},
-                    new Object[]{targetUrl}
-            );
-        } catch (Exception ignored) {
-            // Library not available or failed; use alternatives depending on OS
-            try {
-                if (OS_NAME.contains("Win")) {
-                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + targetUrl.toString());
-                } else if (OS_NAME.startsWith("Mac")) {
-                    StringUtils.executeMethod(
-                            Class.forName("com.apple.eio.FileManager"),
-                            null,
-                            "openURL",
-                            new Class<?>[]{String.class},
-                            new Object[]{targetUrl.toString()}
-                    );
-                } else {
-                    Runtime.getRuntime().exec("xdg-open " + targetUrl.toString());
-                }
-            } catch (Exception ex) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.web", targetUrl.toString()));
-                if (CommandUtils.isVerboseMode()) {
-                    ex.printStackTrace();
-                }
+            if (!java.awt.Desktop.isDesktopSupported()) {
+                ModUtils.LOG.debugInfo("Platform is not supported.");
+                return false;
             }
+
+            if (!java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
+                ModUtils.LOG.debugInfo("BROWSE is not supported.");
+                return false;
+            }
+
+            ModUtils.LOG.debugInfo("Trying to use Desktop.getDesktop().browse() with " + uri.toString());
+            java.awt.Desktop.getDesktop().browse(uri);
+
+            return true;
+        } catch (Throwable t) {
+            ModUtils.LOG.error("Error using desktop browse.", t);
+            return false;
         }
     }
 }
