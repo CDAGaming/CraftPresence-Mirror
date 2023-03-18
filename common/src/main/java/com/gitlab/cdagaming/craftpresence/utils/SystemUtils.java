@@ -193,7 +193,7 @@ public class SystemUtils {
      * @return {@link Boolean#TRUE} upon success
      */
     private static boolean runCommand(final String command, final String args, final String file) {
-        ModUtils.LOG.debugInfo("Trying to exec: [cmd=\"%s\", args=\"%s\", file=\"%s\"", command, args, file);
+        ModUtils.LOG.debugInfo("Trying to exec: [cmd=\"%s\", args=\"%s\", file=\"%s\"]", command, args, file);
         final String[] parts = prepareCommand(command, args, file);
 
         try {
