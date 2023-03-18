@@ -202,17 +202,17 @@ public class SystemUtils {
             try {
                 int retval = p.exitValue();
                 if (retval == 0) {
-                    ModUtils.LOG.error("Process ended immediately.");
+                    ModUtils.LOG.debugError("Process ended immediately.");
                 } else {
-                    ModUtils.LOG.error("Process crashed.");
+                    ModUtils.LOG.debugError("Process crashed.");
                 }
                 return false;
             } catch (IllegalThreadStateException itse) {
-                ModUtils.LOG.error("Process is running.");
+                ModUtils.LOG.debugError("Process is running.");
                 return true;
             }
         } catch (IOException e) {
-            ModUtils.LOG.error("Error running command.", e);
+            ModUtils.LOG.debugError("Error running command.", e);
             return false;
         }
     }

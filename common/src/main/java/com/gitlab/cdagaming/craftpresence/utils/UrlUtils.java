@@ -213,7 +213,7 @@ public class UrlUtils {
         if (SystemUtils.browseWithSystem(targetUrl.toString())) {
             return true;
         }
-        ModUtils.LOG.warn("Failed to browse %s", targetUrl);
+        ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.web", targetUrl.toString()));
         return false;
     }
 
@@ -240,7 +240,7 @@ public class UrlUtils {
 
             return true;
         } catch (Throwable t) {
-            ModUtils.LOG.error("Error using desktop browse.", t);
+            ModUtils.LOG.debugError("Error using desktop browse.", t);
             return false;
         }
     }
