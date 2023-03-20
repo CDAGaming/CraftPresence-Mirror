@@ -1164,20 +1164,7 @@ public class StringUtils {
      */
     public static List<String> splitTextByNewLine(final String original) {
         if (!isNullOrEmpty(original)) {
-            String formattedText = original;
-            if (formattedText.contains("\r\n")) {
-                formattedText = original.replace("\r\n", "&newline&");
-            }
-            if (formattedText.contains("\n")) {
-                formattedText = original.replace("\n", "&newline&");
-            }
-            if (formattedText.contains("\\n")) {
-                formattedText = original.replace("\\n", "&newline&");
-            }
-            if (formattedText.contains("\\\\n+")) {
-                formattedText = original.replace("\\\\n+", "&newline&");
-            }
-            return newArrayList(formattedText.split("&newline&"));
+            return newArrayList(original.split("(\\r\\n|\\r|\\n|\\\\n)"));
         } else {
             return newArrayList();
         }

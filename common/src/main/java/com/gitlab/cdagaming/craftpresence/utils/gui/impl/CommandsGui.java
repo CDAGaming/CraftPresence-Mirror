@@ -146,7 +146,7 @@ public class CommandsGui extends ExtendedScreen {
         if (!blockInteractions) {
             checkCommands();
         }
-        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 25, 35, this, false);
+        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 10, 35, this, false);
     }
 
     /**
