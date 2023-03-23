@@ -132,11 +132,13 @@ public class Tuple<T, U, V> {
      * @param first  the first element to be applied
      * @param second the second element to be applied
      * @param third  the third element to be applied
+     * @return the current instance
      */
-    public void put(final T first, final U second, final V third) {
+    public Tuple<T, U, V> put(final T first, final U second, final V third) {
         this.first = first;
         this.second = second;
         this.third = third;
+        return this;
     }
 
     /**

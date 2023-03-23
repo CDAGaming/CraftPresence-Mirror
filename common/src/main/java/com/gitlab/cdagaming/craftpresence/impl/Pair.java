@@ -104,10 +104,12 @@ public class Pair<U, V> {
      *
      * @param first  the first element to be applied
      * @param second the second element to be applied
+     * @return the current instance
      */
-    public void put(final U first, final V second) {
+    public Pair<U, V> put(final U first, final V second) {
         this.first = first;
         this.second = second;
+        return this;
     }
 
     /**
