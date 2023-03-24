@@ -37,6 +37,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -77,6 +78,15 @@ public class ExtendedScreen extends GuiScreen {
     private boolean verboseMode = false;
 
     /**
+     * The Screen's Current X coordinate position
+     */
+    private int screenX = 0;
+    /**
+     * The Screen's Current Y coordinate position
+     */
+    private int screenY = 0;
+
+    /**
      * The Last Ticked Mouse X Coordinate
      */
     private int lastMouseX = 0;
@@ -84,6 +94,14 @@ public class ExtendedScreen extends GuiScreen {
      * The Last Ticked Mouse Y Coordinate
      */
     private int lastMouseY = 0;
+    /**
+     * The Last Ticked Scroll Delta
+     */
+    private int lastMouseScroll = 0;
+    /**
+     * Whether this Screen can be closed by normal means, true by default
+     */
+    private boolean canClose;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -94,8 +112,17 @@ public class ExtendedScreen extends GuiScreen {
         mc = CraftPresence.instance;
         currentScreen = this;
         this.parentScreen = parentScreen;
+        this.canClose = true;
         setDebugMode(CommandUtils.isDebugMode());
         setVerboseMode(CommandUtils.isVerboseMode());
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     */
+    public ExtendedScreen() {
+        this(null);
+        this.canClose = false;
     }
 
     /**
@@ -112,12 +139,33 @@ public class ExtendedScreen extends GuiScreen {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
+     * @param debugMode Whether debug mode should be enabled for this screen
+     */
+    public ExtendedScreen(boolean debugMode) {
+        this();
+        setDebugMode(debugMode);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
      * @param parentScreen The Parent Screen for this Instance
      * @param debugMode    Whether debug mode should be enabled for this screen
      * @param verboseMode  Whether verbose mode should be enabled for this screen
      */
     public ExtendedScreen(GuiScreen parentScreen, boolean debugMode, boolean verboseMode) {
         this(parentScreen, debugMode);
+        setVerboseMode(verboseMode);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param debugMode   Whether debug mode should be enabled for this screen
+     * @param verboseMode Whether verbose mode should be enabled for this screen
+     */
+    public ExtendedScreen(boolean debugMode, boolean verboseMode) {
+        this(debugMode);
         setVerboseMode(verboseMode);
     }
 
@@ -145,7 +193,12 @@ public class ExtendedScreen extends GuiScreen {
      * Responsible for setting initial Data and creating controls
      */
     public void initializeUi() {
-        // N/A
+        resetMouseScroll();
+        for (Gui extendedControl : extendedControls) {
+            if (extendedControl instanceof ExtendedScreen) {
+                ((ExtendedScreen) extendedControl).initGui();
+            }
+        }
     }
 
     /**
@@ -158,6 +211,11 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
         initialized = false;
+        for (Gui extendedControl : extendedControls) {
+            if (extendedControl instanceof ExtendedScreen) {
+                ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
+            }
+        }
         super.onResize(mcIn, w, h);
     }
 
@@ -215,7 +273,10 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering critical elements before other elements
      */
     public void renderCriticalData() {
-        CraftPresence.GUIS.drawBackground(getScreenWidth(), getScreenHeight());
+        CraftPresence.GUIS.drawBackground(
+                getScreenX(), getScreenY(),
+                getScreenWidth(), getScreenHeight()
+        );
     }
 
     /**
@@ -261,6 +322,9 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.drawTextBox();
                 }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
+                }
             }
 
             super.drawScreen(mouseX, mouseY, partialTicks);
@@ -290,7 +354,13 @@ public class ExtendedScreen extends GuiScreen {
             for (ScrollableListControl listControl : extendedLists) {
                 listControl.handleMouseInput();
             }
+            for (Gui extendedControl : extendedControls) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).handleMouseInput();
+                }
+            }
             super.handleMouseInput();
+            lastMouseScroll = Mouse.getEventDWheel();
         }
     }
 
@@ -316,7 +386,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (initialized) {
-            if (keyCode == Keyboard.KEY_ESCAPE) {
+            if (keyCode == Keyboard.KEY_ESCAPE && canClose) {
                 CraftPresence.GUIS.openScreen(parentScreen);
                 return;
             }
@@ -325,6 +395,9 @@ public class ExtendedScreen extends GuiScreen {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.textboxKeyTyped(typedChar, keyCode);
+                }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).keyTyped(typedChar, keyCode);
                 }
             }
         }
@@ -345,6 +418,9 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.mouseClicked(mouseX, mouseY, mouseButton);
                 }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).mouseClicked(mouseX, mouseY, mouseButton);
+                }
             }
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
@@ -361,6 +437,9 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.updateCursorCounter();
                 }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).updateScreen();
+                }
             }
         }
     }
@@ -373,6 +452,12 @@ public class ExtendedScreen extends GuiScreen {
         initialized = false;
         CraftPresence.GUIS.resetIndex();
         Keyboard.enableRepeatEvents(false);
+
+        for (Gui extendedControl : extendedControls) {
+            if (extendedControl instanceof ExtendedScreen) {
+                ((ExtendedScreen) extendedControl).onGuiClosed();
+            }
+        }
     }
 
     /**
@@ -436,6 +521,75 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Draws a Scrollable String, dependent on scroll parameters
+     *
+     * @param text      The text to render to the screen
+     * @param xPos      The X position to render the text at
+     * @param minScroll The minimum allowed scroll position, inclusive
+     * @param maxScroll The maximum allowed scroll position, non-inclusive
+     * @param scrollPos The current scroll position
+     * @param textColor The color to render the text in
+     */
+    public void drawScrollString(final List<String> text, final int xPos, final int scrollPos, final int minScroll, final int maxScroll, final int textColor) {
+        int currentY = minScroll - scrollPos;
+        for (String line : text) {
+            if (StringUtils.isWithinValue(currentY, minScroll, maxScroll, true, false)) {
+                renderString(line, xPos, currentY, textColor);
+            }
+            currentY += getFontHeight() + 1;
+        }
+    }
+
+    /**
+     * Draws a Scrollable String, dependent on scroll parameters
+     *
+     * @param text      The text to render to the screen
+     * @param xPos      The X position to render the text at
+     * @param minScroll The minimum allowed scroll position, inclusive
+     * @param maxScroll The maximum allowed scroll position, non-inclusive
+     * @param scrollPos The current scroll position
+     * @param wrapWidth The width to wrap the text to
+     * @param textColor The color to render the text in
+     */
+    public void drawScrollString(final String text, final int xPos, final int minScroll, final int maxScroll, final int scrollPos, final int wrapWidth, final int textColor) {
+        drawScrollString(
+                createRenderLines(text, wrapWidth),
+                xPos, scrollPos, minScroll, maxScroll, textColor
+        );
+    }
+
+    /**
+     * Format a section of strings to conform to the specified width
+     *
+     * @param original  The text to interpret
+     * @param wrapWidth The width to wrap the text to
+     * @return the modified lines, if successfull
+     */
+    public List<String> createRenderLines(final List<String> original, final int wrapWidth) {
+        final List<String> data = StringUtils.newArrayList();
+        for (String line : original) {
+            data.addAll(
+                    GuiUtils.listFormattedStringToWidth(getFontRenderer(), line, wrapWidth)
+            );
+        }
+        return data;
+    }
+
+    /**
+     * Format a section of strings to conform to the specified width
+     *
+     * @param original  The text to interpret
+     * @param wrapWidth The width to wrap the text to
+     * @return the modified lines, if successfull
+     */
+    public List<String> createRenderLines(final String original, final int wrapWidth) {
+        return createRenderLines(
+                StringUtils.splitTextByNewLine(original),
+                wrapWidth
+        );
+    }
+
+    /**
      * Get the wrap width for elements to be wrapped by
      * <p>Mostly used as a helper method for wrapping String elements
      *
@@ -464,6 +618,68 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Get the Current Screen's X Coordinate Position
+     *
+     * @return The Screen's X Coordinate Position
+     */
+    public int getScreenX() {
+        return screenX;
+    }
+
+    /**
+     * Sets the Current Screen's X Coordinate Position
+     *
+     * @param screenX the new X position for the screen
+     */
+    public void setScreenX(int screenX) {
+        this.screenX = screenX;
+    }
+
+    /**
+     * Get the Current Screen's Y Coordinate Position
+     *
+     * @return The Screen's Y Coordinate Position
+     */
+    public int getScreenY() {
+        return screenY;
+    }
+
+    /**
+     * Sets the Current Screen's Y Coordinate Position
+     *
+     * @param screenY the new Y position for the screen
+     */
+    public void setScreenY(int screenY) {
+        this.screenY = screenY;
+    }
+
+    /**
+     * Get the Current Mouse's Scroll Delta
+     *
+     * @return The Mouse's Current Scroll Delta
+     */
+    public int getMouseScroll() {
+        return lastMouseScroll;
+    }
+
+    /**
+     * Sets the Current Mouse's Scroll Delta
+     *
+     * @param mouseScroll the new scroll delta
+     */
+    public void setMouseScroll(final int mouseScroll) {
+        this.lastMouseScroll = mouseScroll;
+    }
+
+    /**
+     * Resets the Current Mouse's Scroll Delta
+     */
+    public void resetMouseScroll() {
+        setMouseScroll(0);
+        handleMouseInput();
+    }
+
+    /**
      * Get the Current Screen Width
      *
      * @return the width of the screen
@@ -473,12 +689,30 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Sets the Current Screen Width
+     *
+     * @param screenWidth the new screen width
+     */
+    public void setScreenWidth(final int screenWidth) {
+        this.width = screenWidth;
+    }
+
+    /**
      * Get the Current Screen Height
      *
      * @return the height of the screen
      */
     public int getScreenHeight() {
         return height;
+    }
+
+    /**
+     * Sets the Current Screen Height
+     *
+     * @param screenHeight the new screen height
+     */
+    public void setScreenHeight(final int screenHeight) {
+        this.height = screenHeight;
     }
 
     /**
@@ -497,6 +731,42 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getFontHeight() {
         return getFontRenderer().FONT_HEIGHT;
+    }
+
+    /**
+     * Get the left-most coordinate for this screen
+     *
+     * @return The left-most coordinate for this screen
+     */
+    public int getLeft() {
+        return getScreenX();
+    }
+
+    /**
+     * Get the right-most coordinate for this screen
+     *
+     * @return The right-most coordinate for this screen
+     */
+    public int getRight() {
+        return getScreenX() + getScreenWidth();
+    }
+
+    /**
+     * Get the bottom-most coordinate for this screen
+     *
+     * @return The bottom-most coordinate for this screen
+     */
+    public int getBottom() {
+        return getScreenY() + getScreenHeight();
+    }
+
+    /**
+     * Get the top-most coordinate for this screen
+     *
+     * @return The top-most coordinate for this screen
+     */
+    public int getTop() {
+        return getScreenY();
     }
 
     /**

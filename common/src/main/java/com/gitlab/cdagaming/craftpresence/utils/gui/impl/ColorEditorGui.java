@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
@@ -37,7 +36,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
-import java.io.File;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -47,15 +45,14 @@ public class ColorEditorGui extends PaginatedScreen {
     // Event Data
     private final BiConsumer<Integer, ColorEditorGui> onAdjustEntry;
     private final Consumer<ColorEditorGui> onInit;
-    public String currentNormalHexValue, startingHexValue, currentNormalTexturePath, startingTexturePath;
-    public boolean usingExternalTexture = false;
+    public String currentNormalHexValue, startingHexValue, currentTexturePath, startingTexturePath;
+    public Tuple<Boolean, String, ResourceLocation> textureData = new Tuple<>(false, "", null);
     // Page 1 Variables
     private String currentConvertedHexValue;
     private int currentRed, currentGreen, currentBlue, currentAlpha;
     private ExtendedTextControl hexText;
     private SliderControl redText, greenText, blueText, alphaText;
     // Page 2 Variables
-    private String currentConvertedTexturePath;
     private ExtendedTextControl textureText;
     private boolean isModified = false;
     private ResourceLocation currentTexture;
@@ -224,11 +221,8 @@ public class ColorEditorGui extends PaginatedScreen {
             // Ensure the Texture is refreshed consistently, if an external texture
             double widthDivider = 32.0D, heightDivider = 32.0D;
 
-            if (usingExternalTexture) {
-                final String formattedConvertedName = currentConvertedTexturePath.replaceFirst("file://", "");
-                final String[] urlBits = formattedConvertedName.split("/");
-                final String textureName = urlBits[urlBits.length - 1].trim();
-                currentTexture = ImageUtils.getTextureFromUrl(textureName, currentConvertedTexturePath.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
+            if (textureData.getFirst()) {
+                currentTexture = textureData.getThird();
 
                 widthDivider = 44;
                 heightDivider = 43;
@@ -258,15 +252,17 @@ public class ColorEditorGui extends PaginatedScreen {
                 hexText.setControlMessage(startingHexValue);
                 currentNormalHexValue = null;
                 currentConvertedHexValue = null;
-                currentConvertedTexturePath = null;
-                currentTexture = new ResourceLocation("");
+                currentTexturePath = null;
+                textureData.put(false, "", new ResourceLocation(""));
+                currentTexture = textureData.getThird();
                 currentPage = startPage;
             } else if (StringUtils.isNullOrEmpty(textureText.getControlMessage()) && !StringUtils.isNullOrEmpty(startingTexturePath)) {
                 textureText.setControlMessage(startingTexturePath);
                 currentNormalHexValue = null;
                 currentConvertedHexValue = null;
-                currentConvertedTexturePath = null;
-                currentTexture = new ResourceLocation("");
+                currentTexturePath = null;
+                textureData.put(false, "", new ResourceLocation(""));
+                currentTexture = textureData.getThird();
                 currentPage = startPage + 1;
             }
         }
@@ -335,42 +331,9 @@ public class ColorEditorGui extends PaginatedScreen {
         // Page 2 - Texture Syncing
         if (currentPage == startPage + 1) {
             if (!StringUtils.isNullOrEmpty(textureText.getControlMessage())) {
-                usingExternalTexture = ImageUtils.isExternalImage(textureText.getControlMessage());
-
-                // Only Perform Texture Conversion Steps if not an external Url
-                // As an external Url should be parsed as-is in most use cases
-                if (!usingExternalTexture) {
-                    if (textureText.getControlMessage().contains(":") && !textureText.getControlMessage().startsWith(":")) {
-                        currentNormalTexturePath = textureText.getControlMessage();
-                    } else if (textureText.getControlMessage().startsWith(":")) {
-                        currentNormalTexturePath = textureText.getControlMessage().substring(1);
-                    } else {
-                        currentNormalTexturePath = "minecraft:" + textureText.getControlMessage();
-                    }
-                } else {
-                    currentNormalTexturePath = textureText.getControlMessage();
-                }
-
-                currentConvertedTexturePath = currentNormalTexturePath.trim();
-
-                // Only when we are not using an external texture, would we then need
-                // to convert the path to Minecraft's normal format.
-                //
-                // If we are using an external texture however, then we'd just make
-                // a texture name from the last part of the url and retrieve the external texture
-                if (!usingExternalTexture) {
-                    if (currentConvertedTexturePath.contains(":")) {
-                        final String[] splitInput = currentConvertedTexturePath.split(":", 2);
-                        currentTexture = new ResourceLocation(splitInput[0], splitInput[1]);
-                    } else {
-                        currentTexture = new ResourceLocation(currentConvertedTexturePath);
-                    }
-                } else {
-                    final String formattedConvertedName = currentConvertedTexturePath.replaceFirst("file://", "");
-                    final String[] urlBits = formattedConvertedName.trim().split("/");
-                    final String textureName = urlBits[urlBits.length - 1].trim();
-                    currentTexture = ImageUtils.getTextureFromUrl(textureName, currentConvertedTexturePath.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
-                }
+                textureData = CraftPresence.GUIS.getTextureData(textureText.getControlMessage());
+                currentTexture = textureData.getThird();
+                currentTexturePath = textureData.getSecond();
             } else {
                 currentTexture = new ResourceLocation("");
             }

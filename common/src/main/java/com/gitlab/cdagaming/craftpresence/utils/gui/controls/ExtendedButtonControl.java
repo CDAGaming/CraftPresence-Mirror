@@ -26,8 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 
 /**
  * Extended Gui Widget for a Clickable Button
@@ -193,26 +192,12 @@ public class ExtendedButtonControl extends GuiButton {
             final int hoverState = getHoverState(hovered);
 
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
-            ResourceLocation texLocation;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
                 CraftPresence.GUIS.drawGradientRect(zLevel, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
             } else {
-                final boolean usingExternalTexture = ImageUtils.isExternalImage(backgroundCode);
-
-                if (!usingExternalTexture) {
-                    if (backgroundCode.contains(":")) {
-                        String[] splitInput = backgroundCode.split(":", 2);
-                        texLocation = new ResourceLocation(splitInput[0], splitInput[1]);
-                    } else {
-                        texLocation = new ResourceLocation(backgroundCode);
-                    }
-                } else {
-                    final String formattedConvertedName = backgroundCode.replaceFirst("file://", "");
-                    final String[] urlBits = formattedConvertedName.trim().split("/");
-                    final String textureName = urlBits[urlBits.length - 1].trim();
-                    texLocation = ImageUtils.getTextureFromUrl(textureName, backgroundCode.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
-                }
+                final Tuple<Boolean, String, ResourceLocation> textureData = CraftPresence.GUIS.getTextureData(backgroundCode);
+                final ResourceLocation texLocation = textureData.getThird();
 
                 CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
             }

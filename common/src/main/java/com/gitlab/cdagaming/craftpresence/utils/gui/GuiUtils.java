@@ -117,12 +117,15 @@ public class GuiUtils implements Module {
     }
 
     /**
-     * Get the Default/Global Font Height for this Screen
+     * Format the specified string to conform to the specified width
      *
-     * @return The Default/Global Font Height for this Screen
+     * @param fontRenderer The Font Renderer Instance
+     * @param stringInput  The original String to wrap
+     * @param wrapWidth    The target width per line, to wrap the input around
+     * @return The converted and wrapped version of the original input
      */
-    public static int getDefaultFontHeight() {
-        return getDefaultFontRenderer().FONT_HEIGHT;
+    public static List<String> listFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
+        return StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, stringInput, wrapWidth));
     }
 
     /**
@@ -561,23 +564,10 @@ public class GuiUtils implements Module {
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
 
                 final int zLevel = 300;
-                String backgroundColor, borderColor;
-                ResourceLocation backGroundTexture, borderTexture;
 
-                // Perform Checks for different Color Format Fixes
-                // Fix 1 Example: hexCodeHere -> #hexCodeHere
-                // Fix 2 Example: 0xFFFFFF -> -1 or 100010
-                //
-                // Also Ensure (if using MC Textures) that they annotate with nameHere:textureHere
-
-                if (StringUtils.isValidColorCode(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor)) {
-                    if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.length() == 6) {
-                        backgroundColor = "#" + CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
-                    } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.startsWith("0x")) {
-                        backgroundColor = Long.toString(Long.decode(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor).intValue());
-                    } else {
-                        backgroundColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
-                    }
+                final Pair<Boolean, String> backgroundColorData = getColorData(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor);
+                if (backgroundColorData.getFirst()) {
+                    final String backgroundColor = backgroundColorData.getSecond();
 
                     // Draw with Colors
                     drawGradientRect(zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
@@ -586,30 +576,11 @@ public class GuiUtils implements Module {
                     drawGradientRect(zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
                     drawGradientRect(zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
                 } else {
-                    final boolean usingExternalTexture = ImageUtils.isExternalImage(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor);
+                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor);
+                    final ResourceLocation backGroundTexture = textureData.getThird();
                     double widthDivider = 32.0D, heightDivider = 32.0D;
 
-                    if (!usingExternalTexture) {
-                        if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.contains(":") && !CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.startsWith(":")) {
-                            backgroundColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
-                        } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.startsWith(":")) {
-                            backgroundColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.substring(1);
-                        } else {
-                            backgroundColor = "minecraft:" + CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor;
-                        }
-
-                        if (backgroundColor.contains(":")) {
-                            String[] splitInput = backgroundColor.split(":", 2);
-                            backGroundTexture = new ResourceLocation(splitInput[0], splitInput[1]);
-                        } else {
-                            backGroundTexture = new ResourceLocation(backgroundColor);
-                        }
-                    } else {
-                        final String formattedConvertedName = CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.replaceFirst("file://", "");
-                        final String[] urlBits = formattedConvertedName.trim().split("/");
-                        final String textureName = urlBits[urlBits.length - 1].trim();
-                        backGroundTexture = ImageUtils.getTextureFromUrl(textureName, CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
-
+                    if (textureData.getFirst()) {
                         widthDivider = tooltipTextWidth + 8;
                         heightDivider = tooltipHeight + 8;
                     }
@@ -617,14 +588,9 @@ public class GuiUtils implements Module {
                     drawTextureRect(zLevel, tooltipX - 4, tooltipY - 4, tooltipTextWidth + 8, tooltipHeight + 8, 0, widthDivider, heightDivider, false, backGroundTexture);
                 }
 
-                if (StringUtils.isValidColorCode(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor)) {
-                    if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.length() == 6) {
-                        borderColor = "#" + CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
-                    } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.startsWith("0x")) {
-                        borderColor = Long.toString(Long.decode(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor).intValue());
-                    } else {
-                        borderColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
-                    }
+                final Pair<Boolean, String> borderColorData = getColorData(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor);
+                if (borderColorData.getFirst()) {
+                    final String borderColor = borderColorData.getSecond();
 
                     // Draw with Colors
                     final int borderColorCode = (borderColor.startsWith("#") ? StringUtils.getColorFromHex(borderColor).getRGB() : Integer.parseInt(borderColor));
@@ -635,29 +601,9 @@ public class GuiUtils implements Module {
                     drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColor, borderColor);
                     drawGradientRect(zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
                 } else {
-                    final boolean usingExternalTexture = ImageUtils.isExternalImage(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor);
-
-                    if (!usingExternalTexture) {
-                        if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.contains(":") && !CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.startsWith(":")) {
-                            borderColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
-                        } else if (CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.startsWith(":")) {
-                            borderColor = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.substring(1);
-                        } else {
-                            borderColor = "minecraft:" + CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor;
-                        }
-
-                        if (borderColor.contains(":")) {
-                            String[] splitInput = borderColor.split(":", 2);
-                            borderTexture = new ResourceLocation(splitInput[0], splitInput[1]);
-                        } else {
-                            borderTexture = new ResourceLocation(borderColor);
-                        }
-                    } else {
-                        final String formattedConvertedName = CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.replaceFirst("file://", "");
-                        final String[] urlBits = formattedConvertedName.trim().split("/");
-                        final String textureName = urlBits[urlBits.length - 1].trim();
-                        borderTexture = ImageUtils.getTextureFromUrl(textureName, CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
-                    }
+                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor);
+                    final ResourceLocation borderTexture = textureData.getThird();
+                    final boolean usingExternalTexture = textureData.getFirst();
 
                     drawTextureRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipTextWidth + 5, 1, 0, (usingExternalTexture ? tooltipTextWidth + 5 : 32.0D), (usingExternalTexture ? 1 : 32.0D), false, borderTexture); // Top Border
                     drawTextureRect(zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipTextWidth + 5, 1, 0, (usingExternalTexture ? tooltipTextWidth + 5 : 32.0D), (usingExternalTexture ? 1 : 32.0D), false, borderTexture); // Bottom Border
@@ -714,44 +660,186 @@ public class GuiUtils implements Module {
     }
 
     /**
+     * Retrieve color data for the specified string, if possible
+     *
+     * @param texture The data to interpret
+     * @return a {@link Pair} with the mapping "isColorCode:data"
+     */
+    public Pair<Boolean, String> getColorData(String texture) {
+        final Pair<Boolean, String> result = new Pair<>(false, texture);
+        if (!StringUtils.isNullOrEmpty(texture)) {
+            texture = texture.trim();
+        } else {
+            return result;
+        }
+
+        final boolean isColorCode = StringUtils.isValidColorCode(texture);
+        if (isColorCode) {
+            if (texture.length() == 6) {
+                texture = "#" + texture;
+            } else if (texture.startsWith("0x")) {
+                texture = Long.toString(Long.decode(texture).intValue());
+            }
+        }
+        return result.put(isColorCode, texture);
+    }
+
+    /**
+     * Retrieve texture data for the specified string, if possible
+     *
+     * @param texture The data to interpret
+     * @return a {@link Tuple} with the mapping "usingExternalData:location:resource"
+     */
+    public Tuple<Boolean, String, ResourceLocation> getTextureData(String texture) {
+        ResourceLocation texLocation = new ResourceLocation("");
+        final Tuple<Boolean, String, ResourceLocation> result = new Tuple<>(false, "", texLocation);
+        if (!StringUtils.isNullOrEmpty(texture)) {
+            texture = texture.trim();
+        } else {
+            return result;
+        }
+
+        final boolean isColorCode = StringUtils.isValidColorCode(texture);
+        boolean usingExternalTexture = false;
+
+        if (!isColorCode) {
+            usingExternalTexture = ImageUtils.isExternalImage(texture);
+
+            // Only Perform Texture Conversion Steps if not an external Url
+            // As an external Url should be parsed as-is in most use cases
+            //
+            // Only when we are not using an external texture, would we then need
+            // to convert the path to Minecraft's normal format.
+            //
+            // If we are using an external texture however, then we'd just make
+            // a texture name from the last part of the url and retrieve the external texture
+            if (!usingExternalTexture) {
+                if (texture.startsWith(":")) {
+                    texture = texture.substring(1);
+                }
+
+                if (texture.contains(":")) {
+                    String[] splitInput = texture.split(":", 2);
+                    texLocation = new ResourceLocation(splitInput[0], splitInput[1]);
+                } else {
+                    texLocation = new ResourceLocation(texture);
+                }
+            } else {
+                final String formattedConvertedName = texture.replaceFirst("file://", "");
+                final String[] urlBits = formattedConvertedName.trim().split("/");
+                final String textureName = urlBits[urlBits.length - 1].trim();
+                texLocation = ImageUtils.getTextureFromUrl(textureName, texture.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
+            }
+        }
+        return result.put(usingExternalTexture, texture, texLocation);
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param xPos           The Starting X Position of the Object
+     * @param yPos           The Starting Y Position of the Object
+     * @param width          The width to render the background to
+     * @param height         The height to render the background to
+     * @param backgroundCode The background render data to interpret
+     * @param color          The background RGB data to interpet
+     */
+    public void drawBackground(final double xPos, final double yPos, final double width, final double height, final String backgroundCode, final Color color) {
+        double widthDivider = 32.0D, heightDivider = 32.0D;
+        if (CraftPresence.instance.world != null) {
+            drawGradientRect(300.0F, xPos, yPos, width, height, "-1072689136", "-804253680");
+        } else {
+            if (StringUtils.isValidColorCode(backgroundCode)) {
+                drawGradientRect(300.0F, xPos, yPos, width, height, backgroundCode, backgroundCode);
+            } else {
+                final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundCode);
+                final ResourceLocation texLocation = textureData.getThird();
+
+                if (textureData.getFirst()) {
+                    widthDivider = width;
+                    heightDivider = height;
+                }
+
+                drawTextureRect(0.0D, xPos, yPos, width, height, 0, widthDivider, heightDivider, color, texLocation);
+            }
+        }
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param xPos           The Starting X Position of the Object
+     * @param yPos           The Starting Y Position of the Object
+     * @param width          The width to render the background to
+     * @param height         The height to render the background to
+     * @param backgroundCode The background render data to interpret
+     * @param shouldBeDark   Whether the background data should display in a darker format
+     */
+    public void drawBackground(final double xPos, final double yPos, final double width, final double height, final String backgroundCode, final boolean shouldBeDark) {
+        final Color color = shouldBeDark ? Color.darkGray : Color.white;
+        drawBackground(xPos, yPos, width, height, backgroundCode, color);
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param xPos           The Starting X Position of the Object
+     * @param yPos           The Starting Y Position of the Object
+     * @param width          The width to render the background to
+     * @param height         The height to render the background to
+     * @param backgroundCode The background render data to interpret
+     */
+    public void drawBackground(final double xPos, final double yPos, final double width, final double height, final String backgroundCode) {
+        drawBackground(xPos, yPos, width, height, backgroundCode, CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark);
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param xPos   The Starting X Position of the Object
+     * @param yPos   The Starting Y Position of the Object
+     * @param width  The width to render the background to
+     * @param height The height to render the background to
+     * @param color  The background RGB data to interpet
+     */
+    public void drawBackground(final double xPos, final double yPos, final double width, final double height, final Color color) {
+        drawBackground(xPos, yPos, width, height, CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor, color);
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param xPos         The Starting X Position of the Object
+     * @param yPos         The Starting Y Position of the Object
+     * @param width        The width to render the background to
+     * @param height       The height to render the background to
+     * @param shouldBeDark Whether the background data should display in a darker format
+     */
+    public void drawBackground(final double xPos, final double yPos, final double width, final double height, final boolean shouldBeDark) {
+        final Color color = shouldBeDark ? Color.darkGray : Color.white;
+        drawBackground(xPos, yPos, width, height, color);
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param xPos   The Starting X Position of the Object
+     * @param yPos   The Starting Y Position of the Object
+     * @param width  The width to render the background to
+     * @param height The height to render the background to
+     */
+    public void drawBackground(final double xPos, final double yPos, final double width, final double height) {
+        drawBackground(xPos, yPos, width, height, CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark);
+    }
+
+    /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
      * @param width  The width to render the background to
      * @param height The height to render the background to
      */
     public void drawBackground(final double width, final double height) {
-        double widthDivider = 32.0D, heightDivider = 32.0D;
-        if (CraftPresence.instance.world != null) {
-            drawGradientRect(300, 0, 0, width, height, "-1072689136", "-804253680");
-        } else {
-            final String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
-            ResourceLocation texLocation;
-
-            if (StringUtils.isValidColorCode(backgroundCode)) {
-                drawGradientRect(300, 0, 0, width, height, backgroundCode, backgroundCode);
-            } else {
-                final boolean usingExternalTexture = ImageUtils.isExternalImage(backgroundCode);
-
-                if (!usingExternalTexture) {
-                    if (backgroundCode.contains(":")) {
-                        String[] splitInput = backgroundCode.split(":", 2);
-                        texLocation = new ResourceLocation(splitInput[0], splitInput[1]);
-                    } else {
-                        texLocation = new ResourceLocation(backgroundCode);
-                    }
-                } else {
-                    final String formattedConvertedName = backgroundCode.replaceFirst("file://", "");
-                    final String[] urlBits = formattedConvertedName.trim().split("/");
-                    final String textureName = urlBits[urlBits.length - 1].trim();
-                    texLocation = ImageUtils.getTextureFromUrl(textureName, backgroundCode.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
-
-                    widthDivider = width;
-                    heightDivider = height;
-                }
-
-                drawTextureRect(0.0D, 0.0D, 0.0D, width, height, 0, widthDivider, heightDivider, CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark, texLocation);
-            }
-        }
+        drawBackground(0.0D, 0.0D, width, height);
     }
 
     /**
@@ -828,6 +916,124 @@ public class GuiUtils implements Module {
     /**
      * Draws a Textured Rectangle, following the defined arguments
      *
+     * @param zLevel      The Z Level Position of the Object
+     * @param xPos        The Starting X Position of the Object
+     * @param yPos        The Starting Y Position of the Object
+     * @param width       The Width of the Object
+     * @param height      The Height of the Object
+     * @param tint        The Tinting Level of the Object
+     * @param rgbData     The texture RGB data to interpet
+     * @param texLocation The game texture to render the object as
+     */
+    public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final Color rgbData, final ResourceLocation texLocation) {
+        drawTextureRect(zLevel, xPos, yPos, width, height, tint, 32.0D, 32.0D, rgbData, texLocation);
+    }
+
+    /**
+     * Draws a Textured Rectangle, following the defined arguments
+     *
+     * @param zLevel        The Z Level Position of the Object
+     * @param xPos          The Starting X Position of the Object
+     * @param yPos          The Starting Y Position of the Object
+     * @param width         The Width of the Object
+     * @param height        The Height of the Object
+     * @param tint          The Tinting Level of the Object
+     * @param widthDivider  The number to divide the width by when rendering
+     * @param heightDivider The number to divide the height by when rendering
+     * @param color         The texture RGB data to interpet
+     * @param texLocation   The game texture to render the object as
+     */
+    public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final double widthDivider, final double heightDivider, final Color color, final ResourceLocation texLocation) {
+        drawTextureRect(zLevel,
+                xPos,
+                xPos + width,
+                yPos,
+                yPos + height,
+                width / widthDivider,
+                height / heightDivider,
+                tint,
+                color, color,
+                texLocation
+        );
+    }
+
+    /**
+     * Draws a Textured Rectangle, following the defined arguments
+     *
+     * @param zLevel      The Z Level Position of the Object
+     * @param left        The Starting Left Position of the Object
+     * @param right       The Starting Right Position of the Object
+     * @param top         The Top of the Object
+     * @param bottom      The Bottom of the Object
+     * @param u           The horizontal axis to render this Object by
+     * @param v           The vertical axis to render this Object by
+     * @param tint        The Tinting Level of the Object
+     * @param startColor  The starting texture RGB data to interpet
+     * @param endColor    The starting texture RGB data to interpet
+     * @param texLocation The game texture to render the object as
+     */
+    public void drawTextureRect(final double zLevel, final double left, final double right, final double top, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
+        try {
+            if (texLocation != null) {
+                CraftPresence.instance.getTextureManager().bindTexture(texLocation);
+            }
+        } catch (Exception ignored) {
+        }
+
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_FOG);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+        buffer.pos(left, bottom, zLevel).tex(0.0D, (v + tint)).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        buffer.pos(right, bottom, zLevel).tex(u, (v + tint)).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        buffer.pos(right, top, zLevel).tex(u, tint).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.pos(left, top, zLevel).tex(0.0D, tint).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        tessellator.draw();
+    }
+
+    /**
+     * Draws a Textured Gradient Rectangle, following the defined arguments
+     *
+     * @param zLevel      The Z Level Position of the Object
+     * @param left        The Starting Left Position of the Object
+     * @param right       The Starting Right Position of the Object
+     * @param top         The Top of the Object
+     * @param bottom      The Bottom of the Object
+     * @param u           The horizontal axis to render this Object by
+     * @param v           The vertical axis to render this Object by
+     * @param tint        The Tinting Level of the Object
+     * @param startColor  The starting texture RGB data to interpet
+     * @param endColor    The starting texture RGB data to interpet
+     * @param texLocation The game texture to render the object as
+     */
+    public void drawTextureGradientRect(final double zLevel, final double left, final double right, final double top, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+
+        drawTextureRect(zLevel,
+                left, right,
+                top, bottom,
+                u, v, tint,
+                startColor, endColor,
+                texLocation
+        );
+
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+
+    /**
+     * Draws a Textured Rectangle, following the defined arguments
+     *
      * @param zLevel        The Z Level Position of the Object
      * @param xPos          The Starting X Position of the Object
      * @param yPos          The Starting Y Position of the Object
@@ -840,27 +1046,8 @@ public class GuiUtils implements Module {
      * @param texLocation   The game texture to render the object as
      */
     public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final double widthDivider, final double heightDivider, final boolean shouldBeDark, final ResourceLocation texLocation) {
-        try {
-            if (texLocation != null) {
-                CraftPresence.instance.getTextureManager().bindTexture(texLocation);
-            }
-        } catch (Exception ignored) {
-        }
-
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_FOG);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-        final Tuple<Integer, Integer, Integer> rgbData = new Tuple<>(shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255, shouldBeDark ? 64 : 255);
-
-        final Tessellator tessellator = Tessellator.getInstance();
-        final BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        buffer.pos(xPos, yPos + height, zLevel).tex(0.0D, (height / heightDivider + tint)).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
-        buffer.pos(xPos + width, yPos + height, zLevel).tex((width / widthDivider), (height / heightDivider + tint)).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
-        buffer.pos(xPos + width, yPos, zLevel).tex((width / widthDivider), tint).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
-        buffer.pos(xPos, yPos, zLevel).tex(0.0D, tint).color(rgbData.getFirst(), rgbData.getSecond(), rgbData.getSecond(), 255).endVertex();
-        tessellator.draw();
+        final Color color = shouldBeDark ? Color.darkGray : Color.white;
+        drawTextureRect(zLevel, xPos, yPos, width, height, tint, widthDivider, heightDivider, color, texLocation);
     }
 
     /**
