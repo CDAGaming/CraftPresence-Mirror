@@ -84,7 +84,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         int controlIndex = 1;
-        if (!initialized) {
+        if (!isLoaded()) {
             resetText = "gui.config.message.button.remove";
             if (isNewValue) {
                 mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");

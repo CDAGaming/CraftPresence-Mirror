@@ -65,9 +65,9 @@ public class ExtendedScreen extends GuiScreen {
      */
     protected final List<ScrollableListControl> extendedLists = StringUtils.newArrayList();
     /**
-     * Variable needed to ensure all buttons are initialized before rendering to prevent an NPE
+     * The Current Screen Phase, used to define where in the initialization it is at
      */
-    public boolean initialized = false;
+    private Phase currentPhase = Phase.PREINIT;
     /**
      * Whether to enable debug mode screen data, specified from screen developers
      */
@@ -177,14 +177,15 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void initGui() {
         // Clear Data before Initialization
+        super.initGui();
         buttonList.clear();
         extendedControls.clear();
         extendedLists.clear();
-
         Keyboard.enableRepeatEvents(true);
+
+        currentPhase = Phase.INIT;
         initializeUi();
-        super.initGui();
-        initialized = true;
+        currentPhase = Phase.READY;
     }
 
     /**
@@ -193,10 +194,15 @@ public class ExtendedScreen extends GuiScreen {
      * Responsible for setting initial Data and creating controls
      */
     public void initializeUi() {
+        if (currentPhase == Phase.PREINIT) {
+            initGui();
+            return;
+        }
         resetMouseScroll();
+
         for (Gui extendedControl : extendedControls) {
             if (extendedControl instanceof ExtendedScreen) {
-                ((ExtendedScreen) extendedControl).initGui();
+                ((ExtendedScreen) extendedControl).initializeUi();
             }
         }
     }
@@ -210,7 +216,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
-        initialized = false;
+        currentPhase = Phase.PREINIT;
         for (Gui extendedControl : extendedControls) {
             if (extendedControl instanceof ExtendedScreen) {
                 ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
@@ -307,7 +313,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         // Ensures initialization events have run first, preventing an NPE
-        if (initialized) {
+        if (isLoaded()) {
             renderCriticalData();
             preRender();
 
@@ -350,7 +356,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void handleMouseInput() {
-        if (initialized) {
+        if (isLoaded()) {
             for (ScrollableListControl listControl : extendedLists) {
                 listControl.handleMouseInput();
             }
@@ -385,7 +391,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (initialized) {
+        if (isLoaded()) {
             if (keyCode == Keyboard.KEY_ESCAPE && canClose) {
                 CraftPresence.GUIS.openScreen(parentScreen);
                 return;
@@ -412,7 +418,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (initialized) {
+        if (isLoaded()) {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
@@ -431,7 +437,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void updateScreen() {
-        if (initialized) {
+        if (isLoaded()) {
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
@@ -449,7 +455,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void onGuiClosed() {
-        initialized = false;
+        currentPhase = Phase.PREINIT;
         CraftPresence.GUIS.resetIndex();
         Keyboard.enableRepeatEvents(false);
 
@@ -803,5 +809,32 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void setVerboseMode(boolean isVerboseMode) {
         this.verboseMode = isVerboseMode;
+    }
+
+    /**
+     * Gets whether the Screen is fully loaded
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean isLoaded() {
+        return currentPhase == Phase.READY;
+    }
+
+    /**
+     * Constants representing various Screen Phase statuses
+     */
+    public enum Phase {
+        /**
+         * Defines that the Screen is either unloaded, or has not finished pre-initialization
+         */
+        PREINIT,
+        /**
+         * Defines that the Screen has completed initial construction and data preparation
+         */
+        INIT,
+        /**
+         * Defines that the Screen is fully ready for use
+         */
+        READY
     }
 }
