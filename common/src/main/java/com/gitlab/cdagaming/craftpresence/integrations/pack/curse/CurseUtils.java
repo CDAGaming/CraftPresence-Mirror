@@ -26,9 +26,8 @@ package com.gitlab.cdagaming.craftpresence.integrations.pack.curse;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl.CurseInstance;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.impl.Manifest;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.google.gson.JsonElement;
 
 import java.io.File;
 
@@ -46,31 +45,31 @@ public class CurseUtils extends Pack {
 
     @Override
     public boolean load() {
-        try {
-            // Attempt to Gain Curse Pack Info from the manifest.json file
-            // This will typically work on released/exported/imported packs
-            // But will fail with Custom/User-Created Packs
-            // Note: This additionally works in the same way for GDLauncher packs of the same nature
-            final Manifest manifest = FileUtils.getJsonData(new File("manifest.json"), Manifest.class);
-            if (manifest != null) {
-                setPackName(manifest.name);
-            }
-        } catch (Exception ex) {
+        File packLocation;
+
+        // Attempt to Gain Curse Pack Info from the manifest.json file
+        // This will typically work on released/exported/imported packs
+        // But will fail with Custom/User-Created Packs
+        // Note: This additionally works in the same way for GDLauncher packs of the same nature
+        packLocation = new File("manifest.json");
+        if (!packLocation.exists()) {
+            // If it fails to get the information from the manifest.json
+            // Attempt to read Pack info from the minecraftinstance.json file
+            // As Most if not all types of Curse Packs contain this file
+            packLocation = new File("minecraftinstance.json");
+        }
+
+        if (packLocation.exists()) {
             try {
-                // If it fails to get the information from the manifest.json
-                // Attempt to read Pack info from the minecraftinstance.json file
-                // As Most if not all types of Curse Packs contain this file
-                // Though it is considered a fallback due to how much it's parsing
+                final JsonElement rawJson = FileUtils.getJsonData(packLocation, JsonElement.class);
+                setPackName(
+                        rawJson.getAsJsonObject()
+                                .getAsJsonPrimitive("name")
+                                .getAsString()
+                );
+            } catch (Exception ex) {
                 if (showException(ex)) {
                     ex.printStackTrace();
-                }
-                final CurseInstance instance = FileUtils.getJsonData(new File("minecraftinstance.json"), CurseInstance.class);
-                if (instance != null) {
-                    setPackName(instance.name);
-                }
-            } catch (Exception ex2) {
-                if (showException(ex2)) {
-                    ex2.printStackTrace();
                 }
             }
         }

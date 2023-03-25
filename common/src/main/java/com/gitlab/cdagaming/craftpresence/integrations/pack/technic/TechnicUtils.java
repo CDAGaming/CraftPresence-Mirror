@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
+import com.google.gson.JsonElement;
 
 import java.io.File;
 
@@ -44,19 +45,22 @@ public class TechnicUtils extends Pack {
 
     @Override
     public boolean load() {
-        try {
-            final String packLocation = new File(SystemUtils.USER_DIR).getParentFile().getParentFile() + File.separator + "installedPacks";
-            final File installedPacks = new File(packLocation);
-            final TechnicPack technicPack = FileUtils.getJsonData(installedPacks, TechnicPack.class);
+        final File packLocation = new File(new File(SystemUtils.USER_DIR).getParentFile().getParentFile() + File.separator + "installedPacks");
 
-            if (technicPack != null) {
-                if (SystemUtils.USER_DIR.contains(technicPack.selected)) {
-                    setPackName(technicPack.selected);
+        if (packLocation.exists()) {
+            try {
+                final JsonElement rawJson = FileUtils.getJsonData(packLocation, JsonElement.class);
+                final String selected = rawJson.getAsJsonObject()
+                        .getAsJsonPrimitive("selected")
+                        .getAsString();
+
+                if (SystemUtils.USER_DIR.contains(selected)) {
+                    setPackName(selected);
                 }
-            }
-        } catch (Exception ex) {
-            if (showException(ex)) {
-                ex.printStackTrace();
+            } catch (Exception ex) {
+                if (showException(ex)) {
+                    ex.printStackTrace();
+                }
             }
         }
         return hasPackName();
