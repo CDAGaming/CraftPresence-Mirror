@@ -63,8 +63,8 @@ public class MultiMCUtils extends Pack {
                 setPackName(configFile.getProperty("name"));
                 setPackIcon(configFile.getProperty("iconKey"));
             } catch (Exception ex2) {
-                if (showException(ex)) {
-                    ex.printStackTrace();
+                if (showException(ex2)) {
+                    ex2.printStackTrace();
                 }
             }
         }
