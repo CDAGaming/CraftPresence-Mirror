@@ -186,7 +186,7 @@ public class FunctionsLib {
                 path.add(ss.pop().toString());
             }
         }
-        result = contents = FileUtils.parseJson(json);
+        result = contents = FileUtils.getJsonData(json).getAsJsonObject();
         StringUtils.revlist(path);
 
         boolean needsIndex = false;

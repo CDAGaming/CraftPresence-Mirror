@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.google.gson.JsonElement;
 
 import java.io.File;
 
@@ -48,9 +47,9 @@ public class MCUpdaterUtils extends Pack {
 
         if (packLocation.exists()) {
             try {
-                final JsonElement rawJson = FileUtils.getJsonData(packLocation, JsonElement.class);
                 setPackName(
-                        rawJson.getAsJsonObject()
+                        FileUtils.getJsonData(packLocation)
+                                .getAsJsonObject()
                                 .getAsJsonPrimitive("packName")
                                 .getAsString()
                 );

@@ -142,7 +142,7 @@ public class ModUpdaterUtils {
 
         try {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
-            final JsonObject rootUpdateData = FileUtils.parseJson(UrlUtils.getURLText(updateUrl, "UTF-8"));
+            final JsonObject rootUpdateData = FileUtils.getJsonData(UrlUtils.getURLText(updateUrl, "UTF-8")).getAsJsonObject();
 
             if (rootUpdateData != null) {
                 ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", rootUpdateData.toString()));

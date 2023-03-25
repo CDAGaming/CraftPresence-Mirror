@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
-import com.google.gson.JsonElement;
 
 import java.io.File;
 
@@ -49,8 +48,8 @@ public class TechnicUtils extends Pack {
 
         if (packLocation.exists()) {
             try {
-                final JsonElement rawJson = FileUtils.getJsonData(packLocation, JsonElement.class);
-                final String selected = rawJson.getAsJsonObject()
+                final String selected = FileUtils.getJsonData(packLocation)
+                        .getAsJsonObject()
                         .getAsJsonPrimitive("selected")
                         .getAsString();
 

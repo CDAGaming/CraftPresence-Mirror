@@ -27,8 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonElement;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -85,6 +84,18 @@ public class FileUtils {
     /**
      * Retrieves Raw Data and Converts it into a Parsed Json Syntax
      *
+     * @param data The File to access
+     * @param args The Command Arguments to parse
+     * @return The Parsed Json as the Class Type's Syntax
+     * @throws Exception If Unable to read the File
+     */
+    public static JsonElement getJsonData(final File data, final Modifiers... args) throws Exception {
+        return getJsonData(data, JsonElement.class, args);
+    }
+
+    /**
+     * Retrieves Raw Data and Converts it into a Parsed Json Syntax
+     *
      * @param data     The json string to access
      * @param classObj The target class to base the output on
      * @param <T>      The Result and Class Type
@@ -94,6 +105,17 @@ public class FileUtils {
     public static <T> T getJsonData(final String data, final Class<T> classObj, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
         return builder.create().fromJson(data, classObj);
+    }
+
+    /**
+     * Retrieves Raw Data and Converts it into a Parsed Json Syntax
+     *
+     * @param data The json string to access
+     * @param args The Command Arguments to parse
+     * @return The Parsed Json as the Class Type's Syntax
+     */
+    public static JsonElement getJsonData(final String data, final Modifiers... args) {
+        return getJsonData(data, JsonElement.class, args);
     }
 
     /**
@@ -184,21 +206,6 @@ public class FileUtils {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
-        }
-    }
-
-    /**
-     * Parses inputted raw json into a valid JsonObject
-     *
-     * @param json The raw Input Json String
-     * @return A Parsed and Valid JsonObject
-     */
-    public static JsonObject parseJson(final String json) {
-        if (!StringUtils.isNullOrEmpty(json)) {
-            final JsonParser dataParser = new JsonParser();
-            return dataParser.parse(json).getAsJsonObject();
-        } else {
-            return new JsonObject();
         }
     }
 
