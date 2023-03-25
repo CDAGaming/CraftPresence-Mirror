@@ -107,7 +107,7 @@ public class ModUpdaterUtils {
         this.modID = modID;
         this.updateUrl = updateUrl;
         this.currentGameVersion = currentGameVersion;
-        this.currentVersion = currentVersion.replaceAll("[a-zA-Z]", "").replace("\"", "").trim();
+        this.currentVersion = parseData(currentVersion);
 
         // In Debug Runtime cases, the Version may not be dynamically replaced
         // In this scenario, use v0.0.0, and we'll later use the target version to patch
@@ -148,7 +148,7 @@ public class ModUpdaterUtils {
                 ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", rootUpdateData.toString()));
 
                 if (rootUpdateData.has("homepage")) {
-                    downloadUrl = rootUpdateData.get("homepage").toString().replace("\"", "").trim();
+                    downloadUrl = parseData(rootUpdateData.get("homepage"));
                 } else {
                     ModUtils.LOG.warn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.updater.homepage"));
                 }
@@ -168,9 +168,9 @@ public class ModUpdaterUtils {
                                 final String dataTag = splitPromo[1];
 
                                 if (latestVersionTags.contains(dataTag.toLowerCase())) {
-                                    targetLatestVersion = jsonSegment.getValue().toString().replaceAll("[a-zA-Z]", "").replace("\"", "").trim();
+                                    targetLatestVersion = parseData(jsonSegment.getValue());
                                 } else if (recommendedVersionTags.contains(dataTag.toLowerCase())) {
-                                    targetRecommendedVersion = jsonSegment.getValue().toString().replaceAll("[a-zA-Z]", "").replace("\"", "").trim();
+                                    targetRecommendedVersion = parseData(jsonSegment.getValue());
                                 }
 
                                 // Break of Loop if Found all needed Data
@@ -180,7 +180,7 @@ public class ModUpdaterUtils {
                             }
                         } else if (jsonSegment.getKey().equalsIgnoreCase(currentGameVersion)) {
                             // Case 2: Find only the Minecraft Version, if present, but do not break the loop
-                            targetRecommendedVersion = jsonSegment.getValue().toString().replaceAll("[a-zA-Z]", "").replace("\"", "").trim();
+                            targetRecommendedVersion = parseData(jsonSegment.getValue());
                         } else {
                             ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.updater.incompatible.json", jsonSegment.getKey()));
                         }
@@ -224,13 +224,8 @@ public class ModUpdaterUtils {
                         final JsonObject mcVersionData = rootUpdateData.get(currentGameVersion).getAsJsonObject();
 
                         if (mcVersionData != null) {
-                            final JsonElement semanticVersionData = mcVersionData.has(targetVersion) ? mcVersionData.get(targetVersion) : null;
-                            final JsonElement annotatedVersionData = mcVersionData.has("v" + targetVersion) ? mcVersionData.get("v" + targetVersion) : null;
-
-                            if (semanticVersionData != null || annotatedVersionData != null) {
-                                final JsonElement changelogData = semanticVersionData != null ? semanticVersionData : annotatedVersionData;
-
-                                targetChangelogData = changelogData.toString().replace("\"", "").trim();
+                            if (mcVersionData.has(targetVersion)) {
+                                targetChangelogData = parseData(mcVersionData.get(targetVersion));
                                 ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.changelog", targetChangelogData));
                             } else {
                                 ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.changelog", modID, targetVersion));
@@ -252,6 +247,16 @@ public class ModUpdaterUtils {
                 callback.run();
             }
         }
+    }
+
+    /**
+     * Parse the specified object into a readable string
+     *
+     * @param obj The data to interpret
+     * @return the processed string
+     */
+    private String parseData(final Object obj) {
+        return obj.toString().replace("\"", "").trim();
     }
 
     /**
