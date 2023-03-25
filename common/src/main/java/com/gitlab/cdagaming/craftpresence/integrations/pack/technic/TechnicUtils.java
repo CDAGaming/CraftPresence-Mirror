@@ -45,7 +45,8 @@ public class TechnicUtils extends Pack {
     @Override
     public boolean load() {
         try {
-            final File installedPacks = new File(SystemUtils.USER_DIR + File.separator + ".." + File.separator + ".." + File.separator + "installedPacks");
+            final String packLocation = new File(SystemUtils.USER_DIR).getParentFile().getParentFile() + File.separator + "installedPacks";
+            final File installedPacks = new File(packLocation);
             final TechnicPack technicPack = FileUtils.getJsonData(installedPacks, TechnicPack.class);
 
             if (technicPack != null) {

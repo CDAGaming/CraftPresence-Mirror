@@ -54,14 +54,33 @@ public class MultiMCUtils extends Pack {
             final Properties configFile = new Properties();
             configFile.load(inputStream);
 
-            final String tempIconKey = configFile.getProperty("iconKey"), defaultIconName = "default", defaultIconKey = "infinity";
             setPackName(configFile.getProperty("name"));
-            setPackIcon(!StringUtils.isNullOrEmpty(tempIconKey) && !tempIconKey.equals(defaultIconName) ? tempIconKey : defaultIconKey);
+            setPackIcon(configFile.getProperty("iconKey"));
         } catch (Exception ex) {
             if (showException(ex)) {
                 ex.printStackTrace();
             }
         }
         return hasPackName() && hasPackIcon();
+    }
+
+    @Override
+    public void setPackIcon(final String packIcon) {
+        super.setPackIcon(parseIcon(packIcon));
+    }
+
+    /**
+     * Parses the Specified Icon Key, for MultiMC Integration
+     *
+     * @param original The original iconKey
+     * @return The parsed iconKey
+     */
+    private String parseIcon(final String original) {
+        final String defaultIcon = "infinity";
+        if (StringUtils.isNullOrEmpty(original)) {
+            return defaultIcon;
+        } else {
+            return !original.equals("default") ? original : defaultIcon;
+        }
     }
 }
