@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence;
 
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -77,12 +78,12 @@ public class ModUtils {
     /**
      * The Application's Configuration Directory
      */
-    public static final String configDir = CraftPresence.SYSTEM.USER_DIR + File.separator + "config";
+    public static final String configDir = SystemUtils.USER_DIR + File.separator + "config";
 
     /**
      * The Application's "mods" Directory
      */
-    public static final String modsDir = CraftPresence.SYSTEM.USER_DIR + File.separator + "mods";
+    public static final String modsDir = SystemUtils.USER_DIR + File.separator + "mods";
 
     /**
      * The URL to receive Update Information from

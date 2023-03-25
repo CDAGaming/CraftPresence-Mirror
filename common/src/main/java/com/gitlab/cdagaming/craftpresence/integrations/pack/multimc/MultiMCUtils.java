@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.pack.multimc;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -47,7 +48,7 @@ public class MultiMCUtils extends Pack {
 
     @Override
     public boolean load() {
-        final String instanceFile = new File(CraftPresence.SYSTEM.USER_DIR).getParent() + File.separator + "instance.cfg";
+        final String instanceFile = new File(SystemUtils.USER_DIR).getParent() + File.separator + "instance.cfg";
 
         try (InputStream inputStream = Files.newInputStream(Paths.get(instanceFile))) {
             final Properties configFile = new Properties();

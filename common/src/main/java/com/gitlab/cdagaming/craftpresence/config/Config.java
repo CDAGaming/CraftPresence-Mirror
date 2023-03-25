@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.config;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
 import com.gitlab.cdagaming.craftpresence.config.element.Button;
@@ -205,7 +204,7 @@ public final class Config extends Module implements Serializable {
                 // fileVersion, configDirectories[main,server-entries]
                 final Map<Integer, String> hypherionFiles = new HashMapBuilder<Integer, String>()
                         .put(0, ModUtils.configDir + File.separator)
-                        .put(31, CraftPresence.SYSTEM.USER_DIR + File.separator + "simple-rpc" + File.separator)
+                        .put(31, SystemUtils.USER_DIR + File.separator + "simple-rpc" + File.separator)
                         .put(32, ModUtils.configDir + File.separator + "simple-rpc" + File.separator)
                         .build();
                 for (Map.Entry<Integer, String> entry : hypherionFiles.entrySet()) {

@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.pack.technic;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 
 import java.io.File;
 
@@ -44,11 +45,11 @@ public class TechnicUtils extends Pack {
     @Override
     public boolean load() {
         try {
-            final File installedPacks = new File(CraftPresence.SYSTEM.USER_DIR + File.separator + ".." + File.separator + ".." + File.separator + "installedPacks");
+            final File installedPacks = new File(SystemUtils.USER_DIR + File.separator + ".." + File.separator + ".." + File.separator + "installedPacks");
             final TechnicPack technicPack = FileUtils.getJsonData(installedPacks, TechnicPack.class);
 
             if (technicPack != null) {
-                if (CraftPresence.SYSTEM.USER_DIR.contains(technicPack.selected)) {
+                if (SystemUtils.USER_DIR.contains(technicPack.selected)) {
                     setPackName(technicPack.selected);
                 }
             }
