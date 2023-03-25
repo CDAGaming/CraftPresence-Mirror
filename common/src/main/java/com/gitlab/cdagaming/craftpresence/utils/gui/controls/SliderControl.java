@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
@@ -218,8 +219,8 @@ public class SliderControl extends ExtendedButtonControl {
         if (visible) {
             if (dragging) {
                 sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
-                sliderValue = clamp(sliderValue, 0.0F, 1.0F);
-                denormalizedSlideValue = denormalizeValue(sliderValue);
+                sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
+                denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);
 
                 setControlMessage(windowTitle + ": " + denormalizedSlideValue);
             }
@@ -238,8 +239,8 @@ public class SliderControl extends ExtendedButtonControl {
     public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
             sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
-            sliderValue = clamp(sliderValue, 0.0F, 1.0F);
-            denormalizedSlideValue = denormalizeValue(sliderValue);
+            sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
+            denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);
 
             setControlMessage(windowTitle + ": " + denormalizedSlideValue);
             dragging = true;
@@ -258,9 +259,9 @@ public class SliderControl extends ExtendedButtonControl {
     public void setSliderValue(float newValue) {
         if (newValue >= 0.0f && newValue <= 1.0f) {
             sliderValue = newValue;
-            denormalizedSlideValue = denormalizeValue(newValue);
+            denormalizedSlideValue = MathUtils.denormalizeValue(newValue, valueStep, minValue, maxValue);
         } else {
-            sliderValue = normalizeValue(newValue);
+            sliderValue = MathUtils.normalizeValue(newValue, valueStep, minValue, maxValue);
             denormalizedSlideValue = newValue;
         }
         setControlMessage(windowTitle + ": " + denormalizedSlideValue);
@@ -274,68 +275,6 @@ public class SliderControl extends ExtendedButtonControl {
      */
     public float getSliderValue(boolean useNormal) {
         return useNormal ? sliderValue : denormalizedSlideValue;
-    }
-
-    /**
-     * Clamps the Specified Number between a minimum and maximum limit
-     *
-     * @param num The number to clamp upon
-     * @param min The Minimum Limit for the number
-     * @param max The Maximum Limit for the number
-     * @return The adjusted and clamped number
-     */
-    private float clamp(float num, float min, float max) {
-        if (num < min) {
-            return min;
-        } else {
-            return Math.min(num, max);
-        }
-    }
-
-    /**
-     * Normalize and Clamp the specified value to a number between 0.0f and 1.0f
-     *
-     * @param value The denormalized value to normalize
-     * @return The converted normalized value
-     */
-    private float normalizeValue(float value) {
-        return clamp((snapToStepClamp(value) - minValue) / (maxValue - minValue), 0.0F, 1.0F);
-    }
-
-    /**
-     * Denormalize and Expand the specified value to a number between the minimum and maximum slider value
-     *
-     * @param value The normalized value to denormalize
-     * @return The converted denormalized value
-     */
-    private float denormalizeValue(float value) {
-        return snapToStepClamp(minValue + (maxValue - minValue) * clamp(value, 0.0F, 1.0F));
-    }
-
-    /**
-     * Snaps the Specified Value to the nearest Step Rate Value, then clamps said value within bounds
-     *
-     * @param originalValue The original value to adjust, if needed
-     * @return The Snapped and Clamped proper Slider Value
-     */
-    private float snapToStepClamp(float originalValue) {
-        float value = snapToStep(originalValue);
-        return clamp(value, minValue, maxValue);
-    }
-
-    /**
-     * Rounds the Specified Value to the nearest value, using the Step Rate Value
-     *
-     * @param originalValue The non-rounded value to interpret
-     * @return The Step-Rounded Value at a valid step
-     */
-    private float snapToStep(float originalValue) {
-        float value = originalValue;
-        if (valueStep > 0.0F) {
-            value = valueStep * (float) Math.round(value / valueStep);
-        }
-
-        return value;
     }
 
     /**

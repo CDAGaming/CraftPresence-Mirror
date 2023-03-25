@@ -59,6 +59,8 @@ public class FunctionsLib {
         ss.set("randomString", FunctionsLib::randomString);
         ss.set("getFirst", FunctionsLib::getFirst);
         ss.set("getNbt", FunctionsLib::getNbt);
+
+        // MathUtils
         ss.set("isWithinValue", FunctionsLib::isWithinValue);
 
         // DiscordUtils
@@ -398,7 +400,7 @@ public class FunctionsLib {
                 }
             }
         }
-        return Value.bool(StringUtils.isWithinValue(value, min, max, contains_min, contains_max, check_sanity));
+        return Value.bool(MathUtils.isWithinValue(value, min, max, contains_min, contains_max, check_sanity));
     }
 
     public static Value randomAsset(Starscript ss, int argCount) {

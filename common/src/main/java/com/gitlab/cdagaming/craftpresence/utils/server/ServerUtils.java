@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -317,9 +318,9 @@ public class ServerUtils implements Module {
 
             // `player.position` Argument = Current Coordinates of Player
             final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(
-                    StringUtils.roundDouble(CraftPresence.player.posX, CraftPresence.CONFIG.advancedSettings.roundSize),
-                    StringUtils.roundDouble(CraftPresence.player.posY, CraftPresence.CONFIG.advancedSettings.roundSize),
-                    StringUtils.roundDouble(CraftPresence.player.posZ, CraftPresence.CONFIG.advancedSettings.roundSize)
+                    MathUtils.roundDouble(CraftPresence.player.posX, CraftPresence.CONFIG.advancedSettings.roundSize),
+                    MathUtils.roundDouble(CraftPresence.player.posY, CraftPresence.CONFIG.advancedSettings.roundSize),
+                    MathUtils.roundDouble(CraftPresence.player.posZ, CraftPresence.CONFIG.advancedSettings.roundSize)
             );
             if (!Objects.equals(newCoordinates, currentCoordinates)) {
                 currentCoordinates = newCoordinates;
@@ -328,8 +329,8 @@ public class ServerUtils implements Module {
 
             // 'player.health' Argument = Current and Maximum Health of Player
             final Pair<Double, Double> newHealth = new Pair<>(
-                    StringUtils.roundDouble(CraftPresence.player.getHealth(), 0),
-                    StringUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
+                    MathUtils.roundDouble(CraftPresence.player.getHealth(), 0),
+                    MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
             );
             if (!Objects.equals(newHealth, currentHealth)) {
                 currentHealth = newHealth;

@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -539,7 +540,7 @@ public class ExtendedScreen extends GuiScreen {
     public void drawScrollString(final List<String> text, final int xPos, final int scrollPos, final int minScroll, final int maxScroll, final int textColor) {
         int currentY = minScroll - scrollPos;
         for (String line : text) {
-            if (StringUtils.isWithinValue(currentY, minScroll, maxScroll, true, false)) {
+            if (MathUtils.isWithinValue(currentY, minScroll, maxScroll, true, false)) {
                 renderString(line, xPos, currentY, textColor);
             }
             currentY += getFontHeight() + 1;
