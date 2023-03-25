@@ -252,8 +252,8 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         );
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
+                        180, 20,
                         "gui.config.message.button.back",
                         () -> {
                             if (!languageIdText.getControlMessage().equals(CONFIG.languageId)) {
