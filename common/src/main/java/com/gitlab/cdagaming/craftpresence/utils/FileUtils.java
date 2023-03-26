@@ -364,11 +364,40 @@ public class FileUtils {
     }
 
     /**
+     * Retrieve the Amount of Active Mods in the instance
+     *
+     * @return The Mods that are active in the instance
+     */
+    public static int getModCount() {
+        int modCount = -1;
+        final Class<?> fmlLoader = FileUtils.findValidClass("net.minecraftforge.fml.common.Loader");
+        final Class<?> fabricLoader = FileUtils.findValidClass("net.fabricmc.loader.api.FabricLoader");
+        if (fmlLoader != null) {
+            final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, "instance", null, null);
+            if (loaderInstance != null) {
+                final Object mods = StringUtils.executeMethod(fmlLoader, loaderInstance, "getModList", null, null);
+                if (mods instanceof List<?>) {
+                    modCount = ((List<?>) mods).size();
+                }
+            }
+        } else if (fabricLoader != null) {
+            final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, "getInstance", null, null);
+            if (loaderInstance != null) {
+                final Object mods = StringUtils.executeMethod(fabricLoader, loaderInstance, "getAllMods", null, null);
+                if (mods instanceof List<?>) {
+                    modCount = ((List<?>) mods).size();
+                }
+            }
+        }
+        return modCount > 0 ? modCount : getRawModCount();
+    }
+
+    /**
      * Retrieve the Amount of Active Mods in the {@link ModUtils#modsDir}
      *
      * @return The Mods that are active in the directory
      */
-    public static int getModCount() {
+    public static int getRawModCount() {
         // Mod is within ClassLoader if in a Dev Environment
         // and is thus automatically counted if this is the case
         int modCount = CommandUtils.isDebugMode() ? 1 : 0;
