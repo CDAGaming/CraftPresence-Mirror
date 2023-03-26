@@ -35,7 +35,6 @@ import org.meteordev.starscript.StandardLib;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
 
-import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -440,7 +439,7 @@ public class FunctionsLib {
         if (r < 0 || r > 255) {
             ss.error("First argument to rgbaToHex() is not a valid color index, can only be 0-255.");
         }
-        return Value.string(StringUtils.getHexFromColor(new Color(r, g, b, a)));
+        return Value.string(StringUtils.getHexFrom(r, g, b, a));
     }
 
     public static Value getOrDefault(Starscript ss, int argCount) {

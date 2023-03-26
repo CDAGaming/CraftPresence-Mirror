@@ -100,25 +100,50 @@ public class StringUtils {
     private static final Pattern ALPHANUMERIC_PATTERN = Pattern.compile(".*[a-zA-Z0-9].*");
 
     /**
-     * Attempts to Convert a Hexadecimal String into a Valid interpretable Java Color
+     * Attempts to Convert the specified data into a Valid interpretable Java Color
+     *
+     * @param red   the red component
+     * @param green the green component
+     * @param blue  the blue component
+     * @param alpha the alpha component
+     * @return A Valid Java Color, if successful
+     */
+    public static Color getColorFrom(final int red, final int green, final int blue, final int alpha) {
+        return new Color(red, green, blue, alpha);
+    }
+
+    /**
+     * Attempts to Convert the specified data into a Valid interpretable Java Color
+     *
+     * @param red   the red component
+     * @param green the green component
+     * @param blue  the blue component
+     * @return A Valid Java Color, if successful
+     */
+    public static Color getColorFrom(final int red, final int green, final int blue) {
+        return getColorFrom(red, green, blue, 255);
+    }
+
+    /**
+     * Attempts to Convert the specified data into a Valid interpretable Java Color
      *
      * @param hexColor The inputted Hexadecimal Color String
      * @return A Valid Java Color, if successful
      */
-    public static Color getColorFromHex(final String hexColor) {
+    public static Color getColorFrom(final String hexColor) {
         try {
             if (hexColor.length() == 7 && !isNullOrEmpty(hexColor.substring(1))) {
                 final int r = Integer.valueOf(hexColor.substring(1, 3), 16);
                 final int g = Integer.valueOf(hexColor.substring(3, 5), 16);
                 final int b = Integer.valueOf(hexColor.substring(5, 7), 16);
 
-                return new Color(r, g, b);
+                return getColorFrom(r, g, b);
             } else if (hexColor.length() == 6 && !hexColor.startsWith("#")) {
                 final int r = Integer.valueOf(hexColor.substring(0, 2), 16);
                 final int g = Integer.valueOf(hexColor.substring(2, 4), 16);
                 final int b = Integer.valueOf(hexColor.substring(4, 6), 16);
 
-                return new Color(r, g, b);
+                return getColorFrom(r, g, b);
             } else {
                 return Color.white;
             }
@@ -195,13 +220,38 @@ public class StringUtils {
     }
 
     /**
-     * Converts a Java Color Variable into a Hexadecimal String
+     * Converts the specified data into a Hexadecimal String, if able
      *
      * @param color The original Java Color Type to interpret
      * @return The converted hexadecimal String
      */
-    public static String getHexFromColor(final Color color) {
+    public static String getHexFrom(final Color color) {
         return "0x" + toSafeHexValue(color.getAlpha()) + toSafeHexValue(color.getRed()) + toSafeHexValue(color.getGreen()) + toSafeHexValue(color.getBlue());
+    }
+
+    /**
+     * Converts the specified data into a Hexadecimal String, if able
+     *
+     * @param red   the red component
+     * @param green the green component
+     * @param blue  the blue component
+     * @param alpha the alpha component
+     * @return The converted hexadecimal String
+     */
+    public static String getHexFrom(final int red, final int green, final int blue, final int alpha) {
+        return getHexFrom(getColorFrom(red, green, blue, alpha));
+    }
+
+    /**
+     * Converts the specified data into a Hexadecimal String, if able
+     *
+     * @param red   the red component
+     * @param green the green component
+     * @param blue  the blue component
+     * @return The converted hexadecimal String
+     */
+    public static String getHexFrom(final int red, final int green, final int blue) {
+        return getHexFrom(getColorFrom(red, green, blue));
     }
 
     /**

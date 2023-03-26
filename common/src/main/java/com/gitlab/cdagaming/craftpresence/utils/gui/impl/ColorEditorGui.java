@@ -279,7 +279,7 @@ public class ColorEditorGui extends PaginatedScreen {
 
             if (!StringUtils.isNullOrEmpty(hexText.getControlMessage())) {
                 if (hexText.getControlMessage().startsWith("#") || hexText.getControlMessage().length() == 6) {
-                    localValue = StringUtils.getColorFromHex(hexText.getControlMessage()).getRGB();
+                    localValue = StringUtils.getColorFrom(hexText.getControlMessage()).getRGB();
                 } else if (hexText.getControlMessage().startsWith("0x")) {
                     try {
                         localColor = new Color(Long.decode(hexText.getControlMessage()).intValue(), true);
@@ -319,7 +319,7 @@ public class ColorEditorGui extends PaginatedScreen {
 
                     localColor = new Color(currentRed, currentGreen, currentBlue, currentAlpha);
 
-                    currentNormalHexValue = StringUtils.getHexFromColor(localColor);
+                    currentNormalHexValue = StringUtils.getHexFrom(localColor);
                     hexText.setControlMessage(currentNormalHexValue);
 
                     currentConvertedHexValue = Long.toString(Long.decode(currentNormalHexValue).intValue());

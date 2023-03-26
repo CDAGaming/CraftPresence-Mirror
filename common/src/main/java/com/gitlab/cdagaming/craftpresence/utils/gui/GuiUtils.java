@@ -292,6 +292,18 @@ public class GuiUtils implements Module {
     }
 
     /**
+     * Determines if the Mouse is over an element, following the defined Arguments
+     *
+     * @param mouseX The Mouse's Current X Position
+     * @param mouseY The Mouse's Current Y Position
+     * @param screen The Object to check bounds and position
+     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
+     */
+    public boolean isMouseOver(final double mouseX, final double mouseY, final ExtendedScreen screen) {
+        return screen.isLoaded() && isMouseOver(mouseX, mouseY, screen.getScreenX(), screen.getScreenY(), screen.getScreenWidth(), screen.getScreenHeight());
+    }
+
+    /**
      * Retrieves the Next Available Button ID for use in the currently open Screen
      *
      * @return The next available Button ID
@@ -593,7 +605,7 @@ public class GuiUtils implements Module {
                     final String borderColor = borderColorData.getSecond();
 
                     // Draw with Colors
-                    final int borderColorCode = (borderColor.startsWith("#") ? StringUtils.getColorFromHex(borderColor).getRGB() : Integer.parseInt(borderColor));
+                    final int borderColorCode = (borderColor.startsWith("#") ? StringUtils.getColorFrom(borderColor).getRGB() : Integer.parseInt(borderColor));
                     final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
 
                     drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColor, borderColorEnd);
@@ -1069,8 +1081,8 @@ public class GuiUtils implements Module {
 
         if (!StringUtils.isNullOrEmpty(startColorCode)) {
             if (startColorCode.startsWith("#")) {
-                startColorObj = StringUtils.getColorFromHex(startColorCode);
-                endColorObj = (!StringUtils.isNullOrEmpty(endColorCode) && endColorCode.startsWith("#")) ? StringUtils.getColorFromHex(endColorCode) : startColorObj;
+                startColorObj = StringUtils.getColorFrom(startColorCode);
+                endColorObj = (!StringUtils.isNullOrEmpty(endColorCode) && endColorCode.startsWith("#")) ? StringUtils.getColorFrom(endColorCode) : startColorObj;
             } else {
                 // Determine if Start Color Code is a Valid Number
                 final Pair<Boolean, Integer> startColorData = StringUtils.getValidInteger(startColorCode),

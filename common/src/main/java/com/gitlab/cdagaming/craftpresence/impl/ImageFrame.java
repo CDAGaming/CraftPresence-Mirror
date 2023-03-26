@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -150,7 +151,7 @@ public class ImageFrame {
                             final int green = Integer.parseInt(colorEntry.getAttribute("green"));
                             final int blue = Integer.parseInt(colorEntry.getAttribute("blue"));
 
-                            backgroundColor = new Color(red, green, blue);
+                            backgroundColor = StringUtils.getColorFrom(red, green, blue);
                             break;
                         }
 
