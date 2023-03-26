@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -41,6 +42,10 @@ import java.util.Properties;
  * @author CDAGaming
  */
 public class MultiMCUtils extends Pack {
+    public MultiMCUtils() {
+        setPackType(getLauncherType());
+    }
+
     @Override
     public boolean isEnabled() {
         return CraftPresence.CONFIG.generalSettings.detectMultiMCManifest;
@@ -63,12 +68,24 @@ public class MultiMCUtils extends Pack {
      * @return The parsed iconKey
      */
     private String parseIcon(final String original) {
-        final String defaultIcon = "infinity";
+        final String defaultIcon = getDefaultIcon();
         if (StringUtils.isNullOrEmpty(original)) {
             return defaultIcon;
         } else {
             return !original.equals("default") ? original : defaultIcon;
         }
+    }
+
+    /**
+     * Retrieve the default icon to use for this instance
+     *
+     * @return the default icon to use for this instance
+     */
+    private String getDefaultIcon() {
+        if (Objects.equals(getPackType(), "prism")) {
+            return "prismlauncher";
+        }
+        return "infinity";
     }
 
     /**
@@ -110,5 +127,23 @@ public class MultiMCUtils extends Pack {
             }
         }
         return hasPackName() && hasPackIcon();
+    }
+
+    /**
+     * Retrieve the launcher type that this instance belongs to
+     *
+     * @return the launcher type
+     */
+    private String getLauncherType() {
+        final File prismLocation = new File(
+                new File(SystemUtils.USER_DIR)
+                        .getParentFile()
+                        .getParentFile()
+                        .getParentFile() + File.separator + "prismlauncher.cfg"
+        );
+        if (prismLocation.exists()) {
+            return "prism";
+        }
+        return "multimc";
     }
 }
