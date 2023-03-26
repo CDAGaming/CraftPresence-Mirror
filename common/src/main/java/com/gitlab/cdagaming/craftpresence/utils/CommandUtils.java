@@ -129,11 +129,13 @@ public class CommandUtils {
     public static void syncPackArguments() {
         boolean foundPack = false;
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
-            final String type = pack.getKey();
             final Pack data = pack.getValue();
+            if (!data.hasPackType()) {
+                data.setPackType(pack.getKey());
+            }
 
             if (data.hasPackName()) {
-                CraftPresence.CLIENT.syncArgument("pack.type", type);
+                CraftPresence.CLIENT.syncArgument("pack.type", data.getPackType());
                 CraftPresence.CLIENT.syncArgument("pack.name", data.getPackName());
                 CraftPresence.CLIENT.syncArgument("pack.icon",
                         CraftPresence.CLIENT.imageOf("pack.icon", true, data.getPackIcon())

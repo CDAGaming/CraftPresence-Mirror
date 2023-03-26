@@ -44,6 +44,10 @@ public abstract class Pack {
      * The Icon Key to use for this Pack
      */
     private String packIcon;
+    /**
+     * The Pack Instance Type
+     */
+    private String packType;
 
     public boolean isEnabled() {
         return true;
@@ -108,6 +112,33 @@ public abstract class Pack {
      */
     public boolean hasPackIcon() {
         return !StringUtils.isNullOrEmpty(packIcon);
+    }
+
+    /**
+     * Retrieve the pack instance type name
+     *
+     * @return the type name of the pack, if any
+     */
+    public String getPackType() {
+        return packType;
+    }
+
+    /**
+     * Set the pack instance type name for this instance
+     *
+     * @param packType the new pack type name
+     */
+    public void setPackType(final String packType) {
+        this.packType = packType;
+    }
+
+    /**
+     * Determine whether a valid pack type name is present
+     *
+     * @return {@link Boolean#TRUE} if a pack type name is present
+     */
+    public boolean hasPackType() {
+        return !StringUtils.isNullOrEmpty(packType);
     }
 
     /**
