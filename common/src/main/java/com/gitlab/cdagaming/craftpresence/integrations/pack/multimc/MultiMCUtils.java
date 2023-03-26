@@ -48,27 +48,7 @@ public class MultiMCUtils extends Pack {
 
     @Override
     public boolean load() {
-        try {
-            // 2023-03-10: Utilize the System Properties `multimc.instance.title` and `multimc.instance.icon` if available
-            // Ref: https://github.com/MultiMC/Launcher/commit/c1ed09e74765e7e362c644685b49b77529b748af
-            setPackName(System.getProperty("multimc.instance.title"));
-            setPackIcon(System.getProperty("multimc.instance.icon"));
-        } catch (Exception ex) {
-            // Utilize Legacy Property Route, if unable to use System Properties
-            final String instanceFile = new File(SystemUtils.USER_DIR).getParent() + File.separator + "instance.cfg";
-            try (InputStream inputStream = Files.newInputStream(Paths.get(instanceFile))) {
-                final Properties configFile = new Properties();
-                configFile.load(inputStream);
-
-                setPackName(configFile.getProperty("name"));
-                setPackIcon(configFile.getProperty("iconKey"));
-            } catch (Exception ex2) {
-                if (showException(ex2)) {
-                    ex2.printStackTrace();
-                }
-            }
-        }
-        return hasPackName() && hasPackIcon();
+        return findWithSystem() || findWithLegacy();
     }
 
     @Override
@@ -89,5 +69,46 @@ public class MultiMCUtils extends Pack {
         } else {
             return !original.equals("default") ? original : defaultIcon;
         }
+    }
+
+    /**
+     * Attempt to retrieve instance data via system properties
+     *
+     * @return {@link Boolean#TRUE} if data was found
+     */
+    private boolean findWithSystem() {
+        // 2023-03-10: Utilize the System Properties `multimc.instance.title` and `multimc.instance.icon` if available
+        // Ref: https://github.com/MultiMC/Launcher/commit/c1ed09e74765e7e362c644685b49b77529b748af
+        try {
+            setPackName(System.getProperty("multimc.instance.title"));
+            setPackIcon(System.getProperty("multimc.instance.icon"));
+        } catch (Exception ex) {
+            if (showException(ex)) {
+                ex.printStackTrace();
+            }
+        }
+        return hasPackName() && hasPackIcon();
+    }
+
+    /**
+     * Attempt to retrieve instance data via config properties
+     *
+     * @return {@link Boolean#TRUE} if data was found
+     */
+    private boolean findWithLegacy() {
+        // Utilize Legacy Property Route, if unable to use System Properties
+        final String instanceFile = new File(SystemUtils.USER_DIR).getParent() + File.separator + "instance.cfg";
+        try (InputStream inputStream = Files.newInputStream(Paths.get(instanceFile))) {
+            final Properties configFile = new Properties();
+            configFile.load(inputStream);
+
+            setPackName(configFile.getProperty("name"));
+            setPackIcon(configFile.getProperty("iconKey"));
+        } catch (Exception ex) {
+            if (showException(ex)) {
+                ex.printStackTrace();
+            }
+        }
+        return hasPackName() && hasPackIcon();
     }
 }
