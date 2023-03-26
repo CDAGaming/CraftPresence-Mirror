@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.TreeMapBuilder;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.integrations.pack.atlauncher.ATLauncherUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater.MCUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.multimc.MultiMCUtils;
@@ -69,6 +70,7 @@ public class CommandUtils {
      * A mapping of the currently loaded Pack Extension Modules
      */
     private static final Map<String, Pack> packModules = new TreeMapBuilder<String, Pack>()
+            .put("atlauncher", new ATLauncherUtils())
             .put("curse", new CurseUtils())
             .put("multimc", new MultiMCUtils())
             .put("mcupdater", new MCUpdaterUtils())

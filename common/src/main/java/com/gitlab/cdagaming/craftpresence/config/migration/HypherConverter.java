@@ -126,6 +126,7 @@ public class HypherConverter implements DataMigrator {
             }
             instance.advancedSettings.debugMode = conf.get("general.debugging");
             final boolean launcherIntegration = conf.get("general.launcherIntegration");
+            instance.generalSettings.detectATLauncherInstance = launcherIntegration;
             instance.generalSettings.detectCurseManifest = launcherIntegration;
             instance.generalSettings.detectMCUpdaterInstance = launcherIntegration;
             instance.generalSettings.detectTechnicPack = launcherIntegration;

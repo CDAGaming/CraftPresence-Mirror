@@ -44,7 +44,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
     private final General CONFIG;
     private ExtendedButtonControl proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
-            detectMCUpdaterInstanceButton, detectTechnicPackButton,
+            detectMCUpdaterInstanceButton, detectTechnicPackButton, detectATLauncherButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
             enableJoinRequestButton, resetTimeOnInitButton, autoRegisterButton;
     private ExtendedTextControl clientId;
@@ -165,28 +165,28 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        detectDimensionDataButton = addControl(
+        detectATLauncherButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc1, CraftPresence.GUIS.getButtonY(5, -20),
+                        "gui.config.name.general.detect_atlauncher_instance",
+                        CONFIG.detectATLauncherInstance,
+                        null,
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_atlauncher_instance")
+                                ), this, true
+                        )
+                )
+        );
+        detectDimensionDataButton = addControl(
+                new CheckBoxControl(
+                        checkboxCalc2, CraftPresence.GUIS.getButtonY(5, -20),
                         "gui.config.name.general.detect_dimension_data",
                         CONFIG.detectDimensionData,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
-                                ), this, true
-                        )
-                )
-        );
-        detectBiomeDataButton = addControl(
-                new CheckBoxControl(
-                        checkboxCalc2, CraftPresence.GUIS.getButtonY(5, -20),
-                        "gui.config.name.general.detect_biome_data",
-                        CONFIG.detectBiomeData,
-                        null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
                                 ), this, true
                         )
                 )
@@ -204,15 +204,15 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        detectWorldDataButton = addControl(
+        detectBiomeDataButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc2, CraftPresence.GUIS.getButtonY(6, -30),
-                        "gui.config.name.general.detect_world_data",
-                        CONFIG.detectWorldData,
+                        "gui.config.name.general.detect_biome_data",
+                        CONFIG.detectBiomeData,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
                                 ), this, true
                         )
                 )
@@ -230,9 +230,22 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        resetTimeOnInitButton = addControl(
+        detectWorldDataButton = addControl(
                 new CheckBoxControl(
                         checkboxCalc2, CraftPresence.GUIS.getButtonY(7, -40),
+                        "gui.config.name.general.detect_world_data",
+                        CONFIG.detectWorldData,
+                        null,
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
+                                ), this, true
+                        )
+                )
+        );
+        resetTimeOnInitButton = addControl(
+                new CheckBoxControl(
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(8, -50),
                         "gui.config.name.general.reset_time_on_init",
                         CONFIG.resetTimeOnInit,
                         null,
@@ -276,6 +289,10 @@ public class GeneralSettingsGui extends ExtendedScreen {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.preferredClientLevel = currentPreferredClient;
+                            }
+                            if (detectATLauncherButton.isChecked() != CONFIG.detectATLauncherInstance) {
+                                CraftPresence.CONFIG.hasChanged = true;
+                                CONFIG.detectATLauncherInstance = detectATLauncherButton.isChecked();
                             }
                             if (detectCurseManifestButton.isChecked() != CONFIG.detectCurseManifest) {
                                 CraftPresence.CONFIG.hasChanged = true;

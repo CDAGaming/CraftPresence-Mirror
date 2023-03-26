@@ -35,6 +35,7 @@ import java.io.Serializable;
 public class General extends Module implements Serializable {
     private static final long serialVersionUID = 1796294737844339558L;
     private static General DEFAULT;
+    public boolean detectATLauncherInstance = true;
     public boolean detectCurseManifest = true;
     public boolean detectMultiMCManifest = true;
     public boolean detectMCUpdaterInstance = true;
