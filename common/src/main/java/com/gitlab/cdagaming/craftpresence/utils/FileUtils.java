@@ -526,13 +526,35 @@ public class FileUtils {
         }
 
         for (String path : classList) {
-            try {
-                if (loader == null) {
-                    return Class.forName(path);
-                } else {
-                    return Class.forName(path, init, loader);
+            switch (path) {
+                case "boolean":
+                    return boolean.class;
+                case "byte":
+                    return byte.class;
+                case "short":
+                    return short.class;
+                case "int":
+                    return int.class;
+                case "long":
+                    return long.class;
+                case "float":
+                    return float.class;
+                case "double":
+                    return double.class;
+                case "char":
+                    return char.class;
+                case "void":
+                    return void.class;
+                default: {
+                    try {
+                        if (loader == null) {
+                            return Class.forName(path);
+                        } else {
+                            return Class.forName(path, init, loader);
+                        }
+                    } catch (Throwable ignored) {
+                    }
                 }
-            } catch (Throwable ignored) {
             }
         }
         return null;
