@@ -185,6 +185,9 @@ public class FileUtils {
         OutputStream outputStream = null;
 
         try {
+            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+                throw new UnsupportedOperationException("Failed to setup parent directory @ " + file.getAbsolutePath());
+            }
             outputStream = Files.newOutputStream(file.toPath());
             writer = new OutputStreamWriter(outputStream, Charset.forName(encoding));
             builder.create().toJson(json, writer);
