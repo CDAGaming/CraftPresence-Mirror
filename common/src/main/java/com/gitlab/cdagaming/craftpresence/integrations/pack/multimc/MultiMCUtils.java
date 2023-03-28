@@ -97,8 +97,10 @@ public class MultiMCUtils extends Pack {
         // 2023-03-10: Utilize the System Properties `multimc.instance.title` and `multimc.instance.icon` if available
         // Ref: https://github.com/MultiMC/Launcher/commit/c1ed09e74765e7e362c644685b49b77529b748af
         try {
-            setPackName(System.getProperty("multimc.instance.title"));
-            setPackIcon(System.getProperty("multimc.instance.icon"));
+            setPackData(
+                    System.getProperty("multimc.instance.title"),
+                    System.getProperty("multimc.instance.icon")
+            );
         } catch (Exception ex) {
             if (showException(ex)) {
                 ex.printStackTrace();
@@ -119,8 +121,10 @@ public class MultiMCUtils extends Pack {
             final Properties configFile = new Properties();
             configFile.load(inputStream);
 
-            setPackName(configFile.getProperty("name"));
-            setPackIcon(configFile.getProperty("iconKey"));
+            setPackData(
+                    configFile.getProperty("name"),
+                    configFile.getProperty("iconKey")
+            );
         } catch (Exception ex) {
             if (showException(ex)) {
                 ex.printStackTrace();

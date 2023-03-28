@@ -54,7 +54,7 @@ public class TechnicUtils extends Pack {
                         .getAsString();
 
                 if (SystemUtils.USER_DIR.contains(selected)) {
-                    setPackName(selected);
+                    setPackData(selected);
                 }
             } catch (Exception ex) {
                 if (showException(ex)) {

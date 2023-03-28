@@ -115,6 +115,26 @@ public abstract class Pack {
     }
 
     /**
+     * Set the pack data for this instance
+     *
+     * @param packName the new pack name
+     * @param packIcon the new pack icon key
+     */
+    public void setPackData(final String packName, final String packIcon) {
+        setPackName(packName);
+        setPackIcon(packIcon);
+    }
+
+    /**
+     * Set the pack data for this instance
+     *
+     * @param packName the new pack name
+     */
+    public void setPackData(final String packName) {
+        setPackData(packName, packName);
+    }
+
+    /**
      * Retrieve the pack instance type name
      *
      * @return the type name of the pack, if any

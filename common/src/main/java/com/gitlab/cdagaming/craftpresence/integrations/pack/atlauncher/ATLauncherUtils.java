@@ -42,7 +42,7 @@ public class ATLauncherUtils extends Pack {
 
         if (packLocation.exists()) {
             try {
-                setPackName(
+                setPackData(
                         FileUtils.getJsonData(packLocation)
                                 .getAsJsonObject()
                                 .getAsJsonObject("launcher")

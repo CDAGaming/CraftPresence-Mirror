@@ -60,7 +60,7 @@ public class CurseUtils extends Pack {
 
         if (packLocation.exists()) {
             try {
-                setPackName(
+                setPackData(
                         FileUtils.getJsonData(packLocation)
                                 .getAsJsonObject()
                                 .getAsJsonPrimitive("name")
