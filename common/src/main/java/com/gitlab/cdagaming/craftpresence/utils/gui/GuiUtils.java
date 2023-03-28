@@ -902,8 +902,8 @@ public class GuiUtils implements Module {
     /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
-     * @param width  The width to render the background to
-     * @param height The height to render the background to
+     * @param width        The width to render the background to
+     * @param height       The height to render the background to
      * @param shouldBeDark Whether the background data should display in a darker format
      */
     public void drawBackground(final double width, final double height, final boolean shouldBeDark) {
