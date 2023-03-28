@@ -893,9 +893,32 @@ public class GuiUtils implements Module {
      *
      * @param width  The width to render the background to
      * @param height The height to render the background to
+     * @param color  The background RGB data to interpet
+     */
+    public void drawBackground(final double width, final double height, final Color color) {
+        drawBackground(0.0D, 0.0D, width, height, color);
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param width  The width to render the background to
+     * @param height The height to render the background to
+     * @param shouldBeDark Whether the background data should display in a darker format
+     */
+    public void drawBackground(final double width, final double height, final boolean shouldBeDark) {
+        final Color color = shouldBeDark ? Color.darkGray : Color.white;
+        drawBackground(width, height, color);
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param width  The width to render the background to
+     * @param height The height to render the background to
      */
     public void drawBackground(final double width, final double height) {
-        drawBackground(0.0D, 0.0D, width, height);
+        drawBackground(width, height, CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark);
     }
 
     /**
