@@ -53,7 +53,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandsGui extends ExtendedScreen {
-    private static String[] executionCommandArgs;
+    private String[] executionCommandArgs;
     public ExtendedButtonControl proceedButton;
     private ExtendedTextControl commandInput;
     private String executionString;
@@ -71,7 +71,7 @@ public class CommandsGui extends ExtendedScreen {
      *
      * @param args The Command Arguments to parse
      */
-    public static void executeCommand(String... args) {
+    public void executeCommand(String... args) {
         executionCommandArgs = args;
     }
 
