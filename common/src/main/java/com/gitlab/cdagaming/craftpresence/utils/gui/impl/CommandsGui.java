@@ -36,6 +36,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -56,6 +58,8 @@ public class CommandsGui extends ExtendedScreen {
     private String[] executionCommandArgs;
     public ExtendedButtonControl proceedButton;
     private ExtendedTextControl commandInput;
+    private ExtendedScreen childFrame;
+    private TextWidget previewArea;
     private String executionString;
     private boolean blockInteractions = false;
     private String[] commandArgs, filteredCommandArgs;
@@ -131,6 +135,17 @@ public class CommandsGui extends ExtendedScreen {
                 )
         );
 
+        childFrame = addControl(
+                new ScrollPane(
+                        0, 30,
+                        getScreenWidth(), getScreenHeight() - 35
+                )
+        );
+        previewArea = childFrame.addWidget(new TextWidget(
+                childFrame, 0, 30,
+                getScreenWidth(),
+                executionString
+        ));
         super.initializeUi();
     }
 
@@ -146,7 +161,7 @@ public class CommandsGui extends ExtendedScreen {
         if (!blockInteractions) {
             checkCommands();
         }
-        CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 10, 35, this, false);
+        previewArea.setMessage(executionString);
 
         super.preRender();
     }
@@ -477,6 +492,8 @@ public class CommandsGui extends ExtendedScreen {
                 }
             } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
                 executeCommand(filteredCommandArgs);
+                childFrame.resetMouseScroll();
+                childFrame.setMouseScroll(0);
             }
         }
         if (!blockInteractions) {

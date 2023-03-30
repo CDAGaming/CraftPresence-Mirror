@@ -31,15 +31,17 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
-
-import java.util.List;
 
 /**
  * The Update Info Gui Screen
  */
 public class UpdateInfoGui extends ExtendedScreen {
     private final ModUpdaterUtils modUpdater;
+    private ScrollPane childFrame;
+    private TextWidget infoPane;
     private ExtendedButtonControl downloadButton, checkButton;
 
     /**
@@ -93,6 +95,19 @@ public class UpdateInfoGui extends ExtendedScreen {
                 )
         );
 
+        childFrame = addControl(
+                new ScrollPane(
+                        0, 35,
+                        getScreenWidth(), getScreenHeight() - 35
+                )
+        );
+        infoPane = childFrame.addWidget(
+                new TextWidget(
+                        childFrame, 0, 35,
+                        getScreenWidth()
+                )
+        );
+
         super.initializeUi();
     }
 
@@ -105,12 +120,12 @@ public class UpdateInfoGui extends ExtendedScreen {
 
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
-        final List<String> notice = StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.changelog", modUpdater.targetVersion, modUpdater.targetChangelogData));
+        final String notice = ModUtils.TRANSLATOR.translate("gui.config.message.changelog", modUpdater.targetVersion, modUpdater.targetChangelogData);
 
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
-        CraftPresence.GUIS.drawMultiLineString(notice, 10, 45, this, false);
+        infoPane.setMessage(notice);
 
         super.preRender();
     }
