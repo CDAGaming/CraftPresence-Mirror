@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
@@ -116,18 +117,20 @@ public class MultiMCUtils extends Pack {
      */
     private boolean findWithLegacy() {
         // Utilize Legacy Property Route, if unable to use System Properties
-        final String instanceFile = new File(SystemUtils.USER_DIR).getParent() + File.separator + "instance.cfg";
-        try (InputStream inputStream = Files.newInputStream(Paths.get(instanceFile))) {
-            final Properties configFile = new Properties();
-            configFile.load(inputStream);
+        final Path instanceFile = Paths.get(new File(SystemUtils.USER_DIR).getParent() + File.separator + "instance.cfg");
+        if (Files.exists(instanceFile)) {
+            try (InputStream inputStream = Files.newInputStream(instanceFile)) {
+                final Properties configFile = new Properties();
+                configFile.load(inputStream);
 
-            setPackData(
-                    configFile.getProperty("name"),
-                    configFile.getProperty("iconKey")
-            );
-        } catch (Exception ex) {
-            if (showException(ex)) {
-                ex.printStackTrace();
+                setPackData(
+                        configFile.getProperty("name"),
+                        configFile.getProperty("iconKey")
+                );
+            } catch (Exception ex) {
+                if (showException(ex)) {
+                    ex.printStackTrace();
+                }
             }
         }
         return hasPackName() && hasPackIcon();
