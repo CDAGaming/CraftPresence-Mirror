@@ -749,16 +749,16 @@ public class ExtendedScreen extends GuiScreen {
         this.width = screenWidth;
     }
 
+    /**
+     * Retrieve (And refresh) the Content Height of all applicable widgets
+     * @return the Content Height
+     */
     public int getContentHeight() {
         contentHeight = 0;
         for (Widget widget : extendedWidgets) {
             contentHeight += widget.getHeight();
         }
         return contentHeight;
-    }
-
-    public int getMaxHeight() {
-        return getTop() + getContentHeight();
     }
 
     /**
@@ -795,10 +795,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getFontHeight() {
         return getFontRenderer().FONT_HEIGHT;
-    }
-
-    public int getViewHeight() {
-        return getBottom() - getTop();
     }
 
     /**
