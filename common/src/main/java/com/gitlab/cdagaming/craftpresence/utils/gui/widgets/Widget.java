@@ -26,23 +26,55 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 
+/**
+ * Interface for a Render-Only GUI Control
+ * <p>
+ * Use one of the available Extended Controls for interactive controls
+ *
+ * @author CDAGaming
+ */
 public interface Widget {
+    /**
+     * Renders this Control, including any extra data
+     *
+     * @param screen The Screen instance we're rendering to
+     */
     default void draw(ExtendedScreen screen) {
         // N/A
     }
 
+    /**
+     * Get the left-most coordinate for this Control
+     *
+     * @return The left-most coordinate for this Control
+     */
     default int getLeft() {
         return getX();
     }
 
+    /**
+     * Get the right-most coordinate for this Control
+     *
+     * @return The right-most coordinate for this Control
+     */
     default int getRight() {
         return getX() + getWidth();
     }
 
+    /**
+     * Get the bottom-most coordinate for this Control
+     *
+     * @return The bottom-most coordinate for this Control
+     */
     default int getBottom() {
         return getY() + getHeight();
     }
 
+    /**
+     * Get the top-most coordinate for this Control
+     *
+     * @return The top-most coordinate for this Control
+     */
     default int getTop() {
         return getY();
     }
@@ -54,6 +86,11 @@ public interface Widget {
      */
     int getX();
 
+    /**
+     * Sets the Current X Position of this Control
+     *
+     * @param posX the new X Position of this Control
+     */
     void setX(int posX);
 
     /**
@@ -63,6 +100,11 @@ public interface Widget {
      */
     int getY();
 
+    /**
+     * Sets the Current Y Position of this Control
+     *
+     * @param posY the new Y Position of this Control
+     */
     void setY(int posY);
 
     /**
@@ -72,6 +114,11 @@ public interface Widget {
      */
     int getWidth();
 
+    /**
+     * Sets the Current Width of this Control
+     *
+     * @param width the new Width of this Control
+     */
     void setWidth(int width);
 
     /**
@@ -81,5 +128,10 @@ public interface Widget {
      */
     int getHeight();
 
+    /**
+     * Sets the Current Height of this Control
+     *
+     * @param height the new Height of this Control
+     */
     void setHeight(int height);
 }
