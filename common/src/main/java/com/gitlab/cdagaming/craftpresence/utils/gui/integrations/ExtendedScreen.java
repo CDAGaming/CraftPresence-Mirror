@@ -778,7 +778,7 @@ public class ExtendedScreen extends GuiScreen {
     public int getContentHeight() {
         contentHeight = 0;
         for (Widget widget : extendedWidgets) {
-            contentHeight += widget.getHeight();
+            contentHeight += widget.getControlHeight();
         }
         return contentHeight;
     }

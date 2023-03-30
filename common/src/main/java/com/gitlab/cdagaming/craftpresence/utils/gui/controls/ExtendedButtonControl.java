@@ -205,12 +205,12 @@ public class ExtendedButtonControl extends GuiButton implements Widget {
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                CraftPresence.GUIS.drawGradientRect(zLevel, getX(), getY(), getWidth(), getHeight(), backgroundCode, backgroundCode);
+                CraftPresence.GUIS.drawGradientRect(zLevel, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
             } else {
                 final Tuple<Boolean, String, ResourceLocation> textureData = CraftPresence.GUIS.getTextureData(backgroundCode);
                 final ResourceLocation texLocation = textureData.getThird();
 
-                CraftPresence.GUIS.renderButton(getX(), getY(), getWidth(), getHeight(), hoverState, zLevel, texLocation);
+                CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
             }
 
             if (isOverScreen()) {
@@ -226,47 +226,47 @@ public class ExtendedButtonControl extends GuiButton implements Widget {
                 color = 14737632;
             }
 
-            drawCenteredString(getFontRenderer(), getDisplayMessage(), getX() + getWidth() / 2, getY() + (getHeight() - 8) / 2, color);
+            drawCenteredString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
         }
     }
 
     @Override
-    public int getWidth() {
+    public int getControlWidth() {
         return width;
     }
 
     @Override
-    public void setWidth(int width) {
+    public void setControlWidth(int width) {
         this.width = width;
     }
 
     @Override
-    public int getHeight() {
+    public int getControlHeight() {
         return height;
     }
 
     @Override
-    public void setHeight(int height) {
+    public void setControlHeight(int height) {
         this.height = height;
     }
 
     @Override
-    public int getX() {
+    public int getControlPosX() {
         return this.x;
     }
 
     @Override
-    public void setX(int posX) {
+    public void setControlPosX(int posX) {
         this.x = posX;
     }
 
     @Override
-    public int getY() {
+    public int getControlPosY() {
         return this.y;
     }
 
     @Override
-    public void setY(int posY) {
+    public void setControlPosY(int posY) {
         this.y = posY;
     }
 

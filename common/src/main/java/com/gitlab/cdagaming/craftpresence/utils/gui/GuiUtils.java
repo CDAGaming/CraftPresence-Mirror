@@ -264,7 +264,7 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseOver(final double mouseX, final double mouseY, final ExtendedButtonControl button) {
-        return button.isControlVisible() && isMouseOver(mouseX, mouseY, button.getX(), button.getY(), button.getWidth() - 1, button.getHeight() - 1);
+        return button.isControlVisible() && isMouseOver(mouseX, mouseY, button.getControlPosX(), button.getControlPosY(), button.getControlWidth() - 1, button.getControlHeight() - 1);
     }
 
     /**
@@ -275,7 +275,7 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseOver(final double mouseY, final ExtendedButtonControl button) {
-        return isMouseOver(0, mouseY, 0, button.getY(), 0, button.getHeight() - 1);
+        return isMouseOver(0, mouseY, 0, button.getControlPosY(), 0, button.getControlHeight() - 1);
     }
 
     /**
@@ -287,7 +287,7 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseOver(final double mouseX, final double mouseY, final ExtendedTextControl textControl) {
-        return isMouseOver(mouseX, mouseY, textControl.getX(), textControl.getY(), textControl.getWidth() - 1, textControl.getHeight() - 1);
+        return isMouseOver(mouseX, mouseY, textControl.getControlPosX(), textControl.getControlPosY(), textControl.getControlWidth() - 1, textControl.getControlHeight() - 1);
     }
 
     /**
@@ -298,7 +298,7 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseOver(final double mouseY, final ExtendedTextControl textControl) {
-        return isMouseOver(0, mouseY, 0, textControl.getY(), 0, textControl.getHeight() - 1);
+        return isMouseOver(0, mouseY, 0, textControl.getControlPosY(), 0, textControl.getControlHeight() - 1);
     }
 
     /**
@@ -310,7 +310,7 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseOver(final double mouseX, final double mouseY, final CheckBoxControl checkBox) {
-        return checkBox.isControlVisible() && isMouseOver(mouseX, mouseY, checkBox.getX(), checkBox.getY(), checkBox.boxWidth - 1, checkBox.getHeight() - 1);
+        return checkBox.isControlVisible() && isMouseOver(mouseX, mouseY, checkBox.getControlPosX(), checkBox.getControlPosY(), checkBox.boxWidth - 1, checkBox.getControlHeight() - 1);
     }
 
     /**
@@ -321,7 +321,7 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseOver(final double mouseY, final CheckBoxControl checkBox) {
-        return checkBox.isControlVisible() && isMouseOver(0, mouseY, 0, checkBox.getY(), 0, checkBox.getHeight() - 1);
+        return checkBox.isControlVisible() && isMouseOver(0, mouseY, 0, checkBox.getControlPosY(), 0, checkBox.getControlHeight() - 1);
     }
 
     /**

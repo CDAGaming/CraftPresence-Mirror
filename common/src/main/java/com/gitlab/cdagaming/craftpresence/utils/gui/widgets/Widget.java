@@ -49,7 +49,7 @@ public interface Widget {
      * @return The left-most coordinate for this Control
      */
     default int getLeft() {
-        return getX();
+        return getControlPosX();
     }
 
     /**
@@ -58,7 +58,7 @@ public interface Widget {
      * @return The right-most coordinate for this Control
      */
     default int getRight() {
-        return getX() + getWidth();
+        return getControlPosX() + getControlWidth();
     }
 
     /**
@@ -67,7 +67,7 @@ public interface Widget {
      * @return The bottom-most coordinate for this Control
      */
     default int getBottom() {
-        return getY() + getHeight();
+        return getControlPosY() + getControlHeight();
     }
 
     /**
@@ -76,7 +76,7 @@ public interface Widget {
      * @return The top-most coordinate for this Control
      */
     default int getTop() {
-        return getY();
+        return getControlPosY();
     }
 
     /**
@@ -84,54 +84,54 @@ public interface Widget {
      *
      * @return the Current X Position of this Control
      */
-    int getX();
+    int getControlPosX();
 
     /**
      * Sets the Current X Position of this Control
      *
      * @param posX the new X Position of this Control
      */
-    void setX(int posX);
+    void setControlPosX(int posX);
 
     /**
      * Retrieves the Current Y Position of this Control
      *
      * @return the Current Y Position of this Control
      */
-    int getY();
+    int getControlPosY();
 
     /**
      * Sets the Current Y Position of this Control
      *
      * @param posY the new Y Position of this Control
      */
-    void setY(int posY);
+    void setControlPosY(int posY);
 
     /**
      * Retrieves the Current Width of this Control
      *
      * @return The Current Width of this Control
      */
-    int getWidth();
+    int getControlWidth();
 
     /**
      * Sets the Current Width of this Control
      *
      * @param width the new Width of this Control
      */
-    void setWidth(int width);
+    void setControlWidth(int width);
 
     /**
      * Retrieves the Current Height of this Control
      *
      * @return The Current Height of this Control
      */
-    int getHeight();
+    int getControlHeight();
 
     /**
      * Sets the Current Height of this Control
      *
      * @param height the new Height of this Control
      */
-    void setHeight(int height);
+    void setControlHeight(int height);
 }

@@ -89,42 +89,42 @@ public class ExtendedTextControl extends GuiTextField implements Widget {
     }
 
     @Override
-    public int getWidth() {
+    public int getControlWidth() {
         return width;
     }
 
     @Override
-    public void setWidth(int width) {
+    public void setControlWidth(int width) {
         this.width = width;
     }
 
     @Override
-    public int getHeight() {
+    public int getControlHeight() {
         return height;
     }
 
     @Override
-    public void setHeight(int height) {
+    public void setControlHeight(int height) {
         this.height = height;
     }
 
     @Override
-    public int getX() {
+    public int getControlPosX() {
         return this.x;
     }
 
     @Override
-    public void setX(int posX) {
+    public void setControlPosX(int posX) {
         this.x = posX;
     }
 
     @Override
-    public int getY() {
+    public int getControlPosY() {
         return this.y;
     }
 
     @Override
-    public void setY(int posY) {
+    public void setControlPosY(int posY) {
         this.y = posY;
     }
 
