@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -351,6 +350,14 @@ public class ExtendedScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         // Ensures initialization events have run first, preventing an NPE
         if (isLoaded()) {
+            final int scale = CraftPresence.GUIS.computeGuiScale(mc);
+            CraftPresence.GUIS.drawWithin(
+                    getLeft() * scale,
+                    mc.displayHeight - getBottom() * scale,
+                    getScreenWidth() * scale,
+                    getScreenHeight() * scale
+            );
+
             renderCriticalData();
             preRender();
 
@@ -368,6 +375,8 @@ public class ExtendedScreen extends GuiScreen {
             }
 
             super.drawScreen(mouseX, mouseY, partialTicks);
+
+            CraftPresence.GUIS.drawAnywhere();
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
@@ -569,16 +578,13 @@ public class ExtendedScreen extends GuiScreen {
      * @param text      The text to render to the screen
      * @param xPos      The X position to render the text at
      * @param minScroll The minimum allowed scroll position, inclusive
-     * @param maxScroll The maximum allowed scroll position, non-inclusive
      * @param scrollPos The current scroll position
      * @param textColor The color to render the text in
      */
-    public void drawScrollString(final List<String> text, final int xPos, final int scrollPos, final int minScroll, final int maxScroll, final int textColor) {
+    public void drawScrollString(final List<String> text, final int xPos, final int scrollPos, final int minScroll, final int textColor) {
         int currentY = minScroll - scrollPos;
         for (String line : text) {
-            if (MathUtils.isWithinValue(currentY, minScroll, maxScroll, true, false)) {
-                renderString(line, xPos, currentY, textColor);
-            }
+            renderString(line, xPos, currentY, textColor);
             currentY += getFontHeight() + 1;
         }
     }
@@ -589,15 +595,14 @@ public class ExtendedScreen extends GuiScreen {
      * @param text      The text to render to the screen
      * @param xPos      The X position to render the text at
      * @param minScroll The minimum allowed scroll position, inclusive
-     * @param maxScroll The maximum allowed scroll position, non-inclusive
      * @param scrollPos The current scroll position
      * @param wrapWidth The width to wrap the text to
      * @param textColor The color to render the text in
      */
-    public void drawScrollString(final String text, final int xPos, final int minScroll, final int maxScroll, final int scrollPos, final int wrapWidth, final int textColor) {
+    public void drawScrollString(final String text, final int xPos, final int minScroll, final int scrollPos, final int wrapWidth, final int textColor) {
         drawScrollString(
                 createRenderLines(text, wrapWidth),
-                xPos, scrollPos, minScroll, maxScroll, textColor
+                xPos, scrollPos, minScroll, textColor
         );
     }
 

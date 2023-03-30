@@ -791,6 +791,59 @@ public class GuiUtils implements Module {
     }
 
     /**
+     * <p>Computes the current GUI scale. Calling this method is equivalent to the following:<pre><code>
+     * Minecraft mc = Minecraft.getMinecraft();
+     * int scale = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();</code></pre></p>
+     *
+     * @param mc The Minecraft Instance
+     * @return the current GUI scale
+     */
+    public int computeGuiScale(final Minecraft mc) {
+        int scaleFactor = 1;
+
+        int k = mc.gameSettings.guiScale;
+        if (k == 0) {
+            k = 1000;
+        }
+
+        while (scaleFactor < k && mc.displayWidth / (scaleFactor + 1) >= 320 && mc.displayHeight / (scaleFactor + 1) >= 240) {
+            ++scaleFactor;
+        }
+        return scaleFactor;
+    }
+
+    /**
+     * <p>Computes the current GUI scale. Calling this method is equivalent to the following:<pre><code>
+     * Minecraft mc = Minecraft.getMinecraft();
+     * int scale = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();</code></pre></p>
+     *
+     * @return the current GUI scale
+     */
+    public int computeGuiScale() {
+        return computeGuiScale(CraftPresence.instance);
+    }
+
+    /**
+     * Define viewable rendering boundaries, utilizing glScissor
+     *
+     * @param xPos   The Starting X Position of the Object
+     * @param yPos   The Starting Y Position of the Object
+     * @param width  The width to render the data to
+     * @param height The height to render the data to
+     */
+    public void drawWithin(final int xPos, final int yPos, final int width, final int height) {
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor(xPos, yPos, width, height);
+    }
+
+    /**
+     * Disables current rendering boundary flags, mainly glScissor
+     */
+    public void drawAnywhere() {
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
      * @param xPos           The Starting X Position of the Object
