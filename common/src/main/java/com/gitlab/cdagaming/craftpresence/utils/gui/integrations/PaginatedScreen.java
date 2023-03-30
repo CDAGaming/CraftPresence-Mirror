@@ -116,7 +116,7 @@ public class PaginatedScreen extends ExtendedScreen {
         );
         previousPageButton = addControl(
                 new ExtendedButtonControl(
-                        backButton.getControlPosX() - 23, (getScreenHeight() - 30),
+                        backButton.getX() - 23, (getScreenHeight() - 30),
                         20, 20,
                         "<",
                         () -> {
@@ -131,7 +131,7 @@ public class PaginatedScreen extends ExtendedScreen {
         );
         nextPageButton = addControl(
                 new ExtendedButtonControl(
-                        (backButton.getControlPosX() + backButton.getControlWidth()) + 3, (getScreenHeight() - 30),
+                        (backButton.getX() + backButton.getWidth()) + 3, (getScreenHeight() - 30),
                         20, 20,
                         ">",
                         () -> {

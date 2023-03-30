@@ -218,7 +218,7 @@ public class SliderControl extends ExtendedButtonControl {
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (visible) {
             if (dragging) {
-                sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
+                sliderValue = (float) (mouseX - (getX() + 4)) / (float) (getWidth() - 8);
                 sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
                 denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);
 
@@ -227,7 +227,7 @@ public class SliderControl extends ExtendedButtonControl {
 
             onSlide();
             final int hoverValue = (hovered ? 2 : 1) * 20;
-            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, zLevel, BUTTON_TEXTURES);
+            CraftPresence.GUIS.renderSlider(getX() + (int) (sliderValue * (float) (getWidth() - 8)), getY(), 0, 46 + hoverValue, 4, 20, zLevel, BUTTON_TEXTURES);
         }
     }
 
@@ -238,7 +238,7 @@ public class SliderControl extends ExtendedButtonControl {
     @Override
     public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
-            sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
+            sliderValue = (float) (mouseX - (getX() + 4)) / (float) (getWidth() - 8);
             sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
             denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);
 

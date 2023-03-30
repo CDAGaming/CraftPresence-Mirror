@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.Widget;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -34,7 +35,7 @@ import net.minecraft.client.gui.GuiTextField;
  *
  * @author CDAGaming
  */
-public class ExtendedTextControl extends GuiTextField {
+public class ExtendedTextControl extends GuiTextField implements Widget {
     /**
      * The default character limit for all controls of this type
      */
@@ -87,40 +88,44 @@ public class ExtendedTextControl extends GuiTextField {
         setOnKeyTyped(keyEvent);
     }
 
-    /**
-     * Retrieves the Current Width of this Control
-     *
-     * @return The Current Width of this Control
-     */
-    public int getControlWidth() {
+    @Override
+    public int getWidth() {
         return width;
     }
 
-    /**
-     * Retrieves the Current Height of this Control
-     *
-     * @return The Current Height of this Control
-     */
-    public int getControlHeight() {
+    @Override
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    @Override
+    public int getHeight() {
         return height;
     }
 
-    /**
-     * Retrieves the Current X Position of this Control
-     *
-     * @return the Current X Position of this Control
-     */
-    public int getControlPosX() {
-        return x;
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    /**
-     * Retrieves the Current Y Position of this Control
-     *
-     * @return the Current Y Position of this Control
-     */
-    public int getControlPosY() {
-        return y;
+    @Override
+    public int getX() {
+        return this.x;
+    }
+
+    @Override
+    public void setX(int posX) {
+        this.x = posX;
+    }
+
+    @Override
+    public int getY() {
+        return this.y;
+    }
+
+    @Override
+    public void setY(int posY) {
+        this.y = posY;
     }
 
     /**

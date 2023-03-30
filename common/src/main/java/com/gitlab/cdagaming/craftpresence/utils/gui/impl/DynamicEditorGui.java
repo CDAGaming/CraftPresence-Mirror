@@ -219,9 +219,9 @@ public class DynamicEditorGui extends ExtendedScreen {
     @Override
     public void preRender() {
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
-        renderString(primaryText, (getScreenWidth() / 2f) - 130, primaryInput.getControlPosY() + 5, 0xFFFFFF);
+        renderString(primaryText, (getScreenWidth() / 2f) - 130, primaryInput.getY() + 5, 0xFFFFFF);
         if (willRenderSecondaryInput) {
-            renderString(secondaryText, (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
+            renderString(secondaryText, (getScreenWidth() / 2f) - 130, secondaryInput.getY() + 5, 0xFFFFFF);
         }
 
         proceedButton.setControlMessage(
@@ -234,8 +234,8 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void postRender() {
-        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, primaryInput.getControlPosY() + 5, getStringWidth(primaryText), getFontHeight());
-        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, getStringWidth(secondaryText), getFontHeight());
+        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, primaryInput.getY() + 5, getStringWidth(primaryText), getFontHeight());
+        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, secondaryInput.getY() + 5, getStringWidth(secondaryText), getFontHeight());
         // Hovering over Message Label
         if (isHoveringOverPrimary && onHoverPrimaryCallback != null) {
             onHoverPrimaryCallback.accept(attributeName, this);

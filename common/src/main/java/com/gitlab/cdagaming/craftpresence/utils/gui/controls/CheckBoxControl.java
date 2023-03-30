@@ -143,14 +143,14 @@ public class CheckBoxControl extends ExtendedButtonControl {
         setCurrentFontRender(mc.fontRenderer);
         if (visible) {
             hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, BUTTON_TEXTURES);
+            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getX(), getY()), new Pair<>(0, 46), new Pair<>(boxWidth, getHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, BUTTON_TEXTURES);
             mouseDragged(mc, mouseX, mouseY);
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (is_Checked)
-                drawCenteredString(getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
+                drawCenteredString(getFontRenderer(), "x", getX() + boxWidth / 2 + 1, getY() + 1, 14737632);
 
-            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
+            drawString(getFontRenderer(), getDisplayMessage(), getX() + boxWidth + 2, getY() + 2, color);
         }
     }
 

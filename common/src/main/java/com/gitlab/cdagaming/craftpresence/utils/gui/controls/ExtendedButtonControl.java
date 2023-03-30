@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -43,7 +44,7 @@ import javax.annotation.Nonnull;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class ExtendedButtonControl extends GuiButton {
+public class ExtendedButtonControl extends GuiButton implements Widget {
     /**
      * Optional Arguments used for functions within the Mod, if any
      */
@@ -194,12 +195,12 @@ public class ExtendedButtonControl extends GuiButton {
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                CraftPresence.GUIS.drawGradientRect(zLevel, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
+                CraftPresence.GUIS.drawGradientRect(zLevel, getX(), getY(), getWidth(), getHeight(), backgroundCode, backgroundCode);
             } else {
                 final Tuple<Boolean, String, ResourceLocation> textureData = CraftPresence.GUIS.getTextureData(backgroundCode);
                 final ResourceLocation texLocation = textureData.getThird();
 
-                CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
+                CraftPresence.GUIS.renderButton(getX(), getY(), getWidth(), getHeight(), hoverState, zLevel, texLocation);
             }
 
             mouseDragged(mc, mouseX, mouseY);
@@ -213,44 +214,48 @@ public class ExtendedButtonControl extends GuiButton {
                 color = 14737632;
             }
 
-            drawCenteredString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
+            drawCenteredString(getFontRenderer(), getDisplayMessage(), getX() + getWidth() / 2, getY() + (getHeight() - 8) / 2, color);
         }
     }
 
-    /**
-     * Retrieves the Current Width of this Control
-     *
-     * @return The Current Width of this Control
-     */
-    public int getControlWidth() {
+    @Override
+    public int getWidth() {
         return width;
     }
 
-    /**
-     * Retrieves the Current Height of this Control
-     *
-     * @return The Current Height of this Control
-     */
-    public int getControlHeight() {
+    @Override
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    @Override
+    public int getHeight() {
         return height;
     }
 
-    /**
-     * Retrieves the Current X Position of this Control
-     *
-     * @return the Current X Position of this Control
-     */
-    public int getControlPosX() {
-        return x;
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    /**
-     * Retrieves the Current Y Position of this Control
-     *
-     * @return the Current Y Position of this Control
-     */
-    public int getControlPosY() {
-        return y;
+    @Override
+    public int getX() {
+        return this.x;
+    }
+
+    @Override
+    public void setX(int posX) {
+        this.x = posX;
+    }
+
+    @Override
+    public int getY() {
+        return this.y;
+    }
+
+    @Override
+    public void setY(int posY) {
+        this.y = posY;
     }
 
     /**
