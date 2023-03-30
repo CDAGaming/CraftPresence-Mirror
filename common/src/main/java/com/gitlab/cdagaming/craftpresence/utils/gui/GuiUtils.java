@@ -348,6 +348,16 @@ public class GuiUtils implements Module {
     }
 
     /**
+     * Determines if the Mouse is over an element, following the defined Arguments
+     *
+     * @param screen The Object to check bounds and position
+     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
+     */
+    public boolean isMouseOver(final ExtendedScreen screen) {
+        return isMouseOver(screen.getMouseX(), screen.getMouseY(), screen);
+    }
+
+    /**
      * Retrieves the Next Available Button ID for use in the currently open Screen
      *
      * @return The next available Button ID

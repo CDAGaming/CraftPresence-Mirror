@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -61,6 +62,10 @@ public class ExtendedButtonControl extends GuiButton implements Widget {
      * The current running Font Render Instance for this control
      */
     private FontRenderer currentFontRender = null;
+    /**
+     * Whether the mouse is currently within screen bounds
+     */
+    private boolean isOverScreen = false;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -186,10 +191,15 @@ public class ExtendedButtonControl extends GuiButton implements Widget {
     }
 
     @Override
+    public void draw(ExtendedScreen screen) {
+        isOverScreen = CraftPresence.GUIS.isMouseOver(screen);
+    }
+
+    @Override
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         setCurrentFontRender(mc.fontRenderer);
         if (visible) {
-            hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
+            hovered = isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
             final int hoverState = getHoverState(hovered);
 
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
@@ -203,7 +213,9 @@ public class ExtendedButtonControl extends GuiButton implements Widget {
                 CraftPresence.GUIS.renderButton(getX(), getY(), getWidth(), getHeight(), hoverState, zLevel, texLocation);
             }
 
-            mouseDragged(mc, mouseX, mouseY);
+            if (isOverScreen()) {
+                mouseDragged(mc, mouseX, mouseY);
+            }
             final int color;
 
             if (!enabled) {
@@ -256,6 +268,14 @@ public class ExtendedButtonControl extends GuiButton implements Widget {
     @Override
     public void setY(int posY) {
         this.y = posY;
+    }
+
+    /**
+     * Get whether the mouse is currently within screen bounds
+     * @return {@link Boolean#TRUE} is condition is satisfied
+     */
+    public boolean isOverScreen() {
+        return isOverScreen;
     }
 
     /**

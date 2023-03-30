@@ -142,9 +142,11 @@ public class CheckBoxControl extends ExtendedButtonControl {
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partial) {
         setCurrentFontRender(mc.fontRenderer);
         if (visible) {
-            hovered = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
+            hovered = isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
             CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getX(), getY()), new Pair<>(0, 46), new Pair<>(boxWidth, getHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, BUTTON_TEXTURES);
-            mouseDragged(mc, mouseX, mouseY);
+            if (isOverScreen()) {
+                mouseDragged(mc, mouseX, mouseY);
+            }
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (is_Checked)

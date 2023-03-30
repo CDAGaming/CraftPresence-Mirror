@@ -111,6 +111,10 @@ public class ExtendedScreen extends GuiScreen {
      * Whether this Screen can be closed by normal means, true by default
      */
     private boolean canClose;
+    /**
+     * Whether the mouse is currently within screen bounds
+     */
+    private boolean isOverScreen;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -327,7 +331,9 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering title data and preliminary elements
      */
     public void preRender() {
-        // N/A
+        for (Widget widget : extendedWidgets) {
+            widget.draw(this);
+        }
     }
 
     /**
@@ -380,11 +386,12 @@ public class ExtendedScreen extends GuiScreen {
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
+            isOverScreen = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
 
             for (Gui extendedControl : extendedControls) {
                 if (extendedControl instanceof ExtendedButtonControl) {
                     final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                    if (CraftPresence.GUIS.isMouseOver(mouseX, mouseY, extendedButton)) {
+                    if (isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, extendedButton)) {
                         extendedButton.onHover();
                     }
                 }
@@ -423,10 +430,12 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     protected void actionPerformed(@Nonnull GuiButton button) {
-        if (button instanceof ExtendedButtonControl) {
-            ((ExtendedButtonControl) button).onClick();
+        if (isOverScreen()) {
+            if (button instanceof ExtendedButtonControl) {
+                ((ExtendedButtonControl) button).onClick();
+            }
+            super.actionPerformed(button);
         }
-        super.actionPerformed(button);
     }
 
     /**
@@ -699,6 +708,14 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void setScreenY(int screenY) {
         this.screenY = screenY;
+    }
+
+    /**
+     * Get whether the mouse is currently within screen bounds
+     * @return {@link Boolean#TRUE} is condition is satisfied
+     */
+    public boolean isOverScreen() {
+        return isOverScreen;
     }
 
     /**
