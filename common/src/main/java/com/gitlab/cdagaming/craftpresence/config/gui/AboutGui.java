@@ -94,5 +94,7 @@ public class AboutGui extends ExtendedScreen {
 
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
         renderNotice(notice);
+
+        super.preRender();
     }
 }

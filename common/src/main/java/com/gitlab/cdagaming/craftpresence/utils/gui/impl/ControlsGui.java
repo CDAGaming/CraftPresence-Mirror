@@ -124,6 +124,8 @@ public class ControlsGui extends PaginatedScreen {
                 }
             }
         }
+
+        super.postRender();
     }
 
     @Override

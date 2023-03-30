@@ -111,6 +111,8 @@ public class UpdateInfoGui extends ExtendedScreen {
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
 
         CraftPresence.GUIS.drawMultiLineString(notice, 10, 45, this, false);
+
+        super.preRender();
     }
 
     @Override
@@ -134,5 +136,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 }

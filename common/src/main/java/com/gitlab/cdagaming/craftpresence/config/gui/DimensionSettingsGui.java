@@ -254,6 +254,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
+
+        super.preRender();
     }
 
     @Override
@@ -268,5 +270,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 }

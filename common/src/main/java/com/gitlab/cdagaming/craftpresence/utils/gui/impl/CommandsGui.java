@@ -147,6 +147,8 @@ public class CommandsGui extends ExtendedScreen {
             checkCommands();
         }
         CraftPresence.GUIS.drawMultiLineString(StringUtils.splitTextByNewLine(executionString), 10, 35, this, false);
+
+        super.preRender();
     }
 
     /**

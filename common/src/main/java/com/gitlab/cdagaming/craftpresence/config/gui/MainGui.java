@@ -310,6 +310,8 @@ public class MainGui extends ExtendedScreen {
         }
 
         syncRenderStates();
+
+        super.preRender();
     }
 
     @Override
@@ -324,6 +326,8 @@ public class MainGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 
     @Override

@@ -366,6 +366,8 @@ public class GeneralSettingsGui extends ExtendedScreen {
         partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
         preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
         proceedButton.setControlEnabled(DiscordAssetUtils.isValidId(clientId.getControlMessage()));
+
+        super.preRender();
     }
 
     @Override
@@ -379,5 +381,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 }

@@ -71,5 +71,7 @@ public class MessageGui extends ExtendedScreen {
 
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
         renderNotice(messageData);
+
+        super.preRender();
     }
 }

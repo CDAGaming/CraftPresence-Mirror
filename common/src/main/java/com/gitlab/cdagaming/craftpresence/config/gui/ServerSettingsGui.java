@@ -281,6 +281,8 @@ public class ServerSettingsGui extends ExtendedScreen {
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultName.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultMOTD.getControlMessage()));
         serverMessagesButton.setControlEnabled(CraftPresence.SERVER.enabled);
+
+        super.preRender();
     }
 
     @Override
@@ -313,5 +315,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 }

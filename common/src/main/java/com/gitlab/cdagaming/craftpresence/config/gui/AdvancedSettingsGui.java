@@ -706,6 +706,8 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         itemMessagesButton.setControlEnabled(CraftPresence.TILE_ENTITIES.enabled);
         entityTargetMessagesButton.setControlEnabled(CraftPresence.ENTITIES.enabled);
         entityRidingMessagesButton.setControlEnabled(CraftPresence.ENTITIES.enabled);
+
+        super.preRender();
     }
 
     @Override
@@ -720,5 +722,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 }

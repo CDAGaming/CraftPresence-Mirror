@@ -298,8 +298,9 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
 
         //noinspection ConstantConditions
         stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
-
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
+
+        super.preRender();
     }
 
     @Override
@@ -314,6 +315,8 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 
     @Override

@@ -220,6 +220,8 @@ public class PaginatedScreen extends ExtendedScreen {
 
         previousPageButton.setControlEnabled(currentPage > startPage);
         nextPageButton.setControlEnabled(currentPage < maxPages);
+
+        super.preRender();
     }
 
     @Override

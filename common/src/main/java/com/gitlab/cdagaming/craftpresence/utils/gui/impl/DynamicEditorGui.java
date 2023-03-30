@@ -230,6 +230,8 @@ public class DynamicEditorGui extends ExtendedScreen {
         );
 
         proceedButton.setControlEnabled(isValidEntries());
+
+        super.preRender();
     }
 
     @Override
@@ -245,6 +247,8 @@ public class DynamicEditorGui extends ExtendedScreen {
         if (isHoveringOverSecondary && onHoverSecondaryCallback != null) {
             onHoverSecondaryCallback.accept(attributeName, this);
         }
+
+        super.postRender();
     }
 
     /**

@@ -253,6 +253,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.enabled);
+
+        super.preRender();
     }
 
     @Override
@@ -267,5 +269,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                     ), this, true
             );
         }
+
+        super.postRender();
     }
 }

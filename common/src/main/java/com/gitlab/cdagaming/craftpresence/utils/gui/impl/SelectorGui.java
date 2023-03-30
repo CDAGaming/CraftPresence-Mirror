@@ -282,6 +282,8 @@ public class SelectorGui extends ExtendedScreen {
                         ((originalValue != null && !scrollList.currentValue.equals(originalValue)) || (StringUtils.isNullOrEmpty(originalValue))) ?
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
+
+        super.preRender();
     }
 
     @Override
@@ -296,5 +298,7 @@ public class SelectorGui extends ExtendedScreen {
         if (scrollList.currentHoverText != null && !scrollList.currentHoverText.isEmpty()) {
             CraftPresence.GUIS.drawMultiLineString(scrollList.currentHoverText, this, true);
         }
+
+        super.postRender();
     }
 }

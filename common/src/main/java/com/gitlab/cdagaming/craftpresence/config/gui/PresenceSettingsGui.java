@@ -559,5 +559,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 }
             }
         }
+
+        super.postRender();
     }
 }
