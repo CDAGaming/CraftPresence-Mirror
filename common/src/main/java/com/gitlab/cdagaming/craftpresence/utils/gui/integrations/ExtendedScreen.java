@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -61,6 +62,10 @@ public class ExtendedScreen extends GuiScreen {
      * Similar to buttonList, a list of compatible controls in this Screen
      */
     protected final List<Gui> extendedControls = StringUtils.newArrayList();
+    /**
+     * Similar to buttonList, a list of compatible widgets in this Screen
+     */
+    protected final List<Widget> extendedWidgets = StringUtils.newArrayList();
     /**
      * Similar to buttonList, a list of compatible ScrollLists in this Screen
      */
@@ -100,6 +105,10 @@ public class ExtendedScreen extends GuiScreen {
      */
     private int lastMouseScroll = 0;
     /**
+     * The Content Height of all applicable widgets
+     */
+    private int contentHeight;
+    /**
      * Whether this Screen can be closed by normal means, true by default
      */
     private boolean canClose;
@@ -113,6 +122,7 @@ public class ExtendedScreen extends GuiScreen {
         mc = CraftPresence.instance;
         currentScreen = this;
         this.parentScreen = parentScreen;
+        this.contentHeight = 0;
         this.canClose = true;
         setDebugMode(CommandUtils.isDebugMode());
         setVerboseMode(CommandUtils.isVerboseMode());
@@ -179,14 +189,24 @@ public class ExtendedScreen extends GuiScreen {
     public void initGui() {
         // Clear Data before Initialization
         super.initGui();
-        buttonList.clear();
-        extendedControls.clear();
-        extendedLists.clear();
+        clearData();
         Keyboard.enableRepeatEvents(true);
 
         currentPhase = Phase.INIT;
         initializeUi();
         currentPhase = Phase.READY;
+    }
+
+    public void clearData() {
+        if (currentPhase != Phase.PREINIT) {
+            currentPhase = Phase.PREINIT;
+            contentHeight = 0;
+
+            buttonList.clear();
+            extendedControls.clear();
+            extendedWidgets.clear();
+            extendedLists.clear();
+        }
     }
 
     /**
@@ -217,7 +237,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
-        currentPhase = Phase.PREINIT;
         for (Gui extendedControl : extendedControls) {
             if (extendedControl instanceof ExtendedScreen) {
                 ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
@@ -247,14 +266,16 @@ public class ExtendedScreen extends GuiScreen {
      * @return The added control with attached class type
      */
     @Nonnull
-    protected <T extends Gui> T addControl(@Nonnull T buttonIn) {
+    public <T extends Gui> T addControl(@Nonnull T buttonIn) {
         if (buttonIn instanceof GuiButton && !buttonList.contains(buttonIn)) {
             buttonList.add((GuiButton) buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
         }
-
+        if (buttonIn instanceof Widget && !extendedWidgets.contains(buttonIn)) {
+            addWidget((Widget) buttonIn);
+        }
         return buttonIn;
     }
 
@@ -266,11 +287,26 @@ public class ExtendedScreen extends GuiScreen {
      * @return The added scroll list with attached class type
      */
     @Nonnull
-    protected <T extends ScrollableListControl> T addList(@Nonnull T buttonIn) {
+    public <T extends ScrollableListControl> T addList(@Nonnull T buttonIn) {
         if (!extendedLists.contains(buttonIn)) {
             extendedLists.add(buttonIn);
         }
+        return buttonIn;
+    }
 
+    /**
+     * Adds a Compatible Control to this Screen with specified type
+     *
+     * @param buttonIn The Control to add to this Screen
+     * @param <T>      The Control's Class Type
+     * @return The added control with attached class type
+     */
+    @Nonnull
+    public <T extends Widget> T addWidget(@Nonnull T buttonIn) {
+        if (!extendedWidgets.contains(buttonIn)) {
+            extendedWidgets.add(buttonIn);
+            getContentHeight();
+        }
         return buttonIn;
     }
 
@@ -329,9 +365,6 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.drawTextBox();
                 }
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
-                }
             }
 
             super.drawScreen(mouseX, mouseY, partialTicks);
@@ -345,6 +378,9 @@ public class ExtendedScreen extends GuiScreen {
                     if (CraftPresence.GUIS.isMouseOver(mouseX, mouseY, extendedButton)) {
                         extendedButton.onHover();
                     }
+                }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -456,7 +492,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void onGuiClosed() {
-        currentPhase = Phase.PREINIT;
+        clearData();
         CraftPresence.GUIS.resetIndex();
         Keyboard.enableRepeatEvents(false);
 
@@ -687,6 +723,15 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Get the Maximum Viewable Screen Width
+     *
+     * @return the maximum view width of the screen
+     */
+    public int getMaxWidth() {
+        return getScreenWidth();
+    }
+
+    /**
      * Get the Current Screen Width
      *
      * @return the width of the screen
@@ -702,6 +747,18 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void setScreenWidth(final int screenWidth) {
         this.width = screenWidth;
+    }
+
+    public int getContentHeight() {
+        contentHeight = 0;
+        for (Widget widget : extendedWidgets) {
+            contentHeight += widget.getHeight();
+        }
+        return contentHeight;
+    }
+
+    public int getMaxHeight() {
+        return getTop() + getContentHeight();
     }
 
     /**
@@ -738,6 +795,10 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getFontHeight() {
         return getFontRenderer().FONT_HEIGHT;
+    }
+
+    public int getViewHeight() {
+        return getBottom() - getTop();
     }
 
     /**
