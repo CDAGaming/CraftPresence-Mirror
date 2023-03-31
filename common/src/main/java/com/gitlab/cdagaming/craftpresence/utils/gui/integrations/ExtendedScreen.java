@@ -410,6 +410,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void handleMouseInput() {
         if (isLoaded()) {
+            setMouseScroll(Mouse.getEventDWheel());
             for (ScrollableListControl listControl : extendedLists) {
                 listControl.handleMouseInput();
             }
@@ -419,7 +420,6 @@ public class ExtendedScreen extends GuiScreen {
                 }
             }
             super.handleMouseInput();
-            lastMouseScroll = Mouse.getEventDWheel();
         }
     }
 

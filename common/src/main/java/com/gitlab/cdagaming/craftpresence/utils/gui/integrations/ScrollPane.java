@@ -132,18 +132,17 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void handleMouseInput() {
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), this)) {
+        if (isOverScreen()) {
             super.handleMouseInput();
 
-            // DEBUG START
             final int mouseX = getMouseX();
             final int mouseY = getMouseY();
             final int screenHeight = getScreenHeight();
-            if (Mouse.isButtonDown(0) /*&& getEnabled()*/) {
+            if (Mouse.isButtonDown(0)) {
                 if (initialClickY == -1) {
                     if (CraftPresence.GUIS.isMouseOver(getMouseY(), this)) {
-                        int scrollBarX = getScrollBarX();
-                        int scrollBarRight = scrollBarX + getScrollBarWidth();
+                        final int scrollBarX = getScrollBarX();
+                        final int scrollBarRight = scrollBarX + getScrollBarWidth();
                         if (mouseX >= scrollBarX && mouseX <= scrollBarRight) {
                             scrollMultiplier = -1;
                             int maxScroll = getMaxScroll();
@@ -153,7 +152,7 @@ public class ScrollPane extends ExtendedScreen {
 
                             int height = screenHeight * screenHeight / getContentHeight();
                             height = MathUtils.clamp(height, 32, screenHeight - (padding * 2));
-                            this.scrollMultiplier /= (float) (screenHeight - height) / (float) maxScroll;
+                            scrollMultiplier /= (float) (screenHeight - height) / (float) maxScroll;
                         } else {
                             scrollMultiplier = 1;
                         }
