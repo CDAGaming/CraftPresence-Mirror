@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.Widget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -64,7 +64,7 @@ public class ExtendedScreen extends GuiScreen {
     /**
      * Similar to buttonList, a list of compatible widgets in this Screen
      */
-    protected final List<Widget> extendedWidgets = StringUtils.newArrayList();
+    protected final List<DynamicWidget> extendedWidgets = StringUtils.newArrayList();
     /**
      * Similar to buttonList, a list of compatible ScrollLists in this Screen
      */
@@ -276,8 +276,8 @@ public class ExtendedScreen extends GuiScreen {
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
         }
-        if (buttonIn instanceof Widget && !extendedWidgets.contains(buttonIn)) {
-            addWidget((Widget) buttonIn);
+        if (buttonIn instanceof DynamicWidget && !extendedWidgets.contains(buttonIn)) {
+            addWidget((DynamicWidget) buttonIn);
         }
         return buttonIn;
     }
@@ -305,7 +305,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The added control with attached class type
      */
     @Nonnull
-    public <T extends Widget> T addWidget(@Nonnull T buttonIn) {
+    public <T extends DynamicWidget> T addWidget(@Nonnull T buttonIn) {
         if (!extendedWidgets.contains(buttonIn)) {
             extendedWidgets.add(buttonIn);
             getContentHeight();
@@ -331,7 +331,7 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering title data and preliminary elements
      */
     public void preRender() {
-        for (Widget widget : extendedWidgets) {
+        for (DynamicWidget widget : extendedWidgets) {
             widget.draw(this);
         }
     }
@@ -776,7 +776,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getContentHeight() {
         contentHeight = 0;
-        for (Widget widget : extendedWidgets) {
+        for (DynamicWidget widget : extendedWidgets) {
             contentHeight += widget.getControlHeight();
         }
         return contentHeight;

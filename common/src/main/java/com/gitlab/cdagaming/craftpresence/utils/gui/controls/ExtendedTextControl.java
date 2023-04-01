@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.Widget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -35,7 +35,7 @@ import net.minecraft.client.gui.GuiTextField;
  *
  * @author CDAGaming
  */
-public class ExtendedTextControl extends GuiTextField implements Widget {
+public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     /**
      * The default character limit for all controls of this type
      */

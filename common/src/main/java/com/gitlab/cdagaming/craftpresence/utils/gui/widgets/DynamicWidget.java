@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
  *
  * @author CDAGaming
  */
-public interface Widget {
+public interface DynamicWidget {
     /**
      * Renders this Control, including any extra data
      *

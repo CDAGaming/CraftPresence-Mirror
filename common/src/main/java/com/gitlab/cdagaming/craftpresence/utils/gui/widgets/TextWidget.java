@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import java.util.List;
 import java.util.Objects;
 
-public class TextWidget implements Widget {
+public class TextWidget implements DynamicWidget {
     private ExtendedScreen parent;
     private int startX;
     private int startY;

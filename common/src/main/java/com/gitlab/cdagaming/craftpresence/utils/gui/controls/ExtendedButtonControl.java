@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.Widget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -45,7 +45,7 @@ import javax.annotation.Nonnull;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class ExtendedButtonControl extends GuiButton implements Widget {
+public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     /**
      * Optional Arguments used for functions within the Mod, if any
      */
