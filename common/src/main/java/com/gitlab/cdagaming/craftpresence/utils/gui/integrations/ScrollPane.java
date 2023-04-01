@@ -40,7 +40,7 @@ public class ScrollPane extends ExtendedScreen {
     private static final int DEFAULT_PADDING = 4;
     private int padding;
     private float amountScrolled;
-    private int scrollMultiplier;
+
     public ScrollPane(int startX, int startY, int width, int height, int padding) {
         super();
         setScreenX(startX);
@@ -61,6 +61,12 @@ public class ScrollPane extends ExtendedScreen {
 
     public ScrollPane(int width, int height) {
         this(width, height, DEFAULT_PADDING);
+    }
+
+    @Override
+    public void resetMouseScroll() {
+        super.resetMouseScroll();
+        setScroll(getMouseScroll());
     }
 
     @Override
@@ -181,7 +187,6 @@ public class ScrollPane extends ExtendedScreen {
             scrollBy(deltaY / (float) (getScreenHeight() - height) * getMaxScroll());
         }
     }
-
 
     public void mouseScrolled(int mouseX, int mouseY, int wheelY) {
         scrollBy(-wheelY * getHeightPerScroll());

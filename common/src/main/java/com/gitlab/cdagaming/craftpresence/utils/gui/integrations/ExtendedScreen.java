@@ -741,7 +741,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void resetMouseScroll() {
         setMouseScroll(0);
-        handleMouseInput();
     }
 
     /**
