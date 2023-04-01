@@ -141,10 +141,9 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void handleMouseInput() {
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), this)) {
+        if (isOverScreen()) {
             super.handleMouseInput();
 
-            // DEBUG START
             final int mouseX = getMouseX();
             final int mouseY = getMouseY();
 
@@ -181,7 +180,7 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     public void mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
-        if (button == 0 /* && getEnabled() */) {
+        if (button == 0) {
             int height = getScreenHeight() * getScreenHeight() / getContentHeight();
             height = MathUtils.clamp(height, 32, getScreenHeight() - (padding * 2));
             scrollBy(deltaY / (float) (getScreenHeight() - height) * getMaxScroll());
