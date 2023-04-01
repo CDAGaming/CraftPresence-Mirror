@@ -39,10 +39,8 @@ public class ScrollPane extends ExtendedScreen {
     private static final Color NONE = StringUtils.getColorFrom(0, 0, 0, 0);
     private static final int DEFAULT_PADDING = 4;
     private int padding;
-    private int amountScrolled;
+    private float amountScrolled;
     private int scrollMultiplier;
-    private int initialClickY = -2;
-
     public ScrollPane(int startX, int startY, int width, int height, int padding) {
         super();
         setScreenX(startX);
@@ -102,7 +100,7 @@ public class ScrollPane extends ExtendedScreen {
         if (maxScroll > 0) {
             int height = screenHeight * screenHeight / getContentHeight();
             height = MathUtils.clamp(height, 32, screenHeight - (padding * 2));
-            int barTop = amountScrolled * (screenHeight - height) / maxScroll + top;
+            float barTop = amountScrolled * (screenHeight - height) / maxScroll + top;
             if (barTop < top) {
                 barTop = top;
             }
@@ -130,43 +128,23 @@ public class ScrollPane extends ExtendedScreen {
         }
     }
 
+    // remove in 1.13+
+    private int mousePrevX = 0;
+    // remove in 1.13+
+    private int mousePrevY = 0;
+
     @Override
     public void handleMouseInput() {
-        if (isOverScreen()) {
+        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), this)) {
             super.handleMouseInput();
 
+            // DEBUG START
             final int mouseX = getMouseX();
             final int mouseY = getMouseY();
-            final int screenHeight = getScreenHeight();
-            if (Mouse.isButtonDown(0)) {
-                if (initialClickY == -1) {
-                    if (CraftPresence.GUIS.isMouseOver(getMouseY(), this)) {
-                        final int scrollBarX = getScrollBarX();
-                        final int scrollBarRight = scrollBarX + getScrollBarWidth();
-                        if (mouseX >= scrollBarX && mouseX <= scrollBarRight) {
-                            scrollMultiplier = -1;
-                            int maxScroll = getMaxScroll();
-                            if (maxScroll < 1) {
-                                maxScroll = 1;
-                            }
 
-                            int height = screenHeight * screenHeight / getContentHeight();
-                            height = MathUtils.clamp(height, 32, screenHeight - (padding * 2));
-                            scrollMultiplier /= (float) (screenHeight - height) / (float) maxScroll;
-                        } else {
-                            scrollMultiplier = 1;
-                        }
-
-                        initialClickY = mouseY;
-                    } else {
-                        initialClickY = -2;
-                    }
-                } else if (initialClickY >= 0) {
-                    setScroll(amountScrolled - ((mouseY - initialClickY) * scrollMultiplier));
-                    initialClickY = mouseY;
-                }
-            } else {
-                initialClickY = -1;
+            final int dw = Mouse.getEventDWheel();
+            if (Mouse.getEventDWheel() != 0) {
+                this.mouseScrolled(mouseX, mouseY, (int) (dw / 60D));
             }
 
             int wheelDelta = getMouseScroll();
@@ -181,10 +159,38 @@ public class ScrollPane extends ExtendedScreen {
         }
     }
 
+    // remove in 1.13+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        mousePrevX = mouseX;
+        mousePrevY = mouseY;
+    }
+
+    // remove in 1.13+
+    @Override
+    protected void mouseClickMove(int i, int j, int k, long timeSinceLastClick) {
+        mouseDragged(i, j, k, i - mousePrevX, j - mousePrevY);
+        mousePrevX = i;
+        mousePrevY = j;
+    }
+
+    public void mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
+        if (button == 0 /* && getEnabled() */) {
+            int height = getScreenHeight() * getScreenHeight() / getContentHeight();
+            height = MathUtils.clamp(height, 32, getScreenHeight() - (padding * 2));
+            scrollBy(deltaY / (float) (getScreenHeight() - height) * getMaxScroll());
+        }
+    }
+
+
+    public void mouseScrolled(int mouseX, int mouseY, int wheelY) {
+        scrollBy(-wheelY * getHeightPerScroll());
+    }
+
     public void drawScrollString(final TextWidget data) {
         drawScrollString(
                 data.getRenderLines(),
-                data.getControlPosX() + padding, amountScrolled,
+                data.getControlPosX() + padding, (int) amountScrolled,
                 data.getTop() + padding,
                 0xFFFFFF
         );
@@ -206,14 +212,13 @@ public class ScrollPane extends ExtendedScreen {
         return 6;
     }
 
-    public void scrollBy(int amount) {
+    public void scrollBy(float amount) {
         setScroll(amountScrolled + amount);
     }
 
-    public void setScroll(int amount) {
+    public void setScroll(float amount) {
         amountScrolled = amount;
         bindAmountScrolled();
-        initialClickY = -2;
     }
 
     public void bindAmountScrolled() {
