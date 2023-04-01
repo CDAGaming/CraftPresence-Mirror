@@ -55,8 +55,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandsGui extends ExtendedScreen {
-    private String[] executionCommandArgs;
     public ExtendedButtonControl proceedButton;
+    private String[] executionCommandArgs;
     private ExtendedTextControl commandInput;
     private ExtendedScreen childFrame;
     private TextWidget previewArea;
@@ -68,15 +68,6 @@ public class CommandsGui extends ExtendedScreen {
     public CommandsGui(GuiScreen parentScreen) {
         super(parentScreen);
         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
-    }
-
-    /**
-     * Synchronizes the Command Arguments into a List for further use
-     *
-     * @param args The Command Arguments to parse
-     */
-    public void executeCommand(String... args) {
-        executionCommandArgs = args;
     }
 
     /**
@@ -113,6 +104,15 @@ public class CommandsGui extends ExtendedScreen {
      */
     private static boolean doesStringStartWith(String original, String region) {
         return region.regionMatches(true, 0, original, 0, original.length());
+    }
+
+    /**
+     * Synchronizes the Command Arguments into a List for further use
+     *
+     * @param args The Command Arguments to parse
+     */
+    public void executeCommand(String... args) {
+        executionCommandArgs = args;
     }
 
     @Override

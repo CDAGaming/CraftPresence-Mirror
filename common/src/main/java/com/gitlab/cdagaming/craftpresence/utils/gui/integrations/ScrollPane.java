@@ -40,6 +40,10 @@ public class ScrollPane extends ExtendedScreen {
     private static final int DEFAULT_PADDING = 4;
     private int padding;
     private float amountScrolled;
+    // remove in 1.13+
+    private int mousePrevX = 0;
+    // remove in 1.13+
+    private int mousePrevY = 0;
 
     public ScrollPane(int startX, int startY, int width, int height, int padding) {
         super();
@@ -133,11 +137,6 @@ public class ScrollPane extends ExtendedScreen {
             );
         }
     }
-
-    // remove in 1.13+
-    private int mousePrevX = 0;
-    // remove in 1.13+
-    private int mousePrevY = 0;
 
     @Override
     public void handleMouseInput() {

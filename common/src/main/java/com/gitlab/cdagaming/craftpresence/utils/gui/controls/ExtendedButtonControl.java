@@ -272,6 +272,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
 
     /**
      * Get whether the mouse is currently within screen bounds
+     *
      * @return {@link Boolean#TRUE} is condition is satisfied
      */
     public boolean isOverScreen() {

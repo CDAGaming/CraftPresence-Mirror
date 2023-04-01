@@ -78,7 +78,7 @@ public class TextWidget implements DynamicWidget {
     @Override
     public void draw(ExtendedScreen screen) {
         if (screen instanceof ScrollPane) {
-            ((ScrollPane)screen).drawScrollString(this);
+            ((ScrollPane) screen).drawScrollString(this);
         }
     }
 

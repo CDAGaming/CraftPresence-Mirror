@@ -712,6 +712,7 @@ public class ExtendedScreen extends GuiScreen {
 
     /**
      * Get whether the mouse is currently within screen bounds
+     *
      * @return {@link Boolean#TRUE} is condition is satisfied
      */
     public boolean isOverScreen() {
@@ -772,6 +773,7 @@ public class ExtendedScreen extends GuiScreen {
 
     /**
      * Retrieve (And refresh) the Content Height of all applicable widgets
+     *
      * @return the Content Height
      */
     public int getContentHeight() {
