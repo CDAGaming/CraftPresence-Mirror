@@ -221,7 +221,6 @@ public class GuiUtils implements Module {
         buffer.pos(x + width, y + height, zLevel).tex((u + width) * uScale, ((v + height) * vScale)).endVertex();
         buffer.pos(x + width, y, zLevel).tex((u + width) * uScale, (v * vScale)).endVertex();
         buffer.pos(x, y, zLevel).tex(u * uScale, (v * vScale)).endVertex();
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
         tessellator.draw();
     }
 
@@ -1171,6 +1170,7 @@ public class GuiUtils implements Module {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
     /**
