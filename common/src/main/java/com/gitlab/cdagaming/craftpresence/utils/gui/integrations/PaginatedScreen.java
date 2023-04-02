@@ -74,7 +74,7 @@ public class PaginatedScreen extends ExtendedScreen {
      *
      * @param parentScreen The Parent Screen for this Instance
      */
-    public PaginatedScreen(GuiScreen parentScreen) {
+    public PaginatedScreen(final GuiScreen parentScreen) {
         super(parentScreen);
     }
 
@@ -84,7 +84,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @param parentScreen The Parent Screen for this Instance
      * @param debugMode    Whether debug mode should be enabled for this screen
      */
-    public PaginatedScreen(GuiScreen parentScreen, boolean debugMode) {
+    public PaginatedScreen(final GuiScreen parentScreen, final boolean debugMode) {
         super(parentScreen, debugMode);
     }
 
@@ -95,7 +95,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @param debugMode    Whether debug mode should be enabled for this screen
      * @param verboseMode  Whether verbose mode should be enabled for this screen
      */
-    public PaginatedScreen(GuiScreen parentScreen, boolean debugMode, boolean verboseMode) {
+    public PaginatedScreen(final GuiScreen parentScreen, final boolean debugMode, final boolean verboseMode) {
         super(parentScreen, debugMode, verboseMode);
     }
 
@@ -246,7 +246,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @param color        The color to render the text in
      * @param renderTarget The Control's render target, or page to render on
      */
-    public void renderString(String text, float xPos, float yPos, int color, int renderTarget) {
+    public void renderString(final String text, final float xPos, final float yPos, final int color, final int renderTarget) {
         if (renderTarget == currentPage) {
             getFontRenderer().drawStringWithShadow(text, xPos, yPos, color);
         }
@@ -257,7 +257,7 @@ public class PaginatedScreen extends ExtendedScreen {
      *
      * @param onPageChange The new event to be triggered
      */
-    public void setOnPageChange(Runnable onPageChange) {
+    public void setOnPageChange(final Runnable onPageChange) {
         this.onPageChange = onPageChange;
     }
 }

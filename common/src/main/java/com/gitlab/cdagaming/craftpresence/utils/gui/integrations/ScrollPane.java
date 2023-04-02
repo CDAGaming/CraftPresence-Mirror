@@ -34,10 +34,17 @@ import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 
+/**
+ * Implementation for a Scrollable Screen Pane
+ *
+ * @author CDAGaming
+ */
 public class ScrollPane extends ExtendedScreen {
     private static final Color NERO = StringUtils.getColorFrom(32, 32, 32);
     private static final Color NONE = StringUtils.getColorFrom(0, 0, 0, 0);
     private static final int DEFAULT_PADDING = 4;
+    private static final int DEFAULT_BAR_WIDTH = 6;
+    private static final int DEFAULT_HEIGHT_PER_SCROLL = 8;
     private int padding;
     private float amountScrolled;
     // remove in 1.13+
@@ -45,7 +52,16 @@ public class ScrollPane extends ExtendedScreen {
     // remove in 1.13+
     private int mousePrevY = 0;
 
-    public ScrollPane(int startX, int startY, int width, int height, int padding) {
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param startX  The starting X position of the widget
+     * @param startY  The starting Y position of the widget
+     * @param width   The width of the widget
+     * @param height  The height of the widget
+     * @param padding The padding for the widget
+     */
+    public ScrollPane(final int startX, final int startY, final int width, final int height, final int padding) {
         super();
         setScreenX(startX);
         setScreenY(startY);
@@ -55,15 +71,36 @@ public class ScrollPane extends ExtendedScreen {
         setScroll(0);
     }
 
-    public ScrollPane(int startX, int startY, int width, int height) {
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param startX The starting X position of the widget
+     * @param startY The starting Y position of the widget
+     * @param width  The width of the widget
+     * @param height The height of the widget
+     */
+    public ScrollPane(final int startX, final int startY, final int width, final int height) {
         this(startX, startY, width, height, DEFAULT_PADDING);
     }
 
-    public ScrollPane(int width, int height, int padding) {
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param width   The width of the widget
+     * @param height  The height of the widget
+     * @param padding The padding for the widget
+     */
+    public ScrollPane(final int width, final int height, final int padding) {
         this(0, 0, width, height, padding);
     }
 
-    public ScrollPane(int width, int height) {
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param width  The width of the widget
+     * @param height The height of the widget
+     */
+    public ScrollPane(final int width, final int height) {
         this(width, height, DEFAULT_PADDING);
     }
 
@@ -184,6 +221,11 @@ public class ScrollPane extends ExtendedScreen {
         scrollBy(-wheelY * getHeightPerScroll());
     }
 
+    /**
+     * Render a scrollable string, based on the arguments
+     *
+     * @param data The {@link TextWidget} data to interpret
+     */
     public void drawScrollString(final TextWidget data) {
         drawScrollString(
                 data.getRenderLines(),
@@ -193,35 +235,73 @@ public class ScrollPane extends ExtendedScreen {
         );
     }
 
+    /**
+     * Sets the padding for the widget
+     *
+     * @param newPadding the new padding for the widget
+     */
     public void setPadding(final int newPadding) {
         padding = newPadding;
     }
 
-    public int getHeightPerScroll() {
-        return 8;
-    }
-
+    /**
+     * Retrieve the current starting X position of the scroll bar
+     *
+     * @return the starting X position of the scroll bar
+     */
     public int getScrollBarX() {
         return getRight() - getScrollBarWidth();
     }
 
+    /**
+     * Retrieve the scroll bar width
+     *
+     * @return the scroll bar width
+     */
     public int getScrollBarWidth() {
-        return 6;
+        return DEFAULT_BAR_WIDTH;
     }
 
-    public void scrollBy(float amount) {
+    /**
+     * Retrieve the height to scroll by, per scroll
+     *
+     * @return the height per scroll
+     */
+    public int getHeightPerScroll() {
+        return DEFAULT_HEIGHT_PER_SCROLL;
+    }
+
+    /**
+     * Append the scroll by the specified amount
+     *
+     * @param amount The amount to append the scroll by
+     */
+    public void scrollBy(final float amount) {
         setScroll(amountScrolled + amount);
     }
 
-    public void setScroll(float amount) {
+    /**
+     * Set the scroll to the specified amount
+     *
+     * @param amount the new scroll amount
+     */
+    public void setScroll(final float amount) {
         amountScrolled = amount;
         bindAmountScrolled();
     }
 
+    /**
+     * Clamp the scroll amount between 0 and {@link ScrollPane#getMaxScroll()}
+     */
     public void bindAmountScrolled() {
         amountScrolled = MathUtils.clamp(amountScrolled, 0, getMaxScroll());
     }
 
+    /**
+     * Get the maximum scroll height
+     *
+     * @return the maximum scroll height
+     */
     public int getMaxScroll() {
         return Math.max(0, getContentHeight() - (getScreenHeight() - padding));
     }

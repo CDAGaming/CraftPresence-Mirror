@@ -78,7 +78,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param buttonText   The display text, to display within this control
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
-    public ExtendedButtonControl(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
+    public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final String... optionalArgs) {
         super(buttonId, x, y, widthIn, heightIn, buttonText);
 
         this.optionalArgs = optionalArgs;
@@ -96,7 +96,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param onPushEvent  The Click Event to Occur when this control is clicked
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
-    public ExtendedButtonControl(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, Runnable onPushEvent, String... optionalArgs) {
+    public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final String... optionalArgs) {
         this(buttonId, x, y, widthIn, heightIn, buttonText, optionalArgs);
         this.onPushEvent = onPushEvent;
     }
@@ -114,7 +114,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param onHoverEvent The Hover Event to Occur when this control is clicked
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
-    public ExtendedButtonControl(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, Runnable onPushEvent, Runnable onHoverEvent, String... optionalArgs) {
+    public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final Runnable onHoverEvent, final String... optionalArgs) {
         this(buttonId, x, y, widthIn, heightIn, buttonText, onPushEvent, optionalArgs);
         this.onHoverEvent = onHoverEvent;
     }
@@ -129,7 +129,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param buttonText   The display text, to display within this control
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
-    public ExtendedButtonControl(int x, int y, int widthIn, int heightIn, String buttonText, String... optionalArgs) {
+    public ExtendedButtonControl(final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final String... optionalArgs) {
         super(CraftPresence.GUIS.getNextIndex(), x, y, widthIn, heightIn, buttonText);
         this.optionalArgs = optionalArgs;
     }
@@ -145,7 +145,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param onPushEvent  The Click Event to Occur when this control is clicked
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
-    public ExtendedButtonControl(int x, int y, int widthIn, int heightIn, String buttonText, Runnable onPushEvent, String... optionalArgs) {
+    public ExtendedButtonControl(final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final String... optionalArgs) {
         this(x, y, widthIn, heightIn, buttonText, optionalArgs);
         setOnClick(onPushEvent);
     }
@@ -162,7 +162,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param onHoverEvent The Hover Event to Occur when this control is clicked
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
-    public ExtendedButtonControl(int x, int y, int widthIn, int heightIn, String buttonText, Runnable onPushEvent, Runnable onHoverEvent, String... optionalArgs) {
+    public ExtendedButtonControl(final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final Runnable onHoverEvent, final String... optionalArgs) {
         this(x, y, widthIn, heightIn, buttonText, onPushEvent, optionalArgs);
         setOnHover(onHoverEvent);
     }
@@ -175,7 +175,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param yPos          The Starting Y Position for this Control
      * @param displayString The display text, to display within this Control
      */
-    public ExtendedButtonControl(int id, int xPos, int yPos, String displayString) {
+    public ExtendedButtonControl(final int id, final int xPos, final int yPos, final String displayString) {
         super(id, xPos, yPos, displayString);
     }
 
@@ -186,12 +186,12 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param yPos          The Starting Y Position for this Control
      * @param displayString The display text, to display within this Control
      */
-    public ExtendedButtonControl(int xPos, int yPos, String displayString) {
+    public ExtendedButtonControl(final int xPos, final int yPos, final String displayString) {
         this(CraftPresence.GUIS.getNextIndex(), xPos, yPos, displayString);
     }
 
     @Override
-    public void draw(ExtendedScreen screen) {
+    public void draw(final ExtendedScreen screen) {
         isOverScreen = CraftPresence.GUIS.isMouseOver(screen);
     }
 
@@ -236,7 +236,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     @Override
-    public void setControlWidth(int width) {
+    public void setControlWidth(final int width) {
         this.width = width;
     }
 
@@ -246,7 +246,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     @Override
-    public void setControlHeight(int height) {
+    public void setControlHeight(final int height) {
         this.height = height;
     }
 
@@ -256,7 +256,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     @Override
-    public void setControlPosX(int posX) {
+    public void setControlPosX(final int posX) {
         this.x = posX;
     }
 
@@ -266,7 +266,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     @Override
-    public void setControlPosY(int posY) {
+    public void setControlPosY(final int posY) {
         this.y = posY;
     }
 
@@ -320,7 +320,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      *
      * @param event The event to occur
      */
-    public void setOnClick(Runnable event) {
+    public void setOnClick(final Runnable event) {
         onPushEvent = event;
     }
 
@@ -340,7 +340,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      *
      * @param event The event to occur
      */
-    public void setOnHover(Runnable event) {
+    public void setOnHover(final Runnable event) {
         onHoverEvent = event;
     }
 

@@ -55,7 +55,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
      */
-    public ExtendedTextControl(int componentId, FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
+    public ExtendedTextControl(final int componentId, final FontRenderer fontRendererObj, final int x, final int y, final int widthIn, final int heightIn) {
         super(componentId, fontRendererObj, x, y, widthIn, heightIn);
         setControlMaxLength(DEFAULT_TEXT_LIMIT);
     }
@@ -69,7 +69,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
      */
-    public ExtendedTextControl(FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn) {
+    public ExtendedTextControl(final FontRenderer fontRendererObj, final int x, final int y, final int widthIn, final int heightIn) {
         this(CraftPresence.GUIS.getNextIndex(), fontRendererObj, x, y, widthIn, heightIn);
     }
 
@@ -83,7 +83,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param heightIn        The Height for this Control
      * @param keyEvent        The event to run when characters are typed in this control
      */
-    public ExtendedTextControl(FontRenderer fontRendererObj, int x, int y, int widthIn, int heightIn, Runnable keyEvent) {
+    public ExtendedTextControl(final FontRenderer fontRendererObj, final int x, final int y, final int widthIn, final int heightIn, final Runnable keyEvent) {
         this(fontRendererObj, x, y, widthIn, heightIn);
         setOnKeyTyped(keyEvent);
     }
@@ -94,7 +94,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     }
 
     @Override
-    public void setControlWidth(int width) {
+    public void setControlWidth(final int width) {
         this.width = width;
     }
 
@@ -104,7 +104,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     }
 
     @Override
-    public void setControlHeight(int height) {
+    public void setControlHeight(final int height) {
         this.height = height;
     }
 
@@ -114,7 +114,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     }
 
     @Override
-    public void setControlPosX(int posX) {
+    public void setControlPosX(final int posX) {
         this.x = posX;
     }
 
@@ -124,7 +124,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     }
 
     @Override
-    public void setControlPosY(int posY) {
+    public void setControlPosY(final int posY) {
         this.y = posY;
     }
 
@@ -178,7 +178,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      *
      * @param event The event to occur
      */
-    public void setOnKeyTyped(Runnable event) {
+    public void setOnKeyTyped(final Runnable event) {
         onKeyEvent = event;
     }
 

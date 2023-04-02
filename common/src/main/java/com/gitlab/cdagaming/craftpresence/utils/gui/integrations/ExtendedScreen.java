@@ -121,7 +121,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param parentScreen The Parent Screen for this Instance
      */
-    public ExtendedScreen(GuiScreen parentScreen) {
+    public ExtendedScreen(final GuiScreen parentScreen) {
         mc = CraftPresence.instance;
         currentScreen = this;
         this.parentScreen = parentScreen;
@@ -145,7 +145,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param parentScreen The Parent Screen for this Instance
      * @param debugMode    Whether debug mode should be enabled for this screen
      */
-    public ExtendedScreen(GuiScreen parentScreen, boolean debugMode) {
+    public ExtendedScreen(final GuiScreen parentScreen, final boolean debugMode) {
         this(parentScreen);
         setDebugMode(debugMode);
     }
@@ -155,7 +155,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param debugMode Whether debug mode should be enabled for this screen
      */
-    public ExtendedScreen(boolean debugMode) {
+    public ExtendedScreen(final boolean debugMode) {
         this();
         setDebugMode(debugMode);
     }
@@ -167,7 +167,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param debugMode    Whether debug mode should be enabled for this screen
      * @param verboseMode  Whether verbose mode should be enabled for this screen
      */
-    public ExtendedScreen(GuiScreen parentScreen, boolean debugMode, boolean verboseMode) {
+    public ExtendedScreen(final GuiScreen parentScreen, final boolean debugMode, final boolean verboseMode) {
         this(parentScreen, debugMode);
         setVerboseMode(verboseMode);
     }
@@ -178,7 +178,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param debugMode   Whether debug mode should be enabled for this screen
      * @param verboseMode Whether verbose mode should be enabled for this screen
      */
-    public ExtendedScreen(boolean debugMode, boolean verboseMode) {
+    public ExtendedScreen(final boolean debugMode, final boolean verboseMode) {
         this(debugMode);
         setVerboseMode(verboseMode);
     }
@@ -200,6 +200,9 @@ public class ExtendedScreen extends GuiScreen {
         currentPhase = Phase.READY;
     }
 
+    /**
+     * Clear the Screen Data
+     */
     public void clearData() {
         if (currentPhase != Phase.PREINIT) {
             currentPhase = Phase.PREINIT;
@@ -537,7 +540,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param widthScale  The Scale/Value away from the center X to render at
      * @param heightScale The Scale/Value away from the center Y to render at
      */
-    public void renderNotice(final List<String> notice, float widthScale, float heightScale) {
+    public void renderNotice(final List<String> notice, final float widthScale, final float heightScale) {
         renderNotice(notice, widthScale, heightScale, false, false);
     }
 
@@ -567,7 +570,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param yPos  The Y position to render the text at
      * @param color The color to render the text in
      */
-    public void renderString(String text, float xPos, float yPos, int color) {
+    public void renderString(final String text, final float xPos, final float yPos, final int color) {
         getFontRenderer().drawStringWithShadow(text, xPos, yPos, color);
     }
 
@@ -688,7 +691,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param screenX the new X position for the screen
      */
-    public void setScreenX(int screenX) {
+    public void setScreenX(final int screenX) {
         this.screenX = screenX;
     }
 
@@ -706,7 +709,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param screenY the new Y position for the screen
      */
-    public void setScreenY(int screenY) {
+    public void setScreenY(final int screenY) {
         this.screenY = screenY;
     }
 
@@ -870,7 +873,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param isDebugMode Whether to display any Debug display data for this screen
      */
-    public void setDebugMode(boolean isDebugMode) {
+    public void setDebugMode(final boolean isDebugMode) {
         this.debugMode = isDebugMode;
     }
 
@@ -888,7 +891,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param isVerboseMode Whether to display any Verbose display data for this screen
      */
-    public void setVerboseMode(boolean isVerboseMode) {
+    public void setVerboseMode(final boolean isVerboseMode) {
         this.verboseMode = isVerboseMode;
     }
 

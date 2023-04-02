@@ -39,7 +39,7 @@ public interface DynamicWidget {
      *
      * @param screen The Screen instance we're rendering to
      */
-    default void draw(ExtendedScreen screen) {
+    default void draw(final ExtendedScreen screen) {
         // N/A
     }
 
@@ -91,7 +91,7 @@ public interface DynamicWidget {
      *
      * @param posX the new X Position of this Control
      */
-    void setControlPosX(int posX);
+    void setControlPosX(final int posX);
 
     /**
      * Retrieves the Current Y Position of this Control
@@ -105,7 +105,7 @@ public interface DynamicWidget {
      *
      * @param posY the new Y Position of this Control
      */
-    void setControlPosY(int posY);
+    void setControlPosY(final int posY);
 
     /**
      * Retrieves the Current Width of this Control
@@ -119,7 +119,7 @@ public interface DynamicWidget {
      *
      * @param width the new Width of this Control
      */
-    void setControlWidth(int width);
+    void setControlWidth(final int width);
 
     /**
      * Retrieves the Current Height of this Control
@@ -133,5 +133,5 @@ public interface DynamicWidget {
      *
      * @param height the new Height of this Control
      */
-    void setControlHeight(int height);
+    void setControlHeight(final int height);
 }

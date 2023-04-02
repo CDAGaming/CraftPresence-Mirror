@@ -90,7 +90,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param itemList      The List of items to allocate for the slots in the Gui
      * @param currentValue  The current value, if any, to select upon initialization of the Gui
      */
-    public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue) {
+    public ScrollableListControl(final Minecraft mc, final ExtendedScreen currentScreen, final int width, final int height, final int topIn, final int bottomIn, final int slotHeightIn, final List<String> itemList, final String currentValue) {
         this(mc, currentScreen, width, height, topIn, bottomIn, slotHeightIn, itemList, currentValue, RenderType.None);
     }
 
@@ -108,7 +108,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param currentValue  The current value, if any, to select upon initialization of the Gui
      * @param renderType    The Rendering type for this Scroll List
      */
-    public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, int slotHeightIn, List<String> itemList, String currentValue, RenderType renderType) {
+    public ScrollableListControl(final Minecraft mc, final ExtendedScreen currentScreen, final int width, final int height, final int topIn, final int bottomIn, final int slotHeightIn, final List<String> itemList, final String currentValue, final RenderType renderType) {
         super(mc, width, height, topIn, bottomIn, slotHeightIn);
         setList(itemList);
         this.currentScreen = currentScreen;
@@ -133,7 +133,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param currentValue  The current value, if any, to select upon initialization of the Gui
      * @param renderType    The Rendering type for this Scroll List
      */
-    public ScrollableListControl(Minecraft mc, ExtendedScreen currentScreen, int width, int height, int topIn, int bottomIn, List<String> itemList, String currentValue, RenderType renderType) {
+    public ScrollableListControl(final Minecraft mc, final ExtendedScreen currentScreen, final int width, final int height, final int topIn, final int bottomIn, final List<String> itemList, final String currentValue, final RenderType renderType) {
         this(
                 mc,
                 currentScreen,
@@ -153,7 +153,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param mouseY The Mouse's Current Y Position
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the list
      */
-    public boolean isWithinBounds(int mouseX, int mouseY) {
+    public boolean isWithinBounds(final int mouseX, final int mouseY) {
         return CraftPresence.GUIS.isMouseWithin(
                 mouseX, mouseY,
                 top,
@@ -227,7 +227,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param slotIndex The Slot's ID Number
      * @return The Name of the found slot, if any
      */
-    public String getSelectedItem(int slotIndex) {
+    public String getSelectedItem(final int slotIndex) {
         try {
             return itemList.get(slotIndex);
         } catch (Exception ex) {
@@ -479,7 +479,7 @@ public class ScrollableListControl extends GuiSlot {
          * @param canRenderImage the modified value
          * @return the modified {@link RenderType} instance
          */
-        public RenderType setCanRenderImage(boolean canRenderImage) {
+        public RenderType setCanRenderImage(final boolean canRenderImage) {
             this.canRenderImage = canRenderImage;
             return this;
         }
@@ -490,7 +490,7 @@ public class ScrollableListControl extends GuiSlot {
          * @param type The {@link IdentifierType} to interpret
          * @return the modified {@link RenderType} instance
          */
-        public RenderType setIdentifierType(IdentifierType type) {
+        public RenderType setIdentifierType(final IdentifierType type) {
             this.identifierType = type;
             return this;
         }

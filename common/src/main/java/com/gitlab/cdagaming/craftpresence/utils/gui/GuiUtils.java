@@ -800,9 +800,9 @@ public class GuiUtils implements Module {
     }
 
     /**
-     * <p>Computes the current GUI scale. Calling this method is equivalent to the following:<pre><code>
+     * Computes the current GUI scale. Calling this method is equivalent to the following:<pre><code>
      * Minecraft mc = Minecraft.getMinecraft();
-     * int scale = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();</code></pre></p>
+     * int scale = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();</code></pre>
      *
      * @param mc The Minecraft Instance
      * @return the current GUI scale
@@ -822,9 +822,9 @@ public class GuiUtils implements Module {
     }
 
     /**
-     * <p>Computes the current GUI scale. Calling this method is equivalent to the following:<pre><code>
+     * Computes the current GUI scale. Calling this method is equivalent to the following:<pre><code>
      * Minecraft mc = Minecraft.getMinecraft();
-     * int scale = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();</code></pre></p>
+     * int scale = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();</code></pre>
      *
      * @return the current GUI scale
      */

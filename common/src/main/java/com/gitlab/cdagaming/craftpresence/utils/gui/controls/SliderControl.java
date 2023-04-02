@@ -85,7 +85,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      */
-    public SliderControl(int buttonId, Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString) {
+    public SliderControl(final int buttonId, final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString) {
         super(buttonId, positionData.getFirst(), positionData.getSecond(), dimensions.getFirst(), dimensions.getSecond(), "");
 
         setSliderValue(startValue);
@@ -109,7 +109,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      * @param onPushEvent   The Click Event to Occur when this control is clicked
      */
-    public SliderControl(int buttonId, Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Runnable onPushEvent) {
+    public SliderControl(final int buttonId, final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString, final Runnable onPushEvent) {
         this(buttonId, positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString);
         setOnClick(onPushEvent);
     }
@@ -127,7 +127,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      * @param events        The events to occur when this control is modified
      */
-    public SliderControl(int buttonId, Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Pair<Runnable, Runnable> events) {
+    public SliderControl(final int buttonId, final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString, final Pair<Runnable, Runnable> events) {
         this(buttonId, positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, events.getFirst());
         setOnHover(events.getSecond());
     }
@@ -143,7 +143,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param valueStep     The rate at which each move to the slider adjusts its value
      * @param displayString The title to display in the center of the slider
      */
-    public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString) {
+    public SliderControl(final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString) {
         this(CraftPresence.GUIS.getNextIndex(), positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<>());
     }
 
@@ -159,7 +159,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      * @param onPushEvent   The Click Event to Occur when this control is clicked
      */
-    public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Runnable onPushEvent) {
+    public SliderControl(final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString, final Runnable onPushEvent) {
         this(positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString);
         setOnClick(onPushEvent);
     }
@@ -176,7 +176,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      * @param events        The events to occur when this control is modified
      */
-    public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Pair<Runnable, Runnable> events) {
+    public SliderControl(final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString, final Pair<Runnable, Runnable> events) {
         this(positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, events.getFirst());
         setOnHover(events.getSecond());
     }
@@ -193,7 +193,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      * @param events        The events to occur when this control is modified
      */
-    public SliderControl(Pair<Integer, Integer> positionData, Pair<Integer, Integer> dimensions, float startValue, float minValue, float maxValue, float valueStep, String displayString, Tuple<Runnable, Runnable, Runnable> events) {
+    public SliderControl(final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString, final Tuple<Runnable, Runnable, Runnable> events) {
         this(positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<>(events.getFirst(), events.getSecond()));
         setOnSlide(events.getThird());
     }
@@ -256,7 +256,7 @@ public class SliderControl extends ExtendedButtonControl {
      *
      * @param newValue The New Slider Value
      */
-    public void setSliderValue(float newValue) {
+    public void setSliderValue(final float newValue) {
         if (newValue >= 0.0f && newValue <= 1.0f) {
             sliderValue = newValue;
             denormalizedSlideValue = MathUtils.denormalizeValue(newValue, valueStep, minValue, maxValue);
@@ -273,7 +273,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param useNormal Whether to get the normalized value
      * @return The Current Normalized / denormalized Slider Value
      */
-    public float getSliderValue(boolean useNormal) {
+    public float getSliderValue(final boolean useNormal) {
         return useNormal ? sliderValue : denormalizedSlideValue;
     }
 
@@ -291,7 +291,7 @@ public class SliderControl extends ExtendedButtonControl {
      *
      * @param event The event to occur
      */
-    public void setOnSlide(Runnable event) {
+    public void setOnSlide(final Runnable event) {
         onSlideEvent = event;
     }
 
