@@ -127,6 +127,21 @@ public class StringUtils {
     /**
      * Attempts to Convert the specified data into a Valid interpretable Java Color
      *
+     * @param data the raw interpretable data
+     * @return A Valid Java Color, if successful
+     */
+    public static Color getColorFrom(final int data) {
+        return getColorFrom(
+                (data >> 16 & 255),
+                (data >> 8 & 255),
+                (data & 255),
+                (data >> 24 & 255)
+        );
+    }
+
+    /**
+     * Attempts to Convert the specified data into a Valid interpretable Java Color
+     *
      * @param hexColor The inputted Hexadecimal Color String
      * @return A Valid Java Color, if successful
      */

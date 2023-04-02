@@ -1206,8 +1206,6 @@ public class GuiUtils implements Module {
     public void drawGradientRect(final float zLevel, final double left, final double top, final double right, final double bottom, final String startColorCode, final String endColorCode) {
         Color startColorObj = null, endColorObj = null;
         int startColor = 0xFFFFFF, endColor = 0xFFFFFF;
-        float startAlpha, startRed, startGreen, startBlue,
-                endAlpha, endRed, endGreen, endBlue;
 
         if (!StringUtils.isNullOrEmpty(startColorCode)) {
             if (StringUtils.isValidColor(startColorCode).getFirst()) {
@@ -1226,19 +1224,32 @@ public class GuiUtils implements Module {
             }
         }
 
-        final int startColorInstance = startColorObj != null ? startColorObj.getRGB() : startColor;
-        final int endColorInstance = endColorObj != null ? endColorObj.getRGB() : endColor;
+        if (startColorObj == null) {
+            startColorObj = StringUtils.getColorFrom(startColor);
+        }
+        if (endColorObj == null) {
+            endColorObj = StringUtils.getColorFrom(endColor);
+        }
 
-        startAlpha = (startColorInstance >> 24 & 255) / 255.0F;
-        startRed = (startColorInstance >> 16 & 255) / 255.0F;
-        startGreen = (startColorInstance >> 8 & 255) / 255.0F;
-        startBlue = (startColorInstance & 255) / 255.0F;
+        drawGradientRect(zLevel,
+                left, top,
+                right, bottom,
+                startColorObj, endColorObj
+        );
+    }
 
-        endAlpha = (endColorInstance >> 24 & 255) / 255.0F;
-        endRed = (endColorInstance >> 16 & 255) / 255.0F;
-        endGreen = (endColorInstance >> 8 & 255) / 255.0F;
-        endBlue = (endColorInstance & 255) / 255.0F;
-
+    /**
+     * Draws a Gradient Rectangle, following the defined arguments
+     *
+     * @param zLevel     The Z Level Position of the Object
+     * @param left       The Left side length of the Object
+     * @param top        The top length of the Object
+     * @param right      The Right side length of the Object
+     * @param bottom     The bottom length of the Object
+     * @param startColor The Starting Color Data
+     * @param endColor   The ending Color Data
+     */
+    public void drawGradientRect(final float zLevel, final double left, final double top, final double right, final double bottom, final Color startColor, final Color endColor) {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
@@ -1249,10 +1260,10 @@ public class GuiUtils implements Module {
         final Tessellator tessellator = Tessellator.getInstance();
         final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(right, top, zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-        buffer.pos(left, top, zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-        buffer.pos(left, bottom, zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
-        buffer.pos(right, bottom, zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
+        buffer.pos(right, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        buffer.pos(left, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        buffer.pos(left, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.pos(right, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
         tessellator.draw();
 
         GL11.glShadeModel(GL11.GL_FLAT);

@@ -117,17 +117,17 @@ public class ScrollPane extends ExtendedScreen {
 
             CraftPresence.GUIS.drawGradientRect(0.0F,
                     scrollBarX, top, scrollBarRight, bottom,
-                    StringUtils.getHexFrom(Color.black), StringUtils.getHexFrom(Color.black)
+                    Color.black, Color.black
             );
 
             CraftPresence.GUIS.drawGradientRect(0.0F,
                     scrollBarX, barTop, scrollBarRight, barTop + height,
-                    StringUtils.getHexFrom(Color.gray), StringUtils.getHexFrom(Color.gray)
+                    Color.gray, Color.gray
             );
 
             CraftPresence.GUIS.drawGradientRect(0.0F,
                     scrollBarX, barTop, scrollBarRight - 1, barTop + height - 1,
-                    StringUtils.getHexFrom(Color.lightGray), StringUtils.getHexFrom(Color.lightGray)
+                    Color.lightGray, Color.lightGray
             );
         }
     }
