@@ -87,15 +87,17 @@ subprojects {
     }
 
     repositories {
-        mavenCentral()
         maven {
             name = "Forge"
             url = "https://maven.minecraftforge.net/"
             metadataSources {
-                mavenPom()
                 artifact()
+                if (!isLegacy) {
+                    mavenPom()
+                }
             }
         }
+        mavenCentral()
         maven {
             name = 'Fabric'
             url = "https://maven.fabricmc.net/"
