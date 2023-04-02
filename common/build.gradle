@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.0"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
     id "com.modrinth.minotaur" version "2.7.5"
     id "io.github.CDAGaming.cursegradle" version "1.6.0"
 }
