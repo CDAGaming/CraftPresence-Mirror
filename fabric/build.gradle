@@ -40,6 +40,9 @@ dependencies {
 
     // Additional Integrations
     if (use_replay_mod.toBoolean()) {
+        modImplementation(fabricApi.module("fabric-networking-api-v1", rootProject.fabric_api_version))
+        include(fabricApi.module("fabric-networking-api-v1", rootProject.fabric_api_version))
+
         modImplementation("com.replaymod:replaymod-${rootProject.mc_version}:${rootProject.replaymod_ver}")
     }
 }
