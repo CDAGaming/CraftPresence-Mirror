@@ -205,7 +205,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                CraftPresence.GUIS.drawGradientRect(zLevel, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), backgroundCode, backgroundCode);
+                CraftPresence.GUIS.drawGradientRect(zLevel, getLeft(), getTop(), getRight(), getBottom(), backgroundCode, backgroundCode);
             } else {
                 final Tuple<Boolean, String, ResourceLocation> textureData = CraftPresence.GUIS.getTextureData(backgroundCode);
                 final ResourceLocation texLocation = textureData.getThird();

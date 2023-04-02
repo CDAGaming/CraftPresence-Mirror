@@ -865,10 +865,10 @@ public class GuiUtils implements Module {
     public void drawBackground(final double xPos, final double yPos, final double width, final double height, final String backgroundCode, final Color color) {
         double widthDivider = 32.0D, heightDivider = 32.0D;
         if (CraftPresence.instance.world != null) {
-            drawGradientRect(300.0F, xPos, yPos, width, height, "-1072689136", "-804253680");
+            drawGradientRect(300.0F, xPos, yPos, xPos + width, yPos + height, "-1072689136", "-804253680");
         } else {
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                drawGradientRect(300.0F, xPos, yPos, width, height, backgroundCode, backgroundCode);
+                drawGradientRect(300.0F, xPos, yPos, xPos + width, yPos + height, backgroundCode, backgroundCode);
             } else {
                 final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundCode);
                 final ResourceLocation texLocation = textureData.getThird();
