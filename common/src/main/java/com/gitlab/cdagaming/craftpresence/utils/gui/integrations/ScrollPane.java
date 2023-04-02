@@ -86,14 +86,14 @@ public class ScrollPane extends ExtendedScreen {
         // Render Depth Decorations
         final Tuple<Boolean, String, ResourceLocation> backgroundData = CraftPresence.GUIS.getTextureData(CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor);
         CraftPresence.GUIS.drawTextureGradientRect(0.0D,
-                getLeft(), getRight(), getTop(), getTop() + padding,
+                getLeft(), getTop(), getRight(), getTop() + padding,
                 1.0D, 1.0D, 0.0D,
                 NONE,
                 Color.black,
                 backgroundData.getThird()
         );
         CraftPresence.GUIS.drawTextureGradientRect(0.0D,
-                getLeft(), getRight(), getBottom() - padding, getBottom(),
+                getLeft(), getBottom() - padding, getRight(), getBottom(),
                 1.0D, 1.0D, 0.0D,
                 Color.black,
                 NONE,

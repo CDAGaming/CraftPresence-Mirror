@@ -1087,8 +1087,8 @@ public class GuiUtils implements Module {
     public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final double widthDivider, final double heightDivider, final Color color, final ResourceLocation texLocation) {
         drawTextureRect(zLevel,
                 xPos,
-                xPos + width,
                 yPos,
+                xPos + width,
                 yPos + height,
                 width / widthDivider,
                 height / heightDivider,
@@ -1102,10 +1102,10 @@ public class GuiUtils implements Module {
      * Draws a Textured Rectangle, following the defined arguments
      *
      * @param zLevel      The Z Level Position of the Object
-     * @param left        The Starting Left Position of the Object
-     * @param right       The Starting Right Position of the Object
-     * @param top         The Top of the Object
-     * @param bottom      The Bottom of the Object
+     * @param left        The Left Position of the Object
+     * @param top         The Top Position of the Object
+     * @param right       The Right Position of the Object
+     * @param bottom      The Bottom Position of the Object
      * @param u           The horizontal axis to render this Object by
      * @param v           The vertical axis to render this Object by
      * @param tint        The Tinting Level of the Object
@@ -1113,7 +1113,7 @@ public class GuiUtils implements Module {
      * @param endColor    The starting texture RGB data to interpet
      * @param texLocation The game texture to render the object as
      */
-    public void drawTextureRect(final double zLevel, final double left, final double right, final double top, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
+    public void drawTextureRect(final double zLevel, final double left, final double top, final double right, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
                 CraftPresence.instance.getTextureManager().bindTexture(texLocation);
@@ -1139,10 +1139,10 @@ public class GuiUtils implements Module {
      * Draws a Textured Gradient Rectangle, following the defined arguments
      *
      * @param zLevel      The Z Level Position of the Object
-     * @param left        The Starting Left Position of the Object
-     * @param right       The Starting Right Position of the Object
-     * @param top         The Top of the Object
-     * @param bottom      The Bottom of the Object
+     * @param left        The Left Position of the Object
+     * @param top         The Top Position of the Object
+     * @param right       The Right Position of the Object
+     * @param bottom      The Bottom Position of the Object
      * @param u           The horizontal axis to render this Object by
      * @param v           The vertical axis to render this Object by
      * @param tint        The Tinting Level of the Object
@@ -1150,7 +1150,7 @@ public class GuiUtils implements Module {
      * @param endColor    The starting texture RGB data to interpet
      * @param texLocation The game texture to render the object as
      */
-    public void drawTextureGradientRect(final double zLevel, final double left, final double right, final double top, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
+    public void drawTextureGradientRect(final double zLevel, final double left, final double top, final double right, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
@@ -1159,8 +1159,8 @@ public class GuiUtils implements Module {
         GL11.glShadeModel(GL11.GL_SMOOTH);
 
         drawTextureRect(zLevel,
-                left, right,
-                top, bottom,
+                left, top,
+                right, bottom,
                 u, v, tint,
                 startColor, endColor,
                 texLocation
