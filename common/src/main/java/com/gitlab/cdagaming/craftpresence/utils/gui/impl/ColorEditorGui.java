@@ -278,14 +278,8 @@ public class ColorEditorGui extends PaginatedScreen {
             Color localColor;
 
             if (!StringUtils.isNullOrEmpty(hexText.getControlMessage())) {
-                if (hexText.getControlMessage().startsWith("#") || hexText.getControlMessage().length() == 6) {
+                if (StringUtils.isValidColor(hexText.getControlMessage()).getFirst()) {
                     localValue = StringUtils.getColorFrom(hexText.getControlMessage()).getRGB();
-                } else if (hexText.getControlMessage().startsWith("0x")) {
-                    try {
-                        localColor = new Color(Long.decode(hexText.getControlMessage()).intValue(), true);
-                        localValue = localColor.getRGB();
-                    } catch (Exception ignored) {
-                    }
                 } else if (StringUtils.getValidInteger(hexText.getControlMessage()).getFirst()) {
                     localValue = Integer.decode(hexText.getControlMessage());
                 }

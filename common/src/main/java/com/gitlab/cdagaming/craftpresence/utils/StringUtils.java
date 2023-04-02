@@ -131,25 +131,31 @@ public class StringUtils {
      * @return A Valid Java Color, if successful
      */
     public static Color getColorFrom(final String hexColor) {
-        try {
-            if (hexColor.length() == 7 && !isNullOrEmpty(hexColor.substring(1))) {
-                final int r = Integer.valueOf(hexColor.substring(1, 3), 16);
-                final int g = Integer.valueOf(hexColor.substring(3, 5), 16);
-                final int b = Integer.valueOf(hexColor.substring(5, 7), 16);
-
-                return getColorFrom(r, g, b);
-            } else if (hexColor.length() == 6 && !hexColor.startsWith("#")) {
-                final int r = Integer.valueOf(hexColor.substring(0, 2), 16);
-                final int g = Integer.valueOf(hexColor.substring(2, 4), 16);
-                final int b = Integer.valueOf(hexColor.substring(4, 6), 16);
-
-                return getColorFrom(r, g, b);
-            } else {
-                return Color.white;
-            }
-        } catch (Exception ex) {
+        final Pair<Boolean, Matcher> matchData = isValidColor(hexColor);
+        if (!matchData.getFirst()) {
             return Color.white;
         }
+        final Matcher m = matchData.getSecond();
+        String s = m.group(1);
+        if (s == null) s = m.group(2);
+        if (s == null) throw new IllegalStateException();
+        long l = Long.parseLong(s, 16);
+        int a = m.group(1) != null ? (int) ((l >> 24) & 0xFF) : 0xFF;
+        int r = (int) ((l >> 16) & 0xFF);
+        int g = (int) ((l >> 8) & 0xFF);
+        int b = (int) (l & 0xFF);
+        return getColorFrom(r, g, b, a);
+    }
+
+    /**
+     * Determines whether an inputted String classifies as a valid Color Code
+     *
+     * @param entry The String to evaluate
+     * @return {@link Boolean#TRUE} if Entry is classified as a valid Color Code, alongside extra data
+     */
+    public static Pair<Boolean, Matcher> isValidColor(final String entry) {
+        final Matcher m = Pattern.compile("^(?:0x([\\dA-Fa-f]{1,8})|#?([\\dA-Fa-f]{6}))$").matcher(entry);
+        return new Pair<>(m.find(), m);
     }
 
     /**
@@ -558,7 +564,7 @@ public class StringUtils {
      * @return {@link Boolean#TRUE} if Entry is classified as a valid Color Code
      */
     public static boolean isValidColorCode(final String entry) {
-        return !isNullOrEmpty(entry) && ((entry.startsWith("#") || entry.length() == 6) || entry.startsWith("0x") || getValidInteger(entry).getFirst());
+        return !isNullOrEmpty(entry) && (isValidColor(entry).getFirst() || getValidInteger(entry).getFirst());
     }
 
     /**

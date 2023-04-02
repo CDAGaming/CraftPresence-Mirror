@@ -1210,9 +1210,9 @@ public class GuiUtils implements Module {
                 endAlpha, endRed, endGreen, endBlue;
 
         if (!StringUtils.isNullOrEmpty(startColorCode)) {
-            if (startColorCode.startsWith("#")) {
+            if (StringUtils.isValidColor(startColorCode).getFirst()) {
                 startColorObj = StringUtils.getColorFrom(startColorCode);
-                endColorObj = (!StringUtils.isNullOrEmpty(endColorCode) && endColorCode.startsWith("#")) ? StringUtils.getColorFrom(endColorCode) : startColorObj;
+                endColorObj = (!StringUtils.isNullOrEmpty(endColorCode) && StringUtils.isValidColor(endColorCode).getFirst()) ? StringUtils.getColorFrom(endColorCode) : startColorObj;
             } else {
                 // Determine if Start Color Code is a Valid Number
                 final Pair<Boolean, Integer> startColorData = StringUtils.getValidInteger(startColorCode),
