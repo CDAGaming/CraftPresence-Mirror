@@ -7,16 +7,7 @@ plugins {
 def accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
 
 minecraft {
-    if (isJarMod) {
-        jarMod {
-            // required when using mcp mappings
-            if (protocol <= 2) { // MC a1.1.2_01 and below
-                devNamespace = "searge"
-            } else {
-                devFallbackNamespace = "searge"
-            }
-        }
-    } else {
+    if (!isJarMod) {
         fabric {
             if (accessWidenerFile.exists()) {
                 accessWidener = accessWidenerFile

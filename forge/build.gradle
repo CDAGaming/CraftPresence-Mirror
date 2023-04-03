@@ -17,16 +17,7 @@ mods {
 }
 
 minecraft {
-    if (isJarMod) {
-        jarMod {
-            // required when using mcp mappings
-            if (protocol <= 2) { // MC a1.1.2_01 and below
-                devNamespace = "searge"
-            } else {
-                devFallbackNamespace = "searge"
-            }
-        }
-    } else {
+    if (!isJarMod) {
         forge {
             if (canUseATs) {
                 accessTransformer = aw2at(accessWidenerFile)
@@ -67,7 +58,7 @@ configurations {
 
 dependencies {
     if (isJarMod) {
-        jarMod "risugami:modloader:${rootProject.forge_version}"
+        jarModClient "risugami:modloader:${rootProject.forge_version}"
     } else {
         forge "net.minecraftforge:forge:${rootProject.mc_version}-${rootProject.forge_version}"
     }

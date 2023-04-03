@@ -72,6 +72,16 @@ subprojects {
         if (isLegacy) {
             clientSourceSets = [sourceSets.main]
         }
+        if (isJarMod) {
+            jarMod {
+                // required when using mcp mappings
+                if (protocol <= 2) { // MC a1.1.2_01 and below
+                    devNamespace = "searge"
+                } else {
+                    devFallbackNamespace = "searge"
+                }
+            }
+        }
         mcRemapper.tinyRemapperConf = {
             // most mcp mappings (except older format) dont include field desc
             ignoreFieldDesc(true)
