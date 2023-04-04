@@ -225,7 +225,7 @@ public class ExtendedScreen extends GuiScreen {
             initGui();
             return;
         }
-        if (isLoaded()) {
+        if (currentPhase == Phase.INIT) {
             resetMouseScroll();
 
             for (Gui extendedControl : extendedControls) {
@@ -386,9 +386,6 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.drawTextBox();
                 }
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
-                }
             }
 
             super.drawScreen(mouseX, mouseY, partialTicks);
@@ -405,6 +402,9 @@ public class ExtendedScreen extends GuiScreen {
                     if (isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, extendedButton)) {
                         extendedButton.onHover();
                     }
+                }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -789,10 +789,7 @@ public class ExtendedScreen extends GuiScreen {
         contentHeight = 0;
         if (isLoaded()) {
             for (DynamicWidget widget : extendedWidgets) {
-                final int widgetHeight = widget.getBottom();
-                if (widgetHeight > contentHeight) {
-                    contentHeight = widgetHeight;
-                }
+                contentHeight += widget.getControlHeight();
             }
         }
         return contentHeight;
