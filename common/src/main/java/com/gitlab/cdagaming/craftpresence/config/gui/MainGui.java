@@ -229,12 +229,10 @@ public class MainGui extends ExtendedScreen {
                         "gui.config.message.button.back",
                         () -> {
                             if (CraftPresence.CONFIG.hasChanged) {
-                                CraftPresence.CONFIG.save(false);
+                                CraftPresence.CONFIG.save();
                                 ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
-                                CraftPresence.CONFIG.applySettings();
                             }
                             CraftPresence.GUIS.configGUIOpened = false;
-
                             CraftPresence.GUIS.openScreen(parentScreen);
                         }
                 )
