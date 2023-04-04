@@ -225,12 +225,16 @@ public class ExtendedScreen extends GuiScreen {
             initGui();
             return;
         }
-        resetMouseScroll();
+        if (isLoaded()) {
+            resetMouseScroll();
 
-        for (Gui extendedControl : extendedControls) {
-            if (extendedControl instanceof ExtendedScreen) {
-                ((ExtendedScreen) extendedControl).initializeUi();
+            for (Gui extendedControl : extendedControls) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).initializeUi();
+                }
             }
+
+            getContentHeight();
         }
     }
 
@@ -243,9 +247,11 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
-        for (Gui extendedControl : extendedControls) {
-            if (extendedControl instanceof ExtendedScreen) {
-                ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
+        if (isLoaded()) {
+            for (Gui extendedControl : extendedControls) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
+                }
             }
         }
         super.onResize(mcIn, w, h);
@@ -311,7 +317,6 @@ public class ExtendedScreen extends GuiScreen {
     public <T extends DynamicWidget> T addWidget(@Nonnull T buttonIn) {
         if (!extendedWidgets.contains(buttonIn)) {
             extendedWidgets.add(buttonIn);
-            getContentHeight();
         }
         return buttonIn;
     }
@@ -381,6 +386,9 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.drawTextBox();
                 }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
+                }
             }
 
             super.drawScreen(mouseX, mouseY, partialTicks);
@@ -397,9 +405,6 @@ public class ExtendedScreen extends GuiScreen {
                     if (isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, extendedButton)) {
                         extendedButton.onHover();
                     }
-                }
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -513,14 +518,15 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Override
     public void onGuiClosed() {
-        clearData();
-        CraftPresence.GUIS.resetIndex();
-        Keyboard.enableRepeatEvents(false);
-
-        for (Gui extendedControl : extendedControls) {
-            if (extendedControl instanceof ExtendedScreen) {
-                ((ExtendedScreen) extendedControl).onGuiClosed();
+        if (isLoaded()) {
+            for (Gui extendedControl : extendedControls) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).onGuiClosed();
+                }
             }
+            clearData();
+            CraftPresence.GUIS.resetIndex();
+            Keyboard.enableRepeatEvents(false);
         }
     }
 
@@ -781,8 +787,13 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getContentHeight() {
         contentHeight = 0;
-        for (DynamicWidget widget : extendedWidgets) {
-            contentHeight += widget.getControlHeight();
+        if (isLoaded()) {
+            for (DynamicWidget widget : extendedWidgets) {
+                final int widgetHeight = widget.getBottom();
+                if (widgetHeight > contentHeight) {
+                    contentHeight = widgetHeight;
+                }
+            }
         }
         return contentHeight;
     }
