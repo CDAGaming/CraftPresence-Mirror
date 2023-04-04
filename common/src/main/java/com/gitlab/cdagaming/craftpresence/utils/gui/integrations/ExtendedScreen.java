@@ -234,7 +234,7 @@ public class ExtendedScreen extends GuiScreen {
                 }
             }
 
-            getContentHeight();
+            refreshContentHeight();
         }
     }
 
@@ -781,18 +781,24 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Retrieve (And refresh) the Content Height of all applicable widgets
+     * Retrieve the Content Height of all applicable widgets
      *
-     * @return the Content Height
+     * @return the Content Height of all applicable widgets
      */
     public int getContentHeight() {
+        return contentHeight;
+    }
+
+    /**
+     * Refresh the Content Height of all applicable widgets
+     */
+    public void refreshContentHeight() {
         contentHeight = 0;
         if (isLoaded()) {
             for (DynamicWidget widget : extendedWidgets) {
                 contentHeight += widget.getControlHeight();
             }
         }
-        return contentHeight;
     }
 
     /**

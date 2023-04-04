@@ -118,7 +118,7 @@ public class ScrollPane extends ExtendedScreen {
                 NERO
         );
 
-        getContentHeight();
+        refreshContentHeight();
 
         // Render Depth Decorations
         final Tuple<Boolean, String, ResourceLocation> backgroundData = CraftPresence.GUIS.getTextureData(CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor);
