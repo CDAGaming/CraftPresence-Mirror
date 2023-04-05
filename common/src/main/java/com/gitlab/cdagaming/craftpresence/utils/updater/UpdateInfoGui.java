@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.updater;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -67,9 +66,9 @@ public class UpdateInfoGui extends ExtendedScreen {
                                     if (modUpdater.isInvalidVersion) {
                                         // If the Updater found our version to be an invalid one
                                         // Then replace the Version ID, Name, and Type
-                                        StringUtils.updateField(ModUtils.class, null, new Pair<>("VERSION_ID", "v" + modUpdater.targetVersion));
-                                        StringUtils.updateField(ModUtils.class, null, new Pair<>("VERSION_TYPE", modUpdater.currentState.getDisplayName()));
-                                        StringUtils.updateField(ModUtils.class, null, new Pair<>("NAME", CraftPresence.class.getSimpleName()));
+                                        StringUtils.updateField(ModUtils.class, null, "v" + modUpdater.targetVersion, "VERSION_ID");
+                                        StringUtils.updateField(ModUtils.class, null, modUpdater.currentState.getDisplayName(), "VERSION_TYPE");
+                                        StringUtils.updateField(ModUtils.class, null, CraftPresence.class.getSimpleName(), "NAME");
 
                                         modUpdater.currentVersion = modUpdater.targetVersion;
                                         modUpdater.isInvalidVersion = false;

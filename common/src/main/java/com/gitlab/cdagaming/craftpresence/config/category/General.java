@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.config.Module;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
@@ -66,6 +65,6 @@ public class General extends Module implements Serializable {
 
     @Override
     public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(General.class, this, new Pair<>(name, value));
+        StringUtils.updateField(General.class, this, value, name);
     }
 }

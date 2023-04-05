@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
@@ -142,9 +141,9 @@ public class CraftPresence {
             if (ModUtils.UPDATER.isInvalidVersion) {
                 // If the Updater found our version to be an invalid one
                 // Then replace the Version ID, Name, and Type
-                StringUtils.updateField(ModUtils.class, null, new Pair<>("VERSION_ID", "v" + ModUtils.UPDATER.targetVersion));
-                StringUtils.updateField(ModUtils.class, null, new Pair<>("VERSION_TYPE", ModUtils.UPDATER.currentState.getDisplayName()));
-                StringUtils.updateField(ModUtils.class, null, new Pair<>("NAME", CraftPresence.class.getSimpleName()));
+                StringUtils.updateField(ModUtils.class, null, "v" + ModUtils.UPDATER.targetVersion, "VERSION_ID");
+                StringUtils.updateField(ModUtils.class, null, ModUtils.UPDATER.currentState.getDisplayName(), "VERSION_TYPE");
+                StringUtils.updateField(ModUtils.class, null, CraftPresence.class.getSimpleName(), "NAME");
 
                 ModUtils.UPDATER.currentVersion = ModUtils.UPDATER.targetVersion;
                 ModUtils.UPDATER.isInvalidVersion = false;

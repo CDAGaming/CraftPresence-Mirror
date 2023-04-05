@@ -102,7 +102,6 @@
   "craftpresence.logger.info.pack.init": "Checking for \"%1$s\" pack data...",
   "craftpresence.logger.info.pack.loaded": "Found \"%1$s\" pack data! (Name: \"%2$s\", Icon: \"%3$s\")",
   "craftpresence.logger.info.shutdown": "Shutting down CraftPresence...",
-  "craftpresence.logger.info.update.dynamic": "Dynamically updated data -> %1$s in %2$s",
   "craftpresence.logger.info.updater.init": "Starting version check for \"%1$s\" (MC %2$s) at \"%3$s\"",
   "craftpresence.logger.info.updater.receive.changelog": "Received changelog: %1$s",
   "craftpresence.logger.info.updater.receive.data": "Received update data: %1$s",

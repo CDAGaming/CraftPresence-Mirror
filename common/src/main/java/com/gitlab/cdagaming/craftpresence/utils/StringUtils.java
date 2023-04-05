@@ -1520,18 +1520,13 @@ public class StringUtils {
      *
      * @param classToAccess The class to access with the field(s)
      * @param instance      An Instance of the Class, if needed
-     * @param fieldData     A Pair with the format of fieldName:valueToSet
+     * @param value         The value to set for the field
+     * @param fieldNames    A List of Field Names to search for
      */
-    @SafeVarargs
-    public static void updateField(final Class<?> classToAccess, final Object instance, final Pair<String, Object>... fieldData) {
-        for (Pair<String, Object> currentData : fieldData) {
-            final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, currentData.getFirst());
-            if (result.getFirst()) {
-                result.getSecond().setValue(instance, currentData.getSecond());
-                if (CommandUtils.isVerboseMode()) {
-                    ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.update.dynamic", currentData.toString(), classToAccess.getName()));
-                }
-            }
+    public static void updateField(final Class<?> classToAccess, final Object instance, final Object value, final String... fieldNames) {
+        final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, fieldNames);
+        if (result.getFirst()) {
+            result.getSecond().setValue(instance, value);
         }
     }
 
@@ -1540,13 +1535,32 @@ public class StringUtils {
      *
      * @param classToAccess The class to access with the field(s)
      * @param instance      An Instance of the Class, if needed
-     * @param fieldData     A Pair with the format of fieldName:valueToSet:modifierData
+     * @param value         The value to set for the field
+     * @param fieldNames    A List of Field Names to search for
      */
-    @SafeVarargs
-    public static void updateField(final String classToAccess, final Object instance, final Pair<String, Object>... fieldData) {
+    public static void updateField(final String classToAccess, final Object instance, final Object value, final String... fieldNames) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
-            updateField(foundClass, instance, fieldData);
+            updateField(foundClass, instance, value, fieldNames);
+        }
+    }
+
+    /**
+     * Adjusts the Specified Field(s) in the Target Class via Reflection
+     *
+     * @param classToAccess The class to access with the field(s)
+     * @param instance      An Instance of the Class, if needed
+     * @param value         The value to set for the field
+     * @param fieldNames    A List of Field Names to search for
+     */
+    public static void updateField(final Object classToAccess, final Object instance, final Object value, final String... fieldNames) {
+        if (classToAccess instanceof String) {
+            updateField((String) classToAccess, instance, value, fieldNames);
+        } else {
+            updateField(
+                    classToAccess instanceof Class<?> ? (Class<?>) classToAccess : classToAccess.getClass(),
+                    instance, value, fieldNames
+            );
         }
     }
 
