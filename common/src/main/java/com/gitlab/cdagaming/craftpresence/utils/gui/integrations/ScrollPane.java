@@ -144,8 +144,9 @@ public class ScrollPane extends ExtendedScreen {
         final int top = getTop();
         final int maxScroll = getMaxScroll();
         final int screenHeight = getScreenHeight();
-        if (maxScroll > 0) {
-            int height = screenHeight * screenHeight / getContentHeight();
+        final int contentHeight = getContentHeight();
+        if (maxScroll > 0 && contentHeight > 0) {
+            int height = screenHeight * screenHeight / contentHeight;
             height = MathUtils.clamp(height, 32, screenHeight - (padding * 2));
             float barTop = amountScrolled * (screenHeight - height) / maxScroll + top;
             if (barTop < top) {
@@ -210,8 +211,9 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     public void mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
-        if (button == 0) {
-            int height = getScreenHeight() * getScreenHeight() / getContentHeight();
+        final int contentHeight = getContentHeight();
+        if (button == 0 && contentHeight > 0) {
+            int height = getScreenHeight() * getScreenHeight() / contentHeight;
             height = MathUtils.clamp(height, 32, getScreenHeight() - (padding * 2));
             scrollBy(deltaY / (float) (getScreenHeight() - height) * getMaxScroll());
         }
