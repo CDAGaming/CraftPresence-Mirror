@@ -230,7 +230,12 @@ The following functions are available for use anywhere in CraftPresence:
 * `capitalizeWords(input, timesToCheck ?: -1)` - Capitalizes the words within a specified string
 * `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
   able
-* `convertWorldTime(worldTime=number)` - Converts a Raw World Time Long into a Readable 24-Hour Time String
+* `convertTimeFormat(dateString, fromFormat, toFormat)` - Convert a Date String from one format to another format
+* `convertTimeZone(dateString, fromFormat, fromTimeZone, toTimeZone)` - Convert a Date String from one timezone to
+  another timezone
+* `dateToEpoch(dateString, format, timeZone ?: null)` - Convert Date String to Epoch Timestamp in seconds
+* `epochToDate(dateString, format, timeZone ?: null)` - Convert Epoch Timestamp to Date String in the given format and
+  timezone
 * `executeMethod(classToAccess=Object|String|Class, instance=Object ?: null, methodName, <parameterType, parameter>...)` -
   Invokes the specified Method in the Target Class via Reflection
 * `format(input=String, args=Object...)` - Returns a formatted string using the specified format string and arguments
@@ -241,6 +246,7 @@ The following functions are available for use anywhere in CraftPresence:
 * `getAssetType(input)` - Retrieves the Parsed Image Type from the specified key, if present
 * `getAssetUrl(input)` - Retrieves the Parsed Image Url from the specified key, if present
 * `getClass(reference=Object|String)` - Attempt to retrieve a class object, via the string path or object reference
+* `getCurrentTime()` - Retrieve the current time, as an Instant
 * `getField(classObj=Object|String|Class ?: instance.getClass(), instance=Object, fieldName=String)` - Retrieves the
   Specified Field(s) via Reflection
 * `getFields(classObj=Object|String|Class)` - Retrieve the available field names for a class object
@@ -276,6 +282,11 @@ The following functions are available for use anywhere in CraftPresence:
   a String
 * `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
 * `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
+* `timeFromEpoch(epochTime)` - Retrive a Time Instant from the specified epoch time
+* `timeFromString(dateString, fromFormat, fromTimeZone ?: null)` - Format a Date String from one timezone and format
+  into a valid Instant instance
+* `timeToEpoch(data)` - Gets the number of seconds from the Java Epoch, derived from specified args
+* `timeToString(date, toFormat, toTimeZone ?: null)` - Format a Date String using the specified timezone and format.
 * `toCamelCase(input)` - Converts a String into a Valid and Acceptable Camel-Case Format
 * `translate(input=String, args=Object...)` - Translates an Unlocalized String, based on the mod translations retrieved
   for
