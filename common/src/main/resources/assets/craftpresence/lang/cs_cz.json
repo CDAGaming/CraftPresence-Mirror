@@ -132,7 +132,7 @@
   "craftpresence.placeholders.convertTimeFormat.description": "Convert a Date String from one format to another format",
   "craftpresence.placeholders.convertTimeFormat.usage": "convertTimeFormat(dateString, fromFormat, toFormat)",
   "craftpresence.placeholders.convertTimeZone.description": "Convert a Date String from one timezone to another timezone",
-  "craftpresence.placeholders.convertTimeZone.usage": "convertTimeZone(dateString, fromFormat, fromTimeZone, toTimeZone",
+  "craftpresence.placeholders.convertTimeZone.usage": "convertTimeZone(dateString, fromFormat, fromTimeZone, toTimeZone)",
   "craftpresence.placeholders.dateToEpoch.description": "Convert Date String to Epoch Timestamp in seconds",
   "craftpresence.placeholders.dateToEpoch.usage": "dateToEpoch(dateString, format, timeZone ?: null)",
   "craftpresence.placeholders.dimension.default.icon.description": "The default dimension icon",
