@@ -37,10 +37,10 @@ import net.minecraft.client.gui.GuiScreen;
 
 public class AccessibilitySettingsGui extends ExtendedScreen {
 
-    private final Accessibility CONFIG;
+    private Accessibility CONFIG;
     private ExtendedTextControl languageIdText;
     private CheckBoxControl showBackgroundAsDarkButton, stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
-    private ExtendedButtonControl proceedButton;
+    private ExtendedButtonControl resetConfigButton, proceedButton;
 
     AccessibilitySettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -280,6 +280,23 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        resetConfigButton = addControl(
+                new ExtendedButtonControl(
+                        10, (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.reset",
+                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
+                )
+        );
 
         super.initializeUi();
     }
@@ -299,6 +316,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         //noinspection ConstantConditions
         stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
+        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         super.preRender();
     }

@@ -41,8 +41,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ExtendedScreen {
-    private final General CONFIG;
-    private ExtendedButtonControl proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
+    private General CONFIG;
+    private ExtendedButtonControl resetConfigButton, proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
             detectMCUpdaterInstanceButton, detectTechnicPackButton, detectATLauncherButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
@@ -349,6 +349,23 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        resetConfigButton = addControl(
+                new ExtendedButtonControl(
+                        10, (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.reset",
+                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
+                )
+        );
 
         super.initializeUi();
     }
@@ -366,6 +383,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
         partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
         preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
         proceedButton.setControlEnabled(DiscordAssetUtils.isValidId(clientId.getControlMessage()));
+        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         super.preRender();
     }

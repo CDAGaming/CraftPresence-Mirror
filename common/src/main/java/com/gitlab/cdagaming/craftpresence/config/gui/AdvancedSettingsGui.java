@@ -44,8 +44,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ExtendedScreen {
-    private final Advanced CONFIG;
-    private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
+    private Advanced CONFIG;
+    private ExtendedButtonControl resetConfigButton, proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enableCommandsButton, enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowEndpointIconsButton;
@@ -683,6 +683,23 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        resetConfigButton = addControl(
+                new ExtendedButtonControl(
+                        10, (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.reset",
+                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
+                )
+        );
 
         super.initializeUi();
     }
@@ -701,6 +718,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         proceedButton.setControlEnabled(
                 (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
         );
+        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         guiMessagesButton.setControlEnabled(CraftPresence.GUIS.enabled);
         itemMessagesButton.setControlEnabled(CraftPresence.TILE_ENTITIES.enabled);

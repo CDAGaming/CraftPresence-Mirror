@@ -42,8 +42,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class BiomeSettingsGui extends ExtendedScreen {
-    private final Biome CONFIG;
-    private ExtendedButtonControl proceedButton, biomeMessagesButton;
+    private Biome CONFIG;
+    private ExtendedButtonControl resetConfigButton, proceedButton, biomeMessagesButton;
     private ExtendedTextControl defaultMessage;
 
     BiomeSettingsGui(GuiScreen parentScreen) {
@@ -237,6 +237,23 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        resetConfigButton = addControl(
+                new ExtendedButtonControl(
+                        10, (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.reset",
+                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
+                )
+        );
 
         super.initializeUi();
     }
@@ -252,6 +269,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
         renderString(defaultMessageText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
+        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
         biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.enabled);
 
         super.preRender();

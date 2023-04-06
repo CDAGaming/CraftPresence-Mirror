@@ -42,8 +42,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class ServerSettingsGui extends ExtendedScreen {
-    private final Server CONFIG;
-    private ExtendedButtonControl proceedButton, serverMessagesButton;
+    private Server CONFIG;
+    private ExtendedButtonControl resetConfigButton, proceedButton, serverMessagesButton;
     private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
 
     ServerSettingsGui(GuiScreen parentScreen) {
@@ -261,6 +261,23 @@ public class ServerSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        resetConfigButton = addControl(
+                new ExtendedButtonControl(
+                        10, (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.reset",
+                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
+                )
+        );
 
         super.initializeUi();
     }
@@ -280,6 +297,7 @@ public class ServerSettingsGui extends ExtendedScreen {
         renderString(defaultMessageText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultName.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultMOTD.getControlMessage()));
+        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
         serverMessagesButton.setControlEnabled(CraftPresence.SERVER.enabled);
 
         super.preRender();

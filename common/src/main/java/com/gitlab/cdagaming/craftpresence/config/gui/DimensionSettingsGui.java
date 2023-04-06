@@ -42,8 +42,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ExtendedScreen {
-    private final Dimension CONFIG;
-    private ExtendedButtonControl proceedButton, dimensionMessagesButton;
+    private Dimension CONFIG;
+    private ExtendedButtonControl resetConfigButton, proceedButton, dimensionMessagesButton;
     private ExtendedTextControl defaultMessage;
 
     DimensionSettingsGui(GuiScreen parentScreen) {
@@ -238,6 +238,23 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        resetConfigButton = addControl(
+                new ExtendedButtonControl(
+                        10, (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.reset",
+                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
+                )
+        );
 
         super.initializeUi();
     }
@@ -253,6 +270,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
         renderString(defaultMessageText, (getScreenWidth() / 2f) - 140, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
+        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
         dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
 
         super.preRender();
