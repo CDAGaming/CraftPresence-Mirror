@@ -1086,19 +1086,11 @@ public class DiscordUtils {
             syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));
         }
 
-        if (!CraftPresence.CONFIG.hasChanged && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
-                !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
-            if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(playerName)) {
-                CraftPresence.CONFIG.displaySettings.dynamicIcons.put(playerName,
-                        compileData(String.format(
-                                CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
-                                StringUtils.getOrDefault(uniqueId, playerName)
-                        )).get().toString()
-                );
-                DiscordAssetUtils.syncCustomAssets();
-                CraftPresence.CONFIG.save();
-            }
-
+        if (addEndpointIcon(
+                CraftPresence.CONFIG,
+                CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                playerName, uniqueId
+        )) {
             syncArgument("player.icon", playerName);
         }
 
@@ -1111,6 +1103,49 @@ public class DiscordUtils {
         // Sync the Default Icon Argument
         syncArgument("general.icon", CraftPresence.CONFIG.generalSettings.defaultIcon);
         syncScriptArguments();
+    }
+
+    /**
+     * Add an Endpoint Icon to the Selectable Dynamic Assets
+     *
+     * @param config   The {@link Config} instance to interpret
+     * @param endpoint The endpoint url to be interpreted
+     * @param name     The name to be interpreted
+     * @param key      The key to be interpreted
+     * @return {@link Boolean#TRUE} if operation is allowed
+     */
+    public boolean addEndpointIcon(final Config config, final String endpoint, final String name, final String key) {
+        final boolean canUseEndpointIcon = !config.hasChanged &&
+                config.advancedSettings.allowEndpointIcons &&
+                !StringUtils.isNullOrEmpty(endpoint);
+
+        if (canUseEndpointIcon) {
+            if (!config.displaySettings.dynamicIcons.containsKey(name)) {
+                config.displaySettings.dynamicIcons.put(name,
+                        compileData(String.format(
+                                endpoint,
+                                StringUtils.getOrDefault(key, name)
+                        )).get().toString()
+                );
+                if (config == CraftPresence.CONFIG) {
+                    DiscordAssetUtils.syncCustomAssets();
+                    config.save();
+                }
+            }
+        }
+        return canUseEndpointIcon;
+    }
+
+    /**
+     * Add an Endpoint Icon to the Selectable Dynamic Assets
+     *
+     * @param config   The {@link Config} instance to interpret
+     * @param endpoint The endpoint url to be interpreted
+     * @param name     The name or key to be interpreted
+     * @return {@link Boolean#TRUE} if operation is allowed
+     */
+    public boolean addEndpointIcon(final Config config, final String endpoint, final String name) {
+        return addEndpointIcon(config, endpoint, name, "");
     }
 
     /**

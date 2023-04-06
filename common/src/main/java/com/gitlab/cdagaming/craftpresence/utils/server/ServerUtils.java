@@ -37,7 +37,6 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.multiplayer.GuiConnecting;
@@ -110,10 +109,6 @@ public class ServerUtils implements Module {
      * The Current Server RPC Message being used, with Arguments
      */
     private String currentServerMessage = "";
-    /**
-     * Whether the endpoint icon system can be used in this module
-     */
-    private boolean canUseEndpointIcon = false;
     /**
      * The Current Server RPC Icon being used, with Arguments
      */
@@ -217,7 +212,6 @@ public class ServerUtils implements Module {
         currentWeatherName = null;
         currentServerMessage = "";
         currentServerIcon = "";
-        canUseEndpointIcon = false;
         worldTimeData = null;
         timeString24 = null;
         timeString12 = null;
@@ -488,8 +482,6 @@ public class ServerUtils implements Module {
     @Override
     public void updatePresence() {
         // Form General Argument Lists & Sub Argument Lists
-        canUseEndpointIcon = false;
-
         CraftPresence.CLIENT.syncArgument("player.position.x", currentCoordinates.getFirst());
         CraftPresence.CLIENT.syncArgument("player.position.y", currentCoordinates.getSecond());
         CraftPresence.CLIENT.syncArgument("player.position.z", currentCoordinates.getThird());
@@ -537,8 +529,6 @@ public class ServerUtils implements Module {
             final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
             final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedIP);
 
-            canUseEndpointIcon = !CraftPresence.CONFIG.hasChanged && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons && !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint);
-
             final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : "";
             final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : defaultIcon;
             final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
@@ -548,17 +538,11 @@ public class ServerUtils implements Module {
 
             // Attempt to find alternative icons, if no overrides are present
             if (StringUtils.isNullOrEmpty(currentServerIcon)) {
-                if (canUseEndpointIcon) {
-                    if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(formattedIP)) {
-                        CraftPresence.CONFIG.displaySettings.dynamicIcons.put(formattedIP,
-                                CraftPresence.CLIENT.compileData(String.format(
-                                        CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
-                                        formattedIP
-                                )).get().toString()
-                        );
-                        DiscordAssetUtils.syncCustomAssets();
-                        CraftPresence.CONFIG.save();
-                    }
+                if (CraftPresence.CLIENT.addEndpointIcon(
+                        CraftPresence.CONFIG,
+                        CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
+                        formattedIP
+                )) {
                     currentServerIcon = formattedIP;
                 } else {
                     currentServerIcon = currentServer_Name;
