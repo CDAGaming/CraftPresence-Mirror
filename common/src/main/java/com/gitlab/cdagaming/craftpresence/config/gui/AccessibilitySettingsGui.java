@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ColorEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
+@SuppressWarnings("DuplicatedCode")
 public class AccessibilitySettingsGui extends ExtendedScreen {
 
     private Accessibility CONFIG;
