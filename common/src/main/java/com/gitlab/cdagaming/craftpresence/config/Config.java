@@ -179,6 +179,8 @@ public final class Config extends Module implements Serializable {
     public Config getDefaults() {
         if (DEFAULT == null) {
             DEFAULT = new Config();
+            DEFAULT._schemaVersion = VERSION;
+            DEFAULT._lastMCVersionId = MC_VERSION;
         }
         return copy(DEFAULT, Config.class);
     }
