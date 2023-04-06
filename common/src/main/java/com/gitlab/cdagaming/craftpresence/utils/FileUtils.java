@@ -374,6 +374,7 @@ public class FileUtils {
     public static int getModCount() {
         int modCount = -1;
         final Class<?> fmlLoader = FileUtils.findValidClass("net.minecraftforge.fml.common.Loader");
+        final Class<?> quiltLoader = FileUtils.findValidClass("org.quiltmc.loader.api.QuiltLoader");
         final Class<?> fabricLoader = FileUtils.findValidClass("net.fabricmc.loader.api.FabricLoader");
         if (fmlLoader != null) {
             final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, "instance", null, null);
@@ -382,6 +383,11 @@ public class FileUtils {
                 if (mods instanceof List<?>) {
                     modCount = ((List<?>) mods).size();
                 }
+            }
+        } else if (quiltLoader != null) {
+            final Object mods = StringUtils.executeMethod(quiltLoader, null, "getAllMods", null, null);
+            if (mods instanceof List<?>) {
+                modCount = ((List<?>) mods).size();
             }
         } else if (fabricLoader != null) {
             final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, "getInstance", null, null);
