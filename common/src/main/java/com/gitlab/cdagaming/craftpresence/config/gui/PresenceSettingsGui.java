@@ -82,23 +82,25 @@ public class PresenceSettingsGui extends PaginatedScreen {
         final int checkboxCalc1 = (getScreenWidth() / 2) - 160;
 
         // Universal Items
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
+        if (isDefaultModule) {
+            resetConfigButton = addControl(
+                    new ExtendedButtonControl(
+                            10, (getScreenHeight() - 30),
+                            95, 20,
+                            "gui.config.message.button.reset",
+                            () -> CONFIG = CONFIG.getDefaults(),
+                            () -> {
+                                if (resetConfigButton.isControlEnabled()) {
+                                    CraftPresence.GUIS.drawMultiLineString(
+                                            StringUtils.splitTextByNewLine(
+                                                    ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                            ), this, true
+                                    );
+                                }
                             }
-                        }
-                ), -1
-        );
+                    ), -1
+            );
+        }
 
         // Page 1 Items
         detailsFormat = addControl(
@@ -526,7 +528,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
         renderString(startTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage + 1);
         renderString(endTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage + 1);
 
-        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
+        if (isDefaultModule) {
+            resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
+        }
 
         super.preRender();
     }

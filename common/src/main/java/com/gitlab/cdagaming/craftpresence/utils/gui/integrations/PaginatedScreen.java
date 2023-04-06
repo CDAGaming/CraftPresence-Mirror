@@ -206,6 +206,8 @@ public class PaginatedScreen extends ExtendedScreen {
         if (hasPages()) {
             defaultButtons.add(previousPageButton);
             defaultButtons.add(nextPageButton);
+            previousPageButton.setControlEnabled(currentPage > startPage);
+            nextPageButton.setControlEnabled(currentPage < maxPages);
         }
         if (paginatedControls.containsKey(-1)) {
             defaultButtons.addAll(paginatedControls.get(-1));
@@ -214,23 +216,23 @@ public class PaginatedScreen extends ExtendedScreen {
         final List<ScrollableListControl> listsToRender = paginatedLists.getOrDefault(currentPage, StringUtils.newArrayList());
 
         for (Gui extendedControl : extendedControls) {
-            // Toggle visibility/disable element is not on page
-            if (extendedControl instanceof ExtendedButtonControl) {
-                ((ExtendedButtonControl) extendedControl).setControlVisible(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
-                ((ExtendedButtonControl) extendedControl).setControlEnabled(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
-            }
-            if (extendedControl instanceof ExtendedTextControl) {
-                ((ExtendedTextControl) extendedControl).setVisible(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
-                ((ExtendedTextControl) extendedControl).setEnabled(elementsToRender.contains(extendedControl) || defaultButtons.contains(extendedControl));
+            final boolean isDefault = defaultButtons.contains(extendedControl);
+            if (!isDefault) {
+                final boolean isRendering = elementsToRender.contains(extendedControl);
+
+                // Toggle visibility/disable element is not on page
+                if (extendedControl instanceof ExtendedButtonControl) {
+                    ((ExtendedButtonControl) extendedControl).setControlVisible(isRendering);
+                    ((ExtendedButtonControl) extendedControl).setControlEnabled(isRendering);
+                }
+                if (extendedControl instanceof ExtendedTextControl) {
+                    ((ExtendedTextControl) extendedControl).setVisible(isRendering);
+                    ((ExtendedTextControl) extendedControl).setEnabled(isRendering);
+                }
             }
         }
         for (ScrollableListControl listControl : extendedLists) {
             listControl.setEnabled(listsToRender.contains(listControl));
-        }
-
-        if (hasPages()) {
-            previousPageButton.setControlEnabled(currentPage > startPage);
-            nextPageButton.setControlEnabled(currentPage < maxPages);
         }
 
         super.preRender();
