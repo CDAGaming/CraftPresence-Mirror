@@ -46,14 +46,15 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
-    private final Display CONFIG;
     private final PresenceData PRESENCE;
     private final Button DEFAULT_BUTTON;
     private final boolean isDefaultModule;
     private final Consumer<PresenceData> onChangedCallback;
+    private Display CONFIG;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
+    private ExtendedButtonControl resetConfigButton;
 
     PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
         super(parentScreen);
@@ -79,6 +80,25 @@ public class PresenceSettingsGui extends PaginatedScreen {
         final int calc2 = (getScreenWidth() / 2) + 3;
 
         final int checkboxCalc1 = (getScreenWidth() / 2) - 160;
+
+        // Universal Items
+        resetConfigButton = addControl(
+                new ExtendedButtonControl(
+                        10, (getScreenHeight() - 30),
+                        95, 20,
+                        "gui.config.message.button.reset",
+                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
+                ), -1
+        );
 
         // Page 1 Items
         detailsFormat = addControl(
@@ -505,6 +525,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
         renderString(largeImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
         renderString(startTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage + 1);
         renderString(endTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage + 1);
+
+        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         super.preRender();
     }

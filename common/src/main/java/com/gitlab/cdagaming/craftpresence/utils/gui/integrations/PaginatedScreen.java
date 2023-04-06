@@ -108,45 +108,48 @@ public class PaginatedScreen extends ExtendedScreen {
     public void initializeUi() {
         backButton = addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
-                        180, 20,
+                        hasPages() ? (getScreenWidth() / 2) - 65 : (getScreenWidth() / 2) - 90,
+                        (getScreenHeight() - 30),
+                        hasPages() ? 130 : 180, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
                 )
         );
-        previousPageButton = addControl(
-                new ExtendedButtonControl(
-                        backButton.getControlPosX() - 23, (getScreenHeight() - 30),
-                        20, 20,
-                        "<",
-                        () -> {
-                            if (currentPage > startPage) {
-                                currentPage--;
-                                if (onPageChange != null) {
-                                    onPageChange.run();
+        if (hasPages()) {
+            previousPageButton = addControl(
+                    new ExtendedButtonControl(
+                            backButton.getLeft() - 32, (getScreenHeight() - 30),
+                            30, 20,
+                            "<--",
+                            () -> {
+                                if (currentPage > startPage) {
+                                    currentPage--;
+                                    if (onPageChange != null) {
+                                        onPageChange.run();
+                                    }
                                 }
                             }
-                        }
-                )
-        );
-        nextPageButton = addControl(
-                new ExtendedButtonControl(
-                        (backButton.getControlPosX() + backButton.getControlWidth()) + 3, (getScreenHeight() - 30),
-                        20, 20,
-                        ">",
-                        () -> {
-                            if (currentPage < maxPages) {
-                                currentPage++;
-                                if (onPageChange != null) {
-                                    onPageChange.run();
+                    )
+            );
+            nextPageButton = addControl(
+                    new ExtendedButtonControl(
+                            backButton.getRight() + 2, (getScreenHeight() - 30),
+                            30, 20,
+                            "-->",
+                            () -> {
+                                if (currentPage < maxPages) {
+                                    currentPage++;
+                                    if (onPageChange != null) {
+                                        onPageChange.run();
+                                    }
                                 }
                             }
-                        }
-                )
-        );
+                    )
+            );
 
-        previousPageButton.setControlEnabled(currentPage > startPage);
-        nextPageButton.setControlEnabled(currentPage < maxPages);
+            previousPageButton.setControlEnabled(currentPage > startPage);
+            nextPageButton.setControlEnabled(currentPage < maxPages);
+        }
         super.initializeUi();
     }
 
@@ -199,7 +202,14 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     @Override
     public void preRender() {
-        final List<Gui> defaultButtons = StringUtils.newArrayList(previousPageButton, nextPageButton, backButton);
+        final List<Gui> defaultButtons = StringUtils.newArrayList(backButton);
+        if (hasPages()) {
+            defaultButtons.add(previousPageButton);
+            defaultButtons.add(nextPageButton);
+        }
+        if (paginatedControls.containsKey(-1)) {
+            defaultButtons.addAll(paginatedControls.get(-1));
+        }
         final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
         final List<ScrollableListControl> listsToRender = paginatedLists.getOrDefault(currentPage, StringUtils.newArrayList());
 
@@ -218,20 +228,24 @@ public class PaginatedScreen extends ExtendedScreen {
             listControl.setEnabled(listsToRender.contains(listControl));
         }
 
-        previousPageButton.setControlEnabled(currentPage > startPage);
-        nextPageButton.setControlEnabled(currentPage < maxPages);
+        if (hasPages()) {
+            previousPageButton.setControlEnabled(currentPage > startPage);
+            nextPageButton.setControlEnabled(currentPage < maxPages);
+        }
 
         super.preRender();
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == Keyboard.KEY_UP && currentPage > startPage) {
-            currentPage--;
-        }
+        if (hasPages()) {
+            if (keyCode == Keyboard.KEY_UP && currentPage > startPage) {
+                currentPage--;
+            }
 
-        if (keyCode == Keyboard.KEY_DOWN && currentPage < maxPages) {
-            currentPage++;
+            if (keyCode == Keyboard.KEY_DOWN && currentPage < maxPages) {
+                currentPage++;
+            }
         }
 
         super.keyTyped(typedChar, keyCode);
@@ -259,5 +273,14 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     public void setOnPageChange(final Runnable onPageChange) {
         this.onPageChange = onPageChange;
+    }
+
+    /**
+     * Determine if this UI has any applicable pages
+     *
+     * @return if maxPages is above zero
+     */
+    public boolean hasPages() {
+        return maxPages > 0;
     }
 }
