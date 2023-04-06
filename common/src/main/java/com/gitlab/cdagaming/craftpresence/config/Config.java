@@ -116,11 +116,9 @@ public final class Config extends Module implements Serializable {
         final boolean hasNoData = config == null;
         final boolean isInvalidData = !hasNoData && (forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0));
         if (hasNoData || isInvalidData) {
-            config = new Config();
+            config = hasNoData ? createDefaults() : config.getDefaults();
             config.isNewFile = true;
             config.hasChanged = config.needsReboot = isInvalidData;
-            config._schemaVersion = VERSION;
-            config._lastMCVersionId = MC_VERSION;
         }
 
         final boolean wasNewFile = config.isNewFile;
@@ -175,12 +173,17 @@ public final class Config extends Module implements Serializable {
         return property != null && !StringUtils.isNullOrEmpty(property.toString());
     }
 
+    public static Config createDefaults() {
+        final Config config = new Config();
+        config._schemaVersion = VERSION;
+        config._lastMCVersionId = MC_VERSION;
+        return copy(config, Config.class);
+    }
+
     @Override
     public Config getDefaults() {
         if (DEFAULT == null) {
-            DEFAULT = new Config();
-            DEFAULT._schemaVersion = VERSION;
-            DEFAULT._lastMCVersionId = MC_VERSION;
+            DEFAULT = createDefaults();
         }
         return copy(DEFAULT, Config.class);
     }
