@@ -316,6 +316,7 @@
   "gui.config.comment.advanced.verbose_mode": "Toggles Verbose Mode, showing more detailed logging as well as stack traces and deeper exception messages\\n\\nOverriden Status -> %1$s",
   "gui.config.comment.biome_messages.biome_icon": "Biome icon to default to when in an unsupported or unknown biome",
   "gui.config.comment.biome_messages.biome_messages": "Customize messages to display with biomes\\n(Manual format: biome_name;message;icon)\\n\\n%1$s",
+  "gui.config.comment.button.reset.config": "Reset this config to its default settings\\nWarning: This will overwrite all changes made once saved!",
   "gui.config.comment.button.sync.config": "Synchronize any live changes made from craftpresence.properties\\nWarning: This will overwrite any changes made in here if unsaved!",
   "gui.config.comment.dimension_messages.dimension_icon": "Dimension icon to default to when in an unsupported or unknown dimension",
   "gui.config.comment.dimension_messages.dimension_messages": "Customize messages to display with dimensions\\n(Manual format: dimension_name;message;icon)\\n\\n%1$s",
