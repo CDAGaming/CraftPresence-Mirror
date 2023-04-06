@@ -40,7 +40,7 @@ import java.util.List;
 
 @SuppressWarnings("DuplicatedCode")
 public class MainGui extends ExtendedScreen {
-    private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, commandGUIButton;
+    private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, commandGUIButton, resetConfigButton;
 
     public MainGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -254,13 +254,21 @@ public class MainGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.openScreen(new CommandsGui(currentScreen))
                 )
         );
-        // Added Reset Config Button
-        addControl(
+        resetConfigButton = addControl(
                 new ExtendedButtonControl(
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CraftPresence.CONFIG = Config.loadOrCreate(true)
+                        () -> CraftPresence.CONFIG = Config.loadOrCreate(true),
+                        () -> {
+                            if (resetConfigButton.isControlEnabled()) {
+                                CraftPresence.GUIS.drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                        ), this, true
+                                );
+                            }
+                        }
                 )
         );
         // Added Sync Config Button
@@ -341,6 +349,7 @@ public class MainGui extends ExtendedScreen {
         serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
         commandGUIButton.setControlEnabled(CraftPresence.CONFIG.advancedSettings.enableCommands);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
+        resetConfigButton.setControlEnabled(!CraftPresence.CONFIG.isDefaults());
 
         proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }
