@@ -76,6 +76,15 @@ public abstract class Module {
         setProperty(name, getDefaults().getProperty(name));
     }
 
+    /**
+     * Determine whether our properties match the current defaults for this {@link Module}
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean isDefaults() {
+        return this.equals(getDefaults());
+    }
+
     @Override
     public String toString() {
         return FileUtils.toJsonData(this);

@@ -509,11 +509,6 @@ public final class Config extends Module implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return FileUtils.toJsonData(this);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
@@ -525,10 +520,5 @@ public final class Config extends Module implements Serializable {
 
         Config p = (Config) obj;
         return toString().equals(p.toString());
-    }
-
-    @Override
-    public int hashCode() {
-        return toString().hashCode();
     }
 }
