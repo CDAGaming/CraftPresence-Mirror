@@ -54,8 +54,8 @@ public final class Config extends Module implements Serializable {
     private static int MC_VERSION;
     private static List<String> keyCodeTriggers;
     private static List<String> languageTriggers;
-    private static final Config INSTANCE = loadOrCreate();
     private static Config DEFAULT;
+    private static final Config INSTANCE = loadOrCreate();
     public transient boolean hasChanged = false, needsReboot = false, isNewFile = false;
     // Global Settings
     public String _README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
