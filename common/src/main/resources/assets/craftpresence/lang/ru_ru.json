@@ -316,6 +316,7 @@
   "gui.config.comment.advanced.verbose_mode": "Позволяет использовать подробный режим, показывая более подробное ведение журнала, трассировки стека и глубоких сообщений об исключениях\\n\\nПереопределение статуса -> %1$s",
   "gui.config.comment.biome_messages.biome_icon": "Значок биома, используемый по умолчанию в неподдерживаемом или неизвестном биоме",
   "gui.config.comment.biome_messages.biome_messages": "Настройте отображение сообщений для биомов\\n(Формат руководства: название_биома;сообщение;значок)\\n\\n%1$s",
+  "gui.config.comment.button.reset.config": "Reset this config to its default settings\\nWarning: This will overwrite all changes made once saved!",
   "gui.config.comment.button.sync.config": "Синхронизируйте все текущие изменения, внесенные из craftpresence.properties\\nПредупреждение: это перезапишет все изменения, внесенные здесь, если они не сохранены!",
   "gui.config.comment.dimension_messages.dimension_icon": "Значок измерения, используемый по умолчанию в неподдерживаемом или неизвестном измерении",
   "gui.config.comment.dimension_messages.dimension_messages": "Настройте отображение сообщений для измерений\\n(Формат руководства: название_измерения;сообщение;значок)\\n\\n%1$s",
