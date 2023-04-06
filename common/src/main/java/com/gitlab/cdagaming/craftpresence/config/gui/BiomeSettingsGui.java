@@ -63,7 +63,6 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultMessage.setControlMessage(defaultBiomeMessage);
 
         biomeMessagesButton = addControl(
                 new ExtendedButtonControl(
@@ -242,7 +241,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> refreshData(CONFIG.getDefaults()),
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -254,8 +253,23 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        refreshData();
 
         super.initializeUi();
+    }
+
+    private void refreshData(final Biome newConfig) {
+        if (newConfig != null) {
+            CONFIG = newConfig;
+        }
+        final ModuleData defaultData = CONFIG.biomeData.get("default");
+        final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
+
+        defaultMessage.setControlMessage(defaultBiomeMessage);
+    }
+
+    private void refreshData() {
+        refreshData(null);
     }
 
     @Override

@@ -63,7 +63,6 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultMessage.setControlMessage(defaultDimensionMessage);
 
         dimensionMessagesButton = addControl(
                 new ExtendedButtonControl(
@@ -243,7 +242,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> refreshData(CONFIG.getDefaults()),
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -255,8 +254,23 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        refreshData();
 
         super.initializeUi();
+    }
+
+    private void refreshData(final Dimension newConfig) {
+        if (newConfig != null) {
+            CONFIG = newConfig;
+        }
+        final ModuleData defaultData = CONFIG.dimensionData.get("default");
+        final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
+
+        defaultMessage.setControlMessage(defaultDimensionMessage);
+    }
+
+    private void refreshData() {
+        refreshData(null);
     }
 
     @Override

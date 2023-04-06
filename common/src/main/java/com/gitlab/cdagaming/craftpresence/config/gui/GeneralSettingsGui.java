@@ -65,7 +65,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        clientId.setControlMessage(CONFIG.clientId);
         clientId.setControlMaxLength(32);
 
         final int buttonCalc1 = (getScreenWidth() / 2) - 183;
@@ -99,7 +98,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        currentPartyPrivacy = CONFIG.partyPrivacyLevel;
         partyPrivacyLevelButton = addControl(
                 new ExtendedButtonControl(
                         buttonCalc2, CraftPresence.GUIS.getButtonY(2),
@@ -256,7 +254,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        currentPreferredClient = CONFIG.preferredClientLevel;
         preferredClientLevelButton = addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
@@ -354,7 +351,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> refreshData(CONFIG.getDefaults()),
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -366,8 +363,33 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        refreshData();
 
         super.initializeUi();
+    }
+
+    private void refreshData(final General newConfig) {
+        if (newConfig != null) {
+            CONFIG = newConfig;
+        }
+        clientId.setControlMessage(CONFIG.clientId);
+        currentPartyPrivacy = CONFIG.partyPrivacyLevel;
+        currentPreferredClient = CONFIG.preferredClientLevel;
+        detectATLauncherButton.setIsChecked(CONFIG.detectATLauncherInstance);
+        detectCurseManifestButton.setIsChecked(CONFIG.detectCurseManifest);
+        detectMultiMCManifestButton.setIsChecked(CONFIG.detectMultiMCManifest);
+        detectMCUpdaterInstanceButton.setIsChecked(CONFIG.detectMCUpdaterInstance);
+        detectTechnicPackButton.setIsChecked(CONFIG.detectTechnicPack);
+        detectBiomeDataButton.setIsChecked(CONFIG.detectBiomeData);
+        detectDimensionDataButton.setIsChecked(CONFIG.detectDimensionData);
+        detectWorldDataButton.setIsChecked(CONFIG.detectWorldData);
+        enableJoinRequestButton.setIsChecked(CONFIG.enableJoinRequests);
+        resetTimeOnInitButton.setIsChecked(CONFIG.resetTimeOnInit);
+        autoRegisterButton.setIsChecked(CONFIG.autoRegister);
+    }
+
+    private void refreshData() {
+        refreshData(null);
     }
 
     @Override

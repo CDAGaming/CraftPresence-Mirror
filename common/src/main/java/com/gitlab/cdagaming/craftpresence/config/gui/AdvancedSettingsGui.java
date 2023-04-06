@@ -82,7 +82,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         45, 20
                 )
         );
-        refreshRate.setControlMessage(Integer.toString(CONFIG.refreshRate));
         refreshRate.setControlMaxLength(3);
 
         guiMessagesButton = addControl(
@@ -688,7 +687,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> refreshData(CONFIG.getDefaults()),
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -700,8 +699,30 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        refreshData();
 
         super.initializeUi();
+    }
+
+    private void refreshData(final Advanced newConfig) {
+        if (newConfig != null) {
+            CONFIG = newConfig;
+        }
+        allowEndpointIconsButton.setIsChecked(CONFIG.allowEndpointIcons);
+        refreshRate.setControlMessage(Integer.toString(CONFIG.refreshRate));
+        enableCommandsButton.setIsChecked(CONFIG.enableCommands);
+        enablePerGuiButton.setIsChecked(CONFIG.enablePerGui);
+        enablePerItemButton.setIsChecked(CONFIG.enablePerItem);
+        enablePerEntityButton.setIsChecked(CONFIG.enablePerEntity);
+        renderTooltipsButton.setIsChecked(CONFIG.renderTooltips);
+        formatWordsButton.setIsChecked(CONFIG.formatWords);
+        debugModeButton.setIsChecked(CONFIG.debugMode);
+        verboseModeButton.setIsChecked(CONFIG.verboseMode);
+        allowPlaceholderPreviewsButton.setIsChecked(CONFIG.allowPlaceholderPreviews);
+    }
+
+    private void refreshData() {
+        refreshData(null);
     }
 
     @Override

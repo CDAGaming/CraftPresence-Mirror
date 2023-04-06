@@ -177,4 +177,13 @@ public class CheckBoxControl extends ExtendedButtonControl {
     public boolean isChecked() {
         return is_Checked;
     }
+
+    /**
+     * Sets this Control's Check State
+     *
+     * @param isChecked the new check state of this control
+     */
+    public void setIsChecked(final boolean isChecked) {
+        this.is_Checked = isChecked;
+    }
 }

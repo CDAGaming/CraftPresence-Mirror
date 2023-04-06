@@ -46,10 +46,10 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
-    private final PresenceData PRESENCE;
-    private final Button DEFAULT_BUTTON;
-    private final boolean isDefaultModule;
     private final Consumer<PresenceData> onChangedCallback;
+    private PresenceData PRESENCE;
+    private Button DEFAULT_BUTTON;
+    private boolean isDefaultModule;
     private Display CONFIG;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
@@ -64,7 +64,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
             PRESENCE.buttons.put("default", new Button(CONFIG.presenceData.buttons.get("default")));
         }
         DEFAULT_BUTTON = PRESENCE.buttons.get("default");
-        isDefaultModule = moduleData != null && moduleData.equals(CONFIG.presenceData);
+        isDefaultModule = PRESENCE.equals(CONFIG.presenceData);
         onChangedCallback = changedCallback;
     }
 
@@ -88,7 +88,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                             10, (getScreenHeight() - 30),
                             95, 20,
                             "gui.config.message.button.reset",
-                            () -> CONFIG = CONFIG.getDefaults(),
+                            () -> refreshData(CONFIG.getDefaults()),
                             () -> {
                                 if (resetConfigButton.isControlEnabled()) {
                                     CraftPresence.GUIS.drawMultiLineString(
@@ -131,11 +131,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         180, 20
                 ), startPage
         );
-
-        detailsFormat.setControlMessage(PRESENCE.details);
-        gameStateFormat.setControlMessage(PRESENCE.gameState);
-        largeImageFormat.setControlMessage(PRESENCE.largeImageText);
-        smallImageFormat.setControlMessage(PRESENCE.smallImageText);
 
         if (!isDefaultModule) {
             enabledCheckbox = addControl(
@@ -182,9 +177,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
-        smallImageKeyFormat.setControlMessage(PRESENCE.smallImageKey);
-        largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
-
         startTimeFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -199,9 +191,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         180, 20
                 ), startPage + 1
         );
-
-        startTimeFormat.setControlMessage(PRESENCE.startTimestamp);
-        endTimeFormat.setControlMessage(PRESENCE.endTimestamp);
 
         // Button Messages Button
         addControl(
@@ -448,6 +437,8 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
+        refreshData();
+
         super.initializeUi();
 
         backButton.setOnClick(
@@ -500,6 +491,34 @@ public class PresenceSettingsGui extends PaginatedScreen {
                     CraftPresence.GUIS.openScreen(parentScreen);
                 }
         );
+    }
+
+    private void refreshData(final Display newConfig) {
+        if (newConfig != null) {
+            CONFIG = newConfig;
+            PRESENCE = newConfig.presenceData;
+            if (PRESENCE.buttons.isEmpty()) {
+                PRESENCE.buttons.put("default", new Button(CONFIG.presenceData.buttons.get("default")));
+            }
+            DEFAULT_BUTTON = PRESENCE.buttons.get("default");
+            isDefaultModule = PRESENCE.equals(CONFIG.presenceData);
+        }
+        detailsFormat.setControlMessage(PRESENCE.details);
+        gameStateFormat.setControlMessage(PRESENCE.gameState);
+        largeImageFormat.setControlMessage(PRESENCE.largeImageText);
+        smallImageFormat.setControlMessage(PRESENCE.smallImageText);
+        if (!isDefaultModule) {
+            enabledCheckbox.setIsChecked(PRESENCE.enabled);
+            useAsMainCheckbox.setIsChecked(PRESENCE.useAsMain);
+        }
+        smallImageKeyFormat.setControlMessage(PRESENCE.smallImageKey);
+        largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
+        startTimeFormat.setControlMessage(PRESENCE.startTimestamp);
+        endTimeFormat.setControlMessage(PRESENCE.endTimestamp);
+    }
+
+    private void refreshData() {
+        refreshData(null);
     }
 
     @Override

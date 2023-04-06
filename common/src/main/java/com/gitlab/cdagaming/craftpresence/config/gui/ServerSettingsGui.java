@@ -63,7 +63,6 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultName.setControlMessage(CONFIG.fallbackServerName);
         defaultMOTD = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -71,7 +70,6 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultMOTD.setControlMessage(CONFIG.fallbackServerMotd);
         defaultMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -79,7 +77,6 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        defaultMessage.setControlMessage(defaultServerMessage);
 
         serverMessagesButton = addControl(
                 new ExtendedButtonControl(
@@ -266,7 +263,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> refreshData(CONFIG.getDefaults()),
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -278,8 +275,25 @@ public class ServerSettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        refreshData();
 
         super.initializeUi();
+    }
+
+    private void refreshData(final Server newConfig) {
+        if (newConfig != null) {
+            CONFIG = newConfig;
+        }
+        final ModuleData defaultData = CONFIG.serverData.get("default");
+        final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
+
+        defaultName.setControlMessage(CONFIG.fallbackServerName);
+        defaultMOTD.setControlMessage(CONFIG.fallbackServerMotd);
+        defaultMessage.setControlMessage(defaultServerMessage);
+    }
+
+    private void refreshData() {
+        refreshData(null);
     }
 
     @Override

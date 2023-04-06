@@ -196,7 +196,6 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
-        languageIdText.setControlMessage(CONFIG.languageId);
 
         showBackgroundAsDarkButton = addControl(
                 new CheckBoxControl(
@@ -285,7 +284,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
+                        () -> refreshData(CONFIG.getDefaults()),
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -297,8 +296,24 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         }
                 )
         );
+        refreshData();
 
         super.initializeUi();
+    }
+
+    private void refreshData(final Accessibility newConfig) {
+        if (newConfig != null) {
+            CONFIG = newConfig;
+        }
+        languageIdText.setControlMessage(CONFIG.languageId);
+        showBackgroundAsDarkButton.setIsChecked(CONFIG.showBackgroundAsDark);
+        stripTranslationColorsButton.setIsChecked(CONFIG.stripTranslationColors);
+        showLoggingInChatButton.setIsChecked(CONFIG.showLoggingInChat);
+        stripExtraGuiElementsButton.setIsChecked(CONFIG.stripExtraGuiElements);
+    }
+
+    private void refreshData() {
+        refreshData(null);
     }
 
     @Override
