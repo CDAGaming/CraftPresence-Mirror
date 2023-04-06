@@ -1086,7 +1086,7 @@ public class DiscordUtils {
             syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));
         }
 
-        if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+        if (!CraftPresence.CONFIG.hasChanged && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                 !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
             if (!CraftPresence.CONFIG.displaySettings.dynamicIcons.containsKey(playerName)) {
                 CraftPresence.CONFIG.displaySettings.dynamicIcons.put(playerName,
