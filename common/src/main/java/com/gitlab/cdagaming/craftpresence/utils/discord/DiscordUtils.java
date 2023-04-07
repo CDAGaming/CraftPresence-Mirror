@@ -1063,6 +1063,16 @@ public class DiscordUtils {
      */
     public void syncPlaceholders() {
         // Sync Internal Values
+        if (!CraftPresence.CONFIG.hasChanged) {
+            final boolean isDebugMode = CraftPresence.CONFIG.advancedSettings.debugMode;
+            if (ipcInstance.isDebugMode() != isDebugMode) {
+                ipcInstance.setDebugMode(isDebugMode);
+            }
+            final boolean isVerboseMode = CraftPresence.CONFIG.advancedSettings.verboseMode;
+            if (ipcInstance.isVerboseLogging() != isVerboseMode) {
+                ipcInstance.setVerboseLogging(isVerboseMode);
+            }
+        }
         syncArgument("_general.instance", CraftPresence.instance);
         syncArgument("_general.player", CraftPresence.player);
         syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.world : null);

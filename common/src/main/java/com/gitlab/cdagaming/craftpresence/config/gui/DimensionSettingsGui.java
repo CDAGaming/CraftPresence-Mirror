@@ -42,8 +42,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ExtendedScreen {
-    private Dimension CONFIG;
-    private ExtendedButtonControl resetConfigButton, proceedButton, dimensionMessagesButton;
+    private final Dimension CONFIG;
+    private ExtendedButtonControl proceedButton, dimensionMessagesButton;
     private ExtendedTextControl defaultMessage;
 
     DimensionSettingsGui(GuiScreen parentScreen) {
@@ -63,6 +63,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
+        defaultMessage.setControlMessage(defaultDimensionMessage);
 
         dimensionMessagesButton = addControl(
                 new ExtendedButtonControl(
@@ -237,40 +238,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         }
                 )
         );
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> refreshData(CONFIG.getDefaults()),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-        refreshData();
 
         super.initializeUi();
-    }
-
-    private void refreshData(final Dimension newConfig) {
-        if (newConfig != null) {
-            CONFIG = newConfig;
-        }
-        final ModuleData defaultData = CONFIG.dimensionData.get("default");
-        final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
-
-        defaultMessage.setControlMessage(defaultDimensionMessage);
-    }
-
-    private void refreshData() {
-        refreshData(null);
     }
 
     @Override
@@ -284,7 +253,6 @@ public class DimensionSettingsGui extends ExtendedScreen {
         renderString(defaultMessageText, (getScreenWidth() / 2f) - 140, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
-        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
         dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
 
         super.preRender();

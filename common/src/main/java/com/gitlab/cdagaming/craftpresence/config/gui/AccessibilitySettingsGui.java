@@ -35,13 +35,12 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ColorEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
-@SuppressWarnings("DuplicatedCode")
 public class AccessibilitySettingsGui extends ExtendedScreen {
 
-    private Accessibility CONFIG;
+    private final Accessibility CONFIG;
     private ExtendedTextControl languageIdText;
     private CheckBoxControl showBackgroundAsDarkButton, stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
-    private ExtendedButtonControl resetConfigButton, proceedButton;
+    private ExtendedButtonControl proceedButton;
 
     AccessibilitySettingsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -197,6 +196,7 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
+        languageIdText.setControlMessage(CONFIG.languageId);
 
         showBackgroundAsDarkButton = addControl(
                 new CheckBoxControl(
@@ -280,41 +280,8 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
                         }
                 )
         );
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> refreshData(CONFIG.getDefaults()),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-        refreshData();
 
         super.initializeUi();
-    }
-
-    private void refreshData(final Accessibility newConfig) {
-        if (newConfig != null) {
-            CONFIG = newConfig;
-        }
-        languageIdText.setControlMessage(CONFIG.languageId);
-        showBackgroundAsDarkButton.setIsChecked(CONFIG.showBackgroundAsDark);
-        stripTranslationColorsButton.setIsChecked(CONFIG.stripTranslationColors);
-        showLoggingInChatButton.setIsChecked(CONFIG.showLoggingInChat);
-        stripExtraGuiElementsButton.setIsChecked(CONFIG.stripExtraGuiElements);
-    }
-
-    private void refreshData() {
-        refreshData(null);
     }
 
     @Override
@@ -332,7 +299,6 @@ public class AccessibilitySettingsGui extends ExtendedScreen {
         //noinspection ConstantConditions
         stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
-        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         super.preRender();
     }

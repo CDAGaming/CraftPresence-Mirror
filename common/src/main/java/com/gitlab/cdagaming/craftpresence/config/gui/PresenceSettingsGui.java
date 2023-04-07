@@ -46,15 +46,14 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends PaginatedScreen {
+    private final Display CONFIG;
+    private final PresenceData PRESENCE;
+    private final Button DEFAULT_BUTTON;
+    private final boolean isDefaultModule;
     private final Consumer<PresenceData> onChangedCallback;
-    private PresenceData PRESENCE;
-    private Button DEFAULT_BUTTON;
-    private boolean isDefaultModule;
-    private Display CONFIG;
     private ExtendedTextControl detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
-    private ExtendedButtonControl resetConfigButton;
 
     PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
         super(parentScreen);
@@ -64,7 +63,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
             PRESENCE.buttons.put("default", new Button(CONFIG.presenceData.buttons.get("default")));
         }
         DEFAULT_BUTTON = PRESENCE.buttons.get("default");
-        isDefaultModule = PRESENCE.equals(CONFIG.presenceData);
+        isDefaultModule = moduleData != null && moduleData.equals(CONFIG.presenceData);
         onChangedCallback = changedCallback;
     }
 
@@ -80,27 +79,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
         final int calc2 = (getScreenWidth() / 2) + 3;
 
         final int checkboxCalc1 = (getScreenWidth() / 2) - 160;
-
-        // Universal Items
-        if (isDefaultModule) {
-            resetConfigButton = addControl(
-                    new ExtendedButtonControl(
-                            10, (getScreenHeight() - 30),
-                            95, 20,
-                            "gui.config.message.button.reset",
-                            () -> refreshData(CONFIG.getDefaults()),
-                            () -> {
-                                if (resetConfigButton.isControlEnabled()) {
-                                    CraftPresence.GUIS.drawMultiLineString(
-                                            StringUtils.splitTextByNewLine(
-                                                    ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                            ), this, true
-                                    );
-                                }
-                            }
-                    ), -1
-            );
-        }
 
         // Page 1 Items
         detailsFormat = addControl(
@@ -131,6 +109,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         180, 20
                 ), startPage
         );
+
+        detailsFormat.setControlMessage(PRESENCE.details);
+        gameStateFormat.setControlMessage(PRESENCE.gameState);
+        largeImageFormat.setControlMessage(PRESENCE.largeImageText);
+        smallImageFormat.setControlMessage(PRESENCE.smallImageText);
 
         if (!isDefaultModule) {
             enabledCheckbox = addControl(
@@ -177,6 +160,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
+        smallImageKeyFormat.setControlMessage(PRESENCE.smallImageKey);
+        largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
+
         startTimeFormat = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -191,6 +177,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
                         180, 20
                 ), startPage + 1
         );
+
+        startTimeFormat.setControlMessage(PRESENCE.startTimestamp);
+        endTimeFormat.setControlMessage(PRESENCE.endTimestamp);
 
         // Button Messages Button
         addControl(
@@ -437,8 +426,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
                 ), startPage + 1
         );
 
-        refreshData();
-
         super.initializeUi();
 
         backButton.setOnClick(
@@ -493,34 +480,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
         );
     }
 
-    private void refreshData(final Display newConfig) {
-        if (newConfig != null) {
-            CONFIG = newConfig;
-            PRESENCE = newConfig.presenceData;
-            if (PRESENCE.buttons.isEmpty()) {
-                PRESENCE.buttons.put("default", new Button(CONFIG.presenceData.buttons.get("default")));
-            }
-            DEFAULT_BUTTON = PRESENCE.buttons.get("default");
-            isDefaultModule = PRESENCE.equals(CONFIG.presenceData);
-        }
-        detailsFormat.setControlMessage(PRESENCE.details);
-        gameStateFormat.setControlMessage(PRESENCE.gameState);
-        largeImageFormat.setControlMessage(PRESENCE.largeImageText);
-        smallImageFormat.setControlMessage(PRESENCE.smallImageText);
-        if (!isDefaultModule) {
-            enabledCheckbox.setIsChecked(PRESENCE.enabled);
-            useAsMainCheckbox.setIsChecked(PRESENCE.useAsMain);
-        }
-        smallImageKeyFormat.setControlMessage(PRESENCE.smallImageKey);
-        largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
-        startTimeFormat.setControlMessage(PRESENCE.startTimestamp);
-        endTimeFormat.setControlMessage(PRESENCE.endTimestamp);
-    }
-
-    private void refreshData() {
-        refreshData(null);
-    }
-
     @Override
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
@@ -546,10 +505,6 @@ public class PresenceSettingsGui extends PaginatedScreen {
         renderString(largeImageKeyFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF, startPage + 1);
         renderString(startTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF, startPage + 1);
         renderString(endTimeFormatTitle, (getScreenWidth() / 2f) - 160, CraftPresence.GUIS.getButtonY(4, 5), 0xFFFFFF, startPage + 1);
-
-        if (isDefaultModule) {
-            resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
-        }
 
         super.preRender();
     }

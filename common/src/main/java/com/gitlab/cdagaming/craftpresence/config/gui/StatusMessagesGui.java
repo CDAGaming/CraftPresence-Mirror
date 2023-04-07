@@ -45,6 +45,7 @@ import java.util.Map;
 
 @SuppressWarnings("DuplicatedCode")
 public class StatusMessagesGui extends PaginatedScreen {
+    private final Status CONFIG;
     // nameTranslation, [configPath,commentTranslation]
     private final Map<String, Pair<String, Runnable>> eventMappings = new HashMapBuilder<String, Pair<String, Runnable>>()
             .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
@@ -80,8 +81,6 @@ public class StatusMessagesGui extends PaginatedScreen {
             )
             ))
             .build();
-    private Status CONFIG;
-    private ExtendedButtonControl resetConfigButton;
 
     StatusMessagesGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -94,24 +93,6 @@ public class StatusMessagesGui extends PaginatedScreen {
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
         final int midCalc = (getScreenWidth() / 2) - 90;
-
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> CONFIG = CONFIG.getDefaults(),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
-                            }
-                        }
-                ), -1
-        );
 
         int buttonRow = 1, index = 1;
         for (Map.Entry<String, Pair<String, Runnable>> entry : eventMappings.entrySet()) {
@@ -221,8 +202,6 @@ public class StatusMessagesGui extends PaginatedScreen {
 
         renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
         renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
-
-        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         super.preRender();
     }

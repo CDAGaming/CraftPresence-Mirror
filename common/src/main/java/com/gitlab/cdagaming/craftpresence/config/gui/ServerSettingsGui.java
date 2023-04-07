@@ -42,8 +42,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class ServerSettingsGui extends ExtendedScreen {
-    private Server CONFIG;
-    private ExtendedButtonControl resetConfigButton, proceedButton, serverMessagesButton;
+    private final Server CONFIG;
+    private ExtendedButtonControl proceedButton, serverMessagesButton;
     private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
 
     ServerSettingsGui(GuiScreen parentScreen) {
@@ -63,6 +63,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
+        defaultName.setControlMessage(CONFIG.fallbackServerName);
         defaultMOTD = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -70,6 +71,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
+        defaultMOTD.setControlMessage(CONFIG.fallbackServerMotd);
         defaultMessage = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
@@ -77,6 +79,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
+        defaultMessage.setControlMessage(defaultServerMessage);
 
         serverMessagesButton = addControl(
                 new ExtendedButtonControl(
@@ -258,42 +261,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                         }
                 )
         );
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> refreshData(CONFIG.getDefaults()),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-        refreshData();
 
         super.initializeUi();
-    }
-
-    private void refreshData(final Server newConfig) {
-        if (newConfig != null) {
-            CONFIG = newConfig;
-        }
-        final ModuleData defaultData = CONFIG.serverData.get("default");
-        final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
-
-        defaultName.setControlMessage(CONFIG.fallbackServerName);
-        defaultMOTD.setControlMessage(CONFIG.fallbackServerMotd);
-        defaultMessage.setControlMessage(defaultServerMessage);
-    }
-
-    private void refreshData() {
-        refreshData(null);
     }
 
     @Override
@@ -311,7 +280,6 @@ public class ServerSettingsGui extends ExtendedScreen {
         renderString(defaultMessageText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultName.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultMOTD.getControlMessage()));
-        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
         serverMessagesButton.setControlEnabled(CraftPresence.SERVER.enabled);
 
         super.preRender();

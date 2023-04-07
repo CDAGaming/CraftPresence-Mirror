@@ -41,8 +41,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ExtendedScreen {
-    private General CONFIG;
-    private ExtendedButtonControl resetConfigButton, proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
+    private final General CONFIG;
+    private ExtendedButtonControl proceedButton, partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
             detectMCUpdaterInstanceButton, detectTechnicPackButton, detectATLauncherButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
@@ -65,6 +65,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         180, 20
                 )
         );
+        clientId.setControlMessage(CONFIG.clientId);
         clientId.setControlMaxLength(32);
 
         final int buttonCalc1 = (getScreenWidth() / 2) - 183;
@@ -98,6 +99,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
+        currentPartyPrivacy = CONFIG.partyPrivacyLevel;
         partyPrivacyLevelButton = addControl(
                 new ExtendedButtonControl(
                         buttonCalc2, CraftPresence.GUIS.getButtonY(2),
@@ -254,6 +256,7 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         )
                 )
         );
+        currentPreferredClient = CONFIG.preferredClientLevel;
         preferredClientLevelButton = addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
@@ -275,7 +278,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         () -> {
                             if (!clientId.getControlMessage().equals(CONFIG.clientId)) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.clientId = clientId.getControlMessage();
                             }
                             if (currentPartyPrivacy != CONFIG.partyPrivacyLevel) {
@@ -284,7 +286,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
                             }
                             if (currentPreferredClient != CONFIG.preferredClientLevel) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.preferredClientLevel = currentPreferredClient;
                             }
                             if (detectATLauncherButton.isChecked() != CONFIG.detectATLauncherInstance) {
@@ -325,12 +326,10 @@ public class GeneralSettingsGui extends ExtendedScreen {
                             }
                             if (resetTimeOnInitButton.isChecked() != CONFIG.resetTimeOnInit) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.resetTimeOnInit = resetTimeOnInitButton.isChecked();
                             }
                             if (autoRegisterButton.isChecked() != CONFIG.autoRegister) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.autoRegister = autoRegisterButton.isChecked();
                             }
                             CraftPresence.GUIS.openScreen(parentScreen);
@@ -346,50 +345,8 @@ public class GeneralSettingsGui extends ExtendedScreen {
                         }
                 )
         );
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> refreshData(CONFIG.getDefaults()),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-        refreshData();
 
         super.initializeUi();
-    }
-
-    private void refreshData(final General newConfig) {
-        if (newConfig != null) {
-            CONFIG = newConfig;
-        }
-        clientId.setControlMessage(CONFIG.clientId);
-        currentPartyPrivacy = CONFIG.partyPrivacyLevel;
-        currentPreferredClient = CONFIG.preferredClientLevel;
-        detectATLauncherButton.setIsChecked(CONFIG.detectATLauncherInstance);
-        detectCurseManifestButton.setIsChecked(CONFIG.detectCurseManifest);
-        detectMultiMCManifestButton.setIsChecked(CONFIG.detectMultiMCManifest);
-        detectMCUpdaterInstanceButton.setIsChecked(CONFIG.detectMCUpdaterInstance);
-        detectTechnicPackButton.setIsChecked(CONFIG.detectTechnicPack);
-        detectBiomeDataButton.setIsChecked(CONFIG.detectBiomeData);
-        detectDimensionDataButton.setIsChecked(CONFIG.detectDimensionData);
-        detectWorldDataButton.setIsChecked(CONFIG.detectWorldData);
-        enableJoinRequestButton.setIsChecked(CONFIG.enableJoinRequests);
-        resetTimeOnInitButton.setIsChecked(CONFIG.resetTimeOnInit);
-        autoRegisterButton.setIsChecked(CONFIG.autoRegister);
-    }
-
-    private void refreshData() {
-        refreshData(null);
     }
 
     @Override
@@ -405,7 +362,6 @@ public class GeneralSettingsGui extends ExtendedScreen {
         partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
         preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
         proceedButton.setControlEnabled(DiscordAssetUtils.isValidId(clientId.getControlMessage()));
-        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         super.preRender();
     }

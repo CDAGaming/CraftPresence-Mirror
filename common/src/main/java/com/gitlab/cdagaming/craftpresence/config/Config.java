@@ -56,7 +56,7 @@ public final class Config extends Module implements Serializable {
     private static List<String> languageTriggers;
     private static Config DEFAULT;
     private static final Config INSTANCE = loadOrCreate();
-    public transient boolean hasChanged = false, needsReboot = false, isNewFile = false;
+    public transient boolean hasChanged = false, isNewFile = false;
     // Global Settings
     public String _README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
     public int _schemaVersion = 0;
@@ -118,7 +118,7 @@ public final class Config extends Module implements Serializable {
         if (hasNoData || isInvalidData) {
             config = hasNoData ? createDefaults() : config.getDefaults();
             config.isNewFile = true;
-            config.hasChanged = config.needsReboot = isInvalidData;
+            config.hasChanged = isInvalidData;
         }
 
         final boolean wasNewFile = config.isNewFile;
@@ -195,14 +195,27 @@ public final class Config extends Module implements Serializable {
 
     public void applySettings() {
         if (hasChanged) {
-            if (needsReboot) {
-                CommandUtils.rebootRPC();
-                needsReboot = false;
-            }
             CommandUtils.reloadData(true);
             hasChanged = false;
         }
         isNewFile = false;
+    }
+
+    public void applyFrom(final Config old) {
+        boolean needsReboot = false;
+        if (!generalSettings.clientId.equals(old.generalSettings.clientId)) {
+            needsReboot = true; // Client ID changed
+        } else if (generalSettings.preferredClientLevel != old.generalSettings.preferredClientLevel) {
+            needsReboot = true; // Preferred Client Level changed
+        } else if (generalSettings.resetTimeOnInit != old.generalSettings.resetTimeOnInit) {
+            needsReboot = true; // Reset Time On Init changed
+        } else if (generalSettings.autoRegister != old.generalSettings.autoRegister) {
+            needsReboot = true; // Auto Register changed
+        }
+
+        if (needsReboot) {
+            CommandUtils.rebootRPC();
+        }
     }
 
     public JsonElement handleMigrations(JsonElement rawJson, final int oldVer, final int newVer) {

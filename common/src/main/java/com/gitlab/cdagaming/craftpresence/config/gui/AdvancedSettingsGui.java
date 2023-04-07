@@ -44,8 +44,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ExtendedScreen {
-    private Advanced CONFIG;
-    private ExtendedButtonControl resetConfigButton, proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
+    private final Advanced CONFIG;
+    private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enableCommandsButton, enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowEndpointIconsButton;
@@ -82,6 +82,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         45, 20
                 )
         );
+        refreshRate.setControlMessage(Integer.toString(CONFIG.refreshRate));
         refreshRate.setControlMaxLength(3);
 
         guiMessagesButton = addControl(
@@ -628,7 +629,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             }
                             if (!refreshRate.getControlMessage().equals(Integer.toString(CONFIG.refreshRate))) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
                             }
                             if (enableCommandsButton.isChecked() != CONFIG.enableCommands) {
@@ -657,12 +657,10 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             }
                             if (debugModeButton.isChecked() != CONFIG.debugMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.debugMode = debugModeButton.isChecked();
                             }
                             if (verboseModeButton.isChecked() != CONFIG.verboseMode) {
                                 CraftPresence.CONFIG.hasChanged = true;
-                                CraftPresence.CONFIG.needsReboot = true;
                                 CONFIG.verboseMode = verboseModeButton.isChecked();
                             }
                             if (allowPlaceholderPreviewsButton.isChecked() != CONFIG.allowPlaceholderPreviews) {
@@ -682,47 +680,8 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                         }
                 )
         );
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> refreshData(CONFIG.getDefaults()),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-        refreshData();
 
         super.initializeUi();
-    }
-
-    private void refreshData(final Advanced newConfig) {
-        if (newConfig != null) {
-            CONFIG = newConfig;
-        }
-        allowEndpointIconsButton.setIsChecked(CONFIG.allowEndpointIcons);
-        refreshRate.setControlMessage(Integer.toString(CONFIG.refreshRate));
-        enableCommandsButton.setIsChecked(CONFIG.enableCommands);
-        enablePerGuiButton.setIsChecked(CONFIG.enablePerGui);
-        enablePerItemButton.setIsChecked(CONFIG.enablePerItem);
-        enablePerEntityButton.setIsChecked(CONFIG.enablePerEntity);
-        renderTooltipsButton.setIsChecked(CONFIG.renderTooltips);
-        formatWordsButton.setIsChecked(CONFIG.formatWords);
-        debugModeButton.setIsChecked(CONFIG.debugMode);
-        verboseModeButton.setIsChecked(CONFIG.verboseMode);
-        allowPlaceholderPreviewsButton.setIsChecked(CONFIG.allowPlaceholderPreviews);
-    }
-
-    private void refreshData() {
-        refreshData(null);
     }
 
     @Override
@@ -739,7 +698,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         proceedButton.setControlEnabled(
                 (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
         );
-        resetConfigButton.setControlEnabled(!CONFIG.isDefaults());
 
         guiMessagesButton.setControlEnabled(CraftPresence.GUIS.enabled);
         itemMessagesButton.setControlEnabled(CraftPresence.TILE_ENTITIES.enabled);
