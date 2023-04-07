@@ -71,6 +71,11 @@ public class Gui extends Module implements Serializable {
     }
 
     @Override
+    public Gui copy() {
+        return copy(this, Gui.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Gui.class, this, name);
     }

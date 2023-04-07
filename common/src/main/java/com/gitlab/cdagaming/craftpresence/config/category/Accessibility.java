@@ -55,6 +55,11 @@ public class Accessibility extends Module implements Serializable {
     }
 
     @Override
+    public Accessibility copy() {
+        return copy(this, Accessibility.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Accessibility.class, this, name);
     }

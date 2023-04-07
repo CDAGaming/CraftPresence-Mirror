@@ -65,6 +65,11 @@ public class Advanced extends Module implements Serializable {
     }
 
     @Override
+    public Advanced copy() {
+        return copy(this, Advanced.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Advanced.class, this, name);
     }

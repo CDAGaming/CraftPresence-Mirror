@@ -52,6 +52,13 @@ public abstract class Module {
     protected abstract Module getDefaults();
 
     /**
+     * Retrieve a copy of this {@link Module} instance
+     *
+     * @return a copy of this {@link Module} instance
+     */
+    protected abstract Module copy();
+
+    /**
      * Retrieve the specified property for this {@link Module}
      *
      * @param name the name of the property

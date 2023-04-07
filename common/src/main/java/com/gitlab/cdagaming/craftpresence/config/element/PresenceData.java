@@ -81,6 +81,11 @@ public class PresenceData extends Module implements Serializable {
         return new PresenceData(DEFAULT);
     }
 
+    @Override
+    public PresenceData copy() {
+        return new PresenceData(this);
+    }
+
     public PresenceData setDetails(final String details) {
         this.details = details;
         return this;

@@ -53,6 +53,11 @@ public class Dimension extends Module implements Serializable {
     }
 
     @Override
+    public Dimension copy() {
+        return copy(this, Dimension.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Dimension.class, this, name);
     }

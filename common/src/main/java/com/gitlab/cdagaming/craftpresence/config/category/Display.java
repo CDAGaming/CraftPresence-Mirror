@@ -69,6 +69,11 @@ public class Display extends Module implements Serializable {
     }
 
     @Override
+    public Display copy() {
+        return copy(this, Display.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Display.class, this, name);
     }

@@ -60,6 +60,11 @@ public class Status extends Module implements Serializable {
     }
 
     @Override
+    public Status copy() {
+        return copy(this, Status.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Status.class, this, name);
     }

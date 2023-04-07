@@ -55,6 +55,11 @@ public class Server extends Module implements Serializable {
     }
 
     @Override
+    public Server copy() {
+        return copy(this, Server.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Server.class, this, name);
     }

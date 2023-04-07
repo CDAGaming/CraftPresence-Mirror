@@ -188,6 +188,11 @@ public final class Config extends Module implements Serializable {
         return copy(DEFAULT, Config.class);
     }
 
+    @Override
+    public Config copy() {
+        return copy(this, Config.class);
+    }
+
     public void applySettings() {
         if (hasChanged) {
             if (needsReboot) {

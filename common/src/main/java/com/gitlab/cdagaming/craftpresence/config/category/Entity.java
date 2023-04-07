@@ -59,6 +59,11 @@ public class Entity extends Module implements Serializable {
     }
 
     @Override
+    public Entity copy() {
+        return copy(this, Entity.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Entity.class, this, name);
     }

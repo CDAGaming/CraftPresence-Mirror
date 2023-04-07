@@ -54,6 +54,11 @@ public class Button extends Module implements Serializable {
     }
 
     @Override
+    public Button copy() {
+        return new Button(this);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Button.class, this, name);
     }

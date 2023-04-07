@@ -53,6 +53,11 @@ public class Biome extends Module implements Serializable {
     }
 
     @Override
+    public Biome copy() {
+        return copy(this, Biome.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Biome.class, this, name);
     }

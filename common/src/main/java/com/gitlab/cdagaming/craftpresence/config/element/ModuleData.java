@@ -63,6 +63,11 @@ public class ModuleData extends Module implements Serializable {
         return new ModuleData(DEFAULT);
     }
 
+    @Override
+    public ModuleData copy() {
+        return new ModuleData(this);
+    }
+
     public String getTextOverride() {
         return textOverride;
     }

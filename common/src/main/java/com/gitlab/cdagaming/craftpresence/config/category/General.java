@@ -59,6 +59,11 @@ public class General extends Module implements Serializable {
     }
 
     @Override
+    public General copy() {
+        return copy(this, General.class);
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(General.class, this, name);
     }
