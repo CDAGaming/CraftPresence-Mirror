@@ -212,7 +212,7 @@ public class PaginatedScreen extends ExtendedScreen {
         final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
         final List<ScrollableListControl> listsToRender = paginatedLists.getOrDefault(currentPage, StringUtils.newArrayList());
 
-        for (Gui extendedControl : extendedControls) {
+        for (Gui extendedControl : getControls()) {
             final boolean isDefault = defaultButtons.contains(extendedControl);
             if (!isDefault) {
                 final boolean isRendering = elementsToRender.contains(extendedControl);
@@ -228,7 +228,7 @@ public class PaginatedScreen extends ExtendedScreen {
                 }
             }
         }
-        for (ScrollableListControl listControl : extendedLists) {
+        for (ScrollableListControl listControl : getLists()) {
             listControl.setEnabled(listsToRender.contains(listControl));
         }
 

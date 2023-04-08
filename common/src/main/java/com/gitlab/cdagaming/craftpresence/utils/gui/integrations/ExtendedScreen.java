@@ -60,15 +60,15 @@ public class ExtendedScreen extends GuiScreen {
     /**
      * Similar to buttonList, a list of compatible controls in this Screen
      */
-    protected final List<Gui> extendedControls = StringUtils.newArrayList();
+    private final List<Gui> extendedControls = StringUtils.newArrayList();
     /**
      * Similar to buttonList, a list of compatible widgets in this Screen
      */
-    protected final List<DynamicWidget> extendedWidgets = StringUtils.newArrayList();
+    private final List<DynamicWidget> extendedWidgets = StringUtils.newArrayList();
     /**
      * Similar to buttonList, a list of compatible ScrollLists in this Screen
      */
-    protected final List<ScrollableListControl> extendedLists = StringUtils.newArrayList();
+    private final List<ScrollableListControl> extendedLists = StringUtils.newArrayList();
     /**
      * The Current Screen Phase, used to define where in the initialization it is at
      */
@@ -228,7 +228,7 @@ public class ExtendedScreen extends GuiScreen {
         if (currentPhase == Phase.INIT) {
             resetMouseScroll();
 
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
                     ((ExtendedScreen) extendedControl).initializeUi();
                 }
@@ -248,7 +248,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
         if (isLoaded()) {
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
                     ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
                 }
@@ -339,7 +339,7 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering title data and preliminary elements
      */
     public void preRender() {
-        for (DynamicWidget widget : extendedWidgets) {
+        for (DynamicWidget widget : getWidgets()) {
             widget.draw(this);
         }
     }
@@ -375,13 +375,13 @@ public class ExtendedScreen extends GuiScreen {
             renderCriticalData();
             preRender();
 
-            for (ScrollableListControl listControl : extendedLists) {
+            for (ScrollableListControl listControl : getLists()) {
                 if (listControl.getEnabled()) {
                     listControl.drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
 
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.drawTextBox();
@@ -396,7 +396,7 @@ public class ExtendedScreen extends GuiScreen {
             lastMouseY = mouseY;
             isOverScreen = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
 
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedButtonControl) {
                     final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
                     if (isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, extendedButton)) {
@@ -419,10 +419,10 @@ public class ExtendedScreen extends GuiScreen {
     public void handleMouseInput() {
         if (isLoaded()) {
             setMouseScroll(Mouse.getEventDWheel());
-            for (ScrollableListControl listControl : extendedLists) {
+            for (ScrollableListControl listControl : getLists()) {
                 listControl.handleMouseInput();
             }
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
                     ((ExtendedScreen) extendedControl).handleMouseInput();
                 }
@@ -460,7 +460,7 @@ public class ExtendedScreen extends GuiScreen {
                 return;
             }
 
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.textboxKeyTyped(typedChar, keyCode);
@@ -482,7 +482,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (isLoaded()) {
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.mouseClicked(mouseX, mouseY, mouseButton);
@@ -501,7 +501,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void updateScreen() {
         if (isLoaded()) {
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.updateCursorCounter();
@@ -519,7 +519,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     public void onGuiClosed() {
         if (isLoaded()) {
-            for (Gui extendedControl : extendedControls) {
+            for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
                     ((ExtendedScreen) extendedControl).onGuiClosed();
                 }
@@ -795,7 +795,7 @@ public class ExtendedScreen extends GuiScreen {
     public void refreshContentHeight() {
         contentHeight = 0;
         if (isLoaded()) {
-            for (DynamicWidget widget : extendedWidgets) {
+            for (DynamicWidget widget : getWidgets()) {
                 contentHeight += widget.getControlHeight();
             }
         }
@@ -907,6 +907,33 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void setVerboseMode(final boolean isVerboseMode) {
         this.verboseMode = isVerboseMode;
+    }
+
+    /**
+     * Retrieve the list of compatible controls in this Screen
+     *
+     * @return the list of compatible controls in this Screen
+     */
+    public List<Gui> getControls() {
+        return StringUtils.newArrayList(extendedControls);
+    }
+
+    /**
+     * Retrieve the list of compatible widgets in this Screen
+     *
+     * @return the list of compatible widgets in this Screen
+     */
+    public List<DynamicWidget> getWidgets() {
+        return StringUtils.newArrayList(extendedWidgets);
+    }
+
+    /**
+     * Retrieve the list of compatible ScrollLists in this Screen
+     *
+     * @return the list of compatible ScrollLists in this Screen
+     */
+    public List<ScrollableListControl> getLists() {
+        return StringUtils.newArrayList(extendedLists);
     }
 
     /**
