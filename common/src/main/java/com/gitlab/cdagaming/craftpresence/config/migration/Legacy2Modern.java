@@ -272,7 +272,6 @@ public class Legacy2Modern implements DataMigrator {
             .put("worldDataPlaceholder", "displaySettings.dynamicVariables.world_info")
             .put("modsPlaceholder", "displaySettings.dynamicVariables.mods")
             //
-            .put("enableCommands", "advancedSettings.enableCommands")
             .put("enablePerGuiSystem", "advancedSettings.enablePerGui")
             .put("enablePerItemSystem", "advancedSettings.enablePerItem")
             .put("enablePerEntitySystem", "advancedSettings.enablePerEntity")

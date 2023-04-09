@@ -35,7 +35,6 @@ import java.util.Map;
 public class Advanced extends Module implements Serializable {
     private static final long serialVersionUID = 6035241954568785784L;
     private static Advanced DEFAULT;
-    public boolean enableCommands = true;
     public boolean enablePerGui = false;
     public boolean enablePerItem = false;
     public boolean enablePerEntity = false;

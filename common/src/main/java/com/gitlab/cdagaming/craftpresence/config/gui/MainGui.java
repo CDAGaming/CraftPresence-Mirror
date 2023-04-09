@@ -42,7 +42,7 @@ import java.util.List;
 public class MainGui extends ExtendedScreen {
     private final Config INSTANCE;
     private Config CONFIG;
-    private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, commandGUIButton, resetConfigButton;
+    private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, resetConfigButton;
 
     public MainGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -251,7 +251,8 @@ public class MainGui extends ExtendedScreen {
                         () -> CraftPresence.GUIS.openScreen(new AboutGui(currentScreen))
                 )
         );
-        commandGUIButton = addControl(
+        // Added Commands Gui Button
+        addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() - 105), (getScreenHeight() - 30),
                         95, 20,
@@ -344,7 +345,6 @@ public class MainGui extends ExtendedScreen {
         biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
         serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
-        commandGUIButton.setControlEnabled(CONFIG.advancedSettings.enableCommands);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
         resetConfigButton.setControlEnabled(!CONFIG.equals(INSTANCE.getDefaults()));
 

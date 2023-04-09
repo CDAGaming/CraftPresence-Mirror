@@ -46,7 +46,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class AdvancedSettingsGui extends ExtendedScreen {
     private final Advanced CONFIG;
     private ExtendedButtonControl proceedButton, guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
-    private CheckBoxControl enableCommandsButton, enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
+    private CheckBoxControl enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowEndpointIconsButton;
     private ExtendedTextControl refreshRate;
@@ -500,22 +500,9 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                 )
         );
 
-        enableCommandsButton = addControl(
-                new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(4),
-                        "gui.config.name.advanced.enable_commands",
-                        CONFIG.enableCommands,
-                        null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_commands")
-                                ), this, true
-                        )
-                )
-        );
         enablePerGuiButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(4),
+                        calc1, CraftPresence.GUIS.getButtonY(4),
                         "gui.config.name.advanced.enable_per_gui",
                         CONFIG.enablePerGui,
                         null,
@@ -528,7 +515,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         enablePerItemButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(5, -10),
+                        calc2, CraftPresence.GUIS.getButtonY(4),
                         "gui.config.name.advanced.enable_per_item",
                         CONFIG.enablePerItem,
                         null,
@@ -541,7 +528,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         enablePerEntityButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(5, -10),
+                        calc1, CraftPresence.GUIS.getButtonY(5, -10),
                         "gui.config.name.advanced.enable_per_entity",
                         CONFIG.enablePerEntity,
                         null,
@@ -554,7 +541,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         renderTooltipsButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(6, -20),
+                        calc2, CraftPresence.GUIS.getButtonY(5, -10),
                         "gui.config.name.advanced.render_tooltips",
                         CONFIG.renderTooltips,
                         null,
@@ -567,7 +554,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         formatWordsButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(6, -20),
+                        calc1, CraftPresence.GUIS.getButtonY(6, -20),
                         "gui.config.name.advanced.format_words",
                         CONFIG.formatWords,
                         null,
@@ -580,7 +567,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         debugModeButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(7, -30),
+                        calc2, CraftPresence.GUIS.getButtonY(6, -20),
                         "gui.config.name.advanced.debug_mode",
                         CONFIG.debugMode,
                         null,
@@ -593,7 +580,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         verboseModeButton = addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(7, -30),
+                        calc1, CraftPresence.GUIS.getButtonY(7, -30),
                         "gui.config.name.advanced.verbose_mode",
                         CONFIG.verboseMode,
                         null,
@@ -606,7 +593,7 @@ public class AdvancedSettingsGui extends ExtendedScreen {
         );
         allowPlaceholderPreviewsButton = addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(8, -40),
+                        calc2, CraftPresence.GUIS.getButtonY(7, -30),
                         "gui.config.name.advanced.allow_placeholder_previews",
                         CONFIG.allowPlaceholderPreviews,
                         null,
@@ -630,10 +617,6 @@ public class AdvancedSettingsGui extends ExtendedScreen {
                             if (!refreshRate.getControlMessage().equals(Integer.toString(CONFIG.refreshRate))) {
                                 CraftPresence.CONFIG.hasChanged = true;
                                 CONFIG.refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
-                            }
-                            if (enableCommandsButton.isChecked() != CONFIG.enableCommands) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CONFIG.enableCommands = enableCommandsButton.isChecked();
                             }
                             if (enablePerGuiButton.isChecked() != CONFIG.enablePerGui) {
                                 CraftPresence.CONFIG.hasChanged = true;
