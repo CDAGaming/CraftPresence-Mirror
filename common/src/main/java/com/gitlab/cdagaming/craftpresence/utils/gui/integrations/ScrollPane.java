@@ -313,7 +313,7 @@ public class ScrollPane extends ExtendedScreen {
      * @return the maximum scroll height
      */
     public int getMaxScroll() {
-        return Math.max(0, getContentHeight() - (getScreenHeight() - padding));
+        return Math.max(0, getContentHeight() - (getBottom() - padding));
     }
 
     @Override

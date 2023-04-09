@@ -142,7 +142,7 @@ public class CommandsGui extends ExtendedScreen {
                 )
         );
         previewArea = childFrame.addWidget(new TextWidget(
-                childFrame, 0, 30,
+                childFrame, 0, 0,
                 getScreenWidth(),
                 executionString
         ));

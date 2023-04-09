@@ -279,14 +279,14 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Nonnull
     public <T extends Gui> T addControl(@Nonnull T buttonIn) {
+        if (buttonIn instanceof DynamicWidget && !extendedWidgets.contains(buttonIn)) {
+            addWidget((DynamicWidget) buttonIn);
+        }
         if (buttonIn instanceof GuiButton && !buttonList.contains(buttonIn)) {
             buttonList.add((GuiButton) buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
-        }
-        if (buttonIn instanceof DynamicWidget && !extendedWidgets.contains(buttonIn)) {
-            addWidget((DynamicWidget) buttonIn);
         }
         return buttonIn;
     }
@@ -316,6 +316,7 @@ public class ExtendedScreen extends GuiScreen {
     @Nonnull
     public <T extends DynamicWidget> T addWidget(@Nonnull T buttonIn) {
         if (!extendedWidgets.contains(buttonIn)) {
+            buttonIn.setControlPosY(getTop() + buttonIn.getTop());
             extendedWidgets.add(buttonIn);
         }
         return buttonIn;
@@ -796,7 +797,10 @@ public class ExtendedScreen extends GuiScreen {
         contentHeight = 0;
         if (isLoaded()) {
             for (DynamicWidget widget : getWidgets()) {
-                contentHeight += widget.getControlHeight();
+                final int widgetHeight = widget.getBottom();
+                if (widgetHeight > contentHeight) {
+                    contentHeight = widgetHeight;
+                }
             }
         }
     }
