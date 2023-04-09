@@ -31,10 +31,7 @@ import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
-import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -236,7 +233,8 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseWithin(final double mouseX, final double mouseY, final double topIn, final double bottomIn, final double leftIn, final double rightIn) {
-        return mouseY >= topIn && mouseY <= bottomIn && mouseX >= leftIn && mouseX <= rightIn;
+        return MathUtils.isWithinValue(mouseY, topIn, bottomIn, true, true) &&
+                MathUtils.isWithinValue(mouseX, leftIn, rightIn, true, true);
     }
 
     /**
@@ -251,7 +249,8 @@ public class GuiUtils implements Module {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
      */
     public boolean isMouseOver(final double mouseX, final double mouseY, final double elementX, final double elementY, final double elementWidth, final double elementHeight) {
-        return mouseX >= elementX && mouseX <= elementX + elementWidth && mouseY >= elementY && mouseY <= elementY + elementHeight;
+        return MathUtils.isWithinValue(mouseX, elementX, elementX + elementWidth, true, false) &&
+                MathUtils.isWithinValue(mouseY, elementY, elementY + elementHeight, true, false);
     }
 
     /**
