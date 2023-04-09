@@ -351,7 +351,14 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering hover data
      */
     public void postRender() {
-        // N/A
+        for (Gui extendedControl : getControls()) {
+            if (extendedControl instanceof ExtendedButtonControl) {
+                final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
+                if (isOverScreen() && CraftPresence.GUIS.isMouseOver(lastMouseX, lastMouseY, extendedButton)) {
+                    extendedButton.onHover();
+                }
+            }
+        }
     }
 
     /**
@@ -398,12 +405,6 @@ public class ExtendedScreen extends GuiScreen {
             isOverScreen = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
 
             for (Gui extendedControl : getControls()) {
-                if (extendedControl instanceof ExtendedButtonControl) {
-                    final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                    if (isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, extendedButton)) {
-                        extendedButton.onHover();
-                    }
-                }
                 if (extendedControl instanceof ExtendedScreen) {
                     ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
                 }
