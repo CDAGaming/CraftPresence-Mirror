@@ -41,13 +41,11 @@ import java.util.List;
 @SuppressWarnings("DuplicatedCode")
 public class MainGui extends ExtendedScreen {
     private final Config INSTANCE;
-    private Config CONFIG;
     private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, resetConfigButton;
 
     public MainGui(GuiScreen parentScreen) {
         super(parentScreen);
-        CONFIG = CraftPresence.CONFIG;
-        INSTANCE = CONFIG.copy();
+        INSTANCE = CraftPresence.CONFIG.copy();
     }
 
     @Override
@@ -232,10 +230,10 @@ public class MainGui extends ExtendedScreen {
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
-                            if (CONFIG.hasChanged) {
-                                CONFIG.save();
+                            if (CraftPresence.CONFIG.hasChanged) {
+                                CraftPresence.CONFIG.save();
                                 ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
-                                CONFIG.applyFrom(INSTANCE);
+                                CraftPresence.CONFIG.applyFrom(INSTANCE);
                             }
                             CraftPresence.GUIS.configGUIOpened = false;
                             CraftPresence.GUIS.openScreen(parentScreen);
@@ -265,7 +263,7 @@ public class MainGui extends ExtendedScreen {
                         10, (getScreenHeight() - 30),
                         95, 20,
                         "gui.config.message.button.reset",
-                        () -> CONFIG = Config.loadOrCreate(true),
+                        () -> CraftPresence.CONFIG = Config.loadOrCreate(true),
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 CraftPresence.GUIS.drawMultiLineString(
@@ -283,7 +281,7 @@ public class MainGui extends ExtendedScreen {
                         10, (getScreenHeight() - 55),
                         95, 20,
                         "gui.config.message.button.sync.config",
-                        () -> CONFIG = Config.loadOrCreate(),
+                        () -> CraftPresence.CONFIG = Config.loadOrCreate(),
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.button.sync.config")
@@ -319,7 +317,7 @@ public class MainGui extends ExtendedScreen {
         if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, getStringWidth(mainTitle), getFontHeight())) {
             CraftPresence.GUIS.drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, CONFIG._schemaVersion)
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
                     ), this, true
             );
         }
@@ -330,8 +328,8 @@ public class MainGui extends ExtendedScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
-            if (CONFIG.hasChanged) {
-                CONFIG = Config.loadOrCreate();
+            if (CraftPresence.CONFIG.hasChanged) {
+                CraftPresence.CONFIG = Config.loadOrCreate();
             }
             CraftPresence.GUIS.configGUIOpened = false;
         }
@@ -340,14 +338,14 @@ public class MainGui extends ExtendedScreen {
 
     private void syncRenderStates() {
         // Ensure Critical Data is correct before continuing
-        CONFIG.hasChanged = !CONFIG.equals(INSTANCE);
+        CraftPresence.CONFIG.hasChanged = !CraftPresence.CONFIG.equals(INSTANCE);
 
         biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
         serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
-        resetConfigButton.setControlEnabled(!CONFIG.equals(INSTANCE.getDefaults()));
+        resetConfigButton.setControlEnabled(!CraftPresence.CONFIG.equals(INSTANCE.getDefaults()));
 
-        proceedButton.setControlMessage(CONFIG.hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
+        proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }
 }
