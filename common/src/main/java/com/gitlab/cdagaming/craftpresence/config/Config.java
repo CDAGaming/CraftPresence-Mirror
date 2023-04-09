@@ -38,6 +38,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.google.gson.JsonElement;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -180,6 +181,7 @@ public final class Config extends Module implements Serializable {
         return copy(config, Config.class);
     }
 
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     @Override
     public Config getDefaults() {
         if (DEFAULT == null) {
@@ -529,6 +531,7 @@ public final class Config extends Module implements Serializable {
         resetProperty(name.split("\\."));
     }
 
+    @SuppressFBWarnings("HE_EQUALS_NO_HASHCODE")
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
