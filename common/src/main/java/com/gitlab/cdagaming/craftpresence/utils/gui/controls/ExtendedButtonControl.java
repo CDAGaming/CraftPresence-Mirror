@@ -229,6 +229,15 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         }
     }
 
+    /**
+     * Returns true if the mouse has been pressed on this control.<p>
+     * Equivalent of MouseListener.mousePressed(MouseEvent e).
+     */
+    @Override
+    public boolean mousePressed(@Nonnull Minecraft arg, int mouseX, int mouseY) {
+        return isOverScreen() && isControlEnabled() && visible && hovered;
+    }
+
     @Override
     public int getControlWidth() {
         return width;

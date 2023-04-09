@@ -237,7 +237,7 @@ public class SliderControl extends ExtendedButtonControl {
      */
     @Override
     public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (isOverScreen() && super.mousePressed(mc, mouseX, mouseY)) {
+        if (super.mousePressed(mc, mouseX, mouseY)) {
             sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
             sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
             denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);

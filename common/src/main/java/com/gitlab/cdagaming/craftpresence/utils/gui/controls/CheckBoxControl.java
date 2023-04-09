@@ -162,7 +162,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      */
     @Override
     public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (isControlEnabled() && visible && hovered) {
+        if (super.mousePressed(mc, mouseX, mouseY)) {
             is_Checked = !is_Checked;
             return true;
         }
