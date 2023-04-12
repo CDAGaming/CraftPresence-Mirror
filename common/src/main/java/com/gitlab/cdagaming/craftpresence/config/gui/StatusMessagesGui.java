@@ -200,8 +200,8 @@ public class StatusMessagesGui extends PaginatedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.status_messages");
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
+        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
         super.preRender();
     }

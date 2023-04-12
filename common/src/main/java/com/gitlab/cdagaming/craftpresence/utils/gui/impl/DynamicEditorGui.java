@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.BiConsumer;
@@ -137,10 +138,16 @@ public class DynamicEditorGui extends ExtendedScreen {
         }
 
         primaryInput = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex++),
-                        180, 20
+                        CraftPresence.GUIS.getButtonY(controlIndex++),
+                        180, 20,
+                        primaryText,
+                        () -> {
+                            if (onHoverPrimaryCallback != null) {
+                                onHoverPrimaryCallback.accept(attributeName, this);
+                            }
+                        }
                 )
         );
         if (maxPrimaryLength > 0) {
@@ -173,10 +180,16 @@ public class DynamicEditorGui extends ExtendedScreen {
 
         if (willRenderSecondaryInput) {
             secondaryInput = addControl(
-                    new ExtendedTextControl(
+                    new TextWidget(
                             getFontRenderer(),
-                            (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(controlIndex),
-                            180, 20
+                            CraftPresence.GUIS.getButtonY(controlIndex),
+                            180, 20,
+                            secondaryText,
+                            () -> {
+                                if (onHoverSecondaryCallback != null) {
+                                    onHoverSecondaryCallback.accept(attributeName, this);
+                                }
+                            }
                     )
             );
             if (maxSecondaryLength > 0) {
@@ -218,11 +231,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
-        renderString(primaryText, (getScreenWidth() / 2f) - 130, primaryInput.getControlPosY() + 5, 0xFFFFFF);
-        if (willRenderSecondaryInput) {
-            renderString(secondaryText, (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, 0xFFFFFF);
-        }
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         proceedButton.setControlMessage(
                 isAdjusting() ?
@@ -232,23 +241,6 @@ public class DynamicEditorGui extends ExtendedScreen {
         proceedButton.setControlEnabled(isValidEntries());
 
         super.preRender();
-    }
-
-    @Override
-    public void postRender() {
-        final boolean isHoveringOverPrimary = CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, primaryInput.getControlPosY() + 5, getStringWidth(primaryText), getFontHeight());
-        final boolean isHoveringOverSecondary = willRenderSecondaryInput && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, secondaryInput.getControlPosY() + 5, getStringWidth(secondaryText), getFontHeight());
-        // Hovering over Message Label
-        if (isHoveringOverPrimary && onHoverPrimaryCallback != null) {
-            onHoverPrimaryCallback.accept(attributeName, this);
-        }
-
-        // Hovering over Value Name Label
-        if (isHoveringOverSecondary && onHoverSecondaryCallback != null) {
-            onHoverSecondaryCallback.accept(attributeName, this);
-        }
-
-        super.postRender();
     }
 
     /**

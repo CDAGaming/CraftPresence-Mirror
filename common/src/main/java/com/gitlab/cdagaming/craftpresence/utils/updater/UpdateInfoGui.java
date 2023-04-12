@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 /**
@@ -40,7 +40,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class UpdateInfoGui extends ExtendedScreen {
     private final ModUpdaterUtils modUpdater;
     private ScrollPane childFrame;
-    private TextWidget infoPane;
+    private TextDisplayWidget infoPane;
     private ExtendedButtonControl downloadButton, checkButton;
 
     /**
@@ -101,7 +101,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                 )
         );
         infoPane = childFrame.addWidget(
-                new TextWidget(
+                new TextDisplayWidget(
                         childFrame, 0, 0,
                         getScreenWidth()
                 )
@@ -121,8 +121,8 @@ public class UpdateInfoGui extends ExtendedScreen {
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
         final String notice = ModUtils.TRANSLATOR.translate("gui.config.message.changelog", modUpdater.targetVersion, modUpdater.targetChangelogData);
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
+        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
         infoPane.setMessage(notice);
 

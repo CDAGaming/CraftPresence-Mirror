@@ -69,7 +69,7 @@ public class MessageGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.message");
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
         renderNotice(messageData);
 
         super.preRender();

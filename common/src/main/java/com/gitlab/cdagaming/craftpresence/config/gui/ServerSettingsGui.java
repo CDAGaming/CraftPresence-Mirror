@@ -38,6 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
@@ -57,26 +58,45 @@ public class ServerSettingsGui extends ExtendedScreen {
         final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultName = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
-                        180, 20
+                        CraftPresence.GUIS.getButtonY(1),
+                        180, 20,
+                        "gui.config.name.server_messages.server_name",
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_name")
+                                ), this, true
+                        )
                 )
         );
         defaultName.setControlMessage(CONFIG.fallbackServerName);
         defaultMOTD = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(2),
-                        180, 20
+                        CraftPresence.GUIS.getButtonY(2),
+                        180, 20,
+                        "gui.config.name.server_messages.server_motd",
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_motd")
+                                ), this, true
+                        )
                 )
         );
         defaultMOTD.setControlMessage(CONFIG.fallbackServerMotd);
         defaultMessage = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(3),
-                        180, 20
+                        CraftPresence.GUIS.getButtonY(3),
+                        180, 20,
+                        "gui.config.message.default.server",
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
+                                                CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
+                                ), this, true
+                        )
                 )
         );
         defaultMessage.setControlMessage(defaultServerMessage);
@@ -269,53 +289,13 @@ public class ServerSettingsGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.server_messages");
-        final String serverNameText = ModUtils.TRANSLATOR.translate("gui.config.name.server_messages.server_name");
-        final String serverMOTDText = ModUtils.TRANSLATOR.translate("gui.config.name.server_messages.server_motd");
-        final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.server");
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
-        renderString(serverNameText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
-        renderString(serverMOTDText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(2, 5), 0xFFFFFF);
-        renderString(defaultMessageText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
+        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultName.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultMOTD.getControlMessage()));
         serverMessagesButton.setControlEnabled(CraftPresence.SERVER.enabled);
 
         super.preRender();
-    }
-
-    @Override
-    public void postRender() {
-        final String serverNameText = ModUtils.TRANSLATOR.translate("gui.config.name.server_messages.server_name");
-        final String serverMOTDText = ModUtils.TRANSLATOR.translate("gui.config.name.server_messages.server_motd");
-        final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.server");
-        // Hovering over Default Server Name Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(serverNameText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_name")
-                    ), this, true
-            );
-        }
-        // Hovering over Default Server MOTD Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(2, 5), getStringWidth(serverMOTDText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_motd")
-                    ), this, true
-            );
-        }
-        // Hovering over Default Server Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(3, 5), getStringWidth(defaultMessageText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
-                                    CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                    ), this, true
-            );
-        }
-
-        super.postRender();
     }
 }

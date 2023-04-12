@@ -36,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -59,10 +60,16 @@ public class GeneralSettingsGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         clientId = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
-                        180, 20
+                        CraftPresence.GUIS.getButtonY(1),
+                        180, 20,
+                        "gui.config.name.general.client_id",
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.client_id")
+                                ), this, true
+                        )
                 )
         );
         clientId.setControlMessage(CONFIG.clientId);
@@ -353,31 +360,14 @@ public class GeneralSettingsGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.general");
-        final String clientIdText = ModUtils.TRANSLATOR.translate("gui.config.name.general.client_id");
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
-        renderString(clientIdText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
+        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
         partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
         preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
         proceedButton.setControlEnabled(DiscordAssetUtils.isValidId(clientId.getControlMessage()));
 
         super.preRender();
-    }
-
-    @Override
-    public void postRender() {
-        final String clientIdText = ModUtils.TRANSLATOR.translate("gui.config.name.general.client_id");
-        // Hovering over Client ID Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(clientIdText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.general.client_id")
-                    ), this, true
-            );
-        }
-
-        super.postRender();
     }
 }

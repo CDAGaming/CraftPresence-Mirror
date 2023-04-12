@@ -37,7 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import com.jagrosh.discordipc.IPCClient;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -59,7 +59,7 @@ public class CommandsGui extends ExtendedScreen {
     private String[] executionCommandArgs;
     private ExtendedTextControl commandInput;
     private ExtendedScreen childFrame;
-    private TextWidget previewArea;
+    private TextDisplayWidget previewArea;
     private String executionString;
     private boolean blockInteractions = false;
     private String[] commandArgs, filteredCommandArgs;
@@ -141,7 +141,7 @@ public class CommandsGui extends ExtendedScreen {
                         getScreenWidth(), getScreenHeight() - 35
                 )
         );
-        previewArea = childFrame.addWidget(new TextWidget(
+        previewArea = childFrame.addWidget(new TextDisplayWidget(
                 childFrame, 0, 0,
                 getScreenWidth(),
                 executionString
@@ -153,7 +153,7 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.commands");
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
 
         proceedButton.setControlEnabled(!blockInteractions);
         commandInput.setEnabled(!blockInteractions);

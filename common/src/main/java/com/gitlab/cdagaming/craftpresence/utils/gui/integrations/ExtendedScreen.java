@@ -351,6 +351,9 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering hover data
      */
     public void postRender() {
+        for (DynamicWidget widget : getWidgets()) {
+            widget.postDraw(this);
+        }
         for (Gui extendedControl : getControls()) {
             if (extendedControl instanceof ExtendedButtonControl) {
                 final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
@@ -568,6 +571,18 @@ public class ExtendedScreen extends GuiScreen {
                 renderString(string, (useXAsActual ? widthScale : (getScreenWidth() / widthScale)) - (getStringWidth(string) / widthScale), (useYAsActual ? heightScale : (getScreenHeight() / heightScale)) + (i * 10), 0xFFFFFF);
             }
         }
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of centered text
+     *
+     * @param text  The text to render to the screen
+     * @param xPos  The X position to render the text at
+     * @param yPos  The Y position to render the text at
+     * @param color The color to render the text in
+     */
+    public void renderCenteredString(final String text, final float xPos, final float yPos, final int color) {
+        renderString(text, xPos - (getStringWidth(text) / 2f), yPos, color);
     }
 
     /**

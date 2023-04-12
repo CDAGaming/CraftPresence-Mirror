@@ -35,11 +35,20 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
  */
 public interface DynamicWidget {
     /**
-     * Renders this Control, including any extra data
+     * Pre-Render Event for this Control, including any extra data
      *
      * @param screen The Screen instance we're rendering to
      */
     default void draw(final ExtendedScreen screen) {
+        // N/A
+    }
+
+    /**
+     * Post-Render Event for this Control, including any extra data
+     *
+     * @param screen The Screen instance we're rendering to
+     */
+    default void postDraw(final ExtendedScreen screen) {
         // N/A
     }
 

@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
@@ -76,10 +77,11 @@ public class ColorEditorGui extends PaginatedScreen {
         final String alphaTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.alpha");
 
         hexText = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        calc2, CraftPresence.GUIS.getButtonY(1),
-                        180, 20
+                        CraftPresence.GUIS.getButtonY(1),
+                        180, 20,
+                        "gui.config.message.editor.hex_code"
                 ), startPage
         );
         hexText.setControlMaxLength(10);
@@ -147,11 +149,12 @@ public class ColorEditorGui extends PaginatedScreen {
 
         // Page 2 Items
         textureText = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        calc2, CraftPresence.GUIS.getButtonY(1),
+                        CraftPresence.GUIS.getButtonY(1),
                         180, 20,
-                        this::syncValues
+                        this::syncValues,
+                        "gui.config.message.editor.texture_path"
                 ), startPage + 1
         );
         textureText.setControlMaxLength(32767);
@@ -182,7 +185,7 @@ public class ColorEditorGui extends PaginatedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.color", configValueName);
         final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview");
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
         renderString(previewTitle, getScreenWidth() - 90, getScreenHeight() - 29.5f, 0xFFFFFF);
 
         // Setup Data for Drawing
@@ -198,9 +201,6 @@ public class ColorEditorGui extends PaginatedScreen {
 
         // Page 1 Items
         if (currentPage == startPage) {
-            final String hexCodeTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.hex_code");
-
-            renderString(hexCodeTitle, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
             backButton.setControlEnabled(!StringUtils.isNullOrEmpty(hexText.getControlMessage()));
 
             // Draw Preview Box
@@ -209,9 +209,6 @@ public class ColorEditorGui extends PaginatedScreen {
 
         // Page 2 Items
         if (currentPage == startPage + 1) {
-            final String textureTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path");
-
-            renderString(textureTitle, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
             backButton.setControlEnabled(!StringUtils.isNullOrEmpty(textureText.getControlMessage()));
 
             if (currentTexture == null) {

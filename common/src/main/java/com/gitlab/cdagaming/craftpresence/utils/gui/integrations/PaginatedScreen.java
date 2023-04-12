@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -41,6 +42,7 @@ import java.util.Map;
  * The Paginated Gui Screen Implementation
  */
 public class PaginatedScreen extends ExtendedScreen {
+    private final Map<Integer, List<DynamicWidget>> paginatedWidgets = StringUtils.newHashMap();
     private final Map<Integer, List<Gui>> paginatedControls = StringUtils.newHashMap();
     private final Map<Integer, List<ScrollableListControl>> paginatedLists = StringUtils.newHashMap();
     /**
@@ -67,6 +69,8 @@ public class PaginatedScreen extends ExtendedScreen {
      * The maximum pages that can be displayed
      */
     protected int maxPages = startPage;
+    private List<Gui> defaultButtons = StringUtils.newArrayList();
+    private List<DynamicWidget> defaultWidgets = StringUtils.newArrayList();
     private Runnable onPageChange;
 
     /**
@@ -99,11 +103,6 @@ public class PaginatedScreen extends ExtendedScreen {
         super(parentScreen, debugMode, verboseMode);
     }
 
-    /**
-     * Initializes this Screen
-     * <p>
-     * Responsible for setting initial Data and creating controls
-     */
     @Override
     public void initializeUi() {
         backButton = addControl(
@@ -159,7 +158,10 @@ public class PaginatedScreen extends ExtendedScreen {
      * @return The added control with attached class type
      */
     @Nonnull
-    protected <T extends Gui> T addControl(@Nonnull T buttonIn, final int renderTarget) {
+    public <T extends Gui> T addControl(@Nonnull T buttonIn, final int renderTarget) {
+        if (buttonIn instanceof DynamicWidget) {
+            addWidget((DynamicWidget) buttonIn, renderTarget);
+        }
         if (!paginatedControls.containsKey(renderTarget)) {
             paginatedControls.put(renderTarget, StringUtils.newArrayList(buttonIn));
             if (renderTarget > maxPages) {
@@ -180,7 +182,7 @@ public class PaginatedScreen extends ExtendedScreen {
      * @return The added scroll list with attached class type
      */
     @Nonnull
-    protected <T extends ScrollableListControl> T addList(@Nonnull T buttonIn, final int renderTarget) {
+    public <T extends ScrollableListControl> T addList(@Nonnull T buttonIn, final int renderTarget) {
         if (!paginatedLists.containsKey(renderTarget)) {
             paginatedLists.put(renderTarget, StringUtils.newArrayList(buttonIn));
             if (renderTarget > maxPages) {
@@ -193,25 +195,40 @@ public class PaginatedScreen extends ExtendedScreen {
     }
 
     /**
-     * Preliminary Render Event, executes after renderCriticalData and before postRender
-     * <p>
-     * Primarily used for rendering title data and preliminary elements
+     * Adds a Compatible Control to this Screen with specified type
+     *
+     * @param buttonIn     The Control to add to this Screen
+     * @param <T>          The Control's Class Type
+     * @param renderTarget The Control's render target, or page to render on
+     * @return The added control with attached class type
      */
+    @Nonnull
+    public <T extends DynamicWidget> T addWidget(@Nonnull T buttonIn, final int renderTarget) {
+        if (!paginatedWidgets.containsKey(renderTarget)) {
+            paginatedWidgets.put(renderTarget, StringUtils.newArrayList(buttonIn));
+            if (renderTarget > maxPages) {
+                maxPages = renderTarget;
+            }
+        } else {
+            paginatedWidgets.get(renderTarget).add(buttonIn);
+        }
+        return super.addWidget(buttonIn);
+    }
+
     @Override
     public void preRender() {
-        final List<Gui> defaultButtons = StringUtils.newArrayList(backButton);
-        if (hasPages()) {
-            defaultButtons.add(previousPageButton);
-            defaultButtons.add(nextPageButton);
-            previousPageButton.setControlEnabled(currentPage > startPage);
-            nextPageButton.setControlEnabled(currentPage < maxPages);
-        }
-        if (paginatedControls.containsKey(-1)) {
-            defaultButtons.addAll(paginatedControls.get(-1));
-        }
+        ensureDefaults();
+        final List<DynamicWidget> widgetsToDraw = paginatedWidgets.getOrDefault(currentPage, defaultWidgets);
         final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
         final List<ScrollableListControl> listsToRender = paginatedLists.getOrDefault(currentPage, StringUtils.newArrayList());
 
+        for (DynamicWidget widget : getWidgets()) {
+            final boolean isDefault = defaultWidgets.contains(widget);
+            final boolean isRendering = widgetsToDraw.contains(widget);
+            if (isDefault || isRendering) {
+                widget.draw(this);
+            }
+        }
         for (Gui extendedControl : getControls()) {
             final boolean isDefault = defaultButtons.contains(extendedControl);
             if (!isDefault) {
@@ -231,8 +248,33 @@ public class PaginatedScreen extends ExtendedScreen {
         for (ScrollableListControl listControl : getLists()) {
             listControl.setEnabled(listsToRender.contains(listControl));
         }
+    }
 
-        super.preRender();
+    @Override
+    public void postRender() {
+        ensureDefaults();
+        final List<DynamicWidget> widgetsToDraw = paginatedWidgets.getOrDefault(currentPage, defaultWidgets);
+        final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
+        for (DynamicWidget widget : getWidgets()) {
+            final boolean isDefault = defaultWidgets.contains(widget);
+            final boolean isRendering = widgetsToDraw.contains(widget);
+            if (isDefault || isRendering) {
+                widget.postDraw(this);
+            }
+        }
+        for (Gui extendedControl : getControls()) {
+            final boolean isDefault = defaultButtons.contains(extendedControl);
+            final boolean isRendering = elementsToRender.contains(extendedControl);
+
+            if (isDefault || isRendering) {
+                if (extendedControl instanceof ExtendedButtonControl) {
+                    final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
+                    if (isOverScreen() && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), extendedButton)) {
+                        extendedButton.onHover();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -248,6 +290,37 @@ public class PaginatedScreen extends ExtendedScreen {
         }
 
         super.keyTyped(typedChar, keyCode);
+    }
+
+    /**
+     * Ensure that Default Elements are populated correctly
+     */
+    private void ensureDefaults() {
+        defaultButtons = StringUtils.newArrayList(backButton);
+        if (hasPages()) {
+            defaultButtons.add(previousPageButton);
+            defaultButtons.add(nextPageButton);
+            previousPageButton.setControlEnabled(currentPage > startPage);
+            nextPageButton.setControlEnabled(currentPage < maxPages);
+        }
+        if (paginatedControls.containsKey(-1)) {
+            defaultButtons.addAll(paginatedControls.get(-1));
+        }
+
+        defaultWidgets = StringUtils.newArrayList(backButton);
+        if (hasPages()) {
+            defaultWidgets.add(previousPageButton);
+            defaultWidgets.add(nextPageButton);
+            previousPageButton.setControlEnabled(currentPage > startPage);
+            nextPageButton.setControlEnabled(currentPage < maxPages);
+        }
+        if (paginatedControls.containsKey(-1)) {
+            for (Gui controlIn : paginatedControls.get(-1)) {
+                if (controlIn instanceof DynamicWidget) {
+                    defaultWidgets.add((DynamicWidget) controlIn);
+                }
+            }
+        }
     }
 
     /**

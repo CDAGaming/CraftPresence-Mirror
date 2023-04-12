@@ -38,6 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
@@ -57,10 +58,17 @@ public class BiomeSettingsGui extends ExtendedScreen {
         final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultMessage = addControl(
-                new ExtendedTextControl(
+                new TextWidget(
                         getFontRenderer(),
-                        (getScreenWidth() / 2) + 3, CraftPresence.GUIS.getButtonY(1),
-                        180, 20
+                        CraftPresence.GUIS.getButtonY(1),
+                        180, 20,
+                        "gui.config.message.default.biome",
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                CraftPresence.CLIENT.generateArgumentMessage("biome."))
+                                ), this, true
+                        )
                 )
         );
         defaultMessage.setControlMessage(defaultBiomeMessage);
@@ -245,31 +253,13 @@ public class BiomeSettingsGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome_messages");
-        final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.biome");
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, 0xFFFFFF);
-        renderString(subTitle, (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, 0xFFFFFF);
-        renderString(defaultMessageText, (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
+        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.enabled);
 
         super.preRender();
-    }
-
-    @Override
-    public void postRender() {
-        final String defaultMessageText = ModUtils.TRANSLATOR.translate("gui.config.message.default.biome");
-        // Hovering over Default Biome Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - 130, CraftPresence.GUIS.getButtonY(1, 5), getStringWidth(defaultMessageText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
-                                    CraftPresence.CLIENT.generateArgumentMessage("biome."))
-                    ), this, true
-            );
-        }
-
-        super.postRender();
     }
 }

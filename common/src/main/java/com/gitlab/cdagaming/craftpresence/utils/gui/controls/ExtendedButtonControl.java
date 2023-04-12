@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -225,7 +224,13 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
                 color = 14737632;
             }
 
-            drawCenteredString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getControlWidth() / 2, getControlPosY() + (getControlHeight() - 8) / 2, color);
+            drawCenteredString(
+                    getFontRenderer(),
+                    getDisplayMessage(),
+                    getRight() - (getControlWidth() / 2),
+                    getBottom() - (getControlHeight() / 2) - (getFontHeight() / 2),
+                    color
+            );
         }
     }
 
@@ -367,19 +372,9 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return The control's current display message
      */
     public String getDisplayMessage() {
-        String result = getControlMessage().trim();
-        if (result.contains(" ")) {
-            String adjusted = result;
-            for (String dataPart : result.split(" ")) {
-                if (ModUtils.TRANSLATOR.hasTranslation(dataPart)) {
-                    adjusted = adjusted.replace(dataPart, ModUtils.TRANSLATOR.translate(dataPart));
-                }
-            }
-            result = adjusted;
-        } else if (ModUtils.TRANSLATOR.hasTranslation(getControlMessage())) {
-            result = ModUtils.TRANSLATOR.translate(result);
-        }
-        return result;
+        return StringUtils.getLocalizedMessage(
+                getControlMessage()
+        );
     }
 
     /**

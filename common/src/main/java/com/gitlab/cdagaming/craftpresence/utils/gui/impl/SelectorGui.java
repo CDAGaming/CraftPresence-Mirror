@@ -292,8 +292,8 @@ public class SelectorGui extends ExtendedScreen {
         final String extraText = isVerboseMode() ? ModUtils.TRANSLATOR.translate("gui.config.title.selector.extra", itemList.size(), originalList.size()) : "";
         final String displayText = mainTitle + " " + extraText;
 
-        renderString(searchText, (30 - (getStringWidth(searchText) / 2f)), (getScreenHeight() - 25), 0xFFFFFF);
-        renderString(displayText, (getScreenWidth() / 2f) - (getStringWidth(displayText) / 2f), 15, 0xFFFFFF);
+        renderCenteredString(searchText, 30, (getScreenHeight() - 25), 0xFFFFFF);
+        renderCenteredString(displayText, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         if (scrollList.currentHoverText != null && !scrollList.currentHoverText.isEmpty()) {
             CraftPresence.GUIS.drawMultiLineString(scrollList.currentHoverText, this, true);

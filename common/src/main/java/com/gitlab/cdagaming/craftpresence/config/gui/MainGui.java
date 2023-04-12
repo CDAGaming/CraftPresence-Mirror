@@ -298,10 +298,10 @@ public class MainGui extends ExtendedScreen {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID);
 
-        renderString(mainTitle, (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         if (ModUtils.VERSION_TYPE.equalsIgnoreCase("alpha")) {
-            renderString(releaseNotice, (getScreenWidth() / 2f) - (getStringWidth(releaseNotice) / 2f), getScreenHeight() - 85, 0xFFFFFF);
+            renderCenteredString(releaseNotice, getScreenWidth() / 2f, getScreenHeight() - 85, 0xFFFFFF);
         }
 
         syncRenderStates();

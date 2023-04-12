@@ -1000,6 +1000,28 @@ public class StringUtils {
     }
 
     /**
+     * Attempt to retrieve the localized equivalent of the specified string
+     *
+     * @param original The string to interpret
+     * @return The equivalent localized string, if present
+     */
+    public static String getLocalizedMessage(final String original) {
+        String result = original.trim();
+        if (result.contains(" ")) {
+            String adjusted = result;
+            for (String dataPart : result.split(" ")) {
+                if (ModUtils.TRANSLATOR.hasTranslation(dataPart)) {
+                    adjusted = adjusted.replace(dataPart, ModUtils.TRANSLATOR.translate(dataPart));
+                }
+            }
+            result = adjusted;
+        } else if (ModUtils.TRANSLATOR.hasTranslation(original)) {
+            result = ModUtils.TRANSLATOR.translate(result);
+        }
+        return result;
+    }
+
+    /**
      * Converts an Identifier into a properly formatted and interpretable Name
      * <p>
      * Note: Additional Logic in Place for Older MC Versions

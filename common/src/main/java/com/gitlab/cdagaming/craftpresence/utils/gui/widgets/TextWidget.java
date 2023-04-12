@@ -24,190 +24,120 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.minecraft.client.gui.FontRenderer;
 
-import java.util.List;
-import java.util.Objects;
+public class TextWidget extends ExtendedTextControl {
+    private String title;
+    private float titleX;
+    private float titleY;
+    /**
+     * Event to Deploy when this Control is Hovered Over, if any
+     */
+    private Runnable onHoverEvent = null;
 
-/**
- * Implementation for a Scrollable Text-Only Widget
- *
- * @author CDAGaming
- */
-public class TextWidget implements DynamicWidget {
-    /**
-     * The parent or source screen to refer to
-     */
-    private final ExtendedScreen parent;
-    /**
-     * The starting X position of the widget
-     */
-    private int startX;
-    /**
-     * The starting Y position of the widget
-     */
-    private int startY;
-    /**
-     * The width of the widget
-     */
-    private int width;
-    /**
-     * The height of the widget's content, used for scrolling
-     */
-    private int contentHeight;
-    /**
-     * The text to be rendered with this widget
-     */
-    private String message;
-    /**
-     * The multi-lined version of the interpreting message
-     */
-    private List<String> renderLines;
+    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
+        super(componentId, fontRendererObj, 0, y, widthIn, heightIn);
+        this.title = title;
+        setOnHover(onHoverEvent);
+    }
 
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param parent  The parent or source screen to refer to
-     * @param startX  The starting X position of the widget
-     * @param startY  The starting Y position of the widget
-     * @param width   The width of the widget
-     * @param message The text to be rendered with this widget
-     */
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public TextWidget(final ExtendedScreen parent, final int startX, final int startY, final int width, final String message) {
-        this.parent = parent;
-        setControlPosX(startX);
-        setControlPosY(startY);
-        setControlWidth(width);
-        setMessage(message);
+    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
+        this(componentId, fontRendererObj, y, widthIn, heightIn, title, null);
+    }
+
+    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
+        super(fontRendererObj, 0, y, widthIn, heightIn);
+        this.title = title;
+        setOnHover(onHoverEvent);
+    }
+
+    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
+        this(fontRendererObj, y, widthIn, heightIn, title, null);
+    }
+
+    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable onHoverEvent) {
+        super(fontRendererObj, 0, y, widthIn, heightIn, keyEvent);
+        this.title = title;
+        setOnHover(onHoverEvent);
+    }
+
+    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title) {
+        this(fontRendererObj, y, widthIn, heightIn, keyEvent, title, null);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public float getTitleX() {
+        return titleX;
+    }
+
+    public void setTitleX(float titleX) {
+        this.titleX = titleX;
+    }
+
+    public float getTitleY() {
+        return titleY;
+    }
+
+    public void setTitleY(float titleY) {
+        this.titleY = titleY;
     }
 
     /**
-     * Initialization Event for this Control, assigning defined arguments
+     * Sets the Event to occur upon Mouse Over
      *
-     * @param parent The parent or source screen to refer to
-     * @param startX The starting X position of the widget
-     * @param startY The starting Y position of the widget
-     * @param width  The width of the widget
+     * @param event The event to occur
      */
-    public TextWidget(final ExtendedScreen parent, final int startX, final int startY, final int width) {
-        this(parent, startX, startY, width, "");
+    public void setOnHover(final Runnable event) {
+        onHoverEvent = event;
     }
 
     /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param parent  The parent or source screen to refer to
-     * @param width   The width of the widget
-     * @param message The text to be rendered with this widget
+     * Triggers the onHover event to occur
      */
-    public TextWidget(final ExtendedScreen parent, final int width, final String message) {
-        this(parent, 0, 0, width, message);
-    }
-
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param parent The parent or source screen to refer to
-     * @param width  The width of the widget
-     */
-    public TextWidget(final ExtendedScreen parent, final int width) {
-        this(parent, width, "");
-    }
-
-    /**
-     * Retrieve the text to be rendered with this widget
-     *
-     * @return the current render message
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * Set the text to be rendered with this widget
-     *
-     * @param newMessage The new message to be rendered
-     */
-    public void setMessage(final String newMessage) {
-        if (!Objects.equals(newMessage, message)) {
-            message = newMessage;
-            renderLines = refreshContent();
+    public void onHover() {
+        if (onHoverEvent != null) {
+            onHoverEvent.run();
         }
-    }
-
-    /**
-     * Retrieve the multi-lined version of the interpreting messag
-     *
-     * @return the multi-lined render message
-     */
-    public List<String> getRenderLines() {
-        return StringUtils.newArrayList(renderLines);
     }
 
     @Override
     public void draw(ExtendedScreen screen) {
-        if (screen instanceof ScrollPane) {
-            ((ScrollPane) screen).drawScrollString(this);
+        // Ensure correct positioning
+        final int calc1 = (screen.getScreenWidth() / 2) - (getControlWidth() - 3); // Left; Title Text
+        final int calc2 = (screen.getScreenWidth() / 2) + 3; // Left; Textbox
+        setControlPosX(calc2);
+
+        if (!StringUtils.isNullOrEmpty(title)) {
+            final String mainTitle = StringUtils.getLocalizedMessage(title);
+            setTitleX((calc1 + getControlWidth()) - (getControlWidth() / 2f));
+            setTitleY(getBottom() - (getControlHeight() / 2f) - (screen.getFontHeight() / 2f));
+            screen.renderCenteredString(mainTitle, getTitleX(), getTitleY(), 0xFFFFFF);
         }
     }
 
     @Override
-    public int getControlPosX() {
-        return this.startX;
-    }
-
-    @Override
-    public void setControlPosX(int posX) {
-        this.startX = posX;
-    }
-
-    @Override
-    public int getControlPosY() {
-        return this.startY;
-    }
-
-    @Override
-    public void setControlPosY(int posY) {
-        this.startY = posY;
-    }
-
-    @Override
-    public int getControlWidth() {
-        return width - startX;
-    }
-
-    @Override
-    public void setControlWidth(int width) {
-        this.width = width;
-    }
-
-    @Override
-    public int getControlHeight() {
-        return contentHeight;
-    }
-
-    @Override
-    public void setControlHeight(int height) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Refresh the widget content, scaling the text accordingly
-     *
-     * @return the modified render lines for the widget
-     */
-    private List<String> refreshContent() {
-        final int width = MathUtils.clamp(getControlWidth(), 0, parent.getMaxWidth());
-        final List<String> content = parent.createRenderLines(
-                getMessage(),
-                width
-        );
-        contentHeight = content.size() * (parent.getFontHeight() + 1);
-        return content;
+    public void postDraw(ExtendedScreen screen) {
+        if (!StringUtils.isNullOrEmpty(title)) {
+            final String mainTitle = StringUtils.getLocalizedMessage(title);
+            final int titleWidth = screen.getStringWidth(mainTitle);
+            if (screen.isOverScreen() && CraftPresence.GUIS.isMouseOver(
+                    screen.getMouseX(), screen.getMouseY(),
+                    getTitleX() - (titleWidth / 2f), getTitleY(),
+                    titleWidth, screen.getFontHeight()
+            )) {
+                onHover();
+            }
+        }
     }
 }

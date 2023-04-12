@@ -28,7 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
@@ -234,9 +234,9 @@ public class ScrollPane extends ExtendedScreen {
     /**
      * Render a scrollable string, based on the arguments
      *
-     * @param data The {@link TextWidget} data to interpret
+     * @param data The {@link TextDisplayWidget} data to interpret
      */
-    public void drawScrollString(final TextWidget data) {
+    public void drawScrollString(final TextDisplayWidget data) {
         drawScrollString(
                 data.getRenderLines(),
                 data.getControlPosX() + padding, (int) amountScrolled,
