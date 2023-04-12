@@ -35,32 +35,35 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
-public class DimensionSettingsGui extends ExtendedScreen {
-    private final Dimension CONFIG;
-    private ExtendedButtonControl proceedButton, dimensionMessagesButton;
+public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
+    private final Dimension INSTANCE;
+    private final ModuleData defaultData;
+    private ExtendedButtonControl dimensionMessagesButton;
     private ExtendedTextControl defaultMessage;
 
     DimensionSettingsGui(GuiScreen parentScreen) {
-        super(parentScreen);
-        CONFIG = CraftPresence.CONFIG.dimensionSettings;
+        super(parentScreen, "gui.config.title", "gui.config.title.dimension_messages");
+        INSTANCE = getCurrentData().copy();
+        defaultData = getCurrentData().dimensionData.get("default");
     }
 
     @Override
-    public void initializeUi() {
-        final ModuleData defaultData = CONFIG.dimensionData.get("default");
+    protected void appendControls() {
+        super.appendControls();
+
         final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
-        defaultMessage = addControl(
+        defaultMessage = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        CraftPresence.GUIS.getButtonY(0),
                         180, 20,
                         "gui.config.message.default.dimension",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -73,9 +76,9 @@ public class DimensionSettingsGui extends ExtendedScreen {
         );
         defaultMessage.setControlMessage(defaultDimensionMessage);
 
-        dimensionMessagesButton = addControl(
+        dimensionMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -86,8 +89,8 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
                                             // Event to Occur when proceeding with adjusted data
-                                            final ModuleData defaultDimensionData = CONFIG.dimensionData.get("default");
-                                            final ModuleData currentDimensionData = CONFIG.dimensionData.get(attributeName);
+                                            final ModuleData defaultDimensionData = getCurrentData().dimensionData.get("default");
+                                            final ModuleData currentDimensionData = getCurrentData().dimensionData.get(attributeName);
                                             final String defaultMessage = Config.getProperty(defaultDimensionData, "textOverride") != null ? defaultDimensionData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentDimensionData, "textOverride") != null ? currentDimensionData.getTextOverride() : "";
 
@@ -97,7 +100,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                 newData.setTextOverride(defaultMessage);
                                             }
                                             newData.setIconOverride(currentValue);
-                                            CONFIG.dimensionData.put(attributeName, newData);
+                                            getCurrentData().dimensionData.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -106,13 +109,13 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = CONFIG.dimensionData.get("default");
+                                                                screenInstance.defaultData = getCurrentData().dimensionData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = CONFIG.dimensionData.get("default");
-                                                                screenInstance.currentData = CONFIG.dimensionData.get(attributeName);
+                                                                screenInstance.defaultData = getCurrentData().dimensionData.get("default");
+                                                                screenInstance.currentData = getCurrentData().dimensionData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -122,7 +125,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.dimensionData.put(attributeName, screenInstance.currentData);
+                                                                getCurrentData().dimensionData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.DIMENSIONS.DIMENSION_NAMES.contains(attributeName)) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.add(attributeName);
                                                                 }
@@ -130,7 +133,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.dimensionData.remove(attributeName);
+                                                                getCurrentData().dimensionData.remove(attributeName);
                                                                 if (!screenInstance.isPreliminaryData) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
                                                                 }
@@ -147,7 +150,7 @@ public class DimensionSettingsGui extends ExtendedScreen {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : CONFIG.fallbackDimensionIcon;
+                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().fallbackDimensionIcon;
                                                                     final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new SelectorGui(
@@ -197,20 +200,20 @@ public class DimensionSettingsGui extends ExtendedScreen {
                 )
         );
         // Adding Default Icon Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(3),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_icon",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        CONFIG.fallbackDimensionIcon, null,
+                                        getCurrentData().fallbackDimensionIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
-                                            CONFIG.fallbackDimensionIcon = currentValue;
+                                            getCurrentData().fallbackDimensionIcon = currentValue;
                                         }, null
                                 )
                         ),
@@ -221,46 +224,58 @@ public class DimensionSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        proceedButton = addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
-                        180, 20,
-                        "gui.config.message.button.back",
-                        () -> {
-                            if (!defaultMessage.getControlMessage().equals(defaultDimensionMessage)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                final ModuleData defaultDimensionData = CONFIG.dimensionData.getOrDefault("default", new ModuleData());
-                                defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
-                                CONFIG.dimensionData.put("default", defaultDimensionData);
-                            }
-                            CraftPresence.GUIS.openScreen(parentScreen);
-                        },
-                        () -> {
-                            if (!proceedButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-
-        super.initializeUi();
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        ), this, true
+                );
+            }
+        });
     }
 
     @Override
-    public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension_messages");
-
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
-        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
+    protected void syncRenderStates() {
+        super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
+    }
 
-        super.preRender();
+    @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected void resetData() {
+        setCurrentData(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected void applySettings() {
+        final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
+        if (!defaultMessage.getControlMessage().equals(defaultDimensionMessage)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            final ModuleData defaultDimensionData = getCurrentData().dimensionData.getOrDefault("default", new ModuleData());
+            defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
+            getCurrentData().dimensionData.put("default", defaultDimensionData);
+        }
+    }
+
+    @Override
+    protected Dimension getOriginalData() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected Dimension getCurrentData() {
+        return CraftPresence.CONFIG.dimensionSettings;
+    }
+
+    @Override
+    protected void setCurrentData(Dimension data) {
+        CraftPresence.CONFIG.dimensionSettings = data;
     }
 }
