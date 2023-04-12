@@ -38,7 +38,7 @@ import java.util.List;
 public class AboutGui extends ExtendedScreen {
     private static final String SOURCE_URL = "https://gitlab.com/CDAGaming/CraftPresence";
 
-    AboutGui(GuiScreen parentScreen) {
+    public AboutGui(GuiScreen parentScreen) {
         super(parentScreen);
     }
 

@@ -27,38 +27,36 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.CommandsGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
-import java.util.List;
-
 @SuppressWarnings("DuplicatedCode")
-public class MainGui extends ExtendedScreen {
+public class MainGui extends ConfigurationGui<Config> {
     private final Config INSTANCE;
-    private ExtendedButtonControl biomeSet, dimensionSet, serverSet, controlsButton, proceedButton, resetConfigButton;
+    private ExtendedButtonControl biomeSet,
+            dimensionSet,
+            serverSet;
 
     public MainGui(GuiScreen parentScreen) {
-        super(parentScreen);
+        super(parentScreen, "gui.config.title");
         INSTANCE = CraftPresence.CONFIG.copy();
     }
 
     @Override
-    public void initializeUi() {
+    protected void appendControls() {
+        super.appendControls();
         CraftPresence.GUIS.configGUIOpened = true;
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
         // Added General Settings Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(1),
+                        calc1, CraftPresence.GUIS.getButtonY(0),
                         180, 20,
                         "gui.config.title.general",
                         () -> CraftPresence.GUIS.openScreen(new GeneralSettingsGui(currentScreen)),
@@ -69,9 +67,9 @@ public class MainGui extends ExtendedScreen {
                         )
                 )
         );
-        biomeSet = addControl(
+        biomeSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(1),
+                        calc2, CraftPresence.GUIS.getButtonY(0),
                         180, 20,
                         "gui.config.title.biome_messages",
                         () -> CraftPresence.GUIS.openScreen(new BiomeSettingsGui(currentScreen)),
@@ -94,9 +92,9 @@ public class MainGui extends ExtendedScreen {
                         }
                 )
         );
-        dimensionSet = addControl(
+        dimensionSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(2),
+                        calc1, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.title.dimension_messages",
                         () -> CraftPresence.GUIS.openScreen(new DimensionSettingsGui(currentScreen)),
@@ -119,9 +117,9 @@ public class MainGui extends ExtendedScreen {
                         }
                 )
         );
-        serverSet = addControl(
+        serverSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(2),
+                        calc2, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.title.server_messages",
                         () -> CraftPresence.GUIS.openScreen(new ServerSettingsGui(currentScreen)),
@@ -145,9 +143,9 @@ public class MainGui extends ExtendedScreen {
                 )
         );
         // Added Status Settings Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(3),
+                        calc1, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.title.status_messages",
                         () -> CraftPresence.GUIS.openScreen(new StatusMessagesGui(currentScreen)),
@@ -159,9 +157,9 @@ public class MainGui extends ExtendedScreen {
                 )
         );
         // Added Advanced Settings Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(3),
+                        calc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.title.advanced",
                         () -> CraftPresence.GUIS.openScreen(new AdvancedSettingsGui(currentScreen)),
@@ -173,9 +171,9 @@ public class MainGui extends ExtendedScreen {
                 )
         );
         // Added Accessibility Settings Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(4),
+                        calc1, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.title.accessibility",
                         () -> CraftPresence.GUIS.openScreen(new AccessibilitySettingsGui(currentScreen)),
@@ -187,9 +185,9 @@ public class MainGui extends ExtendedScreen {
                 )
         );
         // Added Presence Settings Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(4),
+                        calc2, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.title.presence_settings",
                         () -> CraftPresence.GUIS.openScreen(new PresenceSettingsGui(currentScreen)),
@@ -200,152 +198,72 @@ public class MainGui extends ExtendedScreen {
                         )
                 )
         );
-        // Adding Controls Button
-        final List<String> controlInfo = StringUtils.newArrayList("key.craftpresence.category");
-        KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
-        if (ModUtils.IS_LEGACY_SOFT) {
-            controlInfo.clear();
-            StringUtils.addEntriesNotPresent(controlInfo, CraftPresence.KEYBINDINGS.getRawKeyMappings().keySet());
-
-            controlMode = KeyUtils.FilterMode.Name;
-        }
-
-        final KeyUtils.FilterMode finalControlMode = controlMode;
-        controlsButton = addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
-                        180, 20,
-                        "gui.config.message.button.controls",
-                        () -> CraftPresence.GUIS.openScreen(
-                                new ControlsGui(
-                                        currentScreen, finalControlMode,
-                                        controlInfo
-                                )
-                        )
-                )
-        );
-        proceedButton = addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
-                        180, 20,
-                        "gui.config.message.button.back",
-                        () -> {
-                            if (CraftPresence.CONFIG.hasChanged) {
-                                CraftPresence.CONFIG.save();
-                                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
-                                CraftPresence.CONFIG.applyFrom(INSTANCE);
-                            }
-                            CraftPresence.GUIS.configGUIOpened = false;
-                            CraftPresence.GUIS.openScreen(parentScreen);
-                        }
-                )
-        );
-        // Added About Button
-        addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() - 105), (getScreenHeight() - 55),
-                        95, 20,
-                        "gui.config.message.button.about",
-                        () -> CraftPresence.GUIS.openScreen(new AboutGui(currentScreen))
-                )
-        );
-        // Added Commands Gui Button
-        addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() - 105), (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.commands",
-                        () -> CraftPresence.GUIS.openScreen(new CommandsGui(currentScreen))
-                )
-        );
-        resetConfigButton = addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        95, 20,
-                        "gui.config.message.button.reset",
-                        () -> CraftPresence.CONFIG = Config.loadOrCreate(true),
-                        () -> {
-                            if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-        // Added Sync Config Button
-        addControl(
-                new ExtendedButtonControl(
-                        10, (getScreenHeight() - 55),
-                        95, 20,
-                        "gui.config.message.button.sync.config",
-                        () -> CraftPresence.CONFIG = Config.loadOrCreate(),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.button.sync.config")
-                                ), this, true
-                        )
-                )
-        );
-
-        super.initializeUi();
-    }
-
-    @Override
-    public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID);
-
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
-
-        if (ModUtils.VERSION_TYPE.equalsIgnoreCase("alpha")) {
-            renderCenteredString(releaseNotice, getScreenWidth() / 2f, getScreenHeight() - 85, 0xFFFFFF);
-        }
-
-        syncRenderStates();
-
-        super.preRender();
-    }
-
-    @Override
-    public void postRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-
-        // Hovering over Title Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 15, getStringWidth(mainTitle), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
-                    ), this, true
-            );
-        }
-
-        super.postRender();
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
-            if (CraftPresence.CONFIG.hasChanged) {
-                CraftPresence.CONFIG = Config.loadOrCreate();
+            if (getCurrentData().hasChanged) {
+                setCurrentData(Config.loadOrCreate());
             }
             CraftPresence.GUIS.configGUIOpened = false;
         }
         super.keyTyped(typedChar, keyCode);
     }
 
-    private void syncRenderStates() {
+    @Override
+    protected void syncRenderStates() {
         // Ensure Critical Data is correct before continuing
-        CraftPresence.CONFIG.hasChanged = !CraftPresence.CONFIG.equals(INSTANCE);
+        super.syncRenderStates();
+        getCurrentData().hasChanged = !getCurrentData().equals(getOriginalData());
 
         biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
         serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
-        controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
-        resetConfigButton.setControlEnabled(!CraftPresence.CONFIG.equals(INSTANCE.getDefaults()));
+    }
 
-        proceedButton.setControlMessage(CraftPresence.CONFIG.hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
+    @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected void resetData() {
+        setCurrentData(Config.loadOrCreate(true));
+    }
+
+    @Override
+    protected boolean canSync() {
+        return true;
+    }
+
+    @Override
+    protected void syncData() {
+        setCurrentData(Config.loadOrCreate());
+    }
+
+    @Override
+    protected void applySettings() {
+        if (getCurrentData().hasChanged) {
+            getCurrentData().save();
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
+            getCurrentData().applyFrom(getOriginalData());
+        }
+        CraftPresence.GUIS.configGUIOpened = false;
+    }
+
+    @Override
+    protected Config getOriginalData() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected Config getCurrentData() {
+        return CraftPresence.CONFIG;
+    }
+
+    @Override
+    protected void setCurrentData(Config data) {
+        CraftPresence.CONFIG = data;
     }
 }
