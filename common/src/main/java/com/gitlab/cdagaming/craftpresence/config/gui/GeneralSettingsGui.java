@@ -122,9 +122,23 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 )
         );
+        currentPreferredClient = getCurrentData().preferredClientLevel;
+        preferredClientLevelButton = childFrame.addControl(
+                new ExtendedButtonControl(
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        180, 20,
+                        "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
+                        () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
+                                ), this, true
+                        )
+                )
+        );
         detectCurseManifestButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(2),
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(3),
                         "gui.config.name.general.detect_curse_manifest",
                         getCurrentData().detectCurseManifest,
                         null,
@@ -137,7 +151,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectMultiMCManifestButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, CraftPresence.GUIS.getButtonY(2),
+                        checkboxCalc2, CraftPresence.GUIS.getButtonY(3),
                         "gui.config.name.general.detect_multimc_manifest",
                         getCurrentData().detectMultiMCManifest,
                         null,
@@ -150,7 +164,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectMCUpdaterInstanceButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(3, -10),
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(4, -10),
                         "gui.config.name.general.detect_mcupdater_instance",
                         getCurrentData().detectMCUpdaterInstance,
                         null,
@@ -163,7 +177,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectTechnicPackButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, CraftPresence.GUIS.getButtonY(3, -10),
+                        checkboxCalc2, CraftPresence.GUIS.getButtonY(4, -10),
                         "gui.config.name.general.detect_technic_pack",
                         getCurrentData().detectTechnicPack,
                         null,
@@ -176,7 +190,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectATLauncherButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(4, -20),
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(5, -20),
                         "gui.config.name.general.detect_atlauncher_instance",
                         getCurrentData().detectATLauncherInstance,
                         null,
@@ -189,7 +203,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectDimensionDataButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, CraftPresence.GUIS.getButtonY(4, -20),
+                        checkboxCalc2, CraftPresence.GUIS.getButtonY(5, -20),
                         "gui.config.name.general.detect_dimension_data",
                         getCurrentData().detectDimensionData,
                         null,
@@ -202,7 +216,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         enableJoinRequestButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(5, -30),
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(6, -30),
                         "gui.config.name.general.enable_join_request",
                         getCurrentData().enableJoinRequests,
                         null,
@@ -215,7 +229,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectBiomeDataButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, CraftPresence.GUIS.getButtonY(5, -30),
+                        checkboxCalc2, CraftPresence.GUIS.getButtonY(6, -30),
                         "gui.config.name.general.detect_biome_data",
                         getCurrentData().detectBiomeData,
                         null,
@@ -228,7 +242,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         autoRegisterButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(6, -40),
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(7, -40),
                         "gui.config.name.general.auto_register",
                         getCurrentData().autoRegister,
                         null,
@@ -241,7 +255,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectWorldDataButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, CraftPresence.GUIS.getButtonY(6, -40),
+                        checkboxCalc2, CraftPresence.GUIS.getButtonY(7, -40),
                         "gui.config.name.general.detect_world_data",
                         getCurrentData().detectWorldData,
                         null,
@@ -254,27 +268,13 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         resetTimeOnInitButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(7, -50),
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(8, -50),
                         "gui.config.name.general.reset_time_on_init",
                         getCurrentData().resetTimeOnInit,
                         null,
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
-                                ), this, true
-                        )
-                )
-        );
-        currentPreferredClient = getCurrentData().preferredClientLevel;
-        preferredClientLevelButton = childFrame.addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(7, -30),
-                        180, 20,
-                        "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
-                        () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
                                 ), this, true
                         )
                 )
