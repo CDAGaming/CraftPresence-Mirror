@@ -38,7 +38,7 @@ import net.minecraft.client.gui.GuiScreen;
 public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen {
     private final String title, subTitle;
     protected ScrollPane childFrame;
-    private ExtendedButtonControl resetConfigButton, syncConfigButton, proceedButton;
+    protected ExtendedButtonControl resetConfigButton, syncConfigButton, proceedButton;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ConfigurationGui(GuiScreen parentScreen, String title, String subTitle) {
@@ -182,11 +182,17 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         );
     }
 
-    protected abstract void resetData();
+    protected void resetData() {
+        // N/A
+    }
 
-    protected abstract void syncData();
+    protected void syncData() {
+        // N/A
+    }
 
-    protected abstract void applySettings();
+    protected void applySettings() {
+        // N/A
+    }
 
     protected abstract T getOriginalData();
 

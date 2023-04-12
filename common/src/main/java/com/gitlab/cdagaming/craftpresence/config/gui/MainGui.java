@@ -42,7 +42,7 @@ public class MainGui extends ConfigurationGui<Config> {
 
     public MainGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title");
-        INSTANCE = CraftPresence.CONFIG.copy();
+        INSTANCE = getCurrentData().copy();
     }
 
     @Override

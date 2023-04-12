@@ -36,16 +36,16 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Map;
 
 @SuppressWarnings("DuplicatedCode")
-public class StatusMessagesGui extends PaginatedScreen {
-    private final Status CONFIG;
+public class StatusMessagesGui extends ConfigurationGui<Status> {
+    private final Status INSTANCE;
     // nameTranslation, [configPath,commentTranslation]
     private final Map<String, Pair<String, Runnable>> eventMappings = new HashMapBuilder<String, Pair<String, Runnable>>()
             .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
@@ -83,18 +83,19 @@ public class StatusMessagesGui extends PaginatedScreen {
             .build();
 
     StatusMessagesGui(GuiScreen parentScreen) {
-        super(parentScreen);
-        CONFIG = CraftPresence.CONFIG.statusMessages;
+        super(parentScreen, "gui.config.title", "gui.config.title.status_messages");
+        INSTANCE = getCurrentData().copy();
     }
 
     @Override
-    public void initializeUi() {
+    protected void appendControls() {
+        super.appendControls();
         // Page 1 Items
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
         final int midCalc = (getScreenWidth() / 2) - 90;
 
-        int buttonRow = 1, index = 1;
+        int buttonRow = 0, index = 1;
         for (Map.Entry<String, Pair<String, Runnable>> entry : eventMappings.entrySet()) {
             final boolean isEven = (index % 2 == 0);
             int startX = isEven ? calc2 : calc1;
@@ -102,7 +103,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                 startX = midCalc;
             }
 
-            addControl(
+            childFrame.addControl(
                     new ExtendedButtonControl(
                             startX, CraftPresence.GUIS.getButtonY(buttonRow),
                             180, 20,
@@ -112,14 +113,14 @@ public class StatusMessagesGui extends PaginatedScreen {
                                             currentScreen, entry.getValue().getFirst(),
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing new data
-                                                screenInstance.defaultData = (ModuleData) CONFIG.getDefaults().getProperty(attributeName);
+                                                screenInstance.defaultData = (ModuleData) getCurrentData().getDefaults().getProperty(attributeName);
                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.resetText = "gui.config.message.button.reset";
                                             },
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing existing data
-                                                screenInstance.defaultData = (ModuleData) CONFIG.getDefaults().getProperty(attributeName);
-                                                screenInstance.currentData = (ModuleData) CONFIG.getProperty(attributeName);
+                                                screenInstance.defaultData = (ModuleData) getCurrentData().getDefaults().getProperty(attributeName);
+                                                screenInstance.currentData = (ModuleData) getCurrentData().getProperty(attributeName);
                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -130,7 +131,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                                 // Event to occur when adjusting set data
                                                 screenInstance.currentData.setTextOverride(inputText);
                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                CONFIG.setProperty(attributeName, screenInstance.currentData);
+                                                getCurrentData().setProperty(attributeName, screenInstance.currentData);
                                                 if (!CraftPresence.GUIS.GUI_NAMES.contains(attributeName)) {
                                                     CraftPresence.GUIS.GUI_NAMES.add(attributeName);
                                                 }
@@ -138,7 +139,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when removing set data
                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                CONFIG.resetProperty(attributeName);
+                                                getCurrentData().resetProperty(attributeName);
                                             },
                                             (attributeName, screenInstance, isPresenceButton) -> {
                                                 // Event to occur when adding specific info to set data
@@ -171,7 +172,7 @@ public class StatusMessagesGui extends PaginatedScreen {
                                     )
                             ),
                             entry.getValue().getSecond()
-                    ), startPage
+                    )
             );
 
             if (isEven) {
@@ -179,30 +180,30 @@ public class StatusMessagesGui extends PaginatedScreen {
             }
             index++;
         }
-
-        super.initializeUi();
-
-        backButton.setOnHover(
-                () -> {
-                    if (!backButton.isControlEnabled()) {
-                        CraftPresence.GUIS.drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                ), this, true
-                        );
-                    }
-                }
-        );
     }
 
     @Override
-    public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.status_messages");
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
 
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
-        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
+    @Override
+    protected void resetData() {
+        setCurrentData(getOriginalData().getDefaults());
+    }
 
-        super.preRender();
+    @Override
+    protected Status getOriginalData() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected Status getCurrentData() {
+        return CraftPresence.CONFIG.statusMessages;
+    }
+
+    @Override
+    protected void setCurrentData(Status data) {
+        CraftPresence.CONFIG.statusMessages = data;
     }
 }
