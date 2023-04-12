@@ -220,6 +220,8 @@ public class MainGui extends ConfigurationGui<Config> {
         biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
         serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
+
+        proceedButton.setControlMessage(getCurrentData().hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }
 
     @Override
