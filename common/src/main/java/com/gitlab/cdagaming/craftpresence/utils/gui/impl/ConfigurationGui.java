@@ -56,7 +56,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     public void initializeUi() {
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
@@ -67,7 +67,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         );
         resetConfigButton = addControl(
                 new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
+                        6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.reset",
                         this::resetData,
@@ -84,7 +84,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         );
         syncConfigButton = addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() - 105), (getScreenHeight() - 30),
+                        (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.sync.config",
                         this::syncData,
@@ -102,8 +102,8 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
 
         childFrame = addControl(
                 new ScrollPane(
-                        0, 30,
-                        getScreenWidth(), getScreenHeight() - 35
+                        0, 32,
+                        getScreenWidth(), getScreenHeight() - 32
                 )
         );
 
@@ -155,7 +155,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         // Added About Button
         addControl(
                 new ExtendedButtonControl(
-                        5, 5,
+                        6, 6,
                         20, 20,
                         "?",
                         () -> CraftPresence.GUIS.openScreen(new AboutGui(currentScreen)),
@@ -169,7 +169,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         // Added Commands GUI Button
         addControl(
                 new ExtendedButtonControl(
-                        getScreenWidth() - 27, 5,
+                        getScreenWidth() - 26, 6,
                         20, 20,
                         ">_",
                         () -> CraftPresence.GUIS.openScreen(new CommandsGui(currentScreen)),
