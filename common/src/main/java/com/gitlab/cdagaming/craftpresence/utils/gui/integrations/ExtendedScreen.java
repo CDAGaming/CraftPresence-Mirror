@@ -492,9 +492,6 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.mouseClicked(mouseX, mouseY, mouseButton);
                 }
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).mouseClicked(mouseX, mouseY, mouseButton);
-                }
             }
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }

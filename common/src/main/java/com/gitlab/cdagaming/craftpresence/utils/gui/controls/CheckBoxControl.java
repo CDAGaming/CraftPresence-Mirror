@@ -57,10 +57,9 @@ public class CheckBoxControl extends ExtendedButtonControl {
      */
     public CheckBoxControl(final int id, final int xPos, final int yPos, final String displayString, final boolean isChecked) {
         super(id, xPos, yPos, displayString);
-        is_Checked = isChecked;
-        boxWidth = 11;
-        height = 11;
-        width = boxWidth + 2 + getFontRenderer().getStringWidth(getDisplayMessage());
+        setIsChecked(isChecked);
+        setControlHeight(boxWidth = 11);
+        setControlWidth(boxWidth + 2 + getFontRenderer().getStringWidth(getDisplayMessage()));
     }
 
     /**
@@ -149,24 +148,17 @@ public class CheckBoxControl extends ExtendedButtonControl {
             }
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
-            if (is_Checked)
+            if (isChecked())
                 drawCenteredString(getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
 
             drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
         }
     }
 
-    /**
-     * Returns true if the mouse has been pressed on this control.<p>
-     * Equivalent of MouseListener.mousePressed(MouseEvent e).
-     */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (super.mousePressed(mc, mouseX, mouseY)) {
-            is_Checked = !is_Checked;
-            return true;
-        }
-        return false;
+    public void onClick() {
+        setIsChecked(!is_Checked);
+        super.onClick();
     }
 
     /**
