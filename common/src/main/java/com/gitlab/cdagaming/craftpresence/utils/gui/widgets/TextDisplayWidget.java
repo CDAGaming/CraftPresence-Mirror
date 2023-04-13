@@ -137,6 +137,7 @@ public class TextDisplayWidget implements DynamicWidget {
         if (!Objects.equals(newMessage, message)) {
             message = newMessage;
             renderLines = refreshContent();
+            parent.refreshContentHeight();
         }
     }
 
@@ -151,8 +152,15 @@ public class TextDisplayWidget implements DynamicWidget {
 
     @Override
     public void draw(ExtendedScreen screen) {
+        int padding = 0;
         if (screen instanceof ScrollPane) {
-            ((ScrollPane) screen).drawScrollString(this);
+            padding = ((ScrollPane) screen).getPadding();
+        }
+        int xPos = getControlPosX() + padding;
+        int currentY = getControlPosY() + padding;
+        for (String line : getRenderLines()) {
+            screen.renderString(line, xPos, currentY, 0xFFFFFF);
+            currentY += screen.getFontHeight() + 1;
         }
     }
 

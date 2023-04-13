@@ -28,7 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
@@ -111,6 +111,13 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     @Override
+    public void refreshContentHeight() {
+        super.refreshContentHeight();
+
+        setContentHeight((int) (getContentHeight() + amountScrolled));
+    }
+
+    @Override
     public void renderCriticalData() {
         CraftPresence.GUIS.drawBackground(
                 getScreenX(), getScreenY(),
@@ -118,19 +125,17 @@ public class ScrollPane extends ExtendedScreen {
                 NERO
         );
 
-        refreshContentHeight();
-
         // Render Depth Decorations
         final Tuple<Boolean, String, ResourceLocation> backgroundData = CraftPresence.GUIS.getTextureData(CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor);
         CraftPresence.GUIS.drawTextureGradientRect(0.0D,
-                getLeft(), getTop(), getRight(), getTop() + padding,
+                getLeft(), getTop(), getRight(), getTop() + getPadding(),
                 1.0D, 1.0D, 0.0D,
                 NONE,
                 Color.black,
                 backgroundData.getThird()
         );
         CraftPresence.GUIS.drawTextureGradientRect(0.0D,
-                getLeft(), getBottom() - padding, getRight(), getBottom(),
+                getLeft(), getBottom() - getPadding(), getRight(), getBottom(),
                 1.0D, 1.0D, 0.0D,
                 Color.black,
                 NONE,
@@ -147,7 +152,7 @@ public class ScrollPane extends ExtendedScreen {
         final int contentHeight = getContentHeight();
         if (maxScroll > 0 && contentHeight > 0) {
             int height = screenHeight * screenHeight / contentHeight;
-            height = MathUtils.clamp(height, 32, screenHeight - (padding * 2));
+            height = MathUtils.clamp(height, 32, screenHeight - (getPadding() * 2));
             float barTop = amountScrolled * (screenHeight - height) / maxScroll + top;
             if (barTop < top) {
                 barTop = top;
@@ -182,16 +187,6 @@ public class ScrollPane extends ExtendedScreen {
             if (Mouse.getEventDWheel() != 0) {
                 this.mouseScrolled(mouseX, mouseY, (int) (dw / 60D));
             }
-
-            int wheelDelta = getMouseScroll();
-            if (wheelDelta != 0) {
-                if (wheelDelta > 0) {
-                    wheelDelta = -1;
-                } else {
-                    wheelDelta = 1;
-                }
-                scrollBy(wheelDelta * getHeightPerScroll());
-            }
         }
     }
 
@@ -221,9 +216,18 @@ public class ScrollPane extends ExtendedScreen {
     public void mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
         final int contentHeight = getContentHeight();
         if (button == 0 && contentHeight > 0) {
-            int height = getScreenHeight() * getScreenHeight() / contentHeight;
-            height = MathUtils.clamp(height, 32, getScreenHeight() - (padding * 2));
-            scrollBy(deltaY / (float) (getScreenHeight() - height) * getMaxScroll());
+            if (mouseY < getTop()) {
+                setScroll(0.0F);
+            } else if (mouseY > getBottom()) {
+                setScroll(getMaxScroll());
+            } else {
+                int height = getScreenHeight() * getScreenHeight() / contentHeight;
+                height = MathUtils.clamp(height, 32, getScreenHeight() - (getPadding() * 2));
+
+                int scrollLimit = Math.max(1, this.getMaxScroll());
+                float heightPerScroll = Math.max(1.0f, scrollLimit / (float) (getScreenHeight() - height));
+                scrollBy(deltaY * heightPerScroll);
+            }
         }
     }
 
@@ -232,17 +236,12 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     /**
-     * Render a scrollable string, based on the arguments
+     * Retrieve the padding for the widget
      *
-     * @param data The {@link TextDisplayWidget} data to interpret
+     * @return the padding for the widget
      */
-    public void drawScrollString(final TextDisplayWidget data) {
-        drawScrollString(
-                data.getRenderLines(),
-                data.getControlPosX() + padding, (int) amountScrolled,
-                data.getTop() + padding,
-                0xFFFFFF
-        );
+    public int getPadding() {
+        return padding;
     }
 
     /**
@@ -296,8 +295,15 @@ public class ScrollPane extends ExtendedScreen {
      * @param amount the new scroll amount
      */
     public void setScroll(final float amount) {
+        float prevScrollAmount = amountScrolled;
         amountScrolled = amount;
         bindAmountScrolled();
+
+        for (DynamicWidget widget : getWidgets()) {
+            widget.setControlPosY(
+                    (int) (widget.getControlPosY() - (amountScrolled - prevScrollAmount))
+            );
+        }
     }
 
     /**
@@ -313,11 +319,11 @@ public class ScrollPane extends ExtendedScreen {
      * @return the maximum scroll height
      */
     public int getMaxScroll() {
-        return Math.max(0, getContentHeight() - (getBottom() - padding));
+        return Math.max(0, getContentHeight() - (getBottom() - getPadding()));
     }
 
     @Override
     public int getMaxWidth() {
-        return getScreenWidth() - padding - getScrollBarWidth();
+        return getScreenWidth() - getPadding() - getScrollBarWidth();
     }
 }

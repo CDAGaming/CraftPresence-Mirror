@@ -125,8 +125,8 @@ public class ExtendedScreen extends GuiScreen {
         mc = CraftPresence.instance;
         currentScreen = this;
         this.parentScreen = parentScreen;
-        this.contentHeight = 0;
         this.canClose = true;
+        setContentHeight(0);
         setDebugMode(CommandUtils.isDebugMode());
         setVerboseMode(CommandUtils.isVerboseMode());
     }
@@ -206,7 +206,7 @@ public class ExtendedScreen extends GuiScreen {
     public void clearData() {
         if (currentPhase != Phase.PREINIT) {
             currentPhase = Phase.PREINIT;
-            contentHeight = 0;
+            setContentHeight(0);
 
             buttonList.clear();
             extendedControls.clear();
@@ -608,40 +608,6 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Draws a Scrollable String, dependent on scroll parameters
-     *
-     * @param text      The text to render to the screen
-     * @param xPos      The X position to render the text at
-     * @param minScroll The minimum allowed scroll position, inclusive
-     * @param scrollPos The current scroll position
-     * @param textColor The color to render the text in
-     */
-    public void drawScrollString(final List<String> text, final int xPos, final int scrollPos, final int minScroll, final int textColor) {
-        int currentY = minScroll - scrollPos;
-        for (String line : text) {
-            renderString(line, xPos, currentY, textColor);
-            currentY += getFontHeight() + 1;
-        }
-    }
-
-    /**
-     * Draws a Scrollable String, dependent on scroll parameters
-     *
-     * @param text      The text to render to the screen
-     * @param xPos      The X position to render the text at
-     * @param minScroll The minimum allowed scroll position, inclusive
-     * @param scrollPos The current scroll position
-     * @param wrapWidth The width to wrap the text to
-     * @param textColor The color to render the text in
-     */
-    public void drawScrollString(final String text, final int xPos, final int minScroll, final int scrollPos, final int wrapWidth, final int textColor) {
-        drawScrollString(
-                createRenderLines(text, wrapWidth),
-                xPos, scrollPos, minScroll, textColor
-        );
-    }
-
-    /**
      * Format a section of strings to conform to the specified width
      *
      * @param original  The text to interpret
@@ -807,16 +773,23 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Sets the Content Height of all applicable widgets
+     *
+     * @param contentHeight the Content Height of all applicable widgets
+     */
+    public void setContentHeight(int contentHeight) {
+        this.contentHeight = contentHeight;
+    }
+
+    /**
      * Refresh the Content Height of all applicable widgets
      */
     public void refreshContentHeight() {
-        contentHeight = 0;
-        if (isLoaded()) {
-            for (DynamicWidget widget : getWidgets()) {
-                final int widgetHeight = widget.getBottom();
-                if (widgetHeight > contentHeight) {
-                    contentHeight = widgetHeight;
-                }
+        setContentHeight(0);
+        for (DynamicWidget widget : getWidgets()) {
+            final int widgetHeight = widget.getBottom();
+            if (widgetHeight > contentHeight) {
+                setContentHeight(widgetHeight);
             }
         }
     }
