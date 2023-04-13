@@ -35,32 +35,35 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
-public class ServerSettingsGui extends ExtendedScreen {
-    private final Server CONFIG;
-    private ExtendedButtonControl proceedButton, serverMessagesButton;
+public class ServerSettingsGui extends ConfigurationGui<Server> {
+    private final Server INSTANCE;
+    private final ModuleData defaultData;
+    private ExtendedButtonControl serverMessagesButton;
     private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
 
     ServerSettingsGui(GuiScreen parentScreen) {
-        super(parentScreen);
-        CONFIG = CraftPresence.CONFIG.serverSettings;
+        super(parentScreen, "gui.config.title", "gui.config.title.server_messages");
+        INSTANCE = getCurrentData().copy();
+        defaultData = getCurrentData().serverData.get("default");
     }
 
     @Override
-    public void initializeUi() {
-        final ModuleData defaultData = CONFIG.serverData.get("default");
+    protected void appendControls() {
+        super.appendControls();
+
         final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
-        defaultName = addControl(
+        defaultName = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        CraftPresence.GUIS.getButtonY(0),
                         180, 20,
                         "gui.config.name.server_messages.server_name",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -70,11 +73,11 @@ public class ServerSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        defaultName.setControlMessage(CONFIG.fallbackServerName);
-        defaultMOTD = addControl(
+        defaultName.setControlMessage(getCurrentData().fallbackServerName);
+        defaultMOTD = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(2),
+                        CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.name.server_messages.server_motd",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -84,11 +87,11 @@ public class ServerSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        defaultMOTD.setControlMessage(CONFIG.fallbackServerMotd);
-        defaultMessage = addControl(
+        defaultMOTD.setControlMessage(getCurrentData().fallbackServerMotd);
+        defaultMessage = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(3),
+                        CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.message.default.server",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -101,9 +104,9 @@ public class ServerSettingsGui extends ExtendedScreen {
         );
         defaultMessage.setControlMessage(defaultServerMessage);
 
-        serverMessagesButton = addControl(
+        serverMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(4),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.name.server_messages.server_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -113,8 +116,8 @@ public class ServerSettingsGui extends ExtendedScreen {
                                         null, null,
                                         true, true, RenderType.ServerData,
                                         (attributeName, currentValue) -> {
-                                            final ModuleData defaultServerData = CONFIG.serverData.get("default");
-                                            final ModuleData currentServerData = CONFIG.serverData.get(attributeName);
+                                            final ModuleData defaultServerData = getCurrentData().serverData.get("default");
+                                            final ModuleData currentServerData = getCurrentData().serverData.get(attributeName);
                                             final String defaultMessage = Config.getProperty(defaultServerData, "textOverride") != null ? defaultServerData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentServerData, "textOverride") != null ? currentServerData.getTextOverride() : "";
 
@@ -124,7 +127,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                 newData.setTextOverride(defaultMessage);
                                             }
                                             newData.setIconOverride(currentValue);
-                                            CONFIG.serverData.put(attributeName, newData);
+                                            getCurrentData().serverData.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -133,13 +136,13 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = CONFIG.serverData.get("default");
+                                                                screenInstance.defaultData = getCurrentData().serverData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = CONFIG.serverData.get("default");
-                                                                screenInstance.currentData = CONFIG.serverData.get(attributeName);
+                                                                screenInstance.defaultData = getCurrentData().serverData.get("default");
+                                                                screenInstance.currentData = getCurrentData().serverData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -149,7 +152,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.serverData.put(attributeName, screenInstance.currentData);
+                                                                getCurrentData().serverData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.SERVER.knownAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.add(attributeName);
                                                                 }
@@ -157,7 +160,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.serverData.remove(attributeName);
+                                                                getCurrentData().serverData.remove(attributeName);
                                                                 if (!screenInstance.isPreliminaryData) {
                                                                     CraftPresence.SERVER.knownAddresses.remove(attributeName);
                                                                 }
@@ -174,7 +177,7 @@ public class ServerSettingsGui extends ExtendedScreen {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : CONFIG.fallbackServerIcon;
+                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().fallbackServerIcon;
                                                                     final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new SelectorGui(
@@ -224,20 +227,20 @@ public class ServerSettingsGui extends ExtendedScreen {
                 )
         );
         // Adding Default Icon Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(5),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(4),
                         180, 20,
                         "gui.config.name.server_messages.server_icon",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        CONFIG.fallbackServerIcon, null,
+                                        getCurrentData().fallbackServerIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
-                                            CONFIG.fallbackServerIcon = currentValue;
+                                            getCurrentData().fallbackServerIcon = currentValue;
                                         }, null
                                 )
                         ),
@@ -248,54 +251,66 @@ public class ServerSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        proceedButton = addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
-                        180, 20,
-                        "gui.config.message.button.back",
-                        () -> {
-                            if (!defaultName.getControlMessage().equals(CONFIG.fallbackServerName)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CONFIG.fallbackServerName = defaultName.getControlMessage();
-                            }
-                            if (!defaultMOTD.getControlMessage().equals(CONFIG.fallbackServerMotd)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                CONFIG.fallbackServerMotd = defaultMOTD.getControlMessage();
-                            }
-                            if (!defaultMessage.getControlMessage().equals(defaultServerMessage)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                final ModuleData defaultServerData = CONFIG.serverData.getOrDefault("default", new ModuleData());
-                                defaultServerData.setTextOverride(defaultMessage.getControlMessage());
-                                CONFIG.serverData.put("default", defaultServerData);
-                            }
-                            CraftPresence.GUIS.openScreen(parentScreen);
-                        },
-                        () -> {
-                            if (!proceedButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-
-        super.initializeUi();
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        ), this, true
+                );
+            }
+        });
     }
 
     @Override
-    public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.server_messages");
-
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
-        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
+    protected void syncRenderStates() {
+        super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultName.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultMOTD.getControlMessage()));
         serverMessagesButton.setControlEnabled(CraftPresence.SERVER.enabled);
+    }
 
-        super.preRender();
+    @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected void resetData() {
+        setCurrentData(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected void applySettings() {
+        final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
+        if (!defaultName.getControlMessage().equals(getCurrentData().fallbackServerName)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().fallbackServerName = defaultName.getControlMessage();
+        }
+        if (!defaultMOTD.getControlMessage().equals(getCurrentData().fallbackServerMotd)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().fallbackServerMotd = defaultMOTD.getControlMessage();
+        }
+        if (!defaultMessage.getControlMessage().equals(defaultServerMessage)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            final ModuleData defaultServerData = getCurrentData().serverData.getOrDefault("default", new ModuleData());
+            defaultServerData.setTextOverride(defaultMessage.getControlMessage());
+            getCurrentData().serverData.put("default", defaultServerData);
+        }
+    }
+
+    @Override
+    protected Server getOriginalData() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected Server getCurrentData() {
+        return CraftPresence.CONFIG.serverSettings;
+    }
+
+    @Override
+    protected void setCurrentData(Server data) {
+        CraftPresence.CONFIG.serverSettings = data;
     }
 }
