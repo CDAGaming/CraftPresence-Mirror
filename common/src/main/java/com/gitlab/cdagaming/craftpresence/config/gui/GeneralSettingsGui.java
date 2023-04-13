@@ -125,7 +125,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         currentPreferredClient = getCurrentData().preferredClientLevel;
         preferredClientLevelButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        buttonCalc2, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
                         () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
@@ -268,7 +268,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         resetTimeOnInitButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, CraftPresence.GUIS.getButtonY(8, -50),
+                        checkboxCalc1, CraftPresence.GUIS.getButtonY(2, 10),
                         "gui.config.name.general.reset_time_on_init",
                         getCurrentData().resetTimeOnInit,
                         null,
