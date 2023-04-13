@@ -37,17 +37,17 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.Consumer;
 
 @SuppressWarnings("DuplicatedCode")
-public class PresenceSettingsGui extends PaginatedScreen {
-    private final Display CONFIG;
+public class PresenceSettingsGui extends ConfigurationGui<Display> {
+    private final Display INSTANCE;
     private final PresenceData PRESENCE;
     private final boolean isDefaultModule;
     private final Consumer<PresenceData> onChangedCallback;
@@ -56,13 +56,13 @@ public class PresenceSettingsGui extends PaginatedScreen {
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
 
     PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
-        super(parentScreen);
-        CONFIG = CraftPresence.CONFIG.displaySettings;
-        PRESENCE = moduleData != null ? moduleData : CONFIG.presenceData;
+        super(parentScreen, "gui.config.title", "gui.config.title.presence_settings");
+        INSTANCE = getCurrentData().copy();
+        PRESENCE = moduleData != null ? moduleData : getCurrentData().presenceData;
         if (PRESENCE.buttons.isEmpty()) {
-            PRESENCE.buttons.put("default", new Button(CONFIG.presenceData.buttons.get("default")));
+            PRESENCE.buttons.put("default", new Button(getCurrentData().presenceData.buttons.get("default")));
         }
-        isDefaultModule = moduleData != null && moduleData.equals(CONFIG.presenceData);
+        isDefaultModule = moduleData != null && moduleData.equals(getCurrentData().presenceData);
         onChangedCallback = changedCallback;
     }
 
@@ -73,17 +73,19 @@ public class PresenceSettingsGui extends PaginatedScreen {
     }
 
     @Override
-    public void initializeUi() {
+    protected void appendControls() {
+        super.appendControls();
+
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
         final int checkboxCalc1 = (getScreenWidth() / 2) - 160;
 
         // Page 1 Items
-        detailsFormat = addControl(
+        detailsFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        CraftPresence.GUIS.getButtonY(0),
                         180, 20,
                         "gui.config.name.display.details_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -92,12 +94,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage
+                )
         );
-        gameStateFormat = addControl(
+        gameStateFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(2),
+                        CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.name.display.game_state_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -106,12 +108,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage
+                )
         );
-        largeImageFormat = addControl(
+        largeImageFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(3),
+                        CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.display.large_image_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -120,12 +122,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage
+                )
         );
-        smallImageFormat = addControl(
+        smallImageFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(4),
+                        CraftPresence.GUIS.getButtonY(3),
                         180, 20,
                         "gui.config.name.display.small_image_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -134,7 +136,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage
+                )
         );
 
         detailsFormat.setControlMessage(PRESENCE.details);
@@ -143,9 +145,9 @@ public class PresenceSettingsGui extends PaginatedScreen {
         smallImageFormat.setControlMessage(PRESENCE.smallImageText);
 
         if (!isDefaultModule) {
-            enabledCheckbox = addControl(
+            enabledCheckbox = childFrame.addControl(
                     new CheckBoxControl(
-                            checkboxCalc1, CraftPresence.GUIS.getButtonY(5),
+                            checkboxCalc1, CraftPresence.GUIS.getButtonY(4),
                             "gui.config.name.display.enabled",
                             PRESENCE.enabled,
                             null,
@@ -154,11 +156,11 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                             ModUtils.TRANSLATOR.translate("gui.config.comment.display.enabled")
                                     ), this, true
                             )
-                    ), startPage
+                    )
             );
-            useAsMainCheckbox = addControl(
+            useAsMainCheckbox = childFrame.addControl(
                     new CheckBoxControl(
-                            calc2, CraftPresence.GUIS.getButtonY(5),
+                            calc2, CraftPresence.GUIS.getButtonY(4),
                             "gui.config.name.display.use_as_main",
                             PRESENCE.useAsMain,
                             null,
@@ -167,15 +169,15 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                             ModUtils.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
                                     ), this, true
                             )
-                    ), startPage
+                    )
             );
         }
 
         // Page 2 Items
-        smallImageKeyFormat = addControl(
+        smallImageKeyFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        CraftPresence.GUIS.getButtonY(5),
                         180, 20,
                         "gui.config.name.display.small_image_key",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -184,12 +186,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage + 1
+                )
         );
-        largeImageKeyFormat = addControl(
+        largeImageKeyFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(2),
+                        CraftPresence.GUIS.getButtonY(6),
                         180, 20,
                         "gui.config.name.display.large_image_key",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -198,16 +200,16 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage + 1
+                )
         );
 
         smallImageKeyFormat.setControlMessage(PRESENCE.smallImageKey);
         largeImageKeyFormat.setControlMessage(PRESENCE.largeImageKey);
 
-        startTimeFormat = addControl(
+        startTimeFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(3),
+                        CraftPresence.GUIS.getButtonY(7),
                         180, 20,
                         "gui.config.name.display.start_timestamp",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -216,12 +218,12 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage + 1
+                )
         );
-        endTimeFormat = addControl(
+        endTimeFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(4),
+                        CraftPresence.GUIS.getButtonY(8),
                         180, 20,
                         "gui.config.name.display.end_timestamp",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -230,16 +232,16 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 ), this, true
                         )
-                ), startPage + 1
+                )
         );
 
         startTimeFormat.setControlMessage(PRESENCE.startTimestamp);
         endTimeFormat.setControlMessage(PRESENCE.endTimestamp);
 
         // Button Messages Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(5),
+                        calc1, CraftPresence.GUIS.getButtonY(9),
                         180, 20,
                         "gui.config.name.display.button_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -314,13 +316,13 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
                                 ), this, true
                         )
-                ), startPage + 1
+                )
         );
 
         // Dynamic Icons Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(5),
+                        calc2, CraftPresence.GUIS.getButtonY(9),
                         180, 20,
                         "gui.config.name.display.dynamic_icons",
                         () -> CraftPresence.GUIS.openScreen(
@@ -341,7 +343,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.dynamicIcons.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getCurrentData().dynamicIcons.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -350,13 +352,13 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CONFIG.dynamicIcons.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CONFIG.dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = getCurrentData().dynamicIcons.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = getCurrentData().dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.dynamicIcons.put(attributeName, inputText);
+                                                                getCurrentData().dynamicIcons.put(attributeName, inputText);
                                                                 final DiscordAsset asset = new DiscordAsset()
                                                                         .setName(attributeName)
                                                                         .setUrl(inputText)
@@ -373,7 +375,7 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.dynamicIcons.remove(attributeName);
+                                                                getCurrentData().dynamicIcons.remove(attributeName);
                                                                 if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
                                                                     DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
                                                                     if (!attributeName.equalsIgnoreCase("default")) {
@@ -407,19 +409,19 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
                                 ), this, true
                         )
-                ), startPage + 1
+                )
         );
 
         // Dynamic Variables Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(6),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(10),
                         180, 20,
                         "gui.config.name.display.dynamic_variables",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.item"), CONFIG.dynamicVariables.keySet(),
+                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.item"), getCurrentData().dynamicVariables.keySet(),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.None,
                                         null,
@@ -432,25 +434,25 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = CONFIG.dynamicVariables.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getCurrentData().dynamicVariables.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.maxSecondaryLength = 32;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
-                                                                screenInstance.originalPrimaryMessage = CONFIG.dynamicVariables.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = CONFIG.dynamicVariables.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = getCurrentData().dynamicVariables.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = getCurrentData().dynamicVariables.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.dynamicVariables.put(attributeName, inputText);
+                                                                getCurrentData().dynamicVariables.put(attributeName, inputText);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.dynamicVariables.remove(attributeName);
+                                                                getCurrentData().dynamicVariables.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
@@ -478,71 +480,71 @@ public class PresenceSettingsGui extends PaginatedScreen {
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
                                 ), this, true
                         )
-                ), startPage + 1
-        );
-
-        super.initializeUi();
-
-        backButton.setOnClick(
-                () -> {
-                    if (!detailsFormat.getControlMessage().equals(PRESENCE.details)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.details = detailsFormat.getControlMessage();
-                    }
-                    if (!gameStateFormat.getControlMessage().equals(PRESENCE.gameState)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.gameState = gameStateFormat.getControlMessage();
-                    }
-                    if (!largeImageFormat.getControlMessage().equals(PRESENCE.largeImageText)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.largeImageText = largeImageFormat.getControlMessage();
-                    }
-                    if (!smallImageFormat.getControlMessage().equals(PRESENCE.smallImageText)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.smallImageText = smallImageFormat.getControlMessage();
-                    }
-                    if (!isDefaultModule) {
-                        if (enabledCheckbox.isChecked() != PRESENCE.enabled) {
-                            CraftPresence.CONFIG.hasChanged = true;
-                            PRESENCE.enabled = enabledCheckbox.isChecked();
-                        }
-                        if (useAsMainCheckbox.isChecked() != PRESENCE.useAsMain) {
-                            CraftPresence.CONFIG.hasChanged = true;
-                            PRESENCE.useAsMain = useAsMainCheckbox.isChecked();
-                        }
-                    }
-                    if (!largeImageKeyFormat.getControlMessage().equals(PRESENCE.largeImageKey)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.largeImageKey = largeImageKeyFormat.getControlMessage();
-                    }
-                    if (!smallImageKeyFormat.getControlMessage().equals(PRESENCE.smallImageKey)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.smallImageKey = smallImageKeyFormat.getControlMessage();
-                    }
-                    if (!startTimeFormat.getControlMessage().equals(PRESENCE.startTimestamp)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.startTimestamp = startTimeFormat.getControlMessage();
-                    }
-                    if (!endTimeFormat.getControlMessage().equals(PRESENCE.endTimestamp)) {
-                        CraftPresence.CONFIG.hasChanged = true;
-                        PRESENCE.endTimestamp = endTimeFormat.getControlMessage();
-                    }
-                    if (onChangedCallback != null) {
-                        onChangedCallback.accept(PRESENCE);
-                    }
-                    CraftPresence.GUIS.openScreen(parentScreen);
-                }
+                )
         );
     }
 
     @Override
-    public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.presence_settings");
+    protected void applySettings() {
+        if (!detailsFormat.getControlMessage().equals(PRESENCE.details)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.details = detailsFormat.getControlMessage();
+        }
+        if (!gameStateFormat.getControlMessage().equals(PRESENCE.gameState)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.gameState = gameStateFormat.getControlMessage();
+        }
+        if (!largeImageFormat.getControlMessage().equals(PRESENCE.largeImageText)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.largeImageText = largeImageFormat.getControlMessage();
+        }
+        if (!smallImageFormat.getControlMessage().equals(PRESENCE.smallImageText)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.smallImageText = smallImageFormat.getControlMessage();
+        }
+        if (!isDefaultModule) {
+            if (enabledCheckbox.isChecked() != PRESENCE.enabled) {
+                CraftPresence.CONFIG.hasChanged = true;
+                PRESENCE.enabled = enabledCheckbox.isChecked();
+            }
+            if (useAsMainCheckbox.isChecked() != PRESENCE.useAsMain) {
+                CraftPresence.CONFIG.hasChanged = true;
+                PRESENCE.useAsMain = useAsMainCheckbox.isChecked();
+            }
+        }
+        if (!largeImageKeyFormat.getControlMessage().equals(PRESENCE.largeImageKey)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.largeImageKey = largeImageKeyFormat.getControlMessage();
+        }
+        if (!smallImageKeyFormat.getControlMessage().equals(PRESENCE.smallImageKey)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.smallImageKey = smallImageKeyFormat.getControlMessage();
+        }
+        if (!startTimeFormat.getControlMessage().equals(PRESENCE.startTimestamp)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.startTimestamp = startTimeFormat.getControlMessage();
+        }
+        if (!endTimeFormat.getControlMessage().equals(PRESENCE.endTimestamp)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            PRESENCE.endTimestamp = endTimeFormat.getControlMessage();
+        }
+        if (onChangedCallback != null) {
+            onChangedCallback.accept(PRESENCE);
+        }
+    }
 
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
-        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
+    @Override
+    protected Display getOriginalData() {
+        return INSTANCE;
+    }
 
-        super.preRender();
+    @Override
+    protected Display getCurrentData() {
+        return CraftPresence.CONFIG.displaySettings;
+    }
+
+    @Override
+    protected void setCurrentData(Display data) {
+        CraftPresence.CONFIG.displaySettings = data;
     }
 }
