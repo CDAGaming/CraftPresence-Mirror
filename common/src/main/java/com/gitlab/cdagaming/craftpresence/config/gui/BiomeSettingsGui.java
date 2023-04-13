@@ -35,32 +35,35 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
-public class BiomeSettingsGui extends ExtendedScreen {
-    private final Biome CONFIG;
-    private ExtendedButtonControl proceedButton, biomeMessagesButton;
+public class BiomeSettingsGui extends ConfigurationGui<Biome> {
+    private final Biome INSTANCE;
+    private final ModuleData defaultData;
+    private ExtendedButtonControl biomeMessagesButton;
     private ExtendedTextControl defaultMessage;
 
     BiomeSettingsGui(GuiScreen parentScreen) {
-        super(parentScreen);
-        CONFIG = CraftPresence.CONFIG.biomeSettings;
+        super(parentScreen, "gui.config.title", "gui.config.title.biome_messages");
+        INSTANCE = getCurrentData().copy();
+        defaultData = getCurrentData().biomeData.get("default");
     }
 
     @Override
-    public void initializeUi() {
-        final ModuleData defaultData = CONFIG.biomeData.get("default");
+    protected void appendControls() {
+        super.appendControls();
+
         final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
-        defaultMessage = addControl(
+        defaultMessage = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        CraftPresence.GUIS.getButtonY(0),
                         180, 20,
                         "gui.config.message.default.biome",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -73,9 +76,9 @@ public class BiomeSettingsGui extends ExtendedScreen {
         );
         defaultMessage.setControlMessage(defaultBiomeMessage);
 
-        biomeMessagesButton = addControl(
+        biomeMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(1),
                         180, 20,
                         "gui.config.name.biome_messages.biome_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -85,8 +88,8 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                         null, null,
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
-                                            final ModuleData defaultBiomeData = CONFIG.biomeData.get("default");
-                                            final ModuleData currentBiomeData = CONFIG.biomeData.get(attributeName);
+                                            final ModuleData defaultBiomeData = getCurrentData().biomeData.get("default");
+                                            final ModuleData currentBiomeData = getCurrentData().biomeData.get(attributeName);
                                             final String defaultMessage = Config.getProperty(defaultBiomeData, "textOverride") != null ? defaultBiomeData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentBiomeData, "textOverride") != null ? currentBiomeData.getTextOverride() : "";
 
@@ -96,7 +99,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                 newData.setTextOverride(defaultMessage);
                                             }
                                             newData.setIconOverride(currentValue);
-                                            CONFIG.biomeData.put(attributeName, newData);
+                                            getCurrentData().biomeData.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -105,13 +108,13 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = CONFIG.biomeData.get("default");
+                                                                screenInstance.defaultData = getCurrentData().biomeData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = CONFIG.biomeData.get("default");
-                                                                screenInstance.currentData = CONFIG.biomeData.get(attributeName);
+                                                                screenInstance.defaultData = getCurrentData().biomeData.get("default");
+                                                                screenInstance.currentData = getCurrentData().biomeData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -121,7 +124,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.biomeData.put(attributeName, screenInstance.currentData);
+                                                                getCurrentData().biomeData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.BIOMES.BIOME_NAMES.contains(attributeName)) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.add(attributeName);
                                                                 }
@@ -129,7 +132,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
-                                                                CONFIG.biomeData.remove(attributeName);
+                                                                getCurrentData().biomeData.remove(attributeName);
                                                                 if (!screenInstance.isPreliminaryData) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
                                                                 }
@@ -146,7 +149,7 @@ public class BiomeSettingsGui extends ExtendedScreen {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : CONFIG.fallbackBiomeIcon;
+                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().fallbackBiomeIcon;
                                                                     final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
                                                                     CraftPresence.GUIS.openScreen(
                                                                             new SelectorGui(
@@ -196,20 +199,20 @@ public class BiomeSettingsGui extends ExtendedScreen {
                 )
         );
         // Adding Default Icon Button
-        addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(3),
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
                         180, 20,
                         "gui.config.name.biome_messages.biome_icon",
                         () -> CraftPresence.GUIS.openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        CONFIG.fallbackBiomeIcon, null,
+                                        getCurrentData().fallbackBiomeIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
                                             CraftPresence.CONFIG.hasChanged = true;
-                                            CONFIG.fallbackBiomeIcon = currentValue;
+                                            getCurrentData().fallbackBiomeIcon = currentValue;
                                         }, null
                                 )
                         ),
@@ -220,46 +223,58 @@ public class BiomeSettingsGui extends ExtendedScreen {
                         )
                 )
         );
-        proceedButton = addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
-                        180, 20,
-                        "gui.config.message.button.back",
-                        () -> {
-                            if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
-                                CraftPresence.CONFIG.hasChanged = true;
-                                final ModuleData defaultBiomeData = CONFIG.biomeData.getOrDefault("default", new ModuleData());
-                                defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
-                                CONFIG.biomeData.put("default", defaultBiomeData);
-                            }
-                            CraftPresence.GUIS.openScreen(parentScreen);
-                        },
-                        () -> {
-                            if (!proceedButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ), this, true
-                                );
-                            }
-                        }
-                )
-        );
-
-        super.initializeUi();
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                CraftPresence.GUIS.drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        ), this, true
+                );
+            }
+        });
     }
 
     @Override
-    public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome_messages");
-
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
-        renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
+    protected void syncRenderStates() {
+        super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.enabled);
+    }
 
-        super.preRender();
+    @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected void resetData() {
+        setCurrentData(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected void applySettings() {
+        final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
+        if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            final ModuleData defaultBiomeData = getCurrentData().biomeData.getOrDefault("default", new ModuleData());
+            defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
+            getCurrentData().biomeData.put("default", defaultBiomeData);
+        }
+    }
+
+    @Override
+    protected Biome getOriginalData() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected Biome getCurrentData() {
+        return CraftPresence.CONFIG.biomeSettings;
+    }
+
+    @Override
+    protected void setCurrentData(Biome data) {
+        CraftPresence.CONFIG.biomeSettings = data;
     }
 }
