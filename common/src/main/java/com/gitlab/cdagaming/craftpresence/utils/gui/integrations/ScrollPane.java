@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 
@@ -180,12 +179,9 @@ public class ScrollPane extends ExtendedScreen {
         if (isOverScreen()) {
             super.handleMouseInput();
 
-            final int mouseX = getMouseX();
-            final int mouseY = getMouseY();
-
-            final int dw = Mouse.getEventDWheel();
-            if (Mouse.getEventDWheel() != 0) {
-                this.mouseScrolled(mouseX, mouseY, (int) (dw / 60D));
+            final int dw = getMouseScroll();
+            if (dw != 0) {
+                mouseScrolled(getMouseX(), getMouseY(), (int) (dw / 60D));
             }
         }
     }
@@ -203,13 +199,13 @@ public class ScrollPane extends ExtendedScreen {
 
     // remove in 1.13+
     @Override
-    protected void mouseClickMove(int i, int j, int k, long timeSinceLastClick) {
+    protected void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
         if (isLoaded()) {
-            mouseDragged(i, j, k, i - mousePrevX, j - mousePrevY);
-            mousePrevX = i;
-            mousePrevY = j;
+            mouseDragged(mouseX, mouseY, mouseButton, mouseX - mousePrevX, mouseY - mousePrevY);
+            mousePrevX = mouseX;
+            mousePrevY = mouseY;
 
-            super.mouseClickMove(i, j, k, timeSinceLastClick);
+            super.mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
         }
     }
 
@@ -224,7 +220,7 @@ public class ScrollPane extends ExtendedScreen {
                 int height = getScreenHeight() * getScreenHeight() / contentHeight;
                 height = MathUtils.clamp(height, 32, getScreenHeight() - (getPadding() * 2));
 
-                int scrollLimit = Math.max(1, this.getMaxScroll());
+                int scrollLimit = Math.max(1, getMaxScroll());
                 float heightPerScroll = Math.max(1.0f, scrollLimit / (float) (getScreenHeight() - height));
                 scrollBy(deltaY * heightPerScroll);
             }

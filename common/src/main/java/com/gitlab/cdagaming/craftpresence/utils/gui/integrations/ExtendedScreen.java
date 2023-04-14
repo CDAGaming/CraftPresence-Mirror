@@ -785,7 +785,7 @@ public class ExtendedScreen extends GuiScreen {
         setContentHeight(0);
         for (DynamicWidget widget : getWidgets()) {
             final int widgetHeight = widget.getBottom();
-            if (widgetHeight > contentHeight) {
+            if (widgetHeight > getContentHeight()) {
                 setContentHeight(widgetHeight);
             }
         }
