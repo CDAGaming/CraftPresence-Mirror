@@ -142,16 +142,14 @@ public class ScrollPane extends ExtendedScreen {
         );
 
         // Render Scrollbar Elements
-        final int scrollBarX = getScrollBarX();
-        final int scrollBarRight = scrollBarX + getScrollBarWidth();
-        final int bottom = getBottom();
-        final int top = getTop();
-        final int maxScroll = getMaxScroll();
-        final int screenHeight = getScreenHeight();
-        final int contentHeight = getContentHeight();
-        if (maxScroll > 0 && contentHeight > 0) {
-            int height = screenHeight * screenHeight / contentHeight;
-            height = MathUtils.clamp(height, 32, screenHeight - (getPadding() * 2));
+        if (needsScrollbar()) {
+            final int scrollBarX = getScrollBarX();
+            final int scrollBarRight = scrollBarX + getScrollBarWidth();
+            final int bottom = getBottom();
+            final int top = getTop();
+            final int maxScroll = getMaxScroll();
+            final int screenHeight = getScreenHeight();
+            final int height = getBarHeight();
             float barTop = amountScrolled * (screenHeight - height) / maxScroll + top;
             if (barTop < top) {
                 barTop = top;
@@ -210,18 +208,15 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     public void mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
-        final int contentHeight = getContentHeight();
-        if (button == 0 && contentHeight > 0) {
+        if (button == 0 && needsScrollbar()) {
             if (mouseY < getTop()) {
                 setScroll(0.0F);
             } else if (mouseY > getBottom()) {
                 setScroll(getMaxScroll());
             } else {
-                int height = getScreenHeight() * getScreenHeight() / contentHeight;
-                height = MathUtils.clamp(height, 32, getScreenHeight() - (getPadding() * 2));
-
-                int scrollLimit = Math.max(1, getMaxScroll());
-                float heightPerScroll = Math.max(1.0f, scrollLimit / (float) (getScreenHeight() - height));
+                final int height = getBarHeight();
+                final int scrollLimit = Math.max(1, getMaxScroll());
+                final int heightPerScroll = Math.max(1, scrollLimit / (getScreenHeight() - height));
                 scrollBy(deltaY * heightPerScroll);
             }
         }
@@ -291,14 +286,15 @@ public class ScrollPane extends ExtendedScreen {
      * @param amount the new scroll amount
      */
     public void setScroll(final float amount) {
-        float prevScrollAmount = amountScrolled;
+        final float prevScrollAmount = amountScrolled;
         amountScrolled = amount;
         bindAmountScrolled();
 
-        for (DynamicWidget widget : getWidgets()) {
-            widget.setControlPosY(
-                    (int) (widget.getControlPosY() - (amountScrolled - prevScrollAmount))
-            );
+        if (amountScrolled != prevScrollAmount) {
+            final int scrollDiff = (int) (amountScrolled - prevScrollAmount);
+            for (DynamicWidget widget : getWidgets()) {
+                widget.setControlPosY(widget.getControlPosY() - scrollDiff);
+            }
         }
     }
 
@@ -316,6 +312,26 @@ public class ScrollPane extends ExtendedScreen {
      */
     public int getMaxScroll() {
         return Math.max(0, getContentHeight() - (getBottom() - getPadding()));
+    }
+
+    /**
+     * Retrieve the height of the scrollbar
+     *
+     * @return the total height of the scrollbar
+     */
+    public int getBarHeight() {
+        if (!needsScrollbar()) return 0;
+        final int barHeight = (getScreenHeight() * getScreenHeight()) / getContentHeight();
+        return MathUtils.clamp(barHeight, 32, getScreenHeight() - (getPadding() * 2));
+    }
+
+    /**
+     * Retrieve whether this widget needs a scrollbar
+     *
+     * @return {@link Boolean#TRUE} if a scrollbar is needed
+     */
+    public boolean needsScrollbar() {
+        return getScreenHeight() < getContentHeight();
     }
 
     @Override
