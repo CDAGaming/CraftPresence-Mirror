@@ -227,7 +227,7 @@ public class ServerUtils implements Module {
             requestedServerData = null;
         }
 
-        CraftPresence.CLIENT.removeArguments("server", "world", "data.world", "player");
+        CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
         CraftPresence.CLIENT.clearOverride("server.message", "server.icon");
         CraftPresence.CLIENT.clearPartyData(true, false);
     }
@@ -415,7 +415,7 @@ public class ServerUtils implements Module {
      * @return The Parsable Secret Key
      */
     private String makeSecret() {
-        String formattedKey = CraftPresence.CLIENT.CLIENT_ID + "";
+        String formattedKey = CraftPresence.CLIENT.CLIENT_ID;
         boolean containsServerName = false;
         boolean containsServerIP = false;
 
@@ -520,7 +520,7 @@ public class ServerUtils implements Module {
             if (!currentServer_MOTD_Lines.isEmpty()) {
                 int index = 1;
                 for (String motdPart : currentServer_MOTD_Lines) {
-                    CraftPresence.CLIENT.syncArgument("data.server.motd.line." + index, motdPart);
+                    CraftPresence.CLIENT.syncArgument("data.server.motd.line_" + index, motdPart);
                     index++;
                 }
             }

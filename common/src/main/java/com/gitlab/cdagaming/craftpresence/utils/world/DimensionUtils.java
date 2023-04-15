@@ -93,7 +93,7 @@ public class DimensionUtils implements Module {
         CURRENT_DIMENSION_IDENTIFIER = null;
 
         setInUse(false);
-        CraftPresence.CLIENT.removeArguments("dimension");
+        CraftPresence.CLIENT.removeArguments("dimension", "data.dimension");
         CraftPresence.CLIENT.clearOverride("dimension.message", "dimension.icon");
     }
 

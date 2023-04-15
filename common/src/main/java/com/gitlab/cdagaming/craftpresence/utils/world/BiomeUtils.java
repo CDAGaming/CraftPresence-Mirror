@@ -91,7 +91,7 @@ public class BiomeUtils implements Module {
         CURRENT_BIOME_IDENTIFIER = null;
 
         setInUse(false);
-        CraftPresence.CLIENT.removeArguments("biome");
+        CraftPresence.CLIENT.removeArguments("biome", "data.biome");
         CraftPresence.CLIENT.clearOverride("biome.message", "biome.icon");
     }
 
