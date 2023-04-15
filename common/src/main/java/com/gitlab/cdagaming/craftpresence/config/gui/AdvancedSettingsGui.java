@@ -40,6 +40,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
@@ -63,25 +64,17 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         final int calc1 = (getScreenWidth() / 2) - 160;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
-        allowEndpointIconsButton = childFrame.addControl(
-                new CheckBoxControl(
-                        calc1 + 2, CraftPresence.GUIS.getButtonY(0, 3),
-                        "gui.config.name.advanced.allow_endpoint_icons",
-                        getCurrentData().allowEndpointIcons,
-                        null,
+        refreshRate = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        CraftPresence.GUIS.getButtonY(0),
+                        160, 20,
+                        "gui.config.name.advanced.refresh_rate",
                         () -> CraftPresence.GUIS.drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_endpoint_icons")
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")
                                 ), this, true
                         )
-                )
-        );
-
-        refreshRate = childFrame.addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        (getScreenWidth() / 2) + 103, CraftPresence.GUIS.getButtonY(0),
-                        45, 20
                 )
         );
         refreshRate.setControlMessage(Integer.toString(getCurrentData().refreshRate));
@@ -606,6 +599,19 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
+        allowEndpointIconsButton = childFrame.addControl(
+                new CheckBoxControl(
+                        calc1, CraftPresence.GUIS.getButtonY(7, -40),
+                        "gui.config.name.advanced.allow_endpoint_icons",
+                        getCurrentData().allowEndpointIcons,
+                        null,
+                        () -> CraftPresence.GUIS.drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_endpoint_icons")
+                                ), this, true
+                        )
+                )
+        );
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
                 CraftPresence.GUIS.drawMultiLineString(
@@ -615,32 +621,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 );
             }
         });
-    }
-
-    @Override
-    public void preRender() {
-        final String refreshRateText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.refresh_rate");
-        final float renderY = refreshRate.getBottom() - (refreshRate.getControlHeight() / 2f) - (childFrame.getFontHeight() / 2f);
-        childFrame.renderString(refreshRateText, (getScreenWidth() / 2f) + 18, renderY, 0xFFFFFF);
-
-        super.preRender();
-    }
-
-    @Override
-    public void postRender() {
-        final String refreshRateText = ModUtils.TRANSLATOR.translate("gui.config.name.advanced.refresh_rate");
-        final float renderY = refreshRate.getBottom() - (refreshRate.getControlHeight() / 2f) - (childFrame.getFontHeight() / 2f);
-
-        // Hovering over Refresh Rate Message Label
-        if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) + 18, renderY, getStringWidth(refreshRateText), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")
-                    ), childFrame, true
-            );
-        }
-
-        super.postRender();
     }
 
     @Override
