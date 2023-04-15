@@ -243,16 +243,6 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
-    }
-
-    @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
-    }
-
-    @Override
     protected void applySettings() {
         final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
         if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {

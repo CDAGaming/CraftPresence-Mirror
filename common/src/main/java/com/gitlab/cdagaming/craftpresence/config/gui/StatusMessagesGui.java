@@ -183,16 +183,6 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
-    }
-
-    @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
-    }
-
-    @Override
     protected Status getOriginalData() {
         return INSTANCE;
     }

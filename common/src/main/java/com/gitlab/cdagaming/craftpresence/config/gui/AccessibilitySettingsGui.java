@@ -270,16 +270,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
-    }
-
-    @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
-    }
-
-    @Override
     protected void applySettings() {
         if (!languageIdText.getControlMessage().equals(getCurrentData().languageId)) {
             CraftPresence.CONFIG.hasChanged = true;

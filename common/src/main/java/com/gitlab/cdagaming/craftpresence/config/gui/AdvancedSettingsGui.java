@@ -637,16 +637,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
-    }
-
-    @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
-    }
-
-    @Override
     protected void applySettings() {
         if (allowEndpointIconsButton.isChecked() != getCurrentData().allowEndpointIcons) {
             CraftPresence.CONFIG.hasChanged = true;

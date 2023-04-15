@@ -271,16 +271,6 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
-    }
-
-    @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
-    }
-
-    @Override
     protected void applySettings() {
         final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
         if (!defaultName.getControlMessage().equals(getCurrentData().fallbackServerName)) {

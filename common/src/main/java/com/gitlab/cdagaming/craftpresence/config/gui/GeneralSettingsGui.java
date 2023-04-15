@@ -361,16 +361,6 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
-    }
-
-    @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
-    }
-
-    @Override
     protected General getOriginalData() {
         return INSTANCE;
     }

@@ -244,16 +244,6 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
-    }
-
-    @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
-    }
-
-    @Override
     protected void applySettings() {
         final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
         if (!defaultMessage.getControlMessage().equals(defaultDimensionMessage)) {
