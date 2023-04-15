@@ -230,12 +230,22 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
+    protected boolean allowedToReset() {
+        return true;
+    }
+
+    @Override
     protected void resetData() {
         setCurrentData(Config.loadOrCreate(true));
     }
 
     @Override
     protected boolean canSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean allowedToSync() {
         return true;
     }
 

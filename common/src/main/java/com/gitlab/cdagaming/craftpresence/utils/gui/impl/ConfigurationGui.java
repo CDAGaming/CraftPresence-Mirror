@@ -141,14 +141,25 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         return false;
     }
 
+    protected boolean allowedToReset() {
+        return false;
+    }
+
     protected boolean canSync() {
+        return false;
+    }
+
+    protected boolean allowedToSync() {
         return false;
     }
 
     protected void syncRenderStates() {
         proceedButton.setControlEnabled(canProceed());
-        resetConfigButton.setControlEnabled(canReset());
-        syncConfigButton.setControlEnabled(canSync());
+
+        resetConfigButton.setControlVisible(allowedToReset());
+        resetConfigButton.setControlEnabled(allowedToReset() && canReset());
+        syncConfigButton.setControlVisible(allowedToSync());
+        syncConfigButton.setControlEnabled(allowedToSync() && canSync());
     }
 
     protected void appendControls() {
