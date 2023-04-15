@@ -117,28 +117,28 @@ public class CommandsGui extends ExtendedScreen {
 
     @Override
     public void initializeUi() {
-        commandInput = addControl(
-                new ExtendedTextControl(
-                        getFontRenderer(),
-                        115, (getScreenHeight() - 30),
-                        (getScreenWidth() - 120), 20
-                )
-        );
-        commandInput.setControlMaxLength(512);
-
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
-                        100, 20,
+                        6, (getScreenHeight() - 26),
+                        95, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
                 )
         );
 
+        commandInput = addControl(
+                new ExtendedTextControl(
+                        getFontRenderer(),
+                        proceedButton.getRight() + 4, (getScreenHeight() - 26),
+                        (getScreenWidth() - 112), 20
+                )
+        );
+        commandInput.setControlMaxLength(512);
+
         childFrame = addControl(
                 new ScrollPane(
-                        0, 30,
-                        getScreenWidth(), getScreenHeight() - 35
+                        0, 32,
+                        getScreenWidth(), getScreenHeight() - 32
                 )
         );
         previewArea = childFrame.addWidget(new TextDisplayWidget(
@@ -153,7 +153,7 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.commands");
 
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         proceedButton.setControlEnabled(!blockInteractions);
         commandInput.setEnabled(!blockInteractions);
