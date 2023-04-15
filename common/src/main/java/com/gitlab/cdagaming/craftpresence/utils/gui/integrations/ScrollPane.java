@@ -172,18 +172,6 @@ public class ScrollPane extends ExtendedScreen {
         }
     }
 
-    @Override
-    public void handleMouseInput() {
-        if (isOverScreen()) {
-            super.handleMouseInput();
-
-            final int dw = getMouseScroll();
-            if (dw != 0) {
-                mouseScrolled(getMouseX(), getMouseY(), (int) (dw / 60D));
-            }
-        }
-    }
-
     // remove in 1.13+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -222,6 +210,7 @@ public class ScrollPane extends ExtendedScreen {
         }
     }
 
+    @Override
     public void mouseScrolled(int mouseX, int mouseY, int wheelY) {
         scrollBy(-wheelY * getHeightPerScroll());
     }
@@ -331,7 +320,7 @@ public class ScrollPane extends ExtendedScreen {
      * @return {@link Boolean#TRUE} if a scrollbar is needed
      */
     public boolean needsScrollbar() {
-        return getScreenHeight() < getContentHeight();
+        return getMaxScroll() > 0;
     }
 
     @Override

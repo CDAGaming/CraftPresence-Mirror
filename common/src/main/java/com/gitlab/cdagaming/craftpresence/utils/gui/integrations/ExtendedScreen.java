@@ -427,12 +427,25 @@ public class ExtendedScreen extends GuiScreen {
             for (ScrollableListControl listControl : getLists()) {
                 listControl.handleMouseInput();
             }
-            for (Gui extendedControl : getControls()) {
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).handleMouseInput();
-                }
+
+            final int dw = getMouseScroll();
+            if (dw != 0) {
+                mouseScrolled(getMouseX(), getMouseY(), (int) (dw / 60D));
             }
             super.handleMouseInput();
+        }
+    }
+
+    /**
+     * Event to trigger upon Mouse Input
+     */
+    public void mouseScrolled(int mouseX, int mouseY, int wheelY) {
+        if (isLoaded()) {
+            for (Gui extendedControl : getControls()) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).mouseScrolled(mouseX, mouseY, wheelY);
+                }
+            }
         }
     }
 
@@ -492,8 +505,35 @@ public class ExtendedScreen extends GuiScreen {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
                     textField.mouseClicked(mouseX, mouseY, mouseButton);
                 }
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).mouseClicked(mouseX, mouseY, mouseButton);
+                }
             }
             super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
+    }
+
+    @Override
+    protected void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
+        if (isLoaded()) {
+            for (Gui extendedControl : getControls()) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
+                }
+            }
+            super.mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
+        }
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        if (isLoaded()) {
+            for (Gui extendedControl : getControls()) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    ((ExtendedScreen) extendedControl).mouseReleased(mouseX, mouseY, state);
+                }
+            }
+            super.mouseReleased(mouseX, mouseY, state);
         }
     }
 
