@@ -170,8 +170,8 @@ public class SelectorGui extends ExtendedScreen {
         if (itemList != null && !itemList.isEmpty()) {
             proceedButton = addControl(
                     new ExtendedButtonControl(
-                            (getScreenWidth() - 100), (getScreenHeight() - 30),
-                            90, 20,
+                            (getScreenWidth() - 101), (getScreenHeight() - 26),
+                            95, 20,
                             "gui.config.message.button.back",
                             () -> {
                                 if (allowContinuing && scrollList.currentValue != null) {
@@ -204,7 +204,7 @@ public class SelectorGui extends ExtendedScreen {
                     new ScrollableListControl(
                             mc, this,
                             getScreenWidth(), getScreenHeight(),
-                            32, getScreenHeight() - 45,
+                            32, getScreenHeight() - 32,
                             itemList, originalValue,
                             renderType
                     )
@@ -212,7 +212,7 @@ public class SelectorGui extends ExtendedScreen {
             searchBox = addControl(
                     new ExtendedTextControl(
                             getFontRenderer(),
-                            60, (getScreenHeight() - 30),
+                            60, (getScreenHeight() - 26),
                             120, 20
                     )
             );
@@ -221,8 +221,8 @@ public class SelectorGui extends ExtendedScreen {
                 // Adding Add New Button
                 addControl(
                         new ExtendedButtonControl(
-                                (getScreenWidth() - 195), (getScreenHeight() - 30),
-                                90, 20,
+                                (proceedButton.getLeft() - 100), (getScreenHeight() - 26),
+                                95, 20,
                                 "gui.config.message.button.add.new",
                                 () -> onAdjustDynamicEntry.accept(null, parentScreen)
                         )
@@ -289,10 +289,12 @@ public class SelectorGui extends ExtendedScreen {
     @Override
     public void postRender() {
         final String searchText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.search");
+        final float renderY = searchBox.getBottom() - (searchBox.getControlHeight() / 2f) - (getFontHeight() / 2f);
+
         final String extraText = isVerboseMode() ? ModUtils.TRANSLATOR.translate("gui.config.title.selector.extra", itemList.size(), originalList.size()) : "";
         final String displayText = mainTitle + " " + extraText;
 
-        renderCenteredString(searchText, 30, (getScreenHeight() - 25), 0xFFFFFF);
+        renderCenteredString(searchText, 30, renderY, 0xFFFFFF);
         renderCenteredString(displayText, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         if (scrollList.currentHoverText != null && !scrollList.currentHoverText.isEmpty()) {
