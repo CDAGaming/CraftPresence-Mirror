@@ -58,7 +58,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     public void initializeUi() {
         checkButton = addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.checkForUpdates",
                         () ->
@@ -79,7 +79,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         // Adding Back Button
         addControl(
                 new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
+                        6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
@@ -87,7 +87,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         );
         downloadButton = addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() - 105), (getScreenHeight() - 30),
+                        (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.download",
                         () -> UrlUtils.openUrl(modUpdater.downloadUrl)
@@ -96,8 +96,8 @@ public class UpdateInfoGui extends ExtendedScreen {
 
         childFrame = addControl(
                 new ScrollPane(
-                        0, 35,
-                        getScreenWidth(), getScreenHeight() - 35
+                        0, 32,
+                        getScreenWidth(), getScreenHeight() - 32
                 )
         );
         infoPane = childFrame.addWidget(

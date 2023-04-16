@@ -47,7 +47,7 @@ public class AboutGui extends ExtendedScreen {
         // Adding Version Check Button
         addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.versionInfo",
                         () -> CraftPresence.GUIS.openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER))
@@ -57,7 +57,7 @@ public class AboutGui extends ExtendedScreen {
         // Adding Back Button
         addControl(
                 new ExtendedButtonControl(
-                        10, (getScreenHeight() - 30),
+                        6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
                         () -> CraftPresence.GUIS.openScreen(parentScreen)
@@ -67,7 +67,7 @@ public class AboutGui extends ExtendedScreen {
         // Adding View Source Button
         addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 55),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 51),
                         180, 20,
                         "gui.config.message.button.view_source",
                         () -> UrlUtils.openUrl(SOURCE_URL)
@@ -77,7 +77,7 @@ public class AboutGui extends ExtendedScreen {
         // Adding Wiki Button
         addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() - 105), (getScreenHeight() - 30),
+                        (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.wiki",
                         () -> UrlUtils.openUrl(CraftPresence.CONFIG._README)

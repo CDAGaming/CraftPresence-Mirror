@@ -120,7 +120,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             // Adding Reset Button
             addControl(
                     new ExtendedButtonControl(
-                            10, (getScreenHeight() - 30),
+                            6, (getScreenHeight() - 26),
                             95, 20,
                             resetText,
                             () -> {
@@ -202,7 +202,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
         proceedButton = addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 30),
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.back",
                         () -> {
