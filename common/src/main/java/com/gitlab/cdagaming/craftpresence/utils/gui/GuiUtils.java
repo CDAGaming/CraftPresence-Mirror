@@ -862,23 +862,16 @@ public class GuiUtils implements Module {
      * @param color          The background RGB data to interpet
      */
     public void drawBackground(final double xPos, final double yPos, final double width, final double height, final String backgroundCode, final Color color) {
-        double widthDivider = 32.0D, heightDivider = 32.0D;
-        if (CraftPresence.instance.world != null) {
-            drawGradientRect(300.0F, xPos, yPos, xPos + width, yPos + height, "-1072689136", "-804253680");
+        if (StringUtils.isValidColorCode(backgroundCode)) {
+            drawGradientRect(300.0F, xPos, yPos, xPos + width, yPos + height, backgroundCode, backgroundCode);
         } else {
-            if (StringUtils.isValidColorCode(backgroundCode)) {
-                drawGradientRect(300.0F, xPos, yPos, xPos + width, yPos + height, backgroundCode, backgroundCode);
-            } else {
-                final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundCode);
-                final ResourceLocation texLocation = textureData.getThird();
+            final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundCode);
+            final ResourceLocation texLocation = textureData.getThird();
 
-                if (textureData.getFirst()) {
-                    widthDivider = width;
-                    heightDivider = height;
-                }
+            final double widthDivider = textureData.getFirst() ? width : 32.0D;
+            final double heightDivider = textureData.getFirst() ? height : 32.0D;
 
-                drawTextureRect(0.0D, xPos, yPos, width, height, 0, widthDivider, heightDivider, color, texLocation);
-            }
+            drawTextureRect(0.0D, xPos, yPos, width, height, 0, widthDivider, heightDivider, color, texLocation);
         }
     }
 
