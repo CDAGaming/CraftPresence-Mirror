@@ -27,20 +27,25 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
+import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ColorEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
+
+import java.util.List;
 
 public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     private final Accessibility INSTANCE;
     private ExtendedTextControl languageIdText;
     private CheckBoxControl showBackgroundAsDarkButton, stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
+    private ExtendedButtonControl controlsButton;
 
     AccessibilitySettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.accessibility");
@@ -258,6 +263,31 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         )
                 )
         );
+
+        // Adding Controls Button
+        final List<String> controlInfo = StringUtils.newArrayList("key.craftpresence.category");
+        KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
+        if (ModUtils.IS_LEGACY_SOFT) {
+            controlInfo.clear();
+            StringUtils.addEntriesNotPresent(controlInfo, CraftPresence.KEYBINDINGS.getRawKeyMappings().keySet());
+
+            controlMode = KeyUtils.FilterMode.Name;
+        }
+
+        final KeyUtils.FilterMode finalControlMode = controlMode;
+        controlsButton = childFrame.addControl(
+                new ExtendedButtonControl(
+                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(4, 5),
+                        180, 20,
+                        "gui.config.message.button.controls",
+                        () -> CraftPresence.GUIS.openScreen(
+                                new ControlsGui(
+                                        currentScreen, finalControlMode,
+                                        controlInfo
+                                )
+                        )
+                )
+        );
     }
 
     @Override
@@ -266,6 +296,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
         //noinspection ConstantConditions
         stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
+        controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
     }
 
