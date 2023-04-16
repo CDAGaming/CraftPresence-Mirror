@@ -44,6 +44,7 @@ public class ScrollPane extends ExtendedScreen {
     private static final int DEFAULT_PADDING = 4;
     private static final int DEFAULT_BAR_WIDTH = 6;
     private static final int DEFAULT_HEIGHT_PER_SCROLL = 8;
+    private boolean clickedScrollbar;
     private int padding;
     private float amountScrolled;
     // remove in 1.13+
@@ -176,6 +177,7 @@ public class ScrollPane extends ExtendedScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (isLoaded()) {
+            checkScrollbarClick(mouseX, mouseY, mouseButton);
             mousePrevX = mouseX;
             mousePrevY = mouseY;
 
@@ -196,7 +198,7 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     public void mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
-        if (button == 0 && needsScrollbar()) {
+        if (button == 0 && needsScrollbar() && clickedScrollbar) {
             if (mouseY < getTop()) {
                 setScroll(0.0F);
             } else if (mouseY > getBottom()) {
@@ -285,6 +287,17 @@ public class ScrollPane extends ExtendedScreen {
                 widget.setControlPosY(widget.getControlPosY() - scrollDiff);
             }
         }
+    }
+
+    /**
+     * Determine if the scrollbar has been clicked
+     *
+     * @param mouseX The Event Mouse X Coordinate
+     * @param mouseY The Event Mouse Y Coordinate
+     * @param button The Event Mouse Button Clicked
+     */
+    public void checkScrollbarClick(double mouseX, double mouseY, int button) {
+        clickedScrollbar = button == 0 && MathUtils.isWithinValue(mouseX, getScrollBarX(), getScrollBarX() + getScrollBarWidth(), true, false);
     }
 
     /**
