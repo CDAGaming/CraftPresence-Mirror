@@ -481,7 +481,7 @@ public class CommandsGui extends ExtendedScreen {
         if (!blockInteractions) {
             if (commandInput.isControlFocused()) {
                 if (keyCode == Keyboard.KEY_ESCAPE) {
-                    commandInput.setFocused(false);
+                    commandInput.setControlFocused(false);
                 } else {
                     if (commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                             (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(ModUtils.MOD_ID))) {

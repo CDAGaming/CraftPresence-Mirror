@@ -174,6 +174,15 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     }
 
     /**
+     * Sets whether the control should be focused upon
+     *
+     * @param focused the new focus state for the control
+     */
+    public void setControlFocused(final boolean focused) {
+        this.setFocused(focused);
+    }
+
+    /**
      * Sets the Event to occur upon typing keys
      *
      * @param event The event to occur
