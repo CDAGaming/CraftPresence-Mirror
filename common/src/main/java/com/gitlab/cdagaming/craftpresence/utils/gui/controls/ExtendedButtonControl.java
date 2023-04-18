@@ -109,7 +109,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param heightIn     The Height for this Control
      * @param buttonText   The display text, to display within this control
      * @param onPushEvent  The Click Event to Occur when this control is clicked
-     * @param onHoverEvent The Hover Event to Occur when this control is clicked
+     * @param onHoverEvent The Hover Event to Occur when this control is hovered over
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final Runnable onHoverEvent, final String... optionalArgs) {
@@ -157,7 +157,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param heightIn     The Height for this Control
      * @param buttonText   The display text, to display within this control
      * @param onPushEvent  The Click Event to Occur when this control is clicked
-     * @param onHoverEvent The Hover Event to Occur when this control is clicked
+     * @param onHoverEvent The Hover Event to Occur when this control is hovered over
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final Runnable onHoverEvent, final String... optionalArgs) {

@@ -86,7 +86,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * @param displayString The display text, to display within this control
      * @param isChecked     The beginning check state for this Control
      * @param onPushEvent   The Click Event to Occur when this control is clicked
-     * @param onHoverEvent  The Hover Event to Occur when this control is clicked
+     * @param onHoverEvent  The Hover Event to Occur when this control is hovered over
      */
     public CheckBoxControl(final int id, final int xPos, final int yPos, final String displayString, final boolean isChecked, final Runnable onPushEvent, final Runnable onHoverEvent) {
         this(id, xPos, yPos, displayString, isChecked, onPushEvent);
@@ -127,7 +127,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * @param displayString The display text, to display within this control
      * @param isChecked     The beginning check state for this Control
      * @param onPushEvent   The Click Event to Occur when this control is clicked
-     * @param onHoverEvent  The Hover Event to Occur when this control is clicked
+     * @param onHoverEvent  The Hover Event to Occur when this control is hovered over
      */
     public CheckBoxControl(final int xPos, final int yPos, final String displayString, final boolean isChecked, final Runnable onPushEvent, final Runnable onHoverEvent) {
         this(xPos, yPos, displayString, isChecked, onPushEvent);

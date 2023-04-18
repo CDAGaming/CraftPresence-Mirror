@@ -438,6 +438,10 @@ public class ExtendedScreen extends GuiScreen {
 
     /**
      * Event to trigger upon Mouse Input
+     *
+     * @param mouseX The Event Mouse X Coordinate
+     * @param mouseY The Event Mouse Y Coordinate
+     * @param wheelY The Event Mouse Wheel Delta
      */
     public void mouseScrolled(int mouseX, int mouseY, int wheelY) {
         if (isLoaded()) {

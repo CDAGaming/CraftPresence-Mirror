@@ -30,65 +30,170 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.FontRenderer;
 
+/**
+ * Implementation for a Row-Style {@link ExtendedTextControl} Widget
+ *
+ * @author CDAGaming
+ */
 public class TextWidget extends ExtendedTextControl {
+    /**
+     * The message to display alongside the control
+     */
     private String title;
+    /**
+     * The X coordinate for the additional message
+     */
     private float titleX;
+    /**
+     * The Y coordinate for the additional message
+     */
     private float titleY;
     /**
      * Event to Deploy when this Control is Hovered Over, if any
      */
     private Runnable onHoverEvent = null;
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param componentId     The ID for the control to Identify as
+     * @param fontRendererObj The Font Renderer Instance
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param title           The text to be rendered with this widget
+     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
+     */
     public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
         super(componentId, fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
         setOnHover(onHoverEvent);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param componentId     The ID for the control to Identify as
+     * @param fontRendererObj The Font Renderer Instance
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param title           The text to be rendered with this widget
+     */
     public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
         this(componentId, fontRendererObj, y, widthIn, heightIn, title, null);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param fontRendererObj The Font Renderer Instance
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param title           The text to be rendered with this widget
+     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
+     */
     public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
         setOnHover(onHoverEvent);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param fontRendererObj The Font Renderer Instance
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param title           The text to be rendered with this widget
+     */
     public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
         this(fontRendererObj, y, widthIn, heightIn, title, null);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param fontRendererObj The Font Renderer Instance
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param keyEvent        The event to run when characters are typed in this control
+     * @param title           The text to be rendered with this widget
+     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
+     */
     public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable onHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn, keyEvent);
         this.title = title;
         setOnHover(onHoverEvent);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param fontRendererObj The Font Renderer Instance
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param keyEvent        The event to run when characters are typed in this control
+     * @param title           The text to be rendered with this widget
+     */
     public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title) {
         this(fontRendererObj, y, widthIn, heightIn, keyEvent, title, null);
     }
 
+    /**
+     * Retrieve the text to be displayed alongside this control
+     *
+     * @return the current attached message
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Set the text to be displayed alongside this control
+     *
+     * @param title The new attached message
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Retrieve the X coordinate for the additional message
+     *
+     * @return The attached message's X coordinate
+     */
     public float getTitleX() {
         return titleX;
     }
 
+    /**
+     * Set the X coordinate for the additional message
+     *
+     * @param titleX The new X coordinate for the attached message
+     */
     public void setTitleX(float titleX) {
         this.titleX = titleX;
     }
 
+    /**
+     * Retrieve the Y coordinate for the additional message
+     *
+     * @return The attached message's Y coordinate
+     */
     public float getTitleY() {
         return titleY;
     }
 
+    /**
+     * Set the Y coordinate for the additional message
+     *
+     * @param titleY The new Y coordinate for the attached message
+     */
     public void setTitleY(float titleY) {
         this.titleY = titleY;
     }
