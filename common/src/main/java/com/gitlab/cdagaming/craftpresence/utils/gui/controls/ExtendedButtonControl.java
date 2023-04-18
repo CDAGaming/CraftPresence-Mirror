@@ -342,9 +342,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      */
     public void onClick() {
         if (onPushEvent != null) {
-            setControlEnabled(false);
             onPushEvent.run();
-            setControlEnabled(true);
         }
     }
 
