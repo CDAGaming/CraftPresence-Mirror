@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
@@ -37,10 +36,18 @@ import javax.annotation.Nonnull;
  */
 public class CheckBoxControl extends ExtendedButtonControl {
     /**
+     * The default border width for this control
+     */
+    private static final int DEFAULT_BORDER = 1;
+
+    /**
      * The width of the inner box of this control
      */
-    public int boxWidth;
-
+    private final int boxWidth;
+    /**
+     * The current border width for this control
+     */
+    private final int borderWidth = DEFAULT_BORDER;
     /**
      * The Check state of this control
      */
@@ -59,7 +66,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
         super(id, xPos, yPos, displayString);
         setIsChecked(isChecked);
         setControlHeight(boxWidth = 11);
-        setControlWidth(boxWidth + 2 + getFontRenderer().getStringWidth(getDisplayMessage()));
+        setControlWidth(boxWidth + (borderWidth * 2) + getFontRenderer().getStringWidth(getDisplayMessage()));
     }
 
     /**
@@ -142,7 +149,21 @@ public class CheckBoxControl extends ExtendedButtonControl {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
             hovered = isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
-            CraftPresence.GUIS.drawContinuousTexturedBox(new Pair<>(getControlPosX(), getControlPosY()), new Pair<>(0, 46), new Pair<>(boxWidth, getControlHeight()), new Pair<>(200, 20), new Pair<>(2, 3), new Pair<>(2, 2), zLevel, BUTTON_TEXTURES);
+            final int hoverState = getHoverState(hovered);
+
+            final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
+
+            final String contentColor = "#2b2b2b";
+            final String contentColorEnd = "#2b2b2b";
+
+            CraftPresence.GUIS.renderGradientBox(
+                    getControlPosX(), getControlPosY(),
+                    boxWidth, getControlHeight(),
+                    300.0F,
+                    borderColor, borderColor, borderWidth,
+                    contentColor, contentColorEnd
+            );
+
             if (isOverScreen()) {
                 mouseDragged(mc, mouseX, mouseY);
             }

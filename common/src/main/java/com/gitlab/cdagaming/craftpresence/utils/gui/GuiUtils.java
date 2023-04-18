@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
@@ -297,29 +296,6 @@ public class GuiUtils implements Module {
      */
     public boolean isMouseOver(final double mouseY, final ExtendedTextControl textControl) {
         return isMouseOver(0, mouseY, 0, textControl.getControlPosY(), 0, textControl.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseX   The Mouse's Current X Position
-     * @param mouseY   The Mouse's Current Y Position
-     * @param checkBox The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseX, final double mouseY, final CheckBoxControl checkBox) {
-        return checkBox.isControlVisible() && isMouseOver(mouseX, mouseY, checkBox.getControlPosX(), checkBox.getControlPosY(), checkBox.boxWidth - 1, checkBox.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseY   The Mouse's Current Y Position
-     * @param checkBox The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseY, final CheckBoxControl checkBox) {
-        return checkBox.isControlVisible() && isMouseOver(0, mouseY, 0, checkBox.getControlPosY(), 0, checkBox.getControlHeight() - 1);
     }
 
     /**
@@ -998,6 +974,43 @@ public class GuiUtils implements Module {
 
         drawTexturedModalRect(x, y, u, v, width, height, zLevel);
         drawTexturedModalRect(x + 4, y, u + 196, v, width, height, zLevel);
+    }
+
+    /**
+     * Renders a Gradient Box from the defined arguments
+     *
+     * @param posX            The Starting X Position to render the object
+     * @param posY            The Starting Y Position to render the object
+     * @param width           The full width for the object to render to
+     * @param height          The full height for the object to render to
+     * @param zLevel          The Z level position for the object to render at
+     * @param borderColor     The starting border color for the object
+     * @param borderColorEnd  The ending border color for the object
+     * @param border          The full width of the border for the object
+     * @param contentColor    The starting content color for the object
+     * @param contentColorEnd The ending content color for the object
+     */
+    public void renderGradientBox(final double posX, final double posY, final double width, final double height, final float zLevel,
+                                  final String borderColor, final String borderColorEnd, final int border,
+                                  final String contentColor, final String contentColorEnd) {
+        final double canvasWidth = width - (border * 2);
+        final double canvasHeight = height - (border * 2);
+
+        final double canvasRight = posX + border + canvasWidth;
+        final double canvasBottom = posY + border + canvasHeight;
+
+        // Draw Borders
+        // Top Left
+        drawGradientRect(zLevel, posX, posY, posX + border, canvasBottom + border, borderColor, borderColorEnd);
+        // Top Right
+        drawGradientRect(zLevel, canvasRight, posY, canvasRight + border, canvasBottom + border, borderColor, borderColorEnd);
+        // Bottom Left
+        drawGradientRect(zLevel, posX, canvasBottom, canvasRight + border, canvasBottom + border, borderColor, borderColorEnd);
+        // Bottom Right
+        drawGradientRect(zLevel, posX, posY, canvasRight + border, posY + border, borderColor, borderColorEnd);
+
+        // Draw Content Box
+        drawGradientRect(zLevel, posX + border, posY + border, canvasRight, canvasBottom, contentColor, contentColorEnd);
     }
 
     /**
