@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.updater;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -61,7 +62,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.checkForUpdates",
-                        () ->
+                        () -> CommandUtils.getThreadPool().execute(() ->
                                 modUpdater.checkForUpdates(() -> {
                                     if (modUpdater.isInvalidVersion) {
                                         // If the Updater found our version to be an invalid one
@@ -74,6 +75,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                                         modUpdater.isInvalidVersion = false;
                                     }
                                 })
+                        )
                 )
         );
         // Adding Back Button
