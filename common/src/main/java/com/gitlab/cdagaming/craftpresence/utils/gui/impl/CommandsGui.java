@@ -478,25 +478,31 @@ public class CommandsGui extends ExtendedScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (commandInput.isControlFocused() && commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
-                (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(ModUtils.MOD_ID))) {
-            if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
-                if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
-                        filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
-                )) {
-                    commandInput.setControlMessage(
-                            commandInput.getControlMessage().replace(
-                                    filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)
-                            )
-                    );
-                }
-            } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
-                executeCommand(filteredCommandArgs);
-                childFrame.resetMouseScroll();
-                childFrame.setMouseScroll(0);
-            }
-        }
         if (!blockInteractions) {
+            if (commandInput.isControlFocused()) {
+                if (keyCode == Keyboard.KEY_ESCAPE) {
+                    commandInput.setFocused(false);
+                } else {
+                    if (commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
+                            (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(ModUtils.MOD_ID))) {
+                        if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
+                            if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
+                                    filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
+                            )) {
+                                commandInput.setControlMessage(
+                                        commandInput.getControlMessage().replace(
+                                                filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)
+                                        )
+                                );
+                            }
+                        } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
+                            executeCommand(filteredCommandArgs);
+                            childFrame.resetMouseScroll();
+                            childFrame.setMouseScroll(0);
+                        }
+                    }
+                }
+            }
             super.keyTyped(typedChar, keyCode);
         }
     }
