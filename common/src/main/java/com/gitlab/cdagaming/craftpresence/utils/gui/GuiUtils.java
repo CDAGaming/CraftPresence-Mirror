@@ -195,28 +195,49 @@ public class GuiUtils implements Module {
         return currentLine != stringLength && currentIndex != -1 && currentIndex < currentLine ? currentIndex : currentLine;
     }
 
-    /**
-     * Draws a Textured Rectangle (Modal Version), following the defined arguments
-     *
-     * @param x      The Starting X Position of the Object
-     * @param y      The Starting Y Position of the Object
-     * @param u      The U Mapping Value
-     * @param v      The V Mapping Value
-     * @param width  The Width of the Object
-     * @param height The Height of the Object
-     * @param zLevel The Z Level Position of the Object
-     */
-    public void drawTexturedModalRect(final int x, final int y, final int u, final int v, final int width, final int height, final double zLevel) {
-        final float uScale = 1f / 0x100;
-        final float vScale = 1f / 0x100;
+    public void blit(final double xPos, final double yPos,
+                     final double zLevel,
+                     final double uOffset, final double vOffset,
+                     final double uWidth, final double vHeight) {
+        blit(xPos, yPos, zLevel, uOffset, vOffset, uWidth, vHeight, 256, 256);
+    }
 
+    public void blit(final double xPos, final double yPos,
+                     final double zLevel,
+                     final double uOffset, final double vOffset,
+                     final double uWidth, final double vHeight,
+                     final double textureWidth, final double textureHeight) {
+        innerBlit(xPos, xPos + uWidth, yPos, yPos + vHeight,
+                zLevel,
+                uWidth, vHeight,
+                uOffset, vOffset,
+                textureWidth, textureHeight
+        );
+    }
+
+    public void innerBlit(final double left, final double right, final double top, final double bottom,
+                          final double zLevel,
+                          final double uWidth, final double vHeight,
+                          final double uOffset, final double vOffset,
+                          final double textureWidth, final double textureHeight) {
+        innerBlit(left, right, top, bottom,
+                zLevel,
+                (uOffset + 0.0D) / textureWidth, (uOffset + uWidth) / textureWidth,
+                (vOffset + 0.0D) / textureHeight, (vOffset + vHeight) / textureHeight
+        );
+    }
+
+    public void innerBlit(final double left, final double right, final double top, final double bottom,
+                          final double zLevel,
+                          final double minU, final double maxU,
+                          final double minV, final double maxV) {
         final Tessellator tessellator = Tessellator.getInstance();
         final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos(x, y + height, zLevel).tex(u * uScale, ((v + height) * vScale)).endVertex();
-        buffer.pos(x + width, y + height, zLevel).tex((u + width) * uScale, ((v + height) * vScale)).endVertex();
-        buffer.pos(x + width, y, zLevel).tex((u + width) * uScale, (v * vScale)).endVertex();
-        buffer.pos(x, y, zLevel).tex(u * uScale, (v * vScale)).endVertex();
+        buffer.pos(left, bottom, zLevel).tex(minU, maxV).endVertex();
+        buffer.pos(right, bottom, zLevel).tex(maxU, maxV).endVertex();
+        buffer.pos(right, top, zLevel).tex(maxU, minV).endVertex();
+        buffer.pos(left, top, zLevel).tex(minU, minV).endVertex();
         tessellator.draw();
     }
 
@@ -972,8 +993,8 @@ public class GuiUtils implements Module {
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        drawTexturedModalRect(x, y, u, v, width, height, zLevel);
-        drawTexturedModalRect(x + 4, y, u + 196, v, width, height, zLevel);
+        blit(x, y, zLevel, u, v, width, height);
+        blit(x + 4, y, zLevel, u + 196, v, width, height);
     }
 
     /**
@@ -1034,14 +1055,13 @@ public class GuiUtils implements Module {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
         final int v = 46 + hoverState * 20;
         final int xOffset = width / 2;
 
-        drawTexturedModalRect(x, y, 0, v, xOffset, height, zLevel);
-        drawTexturedModalRect(x + xOffset, y, 200 - xOffset, v, xOffset, height, zLevel);
-
-        GL11.glDisable(GL11.GL_BLEND);
+        blit(x, y, zLevel, 0, v, xOffset, height);
+        blit(x + xOffset, y, zLevel, 200 - xOffset, v, xOffset, height);
     }
 
     /**
