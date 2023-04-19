@@ -152,16 +152,14 @@ public class CheckBoxControl extends ExtendedButtonControl {
             final int hoverState = getHoverState(hovered);
 
             final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
-
             final String contentColor = "#2b2b2b";
-            final String contentColorEnd = "#2b2b2b";
 
             CraftPresence.GUIS.renderGradientBox(
                     getControlPosX(), getControlPosY(),
                     boxWidth, getControlHeight(),
-                    300.0F,
+                    zLevel,
                     borderColor, borderColor, borderWidth,
-                    contentColor, contentColorEnd
+                    contentColor, contentColor
             );
 
             if (isOverScreen()) {
