@@ -835,7 +835,7 @@ public class GuiUtils implements Module {
      * @param width          The width to render the background to
      * @param height         The height to render the background to
      * @param backgroundCode The background render data to interpret
-     * @param color          The background RGB data to interpet
+     * @param color          The background RGB data to interpret
      */
     public void drawBackground(final double xPos, final double yPos, final double width, final double height, final String backgroundCode, final Color color) {
         if (StringUtils.isValidColorCode(backgroundCode)) {
@@ -886,7 +886,7 @@ public class GuiUtils implements Module {
      * @param yPos   The Starting Y Position of the Object
      * @param width  The width to render the background to
      * @param height The height to render the background to
-     * @param color  The background RGB data to interpet
+     * @param color  The background RGB data to interpret
      */
     public void drawBackground(final double xPos, final double yPos, final double width, final double height, final Color color) {
         drawBackground(xPos, yPos, width, height, CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor, color);
@@ -923,7 +923,7 @@ public class GuiUtils implements Module {
      *
      * @param width  The width to render the background to
      * @param height The height to render the background to
-     * @param color  The background RGB data to interpet
+     * @param color  The background RGB data to interpret
      */
     public void drawBackground(final double width, final double height, final Color color) {
         drawBackground(0.0D, 0.0D, width, height, color);
@@ -1068,7 +1068,7 @@ public class GuiUtils implements Module {
      * @param width       The Width of the Object
      * @param height      The Height of the Object
      * @param tint        The Tinting Level of the Object
-     * @param rgbData     The texture RGB data to interpet
+     * @param rgbData     The texture RGB data to interpret
      * @param texLocation The game texture to render the object as
      */
     public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final Color rgbData, final ResourceLocation texLocation) {
@@ -1086,7 +1086,7 @@ public class GuiUtils implements Module {
      * @param tint          The Tinting Level of the Object
      * @param widthDivider  The number to divide the width by when rendering
      * @param heightDivider The number to divide the height by when rendering
-     * @param color         The texture RGB data to interpet
+     * @param color         The texture RGB data to interpret
      * @param texLocation   The game texture to render the object as
      */
     public void drawTextureRect(final double zLevel, final double xPos, final double yPos, final double width, final double height, final double tint, final double widthDivider, final double heightDivider, final Color color, final ResourceLocation texLocation) {
@@ -1114,8 +1114,8 @@ public class GuiUtils implements Module {
      * @param u           The horizontal axis to render this Object by
      * @param v           The vertical axis to render this Object by
      * @param tint        The Tinting Level of the Object
-     * @param startColor  The starting texture RGB data to interpet
-     * @param endColor    The starting texture RGB data to interpet
+     * @param startColor  The starting texture RGB data to interpret
+     * @param endColor    The starting texture RGB data to interpret
      * @param texLocation The game texture to render the object as
      */
     public void drawTextureRect(final double zLevel, final double left, final double top, final double right, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
@@ -1151,8 +1151,8 @@ public class GuiUtils implements Module {
      * @param u           The horizontal axis to render this Object by
      * @param v           The vertical axis to render this Object by
      * @param tint        The Tinting Level of the Object
-     * @param startColor  The starting texture RGB data to interpet
-     * @param endColor    The starting texture RGB data to interpet
+     * @param startColor  The starting texture RGB data to interpret
+     * @param endColor    The starting texture RGB data to interpret
      * @param texLocation The game texture to render the object as
      */
     public void drawTextureGradientRect(final double zLevel, final double left, final double top, final double right, final double bottom, final double u, final double v, final double tint, final Color startColor, final Color endColor, final ResourceLocation texLocation) {
