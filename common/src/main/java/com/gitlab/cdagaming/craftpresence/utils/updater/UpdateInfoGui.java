@@ -40,7 +40,6 @@ import net.minecraft.client.gui.GuiScreen;
  */
 public class UpdateInfoGui extends ExtendedScreen {
     private final ModUpdaterUtils modUpdater;
-    private ScrollPane childFrame;
     private TextDisplayWidget infoPane;
     private ExtendedButtonControl downloadButton, checkButton;
 
@@ -96,7 +95,8 @@ public class UpdateInfoGui extends ExtendedScreen {
                 )
         );
 
-        childFrame = addControl(
+        // Child Frame Content
+        final ScrollPane childFrame = addControl(
                 new ScrollPane(
                         0, 32,
                         getScreenWidth(), getScreenHeight() - 32
