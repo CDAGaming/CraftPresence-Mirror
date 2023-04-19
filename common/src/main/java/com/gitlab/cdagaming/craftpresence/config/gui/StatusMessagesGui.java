@@ -105,7 +105,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
 
             childFrame.addControl(
                     new ExtendedButtonControl(
-                            startX, CraftPresence.GUIS.getButtonY(buttonRow),
+                            startX, getButtonY(buttonRow),
                             180, 20,
                             entry.getKey(),
                             () -> CraftPresence.GUIS.openScreen(

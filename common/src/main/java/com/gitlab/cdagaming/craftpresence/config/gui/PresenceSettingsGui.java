@@ -85,7 +85,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         detailsFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(0),
+                        getButtonY(0),
                         180, 20,
                         "gui.config.name.display.details_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -99,7 +99,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         gameStateFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        getButtonY(1),
                         180, 20,
                         "gui.config.name.display.game_state_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -113,7 +113,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         largeImageFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(2),
+                        getButtonY(2),
                         180, 20,
                         "gui.config.name.display.large_image_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -127,7 +127,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         smallImageFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(3),
+                        getButtonY(3),
                         180, 20,
                         "gui.config.name.display.small_image_message",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -147,7 +147,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         if (!isDefaultModule) {
             enabledCheckbox = childFrame.addControl(
                     new CheckBoxControl(
-                            checkboxCalc1, CraftPresence.GUIS.getButtonY(4),
+                            checkboxCalc1, getButtonY(4),
                             "gui.config.name.display.enabled",
                             PRESENCE.enabled,
                             null,
@@ -160,7 +160,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
             );
             useAsMainCheckbox = childFrame.addControl(
                     new CheckBoxControl(
-                            calc2, CraftPresence.GUIS.getButtonY(4),
+                            calc2, getButtonY(4),
                             "gui.config.name.display.use_as_main",
                             PRESENCE.useAsMain,
                             null,
@@ -177,7 +177,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         smallImageKeyFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(5),
+                        getButtonY(5),
                         180, 20,
                         "gui.config.name.display.small_image_key",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -191,7 +191,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         largeImageKeyFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(6),
+                        getButtonY(6),
                         180, 20,
                         "gui.config.name.display.large_image_key",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -209,7 +209,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         startTimeFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(7),
+                        getButtonY(7),
                         180, 20,
                         "gui.config.name.display.start_timestamp",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -223,7 +223,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         endTimeFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(8),
+                        getButtonY(8),
                         180, 20,
                         "gui.config.name.display.end_timestamp",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -241,7 +241,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         // Button Messages Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(9),
+                        calc1, getButtonY(9),
                         180, 20,
                         "gui.config.name.display.button_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -322,7 +322,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         // Dynamic Icons Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(9),
+                        calc2, getButtonY(9),
                         180, 20,
                         "gui.config.name.display.dynamic_icons",
                         () -> CraftPresence.GUIS.openScreen(
@@ -415,7 +415,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         // Dynamic Variables Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(10),
+                        (getScreenWidth() / 2) - 90, getButtonY(10),
                         180, 20,
                         "gui.config.name.display.dynamic_variables",
                         () -> CraftPresence.GUIS.openScreen(

@@ -63,7 +63,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
         defaultMessage = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(0),
+                        getButtonY(0),
                         180, 20,
                         "gui.config.message.default.dimension",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -78,7 +78,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
 
         dimensionMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(1),
+                        (getScreenWidth() / 2) - 90, getButtonY(1),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -202,7 +202,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
         // Adding Default Icon Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_icon",
                         () -> CraftPresence.GUIS.openScreen(

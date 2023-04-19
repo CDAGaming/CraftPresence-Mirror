@@ -79,7 +79,7 @@ public class ColorEditorGui extends PaginatedScreen {
         hexText = addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        getButtonY(1),
                         180, 20,
                         "gui.config.message.editor.hex_code"
                 ), startPage
@@ -88,7 +88,7 @@ public class ColorEditorGui extends PaginatedScreen {
 
         redText = addControl(
                 new SliderControl(
-                        new Pair<>(calc1, CraftPresence.GUIS.getButtonY(2)),
+                        new Pair<>(calc1, getButtonY(2)),
                         new Pair<>(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
@@ -103,7 +103,7 @@ public class ColorEditorGui extends PaginatedScreen {
         );
         greenText = addControl(
                 new SliderControl(
-                        new Pair<>(calc2, CraftPresence.GUIS.getButtonY(2)),
+                        new Pair<>(calc2, getButtonY(2)),
                         new Pair<>(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
@@ -118,7 +118,7 @@ public class ColorEditorGui extends PaginatedScreen {
         );
         blueText = addControl(
                 new SliderControl(
-                        new Pair<>(calc1, CraftPresence.GUIS.getButtonY(3)),
+                        new Pair<>(calc1, getButtonY(3)),
                         new Pair<>(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
@@ -133,7 +133,7 @@ public class ColorEditorGui extends PaginatedScreen {
         );
         alphaText = addControl(
                 new SliderControl(
-                        new Pair<>(calc2, CraftPresence.GUIS.getButtonY(3)),
+                        new Pair<>(calc2, getButtonY(3)),
                         new Pair<>(180, 20),
                         1.0f, 0.0f,
                         255.0f, 1.0f,
@@ -151,7 +151,7 @@ public class ColorEditorGui extends PaginatedScreen {
         textureText = addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        getButtonY(1),
                         180, 20,
                         this::syncValues,
                         "gui.config.message.editor.texture_path"

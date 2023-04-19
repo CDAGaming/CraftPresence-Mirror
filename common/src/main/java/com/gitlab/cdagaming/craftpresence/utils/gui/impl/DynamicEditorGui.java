@@ -140,7 +140,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         primaryInput = addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(controlIndex++),
+                        getButtonY(controlIndex++),
                         180, 20,
                         primaryText,
                         () -> {
@@ -161,7 +161,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             // Adding Specific Icon Button
             addControl(
                     new ExtendedButtonControl(
-                            (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
+                            (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
                             "gui.config.message.button.icon.change",
                             () -> onSpecificCallback.accept(attributeName, this, false)
@@ -170,7 +170,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             // Adding Presence Settings Button
             addControl(
                     new ExtendedButtonControl(
-                            (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(controlIndex++),
+                            (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
                             "gui.config.title.presence_settings",
                             () -> onSpecificCallback.accept(attributeName, this, true)
@@ -182,7 +182,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             secondaryInput = addControl(
                     new TextWidget(
                             getFontRenderer(),
-                            CraftPresence.GUIS.getButtonY(controlIndex),
+                            getButtonY(controlIndex),
                             180, 20,
                             secondaryText,
                             () -> {

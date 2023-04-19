@@ -164,7 +164,7 @@ public class ControlsGui extends PaginatedScreen {
         for (Map.Entry<String, List<String>> entry : categorizedNames.entrySet()) {
             syncPageData();
             final String categoryName = entry.getKey();
-            final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((getScreenWidth() / 2f) - (getStringWidth(categoryName) / 2f), (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+            final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((getScreenWidth() / 2f) - (getStringWidth(categoryName) / 2f), (float) getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
             if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                 preRenderQueue.put(currentAllocatedPage, StringUtils.newArrayList());
             }
@@ -177,7 +177,7 @@ public class ControlsGui extends PaginatedScreen {
 
             for (String keyName : keyNames) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
-                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) CraftPresence.GUIS.getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
+                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
                 if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                     preRenderQueue.put(currentAllocatedPage, StringUtils.newArrayList(positionData));
                 } else {
@@ -191,7 +191,7 @@ public class ControlsGui extends PaginatedScreen {
                 }
 
                 final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
-                        renderPosition + 20, CraftPresence.GUIS.getButtonY(currentAllocatedRow),
+                        renderPosition + 20, getButtonY(currentAllocatedRow),
                         120, 20,
                         KeyUtils.getKeyName(keyData.getFirst().getKeyCode()),
                         keyName

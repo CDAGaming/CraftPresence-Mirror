@@ -56,7 +56,7 @@ public class MainGui extends ConfigurationGui<Config> {
         // Added General Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(0),
+                        calc1, getButtonY(0),
                         180, 20,
                         "gui.config.title.general",
                         () -> CraftPresence.GUIS.openScreen(new GeneralSettingsGui(currentScreen)),
@@ -69,7 +69,7 @@ public class MainGui extends ConfigurationGui<Config> {
         );
         biomeSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(0),
+                        calc2, getButtonY(0),
                         180, 20,
                         "gui.config.title.biome_messages",
                         () -> CraftPresence.GUIS.openScreen(new BiomeSettingsGui(currentScreen)),
@@ -94,7 +94,7 @@ public class MainGui extends ConfigurationGui<Config> {
         );
         dimensionSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(1),
+                        calc1, getButtonY(1),
                         180, 20,
                         "gui.config.title.dimension_messages",
                         () -> CraftPresence.GUIS.openScreen(new DimensionSettingsGui(currentScreen)),
@@ -119,7 +119,7 @@ public class MainGui extends ConfigurationGui<Config> {
         );
         serverSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(1),
+                        calc2, getButtonY(1),
                         180, 20,
                         "gui.config.title.server_messages",
                         () -> CraftPresence.GUIS.openScreen(new ServerSettingsGui(currentScreen)),
@@ -145,7 +145,7 @@ public class MainGui extends ConfigurationGui<Config> {
         // Added Status Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(2),
+                        calc1, getButtonY(2),
                         180, 20,
                         "gui.config.title.status_messages",
                         () -> CraftPresence.GUIS.openScreen(new StatusMessagesGui(currentScreen)),
@@ -159,7 +159,7 @@ public class MainGui extends ConfigurationGui<Config> {
         // Added Advanced Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(2),
+                        calc2, getButtonY(2),
                         180, 20,
                         "gui.config.title.advanced",
                         () -> CraftPresence.GUIS.openScreen(new AdvancedSettingsGui(currentScreen)),
@@ -173,7 +173,7 @@ public class MainGui extends ConfigurationGui<Config> {
         // Added Accessibility Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(3),
+                        calc1, getButtonY(3),
                         180, 20,
                         "gui.config.title.accessibility",
                         () -> CraftPresence.GUIS.openScreen(new AccessibilitySettingsGui(currentScreen)),
@@ -187,7 +187,7 @@ public class MainGui extends ConfigurationGui<Config> {
         // Added Presence Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(3),
+                        calc2, getButtonY(3),
                         180, 20,
                         "gui.config.title.presence_settings",
                         () -> CraftPresence.GUIS.openScreen(new PresenceSettingsGui(currentScreen)),

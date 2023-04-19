@@ -63,7 +63,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
         defaultMessage = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(0),
+                        getButtonY(0),
                         180, 20,
                         "gui.config.message.default.biome",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -78,7 +78,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
 
         biomeMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(1),
+                        (getScreenWidth() / 2) - 90, getButtonY(1),
                         180, 20,
                         "gui.config.name.biome_messages.biome_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -201,7 +201,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
         // Adding Default Icon Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(2),
+                        (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
                         "gui.config.name.biome_messages.biome_icon",
                         () -> CraftPresence.GUIS.openScreen(

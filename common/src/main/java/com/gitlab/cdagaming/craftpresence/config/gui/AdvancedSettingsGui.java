@@ -67,7 +67,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         refreshRate = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(0),
+                        getButtonY(0),
                         160, 20,
                         "gui.config.name.advanced.refresh_rate",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -82,7 +82,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
         guiMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(1),
+                        calc1, getButtonY(1),
                         160, 20,
                         "gui.config.name.advanced.gui_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -191,7 +191,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         itemMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(1),
+                        calc2, getButtonY(1),
                         160, 20,
                         "gui.config.name.advanced.item_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -274,7 +274,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         entityTargetMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, CraftPresence.GUIS.getButtonY(2),
+                        calc1, getButtonY(2),
                         160, 20,
                         "gui.config.name.advanced.entity_target_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -385,7 +385,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         entityRidingMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, CraftPresence.GUIS.getButtonY(2),
+                        calc2, getButtonY(2),
                         160, 20,
                         "gui.config.name.advanced.entity_riding_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -497,7 +497,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
         enablePerGuiButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(3),
+                        calc1, getButtonY(3),
                         "gui.config.name.advanced.enable_per_gui",
                         getCurrentData().enablePerGui,
                         null,
@@ -510,7 +510,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         enablePerItemButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(3),
+                        calc2, getButtonY(3),
                         "gui.config.name.advanced.enable_per_item",
                         getCurrentData().enablePerItem,
                         null,
@@ -523,7 +523,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         enablePerEntityButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(4, -10),
+                        calc1, getButtonY(4, -10),
                         "gui.config.name.advanced.enable_per_entity",
                         getCurrentData().enablePerEntity,
                         null,
@@ -536,7 +536,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         renderTooltipsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(4, -10),
+                        calc2, getButtonY(4, -10),
                         "gui.config.name.advanced.render_tooltips",
                         getCurrentData().renderTooltips,
                         null,
@@ -549,7 +549,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         formatWordsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(5, -20),
+                        calc1, getButtonY(5, -20),
                         "gui.config.name.advanced.format_words",
                         getCurrentData().formatWords,
                         null,
@@ -562,7 +562,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         debugModeButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(5, -20),
+                        calc2, getButtonY(5, -20),
                         "gui.config.name.advanced.debug_mode",
                         getCurrentData().debugMode,
                         null,
@@ -575,7 +575,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         verboseModeButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(6, -30),
+                        calc1, getButtonY(6, -30),
                         "gui.config.name.advanced.verbose_mode",
                         getCurrentData().verboseMode,
                         null,
@@ -588,7 +588,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         allowPlaceholderPreviewsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, CraftPresence.GUIS.getButtonY(6, -30),
+                        calc2, getButtonY(6, -30),
                         "gui.config.name.advanced.allow_placeholder_previews",
                         getCurrentData().allowPlaceholderPreviews,
                         null,
@@ -601,7 +601,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         allowEndpointIconsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, CraftPresence.GUIS.getButtonY(7, -40),
+                        calc1, getButtonY(7, -40),
                         "gui.config.name.advanced.allow_endpoint_icons",
                         getCurrentData().allowEndpointIcons,
                         null,

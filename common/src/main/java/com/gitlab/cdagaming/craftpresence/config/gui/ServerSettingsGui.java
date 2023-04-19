@@ -63,7 +63,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         defaultName = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(0),
+                        getButtonY(0),
                         180, 20,
                         "gui.config.name.server_messages.server_name",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -77,7 +77,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         defaultMOTD = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(1),
+                        getButtonY(1),
                         180, 20,
                         "gui.config.name.server_messages.server_motd",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -91,7 +91,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         defaultMessage = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        CraftPresence.GUIS.getButtonY(2),
+                        getButtonY(2),
                         180, 20,
                         "gui.config.message.default.server",
                         () -> CraftPresence.GUIS.drawMultiLineString(
@@ -106,7 +106,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
 
         serverMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(3),
+                        (getScreenWidth() / 2) - 90, getButtonY(3),
                         180, 20,
                         "gui.config.name.server_messages.server_messages",
                         () -> CraftPresence.GUIS.openScreen(
@@ -229,7 +229,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         // Adding Default Icon Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, CraftPresence.GUIS.getButtonY(4),
+                        (getScreenWidth() / 2) - 90, getButtonY(4),
                         180, 20,
                         "gui.config.name.server_messages.server_icon",
                         () -> CraftPresence.GUIS.openScreen(
