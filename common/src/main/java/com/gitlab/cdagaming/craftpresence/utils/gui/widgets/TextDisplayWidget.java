@@ -67,6 +67,30 @@ public class TextDisplayWidget implements DynamicWidget {
      * The multi-lined version of the interpreting message
      */
     private List<String> renderLines;
+    /**
+     * Whether the text should be center-aligned
+     */
+    private boolean centered = false;
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param startX   The starting X position of the widget
+     * @param startY   The starting Y position of the widget
+     * @param width    The width of the widget
+     * @param message  The text to be rendered with this widget
+     */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
+    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width, final String message) {
+        this.parent = parent;
+        setCentered(centered);
+        setControlPosX(startX);
+        setControlPosY(startY);
+        setControlWidth(width);
+        setMessage(message);
+    }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -79,11 +103,20 @@ public class TextDisplayWidget implements DynamicWidget {
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public TextDisplayWidget(final ExtendedScreen parent, final int startX, final int startY, final int width, final String message) {
-        this.parent = parent;
-        setControlPosX(startX);
-        setControlPosY(startY);
-        setControlWidth(width);
-        setMessage(message);
+        this(parent, false, startX, startY, width, message);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param startX   The starting X position of the widget
+     * @param startY   The starting Y position of the widget
+     * @param width    The width of the widget
+     */
+    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width) {
+        this(parent, centered, startX, startY, width, "");
     }
 
     /**
@@ -95,7 +128,19 @@ public class TextDisplayWidget implements DynamicWidget {
      * @param width  The width of the widget
      */
     public TextDisplayWidget(final ExtendedScreen parent, final int startX, final int startY, final int width) {
-        this(parent, startX, startY, width, "");
+        this(parent, false, startX, startY, width);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param width    The width of the widget
+     * @param message  The text to be rendered with this widget
+     */
+    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int width, final String message) {
+        this(parent, centered, 0, 0, width, message);
     }
 
     /**
@@ -106,7 +151,18 @@ public class TextDisplayWidget implements DynamicWidget {
      * @param message The text to be rendered with this widget
      */
     public TextDisplayWidget(final ExtendedScreen parent, final int width, final String message) {
-        this(parent, 0, 0, width, message);
+        this(parent, false, width, message);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param width    The width of the widget
+     */
+    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int width) {
+        this(parent, centered, width, "");
     }
 
     /**
@@ -116,7 +172,7 @@ public class TextDisplayWidget implements DynamicWidget {
      * @param width  The width of the widget
      */
     public TextDisplayWidget(final ExtendedScreen parent, final int width) {
-        this(parent, width, "");
+        this(parent, false, width);
     }
 
     /**
@@ -132,13 +188,35 @@ public class TextDisplayWidget implements DynamicWidget {
      * Set the text to be rendered with this widget
      *
      * @param newMessage The new message to be rendered
+     * @return the current instance, used for chain-building
      */
-    public void setMessage(final String newMessage) {
+    public TextDisplayWidget setMessage(final String newMessage) {
         if (!Objects.equals(newMessage, message)) {
             message = newMessage;
             renderLines = refreshContent();
             parent.refreshContentHeight();
         }
+        return this;
+    }
+
+    /**
+     * Retrieve whether the text should be center-aligned
+     *
+     * @return the current render alignment state
+     */
+    public boolean isCentered() {
+        return centered;
+    }
+
+    /**
+     * Set whether the text should be center-aligned
+     *
+     * @param centered The new render alignment state
+     * @return the current instance, used for chain-building
+     */
+    public TextDisplayWidget setCentered(final boolean centered) {
+        this.centered = centered;
+        return this;
     }
 
     /**
@@ -159,7 +237,11 @@ public class TextDisplayWidget implements DynamicWidget {
         int xPos = getControlPosX() + padding;
         int currentY = getControlPosY() + padding;
         for (String line : getRenderLines()) {
-            screen.renderString(line, xPos, currentY, 0xFFFFFF);
+            if (isCentered()) {
+                screen.renderCenteredString(line, getControlWidth() / 2f, currentY, 0xFFFFFF);
+            } else {
+                screen.renderString(line, xPos, currentY, 0xFFFFFF);
+            }
             currentY += screen.getFontHeight() + 1;
         }
     }

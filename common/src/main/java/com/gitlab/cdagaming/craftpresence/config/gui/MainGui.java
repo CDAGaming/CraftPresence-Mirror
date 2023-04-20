@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
@@ -52,11 +53,28 @@ public class MainGui extends ConfigurationGui<Config> {
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
+        int currentY = -1;
 
+        // Add Tentative Release Notice, if able
+        // Note: This only is meant for a one-line notice -- any bigger and `getButtonY` will be wrong
+        if (ModUtils.VERSION_TYPE.equalsIgnoreCase("alpha")) {
+            currentY++;
+
+            final String releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID);
+            childFrame.addWidget(
+                    new TextDisplayWidget(
+                            childFrame, true,
+                            0, getButtonY(currentY) - (getFontHeight() / 2) + 3,
+                            childFrame.getScreenWidth(), releaseNotice
+                    )
+            );
+        }
+
+        currentY++;
         // Added General Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, getButtonY(0),
+                        calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.general",
                         () -> openScreen(new GeneralSettingsGui(currentScreen)),
@@ -69,7 +87,7 @@ public class MainGui extends ConfigurationGui<Config> {
         );
         biomeSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, getButtonY(0),
+                        calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.biome_messages",
                         () -> openScreen(new BiomeSettingsGui(currentScreen)),
@@ -92,9 +110,10 @@ public class MainGui extends ConfigurationGui<Config> {
                         }
                 )
         );
+        currentY++;
         dimensionSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, getButtonY(1),
+                        calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.dimension_messages",
                         () -> openScreen(new DimensionSettingsGui(currentScreen)),
@@ -119,7 +138,7 @@ public class MainGui extends ConfigurationGui<Config> {
         );
         serverSet = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, getButtonY(1),
+                        calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.server_messages",
                         () -> openScreen(new ServerSettingsGui(currentScreen)),
@@ -142,10 +161,11 @@ public class MainGui extends ConfigurationGui<Config> {
                         }
                 )
         );
+        currentY++;
         // Added Status Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, getButtonY(2),
+                        calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.status_messages",
                         () -> openScreen(new StatusMessagesGui(currentScreen)),
@@ -159,7 +179,7 @@ public class MainGui extends ConfigurationGui<Config> {
         // Added Advanced Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, getButtonY(2),
+                        calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.advanced",
                         () -> openScreen(new AdvancedSettingsGui(currentScreen)),
@@ -170,10 +190,11 @@ public class MainGui extends ConfigurationGui<Config> {
                         )
                 )
         );
+        currentY++;
         // Added Accessibility Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc1, getButtonY(3),
+                        calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.accessibility",
                         () -> openScreen(new AccessibilitySettingsGui(currentScreen)),
@@ -187,7 +208,7 @@ public class MainGui extends ConfigurationGui<Config> {
         // Added Presence Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, getButtonY(3),
+                        calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.presence_settings",
                         () -> openScreen(new PresenceSettingsGui(currentScreen)),
