@@ -51,7 +51,7 @@ public class TileEntityUtils implements Module {
     /**
      * An Instance of an Empty ItemStack
      */
-    public static final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
+    public static final ItemStack EMPTY_STACK = ItemStack.EMPTY;
     /**
      * A List of the detected Block Names
      */

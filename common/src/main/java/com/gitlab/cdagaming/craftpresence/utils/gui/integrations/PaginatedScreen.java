@@ -334,7 +334,7 @@ public class PaginatedScreen extends ExtendedScreen {
      */
     public void renderString(final String text, final float xPos, final float yPos, final int color, final int renderTarget) {
         if (renderTarget == currentPage) {
-            getFontRenderer().drawStringWithShadow(text, xPos, yPos, color);
+            renderString(text, xPos, yPos, color);
         }
     }
 
