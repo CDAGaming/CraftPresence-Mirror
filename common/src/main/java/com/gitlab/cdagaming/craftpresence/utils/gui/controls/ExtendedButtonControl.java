@@ -191,14 +191,14 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
 
     @Override
     public void draw(final ExtendedScreen screen) {
-        isOverScreen = CraftPresence.GUIS.isMouseOver(screen);
+        isOverScreen = RenderUtils.isMouseOver(screen);
     }
 
     @Override
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
-            hovered = isOverScreen() && CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
+            hovered = isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this);
             final int hoverState = getHoverState(hovered);
 
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;

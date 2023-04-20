@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
 import net.minecraft.client.gui.GuiScreen;
@@ -115,7 +116,7 @@ public class ControlsGui extends PaginatedScreen {
             final Integer pageNumber = entry.getKey();
             final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
             for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
-                if (currentPage == pageNumber && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
+                if (currentPage == pageNumber && RenderUtils.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
                     drawMultiLineString(
                             StringUtils.splitTextByNewLine(
                                     ModUtils.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))

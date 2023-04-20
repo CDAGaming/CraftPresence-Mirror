@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
@@ -269,7 +269,7 @@ public class PaginatedScreen extends ExtendedScreen {
             if (isDefault || isRendering) {
                 if (extendedControl instanceof ExtendedButtonControl) {
                     final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                    if (isOverScreen() && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), extendedButton)) {
+                    if (isOverScreen() && RenderUtils.isMouseOver(getMouseX(), getMouseY(), extendedButton)) {
                         extendedButton.onHover();
                     }
                 }

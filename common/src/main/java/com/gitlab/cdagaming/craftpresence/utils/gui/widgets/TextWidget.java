@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.FontRenderer;
@@ -236,7 +236,7 @@ public class TextWidget extends ExtendedTextControl {
         if (!StringUtils.isNullOrEmpty(title)) {
             final String mainTitle = StringUtils.getLocalizedMessage(title);
             final int titleWidth = screen.getStringWidth(mainTitle);
-            if (screen.isOverScreen() && CraftPresence.GUIS.isMouseOver(
+            if (screen.isOverScreen() && RenderUtils.isMouseOver(
                     screen.getMouseX(), screen.getMouseY(),
                     getTitleX() - (titleWidth / 2f), getTitleY(),
                     titleWidth, screen.getFontHeight()

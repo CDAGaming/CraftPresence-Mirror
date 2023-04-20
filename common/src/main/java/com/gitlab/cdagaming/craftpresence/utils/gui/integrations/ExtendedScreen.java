@@ -363,7 +363,7 @@ public class ExtendedScreen extends GuiScreen {
         for (Gui extendedControl : getControls()) {
             if (extendedControl instanceof ExtendedButtonControl) {
                 final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                if (isOverScreen() && CraftPresence.GUIS.isMouseOver(lastMouseX, lastMouseY, extendedButton)) {
+                if (isOverScreen() && RenderUtils.isMouseOver(lastMouseX, lastMouseY, extendedButton)) {
                     extendedButton.onHover();
                 }
             }
@@ -411,7 +411,7 @@ public class ExtendedScreen extends GuiScreen {
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
-            isOverScreen = CraftPresence.GUIS.isMouseOver(mouseX, mouseY, this);
+            isOverScreen = RenderUtils.isMouseOver(mouseX, mouseY, this);
 
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {

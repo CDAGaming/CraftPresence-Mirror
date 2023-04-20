@@ -156,12 +156,9 @@ public class ScrollableListControl extends GuiSlot {
      * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the list
      */
     public boolean isWithinBounds(final int mouseX, final int mouseY) {
-        return CraftPresence.GUIS.isMouseWithin(
+        return RenderUtils.isMouseWithin(
                 mouseX, mouseY,
-                top,
-                bottom,
-                left,
-                right
+                top, bottom, left, right
         );
     }
 
@@ -425,7 +422,7 @@ public class ScrollableListControl extends GuiSlot {
         }
         getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 
-        final boolean isOverEntry = CraftPresence.GUIS.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn);
+        final boolean isOverEntry = RenderUtils.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn);
         if (isWithinBounds(mouseXIn, mouseYIn) && isOverEntry) {
             currentHoverText = hoverText;
         }

@@ -30,10 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
-import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -119,117 +116,6 @@ public class GuiUtils implements Module {
      */
     public void resetIndex() {
         lastIndex = 0;
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseX   The Mouse's Current X Position
-     * @param mouseY   The Mouse's Current Y Position
-     * @param topIn    The top-most boundary of the zone
-     * @param bottomIn The bottom-most boundary of the zone
-     * @param leftIn   The left-most boundary of the zone
-     * @param rightIn  The right-most boundary of the zone
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseWithin(final double mouseX, final double mouseY, final double topIn, final double bottomIn, final double leftIn, final double rightIn) {
-        return MathUtils.isWithinValue(mouseY, topIn, bottomIn, true, true) &&
-                MathUtils.isWithinValue(mouseX, leftIn, rightIn, true, true);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseX        The Mouse's Current X Position
-     * @param mouseY        The Mouse's Current Y Position
-     * @param elementX      The Object's starting X Position
-     * @param elementY      The Object's starting Y Position
-     * @param elementWidth  The total width of the object
-     * @param elementHeight The total height of the object
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseX, final double mouseY, final double elementX, final double elementY, final double elementWidth, final double elementHeight) {
-        return MathUtils.isWithinValue(mouseX, elementX, elementX + elementWidth, true, false) &&
-                MathUtils.isWithinValue(mouseY, elementY, elementY + elementHeight, true, false);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseX The Mouse's Current X Position
-     * @param mouseY The Mouse's Current Y Position
-     * @param button The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseX, final double mouseY, final ExtendedButtonControl button) {
-        return button.isControlVisible() && isMouseOver(mouseX, mouseY, button.getControlPosX(), button.getControlPosY(), button.getControlWidth() - 1, button.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseY The Mouse's Current Y Position
-     * @param button The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseY, final ExtendedButtonControl button) {
-        return isMouseOver(0, mouseY, 0, button.getControlPosY(), 0, button.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseX      The Mouse's Current X Position
-     * @param mouseY      The Mouse's Current Y Position
-     * @param textControl The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseX, final double mouseY, final ExtendedTextControl textControl) {
-        return isMouseOver(mouseX, mouseY, textControl.getControlPosX(), textControl.getControlPosY(), textControl.getControlWidth() - 1, textControl.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseY      The Mouse's Current Y Position
-     * @param textControl The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseY, final ExtendedTextControl textControl) {
-        return isMouseOver(0, mouseY, 0, textControl.getControlPosY(), 0, textControl.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseX The Mouse's Current X Position
-     * @param mouseY The Mouse's Current Y Position
-     * @param screen The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseX, final double mouseY, final ExtendedScreen screen) {
-        return screen.isLoaded() && isMouseOver(mouseX, mouseY, screen.getScreenX(), screen.getScreenY(), screen.getScreenWidth(), screen.getScreenHeight());
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseY The Mouse's Current Y Position
-     * @param screen The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final double mouseY, final ExtendedScreen screen) {
-        return screen.isLoaded() && isMouseOver(0, mouseY, 0, screen.getScreenY(), 0, screen.getScreenHeight());
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param screen The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public boolean isMouseOver(final ExtendedScreen screen) {
-        return isMouseOver(screen.getMouseX(), screen.getMouseY(), screen);
     }
 
     @Override
