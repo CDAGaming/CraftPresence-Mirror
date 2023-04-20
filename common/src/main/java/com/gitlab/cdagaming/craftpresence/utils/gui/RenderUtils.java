@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 - 2023 CDAGaming (cstack2011@yahoo.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
@@ -18,6 +42,11 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Rendering Utilities used to Parse Screen Data and handle rendering tasks
+ *
+ * @author CDAGaming
+ */
 @SuppressWarnings("DuplicatedCode")
 public class RenderUtils {
     /**
@@ -76,6 +105,7 @@ public class RenderUtils {
     /**
      * Renders a Slider Object from the defined arguments
      *
+     * @param mc          The current game instance
      * @param x           The Starting X Position to render the slider
      * @param y           The Starting Y Position to render the slider
      * @param u           The U Mapping Value
@@ -107,6 +137,7 @@ public class RenderUtils {
     /**
      * Renders a Button Object from the defined arguments
      *
+     * @param mc          The current game instance
      * @param x           The Starting X Position to render the button
      * @param y           The Starting Y Position to render the button
      * @param width       The full width for the button to render to
@@ -138,6 +169,23 @@ public class RenderUtils {
         blit(x + xOffset, y, zLevel, 200 - xOffset, v, xOffset, height);
     }
 
+    /**
+     * Draws a Textured Rectangle, following the defined arguments
+     *
+     * @param mc            The current game instance
+     * @param left          The Left Position of the Object
+     * @param right         The Right Position of the Object
+     * @param top           The Top Position of the Object
+     * @param bottom        The Bottom Position of the Object
+     * @param zLevel        The Z Level Position of the Object
+     * @param minU          The minimum horizontal axis to render this Object by
+     * @param maxU          The maximum horizontal axis to render this Object by
+     * @param minV          The minimum vertical axis to render this Object by
+     * @param maxV          The minimum vertical axis to render this Object by
+     * @param startColorObj The starting texture RGB data to interpret
+     * @param endColorObj   The starting texture RGB data to interpret
+     * @param texLocation   The game texture to render the object as
+     */
     public static void drawTexture(@Nonnull final Minecraft mc,
                                    final double left, final double right, final double top, final double bottom,
                                    final double zLevel,
@@ -174,6 +222,23 @@ public class RenderUtils {
         tessellator.draw();
     }
 
+    /**
+     * Draws a Textured Gradient Rectangle, following the defined arguments
+     *
+     * @param mc            The current game instance
+     * @param left          The Left Position of the Object
+     * @param right         The Right Position of the Object
+     * @param top           The Top Position of the Object
+     * @param bottom        The Bottom Position of the Object
+     * @param zLevel        The Z Level Position of the Object
+     * @param minU          The minimum horizontal axis to render this Object by
+     * @param maxU          The maximum horizontal axis to render this Object by
+     * @param minV          The minimum vertical axis to render this Object by
+     * @param maxV          The minimum vertical axis to render this Object by
+     * @param startColorObj The starting texture RGB data to interpret
+     * @param endColorObj   The starting texture RGB data to interpret
+     * @param texLocation   The game texture to render the object as
+     */
     public static void drawTextureGradient(@Nonnull final Minecraft mc,
                                            final double left, final double right, final double top, final double bottom,
                                            final double zLevel,
@@ -208,13 +273,13 @@ public class RenderUtils {
     /**
      * Draws a Gradient Rectangle, following the defined arguments
      *
-     * @param zLevel        The Z Level Position of the Object
      * @param left          The Left side length of the Object
-     * @param top           The top length of the Object
      * @param right         The Right side length of the Object
+     * @param top           The top length of the Object
      * @param bottom        The bottom length of the Object
-     * @param startColorObj The Starting Color Data (Required)
-     * @param endColorObj   The ending Color Data (Optional, Must be same Type as startColorObj)
+     * @param zLevel        The Z Level Position of the Object
+     * @param startColorObj The Starting Color Data
+     * @param endColorObj   The Ending Color Data
      */
     public static void drawGradient(final double left, final double right, final double top, final double bottom,
                                     final double zLevel,
@@ -415,6 +480,7 @@ public class RenderUtils {
     /**
      * Renders a Specified Multi-Line String, constrained by position and dimension arguments
      *
+     * @param mc           The current game instance
      * @param textToInput  The Specified Multi-Line String, split by lines into a list
      * @param posX         The starting X position to render the String
      * @param posY         The starting Y position to render the String
@@ -422,6 +488,7 @@ public class RenderUtils {
      * @param screenHeight The maximum height to allow rendering to (Text will wrap if output is greater)
      * @param maxTextWidth The maximum width the output can be before wrapping
      * @param fontRenderer The font renderer to use to render the String
+     * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
     public static void drawMultiLineString(@Nonnull final Minecraft mc,
                                            final List<String> textToInput,
@@ -465,7 +532,7 @@ public class RenderUtils {
             }
 
             if (needsWrap) {
-                final java.util.List<String> wrappedTextLines = StringUtils.newArrayList();
+                final List<String> wrappedTextLines = StringUtils.newArrayList();
                 int wrappedTooltipWidth = 0;
                 for (int i = 0; i < textLines.size(); i++) {
                     final List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLines.get(i), tooltipTextWidth));
@@ -633,10 +700,12 @@ public class RenderUtils {
     /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
+     * @param mc             The current game instance
      * @param xPos           The Starting X Position of the Object
      * @param yPos           The Starting Y Position of the Object
      * @param width          The width to render the background to
      * @param height         The height to render the background to
+     * @param offset         The vertical offset to render the background to
      * @param backgroundCode The background render data to interpret
      * @param color          The background RGB data to interpret
      */

@@ -162,6 +162,13 @@ public class StringUtils {
         return getColorFrom(r, g, b, a);
     }
 
+    /**
+     * Attempt to retrieve color info for the specified entries
+     *
+     * @param startColorCode The Starting Color Object
+     * @param endColorCode   The Ending Color Object
+     * @return the processed output
+     */
     public static Pair<Color, Color> findColor(final String startColorCode, final String endColorCode) {
         Color startColorObj = null, endColorObj = null;
         int startColor = 0xFFFFFF, endColor = 0xFFFFFF;
@@ -192,6 +199,13 @@ public class StringUtils {
         return new Pair<>(startColorObj, endColorObj);
     }
 
+    /**
+     * Attempt to retrieve color info for the specified entries
+     *
+     * @param startColorObj The Starting Color Object
+     * @param endColorObj   The Ending Color Object
+     * @return the processed output
+     */
     public static Pair<Color, Color> findColor(Object startColorObj, Object endColorObj) {
         Color startColor = null, endColor = null;
         endColorObj = endColorObj == null ? startColorObj : endColorObj;

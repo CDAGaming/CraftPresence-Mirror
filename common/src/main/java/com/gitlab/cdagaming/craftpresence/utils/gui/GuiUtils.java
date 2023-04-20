@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Gui Utilities used to Parse Gui Data and handle related RPC Events, and rendering tasks
+ * Gui Utilities used to Parse Gui Data and handle related RPC Events
  *
  * @author CDAGaming
  */
