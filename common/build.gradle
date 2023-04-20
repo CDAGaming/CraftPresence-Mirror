@@ -203,7 +203,7 @@ curseforge {
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
-    projectId = "${mod_name}".toLowerCase()
+    projectId = "DFqQfIBR"
     versionNumber = "v${versionFormat}".replaceAll("\\s", "").toLowerCase()
     versionName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
     changelog = file("$rootDir/Changes.md").text
