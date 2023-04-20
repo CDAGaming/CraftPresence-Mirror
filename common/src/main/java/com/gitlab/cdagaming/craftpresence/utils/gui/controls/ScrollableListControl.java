@@ -158,7 +158,10 @@ public class ScrollableListControl extends GuiSlot {
     public boolean isWithinBounds(final int mouseX, final int mouseY) {
         return RenderUtils.isMouseWithin(
                 mouseX, mouseY,
-                top, bottom, left, right
+                top,
+                bottom,
+                left,
+                right
         );
     }
 
