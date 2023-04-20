@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
@@ -153,7 +154,7 @@ public class KeyUtils {
                         new Tuple<>(
                                 () -> {
                                     if (!CraftPresence.GUIS.isFocused && !CraftPresence.GUIS.configGUIOpened) {
-                                        CraftPresence.GUIS.openScreen(new MainGui(CraftPresence.instance.currentScreen));
+                                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(CraftPresence.instance.currentScreen));
                                     }
                                 },
                                 (keyCode, shouldSave) -> {

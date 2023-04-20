@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.util.ResourceLocation;
 
@@ -119,24 +120,35 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void renderCriticalData() {
-        CraftPresence.GUIS.drawBackground(
+        final String background = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
+        RenderUtils.drawBackground(mc,
                 getScreenX(), getScreenY(),
                 getScreenWidth(), getScreenHeight(),
+                amountScrolled,
+                background,
                 NERO
         );
+    }
 
+    @Override
+    public void postRender() {
         // Render Depth Decorations
-        final Tuple<Boolean, String, ResourceLocation> backgroundData = CraftPresence.GUIS.getTextureData(CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor);
-        CraftPresence.GUIS.drawTextureGradientRect(0.0D,
-                getLeft(), getTop(), getRight(), getTop() + getPadding(),
-                1.0D, 1.0D, 0.0D,
+        final String background = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
+        final Tuple<Boolean, String, ResourceLocation> backgroundData = RenderUtils.getTextureData(background);
+        RenderUtils.drawTextureGradient(mc,
+                getLeft(), getRight(), getTop(), getTop() + getPadding(),
+                -100.0D,
+                0.0D, 1.0D,
+                0.0D, 1.0D,
                 NONE,
                 Color.black,
                 backgroundData.getThird()
         );
-        CraftPresence.GUIS.drawTextureGradientRect(0.0D,
-                getLeft(), getBottom() - getPadding(), getRight(), getBottom(),
-                1.0D, 1.0D, 0.0D,
+        RenderUtils.drawTextureGradient(mc,
+                getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
+                -100.0D,
+                0.0D, 1.0D,
+                0.0D, 1.0D,
                 Color.black,
                 NONE,
                 backgroundData.getThird()
@@ -156,21 +168,26 @@ public class ScrollPane extends ExtendedScreen {
                 barTop = top;
             }
 
-            CraftPresence.GUIS.drawGradientRect(0.0F,
-                    scrollBarX, top, scrollBarRight, bottom,
+            RenderUtils.drawGradient(
+                    scrollBarX, scrollBarRight, top, bottom,
+                    0.0D,
                     Color.black, Color.black
             );
 
-            CraftPresence.GUIS.drawGradientRect(0.0F,
-                    scrollBarX, barTop, scrollBarRight, barTop + height,
+            RenderUtils.drawGradient(
+                    scrollBarX, scrollBarRight, barTop, barTop + height,
+                    0.0D,
                     Color.gray, Color.gray
             );
 
-            CraftPresence.GUIS.drawGradientRect(0.0F,
-                    scrollBarX, barTop, scrollBarRight - 1, barTop + height - 1,
+            RenderUtils.drawGradient(
+                    scrollBarX, scrollBarRight - 1, barTop, barTop + height - 1,
+                    0.0D,
                     Color.lightGray, Color.lightGray
             );
         }
+
+        super.postRender();
     }
 
     // remove in 1.13+

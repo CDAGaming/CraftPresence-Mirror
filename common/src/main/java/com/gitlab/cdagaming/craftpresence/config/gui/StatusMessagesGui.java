@@ -49,35 +49,35 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     // nameTranslation, [configPath,commentTranslation]
     private final Map<String, Pair<String, Runnable>> eventMappings = new HashMapBuilder<String, Pair<String, Runnable>>()
             .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
-                    "mainMenuData", () -> CraftPresence.GUIS.drawMultiLineString(
+                    "mainMenuData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                    ), this, true
+                    )
             )
             ))
             .put("gui.config.name.status_messages.loading_message", new Pair<>(
-                    "loadingData", () -> CraftPresence.GUIS.drawMultiLineString(
+                    "loadingData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                    ), this, true
+                    )
             )
             ))
             .put("gui.config.name.status_messages.lan_message", new Pair<>(
-                    "lanData", () -> CraftPresence.GUIS.drawMultiLineString(
+                    "lanData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                    ), this, true
+                    )
             )
             ))
             .put("gui.config.name.status_messages.single_player_message", new Pair<>(
-                    "singleplayerData", () -> CraftPresence.GUIS.drawMultiLineString(
+                    "singleplayerData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                    ), this, true
+                    )
             )
             ))
             .build();
@@ -108,7 +108,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                             startX, getButtonY(buttonRow),
                             180, 20,
                             entry.getKey(),
-                            () -> CraftPresence.GUIS.openScreen(
+                            () -> openScreen(
                                     new DynamicEditorGui(
                                             currentScreen, entry.getValue().getFirst(),
                                             (attributeName, screenInstance) -> {
@@ -146,7 +146,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 if (isPresenceButton) {
                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                    CraftPresence.GUIS.openScreen(
+                                                    openScreen(
                                                             new PresenceSettingsGui(
                                                                     screenInstance, currentPresenceData,
                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -155,7 +155,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 } else {
                                                     final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
                                                     final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                    CraftPresence.GUIS.openScreen(
+                                                    openScreen(
                                                             new SelectorGui(
                                                                     screenInstance,
                                                                     ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),

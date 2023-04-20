@@ -122,7 +122,7 @@ public class CommandsGui extends ExtendedScreen {
                         6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        () -> openScreen(parentScreen)
                 )
         );
 
@@ -294,7 +294,7 @@ public class CommandsGui extends ExtendedScreen {
                         );
 
                         if (!results.isEmpty()) {
-                            CraftPresence.GUIS.openScreen(new SelectorGui(
+                            openScreen(new SelectorGui(
                                     currentScreen,
                                     ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                     results,
@@ -328,7 +328,7 @@ public class CommandsGui extends ExtendedScreen {
                             return;
                         } else if (executionCommandArgs[1].equalsIgnoreCase("items")) {
                             if (CraftPresence.TILE_ENTITIES.enabled) {
-                                CraftPresence.GUIS.openScreen(new SelectorGui(
+                                openScreen(new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                         CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
@@ -343,7 +343,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("entities")) {
                             if (CraftPresence.ENTITIES.enabled) {
-                                CraftPresence.GUIS.openScreen(new SelectorGui(
+                                openScreen(new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.entities"),
                                         CraftPresence.ENTITIES.ENTITY_NAMES,
@@ -358,7 +358,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("servers")) {
                             if (CraftPresence.SERVER.enabled) {
-                                CraftPresence.GUIS.openScreen(new SelectorGui(
+                                openScreen(new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.servers"),
                                         CraftPresence.SERVER.knownAddresses,
@@ -373,7 +373,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("screens")) {
                             if (CraftPresence.GUIS.enabled) {
-                                CraftPresence.GUIS.openScreen(new SelectorGui(
+                                openScreen(new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
                                         CraftPresence.GUIS.GUI_NAMES,
@@ -388,7 +388,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("biomes")) {
                             if (CraftPresence.BIOMES.enabled) {
-                                CraftPresence.GUIS.openScreen(new SelectorGui(
+                                openScreen(new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
                                         CraftPresence.BIOMES.BIOME_NAMES,
@@ -403,7 +403,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("dimensions")) {
                             if (CraftPresence.DIMENSIONS.enabled) {
-                                CraftPresence.GUIS.openScreen(new SelectorGui(
+                                openScreen(new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
                                         CraftPresence.DIMENSIONS.DIMENSION_NAMES,
@@ -442,7 +442,7 @@ public class CommandsGui extends ExtendedScreen {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.view.assets");
                             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[2])) {
                                 if (executionCommandArgs[2].equalsIgnoreCase("custom")) {
-                                    CraftPresence.GUIS.openScreen(new SelectorGui(
+                                    openScreen(new SelectorGui(
                                             currentScreen,
                                             ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.custom"),
                                             DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
@@ -451,7 +451,7 @@ public class CommandsGui extends ExtendedScreen {
                                             null, null
                                     ));
                                 } else if (executionCommandArgs[2].equalsIgnoreCase("all")) {
-                                    CraftPresence.GUIS.openScreen(new SelectorGui(
+                                    openScreen(new SelectorGui(
                                             currentScreen,
                                             ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"),
                                             DiscordAssetUtils.ASSET_LIST.keySet(),

@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.CommandsGui;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
@@ -68,7 +69,7 @@ public class ModIPCListener implements IPCListener {
             CraftPresence.CLIENT.REQUESTER_USER = user;
 
             if (!(CraftPresence.instance.currentScreen instanceof CommandsGui)) {
-                CraftPresence.GUIS.openScreen(new CommandsGui(CraftPresence.instance.currentScreen));
+                RenderUtils.openScreen(CraftPresence.instance, new CommandsGui(CraftPresence.instance.currentScreen));
             }
             ((CommandsGui) CraftPresence.instance.currentScreen).executeCommand("request");
         }

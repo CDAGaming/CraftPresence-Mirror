@@ -85,7 +85,7 @@ public class ControlsGui extends PaginatedScreen {
         backButton.setOnClick(
                 () -> {
                     if (entryData == null) {
-                        CraftPresence.GUIS.openScreen(parentScreen);
+                        openScreen(parentScreen);
                     }
                 }
         );
@@ -116,10 +116,10 @@ public class ControlsGui extends PaginatedScreen {
             final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
             for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
                 if (currentPage == pageNumber && CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
-                    CraftPresence.GUIS.drawMultiLineString(
+                    drawMultiLineString(
                             StringUtils.splitTextByNewLine(
                                     ModUtils.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))
-                            ), this, true
+                            )
                     );
                 }
             }

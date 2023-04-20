@@ -66,11 +66,11 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         getButtonY(0),
                         180, 20,
                         "gui.config.message.default.biome",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                 CraftPresence.CLIENT.generateArgumentMessage("biome."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -81,7 +81,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         (getScreenWidth() / 2) - 90, getButtonY(1),
                         180, 20,
                         "gui.config.name.biome_messages.biome_messages",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,
@@ -103,7 +103,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
+                                            openScreen(
                                                     new DynamicEditorGui(
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
@@ -142,7 +142,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    CraftPresence.GUIS.openScreen(
+                                                                    openScreen(
                                                                             new PresenceSettingsGui(
                                                                                     screenInstance, currentPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -151,7 +151,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 } else {
                                                                     final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().fallbackBiomeIcon;
                                                                     final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                                    CraftPresence.GUIS.openScreen(
+                                                                    openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
                                                                                     ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
@@ -167,11 +167,11 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("biome."))
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             }
                                                     )
@@ -181,18 +181,18 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         ),
                         () -> {
                             if (!biomeMessagesButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
-                                        ), this, true
+                                        )
                                 );
                             } else {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("biome."))
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -204,7 +204,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
                         "gui.config.name.biome_messages.biome_icon",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
@@ -216,19 +216,19 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                         }, null
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
-                                ), this, true
+                                )
                         )
                 )
         );
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
-                CraftPresence.GUIS.drawMultiLineString(
+                drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        ), this, true
+                        )
                 );
             }
         });

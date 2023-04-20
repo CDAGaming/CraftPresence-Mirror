@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -179,22 +178,22 @@ public class SelectorGui extends ExtendedScreen {
                                         if (!scrollList.currentValue.equals(originalValue)) {
                                             if (onUpdatedCallback != null) {
                                                 onUpdatedCallback.accept(attributeName, scrollList.currentValue);
-                                                CraftPresence.GUIS.openScreen(parentScreen);
+                                                openScreen(parentScreen);
                                             } else {
-                                                CraftPresence.GUIS.openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
+                                                openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
                                             }
                                         } else {
-                                            CraftPresence.GUIS.openScreen(parentScreen);
+                                            openScreen(parentScreen);
                                         }
                                     } else {
                                         if (allowDynamicEditing && onAdjustDynamicEntry != null) {
                                             onAdjustDynamicEntry.accept(scrollList.currentValue, parentScreen);
                                         } else {
-                                            CraftPresence.GUIS.openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
+                                            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
                                         }
                                     }
                                 } else {
-                                    CraftPresence.GUIS.openScreen(parentScreen);
+                                    openScreen(parentScreen);
                                 }
                             }
                     )
@@ -231,7 +230,7 @@ public class SelectorGui extends ExtendedScreen {
 
             super.initializeUi();
         } else {
-            CraftPresence.GUIS.openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.empty.list"))));
+            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.empty.list"))));
         }
     }
 
@@ -298,7 +297,7 @@ public class SelectorGui extends ExtendedScreen {
         renderCenteredString(displayText, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         if (scrollList.currentHoverText != null && !scrollList.currentHoverText.isEmpty()) {
-            CraftPresence.GUIS.drawMultiLineString(scrollList.currentHoverText, this, true);
+            drawMultiLineString(scrollList.currentHoverText);
         }
 
         super.postRender();

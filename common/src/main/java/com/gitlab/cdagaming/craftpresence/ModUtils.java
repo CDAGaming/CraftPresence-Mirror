@@ -134,10 +134,6 @@ public class ModUtils {
      * If this Application is flagged to be running in a de-obfuscated or Developer environment
      */
     public static final boolean IS_VERBOSE_FLAG;
-    /**
-     * Whether to forcibly block any tooltips related to this Application from rendering
-     */
-    public static boolean forceBlockTooltipRendering = false;
 
     static {
         NAME = "@MOD_NAME@";

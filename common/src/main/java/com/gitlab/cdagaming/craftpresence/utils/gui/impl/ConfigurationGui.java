@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.gui.AboutGui;
@@ -61,7 +60,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         "gui.config.message.button.back",
                         () -> {
                             applySettings();
-                            CraftPresence.GUIS.openScreen(parentScreen);
+                            openScreen(parentScreen);
                         }
                 )
         );
@@ -73,10 +72,10 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         this::resetData,
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -90,10 +89,10 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         this::syncData,
                         () -> {
                             if (syncConfigButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.button.sync.config")
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -169,11 +168,11 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         6, 6,
                         20, 20,
                         "?",
-                        () -> CraftPresence.GUIS.openScreen(new AboutGui(currentScreen)),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> openScreen(new AboutGui(currentScreen)),
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.button.about")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -183,11 +182,11 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         getScreenWidth() - 26, 6,
                         20, 20,
                         ">_",
-                        () -> CraftPresence.GUIS.openScreen(new CommandsGui(currentScreen)),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> openScreen(new CommandsGui(currentScreen)),
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.button.commands")
-                                ), this, true
+                                )
                         )
                 )
         );

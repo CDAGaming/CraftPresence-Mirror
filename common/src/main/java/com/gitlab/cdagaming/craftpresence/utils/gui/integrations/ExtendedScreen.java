@@ -25,9 +25,11 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
@@ -41,6 +43,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -328,9 +331,12 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering critical elements before other elements
      */
     public void renderCriticalData() {
-        CraftPresence.GUIS.drawBackground(
+        RenderUtils.drawBackground(mc,
                 getScreenX(), getScreenY(),
-                getScreenWidth(), getScreenHeight()
+                getScreenWidth(), getScreenHeight(),
+                0,
+                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor,
+                CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark ? Color.darkGray : Color.white
         );
     }
 
@@ -375,8 +381,8 @@ public class ExtendedScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         // Ensures initialization events have run first, preventing an NPE
         if (isLoaded()) {
-            final int scale = CraftPresence.GUIS.computeGuiScale(mc);
-            CraftPresence.GUIS.drawWithin(
+            final int scale = computeGuiScale();
+            RenderUtils.drawWithin(
                     getLeft() * scale,
                     mc.displayHeight - getBottom() * scale,
                     getScreenWidth() * scale,
@@ -401,7 +407,7 @@ public class ExtendedScreen extends GuiScreen {
 
             super.drawScreen(mouseX, mouseY, partialTicks);
 
-            CraftPresence.GUIS.drawAnywhere();
+            RenderUtils.drawAnywhere();
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
@@ -478,7 +484,7 @@ public class ExtendedScreen extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) {
         if (isLoaded()) {
             if (keyCode == Keyboard.KEY_ESCAPE && canClose) {
-                CraftPresence.GUIS.openScreen(parentScreen);
+                openScreen(parentScreen);
                 return;
             }
 
@@ -577,6 +583,26 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
+     *
+     * @param targetScreen The target Gui Screen to display
+     */
+    public void openScreen(final GuiScreen targetScreen) {
+        RenderUtils.openScreen(mc, targetScreen);
+    }
+
+    /**
+     * Computes the current GUI scale. Calling this method is equivalent to the following:<pre><code>
+     * Minecraft mc = Minecraft.getMinecraft();
+     * int scale = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();</code></pre>
+     *
+     * @return the current GUI scale
+     */
+    public int computeGuiScale() {
+        return RenderUtils.computeGuiScale(mc);
+    }
+
+    /**
      * Calculate the Y Value for Buttons in a Standard-Sized Gui
      *
      * @param order Current Order of buttons above it, or 1 if none
@@ -607,6 +633,37 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getButtonY(final int order, final int offset) {
         return getButtonY(order, offset, false);
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput The Specified Multi-Line String, split by lines into a list
+     * @param posX        The starting X position to render the String
+     * @param posY        The starting Y position to render the String
+     */
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY) {
+        RenderUtils.drawMultiLineString(mc,
+                textToInput,
+                posX, posY,
+                getScreenWidth(), getScreenHeight(),
+                getWrapWidth(),
+                getFontRenderer(),
+                new Tuple<>(
+                        CraftPresence.CONFIG.advancedSettings.renderTooltips,
+                        CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor,
+                        CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor
+                )
+        );
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput The Specified Multi-Line String, split by lines into a list
+     */
+    public void drawMultiLineString(final List<String> textToInput) {
+        drawMultiLineString(textToInput, getMouseX(), getMouseY());
     }
 
     /**
@@ -692,7 +749,7 @@ public class ExtendedScreen extends GuiScreen {
         final List<String> data = StringUtils.newArrayList();
         for (String line : original) {
             data.addAll(
-                    GuiUtils.listFormattedStringToWidth(getFontRenderer(), line, wrapWidth)
+                    RenderUtils.listFormattedStringToWidth(getFontRenderer(), line, wrapWidth)
             );
         }
         return data;

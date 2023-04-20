@@ -88,11 +88,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(0),
                         180, 20,
                         "gui.config.name.display.details_message",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -102,11 +102,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(1),
                         180, 20,
                         "gui.config.name.display.game_state_message",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -116,11 +116,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(2),
                         180, 20,
                         "gui.config.name.display.large_image_message",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -130,11 +130,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(3),
                         180, 20,
                         "gui.config.name.display.small_image_message",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -151,10 +151,10 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                             "gui.config.name.display.enabled",
                             PRESENCE.enabled,
                             null,
-                            () -> CraftPresence.GUIS.drawMultiLineString(
+                            () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
                                             ModUtils.TRANSLATOR.translate("gui.config.comment.display.enabled")
-                                    ), this, true
+                                    )
                             )
                     )
             );
@@ -164,10 +164,10 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                             "gui.config.name.display.use_as_main",
                             PRESENCE.useAsMain,
                             null,
-                            () -> CraftPresence.GUIS.drawMultiLineString(
+                            () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
                                             ModUtils.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
-                                    ), this, true
+                                    )
                             )
                     )
             );
@@ -180,11 +180,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(5),
                         180, 20,
                         "gui.config.name.display.small_image_key",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -194,11 +194,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(6),
                         180, 20,
                         "gui.config.name.display.large_image_key",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -212,11 +212,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(7),
                         180, 20,
                         "gui.config.name.display.start_timestamp",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -226,11 +226,11 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         getButtonY(8),
                         180, 20,
                         "gui.config.name.display.end_timestamp",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -244,7 +244,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         calc1, getButtonY(9),
                         180, 20,
                         "gui.config.name.display.button_messages",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(PRESENCE.buttons),
@@ -253,7 +253,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
+                                            openScreen(
                                                     new DynamicEditorGui(
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
@@ -292,18 +292,18 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Secondary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             }
                                                     )
@@ -311,10 +311,10 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                         }
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -325,7 +325,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         calc2, getButtonY(9),
                         180, 20,
                         "gui.config.name.display.dynamic_icons",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
@@ -334,7 +334,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
+                                            openScreen(
                                                     new DynamicEditorGui(
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
@@ -385,18 +385,18 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Secondary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             }
                                                     )
@@ -404,10 +404,10 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                         }
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -418,7 +418,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         (getScreenWidth() / 2) - 90, getButtonY(10),
                         180, 20,
                         "gui.config.name.display.dynamic_variables",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.item"), getCurrentData().dynamicVariables.keySet(),
@@ -427,7 +427,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
+                                            openScreen(
                                                     new DynamicEditorGui(
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
@@ -456,18 +456,18 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Primary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Secondary Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             }
                                                     )
@@ -475,10 +475,10 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                         }
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
-                                ), this, true
+                                )
                         )
                 )
         );

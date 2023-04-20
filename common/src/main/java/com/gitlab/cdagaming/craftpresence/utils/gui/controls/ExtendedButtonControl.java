@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.Minecraft;
@@ -203,12 +204,12 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                CraftPresence.GUIS.drawGradientRect(zLevel, getLeft(), getTop(), getRight(), getBottom(), backgroundCode, backgroundCode);
+                RenderUtils.drawGradient(getLeft(), getRight(), getTop(), getBottom(), zLevel, backgroundCode, backgroundCode);
             } else {
-                final Tuple<Boolean, String, ResourceLocation> textureData = CraftPresence.GUIS.getTextureData(backgroundCode);
+                final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(backgroundCode);
                 final ResourceLocation texLocation = textureData.getThird();
 
-                CraftPresence.GUIS.renderButton(getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
+                RenderUtils.renderButton(mc, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
             }
 
             if (isOverScreen()) {

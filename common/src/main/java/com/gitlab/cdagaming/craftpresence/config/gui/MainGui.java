@@ -59,11 +59,11 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(0),
                         180, 20,
                         "gui.config.title.general",
-                        () -> CraftPresence.GUIS.openScreen(new GeneralSettingsGui(currentScreen)),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> openScreen(new GeneralSettingsGui(currentScreen)),
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.general")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -72,21 +72,21 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(0),
                         180, 20,
                         "gui.config.title.biome_messages",
-                        () -> CraftPresence.GUIS.openScreen(new BiomeSettingsGui(currentScreen)),
+                        () -> openScreen(new BiomeSettingsGui(currentScreen)),
                         () -> {
                             if (!biomeSet.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
-                                        ), this, true
+                                        )
                                 );
                             } else {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("biome."))
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -97,21 +97,21 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(1),
                         180, 20,
                         "gui.config.title.dimension_messages",
-                        () -> CraftPresence.GUIS.openScreen(new DimensionSettingsGui(currentScreen)),
+                        () -> openScreen(new DimensionSettingsGui(currentScreen)),
                         () -> {
                             if (!dimensionSet.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
-                                        ), this, true
+                                        )
                                 );
                             } else {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("dimension."))
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -122,21 +122,21 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(1),
                         180, 20,
                         "gui.config.title.server_messages",
-                        () -> CraftPresence.GUIS.openScreen(new ServerSettingsGui(currentScreen)),
+                        () -> openScreen(new ServerSettingsGui(currentScreen)),
                         () -> {
                             if (!serverSet.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_world_data"))
-                                        ), this, true
+                                        )
                                 );
                             } else {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -148,11 +148,11 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(2),
                         180, 20,
                         "gui.config.title.status_messages",
-                        () -> CraftPresence.GUIS.openScreen(new StatusMessagesGui(currentScreen)),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> openScreen(new StatusMessagesGui(currentScreen)),
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.status_messages")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -162,11 +162,11 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(2),
                         180, 20,
                         "gui.config.title.advanced",
-                        () -> CraftPresence.GUIS.openScreen(new AdvancedSettingsGui(currentScreen)),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> openScreen(new AdvancedSettingsGui(currentScreen)),
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.advanced")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -176,11 +176,11 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(3),
                         180, 20,
                         "gui.config.title.accessibility",
-                        () -> CraftPresence.GUIS.openScreen(new AccessibilitySettingsGui(currentScreen)),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> openScreen(new AccessibilitySettingsGui(currentScreen)),
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.title.accessibility")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -190,11 +190,11 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(3),
                         180, 20,
                         "gui.config.title.presence_settings",
-                        () -> CraftPresence.GUIS.openScreen(new PresenceSettingsGui(currentScreen)),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> openScreen(new PresenceSettingsGui(currentScreen)),
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.presence_settings")
-                                ), this, true
+                                )
                         )
                 )
         );

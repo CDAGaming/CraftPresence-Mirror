@@ -66,10 +66,10 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(0),
                         180, 20,
                         "gui.config.name.server_messages.server_name",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_name")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -80,10 +80,10 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(1),
                         180, 20,
                         "gui.config.name.server_messages.server_motd",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_motd")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -94,11 +94,11 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(2),
                         180, 20,
                         "gui.config.message.default.server",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                 CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -109,7 +109,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         (getScreenWidth() / 2) - 90, getButtonY(3),
                         180, 20,
                         "gui.config.name.server_messages.server_messages",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.server"), CraftPresence.SERVER.knownAddresses,
@@ -131,7 +131,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
+                                            openScreen(
                                                     new DynamicEditorGui(
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
@@ -170,7 +170,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    CraftPresence.GUIS.openScreen(
+                                                                    openScreen(
                                                                             new PresenceSettingsGui(
                                                                                     screenInstance, currentPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -179,7 +179,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                                 } else {
                                                                     final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().fallbackServerIcon;
                                                                     final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                                    CraftPresence.GUIS.openScreen(
+                                                                    openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
                                                                                     ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
@@ -195,11 +195,11 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             }
                                                     )
@@ -209,18 +209,18 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         ),
                         () -> {
                             if (!serverMessagesButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.server_messages.server_messages"))
-                                        ), this, true
+                                        )
                                 );
                             } else {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -232,7 +232,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         (getScreenWidth() / 2) - 90, getButtonY(4),
                         180, 20,
                         "gui.config.name.server_messages.server_icon",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
@@ -244,19 +244,19 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                         }, null
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_icon")
-                                ), this, true
+                                )
                         )
                 )
         );
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
-                CraftPresence.GUIS.drawMultiLineString(
+                drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        ), this, true
+                        )
                 );
             }
         });

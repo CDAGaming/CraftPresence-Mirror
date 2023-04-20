@@ -67,10 +67,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         getButtonY(0),
                         180, 20,
                         "gui.config.name.general.client_id",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.client_id")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -89,7 +89,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         buttonCalc1, getButtonY(1),
                         180, 20,
                         "gui.config.name.general.default_icon",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
@@ -101,10 +101,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                                         }, null
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.default_icon")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -115,10 +115,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         180, 20,
                         "gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name(),
                         () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -129,10 +129,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         180, 20,
                         "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
                         () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -142,10 +142,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_curse_manifest",
                         getCurrentData().detectCurseManifest,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_curse_manifest")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -155,10 +155,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_multimc_manifest",
                         getCurrentData().detectMultiMCManifest,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_multimc_manifest")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -168,10 +168,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_mcupdater_instance",
                         getCurrentData().detectMCUpdaterInstance,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_mcupdater_instance")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -181,10 +181,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_technic_pack",
                         getCurrentData().detectTechnicPack,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_technic_pack")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -194,10 +194,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_atlauncher_instance",
                         getCurrentData().detectATLauncherInstance,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_atlauncher_instance")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -207,10 +207,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_dimension_data",
                         getCurrentData().detectDimensionData,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -220,10 +220,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.enable_join_request",
                         getCurrentData().enableJoinRequests,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -233,10 +233,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_biome_data",
                         getCurrentData().detectBiomeData,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -246,10 +246,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.auto_register",
                         getCurrentData().autoRegister,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.auto_register")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -259,10 +259,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.detect_world_data",
                         getCurrentData().detectWorldData,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -272,20 +272,20 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.reset_time_on_init",
                         getCurrentData().resetTimeOnInit,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
-                                ), this, true
+                                )
                         )
                 )
         );
 
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
-                CraftPresence.GUIS.drawMultiLineString(
+                drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        ), this, true
+                        )
                 );
             }
         });

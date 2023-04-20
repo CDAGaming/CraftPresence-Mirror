@@ -24,11 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
@@ -169,7 +169,7 @@ public class ColorEditorGui extends PaginatedScreen {
                     if (isModified && onAdjustEntry != null) {
                         onAdjustEntry.accept(currentPage, this);
                     }
-                    CraftPresence.GUIS.openScreen(parentScreen);
+                    openScreen(parentScreen);
                 }
         );
         setOnPageChange(
@@ -204,7 +204,7 @@ public class ColorEditorGui extends PaginatedScreen {
             backButton.setControlEnabled(!StringUtils.isNullOrEmpty(hexText.getControlMessage()));
 
             // Draw Preview Box
-            CraftPresence.GUIS.drawGradientRect(300, tooltipX - 3, tooltipY - 3, getScreenWidth() - 2, getScreenHeight() - 2, currentConvertedHexValue, currentConvertedHexValue);
+            RenderUtils.drawGradient(tooltipX - 3, getScreenWidth() - 2, tooltipY - 3, getScreenHeight() - 2, 300, currentConvertedHexValue, currentConvertedHexValue);
         }
 
         // Page 2 Items
@@ -216,24 +216,32 @@ public class ColorEditorGui extends PaginatedScreen {
             }
 
             // Ensure the Texture is refreshed consistently, if an external texture
+            final double width = 44, height = 43;
             double widthDivider = 32.0D, heightDivider = 32.0D;
 
             if (textureData.getFirst()) {
                 currentTexture = textureData.getThird();
 
-                widthDivider = 44;
-                heightDivider = 43;
+                widthDivider = width;
+                heightDivider = height;
             }
 
             // Draw Preview Box
-            CraftPresence.GUIS.drawTextureRect(0.0D, getScreenWidth() - 47, getScreenHeight() - 47, 44, 44, 0, widthDivider, heightDivider, false, currentTexture);
+            RenderUtils.drawTexture(mc,
+                    getScreenWidth() - 47, getScreenWidth() - 3, getScreenHeight() - 47, getScreenHeight() - 3,
+                    0.0D,
+                    0.0D, width / widthDivider,
+                    0.0D, height / heightDivider,
+                    Color.white, Color.white,
+                    currentTexture
+            );
         }
 
-        // Draw Border around Preview Box
-        CraftPresence.GUIS.drawGradientRect(300, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColor, borderColorEnd);
-        CraftPresence.GUIS.drawGradientRect(300, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColor, borderColorEnd);
-        CraftPresence.GUIS.drawGradientRect(300, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColor, borderColor);
-        CraftPresence.GUIS.drawGradientRect(300, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
+        // Draw Border around Preview Box - TODO: Refactor to use `renderGradientBox`
+        RenderUtils.drawGradient(tooltipX - 3, tooltipX - 3 + 1, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, 300, borderColor, borderColorEnd);
+        RenderUtils.drawGradient(tooltipX + tooltipTextWidth + 2, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, 300, borderColor, borderColorEnd);
+        RenderUtils.drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY - 3 + 1, 300, borderColor, borderColor);
+        RenderUtils.drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 2, tooltipY + tooltipHeight + 3, 300, borderColorEnd, borderColorEnd);
 
         backButton.setControlMessage(isModified ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }
@@ -322,7 +330,7 @@ public class ColorEditorGui extends PaginatedScreen {
         // Page 2 - Texture Syncing
         if (currentPage == startPage + 1) {
             if (!StringUtils.isNullOrEmpty(textureText.getControlMessage())) {
-                textureData = CraftPresence.GUIS.getTextureData(textureText.getControlMessage());
+                textureData = RenderUtils.getTextureData(textureText.getControlMessage());
                 currentTexture = textureData.getThird();
                 currentTexturePath = textureData.getSecond();
             } else {

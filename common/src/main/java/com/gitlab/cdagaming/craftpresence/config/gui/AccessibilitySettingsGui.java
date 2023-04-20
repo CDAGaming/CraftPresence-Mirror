@@ -65,7 +65,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         calc1, getButtonY(0),
                         180, 20,
                         "gui.config.name.accessibility.tooltip_background_color",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
                                         (pageNumber, screenInstance) -> {
@@ -86,10 +86,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                         }
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_background_color")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -99,7 +99,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         calc2, getButtonY(0),
                         180, 20,
                         "gui.config.name.accessibility.tooltip_border_color",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
                                         (pageNumber, screenInstance) -> {
@@ -120,10 +120,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                         }
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_border_color")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -133,7 +133,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         calc1, getButtonY(1),
                         180, 20,
                         "gui.config.name.accessibility.gui_background_color",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
                                         (pageNumber, screenInstance) -> {
@@ -154,10 +154,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                         }
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -167,7 +167,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         calc2, getButtonY(1),
                         180, 20,
                         "gui.config.name.accessibility.button_background_color",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
                                         (pageNumber, screenInstance) -> {
@@ -188,10 +188,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                         }
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.button_background_color")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -202,10 +202,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         getButtonY(2),
                         180, 20,
                         "gui.config.name.accessibility.language_id",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.language_id")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -217,10 +217,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.show_background_as_dark",
                         getCurrentData().showBackgroundAsDark,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_background_as_dark")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -230,10 +230,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.strip_translation_colors",
                         getCurrentData().stripTranslationColors,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -243,10 +243,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.show_logging_in_chat",
                         getCurrentData().showLoggingInChat,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_logging_in_chat")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -256,10 +256,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.strip_extra_gui_elements",
                         getCurrentData().stripExtraGuiElements,
                         null,
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_extra_gui_elements")
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -280,7 +280,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         (getScreenWidth() / 2) - 90, getButtonY(4, 5),
                         180, 20,
                         "gui.config.message.button.controls",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new ControlsGui(
                                         currentScreen, finalControlMode,
                                         controlInfo

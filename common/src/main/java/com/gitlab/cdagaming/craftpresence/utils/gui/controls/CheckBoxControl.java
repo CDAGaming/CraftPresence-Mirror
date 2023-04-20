@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
@@ -154,7 +155,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
             final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
             final String contentColor = "#2b2b2b";
 
-            CraftPresence.GUIS.renderGradientBox(
+            RenderUtils.renderGradientBox(
                     getControlPosX(), getControlPosY(),
                     boxWidth, getControlHeight(),
                     zLevel,

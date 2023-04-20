@@ -83,7 +83,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        () -> openScreen(parentScreen)
                 )
         );
         downloadButton = addControl(
@@ -138,18 +138,18 @@ public class UpdateInfoGui extends ExtendedScreen {
 
         // Hovering over Title Label
         if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, getStringWidth(mainTitle), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
+            drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
-                    ), this, true
+                    )
             );
         }
         // Hovering over Subtitle Label
         if (CraftPresence.GUIS.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, getStringWidth(subTitle), getFontHeight())) {
-            CraftPresence.GUIS.drawMultiLineString(
+            drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             ModUtils.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)
-                    ), this, true
+                    )
             );
         }
 

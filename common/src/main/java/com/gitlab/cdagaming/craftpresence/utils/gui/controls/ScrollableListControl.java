@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
@@ -41,6 +42,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ResourceLocation;
 import org.meteordev.starscript.value.Value;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -400,7 +402,16 @@ public class ScrollableListControl extends GuiSlot {
         }
 
         if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
-            CraftPresence.GUIS.drawTextureRect(0.0D, xOffset, yPos + 4.5, 32, 32, 0, texture);
+            final double yOffset = yPos + 4.5;
+            final double size = 32;
+            RenderUtils.drawTexture(currentScreen.mc,
+                    xOffset, xOffset + size, yOffset, yOffset + size,
+                    0.0D,
+                    0.0D, 1.0D,
+                    0.0D, 1.0D,
+                    Color.white, Color.white,
+                    texture
+            );
             if (currentScreen.isDebugMode()) {
                 hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
             }

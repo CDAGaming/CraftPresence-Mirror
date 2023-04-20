@@ -162,6 +162,53 @@ public class StringUtils {
         return getColorFrom(r, g, b, a);
     }
 
+    public static Pair<Color, Color> findColor(final String startColorCode, final String endColorCode) {
+        Color startColorObj = null, endColorObj = null;
+        int startColor = 0xFFFFFF, endColor = 0xFFFFFF;
+
+        if (!isNullOrEmpty(startColorCode)) {
+            if (isValidColor(startColorCode).getFirst()) {
+                startColorObj = getColorFrom(startColorCode);
+                endColorObj = (!isNullOrEmpty(endColorCode) && isValidColor(endColorCode).getFirst()) ? getColorFrom(endColorCode) : startColorObj;
+            } else {
+                // Determine if Start Color Code is a Valid Number
+                final Pair<Boolean, Integer> startColorData = getValidInteger(startColorCode),
+                        endColorData = getValidInteger(endColorCode);
+
+                // Check and ensure that at least one of the Color Codes are correct
+                if (startColorData.getFirst() || endColorData.getFirst()) {
+                    startColor = startColorData.getFirst() ? startColorData.getSecond() : endColor;
+                    endColor = endColorData.getFirst() ? endColorData.getSecond() : startColor;
+                }
+            }
+        }
+
+        if (startColorObj == null) {
+            startColorObj = getColorFrom(startColor);
+        }
+        if (endColorObj == null) {
+            endColorObj = getColorFrom(endColor);
+        }
+        return new Pair<>(startColorObj, endColorObj);
+    }
+
+    public static Pair<Color, Color> findColor(Object startColorObj, Object endColorObj) {
+        Color startColor = null, endColor = null;
+        endColorObj = endColorObj == null ? startColorObj : endColorObj;
+        if (startColorObj instanceof String) {
+            final Pair<Color, Color> colorData = StringUtils.findColor(
+                    (String) startColorObj,
+                    endColorObj instanceof String ? (String) endColorObj : null
+            );
+            startColor = colorData.getFirst();
+            endColor = colorData.getSecond();
+        } else if (startColorObj instanceof Color) {
+            startColor = (Color) startColorObj;
+            endColor = endColorObj instanceof Color ? (Color) endColorObj : startColor;
+        }
+        return new Pair<>(startColor, endColor);
+    }
+
     /**
      * Determines whether an inputted String classifies as a valid Color Code
      *

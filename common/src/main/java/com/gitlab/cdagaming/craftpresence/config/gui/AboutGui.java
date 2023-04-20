@@ -50,7 +50,7 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.versionInfo",
-                        () -> CraftPresence.GUIS.openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER))
+                        () -> openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER))
                 )
         );
 
@@ -60,7 +60,7 @@ public class AboutGui extends ExtendedScreen {
                         6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        () -> openScreen(parentScreen)
                 )
         );
 

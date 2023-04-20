@@ -66,11 +66,11 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         getButtonY(0),
                         180, 20,
                         "gui.config.message.default.dimension",
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                 CraftPresence.CLIENT.generateArgumentMessage("dimension."))
-                                ), this, true
+                                )
                         )
                 )
         );
@@ -81,7 +81,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         (getScreenWidth() / 2) - 90, getButtonY(1),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_messages",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.dimension"), CraftPresence.DIMENSIONS.DIMENSION_NAMES,
@@ -104,7 +104,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
-                                            CraftPresence.GUIS.openScreen(
+                                            openScreen(
                                                     new DynamicEditorGui(
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
@@ -143,7 +143,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    CraftPresence.GUIS.openScreen(
+                                                                    openScreen(
                                                                             new PresenceSettingsGui(
                                                                                     screenInstance, currentPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -152,7 +152,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 } else {
                                                                     final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().fallbackDimensionIcon;
                                                                     final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                                    CraftPresence.GUIS.openScreen(
+                                                                    openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
                                                                                     ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
@@ -168,11 +168,11 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                CraftPresence.GUIS.drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("dimension."))
-                                                                        ), screenInstance, true
+                                                                        )
                                                                 );
                                                             }
                                                     )
@@ -182,18 +182,18 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         ),
                         () -> {
                             if (!dimensionMessagesButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
                                                         ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
-                                        ), this, true
+                                        )
                                 );
                             } else {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("dimension."))
-                                        ), this, true
+                                        )
                                 );
                             }
                         }
@@ -205,7 +205,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_icon",
-                        () -> CraftPresence.GUIS.openScreen(
+                        () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
@@ -217,19 +217,19 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                         }, null
                                 )
                         ),
-                        () -> CraftPresence.GUIS.drawMultiLineString(
+                        () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
-                                ), this, true
+                                )
                         )
                 )
         );
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
-                CraftPresence.GUIS.drawMultiLineString(
+                drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        ), this, true
+                        )
                 );
             }
         });

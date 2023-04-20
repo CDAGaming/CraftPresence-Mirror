@@ -111,7 +111,7 @@ public class PaginatedScreen extends ExtendedScreen {
                         (getScreenHeight() - 26),
                         hasPages() ? 130 : 180, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        () -> openScreen(parentScreen)
                 )
         );
         if (hasPages()) {

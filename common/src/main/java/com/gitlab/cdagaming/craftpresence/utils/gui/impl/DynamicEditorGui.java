@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.TupleConsumer;
@@ -66,19 +65,19 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
-                CraftPresence.GUIS.drawMultiLineString(
+                screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")
-                        ), screenInstance, true
+                        )
                 ));
     }
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback) {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
-                CraftPresence.GUIS.drawMultiLineString(
+                screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.message")
-                        ), screenInstance, true
+                        )
                 ));
     }
 
@@ -127,7 +126,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                                 if (onRemoveEntry != null) {
                                     onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                                 }
-                                CraftPresence.GUIS.openScreen(parentScreen);
+                                openScreen(parentScreen);
                             }
                     )
             );
@@ -212,14 +211,14 @@ public class DynamicEditorGui extends ExtendedScreen {
                             if (isAdjusting() && onAdjustEntry != null) {
                                 onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                             }
-                            CraftPresence.GUIS.openScreen(parentScreen);
+                            openScreen(parentScreen);
                         },
                         () -> {
                             if (!proceedButton.isControlEnabled()) {
-                                CraftPresence.GUIS.drawMultiLineString(
+                                drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        ), this, true
+                                        )
                                 );
                             }
                         }

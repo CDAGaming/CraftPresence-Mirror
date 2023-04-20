@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
@@ -227,7 +228,7 @@ public class SliderControl extends ExtendedButtonControl {
 
             onSlide();
             final int hoverValue = (hovered ? 2 : 1) * 20;
-            CraftPresence.GUIS.renderSlider(getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, zLevel, BUTTON_TEXTURES);
+            RenderUtils.renderSlider(mc, getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, zLevel, BUTTON_TEXTURES);
         }
     }
 

@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -58,7 +57,7 @@ public class MessageGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.back",
-                        () -> CraftPresence.GUIS.openScreen(parentScreen)
+                        () -> openScreen(parentScreen)
                 )
         );
 
