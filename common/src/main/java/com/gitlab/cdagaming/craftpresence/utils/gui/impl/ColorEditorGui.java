@@ -237,11 +237,14 @@ public class ColorEditorGui extends PaginatedScreen {
             );
         }
 
-        // Draw Border around Preview Box - TODO: Refactor to use `renderGradientBox`
-        RenderUtils.drawGradient(tooltipX - 3, tooltipX - 3 + 1, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, 300, borderColor, borderColorEnd);
-        RenderUtils.drawGradient(tooltipX + tooltipTextWidth + 2, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, 300, borderColor, borderColorEnd);
-        RenderUtils.drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY - 3 + 1, 300, borderColor, borderColor);
-        RenderUtils.drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 2, tooltipY + tooltipHeight + 3, 300, borderColorEnd, borderColorEnd);
+        // Draw Border around Preview Box
+        RenderUtils.drawGradientBox(
+                tooltipX - 3, tooltipY - 3, tooltipTextWidth + 6, tooltipHeight + 6,
+                300,
+                borderColor, borderColorEnd,
+                1,
+                null, null
+        );
 
         backButton.setControlMessage(isModified ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }

@@ -44,11 +44,11 @@ public class RenderUtils {
      * @param contentColor    The starting content color for the object
      * @param contentColorEnd The ending content color for the object
      */
-    public static void renderGradientBox(final double posX, final double posY,
-                                         final double width, final double height,
-                                         final double zLevel,
-                                         final String borderColor, final String borderColorEnd, final int border,
-                                         final String contentColor, final String contentColorEnd) {
+    public static void drawGradientBox(final double posX, final double posY,
+                                       final double width, final double height,
+                                       final double zLevel,
+                                       final Object borderColor, final Object borderColorEnd, final int border,
+                                       final Object contentColor, final Object contentColorEnd) {
         final double canvasWidth = width - (border * 2);
         final double canvasHeight = height - (border * 2);
 
@@ -56,17 +56,21 @@ public class RenderUtils {
         final double canvasBottom = posY + border + canvasHeight;
 
         // Draw Borders
-        // Top Left
-        drawGradient(posX, posX + border, posY, canvasBottom + border, zLevel, borderColor, borderColorEnd);
-        // Top Right
-        drawGradient(canvasRight, canvasRight + border, posY, canvasBottom + border, zLevel, borderColor, borderColorEnd);
-        // Bottom Left
-        drawGradient(posX, canvasRight + border, canvasBottom, canvasBottom + border, zLevel, borderColor, borderColorEnd);
-        // Bottom Right
-        drawGradient(posX, canvasRight + border, posY, posY + border, zLevel, borderColor, borderColorEnd);
+        if (borderColor != null) {
+            // Top Left
+            drawGradient(posX, posX + border, posY, canvasBottom + border, zLevel, borderColor, borderColorEnd);
+            // Top Right
+            drawGradient(canvasRight, canvasRight + border, posY, canvasBottom + border, zLevel, borderColor, borderColorEnd);
+            // Bottom Left
+            drawGradient(posX, canvasRight + border, canvasBottom, canvasBottom + border, zLevel, borderColor, borderColorEnd);
+            // Bottom Right
+            drawGradient(posX, canvasRight + border, posY, posY + border, zLevel, borderColor, borderColorEnd);
+        }
 
         // Draw Content Box
-        drawGradient(posX + border, canvasRight, posY + border, canvasBottom, zLevel, contentColor, contentColorEnd);
+        if (contentColor != null) {
+            drawGradient(posX + border, canvasRight, posY + border, canvasBottom, zLevel, contentColor, contentColorEnd);
+        }
     }
 
     /**
@@ -507,7 +511,6 @@ public class RenderUtils {
             final String borderColorInfo = colorInfo.getThird();
             final int zLevel = 300;
 
-            // TODO: Refactor to utilize `renderGradientBox` and Implement `renderTextureBox`
             if (!StringUtils.isNullOrEmpty(backgroundColorInfo)) {
                 final Pair<Boolean, String> backgroundColorData = getColorData(backgroundColorInfo);
                 if (backgroundColorData.getFirst()) {

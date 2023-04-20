@@ -155,7 +155,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
             final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
             final String contentColor = "#2b2b2b";
 
-            RenderUtils.renderGradientBox(
+            RenderUtils.drawGradientBox(
                     getControlPosX(), getControlPosY(),
                     boxWidth, getControlHeight(),
                     zLevel,
