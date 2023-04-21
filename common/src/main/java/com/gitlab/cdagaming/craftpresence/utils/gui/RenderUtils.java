@@ -304,8 +304,7 @@ public class RenderUtils {
     public static void drawTexture(@Nonnull final Minecraft mc,
                                    final double left, final double right, final double top, final double bottom,
                                    final double zLevel,
-                                   final double minU, final double maxU,
-                                   final double minV, final double maxV,
+                                   final double minU, final double maxU, final double minV, final double maxV,
                                    Object startColorObj, Object endColorObj,
                                    final ResourceLocation texLocation) {
         try {
@@ -357,8 +356,7 @@ public class RenderUtils {
     public static void drawTextureGradient(@Nonnull final Minecraft mc,
                                            final double left, final double right, final double top, final double bottom,
                                            final double zLevel,
-                                           final double minU, final double maxU,
-                                           final double minV, final double maxV,
+                                           final double minU, final double maxU, final double minV, final double maxV,
                                            Object startColorObj, Object endColorObj,
                                            final ResourceLocation texLocation) {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -429,42 +427,93 @@ public class RenderUtils {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
+    /**
+     * Draws a textured rectangle from a region in a 256x256 texture
+     *
+     * @param xPos         The Starting X Position of the Object
+     * @param yPos         The Starting Y Position of the Object
+     * @param zLevel       The Z Level Position of the Object
+     * @param u            The U Mapping Value
+     * @param v            The V Mapping Value
+     * @param regionWidth  The Width of the Texture Region
+     * @param regionHeight The Height of the Texture Region
+     */
     public static void blit(final double xPos, final double yPos,
                             final double zLevel,
-                            final double uOffset, final double vOffset,
-                            final double uWidth, final double vHeight) {
-        blit(xPos, yPos, zLevel, uOffset, vOffset, uWidth, vHeight, 256, 256);
+                            final double u, final double v,
+                            final double regionWidth, final double regionHeight) {
+        blit(xPos, yPos, zLevel, u, v, regionWidth, regionHeight, 256, 256);
     }
 
+    /**
+     * Draws a textured rectangle from a region in a texture
+     *
+     * @param xPos          The Starting X Position of the Object
+     * @param yPos          The Starting Y Position of the Object
+     * @param zLevel        The Z Level Position of the Object
+     * @param u             The U Mapping Value
+     * @param v             The V Mapping Value
+     * @param regionWidth   The Width of the Texture Region
+     * @param regionHeight  The Height of the Texture Region
+     * @param textureWidth  The Width of the Texture
+     * @param textureHeight The Height of the Texture
+     */
     public static void blit(final double xPos, final double yPos,
                             final double zLevel,
-                            final double uOffset, final double vOffset,
-                            final double uWidth, final double vHeight,
+                            final double u, final double v,
+                            final double regionWidth, final double regionHeight,
                             final double textureWidth, final double textureHeight) {
-        innerBlit(xPos, xPos + uWidth, yPos, yPos + vHeight,
+        innerBlit(xPos, xPos + regionWidth, yPos, yPos + regionHeight,
                 zLevel,
-                uWidth, vHeight,
-                uOffset, vOffset,
+                regionWidth, regionHeight,
+                u, v,
                 textureWidth, textureHeight
         );
     }
 
+    /**
+     * Draws a textured rectangle from a region in a texture
+     *
+     * @param left          The Left Position of the Object
+     * @param right         The Right Position of the Object
+     * @param top           The Top Position of the Object
+     * @param bottom        The Bottom Position of the Object
+     * @param zLevel        The Z Level Position of the Object
+     * @param regionWidth   The Width of the Texture Region
+     * @param regionHeight  The Height of the Texture Region
+     * @param u             The U Mapping Value
+     * @param v             The V Mapping Value
+     * @param textureWidth  The Width of the Texture
+     * @param textureHeight The Height of the Texture
+     */
     public static void innerBlit(final double left, final double right, final double top, final double bottom,
                                  final double zLevel,
-                                 final double uWidth, final double vHeight,
-                                 final double uOffset, final double vOffset,
+                                 final double regionWidth, final double regionHeight,
+                                 final double u, final double v,
                                  final double textureWidth, final double textureHeight) {
         innerBlit(left, right, top, bottom,
                 zLevel,
-                (uOffset + 0.0D) / textureWidth, (uOffset + uWidth) / textureWidth,
-                (vOffset + 0.0D) / textureHeight, (vOffset + vHeight) / textureHeight
+                (u + 0.0D) / textureWidth, (u + regionWidth) / textureWidth,
+                (v + 0.0D) / textureHeight, (v + regionHeight) / textureHeight
         );
     }
 
+    /**
+     * Draws a textured rectangle from a region in a texture
+     *
+     * @param left   The Left Position of the Object
+     * @param right  The Right Position of the Object
+     * @param top    The Top Position of the Object
+     * @param bottom The Bottom Position of the Object
+     * @param zLevel The Z Level Position of the Object
+     * @param minU   The minimum horizontal axis to render this Object by
+     * @param maxU   The maximum horizontal axis to render this Object by
+     * @param minV   The minimum vertical axis to render this Object by
+     * @param maxV   The minimum vertical axis to render this Object by
+     */
     public static void innerBlit(final double left, final double right, final double top, final double bottom,
                                  final double zLevel,
-                                 final double minU, final double maxU,
-                                 final double minV, final double maxV) {
+                                 final double minU, final double maxU, final double minV, final double maxV) {
         final Tessellator tessellator = Tessellator.getInstance();
         final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -816,33 +865,28 @@ public class RenderUtils {
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
      * @param mc             The current game instance
-     * @param xPos           The Starting X Position of the Object
-     * @param yPos           The Starting Y Position of the Object
-     * @param width          The width to render the background to
-     * @param height         The height to render the background to
+     * @param left           The Left Position of the Object
+     * @param right          The Right Position of the Object
+     * @param top            The Top Position of the Object
+     * @param bottom         The Bottom Position of the Object
      * @param offset         The vertical offset to render the background to
      * @param backgroundCode The background render data to interpret
      * @param color          The background RGB data to interpret
      */
     public static void drawBackground(@Nonnull final Minecraft mc,
-                                      final double xPos, final double yPos,
-                                      final double width, final double height,
+                                      final double left, final double right,
+                                      final double top, final double bottom,
                                       double offset,
                                       final String backgroundCode, final Color color) {
         if (StringUtils.isValidColorCode(backgroundCode)) {
-            drawGradient(xPos, xPos + width, yPos, yPos + height, 300.0F, backgroundCode, backgroundCode);
+            drawGradient(left, right, top, bottom, 300.0F, backgroundCode, backgroundCode);
         } else {
             final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundCode);
             final ResourceLocation texLocation = textureData.getThird();
 
-            final double widthDivider = textureData.getFirst() ? width : 32.0D;
-            final double heightDivider = textureData.getFirst() ? height : 32.0D;
+            final double widthDivider = textureData.getFirst() ? (right - left) : 32.0D;
+            final double heightDivider = textureData.getFirst() ? (bottom - top) : 32.0D;
             offset = textureData.getFirst() ? 0.0D : offset;
-
-            final double left = xPos;
-            final double right = xPos + width;
-            final double top = yPos;
-            final double bottom = yPos + height;
 
             drawTexture(mc,
                     left, right, top, bottom,

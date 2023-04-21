@@ -120,12 +120,11 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void renderCriticalData() {
-        final String background = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
         RenderUtils.drawBackground(mc,
-                getScreenX(), getScreenY(),
-                getScreenWidth(), getScreenHeight(),
+                getLeft(), getRight(),
+                getTop(), getBottom(),
                 amountScrolled,
-                background,
+                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor,
                 NERO
         );
     }
@@ -133,8 +132,9 @@ public class ScrollPane extends ExtendedScreen {
     @Override
     public void postRender() {
         // Render Depth Decorations
-        final String background = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
-        final Tuple<Boolean, String, ResourceLocation> backgroundData = RenderUtils.getTextureData(background);
+        final Tuple<Boolean, String, ResourceLocation> backgroundData = RenderUtils.getTextureData(
+                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor
+        );
         RenderUtils.drawTextureGradient(mc,
                 getLeft(), getRight(), getTop(), getTop() + getPadding(),
                 -100.0D,

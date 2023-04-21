@@ -332,8 +332,8 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void renderCriticalData() {
         RenderUtils.drawBackground(mc,
-                getScreenX(), getScreenY(),
-                getScreenWidth(), getScreenHeight(),
+                getLeft(), getRight(),
+                getTop(), getBottom(),
                 0,
                 CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor,
                 CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark ? Color.darkGray : Color.white
