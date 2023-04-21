@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
@@ -70,7 +70,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(final FontRenderer fontRendererObj, final int x, final int y, final int widthIn, final int heightIn) {
-        this(CraftPresence.GUIS.getNextIndex(), fontRendererObj, x, y, widthIn, heightIn);
+        this(ExtendedScreen.getNextIndex(), fontRendererObj, x, y, widthIn, heightIn);
     }
 
     /**

@@ -129,7 +129,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final String... optionalArgs) {
-        super(CraftPresence.GUIS.getNextIndex(), x, y, widthIn, heightIn, buttonText);
+        super(ExtendedScreen.getNextIndex(), x, y, widthIn, heightIn, buttonText);
         this.optionalArgs = optionalArgs;
     }
 
@@ -186,7 +186,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param displayString The display text, to display within this Control
      */
     public ExtendedButtonControl(final int xPos, final int yPos, final String displayString) {
-        this(CraftPresence.GUIS.getNextIndex(), xPos, yPos, displayString);
+        this(ExtendedScreen.getNextIndex(), xPos, yPos, displayString);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             hovered = isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this);
             final int hoverState = getHoverState(hovered);
 
-            String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
+            final String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
                 RenderUtils.drawGradient(getLeft(), getRight(), getTop(), getBottom(), zLevel, backgroundCode, backgroundCode);

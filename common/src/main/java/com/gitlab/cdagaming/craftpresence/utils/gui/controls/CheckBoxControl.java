@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
@@ -110,7 +110,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * @param isChecked     The beginning check state for this Control
      */
     public CheckBoxControl(final int xPos, final int yPos, final String displayString, final boolean isChecked) {
-        this(CraftPresence.GUIS.getNextIndex(), xPos, yPos, displayString, isChecked);
+        this(ExtendedScreen.getNextIndex(), xPos, yPos, displayString, isChecked);
     }
 
     /**

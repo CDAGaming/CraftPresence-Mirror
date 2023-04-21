@@ -24,11 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
@@ -145,7 +145,7 @@ public class SliderControl extends ExtendedButtonControl {
      * @param displayString The title to display in the center of the slider
      */
     public SliderControl(final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString) {
-        this(CraftPresence.GUIS.getNextIndex(), positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<>());
+        this(ExtendedScreen.getNextIndex(), positionData, dimensions, startValue, minValue, maxValue, valueStep, displayString, new Pair<>());
     }
 
     /**

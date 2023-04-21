@@ -80,10 +80,6 @@ public class GuiUtils implements Module {
      */
     private boolean hasScanned = false;
     /**
-     * The Last Used Control ID
-     */
-    private int lastIndex = 0;
-    /**
      * The name of the Current Gui the player is in
      */
     private String CURRENT_GUI_NAME;
@@ -99,23 +95,6 @@ public class GuiUtils implements Module {
      */
     public static FontRenderer getDefaultFontRenderer() {
         return CraftPresence.instance.fontRenderer;
-    }
-
-    /**
-     * Retrieves the Next Available Button ID for use in the currently open Screen
-     *
-     * @return The next available Button ID
-     */
-    public int getNextIndex() {
-        return lastIndex++;
-    }
-
-    /**
-     * Resets the Button Index to 0
-     * Normally used when closing a screen and no longer using the allocated ID's
-     */
-    public void resetIndex() {
-        lastIndex = 0;
     }
 
     @Override

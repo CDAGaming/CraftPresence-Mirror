@@ -53,6 +53,10 @@ import java.util.List;
  */
 public class ExtendedScreen extends GuiScreen {
     /**
+     * The Last Used Control ID
+     */
+    private static int lastIndex = 0;
+    /**
      * The Parent or Past Screen
      */
     public final GuiScreen parentScreen;
@@ -184,6 +188,23 @@ public class ExtendedScreen extends GuiScreen {
     public ExtendedScreen(final boolean debugMode, final boolean verboseMode) {
         this(debugMode);
         setVerboseMode(verboseMode);
+    }
+
+    /**
+     * Retrieves the Next Available Button ID for use in the currently open Screen
+     *
+     * @return The next available Button ID
+     */
+    public static int getNextIndex() {
+        return lastIndex++;
+    }
+
+    /**
+     * Resets the Button Index to 0
+     * Normally used when closing a screen and no longer using the allocated ID's
+     */
+    public static void resetIndex() {
+        lastIndex = 0;
     }
 
     /**
@@ -577,7 +598,7 @@ public class ExtendedScreen extends GuiScreen {
                 }
             }
             clearData();
-            CraftPresence.GUIS.resetIndex();
+            resetIndex();
             Keyboard.enableRepeatEvents(false);
         }
     }

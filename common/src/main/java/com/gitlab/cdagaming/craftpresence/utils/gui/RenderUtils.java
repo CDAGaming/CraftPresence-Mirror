@@ -170,7 +170,7 @@ public class RenderUtils {
      * @param mc           The current game instance
      * @param targetScreen The target Gui Screen to display
      */
-    public static void openScreen(final Minecraft mc, final GuiScreen targetScreen) {
+    public static void openScreen(@Nonnull final Minecraft mc, final GuiScreen targetScreen) {
         mc.addScheduledTask(() -> mc.displayGuiScreen(targetScreen));
     }
 
