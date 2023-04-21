@@ -302,17 +302,23 @@ public class StringUtils {
         }
     }
 
+    /**
+     * Attempt to convert the specified object into an array
+     *
+     * @param original The object to interpret
+     * @return the converted array, if able (Returns null if errored)
+     */
     public static Object[] getDynamicArray(final Object original) {
         if (!(original instanceof Object[])) {
-            final int len = Array.getLength(original);
-            final Object[] objects = new Object[len];
             try {
+                final int len = Array.getLength(original);
+                final Object[] objects = new Object[len];
                 for (int i = 0; i < len; i++)
                     objects[i] = Array.get(original, i);
+                return objects;
             } catch (Exception ex) {
                 return null;
             }
-            return objects;
         } else {
             return (Object[]) original;
         }
