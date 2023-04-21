@@ -120,6 +120,10 @@ public class SystemUtils {
      * The Elapsed Time since the application started (In Seconds)
      */
     private long ELAPSED_TIME;
+    /**
+     * The Last Timestamp at which the refresh rate was successfully passed (and related events ticked)
+     */
+    private long LAST_TICKED;
 
     /**
      * Initialize OS and Timer Information
@@ -286,7 +290,7 @@ public class SystemUtils {
         }
 
         // Every <passTime> Seconds, refresh Callbacks and load state status
-        if (ELAPSED_TIME % getRefreshRate() == 0) {
+        if (LAST_TICKED != ELAPSED_TIME && ELAPSED_TIME % getRefreshRate() == 0) {
             if (!refreshedCallbacks) {
                 if (!HAS_LOADED && CraftPresence.CLIENT.STATUS == DiscordStatus.Ready) {
                     HAS_LOADED = true;
@@ -296,8 +300,6 @@ public class SystemUtils {
                 }
                 refreshedCallbacks = true;
             }
-        } else {
-            refreshedCallbacks = false;
         }
     }
 
@@ -309,7 +311,12 @@ public class SystemUtils {
     void postTick() {
         if (refreshedCallbacks) {
             try {
-                TICK_LOCK.waitForUnlock(CraftPresence.CLIENT::updatePresence);
+                TICK_LOCK.waitForUnlock((() -> {
+                    CraftPresence.CLIENT.updatePresence();
+
+                    LAST_TICKED = ELAPSED_TIME;
+                    refreshedCallbacks = false;
+                }));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

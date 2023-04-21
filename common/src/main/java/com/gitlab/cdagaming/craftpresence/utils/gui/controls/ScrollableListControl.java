@@ -312,6 +312,10 @@ public class ScrollableListControl extends GuiSlot {
         String displayName = entryAliases.getOrDefault(originalName, originalName);
         int xOffset = xPos;
 
+        final boolean isOverEntry = RenderUtils.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn);
+        final boolean isInBounds = isWithinBounds(mouseXIn, mouseYIn);
+        final boolean isHovering = isInBounds && isOverEntry;
+
         ResourceLocation texture = new ResourceLocation("");
         String assetUrl;
 
@@ -332,7 +336,7 @@ public class ScrollableListControl extends GuiSlot {
                         new Pair<>("server.address.full", () -> originalName)
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
-                if (currentScreen.isDebugMode()) {
+                if (currentScreen.isDebugMode() && isHovering) {
                     hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
             }
@@ -341,7 +345,7 @@ public class ScrollableListControl extends GuiSlot {
                     renderType == RenderType.CustomDiscordAsset ? DiscordAssetUtils.CUSTOM_ASSET_LIST : DiscordAssetUtils.ASSET_LIST,
                     originalName
             );
-            if (currentScreen.isDebugMode()) {
+            if (currentScreen.isDebugMode() && isHovering) {
                 hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
             }
             texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
@@ -359,13 +363,13 @@ public class ScrollableListControl extends GuiSlot {
                         new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
-                if (currentScreen.isDebugMode()) {
+                if (currentScreen.isDebugMode() && isHovering) {
                     hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
             }
         } else if (renderType == RenderType.ItemData) {
             texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
-        } else if (renderType == RenderType.Placeholder) {
+        } else if (renderType == RenderType.Placeholder && isHovering) {
             final String placeholderTranslation = String.format("%s.placeholders.%s.description",
                     ModUtils.MOD_ID,
                     originalName
@@ -386,7 +390,9 @@ public class ScrollableListControl extends GuiSlot {
                         ModUtils.TRANSLATOR.translate(placeholderUsage)
                 ));
             }
-            if (CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews) {
+
+            final boolean addExtraData = CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews;
+            if (addExtraData && CraftPresence.CLIENT.isDefaultPlaceholder(originalName.toLowerCase())) {
                 final Supplier<Value> suppliedInfo = CraftPresence.CLIENT.getArgument(originalName);
 
                 if (suppliedInfo != null) {
@@ -413,7 +419,7 @@ public class ScrollableListControl extends GuiSlot {
                     Color.white, Color.white,
                     texture
             );
-            if (currentScreen.isDebugMode()) {
+            if (currentScreen.isDebugMode() && isHovering) {
                 hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
             }
             // Note: 35 Added to xOffset to accommodate for Image Size
@@ -421,13 +427,12 @@ public class ScrollableListControl extends GuiSlot {
         }
 
         final String identifierName = renderType.getIdentifier(originalName);
-        if (!identifierName.equals(displayName)) {
+        if (!identifierName.equals(displayName) && isHovering) {
             hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
         getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 
-        final boolean isOverEntry = RenderUtils.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn);
-        if (isWithinBounds(mouseXIn, mouseYIn) && isOverEntry) {
+        if (isHovering) {
             currentHoverText = hoverText;
         }
     }

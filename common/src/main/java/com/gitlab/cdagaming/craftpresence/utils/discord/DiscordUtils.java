@@ -1013,7 +1013,7 @@ public class DiscordUtils {
                     ));
                 }
 
-                if (addExtraData) {
+                if (addExtraData && isDefaultPlaceholder(placeholderName.toLowerCase())) {
                     final Supplier<Value> suppliedInfo = argData.getValue();
 
                     if (suppliedInfo != null) {
@@ -1035,6 +1035,20 @@ public class DiscordUtils {
         }
         resultString.append(placeholderString);
         return resultString.toString();
+    }
+
+    /**
+     * Retrieve whether this placeholder is a default-supplied one
+     * <p>
+     * Non-default placeholder can contain dynamic data that we can't always account for.
+     *
+     * @param name The placeholder name to interpret
+     * @return {@link Boolean#TRUE} if this is a default-supplied placeholder
+     */
+    public boolean isDefaultPlaceholder(final String name) {
+        return !name.startsWith("overrides.") &&
+                !name.startsWith("custom.") &&
+                !name.endsWith(".message") && !name.endsWith(".icon");
     }
 
     /**
