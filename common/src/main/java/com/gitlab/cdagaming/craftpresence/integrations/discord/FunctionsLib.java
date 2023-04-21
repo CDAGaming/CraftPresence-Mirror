@@ -79,6 +79,8 @@ public class FunctionsLib {
         ss.set("getOrDefault", FunctionsLib::getOrDefault);
         ss.set("replace", FunctionsLib::replace);
         ss.set("length", FunctionsLib::length);
+        ss.set("split", FunctionsLib::split);
+        ss.set("getElement", FunctionsLib::getElement);
         ss.set("minify", FunctionsLib::minify);
         ss.set("nullOrEmpty", FunctionsLib::nullOrEmpty);
         ss.set("formatAddress", FunctionsLib::formatAddress);
@@ -523,6 +525,31 @@ public class FunctionsLib {
         if (argCount != 1) ss.error("length() requires 1 argument, got %d.", argCount);
         String source = ss.popString("First argument to length() needs to be a string.");
         return Value.number(source.length());
+    }
+
+    public static Value split(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3)
+            ss.error("split() can only be used with 2-3 arguments, got %d.", argCount);
+        int limit = 0;
+        if (argCount == 3) {
+            limit = (int) ss.popNumber("Third argument to split() needs to be a number.");
+        }
+        String regex = ss.popString("Second argument to split() needs to be a string.");
+        String source = ss.popString("First argument to split() needs to be a string.");
+        return Value.object(source.split(regex, limit));
+    }
+
+    public static Value getElement(Starscript ss, int argCount) {
+        if (argCount != 2) ss.error("getElement() requires 2 arguments, %d.", argCount);
+        int element = (int) ss.popNumber("Second argument to getElement() needs to be a number.");
+        Object data = ss.popObject("First argument to getElement() needs to be an object.");
+        Object[] array = StringUtils.getDynamicArray(data);
+        if (array != null) {
+            return CraftPresence.CLIENT.toValue(array[element], true);
+        } else {
+            ss.error("Invalid array information supplied for getElement(), please check input and documentation.");
+        }
+        return Value.null_();
     }
 
     public static Value minify(Starscript ss, int argCount) {

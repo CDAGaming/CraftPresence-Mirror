@@ -36,6 +36,7 @@ import net.minecraft.util.text.TextComponentString;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -298,6 +299,22 @@ public class StringUtils {
             }
         } catch (Exception ex) {
             return original;
+        }
+    }
+
+    public static Object[] getDynamicArray(final Object original) {
+        if (!(original instanceof Object[])) {
+            final int len = Array.getLength(original);
+            final Object[] objects = new Object[len];
+            try {
+                for (int i = 0; i < len; i++)
+                    objects[i] = Array.get(original, i);
+            } catch (Exception ex) {
+                return null;
+            }
+            return objects;
+        } else {
+            return (Object[]) original;
         }
     }
 
