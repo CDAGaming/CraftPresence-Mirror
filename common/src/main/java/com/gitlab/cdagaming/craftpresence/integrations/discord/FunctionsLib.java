@@ -80,7 +80,7 @@ public class FunctionsLib {
         ss.set("replace", FunctionsLib::replace);
         ss.set("length", FunctionsLib::length);
         ss.set("split", FunctionsLib::split);
-        ss.set("getElement", FunctionsLib::getElement);
+        ss.set("getArrayElement", FunctionsLib::getArrayElement);
         ss.set("minify", FunctionsLib::minify);
         ss.set("nullOrEmpty", FunctionsLib::nullOrEmpty);
         ss.set("formatAddress", FunctionsLib::formatAddress);
@@ -539,15 +539,15 @@ public class FunctionsLib {
         return Value.object(source.split(regex, limit));
     }
 
-    public static Value getElement(Starscript ss, int argCount) {
-        if (argCount != 2) ss.error("getElement() requires 2 arguments, %d.", argCount);
-        int element = (int) ss.popNumber("Second argument to getElement() needs to be a number.");
-        Object data = ss.popObject("First argument to getElement() needs to be an object.");
+    public static Value getArrayElement(Starscript ss, int argCount) {
+        if (argCount != 2) ss.error("getArrayElement() requires 2 arguments, %d.", argCount);
+        int element = (int) ss.popNumber("Second argument to getArrayElement() needs to be a number.");
+        Object data = ss.popObject("First argument to getArrayElement() needs to be an object.");
         Object[] array = StringUtils.getDynamicArray(data);
         if (array != null) {
             return CraftPresence.CLIENT.toValue(array[element], true);
         } else {
-            ss.error("Invalid array information supplied for getElement(), please check input and documentation.");
+            ss.error("Invalid array information supplied for getArrayElement(), please check input and documentation.");
         }
         return Value.null_();
     }
