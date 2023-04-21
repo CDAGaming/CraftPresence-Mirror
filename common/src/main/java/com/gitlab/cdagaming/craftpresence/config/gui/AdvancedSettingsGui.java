@@ -625,6 +625,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
     @Override
     protected void syncRenderStates() {
+        super.syncRenderStates();
+
         final Pair<Boolean, Integer> refreshRateData = StringUtils.getValidInteger(refreshRate.getControlMessage());
         proceedButton.setControlEnabled(
                 (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
