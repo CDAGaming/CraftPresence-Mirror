@@ -39,12 +39,10 @@ mappings {
     getStub("COMBINED").withMappings(["searge", target]) {
         c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
         c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", classPath + "/forge/mod_${mod_name}", classPath + "/forge/mod_${mod_name}")
     }
     getStub("CLIENT").withMappings(["searge", target]) {
         c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
         c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-        c("mod_${mod_name}", classPath + "/forge/mod_${mod_name}", classPath + "/forge/mod_${mod_name}")
     }
 }
 
