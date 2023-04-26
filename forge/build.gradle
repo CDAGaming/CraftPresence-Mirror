@@ -23,6 +23,15 @@ minecraft {
                 accessTransformer = aw2at(accessWidenerFile)
             }
         }
+    } else {
+        jarMod {
+            // required when using mcp mappings
+            if (protocol <= 2) { // MC a1.1.2_01 and below
+                devNamespace = "searge"
+            } else {
+                devFallbackNamespace = "searge"
+            }
+        }
     }
 
     runs.client = {
@@ -96,7 +105,7 @@ processResources {
         expand "version": "${baseVersionLabel}"
     }
 
-    filesMatching("mappings-forge.srg") {
+    filesMatching("mappings-${fmlName}.srg") {
         filter { line ->
             if (line.startsWith("CL:")) {
                 line
@@ -111,14 +120,14 @@ exportMappings {
     export("CLIENT") {
         targetNamespaces = ["searge"]
         sourceNamespace = "official"
-        location = "$projectDir/src/main/resources/mappings-forge.srg"
+        location = "$projectDir/src/main/resources/mappings-${fmlName}.srg"
         type = "SRG"
     }
 
     export("COMBINED") {
         targetNamespaces = ["searge"]
         sourceNamespace = "official"
-        location = "$projectDir/src/main/resources/mappings-forge.srg"
+        location = "$projectDir/src/main/resources/mappings-${fmlName}.srg"
         type = "SRG"
     }
 }
@@ -155,7 +164,7 @@ shadowJar {
 remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set "forge"
+    archiveClassifier.set "${fmlName}"
 }
 
 jar {

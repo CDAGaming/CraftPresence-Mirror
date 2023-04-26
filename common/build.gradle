@@ -13,6 +13,15 @@ minecraft {
                 accessWidener = accessWidenerFile
             }
         }
+    } else {
+        jarMod {
+            // required when using mcp mappings
+            if (protocol <= 2) { // MC a1.1.2_01 and below
+                devNamespace = "searge"
+            } else {
+                devFallbackNamespace = "searge"
+            }
+        }
     }
 }
 
@@ -170,8 +179,8 @@ tasks.register('generateMyResources') {
 def archive_name = "${rootProject.mod_name}"
 def targetFile = file("$rootDir/build/libs/${fileFormat}.jar")
 if (!targetFile.exists() && isJarMod) {
-    // Fallback to the Forge Sub-Project Output when in a Jar Mod configuration
-    targetFile = file("$rootDir/forge/build/libs/${fileFormat}-forge.jar")
+    // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
+    targetFile = file("$rootDir/${fmlName}/build/libs/${fileFormat}-${fmlName}.jar")
 }
 
 curseforge {

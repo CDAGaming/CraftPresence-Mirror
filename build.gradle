@@ -20,6 +20,8 @@ int ext_protocol = "${mc_protocol}".toInteger()
 boolean ext_isLegacy = "${isLegacy}".toBoolean()
 boolean ext_isJarMod = "${isJarMod}".toBoolean()
 
+def ext_fmlName = isJarMod ? "modloader" : "forge"
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'xyz.wagyourtail.unimined'
@@ -34,6 +36,7 @@ subprojects {
         protocol = ext_protocol
         isLegacy = ext_isLegacy
         isJarMod = ext_isJarMod
+        fmlName = "${ext_fmlName}"
     }
 
     spotless {
@@ -71,16 +74,6 @@ subprojects {
     minecraft {
         if (isLegacy) {
             clientSourceSets = [sourceSets.main]
-        }
-        if (isJarMod) {
-            jarMod {
-                // required when using mcp mappings
-                if (protocol <= 2) { // MC a1.1.2_01 and below
-                    devNamespace = "searge"
-                } else {
-                    devFallbackNamespace = "searge"
-                }
-            }
         }
         mcRemapper.tinyRemapperConf = {
             // most mcp mappings (except older format) dont include field desc
@@ -284,8 +277,10 @@ forgix {
     mergedJarName = "${ext_fileFormat}.jar"
     outputDir = "build/libs"
 
-    forge {
-        jarLocation = "build/libs/${ext_fileFormat}-forge.jar"
+    // Forge / ModLoader
+    custom {
+        projectName = "${ext_fmlName}"
+        jarLocation = "build/libs/${ext_fileFormat}-${ext_fmlName}.jar"
     }
 
     fabric {

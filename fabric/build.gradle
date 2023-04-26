@@ -2,12 +2,56 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-def accessWidenerFile = project(":common").minecraft.mcPatcher.accessWidener
+
+import com.google.gson.JsonObject
+import org.jetbrains.annotations.NotNull
+import xyz.wagyourtail.unimined.api.mappings.MappingNamespace
+import xyz.wagyourtail.unimined.minecraft.patch.fabric.FabricLikeMinecraftTransformer
+
+def accessWidenerFile = !isJarMod ? project(":common").minecraft.mcPatcher.accessWidener : null
+
 minecraft {
-    fabric {
-        if (accessWidenerFile != null) {
-            accessWidener = accessWidenerFile
+    if (!isJarMod) {
+        fabric {
+            if (accessWidenerFile != null) {
+                accessWidener = accessWidenerFile
+            }
         }
+    } else {
+        mcPatcher = new FabricLikeMinecraftTransformer(project, project.minecraft, "fabric", "fabric.mod.json", "accessWidener") {
+            @Override
+            public MappingNamespace getProdNamespace() {
+                return MappingNamespace.OFFICIAL
+            }
+
+            @Override
+            protected String getENVIRONMENT() {
+                return "Lnet/fabricmc/api/Environment;"
+            }
+
+            @Override
+            protected String getENV_TYPE() {
+                return "Lnet/fabricmc/api/EnvType;"
+            }
+
+            @Override
+            protected void addIncludeToModJson(@NotNull JsonObject json, @NotNull Dependency dependency, @NotNull String s) {
+                var jars = json.get("jars")?.asJsonArray
+                if (jars == null) {
+                    jars = JsonArray()
+                    json.add("jars", jars)
+                }
+                jars.add(JsonObject().apply {
+                    addProperty("file", path)
+                })
+            }
+
+            @Override
+            protected void addMavens() {
+                // N/A
+            }
+        }
+        mcPatcher.devFallbackNamespace = "searge"
     }
 }
 
@@ -76,17 +120,17 @@ processResources {
 }
 
 exportMappings {
-    def target = (isLegacy || protocol < 498) ? "mcp" : "mojmap"
+    def target = isJarMod ? "searge" : ((isLegacy || protocol < 498) ? "mcp" : "mojmap")
     export("CLIENT") {
         targetNamespaces = [target]
-        sourceNamespace = "intermediary"
+        sourceNamespace = isJarMod ? "official" : "intermediary"
         location = "$projectDir/src/main/resources/mappings-fabric.srg"
         type = "SRG"
     }
 
     export("COMBINED") {
         targetNamespaces = [target]
-        sourceNamespace = "intermediary"
+        sourceNamespace = isJarMod ? "official" : "intermediary"
         location = "$projectDir/src/main/resources/mappings-fabric.srg"
         type = "SRG"
     }
