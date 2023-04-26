@@ -46,7 +46,7 @@ subprojects {
     group = rootProject.group
     archivesBaseName = "${mod_name}"
 
-    Jvm currentJvm = Jvm.current();
+    Jvm currentJvm = Jvm.current()
     JavaVersion sourceVersion = currentJvm.getJavaVersion()
     JavaVersion targetVersion = JavaVersion.VERSION_1_8
 

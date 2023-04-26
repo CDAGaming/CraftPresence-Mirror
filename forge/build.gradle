@@ -82,8 +82,8 @@ processResources {
     // replace stuff in mcmod.info, nothing else
     filesMatching("mcmod.info") {
         // replace version and mcversion
-        expand 'version': "${baseVersionLabel}",
-                'mcversion': "${mc_version}"
+        expand "version": "${baseVersionLabel}",
+                "mcversion": "${rootProject.mc_version}"
     }
 
     // replace stuff in mods.toml, nothing else
@@ -95,7 +95,7 @@ processResources {
     // replace stuff in mod_modId.info, nothing else
     filesMatching("mod_${mod_name}.info") {
         // replace version
-        expand 'version': "${baseVersionLabel}"
+        expand "version": "${baseVersionLabel}"
     }
 
     filesMatching("mappings-forge.srg") {
