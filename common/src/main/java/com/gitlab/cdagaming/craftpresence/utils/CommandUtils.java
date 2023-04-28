@@ -206,6 +206,13 @@ public class CommandUtils {
                     }
                 }
             }
+            if (forceUpdateRPC) {
+                if (isLoadingGame) {
+                    setLoadingPresence();
+                } else if (isInMainMenu) {
+                    setMainMenuPresence();
+                }
+            }
             CraftPresence.CLIENT.onTick();
         } finally {
             CraftPresence.SYSTEM.TICK_LOCK.unlock();
