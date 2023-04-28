@@ -20,7 +20,7 @@ int ext_protocol = "${mc_protocol}".toInteger()
 boolean ext_isLegacy = "${isLegacy}".toBoolean()
 boolean ext_isJarMod = "${isJarMod}".toBoolean()
 
-def ext_fmlName = isJarMod ? "modloader" : "forge"
+def ext_fmlName = ext_isJarMod ? "modloader" : "forge"
 
 subprojects {
     apply plugin: 'java'
