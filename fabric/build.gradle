@@ -25,6 +25,11 @@ minecraft {
             }
 
             @Override
+            public java.nio.file.Path getDevMappings() {
+                return null
+            }
+
+            @Override
             protected String getENVIRONMENT() {
                 return "Lnet/fabricmc/api/Environment;"
             }
@@ -51,7 +56,12 @@ minecraft {
                 // N/A
             }
         }
-        mcPatcher.devFallbackNamespace = "searge"
+        // required when using mcp mappings
+        if (protocol <= 2) { // MC a1.1.2_01 and below
+            mcPatcher.devNamespace = "searge"
+        } else {
+            mcPatcher.devFallbackNamespace = "searge"
+        }
     }
 }
 
@@ -166,6 +176,9 @@ shadowJar {
 }
 
 remapJar {
+    if (isJarMod) {
+        target = "official"
+    }
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set "fabric"
