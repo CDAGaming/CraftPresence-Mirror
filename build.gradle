@@ -9,11 +9,13 @@ plugins {
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
+def ext_mcVersionLabel = rootProject.hasProperty("mc_version_extra") ? "${mc_version_extra}" : "${mc_version}"
+
 def ext_versionInfoLabel = "${rootProject.versionLabel.equalsIgnoreCase("release") ? "" : "-${rootProject.versionLabel}"}"
 def ext_baseVersionLabel = "${rootProject.versionId + ext_versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
 def ext_classPath = "${rootProject.group}".replace(".", "/") + "/${mod_name}".toLowerCase()
 
-def ext_versionFormat = "${ext_baseVersionLabel + "+" + mc_version}"
+def ext_versionFormat = "${ext_baseVersionLabel + "+" + ext_mcVersionLabel}"
 def ext_fileFormat = "${rootProject.mod_name}-${ext_versionFormat}"
 
 int ext_protocol = "${mc_protocol}".toInteger()
@@ -37,6 +39,7 @@ subprojects {
         isLegacy = ext_isLegacy
         isJarMod = ext_isJarMod
         fmlName = "${ext_fmlName}"
+        mcVersionLabel = "${ext_mcVersionLabel}"
     }
 
     spotless {
@@ -204,7 +207,7 @@ subprojects {
         inputs.property "versionId", "${versionId}"
         inputs.property "versionType", "${deploymentType}"
         inputs.property "versionLabel", "${versionLabel}"
-        inputs.property "mcVersion", "${mc_version}"
+        inputs.property "mcVersion", "${mcVersionLabel}"
         inputs.property "mcProtocol", "${mc_protocol}"
         inputs.property "isDevState", "${isDevState}"
         inputs.property "isVerboseState", "${isVerboseState}"
@@ -214,7 +217,7 @@ subprojects {
                 MOD_NAME    : mod_name,
                 VERSION_ID  : "${baseVersionLabel}".toString(),
                 VERSION_TYPE: deploymentType,
-                MC_VERSION  : mc_version,
+                MC_VERSION  : "${mcVersionLabel}".toString(),
                 MC_PROTOCOL : mc_protocol,
                 IS_DEV      : isDevState,
                 IS_VERBOSE  : isVerboseState

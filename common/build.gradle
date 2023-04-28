@@ -205,7 +205,7 @@ curseforge {
         addGameVersion mcVersionTarget
 
         mainArtifact(targetFile) {
-            it.displayName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
+            it.displayName = "${archive_name} v${versionId} ${versionLabel} (${mcVersionLabel})"
         }
     }
 }
@@ -214,7 +214,7 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "DFqQfIBR"
     versionNumber = "v${versionFormat}".replaceAll("\\s", "").toLowerCase()
-    versionName = "${archive_name} v${versionId} ${versionLabel} (${mc_version})"
+    versionName = "${archive_name} v${versionId} ${versionLabel} (${mcVersionLabel})"
     changelog = file("$rootDir/Changes.md").text
     versionType = "${deploymentType}".toLowerCase()
     uploadFile = targetFile

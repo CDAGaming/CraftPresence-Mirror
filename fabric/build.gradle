@@ -109,13 +109,16 @@ dependencies {
     }
 }
 
+// Fix: mcversion constaint does not apply below 1.0
+def mcVersionTarget = (isLegacy && protocol < 22) ? "*" : "${mcVersionLabel}"
+
 processResources {
     inputs.property "version", "${baseVersionLabel}"
-    inputs.property "mcversion", "${rootProject.mc_version}"
+    inputs.property "mcversion", "${mcVersionTarget}"
 
     filesMatching("fabric.mod.json") {
         expand "version": "${baseVersionLabel}",
-                "mcversion": "${rootProject.mc_version}"
+                "mcversion": "${mcVersionTarget}"
     }
 
     filesMatching("mappings-fabric.srg") {
