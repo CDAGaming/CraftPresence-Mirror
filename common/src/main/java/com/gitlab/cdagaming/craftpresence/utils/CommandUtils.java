@@ -160,6 +160,7 @@ public class CommandUtils {
         for (Module module : modules.values()) {
             module.clearClientData();
         }
+        clearInitialPresence();
     }
 
     /**
