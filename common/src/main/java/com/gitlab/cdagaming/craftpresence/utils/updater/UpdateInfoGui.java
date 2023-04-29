@@ -63,7 +63,10 @@ public class UpdateInfoGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.checkForUpdates",
-                        modUpdater::checkForUpdates
+                        () -> {
+                            resetNotes();
+                            modUpdater.checkForUpdates(this::updateNotes);
+                        }
                 )
         );
         // Adding Back Button
@@ -98,6 +101,8 @@ public class UpdateInfoGui extends ExtendedScreen {
                 )
         );
 
+        updateNotes();
+
         super.initializeUi();
     }
 
@@ -113,22 +118,6 @@ public class UpdateInfoGui extends ExtendedScreen {
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
         renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
-
-        final StringBuilder notice = new StringBuilder();
-        notice.append(ModUtils.TRANSLATOR.translate("gui.config.message.changelog"));
-
-        if (modUpdater.changelogData.size() > 0) {
-            for (Map.Entry<String, String> entry : modUpdater.changelogData.entrySet()) {
-                notice
-                        .append('\n').append("  ").append(entry.getKey()).append(":")
-                        .append('\n').append(entry.getValue())
-                        .append('\n').append(' ');
-            }
-        } else {
-            notice.append('\n').append("  ").append("N/A");
-        }
-
-        infoPane.setMessage(notice.toString());
 
         super.preRender();
     }
@@ -156,5 +145,28 @@ public class UpdateInfoGui extends ExtendedScreen {
         }
 
         super.postRender();
+    }
+
+    private void resetNotes() {
+        final String notice = ModUtils.TRANSLATOR.translate("gui.config.message.changelog") +
+                '\n' + "  " + "N/A";
+        infoPane.setMessage(notice);
+    }
+
+    private void updateNotes() {
+        if (modUpdater.changelogData.size() > 0) {
+            final StringBuilder notice = new StringBuilder();
+            notice.append(ModUtils.TRANSLATOR.translate("gui.config.message.changelog"));
+
+            for (Map.Entry<String, String> entry : modUpdater.changelogData.entrySet()) {
+                notice
+                        .append('\n').append("  ").append(entry.getKey()).append(":")
+                        .append('\n').append(entry.getValue())
+                        .append('\n').append(' ');
+            }
+            infoPane.setMessage(notice.toString());
+        } else {
+            resetNotes();
+        }
     }
 }
