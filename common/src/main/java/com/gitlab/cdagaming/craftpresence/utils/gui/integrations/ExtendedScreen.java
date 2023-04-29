@@ -785,7 +785,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     public List<String> createRenderLines(final String original, final int wrapWidth) {
         return createRenderLines(
-                StringUtils.splitTextByNewLine(original),
+                StringUtils.splitTextByNewLine(original, true),
                 wrapWidth
         );
     }

@@ -1251,15 +1251,26 @@ public class StringUtils {
     /**
      * Converts a String into a List of Strings, split up by new lines
      *
-     * @param original The original String
+     * @param original        The original String
+     * @param allowWhitespace Whether to allow whitespace strings
      * @return The converted, newline-split list from the original String
      */
-    public static List<String> splitTextByNewLine(final String original) {
-        if (!isNullOrEmpty(original)) {
+    public static List<String> splitTextByNewLine(final String original, final boolean allowWhitespace) {
+        if (!isNullOrEmpty(original, allowWhitespace)) {
             return newArrayList(original.split("(\\r\\n|\\r|\\n|\\\\n)"));
         } else {
             return newArrayList();
         }
+    }
+
+    /**
+     * Converts a String into a List of Strings, split up by new lines
+     *
+     * @param original The original String
+     * @return The converted, newline-split list from the original String
+     */
+    public static List<String> splitTextByNewLine(final String original) {
+        return splitTextByNewLine(original, false);
     }
 
     /**

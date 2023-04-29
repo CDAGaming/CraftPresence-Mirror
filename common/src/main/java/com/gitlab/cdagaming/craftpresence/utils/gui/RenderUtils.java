@@ -699,7 +699,7 @@ public class RenderUtils {
                 final List<String> wrappedTextLines = StringUtils.newArrayList();
                 int wrappedTooltipWidth = 0;
                 for (int i = 0; i < textLines.size(); i++) {
-                    final List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLines.get(i), tooltipTextWidth));
+                    final List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLines.get(i), tooltipTextWidth), true);
                     if (i == 0) {
                         titleLinesCount = wrappedLine.size();
                     }
@@ -908,7 +908,7 @@ public class RenderUtils {
      * @return The converted and wrapped version of the original input
      */
     public static List<String> listFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
-        return StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, stringInput, wrapWidth));
+        return StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, stringInput, wrapWidth), true);
     }
 
     /**
