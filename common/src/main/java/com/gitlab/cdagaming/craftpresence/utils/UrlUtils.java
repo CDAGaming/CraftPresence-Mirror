@@ -140,7 +140,7 @@ public class UrlUtils {
             final URLConnection connection = url.openConnection();
             connection.addRequestProperty("Accept-Encoding", "gzip");
             connection.addRequestProperty("User-Agent", USER_AGENT);
-            connection.setConnectTimeout(HTTP_TIMEOUT_SECS);
+            connection.setConnectTimeout(HTTP_TIMEOUT_SECS * 1000);
             if (connection instanceof HttpURLConnection) {
                 final HttpURLConnection huc = (HttpURLConnection) connection;
                 huc.setInstanceFollowRedirects(false);
