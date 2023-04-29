@@ -190,9 +190,6 @@ public class CommandUtils {
      */
     public static void reloadData(final boolean forceUpdateRPC) {
         ModUtils.TRANSLATOR.onTick();
-        if (forceUpdateRPC) {
-            ModUtils.TRANSLATOR.syncTranslations();
-        }
         CraftPresence.SYSTEM.onTick();
         CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
 
