@@ -316,7 +316,7 @@ public class StringUtils {
                 for (int i = 0; i < len; i++)
                     objects[i] = Array.get(original, i);
                 return objects;
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 return null;
             }
         } else {
