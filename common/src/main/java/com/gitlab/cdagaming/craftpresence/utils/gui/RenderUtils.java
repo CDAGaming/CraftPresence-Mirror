@@ -282,6 +282,9 @@ public class RenderUtils {
 
         blit(x, y, zLevel, 0, v, xOffset, height);
         blit(x + xOffset, y, zLevel, 200 - xOffset, v, xOffset, height);
+
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     /**
