@@ -98,6 +98,9 @@ public class ModUpdaterUtils {
         this.currentVersion = currentVersion;
     }
 
+    /**
+     * Clears Runtime Client Data from this Module
+     */
     public void flushData() {
         currentState = UpdateState.PENDING;
         targetRecommendedVersion = "";
