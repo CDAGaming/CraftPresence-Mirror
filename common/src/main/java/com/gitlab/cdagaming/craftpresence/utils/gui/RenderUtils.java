@@ -867,24 +867,33 @@ public class RenderUtils {
     /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
-     * @param mc             The current game instance
-     * @param left           The Left Position of the Object
-     * @param right          The Right Position of the Object
-     * @param top            The Top Position of the Object
-     * @param bottom         The Bottom Position of the Object
-     * @param offset         The vertical offset to render the background to
-     * @param backgroundCode The background render data to interpret
-     * @param color          The background RGB data to interpret
+     * @param mc      The current game instance
+     * @param left    The Left Position of the Object
+     * @param right   The Right Position of the Object
+     * @param top     The Top Position of the Object
+     * @param bottom  The Bottom Position of the Object
+     * @param offset  The vertical offset to render the background to
+     * @param startBg The starting background render data to interpret
+     * @param endBg   The ending background render data to interpret
+     * @param color   The background RGB data to interpret
+     * @return {@link Boolean#TRUE} if rendering succeeded, utilizing texture rendering
      */
-    public static void drawBackground(@Nonnull final Minecraft mc,
-                                      final double left, final double right,
-                                      final double top, final double bottom,
-                                      double offset,
-                                      final String backgroundCode, final Color color) {
-        if (StringUtils.isValidColorCode(backgroundCode)) {
-            drawGradient(left, right, top, bottom, 300.0F, backgroundCode, backgroundCode);
+    public static boolean drawBackground(@Nonnull final Minecraft mc,
+                                         final double left, final double right,
+                                         final double top, final double bottom,
+                                         double offset,
+                                         String startBg, String endBg, final Color color) {
+        boolean usingColors = StringUtils.isValidColorCode(startBg);
+        boolean usingTexture;
+
+        if (usingColors) {
+            drawGradient(left, right, top, bottom,
+                    300.0F,
+                    startBg, (StringUtils.isValidColorCode(endBg) ? endBg : startBg)
+            );
+            usingTexture = false;
         } else {
-            final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundCode);
+            final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(startBg);
             final ResourceLocation texLocation = textureData.getThird();
 
             final double widthDivider = textureData.getFirst() ? (right - left) : 32.0D;
@@ -899,7 +908,31 @@ public class RenderUtils {
                     color, color,
                     texLocation
             );
+            usingTexture = true;
         }
+
+        return usingTexture;
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param mc     The current game instance
+     * @param left   The Left Position of the Object
+     * @param right  The Right Position of the Object
+     * @param top    The Top Position of the Object
+     * @param bottom The Bottom Position of the Object
+     * @param offset The vertical offset to render the background to
+     * @param bgCode The background render data to interpret
+     * @param color  The background RGB data to interpret
+     * @return {@link Boolean#TRUE} if rendering succeeded, utilizing texture rendering
+     */
+    public static boolean drawBackground(@Nonnull final Minecraft mc,
+                                         final double left, final double right,
+                                         final double top, final double bottom,
+                                         double offset,
+                                         final String bgCode, final Color color) {
+        return drawBackground(mc, left, right, top, bottom, offset, bgCode, bgCode, color);
     }
 
     /**

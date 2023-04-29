@@ -46,6 +46,7 @@ public class ScrollPane extends ExtendedScreen {
     private static final int DEFAULT_BAR_WIDTH = 6;
     private static final int DEFAULT_HEIGHT_PER_SCROLL = 8;
     private boolean clickedScrollbar;
+    private boolean renderDepthEffects;
     private int padding;
     private float amountScrolled;
     // remove in 1.13+
@@ -120,7 +121,7 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void renderCriticalData() {
-        RenderUtils.drawBackground(mc,
+        renderDepthEffects = RenderUtils.drawBackground(mc,
                 getLeft(), getRight(),
                 getTop(), getBottom(),
                 amountScrolled,
@@ -131,28 +132,30 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void postRender() {
-        // Render Depth Decorations
-        final Tuple<Boolean, String, ResourceLocation> backgroundData = RenderUtils.getTextureData(
-                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor
-        );
-        RenderUtils.drawTextureGradient(mc,
-                getLeft(), getRight(), getTop(), getTop() + getPadding(),
-                -100.0D,
-                0.0D, 1.0D,
-                0.0D, 1.0D,
-                NONE,
-                Color.black,
-                backgroundData.getThird()
-        );
-        RenderUtils.drawTextureGradient(mc,
-                getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
-                -100.0D,
-                0.0D, 1.0D,
-                0.0D, 1.0D,
-                Color.black,
-                NONE,
-                backgroundData.getThird()
-        );
+        // Render Depth Decorations, if able
+        if (renderDepthEffects) {
+            final Tuple<Boolean, String, ResourceLocation> backgroundData = RenderUtils.getTextureData(
+                    CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor
+            );
+            RenderUtils.drawTextureGradient(mc,
+                    getLeft(), getRight(), getTop(), getTop() + getPadding(),
+                    -100.0D,
+                    0.0D, 1.0D,
+                    0.0D, 1.0D,
+                    NONE,
+                    Color.black,
+                    backgroundData.getThird()
+            );
+            RenderUtils.drawTextureGradient(mc,
+                    getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
+                    -100.0D,
+                    0.0D, 1.0D,
+                    0.0D, 1.0D,
+                    Color.black,
+                    NONE,
+                    backgroundData.getThird()
+            );
+        }
 
         // Render Scrollbar Elements
         if (needsScrollbar()) {
