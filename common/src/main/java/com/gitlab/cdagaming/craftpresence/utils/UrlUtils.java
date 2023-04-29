@@ -29,12 +29,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.zip.GZIPInputStream;
 
 /**
  * URL Utilities for parsing URL and relative Json Data
@@ -50,6 +53,14 @@ public class UrlUtils {
      * The GSON Json Builder to Use while Parsing Json
      */
     private static final Gson GSON = new GsonBuilder().create();
+    /**
+     * The Maximum HTTP Redirects to allow
+     */
+    private static final int MAX_HTTP_REDIRECTS = Integer.getInteger("http.maxRedirects", 20);
+    /**
+     * The Maximum amount of time to wait for a URL response before failing
+     */
+    private static final int HTTP_TIMEOUT_SECS = Integer.getInteger("http.timeoutSecs", 15);
 
     /**
      * Retrieve Output from a URL as a readable String
@@ -123,9 +134,33 @@ public class UrlUtils {
             // To avoid this, TLSv1.2 is used as the protocol, which is equivalent to 1.8s default
             System.setProperty("https.protocols", "TLSv1.2");
         }
-        final URLConnection connection = url.openConnection();
-        connection.addRequestProperty("User-Agent", USER_AGENT);
-        return (connection.getInputStream());
+
+        URL currentUrl = url;
+        for (int redirects = 0; redirects < MAX_HTTP_REDIRECTS; redirects++) {
+            final URLConnection connection = url.openConnection();
+            connection.addRequestProperty("Accept-Encoding", "gzip");
+            connection.addRequestProperty("User-Agent", USER_AGENT);
+            connection.setConnectTimeout(HTTP_TIMEOUT_SECS);
+            if (connection instanceof HttpURLConnection) {
+                final HttpURLConnection huc = (HttpURLConnection) connection;
+                huc.setInstanceFollowRedirects(false);
+                final int responseCode = huc.getResponseCode();
+                if (responseCode >= 300 && responseCode <= 399) {
+                    final String loc = huc.getHeaderField("Location");
+                    if (StringUtils.isNullOrEmpty(loc)) {
+                        throw new IOException("Got a 3xx response code but Location header was null while trying to fetch " + url);
+                    }
+                    currentUrl = new URL(currentUrl, loc);
+                    continue;
+                }
+            }
+
+            final String encoding = connection.getContentEncoding();
+            final boolean isGzipEncoded = !StringUtils.isNullOrEmpty(encoding) && encoding.equals("gzip");
+
+            return isGzipEncoded ? new GZIPInputStream(connection.getInputStream()) : connection.getInputStream();
+        }
+        throw new IOException("Too many redirects while trying to fetch " + url);
     }
 
     /**
