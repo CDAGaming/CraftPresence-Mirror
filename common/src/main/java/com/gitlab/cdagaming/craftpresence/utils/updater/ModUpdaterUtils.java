@@ -30,9 +30,9 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,14 +42,6 @@ import java.util.Map;
  * @author CDAGaming
  */
 public class ModUpdaterUtils {
-    /**
-     * Mapping for Storing Strings to be interpreted as unstable/bleeding-edge versions
-     */
-    private final List<String> latestVersionTags = StringUtils.newArrayList("latest", "beta", "alpha", "bleeding-edge", "unstable", "rc", "release-candidate");
-    /**
-     * Mapping for Storing String to be interpreted as stable/recommended versions
-     */
-    private final List<String> recommendedVersionTags = StringUtils.newArrayList("recommended", "stable", "release");
     /**
      * The Current Update State for this Mod Updater Instance
      */
@@ -81,7 +73,7 @@ public class ModUpdaterUtils {
     /**
      * The Changelog Data attached to the Target Version, if any
      */
-    public String targetChangelogData;
+    public Map<String, String> changelogData = new LinkedHashMap<>();
     /**
      * The Current Version attached to this Instance
      */
@@ -90,10 +82,6 @@ public class ModUpdaterUtils {
      * The Current Game Version attached to this Instance
      */
     public String currentGameVersion;
-    /**
-     * Whether the Current Version was considered invalid/debug variable
-     */
-    public boolean isInvalidVersion = false;
 
     /**
      * Initializes this Module from the Specified Arguments
@@ -107,16 +95,16 @@ public class ModUpdaterUtils {
         this.modID = modID;
         this.updateUrl = updateUrl;
         this.currentGameVersion = currentGameVersion;
-        this.currentVersion = parseData(currentVersion);
+        this.currentVersion = currentVersion;
+    }
 
-        // In Debug Runtime cases, the Version may not be dynamically replaced
-        // In this scenario, use v0.0.0, and we'll later use the target version to patch
-        // up the invalidated version id
-        if (currentVersion.contains("@")) {
-            ModUtils.LOG.warn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.updater.data.missing", modID));
-            this.currentVersion = "v0.0.0";
-            isInvalidVersion = true;
-        }
+    public void flushData() {
+        currentState = UpdateState.PENDING;
+        targetRecommendedVersion = "";
+        targetLatestVersion = "";
+        targetVersion = "";
+        downloadUrl = "";
+        changelogData.clear();
     }
 
     /**
@@ -132,106 +120,70 @@ public class ModUpdaterUtils {
      * @param callback The callback to run after Update Events
      */
     public void checkForUpdates(final Runnable callback) {
-        // Reset Last Check Data before Starting
-        currentState = UpdateState.PENDING;
-        targetRecommendedVersion = "0.0.0";
-        targetLatestVersion = "0.0.0";
-        targetVersion = "0.0.0";
-        targetChangelogData = "";
-        downloadUrl = "";
+        CommandUtils.getThreadPool().execute(() -> process(callback));
+    }
 
+    private void process(final Runnable callback) {
         try {
+            flushData();
+
+            if (StringUtils.isNullOrEmpty(updateUrl)) return;
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
-            final JsonObject rootUpdateData = FileUtils.getJsonData(UrlUtils.getURLText(updateUrl, "UTF-8")).getAsJsonObject();
 
-            if (rootUpdateData != null) {
-                ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", rootUpdateData.toString()));
+            final String data = UrlUtils.getURLText(updateUrl, "UTF-8");
 
-                if (rootUpdateData.has("homepage")) {
-                    downloadUrl = parseData(rootUpdateData.get("homepage"));
+            ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", data));
+
+            @SuppressWarnings("unchecked") final Map<String, Object> json = FileUtils.getJsonData(data, Map.class);
+            @SuppressWarnings("unchecked") final Map<String, String> promos = (Map<String, String>) json.get("promos");
+            downloadUrl = (String) json.get("homepage");
+
+            targetRecommendedVersion = promos.get(currentGameVersion + "-recommended");
+            targetLatestVersion = promos.get(currentGameVersion + "-latest");
+
+            final VersionComparator cmp = new VersionComparator();
+            final boolean hasRecommended = !StringUtils.isNullOrEmpty(targetRecommendedVersion);
+            final boolean hasLatest = !StringUtils.isNullOrEmpty(targetLatestVersion);
+
+            if (hasRecommended) {
+                final int diff = cmp.compare(targetRecommendedVersion, currentVersion);
+
+                if (diff == 0)
+                    currentState = UpdateState.UP_TO_DATE;
+                else if (diff < 0) {
+                    currentState = UpdateState.AHEAD;
+                    if (hasLatest && cmp.compare(currentVersion, targetLatestVersion) < 0) {
+                        currentState = UpdateState.OUTDATED;
+                        targetVersion = targetLatestVersion;
+                    }
                 } else {
-                    ModUtils.LOG.warn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.updater.homepage"));
+                    currentState = UpdateState.OUTDATED;
+                    targetVersion = targetRecommendedVersion;
                 }
+            } else if (hasLatest) {
+                if (cmp.compare(currentVersion, targetLatestVersion) < 0)
+                    currentState = UpdateState.BETA_OUTDATED;
+                else
+                    currentState = UpdateState.BETA;
+                targetVersion = targetLatestVersion;
+            } else
+                currentState = UpdateState.BETA;
 
-                if (rootUpdateData.has("promos")) {
-                    final JsonObject promoData = rootUpdateData.get("promos").getAsJsonObject();
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
 
-                    // Check through Promo Data for Available Current Versions
-                    for (Map.Entry<String, JsonElement> jsonSegment : promoData.entrySet()) {
-                        // Case 1: Ensure the Element matches the format: mcVersion-dataTag
-                        if (jsonSegment.getKey().contains("-")) {
-                            final String[] splitPromo = jsonSegment.getKey().split("-");
-                            final String mcVersion = splitPromo[0];
-
-                            // Only Parse the Arguments attached to the target Minecraft Version
-                            if (mcVersion.equalsIgnoreCase(currentGameVersion)) {
-                                final String dataTag = splitPromo[1];
-
-                                if (latestVersionTags.contains(dataTag.toLowerCase())) {
-                                    targetLatestVersion = parseData(jsonSegment.getValue());
-                                } else if (recommendedVersionTags.contains(dataTag.toLowerCase())) {
-                                    targetRecommendedVersion = parseData(jsonSegment.getValue());
-                                }
-
-                                // Break of Loop if Found all needed Data
-                                if (!targetLatestVersion.equalsIgnoreCase("0.0.0") && !targetRecommendedVersion.equalsIgnoreCase("0.0.0")) {
-                                    break;
-                                }
-                            }
-                        } else if (jsonSegment.getKey().equalsIgnoreCase(currentGameVersion)) {
-                            // Case 2: Find only the Minecraft Version, if present, but do not break the loop
-                            targetRecommendedVersion = parseData(jsonSegment.getValue());
-                        } else {
-                            ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.updater.incompatible.json", jsonSegment.getKey()));
-                        }
+            changelogData.clear();
+            @SuppressWarnings("unchecked") final Map<String, String> tmp = (Map<String, String>) json.get(currentGameVersion);
+            if (tmp != null) {
+                final List<String> ordered = StringUtils.newArrayList();
+                for (String key : tmp.keySet()) {
+                    if (cmp.compare(key, currentVersion) > 0 && (StringUtils.isNullOrEmpty(targetVersion) || cmp.compare(key, targetVersion) < 1)) {
+                        ordered.add(key);
                     }
+                }
+                Collections.sort(ordered);
 
-                    ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.status", "Latest", currentGameVersion, targetLatestVersion));
-                    ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.status", "Recommended", currentGameVersion, targetRecommendedVersion));
-
-                    // If the currentVersion was previously found to be invalidated
-                    // We'll now supplement it with the targetRecommendedVersion
-                    if (isInvalidVersion) {
-                        currentVersion = targetRecommendedVersion;
-                    }
-
-                    // Update Current Update State
-                    final VersionComparator cmp = new VersionComparator();
-                    final int recommendedState = cmp.compare(currentVersion, targetRecommendedVersion);
-                    final int latestState = cmp.compare(currentVersion, targetLatestVersion);
-
-                    if (recommendedState == 0) {
-                        currentState = UpdateState.UP_TO_DATE;
-                        targetVersion = targetRecommendedVersion;
-                    } else {
-                        if (recommendedState < 0) {
-                            currentState = UpdateState.OUTDATED;
-                            targetVersion = targetRecommendedVersion;
-                        } else {
-                            if (latestState == 0 || latestState > 0) {
-                                currentState = UpdateState.BETA;
-                            } else {
-                                currentState = UpdateState.BETA_OUTDATED;
-                            }
-                            targetVersion = targetLatestVersion;
-                        }
-                    }
-
-                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
-
-                    // Retrieve Changelog Data, if present
-                    if (rootUpdateData.has(currentGameVersion)) {
-                        final JsonObject mcVersionData = rootUpdateData.get(currentGameVersion).getAsJsonObject();
-
-                        if (mcVersionData != null) {
-                            if (mcVersionData.has(targetVersion)) {
-                                targetChangelogData = parseData(mcVersionData.get(targetVersion));
-                                ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.changelog", targetChangelogData));
-                            } else {
-                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.changelog", modID, targetVersion));
-                            }
-                        }
-                    }
+                for (String ver : ordered) {
+                    changelogData.put(ver, tmp.get(ver));
                 }
             }
         } catch (Throwable ex) {
@@ -250,24 +202,15 @@ public class ModUpdaterUtils {
     }
 
     /**
-     * Parse the specified object into a readable string
+     * Mapping for CFU State (Based on <a href="https://docs.minecraftforge.net/en/latest/misc/updatechecker/">Forge Systems</a>)
      *
-     * @param obj The data to interpret
-     * @return the processed string
-     */
-    private String parseData(final Object obj) {
-        return obj.toString().replace("\"", "").trim();
-    }
-
-    /**
-     * Mapping for CFU State (Based on <a href="https://docs.minecraftforge.net/en/latest/misc/updatechecker/">Forges Systems</a>)
-     *
-     * <p>FAILED: The version checker could not connect to the URL provided or was unable to retrieve/parse data
-     * <p>UP_TO_DATE: The current version is equal to or newer than the latest stable version
-     * <p>OUTDATED: There is a new stable version available to download
-     * <p>BETA_OUTDATED: There is a new unstable version available to download
-     * <p>BETA: The current version is equal to or newer than the latest unstable version
-     * <p>PENDING: The version checker has not completed at this time
+     * <p>FAILED: The version checker could not connect to the URL provided.
+     * <p>UP_TO_DATE: The current version is equal to the recommended version.
+     * <p>AHEAD: The current version is newer than the recommended version if there is not latest version.
+     * <p>OUTDATED: There is a new recommended or latest version.
+     * <p>BETA_OUTDATED: There is a new latest version.
+     * <p>BETA: The current version is equal to or newer than the latest version.
+     * <p>PENDING: The result requested has not finished yet, so you should try again in a little bit.
      */
     public enum UpdateState {
         /**
@@ -278,6 +221,10 @@ public class ModUpdaterUtils {
          * The CFU State representing an "Up to Date" status
          */
         UP_TO_DATE("Release"),
+        /**
+         * The CFU State representing an "Ahead" status
+         */
+        AHEAD,
         /**
          * The CFU State representing an "Outdated" status
          */

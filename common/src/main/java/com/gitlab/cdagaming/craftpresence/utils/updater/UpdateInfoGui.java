@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.updater;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
@@ -35,6 +34,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import net.minecraft.client.gui.GuiScreen;
+
+import java.util.Map;
 
 /**
  * The Update Info Gui Screen
@@ -62,20 +63,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.checkForUpdates",
-                        () -> CommandUtils.getThreadPool().execute(() ->
-                                modUpdater.checkForUpdates(() -> {
-                                    if (modUpdater.isInvalidVersion) {
-                                        // If the Updater found our version to be an invalid one
-                                        // Then replace the Version ID, Name, and Type
-                                        StringUtils.updateField(ModUtils.class, null, "v" + modUpdater.targetVersion, "VERSION_ID");
-                                        StringUtils.updateField(ModUtils.class, null, modUpdater.currentState.getDisplayName(), "VERSION_TYPE");
-                                        StringUtils.updateField(ModUtils.class, null, CraftPresence.class.getSimpleName(), "NAME");
-
-                                        modUpdater.currentVersion = modUpdater.targetVersion;
-                                        modUpdater.isInvalidVersion = false;
-                                    }
-                                })
-                        )
+                        modUpdater::checkForUpdates
                 )
         );
         // Adding Back Button
@@ -122,12 +110,25 @@ public class UpdateInfoGui extends ExtendedScreen {
 
         final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
         final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
-        final String notice = ModUtils.TRANSLATOR.translate("gui.config.message.changelog", modUpdater.targetVersion, modUpdater.targetChangelogData);
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
         renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
-        infoPane.setMessage(notice);
+        final StringBuilder notice = new StringBuilder();
+        notice.append(ModUtils.TRANSLATOR.translate("gui.config.message.changelog"));
+
+        if (modUpdater.changelogData.size() > 0) {
+            for (Map.Entry<String, String> entry : modUpdater.changelogData.entrySet()) {
+                notice
+                        .append('\n').append("  ").append(entry.getKey()).append(":")
+                        .append('\n').append(entry.getValue())
+                        .append('\n').append(' ');
+            }
+        } else {
+            notice.append('\n').append("  ").append("N/A");
+        }
+
+        infoPane.setMessage(notice.toString());
 
         super.preRender();
     }

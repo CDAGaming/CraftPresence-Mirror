@@ -137,18 +137,7 @@ public class CraftPresence {
         ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", SystemUtils.OS_NAME, SystemUtils.OS_ARCH, SystemUtils.IS_64_BIT));
 
         // Check for Updates before continuing
-        ModUtils.UPDATER.checkForUpdates(() -> {
-            if (ModUtils.UPDATER.isInvalidVersion) {
-                // If the Updater found our version to be an invalid one
-                // Then replace the Version ID, Name, and Type
-                StringUtils.updateField(ModUtils.class, null, "v" + ModUtils.UPDATER.targetVersion, "VERSION_ID");
-                StringUtils.updateField(ModUtils.class, null, ModUtils.UPDATER.currentState.getDisplayName(), "VERSION_TYPE");
-                StringUtils.updateField(ModUtils.class, null, CraftPresence.class.getSimpleName(), "NAME");
-
-                ModUtils.UPDATER.currentVersion = ModUtils.UPDATER.targetVersion;
-                ModUtils.UPDATER.isInvalidVersion = false;
-            }
-        });
+        ModUtils.UPDATER.checkForUpdates();
 
         CONFIG = Config.getInstance();
         CommandUtils.init();
