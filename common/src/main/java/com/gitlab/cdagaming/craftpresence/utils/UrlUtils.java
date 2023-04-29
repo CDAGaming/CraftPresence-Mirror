@@ -161,8 +161,10 @@ public class UrlUtils {
 
             final String encoding = connection.getContentEncoding();
             final boolean isGzipEncoded = !StringUtils.isNullOrEmpty(encoding) && encoding.equals("gzip");
-
-            return isGzipEncoded ? new GZIPInputStream(connection.getInputStream()) : connection.getInputStream();
+            if (isGzipEncoded) {
+                return new GZIPInputStream(connection.getInputStream());
+            }
+            return connection.getInputStream();
         }
         throw new IOException("Too many redirects while trying to fetch " + url);
     }
