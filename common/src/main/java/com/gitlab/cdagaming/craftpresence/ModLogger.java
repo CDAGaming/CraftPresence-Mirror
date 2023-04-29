@@ -66,7 +66,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void error(final String logMessage, Object... logArguments) {
-        final String message = String.format(logMessage, logArguments);
+        final String message = parse(logMessage, logArguments);
         if (canShowAsChat()) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§c " + message);
         } else {
@@ -81,7 +81,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void warn(final String logMessage, Object... logArguments) {
-        final String message = String.format(logMessage, logArguments);
+        final String message = parse(logMessage, logArguments);
         if (canShowAsChat()) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§e " + message);
         } else {
@@ -96,7 +96,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void info(final String logMessage, Object... logArguments) {
-        final String message = String.format(logMessage, logArguments);
+        final String message = parse(logMessage, logArguments);
         if (canShowAsChat()) {
             StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r " + message);
         } else {
@@ -150,5 +150,10 @@ public class ModLogger {
                 !CraftPresence.CONFIG.hasChanged &&
                 !CraftPresence.SYSTEM.IS_GAME_CLOSING &&
                 CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat;
+    }
+
+    private String parse(final String message, Object... args) {
+        return String.format(message, args)
+                .replace("\\n", "\n");
     }
 }
