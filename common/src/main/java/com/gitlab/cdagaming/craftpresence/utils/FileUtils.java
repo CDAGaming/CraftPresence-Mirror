@@ -341,14 +341,14 @@ public class FileUtils {
      * @throws Exception If Unable to read the file
      */
     public static String fileToString(final File file, final String encoding) throws Exception {
-        final StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(file.toPath()), Charset.forName(encoding)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append(System.lineSeparator());
-            }
-        }
-        return sb.toString();
+        return UrlUtils.readerToString(
+                new BufferedReader(
+                        new InputStreamReader(
+                                Files.newInputStream(file.toPath()),
+                                Charset.forName(encoding)
+                        )
+                )
+        );
     }
 
     /**

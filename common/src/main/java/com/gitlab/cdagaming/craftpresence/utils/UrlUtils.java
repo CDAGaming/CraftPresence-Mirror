@@ -37,6 +37,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -71,17 +72,20 @@ public class UrlUtils {
      * @throws Exception If connection or Input is unable to be established
      */
     public static String getURLText(final URL url, final String encoding) throws Exception {
-        return getString(getURLReader(url, encoding));
+        return readerToString(getURLReader(url, encoding));
     }
 
-    private static String getString(BufferedReader urlReader) throws Exception {
-        final StringBuilder response = new StringBuilder();
-        String inputLine;
-        while (!StringUtils.isNullOrEmpty((inputLine = urlReader.readLine()))) {
-            response.append(inputLine);
-        }
-        urlReader.close();
-        return response.toString();
+    /**
+     * Attempts to convert a {@link BufferedReader}'s data into a readable String
+     *
+     * @param reader The data to access
+     * @return The {@link BufferedReader}'s data as a String
+     * @throws Exception If Unable to read the data
+     */
+    public static String readerToString(final BufferedReader reader) throws Exception {
+        final String response = reader.lines().collect(Collectors.joining("\n"));
+        reader.close();
+        return response;
     }
 
     /**
@@ -93,7 +97,7 @@ public class UrlUtils {
      * @throws Exception If connection or Input is unable to be established
      */
     public static String getURLText(final String url, final String encoding) throws Exception {
-        return getString(getURLReader(url, encoding));
+        return readerToString(getURLReader(url, encoding));
     }
 
     /**
