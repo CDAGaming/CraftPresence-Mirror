@@ -182,10 +182,11 @@ public class NbtUtils {
                 }
                 return converted;
             }
+            case 10:
+                return FileUtils.toJsonData(tag);
             case 11:
                 return ((NBTTagIntArray) tag).getIntArray();
             case 0:
-            case 10:
             case 12:
             case 99:
             default:
