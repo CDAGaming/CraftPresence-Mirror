@@ -885,6 +885,11 @@ public class RenderUtils {
                                          String startBg, String endBg, final Color color) {
         boolean usingColors = StringUtils.isValidColorCode(startBg);
         boolean usingTexture;
+        if (mc.world != null && !usingColors) {
+            startBg = "-1072689136";
+            endBg = "-804253680";
+            usingColors = true;
+        }
 
         if (usingColors) {
             drawGradient(left, right, top, bottom,
