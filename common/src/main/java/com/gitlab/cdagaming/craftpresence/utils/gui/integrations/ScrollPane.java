@@ -46,7 +46,6 @@ public class ScrollPane extends ExtendedScreen {
     private static final int DEFAULT_BAR_WIDTH = 6;
     private static final int DEFAULT_HEIGHT_PER_SCROLL = 8;
     private boolean clickedScrollbar;
-    private boolean renderDepthEffects;
     private int padding;
     private float amountScrolled;
     // remove in 1.13+
@@ -121,7 +120,7 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void renderCriticalData() {
-        renderDepthEffects = RenderUtils.drawBackground(mc,
+        RenderUtils.drawBackground(mc,
                 getLeft(), getRight(),
                 getTop(), getBottom(),
                 amountScrolled,
@@ -132,18 +131,33 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public void postRender() {
-        // Render Depth Decorations, if able
-        if (renderDepthEffects) {
+        // Render Depth Decorations
+        final String background = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
+        final boolean isColorBg = StringUtils.isValidColorCode(background);
+        if (isColorBg) {
+            RenderUtils.drawGradient(
+                    getLeft(), getRight(), getTop(), getTop() + getPadding(),
+                    -100.0D,
+                    Color.black,
+                    NONE
+            );
+            RenderUtils.drawGradient(
+                    getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
+                    -100.0D,
+                    NONE,
+                    Color.black
+            );
+        } else {
             final Tuple<Boolean, String, ResourceLocation> backgroundData = RenderUtils.getTextureData(
-                    CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor
+                    background
             );
             RenderUtils.drawTextureGradient(mc,
                     getLeft(), getRight(), getTop(), getTop() + getPadding(),
                     -100.0D,
                     0.0D, 1.0D,
                     0.0D, 1.0D,
-                    NONE,
                     Color.black,
+                    NONE,
                     backgroundData.getThird()
             );
             RenderUtils.drawTextureGradient(mc,
@@ -151,8 +165,8 @@ public class ScrollPane extends ExtendedScreen {
                     -100.0D,
                     0.0D, 1.0D,
                     0.0D, 1.0D,
-                    Color.black,
                     NONE,
+                    Color.black,
                     backgroundData.getThird()
             );
         }

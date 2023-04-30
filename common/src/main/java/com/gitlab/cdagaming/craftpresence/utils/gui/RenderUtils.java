@@ -332,10 +332,10 @@ public class RenderUtils {
         final Tessellator tessellator = Tessellator.getInstance();
         final BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        buffer.pos(left, bottom, zLevel).tex(minU, maxV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.pos(right, bottom, zLevel).tex(maxU, maxV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.pos(right, top, zLevel).tex(maxU, minV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(left, top, zLevel).tex(minU, minV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.pos(left, bottom, zLevel).tex(minU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.pos(right, bottom, zLevel).tex(maxU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.pos(right, top, zLevel).tex(maxU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        buffer.pos(left, top, zLevel).tex(minU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
         tessellator.draw();
     }
 
@@ -876,18 +876,17 @@ public class RenderUtils {
      * @param startBg The starting background render data to interpret
      * @param endBg   The ending background render data to interpret
      * @param color   The background RGB data to interpret
-     * @return {@link Boolean#TRUE} if rendering succeeded, utilizing texture rendering
      */
-    public static boolean drawBackground(@Nonnull final Minecraft mc,
+    public static void drawBackground(@Nonnull final Minecraft mc,
                                          final double left, final double right,
                                          final double top, final double bottom,
                                          double offset,
-                                         String startBg, String endBg, final Color color) {
+                                         String startBg, String endBg, Color color) {
         boolean usingColors = StringUtils.isValidColorCode(startBg);
-        boolean usingTexture;
         if (mc.world != null && !usingColors) {
             startBg = "-1072689136";
             endBg = "-804253680";
+            color = Color.white;
             usingColors = true;
         }
 
@@ -896,7 +895,6 @@ public class RenderUtils {
                     300.0F,
                     startBg, (StringUtils.isValidColorCode(endBg) ? endBg : startBg)
             );
-            usingTexture = false;
         } else {
             final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(startBg);
             final ResourceLocation texLocation = textureData.getThird();
@@ -913,10 +911,7 @@ public class RenderUtils {
                     color, color,
                     texLocation
             );
-            usingTexture = true;
         }
-
-        return usingTexture;
     }
 
     /**
@@ -930,14 +925,13 @@ public class RenderUtils {
      * @param offset The vertical offset to render the background to
      * @param bgCode The background render data to interpret
      * @param color  The background RGB data to interpret
-     * @return {@link Boolean#TRUE} if rendering succeeded, utilizing texture rendering
      */
-    public static boolean drawBackground(@Nonnull final Minecraft mc,
+    public static void drawBackground(@Nonnull final Minecraft mc,
                                          final double left, final double right,
                                          final double top, final double bottom,
                                          double offset,
                                          final String bgCode, final Color color) {
-        return drawBackground(mc, left, right, top, bottom, offset, bgCode, bgCode, color);
+        drawBackground(mc, left, right, top, bottom, offset, bgCode, bgCode, color);
     }
 
     /**
