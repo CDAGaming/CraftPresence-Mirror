@@ -37,7 +37,8 @@ import java.awt.*;
  * @author CDAGaming
  */
 public class ScrollPane extends ExtendedScreen {
-    private static final Color NERO = StringUtils.getColorFrom(32, 32, 32);
+    private static final Color LIGHT_NERO = StringUtils.getColorFrom(223, 223, 223); // 255*0.875
+    private static final Color NERO = StringUtils.getColorFrom(32, 32, 32); // 255*0.125
     private static final Color NONE = StringUtils.getColorFrom(0, 0, 0, 0);
     private static final int DEFAULT_PADDING = 4;
     private static final int DEFAULT_BAR_WIDTH = 6;
@@ -121,8 +122,13 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     @Override
-    public Color getTint() {
+    public Color getDarkTint() {
         return NERO;
+    }
+
+    @Override
+    public Color getLightTint() {
+        return LIGHT_NERO;
     }
 
     @Override

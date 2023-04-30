@@ -224,6 +224,50 @@ public class StringUtils {
         return new Pair<>(startColor, endColor);
     }
 
+
+    /**
+     * This method takes in two integer values representing a base color and a tint color,
+     * <p>
+     * and returns an int value representing the tinted color.
+     *
+     * @param baseColor an int value representing the base color
+     * @param tintColor an int value representing the tint color
+     * @return an int value representing the tinted color
+     */
+    public static int tintColor(final int baseColor, final int tintColor) {
+        int alpha = baseColor >> 24 & 255;
+        int red = baseColor >> 16 & 255;
+        int green = baseColor >> 8 & 255;
+        int blue = baseColor & 255;
+
+        int tintAlpha = tintColor >> 24 & 255;
+        int tintRed = tintColor >> 16 & 255;
+        int tintGreen = tintColor >> 8 & 255;
+        int tintBlue = tintColor & 255;
+
+        red = (int) ((red * tintRed) / 255.0);
+        green = (int) ((green * tintGreen) / 255.0);
+        blue = (int) ((blue * tintBlue) / 255.0);
+        alpha = (int) ((alpha * tintAlpha) / 255.0);
+
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+    /**
+     * This method takes in two Color objects representing a base color and a tint color,
+     * <p>
+     * and returns a Color object representing the tinted color.
+     *
+     * @param base a Color object representing the base color
+     * @param tint a Color object representing the tint color
+     * @return a Color object representing the tinted color
+     */
+    public static Color tintColor(final Color base, final Color tint) {
+        return getColorFrom(
+                tintColor(base.getRGB(), tint.getRGB())
+        );
+    }
+
     /**
      * Determines whether an inputted String classifies as a valid Color Code
      *

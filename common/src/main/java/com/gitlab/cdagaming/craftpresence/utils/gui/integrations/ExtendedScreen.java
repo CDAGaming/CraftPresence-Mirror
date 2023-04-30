@@ -387,7 +387,8 @@ public class ExtendedScreen extends GuiScreen {
     public String getPrimaryBg() {
         final String raw = getPrimaryRaw();
         return hasWorld() && !StringUtils.isValidColorCode(raw) ?
-                "-1072689136" : raw;
+                "-1072689136" : // Color[16,16,16,192]
+                raw;
     }
 
     /**
@@ -407,7 +408,8 @@ public class ExtendedScreen extends GuiScreen {
     public String getSecondaryBg() {
         final String raw = getSecondaryRaw();
         return hasWorld() && !StringUtils.isValidColorCode(raw) ?
-                "-804253680" : raw;
+                "-804253680" : // Color[16,16,16,208]
+                raw;
     }
 
     /**
@@ -429,13 +431,41 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Whether this screen is currently rendering with a darker tint
+     *
+     * @return if dark mode rendering is currently allowed
+     */
+    public boolean isDarkMode() {
+        return CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark &&
+                !StringUtils.isValidColorCode(getPrimaryBg());
+    }
+
+    /**
      * Retrieve the tint to be used when interpreting background data
      *
      * @return the tint color for background data
      */
     public Color getTint() {
-        return CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark ?
-                Color.darkGray : Color.white;
+        return isDarkMode() ?
+                getDarkTint() : getLightTint();
+    }
+
+    /**
+     * Retrieve the tint to be used when in dark mode
+     *
+     * @return the dark mode tint
+     */
+    public Color getDarkTint() {
+        return Color.darkGray;
+    }
+
+    /**
+     * Retrieve the tint to be used when in light mode
+     *
+     * @return the light mode tint
+     */
+    public Color getLightTint() {
+        return Color.white;
     }
 
     /**

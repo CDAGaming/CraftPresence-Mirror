@@ -883,9 +883,16 @@ public class RenderUtils {
                                          final double offset,
                                          final String startBg, final String endBg, final Color color) {
         if (StringUtils.isValidColorCode(startBg)) {
+            final Pair<Color, Color> colorData = StringUtils.findColor(startBg, endBg);
+            if (color != null) {
+                colorData.setFirst(StringUtils.tintColor(colorData.getFirst(), color));
+                colorData.setSecond(StringUtils.tintColor(colorData.getSecond(), color));
+            }
+
             drawGradient(left, right, top, bottom,
                     300.0F,
-                    startBg, (StringUtils.isValidColorCode(endBg) ? endBg : startBg)
+                    colorData.getFirst(),
+                    colorData.getSecond()
             );
         } else {
             final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(startBg);
