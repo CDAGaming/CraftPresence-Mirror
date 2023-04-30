@@ -878,10 +878,10 @@ public class RenderUtils {
      * @param color   The background RGB data to interpret
      */
     public static void drawBackground(@Nonnull final Minecraft mc,
-                                         final double left, final double right,
-                                         final double top, final double bottom,
-                                         final double offset,
-                                         final String startBg, final String endBg, final Color color) {
+                                      final double left, final double right,
+                                      final double top, final double bottom,
+                                      final double offset,
+                                      final String startBg, final String endBg, final Color color) {
         if (StringUtils.isValidColorCode(startBg)) {
             final Pair<Color, Color> colorData = StringUtils.findColor(startBg, endBg);
             if (color != null) {
@@ -926,10 +926,10 @@ public class RenderUtils {
      * @param color  The background RGB data to interpret
      */
     public static void drawBackground(@Nonnull final Minecraft mc,
-                                         final double left, final double right,
-                                         final double top, final double bottom,
-                                         double offset,
-                                         final String bgCode, final Color color) {
+                                      final double left, final double right,
+                                      final double top, final double bottom,
+                                      double offset,
+                                      final String bgCode, final Color color) {
         drawBackground(mc, left, right, top, bottom, offset, bgCode, bgCode, color);
     }
 
