@@ -880,17 +880,9 @@ public class RenderUtils {
     public static void drawBackground(@Nonnull final Minecraft mc,
                                          final double left, final double right,
                                          final double top, final double bottom,
-                                         double offset,
-                                         String startBg, String endBg, Color color) {
-        boolean usingColors = StringUtils.isValidColorCode(startBg);
-        if (mc.world != null && !usingColors) {
-            startBg = "-1072689136";
-            endBg = "-804253680";
-            color = Color.white;
-            usingColors = true;
-        }
-
-        if (usingColors) {
+                                         final double offset,
+                                         final String startBg, final String endBg, final Color color) {
+        if (StringUtils.isValidColorCode(startBg)) {
             drawGradient(left, right, top, bottom,
                     300.0F,
                     startBg, (StringUtils.isValidColorCode(endBg) ? endBg : startBg)
@@ -901,13 +893,13 @@ public class RenderUtils {
 
             final double widthDivider = textureData.getFirst() ? (right - left) : 32.0D;
             final double heightDivider = textureData.getFirst() ? (bottom - top) : 32.0D;
-            offset = textureData.getFirst() ? 0.0D : offset;
+            final double offsetAmount = textureData.getFirst() ? 0.0D : offset;
 
             drawTexture(mc,
                     left, right, top, bottom,
                     0.0D,
                     left / widthDivider, right / widthDivider,
-                    (top + offset) / heightDivider, (bottom + offset) / heightDivider,
+                    (top + offsetAmount) / heightDivider, (bottom + offsetAmount) / heightDivider,
                     color, color,
                     texLocation
             );

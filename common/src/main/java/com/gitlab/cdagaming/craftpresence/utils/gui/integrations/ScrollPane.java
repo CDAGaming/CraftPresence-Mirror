@@ -24,13 +24,10 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
-import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 
@@ -115,61 +112,34 @@ public class ScrollPane extends ExtendedScreen {
     public void refreshContentHeight() {
         super.refreshContentHeight();
 
-        setContentHeight((int) (getContentHeight() + amountScrolled));
+        setContentHeight((int) (getContentHeight() + getAmountScrolled()));
     }
 
     @Override
-    public void renderCriticalData() {
-        RenderUtils.drawBackground(mc,
-                getLeft(), getRight(),
-                getTop(), getBottom(),
-                amountScrolled,
-                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor,
-                NERO
-        );
+    public double getOffset() {
+        return getAmountScrolled();
+    }
+
+    @Override
+    public Color getTint() {
+        return NERO;
     }
 
     @Override
     public void postRender() {
         // Render Depth Decorations
-        final String background = CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
-        final boolean isColorBg = StringUtils.isValidColorCode(background);
-        if (isColorBg) {
-            RenderUtils.drawGradient(
-                    getLeft(), getRight(), getTop(), getTop() + getPadding(),
-                    -100.0D,
-                    Color.black,
-                    NONE
-            );
-            RenderUtils.drawGradient(
-                    getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
-                    -100.0D,
-                    NONE,
-                    Color.black
-            );
-        } else {
-            final Tuple<Boolean, String, ResourceLocation> backgroundData = RenderUtils.getTextureData(
-                    background
-            );
-            RenderUtils.drawTextureGradient(mc,
-                    getLeft(), getRight(), getTop(), getTop() + getPadding(),
-                    -100.0D,
-                    0.0D, 1.0D,
-                    0.0D, 1.0D,
-                    Color.black,
-                    NONE,
-                    backgroundData.getThird()
-            );
-            RenderUtils.drawTextureGradient(mc,
-                    getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
-                    -100.0D,
-                    0.0D, 1.0D,
-                    0.0D, 1.0D,
-                    NONE,
-                    Color.black,
-                    backgroundData.getThird()
-            );
-        }
+        RenderUtils.drawGradient(
+                getLeft(), getRight(), getTop(), getTop() + getPadding(),
+                -100.0D,
+                Color.black,
+                NONE
+        );
+        RenderUtils.drawGradient(
+                getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
+                -100.0D,
+                NONE,
+                Color.black
+        );
 
         // Render Scrollbar Elements
         if (needsScrollbar()) {
@@ -180,7 +150,7 @@ public class ScrollPane extends ExtendedScreen {
             final int maxScroll = getMaxScroll();
             final int screenHeight = getScreenHeight();
             final int height = getBarHeight();
-            float barTop = amountScrolled * (screenHeight - height) / maxScroll + top;
+            float barTop = getAmountScrolled() * (screenHeight - height) / maxScroll + top;
             if (barTop < top) {
                 barTop = top;
             }
@@ -302,7 +272,7 @@ public class ScrollPane extends ExtendedScreen {
      * @param amount The amount to append the scroll by
      */
     public void scrollBy(final float amount) {
-        setScroll(amountScrolled + amount);
+        setScroll(getAmountScrolled() + amount);
     }
 
     /**
@@ -311,12 +281,12 @@ public class ScrollPane extends ExtendedScreen {
      * @param amount the new scroll amount
      */
     public void setScroll(final float amount) {
-        final float prevScrollAmount = amountScrolled;
-        amountScrolled = amount;
+        final float prevScrollAmount = getAmountScrolled();
+        setAmountScrolled(amount);
         bindAmountScrolled();
 
-        if (amountScrolled != prevScrollAmount) {
-            final int scrollDiff = (int) (amountScrolled - prevScrollAmount);
+        if (getAmountScrolled() != prevScrollAmount) {
+            final int scrollDiff = (int) (getAmountScrolled() - prevScrollAmount);
             for (DynamicWidget widget : getWidgets()) {
                 widget.setControlPosY(widget.getControlPosY() - scrollDiff);
             }
@@ -338,7 +308,26 @@ public class ScrollPane extends ExtendedScreen {
      * Clamp the scroll amount between 0 and {@link ScrollPane#getMaxScroll()}
      */
     public void bindAmountScrolled() {
-        amountScrolled = MathUtils.clamp(amountScrolled, 0, getMaxScroll());
+        setAmountScrolled(MathUtils.clamp(getAmountScrolled(), 0, getMaxScroll()));
+    }
+
+    /**
+     * Retrieve the current scroll amount
+     *
+     * @return the current scroll amount
+     */
+    public float getAmountScrolled() {
+        return amountScrolled;
+    }
+
+    /**
+     * Directly sets the current scroll amount
+     * <p>It is recommended to use {@link ScrollPane#scrollBy(float)} or {@link ScrollPane#setScroll(float)} instead
+     *
+     * @param scrolled the new scroll amound
+     */
+    public void setAmountScrolled(final float scrolled) {
+        this.amountScrolled = scrolled;
     }
 
     /**

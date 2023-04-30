@@ -355,10 +355,87 @@ public class ExtendedScreen extends GuiScreen {
         RenderUtils.drawBackground(mc,
                 getLeft(), getRight(),
                 getTop(), getBottom(),
-                0,
-                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor,
-                CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark ? Color.darkGray : Color.white
+                getOffset(),
+                getPrimaryBg(), getSecondaryBg(),
+                getTint()
         );
+    }
+
+    /**
+     * Retrieve if the rendering environment is within a world
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean hasWorld() {
+        return mc.world != null;
+    }
+
+    /**
+     * Retrieve the raw primary background data
+     *
+     * @return the raw primary background
+     */
+    public String getPrimaryRaw() {
+        return getDefaultBg();
+    }
+
+    /**
+     * Retrieve the primary background data
+     *
+     * @return the primary background data
+     */
+    public String getPrimaryBg() {
+        final String raw = getPrimaryRaw();
+        return hasWorld() && !StringUtils.isValidColorCode(raw) ?
+                "-1072689136" : raw;
+    }
+
+    /**
+     * Retrieve the raw secondary background data
+     *
+     * @return the raw secondary background
+     */
+    public String getSecondaryRaw() {
+        return getPrimaryRaw();
+    }
+
+    /**
+     * Retrieve the secondary background data
+     *
+     * @return the secondary background data
+     */
+    public String getSecondaryBg() {
+        final String raw = getSecondaryRaw();
+        return hasWorld() && !StringUtils.isValidColorCode(raw) ?
+                "-804253680" : raw;
+    }
+
+    /**
+     * Retrieve the default background data
+     *
+     * @return the default background
+     */
+    public String getDefaultBg() {
+        return CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
+    }
+
+    /**
+     * Retrieve the amount to offset the background data by
+     *
+     * @return the offset for the background
+     */
+    public double getOffset() {
+        return 0;
+    }
+
+    /**
+     * Retrieve the tint to be used when interpreting background data
+     *
+     * @return the tint color for background data
+     */
+    public Color getTint() {
+        return CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark ?
+                Color.darkGray : Color.white;
     }
 
     /**
