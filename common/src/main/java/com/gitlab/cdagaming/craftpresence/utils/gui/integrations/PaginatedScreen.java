@@ -269,7 +269,7 @@ public class PaginatedScreen extends ExtendedScreen {
             if (isDefault || isRendering) {
                 if (extendedControl instanceof ExtendedButtonControl) {
                     final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                    if (isOverScreen() && RenderUtils.isMouseOver(getMouseX(), getMouseY(), extendedButton)) {
+                    if (isOverScreen() && extendedButton.isHoveringOver()) {
                         extendedButton.onHover();
                     }
                 }

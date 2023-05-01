@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.Serializable;
@@ -37,8 +38,8 @@ public class Accessibility extends Module implements Serializable {
     private static Accessibility DEFAULT;
     public String tooltipBackgroundColor = "0xF0100010";
     public String tooltipBorderColor = "0x505000FF";
-    public String guiBackgroundColor = "minecraft:" + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
-    public String buttonBackgroundColor = "minecraft:" + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? "/gui/gui.png" : "textures/gui/widgets.png");
+    public String guiBackgroundColor = RenderUtils.DEFAULT_GUI_BACKGROUND;
+    public String buttonBackgroundColor = RenderUtils.DEFAULT_BUTTON_BACKGROUND;
     public String languageId = ModUtils.TRANSLATOR.defaultLanguageId;
     public boolean showBackgroundAsDark = true;
     public boolean stripTranslationColors = false;

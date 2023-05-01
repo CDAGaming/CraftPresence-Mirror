@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
@@ -53,6 +54,17 @@ import java.util.List;
  */
 @SuppressWarnings("DuplicatedCode")
 public class RenderUtils {
+    public static final String DEFAULT_BUTTON_BACKGROUND = "minecraft:" + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? "/gui/gui.png" : "textures/gui/widgets.png");
+    public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.MCProtocolID <= 61 && ModUtils.IS_LEGACY_SOFT ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+
+    public static ResourceLocation getScreenTextures() {
+        return getTextureData(DEFAULT_GUI_BACKGROUND).getThird();
+    }
+
+    public static ResourceLocation getButtonTextures() {
+        return getTextureData(DEFAULT_BUTTON_BACKGROUND).getThird();
+    }
+
     /**
      * Determines if the Mouse is over an element, following the defined Arguments
      *

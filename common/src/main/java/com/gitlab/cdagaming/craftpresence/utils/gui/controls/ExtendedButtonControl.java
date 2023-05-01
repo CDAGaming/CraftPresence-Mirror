@@ -198,18 +198,18 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
-            hovered = isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this);
-            final int hoverState = getHoverState(hovered);
+            setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
+            final int hoverState = getHoverState(isHoveringOrFocusingOver());
 
             final String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
 
             if (StringUtils.isValidColorCode(backgroundCode)) {
-                RenderUtils.drawGradient(getLeft(), getRight(), getTop(), getBottom(), zLevel, backgroundCode, backgroundCode);
+                RenderUtils.drawGradient(getLeft(), getRight(), getTop(), getBottom(), getZLevel(), backgroundCode, backgroundCode);
             } else {
                 final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(backgroundCode);
                 final ResourceLocation texLocation = textureData.getThird();
 
-                RenderUtils.renderButton(mc, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, zLevel, texLocation);
+                RenderUtils.renderButton(mc, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, getZLevel(), texLocation);
             }
 
             if (isOverScreen()) {
@@ -219,7 +219,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
 
             if (!isControlEnabled()) {
                 color = 10526880;
-            } else if (hovered) {
+            } else if (isHoveringOrFocusingOver()) {
                 color = 16777120;
             } else {
                 color = 14737632;
@@ -241,7 +241,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      */
     @Override
     public boolean mousePressed(@Nonnull Minecraft arg, int mouseX, int mouseY) {
-        return isOverScreen() && isControlEnabled() && isControlVisible() && hovered;
+        return isOverScreen() && isControlEnabled() && isControlVisible() && isHoveringOver();
     }
 
     @Override
@@ -428,5 +428,29 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      */
     public void setControlVisible(final boolean isVisible) {
         this.visible = isVisible;
+    }
+
+    public boolean isHoveringOver() {
+        return this.hovered;
+    }
+
+    public void setHoveringOver(final boolean isHovered) {
+        this.hovered = isHovered;
+    }
+
+    public boolean isFocusedOver() {
+        return false;
+    }
+
+    public void setFocusedOver(final boolean isFocused) {
+        // N/A
+    }
+
+    public boolean isHoveringOrFocusingOver() {
+        return isHoveringOver() || isFocusedOver();
+    }
+
+    public double getZLevel() {
+        return zLevel;
     }
 }

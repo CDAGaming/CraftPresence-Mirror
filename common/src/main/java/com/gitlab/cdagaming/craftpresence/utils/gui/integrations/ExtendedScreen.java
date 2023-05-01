@@ -491,7 +491,7 @@ public class ExtendedScreen extends GuiScreen {
         for (Gui extendedControl : getControls()) {
             if (extendedControl instanceof ExtendedButtonControl) {
                 final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                if (isOverScreen() && RenderUtils.isMouseOver(lastMouseX, lastMouseY, extendedButton)) {
+                if (isOverScreen() && extendedButton.isHoveringOver()) {
                     extendedButton.onHover();
                 }
             }

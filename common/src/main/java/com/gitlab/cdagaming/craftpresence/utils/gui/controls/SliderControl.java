@@ -227,8 +227,14 @@ public class SliderControl extends ExtendedButtonControl {
             }
 
             onSlide();
-            final int hoverValue = (hovered ? 2 : 1) * 20;
-            RenderUtils.renderSlider(mc, getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(), 0, 46 + hoverValue, 4, 20, zLevel, BUTTON_TEXTURES);
+            final int hoverState = getHoverState(isHoveringOrFocusingOver());
+            RenderUtils.renderSlider(mc,
+                    getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(),
+                    0, 46 + hoverState * 20,
+                    4, 20,
+                    getZLevel(),
+                    RenderUtils.getButtonTextures()
+            );
         }
     }
 

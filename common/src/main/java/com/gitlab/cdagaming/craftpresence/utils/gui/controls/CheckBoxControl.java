@@ -152,8 +152,8 @@ public class CheckBoxControl extends ExtendedButtonControl {
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partial) {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
-            hovered = isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this);
-            final int hoverState = getHoverState(hovered);
+            setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
+            final int hoverState = getHoverState(isHoveringOrFocusingOver());
 
             final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
             final String contentColor = "#2b2b2b";
@@ -161,7 +161,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
             RenderUtils.drawGradientBox(
                     getControlPosX(), getControlPosY(),
                     getBoxWidth(), getControlHeight(),
-                    zLevel,
+                    getZLevel(),
                     borderColor, borderColor, getBorderWidth(),
                     contentColor, contentColor
             );
