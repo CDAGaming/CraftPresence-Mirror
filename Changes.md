@@ -1,9 +1,9 @@
 # CraftPresence Changes
 
-## v2.0.0 Release Candidate 3 (05/04/2023)
+## v2.0.0 (06/05/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0-rc.3)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0)_
 
 ### Changes
 
@@ -226,18 +226,14 @@ ___
 
 #### Known Issues
 
-This release represents a work-in-progress build of CraftPresence's v2.0 release.
-It does not in any way, shape, or form represent a final product, in either it's backend or frontend implementation.
-
 Despite configuration compatibility being ensured between v1.8.x/v1.9.x and v2.0,
-caution is advised to ensure the best experience, while also baring in mind that features can change, be added, or
-outright removed without forewarning and without compatibility
-between future work-in-progress releases.
+caution is advised to ensure the best experience, while also baring in mind that features can be adjusted, removed, or
+added/iterated upon between releases.
 
 The following known issues are present in this build:
 
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
-* The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) is heavily work in progress:
+* The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) contains the following known issues:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
 
 #### 1.13.x Build Info
@@ -250,10 +246,10 @@ contains the following differences to take Note of:
 
 Starting in v1.5.0, The 1.13 Rift Port of CraftPresence was deprecated in favor of the 1.13.2 Rift Port.
 
+Starting in v1.6.1, Rift Versions are no longer supported, though the differences do still take effect for Forge.
+
 Starting in v1.7.0, The aforementioned KeyCode warning is now void, due to new systems introduced to convert keybindings
 between LWJGL versions.
-
-Starting in v1.6.1, Rift Versions are no longer supported, though the differences do still take effect for Forge.
 
 #### 1.14+ Build Info
 
@@ -264,11 +260,12 @@ and contains the same differences as the 1.13.x Port.
 
 Some Versions of this Mod are for Minecraft Snapshots or Experimental Versions, and as such, caution should be noted.
 
-Any Snapshot Build released will be marked as BETA to match its Snapshot Status depending on tests done before release
+Any Snapshot Build released will be marked as **ALPHA** to match its Snapshot Status depending on tests done before
+release
 and issues found.
 
 Snapshot Builds, depending on circumstances, may also contain changes for a future version of the mod, and will be noted
-as so if this is the case.
+as so if this is the case with the `-Staging` label.
 
 #### Legacy Build Info (Minecraft Versions 1.5.2 and Below)
 
@@ -279,9 +276,15 @@ Please keep in mind the following:
 
 * Ports for MC 1.6.4 and lower will not show Image Previews in Scroll Lists, as Mojang did not implement the
   logic for this until MC 1.7 and above
-* The MC a1.1.2_01 Port has its Dimension and Biome Modules **disabled**, as Mojang did not implement the logic for this
+* The MC a1.1.2_01 Port has its Dimension and Biome Modules **stubbed**, as Mojang did not implement the logic for this
   until MC a1.2.x and above
 * Bugs that are related to or are caused by issues in the Vanilla Codebase, are unlikely to be fixed due to
   Minecraft's limitations
+
+The following Mojang Bugs effect CraftPresence's utilities:
+
+* On MC 1.1 and below, the `GuiTextField` contents can overflow, causing them to become unusable
+* Also on MC 1.1 and below, Text Colors may appear differently compared to newer versions of Minecraft
+* An `OutOfBounds` exception can be thrown when rendering strings on MC b1.2_02 and below
 
 See the Mod Description // README for More Info
