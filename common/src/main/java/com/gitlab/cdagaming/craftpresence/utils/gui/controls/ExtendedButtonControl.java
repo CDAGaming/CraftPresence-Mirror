@@ -217,7 +217,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             }
             final int color;
 
-            if (!enabled) {
+            if (!isControlEnabled()) {
                 color = 10526880;
             } else if (hovered) {
                 color = 16777120;
