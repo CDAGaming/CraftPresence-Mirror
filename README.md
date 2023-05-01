@@ -203,9 +203,15 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `replaymod.time.remaining` - When in the Video Renderer, retrieves the `renderTimeLeft` field
 * Extra Placeholders (Advanced Usage):
     * `_general.instance` - The `Minecraft` Instance
+    * `_general.player` - The `Minecraft` Player Instance
+    * `_general.world` - The `Minecraft` World Instance
     * `_config.instance` - The Mod Config Instance
     * `_[moduleName].instance` - An instance of one of the modules CraftPresence has
         * Module Order: `biome, dimension, entity, item, screen, server, <...>`
+    * `data.biome.instance` - An instance of the player's current biome
+    * `data.biome.class` - The class object for the player's current biome
+    * `data.dimension.instance` - An instance of the player's current dimension
+    * `data.dimension.class` - The class object for the player's current dimension
     * `data.entity.target.instance` - An instance of the currently targeted entity
     * `data.entity.target.class` - The class object for the currently targeted entity
     * `data.entity.riding.instance` - An instance of the currently riding entity
@@ -214,7 +220,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `data.item.[slotId].class` - The class object for the current `slotId`
     * `data.screen.instance` - An instance of the current Gui Screen
     * `data.screen.class` - The class object for the current Gui Screen
-    * `data.server.motd.line.[number]` - Retrieves a specific line of `server.motd.raw`
+    * `data.server.motd.line_[number]` - Retrieves a specific line of `server.motd.raw`
     * `data.[moduleName].time` - The timestamp at which a module has changed its primary state
         * Use `data.general.time` for the current RPC Starting Timestamp
 
@@ -240,6 +246,7 @@ The following functions are available for use anywhere in CraftPresence:
   Invokes the specified Method in the Target Class via Reflection
 * `format(input=String, args=Object...)` - Returns a formatted string using the specified format string and arguments
 * `formatAddress(input, returnPort ?: false)` - Formats an IP Address based on Input
+* `getArrayElement(content=Array, index)` - Retrieves the array element from the specified content, or null if unable
 * `getAsset(input)` - Retrieves the Specified DiscordAsset data from an Icon Key, if present
 * `getAssetId(input)` - Retrieves the Parsed Icon ID from the specified key, if present
 * `getAssetKey(input)` - Retrieves the Parsed Icon Key from the specified key, if present
@@ -281,6 +288,7 @@ The following functions are available for use anywhere in CraftPresence:
 * `replace(input, matchCase ?: false, matchWholeWord ?: false, useRegex ?: true, data=[from, to]...)` - Replaces Data in
   a String
 * `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
+* `split(input, regex, limit ?: 0)` - Splits this string around matches of the given regular expression
 * `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
 * `timeFromEpoch(epochTime)` - Retrive a Time Instant from the specified epoch time
 * `timeFromString(dateString, fromFormat, fromTimeZone ?: null)` - Format a Date String from one timezone and format
