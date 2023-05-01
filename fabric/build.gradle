@@ -2,12 +2,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-
-import com.google.gson.JsonObject
-import org.jetbrains.annotations.NotNull
-import xyz.wagyourtail.unimined.api.mappings.MappingNamespace
-import xyz.wagyourtail.unimined.minecraft.patch.fabric.FabricLikeMinecraftTransformer
-
 def accessWidenerFile = !isJarMod ? project(":common").minecraft.mcPatcher.accessWidener : null
 
 minecraft {
