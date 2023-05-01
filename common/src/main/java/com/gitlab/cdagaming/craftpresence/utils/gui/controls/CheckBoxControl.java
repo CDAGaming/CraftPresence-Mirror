@@ -40,15 +40,19 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * The default border width for this control
      */
     private static final int DEFAULT_BORDER = 1;
+    /**
+     * The default inner box width for this control
+     */
+    private static final int DEFAULT_BOX_WIDTH = 11;
 
     /**
      * The width of the inner box of this control
      */
-    private final int boxWidth;
+    private int boxWidth;
     /**
      * The current border width for this control
      */
-    private final int borderWidth = DEFAULT_BORDER;
+    private int borderWidth;
     /**
      * The Check state of this control
      */
@@ -65,9 +69,8 @@ public class CheckBoxControl extends ExtendedButtonControl {
      */
     public CheckBoxControl(final int id, final int xPos, final int yPos, final String displayString, final boolean isChecked) {
         super(id, xPos, yPos, displayString);
+        resetRenderStates();
         setIsChecked(isChecked);
-        setControlHeight(boxWidth = 11);
-        setControlWidth(boxWidth + (borderWidth * 2) + getFontRenderer().getStringWidth(getDisplayMessage()));
     }
 
     /**
@@ -157,9 +160,9 @@ public class CheckBoxControl extends ExtendedButtonControl {
 
             RenderUtils.drawGradientBox(
                     getControlPosX(), getControlPosY(),
-                    boxWidth, getControlHeight(),
+                    getBoxWidth(), getControlHeight(),
                     zLevel,
-                    borderColor, borderColor, borderWidth,
+                    borderColor, borderColor, getBorderWidth(),
                     contentColor, contentColor
             );
 
@@ -169,9 +172,9 @@ public class CheckBoxControl extends ExtendedButtonControl {
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (isChecked())
-                drawCenteredString(getFontRenderer(), "x", getControlPosX() + boxWidth / 2 + 1, getControlPosY() + 1, 14737632);
+                drawCenteredString(getFontRenderer(), "x", getControlPosX() + getBoxWidth() / 2 + 1, getControlPosY() + 1, 14737632);
 
-            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + boxWidth + 2, getControlPosY() + 2, color);
+            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getBoxWidth() + 2, getControlPosY() + 2, color);
         }
     }
 
@@ -179,6 +182,12 @@ public class CheckBoxControl extends ExtendedButtonControl {
     public void onClick() {
         setIsChecked(!is_Checked);
         super.onClick();
+    }
+
+    @Override
+    public void setControlMessage(String newMessage) {
+        super.setControlMessage(newMessage);
+        syncRenderStates();
     }
 
     /**
@@ -197,5 +206,53 @@ public class CheckBoxControl extends ExtendedButtonControl {
      */
     public void setIsChecked(final boolean isChecked) {
         this.is_Checked = isChecked;
+    }
+
+    /**
+     * Retrieve the width of the inner box of this control
+     *
+     * @return the inner box width
+     */
+    public int getBoxWidth() {
+        return boxWidth;
+    }
+
+    /**
+     * Sets the width of the inner box of this control
+     *
+     * @param boxWidth the new inner box width
+     */
+    public void setBoxWidth(final int boxWidth) {
+        this.boxWidth = boxWidth;
+        syncRenderStates();
+    }
+
+    /**
+     * Retrieve the current border width for this control
+     *
+     * @return the current border width
+     */
+    public int getBorderWidth() {
+        return borderWidth;
+    }
+
+    /**
+     * Sets the current border width for this control
+     *
+     * @param borderWidth the new border width
+     */
+    public void setBorderWidth(final int borderWidth) {
+        this.borderWidth = borderWidth;
+        syncRenderStates();
+    }
+
+    private void syncRenderStates() {
+        setControlHeight(getBoxWidth());
+        setControlWidth(getBoxWidth() + (getBorderWidth() * 2) + getFontRenderer().getStringWidth(getDisplayMessage()));
+    }
+
+    private void resetRenderStates() {
+        setBoxWidth(DEFAULT_BOX_WIDTH);
+        setBorderWidth(DEFAULT_BORDER);
     }
 }
