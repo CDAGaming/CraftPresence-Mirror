@@ -11,56 +11,20 @@ import xyz.wagyourtail.unimined.minecraft.patch.fabric.FabricLikeMinecraftTransf
 def accessWidenerFile = !isJarMod ? project(":common").minecraft.mcPatcher.accessWidener : null
 
 minecraft {
-    if (!isJarMod) {
-        fabric {
-            if (accessWidenerFile != null) {
-                accessWidener = accessWidenerFile
-            }
+    fabric {
+        if (accessWidenerFile != null) {
+            accessWidener = accessWidenerFile
         }
-    } else {
-        mcPatcher = new FabricLikeMinecraftTransformer(project, project.minecraft, "fabric", "fabric.mod.json", "accessWidener") {
-            @Override
-            public MappingNamespace getProdNamespace() {
-                return MappingNamespace.OFFICIAL
-            }
+        if (isJarMod) {
+            devMappings = null
+            prodNamespace = "official"
 
-            @Override
-            public java.nio.file.Path getDevMappings() {
-                return null
+            // required when using mcp mappings
+            if (protocol <= 2) { // MC a1.1.2_01 and below
+                devNamespace = "searge"
+            } else {
+                devFallbackNamespace = "searge"
             }
-
-            @Override
-            protected String getENVIRONMENT() {
-                return "Lnet/fabricmc/api/Environment;"
-            }
-
-            @Override
-            protected String getENV_TYPE() {
-                return "Lnet/fabricmc/api/EnvType;"
-            }
-
-            @Override
-            protected void addIncludeToModJson(@NotNull JsonObject json, @NotNull Dependency dependency, @NotNull String s) {
-                var jars = json.get("jars")?.asJsonArray
-                if (jars == null) {
-                    jars = JsonArray()
-                    json.add("jars", jars)
-                }
-                jars.add(JsonObject().apply {
-                    addProperty("file", path)
-                })
-            }
-
-            @Override
-            protected void addMavens() {
-                // N/A
-            }
-        }
-        // required when using mcp mappings
-        if (protocol <= 2) { // MC a1.1.2_01 and below
-            mcPatcher.devNamespace = "searge"
-        } else {
-            mcPatcher.devFallbackNamespace = "searge"
         }
     }
 }
