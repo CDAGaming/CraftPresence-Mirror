@@ -1,7 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "com.modrinth.minotaur" version "2.7.5"
-    id "io.github.CDAGaming.cursegradle" version "1.6.0"
+    id "me.hypherionmc.modutils.modpublisher" version "1.0.9"
 }
 
 def accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
@@ -183,47 +182,20 @@ if (!targetFile.exists() && isJarMod) {
     targetFile = file("$rootDir/${fmlName}/build/libs/${fileFormat}-${fmlName}.jar")
 }
 
-curseforge {
-    project {
-        apiKey = System.getenv("CF_APIKEY")
-        id = "297038"
-        changelog = file("$rootDir/Changes.md")
-        changelogType = "markdown"
-        releaseType = "${deploymentType}".toLowerCase()
-        def mcVersionTarget = (isLegacy && protocol < 22) ? "1.0" : "${mc_version}"
-        for (String loaderName : rootProject.enabled_platforms.split(",")) {
-            def loaderToAdd = loaderName
-
-            // CurseForge Compatibility Layer (For Modloader and Beta MC)
-            // (This can be removed when/if CurseForge ever adds support for this)
-            if (loaderToAdd.equalsIgnoreCase("modloader")) {
-                // MC 1.0.0 and above, and using ModLoader
-                loaderToAdd = (protocol >= 22) ? "Forge" : ""
-            }
-            addGameVersion loaderToAdd.capitalize()
-        }
-        addGameVersion mcVersionTarget
-
-        mainArtifact(targetFile) {
-            it.displayName = "${archive_name} v${versionId} ${versionLabel} (${mcVersionLabel})"
-        }
+publisher {
+    apiKeys {
+        curseforge = System.getenv("CF_APIKEY")
+        modrinth = System.getenv("MODRINTH_TOKEN")
     }
-}
 
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = "DFqQfIBR"
-    versionNumber = "v${versionFormat}".replaceAll("\\s", "").toLowerCase()
-    versionName = "${archive_name} v${versionId} ${versionLabel} (${mcVersionLabel})"
-    changelog = file("$rootDir/Changes.md").text
+    debug = false
+    curseID = "297038"
+    modrinthID = "DFqQfIBR"
     versionType = "${deploymentType}".toLowerCase()
-    uploadFile = targetFile
-    gameVersions = ["${mc_version}"]
+    changelog = file("$rootDir/Changes.md").text
+    version = "v${versionFormat}".replaceAll("\\s", "").toLowerCase() // Modrinth Only
+    displayName = "${archive_name} v${versionId} ${versionLabel} (${mcVersionLabel})"
+    gameVersions = [mc_version.toString()]
     loaders = rootProject.enabled_platforms.split(",").toList()
-    dependencies = []
-}
-
-tasks.register('publishToModSites') {
-    publishToModSites.dependsOn 'modrinth'
-    publishToModSites.dependsOn 'curseforge'
+    artifact = targetFile
 }
