@@ -400,9 +400,7 @@ public class ServerUtils implements Module {
      */
     private boolean isInvalidMotd(final String serverMotd) {
         for (String item : invalidMotds) {
-            if (ModUtils.TRANSLATOR != null && ModUtils.TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.TRANSLATOR.translate(item))) {
-                return true;
-            } else if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.RAW_TRANSLATOR.translate(item))) {
+            if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.RAW_TRANSLATOR.translate(item))) {
                 return true;
             }
         }
