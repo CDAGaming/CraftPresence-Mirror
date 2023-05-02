@@ -451,6 +451,10 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     public double getZLevel() {
-        return zLevel;
+        return this.zLevel;
+    }
+
+    public void setZLevel(final double zLevel) {
+        this.zLevel = (float) zLevel;
     }
 }
