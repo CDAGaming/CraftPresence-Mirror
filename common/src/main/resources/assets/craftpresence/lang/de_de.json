@@ -425,7 +425,6 @@
   "gui.config.name.advanced.refresh_rate": "Aktualisierungsrate",
   "gui.config.name.advanced.render_tooltips": "Tooltips anzeigen",
   "gui.config.name.advanced.round_size": "Rundungsgröße",
-  "gui.config.name.advanced.server_icon_endpoint": "Server Icon Endpoint",
   "gui.config.name.advanced.verbose_mode": "Ausführlicher Modus",
   "gui.config.name.biome_messages.biome_icon": "Standard Biom Icon",
   "gui.config.name.biome_messages.biome_messages": "Biom Nachrichten",

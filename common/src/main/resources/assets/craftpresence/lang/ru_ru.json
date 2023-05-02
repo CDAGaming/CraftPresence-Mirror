@@ -425,7 +425,6 @@
   "gui.config.name.advanced.refresh_rate": "Обновление",
   "gui.config.name.advanced.render_tooltips": "Всплывающие подсказки",
   "gui.config.name.advanced.round_size": "Размер округления",
-  "gui.config.name.advanced.server_icon_endpoint": "Server Icon Endpoint",
   "gui.config.name.advanced.verbose_mode": "Подробный режим",
   "gui.config.name.biome_messages.biome_icon": "Стандартный значок биома",
   "gui.config.name.biome_messages.biome_messages": "Сообщения биомов",
