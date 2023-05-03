@@ -224,7 +224,6 @@ public class StringUtils {
         return new Pair<>(startColor, endColor);
     }
 
-
     /**
      * This method takes in two integer values representing a base color and a tint color,
      * <p>
