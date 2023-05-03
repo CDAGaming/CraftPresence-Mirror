@@ -743,6 +743,16 @@ public class StringUtils {
     }
 
     /**
+     * Determine whether an inputted Object classifies as a valid Long
+     *
+     * @param entry The Object to evaluate
+     * @return A Pair with the format of isValid:parsedLongIfTrue
+     */
+    public static Pair<Boolean, Long> getValidLong(final Object entry) {
+        return entry != null ? getValidLong(entry.toString()) : new Pair<>(false, 0L);
+    }
+
+    /**
      * Determine whether an inputted String classifies as a valid Long
      *
      * @param entry The String to evaluate
