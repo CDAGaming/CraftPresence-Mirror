@@ -32,7 +32,6 @@ import java.util.Comparator;
  *
  * @author CDAGaming, StackOverflow (<a href="https://stackoverflow.com/a/10034633">Markus Jarderot</a>)
  */
-@SuppressWarnings("UnusedAssignment")
 public class VersionComparator implements Comparator<Object>, Serializable {
     private static final long serialVersionUID = -5857843385438592922L;
 
@@ -55,8 +54,8 @@ public class VersionComparator implements Comparator<Object>, Serializable {
         VersionTokenizer tokenizer1 = new VersionTokenizer(version1);
         VersionTokenizer tokenizer2 = new VersionTokenizer(version2);
 
-        int number1 = 0, number2 = 0;
-        String suffix1 = "", suffix2 = "";
+        int number1, number2;
+        String suffix1, suffix2;
 
         while (tokenizer1.next()) {
             if (!tokenizer2.next()) {
