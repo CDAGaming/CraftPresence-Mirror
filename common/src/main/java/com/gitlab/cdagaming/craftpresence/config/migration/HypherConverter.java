@@ -49,7 +49,6 @@ import java.util.regex.Pattern;
 /**
  * Migration from SimpleRPC (Hypherion) Config to our {@link Config} format
  */
-@SuppressWarnings("unchecked")
 public class HypherConverter implements DataMigrator {
     private final static int LOWEST_SUPPORTED = 13;
     private final static String EMPTY_QUOTES = "{''}";
@@ -134,25 +133,36 @@ public class HypherConverter implements DataMigrator {
 
             final boolean areOverridesEnabled = conf.get("dimension_overrides.enabled");
             if (conf.get("dimension_overrides.dimensions") != null) {
-                for (AbstractConfig entry : (List<AbstractConfig>) conf.get("dimension_overrides.dimensions")) {
-                    String name = entry.get("name").toString();
-                    final boolean isBiome = name.startsWith("biome:");
-                    if (isBiome) {
-                        name = name.replaceFirst("biome:", "");
+                final Object dimensionList = conf.get("dimension_overrides.dimensions");
+                if (dimensionList instanceof List<?>) {
+                    for (Object entryObj : (List<?>) conf.get("dimension_overrides.dimensions")) {
+                        if (entryObj instanceof AbstractConfig) {
+                            final AbstractConfig entry = (AbstractConfig) entryObj;
+
+                            String name = entry.get("name").toString();
+                            final boolean isBiome = name.startsWith("biome:");
+                            if (isBiome) {
+                                name = name.replaceFirst("biome:", "");
+                            }
+                            final ModuleData data = new ModuleData()
+                                    .setData(convertPresenceData(entry, areOverridesEnabled, true));
+                            (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
+                        }
                     }
-                    final ModuleData data = new ModuleData()
-                            .setData(convertPresenceData(entry, areOverridesEnabled, true));
-                    (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
                 }
             }
 
             // Custom Variables (Enabled state is ignored)
-            if (conf.get("custom.variables") != null) {
-                for (AbstractConfig entry : (List<AbstractConfig>) conf.get("custom.variables")) {
-                    String name = entry.get("name").toString();
-                    String value = entry.get("value").toString();
+            if (conf.get("custom.variables") instanceof List<?>) {
+                for (Object entryObj : (List<?>) conf.get("custom.variables")) {
+                    if (entryObj instanceof AbstractConfig) {
+                        final AbstractConfig entry = (AbstractConfig) entryObj;
 
-                    instance.displaySettings.dynamicVariables.put(name, processPlaceholder(value));
+                        String name = entry.get("name").toString();
+                        String value = entry.get("value").toString();
+
+                        instance.displaySettings.dynamicVariables.put(name, processPlaceholder(value));
+                    }
                 }
             }
 
@@ -185,10 +195,14 @@ public class HypherConverter implements DataMigrator {
                 ModUtils.LOG.debugInfo("Server Entries file found (Version: %d, File Version: %d), interpreting data...", serverEntryVersion, fileVersion);
 
                 final boolean areOverridesEnabled = conf.get("enabled");
-                if (conf.get("entry") != null) {
-                    for (AbstractConfig entry : (List<AbstractConfig>) conf.get("entry")) {
-                        instance.serverSettings.serverData.put(entry.get("ip"), new ModuleData()
-                                .setData(convertPresenceData(entry, areOverridesEnabled, true)));
+                if (conf.get("entry") instanceof List<?>) {
+                    for (Object entryObj : (List<?>) conf.get("entry")) {
+                        if (entryObj instanceof AbstractConfig) {
+                            final AbstractConfig entry = (AbstractConfig) entryObj;
+
+                            instance.serverSettings.serverData.put(entry.get("ip"), new ModuleData()
+                                    .setData(convertPresenceData(entry, areOverridesEnabled, true)));
+                        }
                     }
                 }
                 instance.save();
@@ -253,14 +267,18 @@ public class HypherConverter implements DataMigrator {
         data.smallImageText = processPlaceholder(entry.get("smallImageText"));
 
         int buttonIndex = 1;
-        if (entry.get("buttons") != null) {
-            for (AbstractConfig buttonEntry : (List<AbstractConfig>) entry.get("buttons")) {
-                final Button buttonData = new Button(
-                        processPlaceholder(buttonEntry.get("label")),
-                        processPlaceholder(buttonEntry.get("url"))
-                );
-                data.addButton("button_" + buttonIndex, buttonData);
-                buttonIndex++;
+        if (entry.get("buttons") instanceof List<?>) {
+            for (Object buttonEntryObj : (List<?>) entry.get("buttons")) {
+                if (buttonEntryObj instanceof AbstractConfig) {
+                    final AbstractConfig buttonEntry = (AbstractConfig) buttonEntryObj;
+
+                    final Button buttonData = new Button(
+                            processPlaceholder(buttonEntry.get("label")),
+                            processPlaceholder(buttonEntry.get("url"))
+                    );
+                    data.addButton("button_" + buttonIndex, buttonData);
+                    buttonIndex++;
+                }
             }
         }
 
