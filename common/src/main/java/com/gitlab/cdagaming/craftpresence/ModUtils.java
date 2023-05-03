@@ -24,10 +24,10 @@
 
 package com.gitlab.cdagaming.craftpresence;
 
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.ClientBrandRetriever;
 
 import java.io.File;
@@ -37,23 +37,21 @@ import java.io.File;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("ConstantValue")
-@SuppressFBWarnings("MS_SHOULD_BE_FINAL")
 public class ModUtils {
     /**
      * The Application's Name
      */
-    public static final String NAME;
+    public static final String NAME = "@MOD_NAME@";
 
     /**
      * The Application's Version ID
      */
-    public static final String VERSION_ID;
+    public static final String VERSION_ID = "v@VERSION_ID@";
 
     /**
      * The Application's Version Release Type
      */
-    public static final String VERSION_TYPE;
+    public static final String VERSION_TYPE = "@VERSION_TYPE@";
 
     /**
      * The Application's Identifier
@@ -63,12 +61,12 @@ public class ModUtils {
     /**
      * The Detected Minecraft Version
      */
-    public static final String MCVersion;
+    public static final String MCVersion = "@MC_VERSION@";
 
     /**
      * The Detected Minecraft Protocol Version
      */
-    public static final int MCProtocolID;
+    public static final int MCProtocolID = StringUtils.getValidInteger("@MC_PROTOCOL@").getSecond();
 
     /**
      * The Detected Brand Information within Minecraft
@@ -91,63 +89,57 @@ public class ModUtils {
     public static final String UPDATE_JSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json";
 
     /**
-     * The Application's Instance of {@link ModLogger} for Logging Information
-     */
-    public static final ModLogger LOG = new ModLogger(MOD_ID);
-
-    /**
-     * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
-     */
-    public static final TranslationUtils TRANSLATOR;
-
-    /**
-     * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
-     */
-    public static final TranslationUtils RAW_TRANSLATOR;
-
-    /**
      * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
      */
-    public static final ModUpdaterUtils UPDATER;
-    /**
-     * If this Application is in the Alpha Floor of Legacy Mode
-     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
-     */
-    public final static boolean IS_LEGACY_ALPHA = false;
-    /**
-     * If this Application is in the Hard Floor of Legacy Mode
-     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
-     */
-    @SuppressWarnings("PointlessBooleanExpression")
-    public final static boolean IS_LEGACY_HARD = IS_LEGACY_ALPHA || false;
+    public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
+
     /**
      * If this Application is within the Soft Floor of Legacy Mode
      * <p>This variable becomes true only on versions before 13w41a (When the protocol number was reset)
      */
-    @SuppressWarnings("PointlessBooleanExpression")
-    public final static boolean IS_LEGACY_SOFT = IS_LEGACY_HARD || false;
+    public final static boolean IS_LEGACY_SOFT = StringUtils.getValidBoolean("@IS_LEGACY@").getSecond();
+
+    /**
+     * If this Application is in the Hard Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
+     */
+    public final static boolean IS_LEGACY_HARD = IS_LEGACY_SOFT && MCProtocolID <= 61;
+
+    /**
+     * If this Application is in the Alpha Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
+     */
+    public final static boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCProtocolID <= 2;
+
     /**
      * If this Application is flagged to be run in a Developer or Debug State
      */
-    public static final boolean IS_DEV_FLAG;
+    public static final boolean IS_DEV_FLAG = StringUtils.getValidBoolean("@IS_DEV@").getSecond();
+
     /**
      * If this Application is flagged to be running in a de-obfuscated or Developer environment
      */
-    public static final boolean IS_VERBOSE_FLAG;
+    public static final boolean IS_VERBOSE_FLAG = StringUtils.getValidBoolean("@IS_VERBOSE@").getSecond();
 
-    static {
-        NAME = "@MOD_NAME@";
-        VERSION_ID = "v@VERSION_ID@";
-        VERSION_TYPE = "@VERSION_TYPE@";
-        MCVersion = "@MC_VERSION@";
-        MCProtocolID = Integer.parseInt("@MC_PROTOCOL@");
-        IS_DEV_FLAG = Boolean.parseBoolean("@IS_DEV@");
-        IS_VERBOSE_FLAG = Boolean.parseBoolean("@IS_VERBOSE@");
-        TRANSLATOR = new TranslationUtils(MOD_ID, true).build();
+    /**
+     * The Application's Instance of {@link ModLogger} for Logging Information
+     */
+    public static final ModLogger LOG = new ModLogger(NAME);
+
+    /**
+     * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
+     */
+    public static final TranslationUtils TRANSLATOR = new TranslationUtils(MOD_ID, true).build();
+
+    /**
+     * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
+     */
+    public static final TranslationUtils RAW_TRANSLATOR = findGameTranslations();
+
+    private static TranslationUtils findGameTranslations() {
         final boolean hasVanillaTranslations = !IS_LEGACY_SOFT || MCProtocolID >= 7;
-        RAW_TRANSLATOR = hasVanillaTranslations ? new TranslationUtils(
+        return hasVanillaTranslations ? new TranslationUtils(
                 "minecraft", !IS_LEGACY_SOFT && MCProtocolID >= 353
         ).setUsingAssetsPath(!IS_LEGACY_SOFT || MCProtocolID >= 72).build() : null;
-        UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
     }
 }

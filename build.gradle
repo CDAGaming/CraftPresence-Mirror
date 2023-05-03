@@ -209,6 +209,7 @@ subprojects {
         inputs.property "versionLabel", "${versionLabel}"
         inputs.property "mcVersion", "${mcVersionLabel}"
         inputs.property "mcProtocol", "${mc_protocol}"
+        inputs.property "isLegacy", "${isLegacy}"
         inputs.property "isDevState", "${isDevState}"
         inputs.property "isVerboseState", "${isVerboseState}"
 
@@ -219,6 +220,7 @@ subprojects {
                 VERSION_TYPE: deploymentType,
                 MC_VERSION  : "${mcVersionLabel}".toString(),
                 MC_PROTOCOL : mc_protocol,
+                IS_LEGACY   : "${isLegacy}".toString(),
                 IS_DEV      : isDevState,
                 IS_VERBOSE  : isVerboseState
         ])
