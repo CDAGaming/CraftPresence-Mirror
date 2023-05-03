@@ -141,7 +141,7 @@ public final class Config extends Module implements Serializable {
 
     public static void setupCriticalData() {
         // Setup other critical data
-        MC_VERSION = Integer.parseInt("@MC_PROTOCOL@");
+        MC_VERSION = ModUtils.MCProtocolID;
         keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
         languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     }
