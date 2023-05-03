@@ -776,6 +776,39 @@ public class StringUtils {
     }
 
     /**
+     * Determine whether an inputted Object classifies as a valid Boolean
+     *
+     * @param entry The Object to evaluate
+     * @return A Pair with the format of isValid:parsedBoolIfTrue
+     */
+    public static Pair<Boolean, Boolean> getValidBoolean(final Object entry) {
+        return entry != null ? getValidBoolean(entry.toString()) : new Pair<>(false, false);
+    }
+
+    /**
+     * Determine whether an inputted String classifies as a valid Boolean
+     *
+     * @param entry The String to evaluate
+     * @return A Pair with the format of isValid:parsedBoolIfTrue
+     */
+    public static Pair<Boolean, Boolean> getValidBoolean(final String entry) {
+        final Pair<Boolean, Boolean> finalSet = new Pair<>();
+
+        if (!isNullOrEmpty(entry)) {
+            try {
+                finalSet.setSecond(Boolean.parseBoolean(entry));
+                finalSet.setFirst(true);
+            } catch (Exception ex) {
+                finalSet.setFirst(false);
+            }
+        } else {
+            finalSet.setFirst(false);
+        }
+
+        return finalSet;
+    }
+
+    /**
      * Formats an IP Address based on Input
      *
      * @param input      The original String to evaluate
