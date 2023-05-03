@@ -215,14 +215,14 @@ subprojects {
 
         from sourceSets.main.java
         filter(ReplaceTokens, tokens: [
-                MOD_NAME    : mod_name,
+                MOD_NAME    : "${mod_name}".toString(),
                 VERSION_ID  : "${baseVersionLabel}".toString(),
-                VERSION_TYPE: deploymentType,
+                VERSION_TYPE: "${deploymentType}".toString(),
                 MC_VERSION  : "${mcVersionLabel}".toString(),
-                MC_PROTOCOL : mc_protocol,
+                MC_PROTOCOL : "${mc_protocol}".toString(),
                 IS_LEGACY   : "${isLegacy}".toString(),
-                IS_DEV      : isDevState,
-                IS_VERBOSE  : isVerboseState
+                IS_DEV      : "${isDevState}".toString(),
+                IS_VERBOSE  : "${isVerboseState}".toString()
         ])
         into copyDir
     }
