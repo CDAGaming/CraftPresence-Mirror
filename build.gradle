@@ -194,6 +194,8 @@ subprojects {
 
     gradle.projectsEvaluated {
         tasks.withType(Javadoc).configureEach {
+            it.options.encoding = "UTF-8"
+
             exclude "**/*Gui.java"
             exclude "${classPath}/config/**"
             exclude "${classPath}/integrations/**"
