@@ -54,13 +54,29 @@ import java.util.List;
  */
 @SuppressWarnings("DuplicatedCode")
 public class RenderUtils {
+    /**
+     * The Default Widget Background Resources
+     */
     public static final String DEFAULT_BUTTON_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? "/gui/gui.png" : "textures/gui/widgets.png");
+    /**
+     * The Default Screen Background Resources
+     */
     public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
 
+    /**
+     * Retrieve the default Screen Textures as Texture Data
+     *
+     * @return the default Screen Textures
+     */
     public static ResourceLocation getScreenTextures() {
         return getTextureData(DEFAULT_GUI_BACKGROUND).getThird();
     }
 
+    /**
+     * Retrieve the default Widget Textures as Texture Data
+     *
+     * @return the default Widget Textures
+     */
     public static ResourceLocation getButtonTextures() {
         return getTextureData(DEFAULT_BUTTON_BACKGROUND).getThird();
     }

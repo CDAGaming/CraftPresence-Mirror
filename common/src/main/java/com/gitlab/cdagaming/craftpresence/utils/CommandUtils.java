@@ -88,6 +88,11 @@ public class CommandUtils {
         return status;
     }
 
+    /**
+     * Sets the current {@link MenuStatus} for this instance
+     *
+     * @param newState the new {@link MenuStatus}
+     */
     public static void setMenuState(final MenuStatus newState) {
         final MenuStatus oldState = status;
         status = newState;
@@ -96,10 +101,16 @@ public class CommandUtils {
         }
     }
 
+    /**
+     * Reset the {@link MenuStatus} for this instance
+     */
     public static void clearMenuState() {
         setMenuState(MenuStatus.None);
     }
 
+    /**
+     * Synchronize Presence Data with the current {@link MenuStatus}
+     */
     public static void updateMenuPresence() {
         switch (status) {
             case Loading:
@@ -318,7 +329,22 @@ public class CommandUtils {
         CraftPresence.CLIENT.removeArguments("menu");
     }
 
+    /**
+     * Constants representing various Menu Status Levels,
+     * such as MainMenu or Loading
+     */
     public enum MenuStatus {
-        MainMenu, Loading, None
+        /**
+         * Constant for the "MainMenu" Status Level.
+         */
+        MainMenu,
+        /**
+         * Constant for the "Loading" Status Level.
+         */
+        Loading,
+        /**
+         * Constant for the "None" Status Level.
+         */
+        None
     }
 }

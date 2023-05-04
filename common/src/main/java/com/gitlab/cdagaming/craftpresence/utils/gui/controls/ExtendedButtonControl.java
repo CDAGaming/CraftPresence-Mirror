@@ -430,30 +430,65 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         this.visible = isVisible;
     }
 
+    /**
+     * Gets whether we are currently hovering over this control
+     *
+     * @return the current hover state
+     */
     public boolean isHoveringOver() {
         return this.hovered;
     }
 
+    /**
+     * Sets whether we are currently hovering over this control
+     *
+     * @param isHovered the new hover state
+     */
     public void setHoveringOver(final boolean isHovered) {
         this.hovered = isHovered;
     }
 
+    /**
+     * Gets whether we are currently focusing over this control
+     *
+     * @return the current focus state
+     */
     public boolean isFocusedOver() {
         return false;
     }
 
+    /**
+     * Sets whether we are currently focusing over this control
+     *
+     * @param isFocused the new focus state
+     */
     public void setFocusedOver(final boolean isFocused) {
         // N/A
     }
 
+    /**
+     * Gets whether we are currently hovering or focusing over this control
+     *
+     * @return {@link Boolean#TRUE} if we are hovering or focusing over this control
+     */
     public boolean isHoveringOrFocusingOver() {
         return isHoveringOver() || isFocusedOver();
     }
 
+    /**
+     * Retrieve the Z Level that this control will be rendering at
+     *
+     * @return the current Z Level
+     */
     public double getZLevel() {
         return this.zLevel;
     }
 
+    /**
+     * Set the Z Level that this control will be rendering at
+     *
+     * @param zLevel the new Z Level
+     */
     public void setZLevel(final double zLevel) {
         this.zLevel = (float) zLevel;
     }
