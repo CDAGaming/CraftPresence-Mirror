@@ -47,7 +47,6 @@ import java.util.ArrayList;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("ConstantConditions")
 public class ImageFrame {
     /**
      * The delay between image transitions
@@ -129,7 +128,7 @@ public class ImageFrame {
             final NodeList globalColorTable = globalRoot.getElementsByTagName("GlobalColorTable");
             final NodeList globalScreeDescriptor = globalRoot.getElementsByTagName("LogicalScreenDescriptor");
 
-            if (globalScreeDescriptor != null && globalScreeDescriptor.getLength() > 0) {
+            if (globalScreeDescriptor.getLength() > 0) {
                 final IIOMetadataNode screenDescriptor = (IIOMetadataNode) globalScreeDescriptor.item(0);
 
                 if (screenDescriptor != null) {
@@ -138,7 +137,7 @@ public class ImageFrame {
                 }
             }
 
-            if (globalColorTable != null && globalColorTable.getLength() > 0) {
+            if (globalColorTable.getLength() > 0) {
                 final IIOMetadataNode colorTable = (IIOMetadataNode) globalColorTable.item(0);
 
                 if (colorTable != null) {
