@@ -31,7 +31,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.gui.GuiScreen;
 
 public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen {
@@ -39,7 +38,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     protected ScrollPane childFrame;
     protected ExtendedButtonControl resetConfigButton, syncConfigButton, proceedButton;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ConfigurationGui(GuiScreen parentScreen, String title, String subTitle) {
         super(parentScreen);
 

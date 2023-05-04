@@ -70,7 +70,7 @@ public class TextDisplayWidget implements DynamicWidget {
     /**
      * Whether the text should be center-aligned
      */
-    private boolean centered = false;
+    private boolean centered;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
