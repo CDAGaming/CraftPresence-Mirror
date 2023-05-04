@@ -38,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.integrations.pack.multimc.MultiMCUtils
 import com.gitlab.cdagaming.craftpresence.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -49,7 +48,6 @@ import java.util.concurrent.ScheduledExecutorService;
  *
  * @author CDAGaming
  */
-@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CommandUtils {
     /**
      * Timer Instance for this Class, used for Scheduling Events
@@ -77,13 +75,44 @@ public class CommandUtils {
             .put("technic", new TechnicUtils())
             .build();
     /**
-     * Whether you are on the Main Menu in Minecraft
+     * The Current {@link MenuStatus} representing where we are at in the load process
      */
-    public static boolean isInMainMenu = false;
+    private static MenuStatus status = MenuStatus.None;
+
     /**
-     * Whether you are on the Loading Stage in Minecraft
+     * Retrieve the current {@link MenuStatus} for this instance
+     *
+     * @return the current {@link MenuStatus}
      */
-    public static boolean isLoadingGame = false;
+    public static MenuStatus getMenuState() {
+        return status;
+    }
+
+    public static void setMenuState(final MenuStatus newState) {
+        final MenuStatus oldState = status;
+        status = newState;
+        if (oldState != newState) {
+            updateMenuPresence();
+        }
+    }
+
+    public static void clearMenuState() {
+        setMenuState(MenuStatus.None);
+    }
+
+    public static void updateMenuPresence() {
+        switch (status) {
+            case Loading:
+                syncMenuData(CraftPresence.CONFIG.statusMessages.loadingData);
+                break;
+            case MainMenu:
+                syncMenuData(CraftPresence.CONFIG.statusMessages.mainMenuData);
+                break;
+            default:
+                clearMenuPresence();
+                break;
+        }
+    }
 
     /**
      * Retrieve the Timer Instance for this Class, used for Scheduling Events
@@ -160,7 +189,7 @@ public class CommandUtils {
         for (Module module : modules.values()) {
             module.clearClientData();
         }
-        clearInitialPresence();
+        clearMenuState();
     }
 
     /**
@@ -204,11 +233,7 @@ public class CommandUtils {
                 }
             }
             if (forceUpdateRPC) {
-                if (isLoadingGame) {
-                    setLoadingPresence();
-                } else if (isInMainMenu) {
-                    setMainMenuPresence();
-                }
+                updateMenuPresence();
             }
             CraftPresence.CLIENT.onTick();
         } finally {
@@ -286,41 +311,14 @@ public class CommandUtils {
     }
 
     /**
-     * Synchronizes RPC Data towards that of being in a Loading State
-     */
-    public static void setLoadingPresence() {
-        syncMenuData(CraftPresence.CONFIG.statusMessages.loadingData);
-        isLoadingGame = true;
-    }
-
-    /**
-     * Synchronizes RPC Data towards that of being in the Main Menu
-     */
-    public static void setMainMenuPresence() {
-        // Clear Loading Game State, if applicable
-        if (isLoadingGame) {
-            clearMenuPresence();
-            isLoadingGame = false;
-        }
-
-        syncMenuData(CraftPresence.CONFIG.statusMessages.mainMenuData);
-        isInMainMenu = true;
-    }
-
-    /**
-     * Clear the Initial Presence Data set from the Loading and Main Menu Events
-     */
-    public static void clearInitialPresence() {
-        isInMainMenu = false;
-        isLoadingGame = false;
-        clearMenuPresence();
-    }
-
-    /**
      * Clear the Menu Presence Data, derived from the Loading and Main Menu Events
      */
     public static void clearMenuPresence() {
         CraftPresence.CLIENT.clearOverride("menu.message", "menu.icon");
         CraftPresence.CLIENT.removeArguments("menu");
+    }
+
+    public enum MenuStatus {
+        MainMenu, Loading, None
     }
 }

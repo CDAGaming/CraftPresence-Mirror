@@ -281,7 +281,6 @@ public class DiscordUtils {
             overrideData.clear();
             placeholderData.clear();
         }
-        CommandUtils.isInMainMenu = false;
 
         // Update Start Timestamp onInit, if needed
         final long newStartTime = TimeUtils.getCurrentTime().getEpochSecond();
@@ -1507,15 +1506,15 @@ public class DiscordUtils {
         syncPlaceholders();
 
         // Menu Tick Event
-        final boolean isMenuActive = (CommandUtils.isLoadingGame || CommandUtils.isInMainMenu);
+        final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
         final boolean isFullyLoaded = CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
         if (!isFullyLoaded && !isMenuActive) {
             // Ensure Loading Presence has already passed, before any other type of presence displays
-            CommandUtils.setLoadingPresence();
-        } else if (CraftPresence.player == null && !CommandUtils.isInMainMenu) {
-            CommandUtils.setMainMenuPresence();
+            CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
+        } else if (CraftPresence.player == null && CommandUtils.getMenuState() != CommandUtils.MenuStatus.MainMenu) {
+            CommandUtils.setMenuState(CommandUtils.MenuStatus.MainMenu);
         } else if (CraftPresence.player != null && isMenuActive) {
-            CommandUtils.clearInitialPresence();
+            CommandUtils.clearMenuState();
         }
         // Join Request Tick Event
         if (!CraftPresence.CONFIG.hasChanged && isFullyLoaded) {
