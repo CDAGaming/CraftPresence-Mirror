@@ -38,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.google.gson.JsonElement;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,12 +49,12 @@ import java.util.Map;
 
 public final class Config extends Module implements Serializable {
     // Constants
-    public static final int VERSION = 3;
     private static final long serialVersionUID = -4853238501768086595L;
-    private static int MC_VERSION;
-    private static List<String> keyCodeTriggers;
-    private static List<String> languageTriggers;
-    private static Config DEFAULT;
+    private static final int MC_VERSION = ModUtils.MCProtocolID;
+    private static final int VERSION = 3;
+    private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
+    private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
+    private static final Config DEFAULT = new Config().applyDefaults();
     private static final Config INSTANCE = loadOrCreate();
     public transient boolean hasChanged = false, isNewFile = false;
     // Global Settings
@@ -108,8 +107,6 @@ public final class Config extends Module implements Serializable {
     }
 
     public static Config loadOrCreate(final boolean forceCreate) {
-        setupCriticalData();
-
         final Pair<Config, JsonElement> data = read();
         Config config = data.getFirst();
         JsonElement rawJson = data.getSecond();
@@ -117,7 +114,7 @@ public final class Config extends Module implements Serializable {
         final boolean hasNoData = config == null;
         final boolean isInvalidData = !hasNoData && (forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0));
         if (hasNoData || isInvalidData) {
-            config = hasNoData ? createDefaults() : config.getDefaults();
+            config = hasNoData ? DEFAULT : config.getDefaults();
             config.isNewFile = true;
             config.hasChanged = isInvalidData;
         }
@@ -137,13 +134,6 @@ public final class Config extends Module implements Serializable {
 
     public static Config loadOrCreate() {
         return loadOrCreate(false);
-    }
-
-    public static void setupCriticalData() {
-        // Setup other critical data
-        MC_VERSION = ModUtils.MCProtocolID;
-        keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
-        languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     }
 
     public static Object getProperty(final Config instance, final String... path) {
@@ -174,19 +164,26 @@ public final class Config extends Module implements Serializable {
         return property != null && !StringUtils.isNullOrEmpty(property.toString());
     }
 
-    public static Config createDefaults() {
-        final Config config = new Config();
-        config._schemaVersion = VERSION;
-        config._lastMCVersionId = MC_VERSION;
-        return copy(config, Config.class);
+    public static int getGameVersion() {
+        return MC_VERSION;
     }
 
-    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+    public static int getSchemaVersion() {
+        return VERSION;
+    }
+
+    public Config applyDefaults(final Config config) {
+        config._schemaVersion = getSchemaVersion();
+        config._lastMCVersionId = getGameVersion();
+        return config;
+    }
+
+    public Config applyDefaults() {
+        return applyDefaults(this);
+    }
+
     @Override
     public Config getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = createDefaults();
-        }
         return copy(DEFAULT, Config.class);
     }
 
@@ -400,14 +397,16 @@ public final class Config extends Module implements Serializable {
     }
 
     public JsonElement handleSync(JsonElement rawJson) {
-        if (isNewFile || _schemaVersion != VERSION) {
+        final int newSchemaVer = getSchemaVersion();
+        if (isNewFile || _schemaVersion != newSchemaVer) {
             int oldVer = _schemaVersion;
-            rawJson = handleMigrations(rawJson, oldVer, VERSION);
-            _schemaVersion = VERSION;
+            rawJson = handleMigrations(rawJson, oldVer, newSchemaVer);
+            _schemaVersion = newSchemaVer;
         }
-        int oldMCVer = _lastMCVersionId;
-        if (_lastMCVersionId != MC_VERSION) {
-            _lastMCVersionId = MC_VERSION;
+        final int oldMCVer = _lastMCVersionId;
+        final int newMCVer = getGameVersion();
+        if (oldMCVer != newMCVer) {
+            _lastMCVersionId = newMCVer;
         }
 
         // Sync Migration Data for later usage
@@ -421,11 +420,11 @@ public final class Config extends Module implements Serializable {
         // Otherwise, if our current protocol version is anything less then 17w43a (1.13, 341),
         // we need to ensure any keycode assignments are in an LWJGL 2 format.
         // If neither is true, then we mark the migration data as None, and it will be verified
-        if (oldMCVer < 341 && MC_VERSION >= 341) {
+        if (oldMCVer < 341 && newMCVer >= 341) {
             keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl3;
-        } else if (oldMCVer >= 341 && MC_VERSION < 341) {
+        } else if (oldMCVer >= 341 && newMCVer < 341) {
             keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl2;
-        } else if (oldMCVer >= 0 && MC_VERSION >= 0) {
+        } else if (oldMCVer >= 0 && newMCVer >= 0) {
             keyCodeMigrationId = KeyConverter.ConversionMode.None;
         } else {
             keyCodeMigrationId = KeyConverter.ConversionMode.Unknown;
@@ -438,11 +437,11 @@ public final class Config extends Module implements Serializable {
         // Otherwise, if our current protocol version is anything less then 16w32a (1.11, 301),
         // we need to ensure any Language Locale's are complying with Pack Format 2 and below.
         // If neither is true, then we mark the migration data as None, and it will be verified
-        if (oldMCVer < 301 && MC_VERSION >= 301) {
+        if (oldMCVer < 301 && newMCVer >= 301) {
             languageMigrationId = TranslationUtils.ConversionMode.PackFormat3;
-        } else if (oldMCVer >= 301 && MC_VERSION < 301) {
+        } else if (oldMCVer >= 301 && newMCVer < 301) {
             languageMigrationId = TranslationUtils.ConversionMode.PackFormat2;
-        } else if (oldMCVer >= 0 && MC_VERSION >= 0) {
+        } else if (oldMCVer >= 0 && newMCVer >= 0) {
             languageMigrationId = TranslationUtils.ConversionMode.None;
         } else {
             languageMigrationId = TranslationUtils.ConversionMode.Unknown;
@@ -531,20 +530,5 @@ public final class Config extends Module implements Serializable {
     @Override
     public void resetProperty(final String name) {
         resetProperty(name.split("\\."));
-    }
-
-    @SuppressFBWarnings("HE_EQUALS_NO_HASHCODE")
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        if (!(obj instanceof Config)) {
-            return false;
-        }
-
-        Config p = (Config) obj;
-        return toString().equals(p.toString());
     }
 }

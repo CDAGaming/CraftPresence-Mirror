@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class Gui extends Module implements Serializable {
     private static final long serialVersionUID = -5871047759131139250L;
-    private static Gui DEFAULT;
+    private static final Gui DEFAULT = new Gui();
     public String fallbackGuiIcon = "unknown";
     public Map<String, ModuleData> guiData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
@@ -64,9 +64,6 @@ public class Gui extends Module implements Serializable {
 
     @Override
     public Gui getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Gui();
-        }
         return copy(DEFAULT, Gui.class);
     }
 

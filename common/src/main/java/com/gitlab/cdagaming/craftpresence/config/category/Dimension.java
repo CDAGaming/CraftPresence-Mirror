@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Dimension extends Module implements Serializable {
     private static final long serialVersionUID = 2779211521643527744L;
-    private static Dimension DEFAULT;
+    private static final Dimension DEFAULT = new Dimension();
     public String fallbackDimensionIcon = "unknown";
     public Map<String, ModuleData> dimensionData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
@@ -46,9 +46,6 @@ public class Dimension extends Module implements Serializable {
 
     @Override
     public Dimension getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Dimension();
-        }
         return copy(DEFAULT, Dimension.class);
     }
 

@@ -31,7 +31,7 @@ import java.io.Serializable;
 
 public class ModuleData extends Module implements Serializable {
     private static final long serialVersionUID = -5846802181463006850L;
-    private static ModuleData DEFAULT;
+    private static final ModuleData DEFAULT = new ModuleData();
 
     private String textOverride;
     private String iconOverride;
@@ -57,9 +57,6 @@ public class ModuleData extends Module implements Serializable {
 
     @Override
     public ModuleData getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new ModuleData();
-        }
         return new ModuleData(DEFAULT);
     }
 

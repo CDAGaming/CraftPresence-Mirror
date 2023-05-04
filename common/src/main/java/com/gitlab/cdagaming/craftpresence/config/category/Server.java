@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Server extends Module implements Serializable {
     private static final long serialVersionUID = -3687928791637101400L;
-    private static Server DEFAULT;
+    private static final Server DEFAULT = new Server();
     public String fallbackServerIcon = "default";
     public String fallbackServerName = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_name");
     public String fallbackServerMotd = ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.server_messages.server_motd");
@@ -48,9 +48,6 @@ public class Server extends Module implements Serializable {
 
     @Override
     public Server getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Server();
-        }
         return copy(DEFAULT, Server.class);
     }
 

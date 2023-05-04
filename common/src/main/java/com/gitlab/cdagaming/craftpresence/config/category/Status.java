@@ -33,7 +33,7 @@ import java.io.Serializable;
 
 public class Status extends Module implements Serializable {
     private static final long serialVersionUID = 3055410101315942491L;
-    private static Status DEFAULT;
+    private static final Status DEFAULT = new Status();
     public ModuleData mainMenuData = new ModuleData(
             ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.main_menu"),
             null
@@ -53,9 +53,6 @@ public class Status extends Module implements Serializable {
 
     @Override
     public Status getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Status();
-        }
         return copy(DEFAULT, Status.class);
     }
 

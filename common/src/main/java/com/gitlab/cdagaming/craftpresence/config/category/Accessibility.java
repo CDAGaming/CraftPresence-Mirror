@@ -28,14 +28,12 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.Serializable;
 
-@SuppressFBWarnings("UCF_USELESS_CONTROL_FLOW_NEXT_LINE")
 public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
-    private static Accessibility DEFAULT;
+    private static final Accessibility DEFAULT = new Accessibility();
     public String tooltipBackgroundColor = "0xF0100010";
     public String tooltipBorderColor = "0x505000FF";
     public String guiBackgroundColor = RenderUtils.DEFAULT_GUI_BACKGROUND;
@@ -49,9 +47,6 @@ public class Accessibility extends Module implements Serializable {
 
     @Override
     public Accessibility getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Accessibility();
-        }
         return copy(DEFAULT, Accessibility.class);
     }
 

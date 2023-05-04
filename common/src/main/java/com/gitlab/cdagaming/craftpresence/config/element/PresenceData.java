@@ -35,7 +35,7 @@ import java.util.Objects;
 
 public class PresenceData extends Module implements Serializable {
     private static final long serialVersionUID = -7560029890988753870L;
-    private static PresenceData DEFAULT;
+    private static final PresenceData DEFAULT = new PresenceData();
 
     public boolean enabled = true;
     public boolean useAsMain = false;
@@ -75,9 +75,6 @@ public class PresenceData extends Module implements Serializable {
 
     @Override
     public PresenceData getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new PresenceData();
-        }
         return new PresenceData(DEFAULT);
     }
 

@@ -447,7 +447,7 @@ public class Legacy2Modern implements DataMigrator {
                 ModUtils.LOG.error("Failed to remove: " + configFile.getName());
             }
             // Force Schema Version to the latest schema, before saving
-            instance._schemaVersion = Config.VERSION;
+            instance._schemaVersion = Config.getSchemaVersion();
             instance.save();
         }
         return instance;

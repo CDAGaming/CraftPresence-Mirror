@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Entity extends Module implements Serializable {
     private static final long serialVersionUID = -4294690176016925084L;
-    private static Entity DEFAULT;
+    private static final Entity DEFAULT = new Entity();
     public String fallbackEntityIcon = "unknown";
     public Map<String, ModuleData> targetData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
@@ -52,9 +52,6 @@ public class Entity extends Module implements Serializable {
 
     @Override
     public Entity getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Entity();
-        }
         return copy(DEFAULT, Entity.class);
     }
 

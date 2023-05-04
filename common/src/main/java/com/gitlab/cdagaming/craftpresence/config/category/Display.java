@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Display extends Module implements Serializable {
     private static final long serialVersionUID = -3302764075156017733L;
-    private static Display DEFAULT;
+    private static final Display DEFAULT = new Display();
     public PresenceData presenceData = new PresenceData()
             .setGameState("{getOrDefault(server.message)} {getOrDefault(pack.name)}")
             .setDetails("{getFirst(menu.message, dimension.message)}")
@@ -62,9 +62,6 @@ public class Display extends Module implements Serializable {
 
     @Override
     public Display getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Display();
-        }
         return copy(DEFAULT, Display.class);
     }
 

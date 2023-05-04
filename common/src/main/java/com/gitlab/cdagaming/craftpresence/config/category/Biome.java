@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Biome extends Module implements Serializable {
     private static final long serialVersionUID = 7528869687150995557L;
-    private static Biome DEFAULT;
+    private static final Biome DEFAULT = new Biome();
     public String fallbackBiomeIcon = "unknown";
     public Map<String, ModuleData> biomeData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
@@ -46,9 +46,6 @@ public class Biome extends Module implements Serializable {
 
     @Override
     public Biome getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Biome();
-        }
         return copy(DEFAULT, Biome.class);
     }
 

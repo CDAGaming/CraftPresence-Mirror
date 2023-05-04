@@ -33,7 +33,7 @@ import java.io.Serializable;
 
 public class General extends Module implements Serializable {
     private static final long serialVersionUID = 1796294737844339558L;
-    private static General DEFAULT;
+    private static final General DEFAULT = new General();
     public boolean detectATLauncherInstance = true;
     public boolean detectCurseManifest = true;
     public boolean detectMultiMCManifest = true;
@@ -52,9 +52,6 @@ public class General extends Module implements Serializable {
 
     @Override
     public General getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new General();
-        }
         return copy(DEFAULT, General.class);
     }
 

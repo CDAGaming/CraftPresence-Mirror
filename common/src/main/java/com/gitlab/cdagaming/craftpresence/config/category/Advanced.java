@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class Advanced extends Module implements Serializable {
     private static final long serialVersionUID = 6035241954568785784L;
-    private static Advanced DEFAULT;
+    private static final Advanced DEFAULT = new Advanced();
     public boolean enablePerGui = false;
     public boolean enablePerItem = false;
     public boolean enablePerEntity = false;
@@ -57,9 +57,6 @@ public class Advanced extends Module implements Serializable {
 
     @Override
     public Advanced getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Advanced();
-        }
         return copy(DEFAULT, Advanced.class);
     }
 

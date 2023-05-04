@@ -31,7 +31,7 @@ import java.io.Serializable;
 
 public class Button extends Module implements Serializable {
     private static final long serialVersionUID = 636718807992670138L;
-    private static Button DEFAULT;
+    private static final Button DEFAULT = new Button();
 
     public String label;
     public String url;
@@ -45,11 +45,12 @@ public class Button extends Module implements Serializable {
         this(other.label, other.url);
     }
 
+    public Button() {
+        this("", "");
+    }
+
     @Override
     public Button getDefaults() {
-        if (DEFAULT == null) {
-            DEFAULT = new Button("", "");
-        }
         return new Button(DEFAULT);
     }
 
