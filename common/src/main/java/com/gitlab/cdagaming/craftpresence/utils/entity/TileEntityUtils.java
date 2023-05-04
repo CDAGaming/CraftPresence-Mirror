@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -467,7 +466,6 @@ public class TileEntityUtils implements Module {
         }
     }
 
-    @SuppressFBWarnings("DE_MIGHT_IGNORE")
     @Override
     public void getAllData() {
         for (Block block : Block.REGISTRY) {
@@ -493,6 +491,8 @@ public class TileEntityUtils implements Module {
                                 )
                         );
                     } catch (Exception ignored) {
+                        // Stub Data if error occurs
+                        TILE_ENTITY_RESOURCES.put(blockName, new ResourceLocation(""));
                     }
                 }
             }
@@ -522,6 +522,8 @@ public class TileEntityUtils implements Module {
                                 )
                         );
                     } catch (Exception ignored) {
+                        // Stub Data if error occurs
+                        TILE_ENTITY_RESOURCES.put(itemName, new ResourceLocation(""));
                     }
                 }
             }
