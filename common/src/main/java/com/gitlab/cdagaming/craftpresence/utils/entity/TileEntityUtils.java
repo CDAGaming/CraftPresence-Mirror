@@ -27,8 +27,8 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -467,7 +467,6 @@ public class TileEntityUtils implements Module {
         }
     }
 
-    @SuppressFBWarnings("DE_MIGHT_IGNORE")
     @Override
     public void getAllData() {
         for (Block block : Block.REGISTRY) {
@@ -492,7 +491,10 @@ public class TileEntityUtils implements Module {
                                         "textures/" + initialData.getPath() + ".png"
                                 )
                         );
-                    } catch (Exception ignored) {
+                    } catch (Exception ex) {
+                        if (CommandUtils.isVerboseMode()) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
             }
@@ -521,7 +523,10 @@ public class TileEntityUtils implements Module {
                                         "textures/" + initialData.getPath() + ".png"
                                 )
                         );
-                    } catch (Exception ignored) {
+                    } catch (Exception ex) {
+                        if (CommandUtils.isVerboseMode()) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
             }

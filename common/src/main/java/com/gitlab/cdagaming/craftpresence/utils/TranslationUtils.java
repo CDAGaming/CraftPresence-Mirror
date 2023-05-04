@@ -333,7 +333,10 @@ public class TranslationUtils implements IResourceManagerReloadListener {
             for (IResource resource : resources) {
                 results.add(resource.getInputStream());
             }
-        } catch (Exception ignored) {
+        } catch (Exception ex) {
+            if (CommandUtils.isVerboseMode()) {
+                ex.printStackTrace();
+            }
         }
         return results;
     }
