@@ -453,10 +453,7 @@ public class DiscordUtils {
         Parser.Result result = null;
         try {
             result = Parser.parse(data);
-        } catch (Throwable ex) {
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
+        } catch (Throwable ignored) {
         }
 
         final String originalPrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.original");
@@ -471,10 +468,7 @@ public class DiscordUtils {
                     if (output != null) {
                         try {
                             output.append(error.toString()).append('\n');
-                        } catch (Exception ex) {
-                            if (CommandUtils.isVerboseMode()) {
-                                ex.printStackTrace();
-                            }
+                        } catch (Exception ignored) {
                         }
                     }
                     ModUtils.LOG.error("\t" + error.toString());
@@ -513,10 +507,7 @@ public class DiscordUtils {
                                 output.append('\n').append(verbosePrefix).append('\n');
                             }
                         }
-                    } catch (Exception ex2) {
-                        if (CommandUtils.isVerboseMode()) {
-                            ex2.printStackTrace();
-                        }
+                    } catch (Exception ignored) {
                     }
                 }
                 // Perform the same to Logging, so the same information is available on both ends

@@ -558,10 +558,7 @@ public class FileUtils {
                         } else {
                             return Class.forName(path, init, loader);
                         }
-                    } catch (Throwable ex) {
-                        if (CommandUtils.isVerboseMode()) {
-                            ex.printStackTrace();
-                        }
+                    } catch (Throwable ignored) {
                     }
                 }
             }
@@ -641,10 +638,7 @@ public class FileUtils {
                         CLASS_LIST.add(result);
                         try {
                             CLASS_MAP.put(resultName, result.loadClass(true));
-                        } catch (Throwable ex) {
-                            if (CommandUtils.isVerboseMode()) {
-                                ex.printStackTrace();
-                            }
+                        } catch (Throwable ignored) {
                         }
                     }
                 }
@@ -696,10 +690,7 @@ public class FileUtils {
                 if (hasMatch) {
                     try {
                         results.add(CLASS_MAP.get(classPath));
-                    } catch (Throwable ex) {
-                        if (CommandUtils.isVerboseMode()) {
-                            ex.printStackTrace();
-                        }
+                    } catch (Throwable ignored) {
                     }
                 }
             }
