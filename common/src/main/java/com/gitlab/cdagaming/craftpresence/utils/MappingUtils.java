@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -66,13 +65,17 @@ public class MappingUtils {
      *
      * @return the resulting mappings
      */
-    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public static Map<String, String> getClassMap() {
         if (classMap == null) {
             final Map<String, String> cm = StringUtils.newHashMap();
             // load from /mappings.srg
             try {
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getResourceAsStream(MappingUtils.class, filePath)))) {
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(
+                                FileUtils.getResourceAsStream(MappingUtils.class, filePath),
+                                StringUtils.DEFAULT_CHARSET
+                        )
+                )) {
                     ModUtils.LOG.info("Loading Mappings...");
                     final Instant time = TimeUtils.getCurrentTime();
                     for (String line = reader.readLine(); line != null; line = reader.readLine()) {

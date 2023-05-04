@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.integrations.FieldReflectionUtils;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
@@ -39,6 +38,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
@@ -74,6 +74,10 @@ public class StringUtils {
      * Regex Pattern for Color and Formatting Codes
      */
     public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
+    /**
+     * The Default Charset to use for String Operations
+     */
+    public static final Charset DEFAULT_CHARSET = Charset.defaultCharset();
     /**
      * Regex Pattern for Base64 Detection
      */
@@ -284,16 +288,15 @@ public class StringUtils {
      * @param encoding The Charset to encode the bytes under
      * @return The processed byte array
      */
-    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public static byte[] getBytes(final String original, final String encoding) {
         try {
             if (!isNullOrEmpty(encoding)) {
                 return original.getBytes(encoding);
             } else {
-                return original.getBytes();
+                return getBytes(original, DEFAULT_CHARSET.name());
             }
         } catch (Exception ex) {
-            return original.getBytes();
+            return getBytes(original, DEFAULT_CHARSET.name());
         }
     }
 
@@ -331,13 +334,13 @@ public class StringUtils {
      * @param decode   If we are Decoding an already encoded String
      * @return The converted UTF_8 String, if successful
      */
-    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public static String convertString(final String original, final String encoding, final boolean decode) {
         try {
             if (decode) {
                 return new String(getBytes(original), encoding);
             } else {
-                return new String(getBytes(original, encoding));
+                final byte[] bytes = getBytes(original, encoding);
+                return new String(bytes, 0, bytes.length, DEFAULT_CHARSET);
             }
         } catch (Exception ex) {
             return original;
