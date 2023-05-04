@@ -44,7 +44,7 @@ import java.util.List;
  *
  * @author CDAGaming
  */
-@SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
+@SuppressWarnings("DuplicatedCode")
 public class ReplayModUtils implements Module {
     /**
      * Whether this module is allowed to start and enabled
@@ -207,21 +207,24 @@ public class ReplayModUtils implements Module {
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN instanceof GuiVideoRenderer) {
             CraftPresence.CLIENT.syncArgument("replaymod.time.current", secToString(
-                    (Integer) StringUtils.getField(
+                    StringUtils.getValidInteger(StringUtils.getField(
                             GuiVideoRenderer.class, CURRENT_SCREEN, "renderTimeTaken"
-                    ) / 1000
+                    )).getSecond() / 1000
             ));
             CraftPresence.CLIENT.syncArgument("replaymod.time.remaining", secToString(
-                    (Integer) StringUtils.getField(
+                    StringUtils.getValidInteger(StringUtils.getField(
                             GuiVideoRenderer.class, CURRENT_SCREEN, "renderTimeLeft"
-                    ) / 1000
+                    )).getSecond() / 1000
             ));
 
-            final VideoRenderer renderer = (VideoRenderer) StringUtils.getField(
+            final Object rendererObj = StringUtils.getField(
                     GuiVideoRenderer.class, CURRENT_SCREEN, "renderer"
             );
-            CraftPresence.CLIENT.syncArgument("replaymod.frames.current", renderer.getFramesDone());
-            CraftPresence.CLIENT.syncArgument("replaymod.frames.total", renderer.getTotalFrames());
+            if (rendererObj instanceof VideoRenderer) {
+                final VideoRenderer renderer = (VideoRenderer) rendererObj;
+                CraftPresence.CLIENT.syncArgument("replaymod.frames.current", renderer.getFramesDone());
+                CraftPresence.CLIENT.syncArgument("replaymod.frames.total", renderer.getTotalFrames());
+            }
         } else {
             CraftPresence.CLIENT.removeArguments("replaymod");
         }
