@@ -283,6 +283,7 @@ public class RenderUtils {
                 mc.getTextureManager().bindTexture(texLocation);
             }
         } catch (Exception ignored) {
+            return;
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL11.GL_BLEND);
