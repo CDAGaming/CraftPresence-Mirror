@@ -52,6 +52,7 @@ public class SelectorGui extends ExtendedScreen {
     private ExtendedTextControl searchBox;
     private String searchTerm;
     private List<String> itemList;
+    private ScrollableListControl.IdentifierType identifierType = ScrollableListControl.IdentifierType.None;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -206,7 +207,7 @@ public class SelectorGui extends ExtendedScreen {
                             32, getScreenHeight() - 32,
                             itemList, originalValue,
                             renderType
-                    )
+                    ).setIdentifierType(identifierType)
             );
             searchBox = addControl(
                     new ExtendedTextControl(
@@ -301,5 +302,16 @@ public class SelectorGui extends ExtendedScreen {
         }
 
         super.postRender();
+    }
+
+    /**
+     * Sets the Identifier Type to be linked to this Render Type
+     *
+     * @param type The {@link ScrollableListControl.IdentifierType} to interpret
+     * @return the modified instance
+     */
+    public SelectorGui setIdentifierType(final ScrollableListControl.IdentifierType type) {
+        this.identifierType = type;
+        return this;
     }
 }

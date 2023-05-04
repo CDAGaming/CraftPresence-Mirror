@@ -299,7 +299,7 @@ public class CommandsGui extends ExtendedScreen {
                                     ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                     results,
                                     null, null,
-                                    false, false, RenderType.Placeholder.setCanRenderImage(false),
+                                    false, false, RenderType.Placeholder,
                                     null, null
                             ));
                         } else {

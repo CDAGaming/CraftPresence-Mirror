@@ -34,7 +34,6 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
@@ -59,6 +58,10 @@ public class ScrollableListControl extends GuiSlot {
      */
     public final Map<String, String> entryAliases = StringUtils.newHashMap();
     /**
+     * The Rendering Type to render the slots in
+     */
+    public final RenderType renderType;
+    /**
      * The Currently Selected Value in the List
      */
     public String currentValue;
@@ -71,10 +74,9 @@ public class ScrollableListControl extends GuiSlot {
      */
     public List<String> itemList;
     /**
-     * The Rendering Type to render the slots in
+     * The Identifier Type, normally related to the Render Type
      */
-    public RenderType renderType;
-
+    public IdentifierType identifierType = IdentifierType.None;
     /**
      * The current screen instance
      */
@@ -147,6 +149,17 @@ public class ScrollableListControl extends GuiSlot {
                 currentValue,
                 renderType
         );
+    }
+
+    /**
+     * Sets the Identifier Type to be linked to this Render Type
+     *
+     * @param type The {@link IdentifierType} to interpret
+     * @return the modified instance
+     */
+    public ScrollableListControl setIdentifierType(final IdentifierType type) {
+        this.identifierType = type;
+        return this;
     }
 
     /**
@@ -426,7 +439,7 @@ public class ScrollableListControl extends GuiSlot {
             xOffset += 35;
         }
 
-        final String identifierName = renderType.getIdentifier(originalName);
+        final String identifierName = identifierType.getIdentifier(originalName);
         if (!identifierName.equals(displayName) && isHovering) {
             hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
@@ -440,7 +453,6 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * The Rendering Type for this Scroll List
      */
-    @SuppressFBWarnings("ME_ENUM_FIELD_SETTER")
     public enum RenderType {
         /**
          * Constant for the "Discord Asset" Rendering Mode.
@@ -472,45 +484,27 @@ public class ScrollableListControl extends GuiSlot {
         None;
 
         /**
-         * The Identifier Type linked to this Render Type
-         */
-        private IdentifierType identifierType = IdentifierType.None;
-
-        /**
-         * Whether this Render Mode can render images
-         */
-        private boolean canRenderImage = !CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements;
-
-        /**
          * Retrieve whether this Render Mode can render images
          *
          * @return {@link Boolean#TRUE} if this Render Mode can render images
          */
         public boolean canRenderImage() {
-            return this != None && canRenderImage;
+            return this != RenderType.None && !CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements;
         }
+    }
 
+    /**
+     * The Identifier Type attached to a Render Type
+     */
+    public enum IdentifierType {
         /**
-         * Sets whether this Rendering Mode involves Image Rendering
-         *
-         * @param canRenderImage the modified value
-         * @return the modified {@link RenderType} instance
+         * Constant for the "Gui" Identifier Type.
          */
-        public RenderType setCanRenderImage(final boolean canRenderImage) {
-            this.canRenderImage = canRenderImage;
-            return this;
-        }
-
+        Gui,
         /**
-         * Sets the Identifier Type to be linked to this Render Type
-         *
-         * @param type The {@link IdentifierType} to interpret
-         * @return the modified {@link RenderType} instance
+         * Constant for the "None" Identifier Type.
          */
-        public RenderType setIdentifierType(final IdentifierType type) {
-            this.identifierType = type;
-            return this;
-        }
+        None;
 
         /**
          * Retrieve the identifier name to use with the specified argument
@@ -520,7 +514,7 @@ public class ScrollableListControl extends GuiSlot {
          */
         public String getIdentifier(final String originalName) {
             String identifierName;
-            switch (identifierType) {
+            switch (this) {
                 case Gui: {
                     final Class<?> target = CraftPresence.GUIS.GUI_CLASSES.get(originalName);
                     identifierName = target != null ? MappingUtils.getCanonicalName(target) : originalName;
@@ -533,20 +527,6 @@ public class ScrollableListControl extends GuiSlot {
                 }
             }
             return identifierName;
-        }
-
-        /**
-         * The Identifier Type attached to a Render Type
-         */
-        public enum IdentifierType {
-            /**
-             * Constant for the "Gui" Identifier Type.
-             */
-            Gui,
-            /**
-             * Constant for the "None" Identifier Type.
-             */
-            None
         }
     }
 }

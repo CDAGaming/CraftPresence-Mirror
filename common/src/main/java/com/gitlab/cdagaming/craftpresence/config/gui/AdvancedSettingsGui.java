@@ -36,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.IdentifierType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
@@ -90,8 +91,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                         currentScreen,
                                         ModUtils.TRANSLATOR.translate("gui.config.title.selector.gui"), CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
-                                        true, true, RenderType.None.setIdentifierType(
-                                        RenderType.IdentifierType.Gui),
+                                        true, true, RenderType.None,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -169,7 +169,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                     )
                                             );
                                         }
-                                )
+                                ).setIdentifierType(IdentifierType.Gui)
                         ),
                         () -> {
                             if (!guiMessagesButton.isControlEnabled()) {
