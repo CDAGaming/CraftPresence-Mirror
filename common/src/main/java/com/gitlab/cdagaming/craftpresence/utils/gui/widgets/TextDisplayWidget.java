@@ -101,7 +101,6 @@ public class TextDisplayWidget implements DynamicWidget {
      * @param width   The width of the widget
      * @param message The text to be rendered with this widget
      */
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public TextDisplayWidget(final ExtendedScreen parent, final int startX, final int startY, final int width, final String message) {
         this(parent, false, startX, startY, width, message);
     }
