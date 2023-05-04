@@ -288,6 +288,9 @@ public class DiscordUtils {
                 lastStartTime :
                 newStartTime;
         lastStartTime = newStartTime;
+
+        // Initialize Static Data
+        syncArgument("general.mods", FileUtils.getModCount());
     }
 
     /**
@@ -1106,7 +1109,6 @@ public class DiscordUtils {
         }
         // Add Any Generalized Argument Data needed
         final String playerName = CraftPresence.session.getUsername();
-        syncArgument("general.mods", FileUtils.getModCount());
         syncArgument("player.name", playerName);
 
         // UUID Data
