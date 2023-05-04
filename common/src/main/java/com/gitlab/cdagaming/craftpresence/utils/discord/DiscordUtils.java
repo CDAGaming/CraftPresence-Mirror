@@ -45,7 +45,6 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -68,7 +67,6 @@ import java.util.function.Supplier;
  *
  * @author CDAGaming
  */
-@SuppressFBWarnings("UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
 public class DiscordUtils {
     /**
      * A mapping of the arguments that have overwritten module data
@@ -1458,10 +1456,14 @@ public class DiscordUtils {
                         LARGE_IMAGE_TEXT = sanitizePlaceholders(LARGE_IMAGE_TEXT, 128))
                 .setSmallImage(SMALL_IMAGE_KEY = sanitizePlaceholders(SMALL_IMAGE_KEY, 256),
                         SMALL_IMAGE_TEXT = sanitizePlaceholders(SMALL_IMAGE_TEXT, 128))
-                .setParty(PARTY_ID, PARTY_SIZE, PARTY_MAX, PARTY_PRIVACY.ordinal())
-                .setMatchSecret(MATCH_SECRET)
-                .setJoinSecret(JOIN_SECRET)
-                .setSpectateSecret(SPECTATE_SECRET)
+                .setParty(
+                        PARTY_ID = sanitizePlaceholders(PARTY_ID, 128),
+                        PARTY_SIZE, PARTY_MAX,
+                        PARTY_PRIVACY.ordinal()
+                )
+                .setMatchSecret(MATCH_SECRET = sanitizePlaceholders(MATCH_SECRET, 128))
+                .setJoinSecret(JOIN_SECRET = sanitizePlaceholders(JOIN_SECRET, 128))
+                .setSpectateSecret(SPECTATE_SECRET = sanitizePlaceholders(SPECTATE_SECRET, 128))
                 .setButtons(BUTTONS)
                 .build();
 
