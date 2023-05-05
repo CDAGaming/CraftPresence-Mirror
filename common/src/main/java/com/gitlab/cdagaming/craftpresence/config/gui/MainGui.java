@@ -257,7 +257,7 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected void resetData() {
-        setCurrentData(Config.loadOrCreate(true));
+        setCurrentData(getOriginalData().getDefaults());
     }
 
     @Override
