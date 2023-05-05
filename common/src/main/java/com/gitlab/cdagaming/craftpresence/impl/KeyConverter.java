@@ -311,13 +311,19 @@ public class KeyConverter {
      */
     public static int convertKey(final int originalKey, final ConversionMode mode) {
         final Pair<Integer, String> unknownKeyData = mode == ConversionMode.Lwjgl2 ? fromGlfw.get(-1) : toGlfw.get(0);
-        int resultKey = originalKey;
+        int resultKey = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
 
-        if (fromGlfw.containsKey(originalKey) || toGlfw.containsKey(originalKey)) {
-            if (mode == ConversionMode.Lwjgl2 || (mode == ConversionMode.None && fromGlfw.containsKey(originalKey) && toGlfw.containsValue(new Pair<>(originalKey, fromGlfw.get(originalKey).getSecond())) && ModUtils.MCProtocolID <= 340)) {
-                resultKey = fromGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
-            } else if (mode == ConversionMode.Lwjgl3 || (mode == ConversionMode.None && toGlfw.containsKey(originalKey) && fromGlfw.containsValue(new Pair<>(originalKey, toGlfw.get(originalKey).getSecond())) && ModUtils.MCProtocolID > 340)) {
-                resultKey = toGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+        if (mode == ConversionMode.Lwjgl2) {
+            resultKey = fromGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+        } else if (mode == ConversionMode.Lwjgl3) {
+            resultKey = toGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+        } else if (mode == ConversionMode.None) {
+            // If Input is a valid Integer and Valid KeyCode,
+            // Retain the Original Value
+            if (ModUtils.MCProtocolID <= 340 && toGlfw.containsKey(originalKey)) {
+                resultKey = originalKey;
+            } else if (ModUtils.MCProtocolID > 340 && fromGlfw.containsKey(originalKey)) {
+                resultKey = originalKey;
             }
         }
 
