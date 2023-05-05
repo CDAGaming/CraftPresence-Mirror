@@ -336,6 +336,9 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     @Override
     protected void setCurrentData(Accessibility data) {
-        CraftPresence.CONFIG.accessibilitySettings = data;
+        if (!getCurrentData().equals(data)) {
+            getCurrentData().transferFrom(data);
+            CraftPresence.CONFIG.hasChanged = true;
+        }
     }
 }

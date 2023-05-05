@@ -66,6 +66,31 @@ public class Advanced extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Advanced && !equals(target)) {
+            final Advanced data = (Advanced) target;
+
+            enablePerGui = data.enablePerGui;
+            enablePerItem = data.enablePerItem;
+            enablePerEntity = data.enablePerEntity;
+            renderTooltips = data.renderTooltips;
+            formatWords = data.formatWords;
+            debugMode = data.debugMode;
+            verboseMode = data.verboseMode;
+            refreshRate = data.refreshRate;
+            roundSize = data.roundSize;
+            includeExtraGuiClasses = data.includeExtraGuiClasses;
+            allowPlaceholderPreviews = data.allowPlaceholderPreviews;
+            guiSettings.transferFrom(data.guiSettings);
+            itemMessages = data.itemMessages;
+            entitySettings.transferFrom(data.entitySettings);
+            allowEndpointIcons = data.allowEndpointIcons;
+            serverIconEndpoint = data.serverIconEndpoint;
+            playerSkinEndpoint = data.playerSkinEndpoint;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Advanced.class, this, name);
     }

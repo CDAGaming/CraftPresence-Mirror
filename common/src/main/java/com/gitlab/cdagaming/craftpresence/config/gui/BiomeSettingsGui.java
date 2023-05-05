@@ -265,6 +265,9 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
 
     @Override
     protected void setCurrentData(Biome data) {
-        CraftPresence.CONFIG.biomeSettings = data;
+        if (!getCurrentData().equals(data)) {
+            getCurrentData().transferFrom(data);
+            CraftPresence.CONFIG.hasChanged = true;
+        }
     }
 }

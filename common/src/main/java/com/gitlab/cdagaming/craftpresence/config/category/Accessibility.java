@@ -56,6 +56,24 @@ public class Accessibility extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Accessibility && !equals(target)) {
+            final Accessibility data = (Accessibility) target;
+
+            tooltipBackgroundColor = data.tooltipBackgroundColor;
+            tooltipBorderColor = data.tooltipBorderColor;
+            guiBackgroundColor = data.guiBackgroundColor;
+            buttonBackgroundColor = data.buttonBackgroundColor;
+            languageId = data.languageId;
+            showBackgroundAsDark = data.showBackgroundAsDark;
+            stripTranslationColors = data.stripTranslationColors;
+            showLoggingInChat = data.showLoggingInChat;
+            stripExtraGuiElements = data.stripExtraGuiElements;
+            configKeyCode = data.configKeyCode;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Accessibility.class, this, name);
     }

@@ -57,6 +57,18 @@ public class Server extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Server && !equals(target)) {
+            final Server data = (Server) target;
+
+            fallbackServerIcon = data.fallbackServerIcon;
+            fallbackServerName = data.fallbackServerName;
+            fallbackServerMotd = data.fallbackServerMotd;
+            serverData = data.serverData;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Server.class, this, name);
     }

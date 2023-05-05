@@ -71,6 +71,17 @@ public class Display extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Display && !equals(target)) {
+            final Display data = (Display) target;
+
+            presenceData = data.presenceData;
+            dynamicIcons = data.dynamicIcons;
+            dynamicVariables = data.dynamicVariables;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Display.class, this, name);
     }

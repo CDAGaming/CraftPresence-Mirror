@@ -55,6 +55,16 @@ public class Dimension extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Dimension && !equals(target)) {
+            final Dimension data = (Dimension) target;
+
+            fallbackDimensionIcon = data.fallbackDimensionIcon;
+            dimensionData = data.dimensionData;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Dimension.class, this, name);
     }

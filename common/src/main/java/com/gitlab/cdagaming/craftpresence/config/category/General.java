@@ -61,6 +61,29 @@ public class General extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof General && !equals(target)) {
+            final General data = (General) target;
+
+            detectATLauncherInstance = data.detectATLauncherInstance;
+            detectCurseManifest = data.detectCurseManifest;
+            detectMultiMCManifest = data.detectMultiMCManifest;
+            detectMCUpdaterInstance = data.detectMCUpdaterInstance;
+            detectTechnicPack = data.detectTechnicPack;
+            detectBiomeData = data.detectBiomeData;
+            detectDimensionData = data.detectDimensionData;
+            detectWorldData = data.detectWorldData;
+            clientId = data.clientId;
+            defaultIcon = data.defaultIcon;
+            enableJoinRequests = data.enableJoinRequests;
+            partyPrivacyLevel = data.partyPrivacyLevel;
+            preferredClientLevel = data.preferredClientLevel;
+            resetTimeOnInit = data.resetTimeOnInit;
+            autoRegister = data.autoRegister;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(General.class, this, name);
     }

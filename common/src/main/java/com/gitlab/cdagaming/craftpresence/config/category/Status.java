@@ -62,6 +62,18 @@ public class Status extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Status && !equals(target)) {
+            final Status data = (Status) target;
+
+            mainMenuData = data.mainMenuData;
+            loadingData = data.loadingData;
+            lanData = data.lanData;
+            singleplayerData = data.singleplayerData;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Status.class, this, name);
     }

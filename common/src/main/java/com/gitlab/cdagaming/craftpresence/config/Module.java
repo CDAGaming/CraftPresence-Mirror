@@ -59,6 +59,15 @@ public abstract class Module {
     protected abstract Module copy();
 
     /**
+     * Clone the properties of one {@link Module} instance to another
+     *
+     * @param target the target {@link Module} to clone from
+     */
+    public void transferFrom(Module target) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Retrieve the specified property for this {@link Module}
      *
      * @param name the name of the property

@@ -301,6 +301,9 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
 
     @Override
     protected void setCurrentData(Server data) {
-        CraftPresence.CONFIG.serverSettings = data;
+        if (!getCurrentData().equals(data)) {
+            getCurrentData().transferFrom(data);
+            CraftPresence.CONFIG.hasChanged = true;
+        }
     }
 }

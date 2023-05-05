@@ -73,6 +73,16 @@ public class Gui extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Gui && !equals(target)) {
+            final Gui data = (Gui) target;
+
+            fallbackGuiIcon = data.fallbackGuiIcon;
+            guiData = data.guiData;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Gui.class, this, name);
     }

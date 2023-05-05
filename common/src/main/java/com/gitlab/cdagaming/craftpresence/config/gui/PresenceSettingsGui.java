@@ -545,6 +545,9 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
 
     @Override
     protected void setCurrentData(Display data) {
-        CraftPresence.CONFIG.displaySettings = data;
+        if (!getCurrentData().equals(data)) {
+            getCurrentData().transferFrom(data);
+            CraftPresence.CONFIG.hasChanged = true;
+        }
     }
 }

@@ -61,6 +61,17 @@ public class Entity extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Entity && !equals(target)) {
+            final Entity data = (Entity) target;
+
+            fallbackEntityIcon = data.fallbackEntityIcon;
+            targetData = data.targetData;
+            ridingData = data.ridingData;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Entity.class, this, name);
     }

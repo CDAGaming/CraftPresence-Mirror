@@ -192,6 +192,22 @@ public final class Config extends Module implements Serializable {
         return copy(this, Config.class);
     }
 
+    @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Config && !equals(target)) {
+            final Config data = (Config) target;
+
+            generalSettings = data.generalSettings;
+            biomeSettings = data.biomeSettings;
+            dimensionSettings = data.dimensionSettings;
+            serverSettings = data.serverSettings;
+            statusMessages = data.statusMessages;
+            advancedSettings = data.advancedSettings;
+            accessibilitySettings = data.accessibilitySettings;
+            displaySettings = data.displaySettings;
+        }
+    }
+
     public void applySettings() {
         if (hasChanged) {
             CommandUtils.reloadData(true);

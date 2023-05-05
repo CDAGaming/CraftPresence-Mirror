@@ -55,6 +55,16 @@ public class Biome extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Biome && !equals(target)) {
+            final Biome data = (Biome) target;
+
+            fallbackBiomeIcon = data.fallbackBiomeIcon;
+            biomeData = data.biomeData;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Biome.class, this, name);
     }

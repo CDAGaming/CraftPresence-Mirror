@@ -297,6 +297,9 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected void setCurrentData(Config data) {
-        CraftPresence.CONFIG = data;
+        if (!getCurrentData().equals(data)) {
+            getCurrentData().transferFrom(data);
+            getCurrentData().hasChanged = true;
+        }
     }
 }
