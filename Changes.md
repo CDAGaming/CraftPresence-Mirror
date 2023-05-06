@@ -313,10 +313,8 @@ Please keep in mind the following:
 * Bugs that are related to or are caused by issues in the Vanilla Codebase, are unlikely to be fixed due to
   Minecraft's limitations
 
-The following Mojang Bugs effect CraftPresence's utilities:
+The following Mojang Bugs are currently known to affect CraftPresence's utilities:
 
 * On MC 1.1 and below, the `GuiTextField` contents can overflow, causing them to become unusable
-* Also on MC 1.1 and below, Text Colors may appear differently compared to newer versions of Minecraft
-* An `OutOfBounds` exception can be thrown when rendering strings on MC b1.2_02 and below
 
 See the Mod Description // README for More Info

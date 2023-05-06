@@ -326,6 +326,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         super.syncRenderStates();
 
         //noinspection ConstantConditions
+        stripTranslationColorsButton.setControlEnabled(!(ModUtils.IS_LEGACY_SOFT && ModUtils.MCProtocolID <= 23));
         stripExtraGuiElementsButton.setControlEnabled(!ModUtils.IS_LEGACY_HARD);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
