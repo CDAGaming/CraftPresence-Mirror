@@ -429,7 +429,7 @@ public final class Config extends Module implements Serializable {
         final KeyConverter.ConversionMode keyCodeMigrationId;
         final TranslationUtils.ConversionMode languageMigrationId;
 
-        // Global Case 1 Notes (KeyCode):
+        // Case 1 Notes (KeyCode):
         // In this situation, if the currently parsed protocol version differs and
         // is a newer version then or exactly 17w43a (1.13, 341), then
         // we need to ensure any keycode assignments are in an LWJGL 3 format.
@@ -446,7 +446,7 @@ public final class Config extends Module implements Serializable {
             keyCodeMigrationId = KeyConverter.ConversionMode.Unknown;
         }
 
-        // Normal Case 1 Notes (Language ID):
+        // Case 2 Notes (Language ID):
         // In this situation, if the currently parsed protocol version differs and
         // is a newer version then or exactly 16w32a (1.11, 301), then
         // we need to ensure any Language Locale's are complying with Pack Format 3 and above.
