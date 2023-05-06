@@ -114,7 +114,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         buttonCalc2, getButtonY(1),
                         180, 20,
                         "gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name(),
-                        () -> currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length,
+                        () -> {
+                            currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length;
+                            partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
+                        },
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
@@ -128,7 +131,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         buttonCalc2, getButtonY(2),
                         180, 20,
                         "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
-                        () -> currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length,
+                        () -> {
+                            currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length;
+                            preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
+                        },
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
@@ -355,9 +361,9 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     protected void syncRenderStates() {
         super.syncRenderStates();
 
-        partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
-        preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
-        proceedButton.setControlEnabled(DiscordAssetUtils.isValidId(clientId.getControlMessage()));
+        proceedButton.setControlEnabled(
+                DiscordAssetUtils.isValidId(clientId.getControlMessage())
+        );
     }
 
     @Override
