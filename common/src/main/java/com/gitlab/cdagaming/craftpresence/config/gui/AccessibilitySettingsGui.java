@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -288,6 +289,36 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         )
                 )
         );
+    }
+
+    @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected boolean allowedToReset() {
+        return true;
+    }
+
+    @Override
+    protected boolean resetData() {
+        return setCurrentData(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected boolean canSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean allowedToSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean syncData() {
+        return setCurrentData(Config.loadOrCreate().accessibilitySettings);
     }
 
     @Override

@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.General;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -355,6 +356,36 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().autoRegister = autoRegisterButton.isChecked();
         }
+    }
+
+    @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected boolean allowedToReset() {
+        return true;
+    }
+
+    @Override
+    protected boolean resetData() {
+        return setCurrentData(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected boolean canSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean allowedToSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean syncData() {
+        return setCurrentData(Config.loadOrCreate().generalSettings);
     }
 
     @Override

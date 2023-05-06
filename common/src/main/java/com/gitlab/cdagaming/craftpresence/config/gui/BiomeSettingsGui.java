@@ -235,6 +235,36 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     }
 
     @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected boolean allowedToReset() {
+        return true;
+    }
+
+    @Override
+    protected boolean resetData() {
+        return setCurrentData(getOriginalData().getDefaults());
+    }
+
+    @Override
+    protected boolean canSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean allowedToSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean syncData() {
+        return setCurrentData(Config.loadOrCreate().biomeSettings);
+    }
+
+    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
