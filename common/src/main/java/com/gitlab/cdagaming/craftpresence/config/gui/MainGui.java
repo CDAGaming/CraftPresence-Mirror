@@ -256,8 +256,8 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    protected void resetData() {
-        setCurrentData(getOriginalData().getDefaults());
+    protected boolean resetData() {
+        return setCurrentData(getOriginalData().getDefaults());
     }
 
     @Override
@@ -271,8 +271,8 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    protected void syncData() {
-        setCurrentData(Config.loadOrCreate());
+    protected boolean syncData() {
+        return setCurrentData(Config.loadOrCreate());
     }
 
     @Override
@@ -296,10 +296,12 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    protected void setCurrentData(Config data) {
+    protected boolean setCurrentData(Config data) {
         if (!getCurrentData().equals(data)) {
             getCurrentData().transferFrom(data);
             getCurrentData().hasChanged = true;
+            return true;
         }
+        return false;
     }
 }

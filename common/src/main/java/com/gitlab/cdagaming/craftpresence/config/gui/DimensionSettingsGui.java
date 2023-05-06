@@ -265,10 +265,12 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     }
 
     @Override
-    protected void setCurrentData(Dimension data) {
+    protected boolean setCurrentData(Dimension data) {
         if (!getCurrentData().equals(data)) {
             getCurrentData().transferFrom(data);
             CraftPresence.CONFIG.hasChanged = true;
+            return true;
         }
+        return false;
     }
 }

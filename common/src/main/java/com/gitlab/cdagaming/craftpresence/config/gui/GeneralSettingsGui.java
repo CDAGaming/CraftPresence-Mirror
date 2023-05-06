@@ -371,10 +371,12 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     }
 
     @Override
-    protected void setCurrentData(General data) {
+    protected boolean setCurrentData(General data) {
         if (!getCurrentData().equals(data)) {
             getCurrentData().transferFrom(data);
             CraftPresence.CONFIG.hasChanged = true;
+            return true;
         }
+        return false;
     }
 }

@@ -693,10 +693,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     }
 
     @Override
-    protected void setCurrentData(Advanced data) {
+    protected boolean setCurrentData(Advanced data) {
         if (!getCurrentData().equals(data)) {
             getCurrentData().transferFrom(data);
             CraftPresence.CONFIG.hasChanged = true;
+            return true;
         }
+        return false;
     }
 }

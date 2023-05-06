@@ -193,10 +193,12 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     }
 
     @Override
-    protected void setCurrentData(Status data) {
+    protected boolean setCurrentData(Status data) {
         if (!getCurrentData().equals(data)) {
             getCurrentData().transferFrom(data);
             CraftPresence.CONFIG.hasChanged = true;
+            return true;
         }
+        return false;
     }
 }

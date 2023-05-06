@@ -263,6 +263,13 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Event to trigger upon Window Reload
+     */
+    public void reloadUi() {
+        onResize(mc, width, height);
+    }
+
+    /**
      * Event to trigger upon Window Resize
      *
      * @param mcIn The Minecraft Instance

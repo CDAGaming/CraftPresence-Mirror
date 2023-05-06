@@ -67,7 +67,11 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.reset",
-                        this::resetData,
+                        () -> {
+                            if (resetData()) {
+                                reloadUi();
+                            }
+                        },
                         () -> {
                             if (resetConfigButton.isControlEnabled()) {
                                 drawMultiLineString(
@@ -84,7 +88,11 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.sync.config",
-                        this::syncData,
+                        () -> {
+                            if (syncData()) {
+                                reloadUi();
+                            }
+                        },
                         () -> {
                             if (syncConfigButton.isControlEnabled()) {
                                 drawMultiLineString(
@@ -190,12 +198,12 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         );
     }
 
-    protected void resetData() {
-        // N/A
+    protected boolean resetData() {
+        return false;
     }
 
-    protected void syncData() {
-        // N/A
+    protected boolean syncData() {
+        return false;
     }
 
     protected void applySettings() {
@@ -206,5 +214,5 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
 
     protected abstract T getCurrentData();
 
-    protected abstract void setCurrentData(T data);
+    protected abstract boolean setCurrentData(T data);
 }
