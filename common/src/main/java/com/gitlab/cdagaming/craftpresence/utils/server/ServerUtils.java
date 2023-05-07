@@ -78,6 +78,10 @@ public class ServerUtils implements Module {
      */
     public List<String> knownAddresses = StringUtils.newArrayList();
     /**
+     * A List of the default detected Server Addresses
+     */
+    public List<String> defaultAddresses = StringUtils.newArrayList();
+    /**
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = StringUtils.newHashMap();
@@ -192,6 +196,7 @@ public class ServerUtils implements Module {
     public void emptyData() {
         hasScanned = false;
         currentPlayerList.clear();
+        defaultAddresses.clear();
         knownAddresses.clear();
         knownServerData.clear();
         clearClientData();
@@ -294,6 +299,9 @@ public class ServerUtils implements Module {
 
                 if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
                     final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
+                    if (!defaultAddresses.contains(formattedIP)) {
+                        defaultAddresses.add(formattedIP);
+                    }
                     if (!knownAddresses.contains(formattedIP)) {
                         knownAddresses.add(formattedIP);
                     }
@@ -600,6 +608,9 @@ public class ServerUtils implements Module {
                 final ServerData data = serverList.getServerData(currentIndex);
                 if (!StringUtils.isNullOrEmpty(data.serverIP)) {
                     final String formattedIP = data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP;
+                    if (!defaultAddresses.contains(formattedIP)) {
+                        defaultAddresses.add(formattedIP);
+                    }
                     if (!knownAddresses.contains(formattedIP)) {
                         knownAddresses.add(formattedIP);
                     }

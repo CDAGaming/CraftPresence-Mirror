@@ -134,7 +134,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 getCurrentData().dimensionData.remove(attributeName);
-                                                                if (!screenInstance.isPreliminaryData) {
+                                                                if (!CraftPresence.DIMENSIONS.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
                                                                 }
                                                             },

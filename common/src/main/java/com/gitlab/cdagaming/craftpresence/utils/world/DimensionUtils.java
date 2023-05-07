@@ -58,6 +58,10 @@ public class DimensionUtils implements Module {
      */
     public List<String> DIMENSION_NAMES = StringUtils.newArrayList();
     /**
+     * A List of the default detected Dimension Names
+     */
+    public List<String> DEFAULT_NAMES = StringUtils.newArrayList();
+    /**
      * Whether this module is active and currently in use
      */
     private boolean isInUse = false;
@@ -81,6 +85,7 @@ public class DimensionUtils implements Module {
     @Override
     public void emptyData() {
         hasScanned = false;
+        DEFAULT_NAMES.clear();
         DIMENSION_NAMES.clear();
         DIMENSION_TYPES.clear();
         clearClientData();
@@ -134,6 +139,9 @@ public class DimensionUtils implements Module {
             CURRENT_DIMENSION_NAME = StringUtils.getOrDefault(newDimensionName, newDimension_Identifier);
             CURRENT_DIMENSION_IDENTIFIER = newDimension_Identifier;
 
+            if (!DEFAULT_NAMES.contains(newDimension_Identifier)) {
+                DEFAULT_NAMES.add(newDimension_Identifier);
+            }
             if (!DIMENSION_NAMES.contains(newDimension_Identifier)) {
                 DIMENSION_NAMES.add(newDimension_Identifier);
             }
@@ -218,6 +226,9 @@ public class DimensionUtils implements Module {
             if (TYPE != null) {
                 String dimensionName = StringUtils.getOrDefault(TYPE.getName(), MappingUtils.getClassName(TYPE));
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+                if (!DEFAULT_NAMES.contains(name)) {
+                    DEFAULT_NAMES.add(name);
+                }
                 if (!DIMENSION_NAMES.contains(name)) {
                     DIMENSION_NAMES.add(name);
                 }

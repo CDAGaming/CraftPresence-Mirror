@@ -68,6 +68,10 @@ public class GuiUtils implements Module {
      */
     public List<String> GUI_NAMES = StringUtils.newArrayList();
     /**
+     * A List of the default detected Gui Screen Names
+     */
+    public List<String> DEFAULT_NAMES = StringUtils.newArrayList();
+    /**
      * The Current Instance of the Gui the player is in
      */
     public GuiScreen CURRENT_SCREEN;
@@ -100,6 +104,7 @@ public class GuiUtils implements Module {
     @Override
     public void emptyData() {
         hasScanned = false;
+        DEFAULT_NAMES.clear();
         GUI_NAMES.clear();
         GUI_CLASSES.clear();
         clearClientData();
@@ -159,6 +164,9 @@ public class GuiUtils implements Module {
                 CURRENT_GUI_CLASS = newScreenClass;
                 CURRENT_GUI_NAME = newScreenName;
 
+                if (!DEFAULT_NAMES.contains(newScreenName)) {
+                    DEFAULT_NAMES.add(newScreenName);
+                }
                 if (!GUI_NAMES.contains(newScreenName)) {
                     GUI_NAMES.add(newScreenName);
                 }
@@ -177,6 +185,9 @@ public class GuiUtils implements Module {
 
         for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
             final String screenName = MappingUtils.getClassName(classObj);
+            if (!DEFAULT_NAMES.contains(screenName)) {
+                DEFAULT_NAMES.add(screenName);
+            }
             if (!GUI_NAMES.contains(screenName)) {
                 GUI_NAMES.add(screenName);
             }

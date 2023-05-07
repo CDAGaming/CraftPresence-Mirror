@@ -56,6 +56,10 @@ public class EntityUtils implements Module {
      */
     public List<String> ENTITY_NAMES = StringUtils.newArrayList();
     /**
+     * A List of the default detected Entity Names
+     */
+    public List<String> DEFAULT_NAMES = StringUtils.newArrayList();
+    /**
      * A Mapping representing the link between UUIDs and Player Names
      */
     public Map<String, String> PLAYER_BINDINGS = StringUtils.newHashMap();
@@ -150,6 +154,7 @@ public class EntityUtils implements Module {
     @Override
     public void emptyData() {
         hasScanned = false;
+        DEFAULT_NAMES.clear();
         ENTITY_NAMES.clear();
         PLAYER_BINDINGS.clear();
         clearClientData();
@@ -206,6 +211,13 @@ public class EntityUtils implements Module {
 
             if (CURRENT_TARGET != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.target.time");
+
+                if (!DEFAULT_NAMES.contains(CURRENT_TARGET_NAME)) {
+                    DEFAULT_NAMES.add(CURRENT_TARGET_NAME);
+                }
+                if (!ENTITY_NAMES.contains(CURRENT_TARGET_NAME)) {
+                    ENTITY_NAMES.add(CURRENT_TARGET_NAME);
+                }
             }
         }
 
@@ -215,6 +227,13 @@ public class EntityUtils implements Module {
 
             if (CURRENT_RIDING != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.riding.time");
+
+                if (!DEFAULT_NAMES.contains(CURRENT_RIDING_NAME)) {
+                    DEFAULT_NAMES.add(CURRENT_RIDING_NAME);
+                }
+                if (!ENTITY_NAMES.contains(CURRENT_RIDING_NAME)) {
+                    ENTITY_NAMES.add(CURRENT_RIDING_NAME);
+                }
             }
         }
 
@@ -278,6 +297,9 @@ public class EntityUtils implements Module {
             for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
                     final String entityName = StringUtils.getOrDefault(EntityList.getTranslationName(entityLocation), "generic");
+                    if (!DEFAULT_NAMES.contains(entityName)) {
+                        DEFAULT_NAMES.add(entityName);
+                    }
                     if (!ENTITY_NAMES.contains(entityName)) {
                         ENTITY_NAMES.add(entityName);
                     }

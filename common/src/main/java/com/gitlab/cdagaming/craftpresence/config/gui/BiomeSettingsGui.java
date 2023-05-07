@@ -133,7 +133,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 getCurrentData().biomeData.remove(attributeName);
-                                                                if (!screenInstance.isPreliminaryData) {
+                                                                if (!CraftPresence.BIOMES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
                                                                 }
                                                             },

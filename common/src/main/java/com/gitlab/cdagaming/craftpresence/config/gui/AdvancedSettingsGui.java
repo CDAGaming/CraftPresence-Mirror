@@ -125,7 +125,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 getCurrentData().guiSettings.guiData.remove(attributeName);
-                                                                if (!screenInstance.isPreliminaryData) {
+                                                                if (!CraftPresence.GUIS.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.GUIS.GUI_NAMES.remove(attributeName);
                                                                 }
                                                             },
@@ -316,7 +316,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 getCurrentData().entitySettings.targetData.remove(attributeName);
-                                                                if (!screenInstance.isPreliminaryData) {
+                                                                if (!CraftPresence.ENTITIES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                                 }
                                                             },
@@ -427,7 +427,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 getCurrentData().entitySettings.ridingData.remove(attributeName);
-                                                                if (!screenInstance.isPreliminaryData) {
+                                                                if (!CraftPresence.ENTITIES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                                 }
                                                             },

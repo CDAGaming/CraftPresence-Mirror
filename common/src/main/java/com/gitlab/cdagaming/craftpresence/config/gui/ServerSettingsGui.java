@@ -161,7 +161,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                                 // Event to occur when removing set data
                                                                 CraftPresence.CONFIG.hasChanged = true;
                                                                 getCurrentData().serverData.remove(attributeName);
-                                                                if (!screenInstance.isPreliminaryData) {
+                                                                if (!CraftPresence.SERVER.defaultAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.remove(attributeName);
                                                                 }
                                                             },

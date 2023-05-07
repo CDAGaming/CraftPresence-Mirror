@@ -56,6 +56,10 @@ public class BiomeUtils implements Module {
      */
     public List<String> BIOME_NAMES = StringUtils.newArrayList();
     /**
+     * A List of the default detected Biome Names
+     */
+    public List<String> DEFAULT_NAMES = StringUtils.newArrayList();
+    /**
      * Whether this module is active and currently in use
      */
     private boolean isInUse = false;
@@ -79,6 +83,7 @@ public class BiomeUtils implements Module {
     @Override
     public void emptyData() {
         hasScanned = false;
+        DEFAULT_NAMES.clear();
         BIOME_NAMES.clear();
         BIOME_TYPES.clear();
         clearClientData();
@@ -131,6 +136,9 @@ public class BiomeUtils implements Module {
             CURRENT_BIOME_NAME = StringUtils.getOrDefault(newBiomeName, newBiome_Identifier);
             CURRENT_BIOME_IDENTIFIER = newBiome_Identifier;
 
+            if (!DEFAULT_NAMES.contains(newBiome_Identifier)) {
+                DEFAULT_NAMES.add(newBiome_Identifier);
+            }
             if (!BIOME_NAMES.contains(newBiome_Identifier)) {
                 BIOME_NAMES.add(newBiome_Identifier);
             }
@@ -208,6 +216,9 @@ public class BiomeUtils implements Module {
             if (biome != null) {
                 String biomeName = StringUtils.getOrDefault(biome.getBiomeName(), MappingUtils.getClassName(biome));
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+                if (!DEFAULT_NAMES.contains(name)) {
+                    DEFAULT_NAMES.add(name);
+                }
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);
                 }
