@@ -41,7 +41,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private final BiConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
     private final TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
-    public boolean isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
+    public boolean initialized = false, isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     public String resetText;
     public ModuleData defaultData, originalData, currentData;
@@ -84,7 +84,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         int controlIndex = 1;
-        if (!isLoaded()) {
+        if (!isLoaded() && !initialized) {
             resetText = "gui.config.message.button.remove";
             if (isNewValue) {
                 mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
@@ -96,6 +96,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                     onAdjustInit.accept(attributeName, this);
                 }
             }
+            initialized = true;
         }
 
         this.isModuleMode = defaultData != null || currentData != null;
