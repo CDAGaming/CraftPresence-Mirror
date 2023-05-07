@@ -45,9 +45,17 @@ public class TextWidget extends ExtendedTextControl {
      */
     private float titleX;
     /**
+     * The X coordinate offset for the additional message
+     */
+    private float titleXOffset = 0;
+    /**
      * The Y coordinate for the additional message
      */
     private float titleY;
+    /**
+     * The Y coordinate offset for the additional message
+     */
+    private float titleYOffset = 0;
     /**
      * Event to Deploy when this Control is Hovered Over, if any
      */
@@ -157,9 +165,11 @@ public class TextWidget extends ExtendedTextControl {
      * Set the text to be displayed alongside this control
      *
      * @param title The new attached message
+     * @return the modified instance
      */
-    public void setTitle(String title) {
+    public TextWidget setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     /**
@@ -168,16 +178,38 @@ public class TextWidget extends ExtendedTextControl {
      * @return The attached message's X coordinate
      */
     public float getTitleX() {
-        return titleX;
+        return titleX + getTitleXOffset();
     }
 
     /**
      * Set the X coordinate for the additional message
      *
      * @param titleX The new X coordinate for the attached message
+     * @return the modified instance
      */
-    public void setTitleX(float titleX) {
+    public TextWidget setTitleX(float titleX) {
         this.titleX = titleX;
+        return this;
+    }
+
+    /**
+     * Retrieve the X coordinate offset for the additional message
+     *
+     * @return The attached message's X coordinate offset
+     */
+    public float getTitleXOffset() {
+        return titleXOffset;
+    }
+
+    /**
+     * Set the X coordinate offset for the additional message
+     *
+     * @param offset The new X coordinate offset for the attached message
+     * @return the modified instance
+     */
+    public TextWidget setTitleXOffset(float offset) {
+        this.titleXOffset = offset;
+        return this;
     }
 
     /**
@@ -186,16 +218,38 @@ public class TextWidget extends ExtendedTextControl {
      * @return The attached message's Y coordinate
      */
     public float getTitleY() {
-        return titleY;
+        return titleY + getTitleYOffset();
     }
 
     /**
      * Set the Y coordinate for the additional message
      *
      * @param titleY The new Y coordinate for the attached message
+     * @return the modified instance
      */
-    public void setTitleY(float titleY) {
+    public TextWidget setTitleY(float titleY) {
         this.titleY = titleY;
+        return this;
+    }
+
+    /**
+     * Retrieve the Y coordinate offset for the additional message
+     *
+     * @return The attached message's Y coordinate offset
+     */
+    public float getTitleYOffset() {
+        return titleYOffset;
+    }
+
+    /**
+     * Set the Y coordinate offset for the additional message
+     *
+     * @param offset The new Y coordinate offset for the attached message
+     * @return the modified instance
+     */
+    public TextWidget setTitleYOffset(float offset) {
+        this.titleYOffset = offset;
+        return this;
     }
 
     /**
