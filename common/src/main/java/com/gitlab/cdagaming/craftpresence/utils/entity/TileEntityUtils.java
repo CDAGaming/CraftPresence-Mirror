@@ -478,7 +478,7 @@ public class TileEntityUtils implements Module {
                     BLOCK_CLASSES.add(block.getClass().getName());
                 }
 
-                if (!TILE_ENTITY_RESOURCES.containsKey(blockName)) {
+                if (!TILE_ENTITY_RESOURCES.containsKey(blockName) || TILE_ENTITY_RESOURCES.get(blockName) == null) {
                     try {
                         final ResourceLocation initialData = new ResourceLocation(
                                 CraftPresence.instance.getBlockRendererDispatcher().getModelForState(
@@ -492,7 +492,7 @@ public class TileEntityUtils implements Module {
                         );
                     } catch (Exception ignored) {
                         // Stub Data if error occurs
-                        TILE_ENTITY_RESOURCES.put(blockName, new ResourceLocation(""));
+                        TILE_ENTITY_RESOURCES.put(blockName, null);
                     }
                 }
             }
@@ -509,7 +509,7 @@ public class TileEntityUtils implements Module {
                     ITEM_CLASSES.add(item.getClass().getName());
                 }
 
-                if (!TILE_ENTITY_RESOURCES.containsKey(itemName)) {
+                if (!TILE_ENTITY_RESOURCES.containsKey(itemName) || TILE_ENTITY_RESOURCES.get(itemName) == null) {
                     try {
                         final ResourceLocation initialData = new ResourceLocation(
                                 CraftPresence.instance.getRenderItem().getItemModelMesher().getItemModel(
@@ -523,7 +523,7 @@ public class TileEntityUtils implements Module {
                         );
                     } catch (Exception ignored) {
                         // Stub Data if error occurs
-                        TILE_ENTITY_RESOURCES.put(itemName, new ResourceLocation(""));
+                        TILE_ENTITY_RESOURCES.put(itemName, null);
                     }
                 }
             }

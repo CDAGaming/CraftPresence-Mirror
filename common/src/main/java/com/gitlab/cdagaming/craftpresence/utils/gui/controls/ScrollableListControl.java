@@ -381,7 +381,13 @@ public class ScrollableListControl extends GuiSlot {
                 }
             }
         } else if (renderType == RenderType.ItemData) {
-            texture = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES.getOrDefault(originalName, texture);
+            final Map<String, ResourceLocation> data = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES;
+            if (data.containsKey(originalName)) {
+                final ResourceLocation newTexture = data.get(originalName);
+                if (newTexture != null) {
+                    texture = newTexture;
+                }
+            }
         } else if (renderType == RenderType.Placeholder && isHovering) {
             final String placeholderTranslation = String.format("%s.placeholders.%s.description",
                     ModUtils.MOD_ID,
