@@ -68,7 +68,6 @@ public interface Module {
      * Scans for applicable data related to this Module, within a new Thread.
      */
     default void scanForData() {
-        ModUtils.LOG.info("Debug: " + (ModUtils.NAME + "-" + getClass().getSimpleName() + "-Lookup"));
         new Thread(this::getAllData, ModUtils.NAME + "-" + getClass().getSimpleName() + "-Lookup").start();
     }
 
