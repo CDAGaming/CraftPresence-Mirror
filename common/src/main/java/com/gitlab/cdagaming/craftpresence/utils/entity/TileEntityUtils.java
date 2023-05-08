@@ -32,7 +32,6 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -80,9 +79,9 @@ public class TileEntityUtils implements Module {
      */
     public List<String> TILE_ENTITY_NAMES = StringUtils.newArrayList();
     /**
-     * A List storing a mapping of Tile Entity textures, mapped as entityName:entityTexture
+     * A List storing a mapping of Tile Entity textures, mapped as entityName:entityObject
      */
-    public Map<String, ResourceLocation> TILE_ENTITY_RESOURCES = StringUtils.newHashMap();
+    public Map<String, ItemStack> TILE_ENTITY_RESOURCES = StringUtils.newHashMap();
     /**
      * Whether this module is active and currently in use
      */
@@ -470,30 +469,16 @@ public class TileEntityUtils implements Module {
     public void getAllData() {
         for (Block block : Block.REGISTRY) {
             if (!isEmpty(block)) {
-                final String blockName = getName(block);
+                final ItemStack stack = getStackFrom(block);
+                final String blockName = getName(stack);
                 if (!BLOCK_NAMES.contains(blockName)) {
                     BLOCK_NAMES.add(blockName);
                 }
                 if (!BLOCK_CLASSES.contains(block.getClass().getName())) {
                     BLOCK_CLASSES.add(block.getClass().getName());
                 }
-
-                if (!TILE_ENTITY_RESOURCES.containsKey(blockName) || TILE_ENTITY_RESOURCES.get(blockName) == null) {
-                    try {
-                        final ResourceLocation initialData = new ResourceLocation(
-                                CraftPresence.instance.getBlockRendererDispatcher().getModelForState(
-                                        block.getDefaultState()
-                                ).getParticleTexture().getIconName()
-                        );
-                        TILE_ENTITY_RESOURCES.put(blockName,
-                                new ResourceLocation(initialData.getNamespace(),
-                                        "textures/" + initialData.getPath() + ".png"
-                                )
-                        );
-                    } catch (Exception ignored) {
-                        // Stub Data if error occurs
-                        TILE_ENTITY_RESOURCES.put(blockName, null);
-                    }
+                if (!TILE_ENTITY_RESOURCES.containsKey(blockName)) {
+                    TILE_ENTITY_RESOURCES.put(blockName, stack);
                 }
             }
         }
@@ -508,23 +493,8 @@ public class TileEntityUtils implements Module {
                 if (!ITEM_CLASSES.contains(item.getClass().getName())) {
                     ITEM_CLASSES.add(item.getClass().getName());
                 }
-
-                if (!TILE_ENTITY_RESOURCES.containsKey(itemName) || TILE_ENTITY_RESOURCES.get(itemName) == null) {
-                    try {
-                        final ResourceLocation initialData = new ResourceLocation(
-                                CraftPresence.instance.getRenderItem().getItemModelMesher().getItemModel(
-                                        stack
-                                ).getParticleTexture().getIconName()
-                        );
-                        TILE_ENTITY_RESOURCES.put(itemName,
-                                new ResourceLocation(initialData.getNamespace(),
-                                        "textures/" + initialData.getPath() + ".png"
-                                )
-                        );
-                    } catch (Exception ignored) {
-                        // Stub Data if error occurs
-                        TILE_ENTITY_RESOURCES.put(itemName, null);
-                    }
+                if (!TILE_ENTITY_RESOURCES.containsKey(itemName)) {
+                    TILE_ENTITY_RESOURCES.put(itemName, stack);
                 }
             }
         }

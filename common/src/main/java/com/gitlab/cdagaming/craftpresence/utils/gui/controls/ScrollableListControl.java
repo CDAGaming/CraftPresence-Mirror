@@ -38,6 +38,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.meteordev.starscript.value.Value;
 
@@ -377,11 +378,15 @@ public class ScrollableListControl extends GuiSlot {
                 }
             }
         } else if (renderType == RenderType.ItemData) {
-            final Map<String, ResourceLocation> data = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES;
+            final Map<String, ItemStack> data = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES;
             if (data.containsKey(originalName)) {
-                final ResourceLocation newTexture = data.get(originalName);
-                if (newTexture != null) {
-                    texture = newTexture;
+                final ItemStack stack = data.get(originalName);
+                if (!stack.isEmpty()) {
+                    RenderUtils.drawItemStack(
+                            mc, getFontRenderer(), xOffset, yPos + 4, stack,
+                            2.0f
+                    );
+                    xOffset += 35;
                 }
             }
         } else if (renderType == RenderType.Placeholder && isHovering) {

@@ -37,8 +37,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -200,6 +202,28 @@ public class RenderUtils {
      */
     public static void openScreen(@Nonnull final Minecraft client, final GuiScreen targetScreen) {
         client.addScheduledTask(() -> client.displayGuiScreen(targetScreen));
+    }
+
+    public static void drawItemStack(@Nonnull final Minecraft client, final FontRenderer fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
+        try {
+            GL11.glPushMatrix();
+            GL11.glScalef(scale, scale, 1.0f);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            RenderHelper.enableGUIStandardItemLighting();
+            client.getRenderItem().zLevel = -100.0f;
+
+            final int xPos = Math.round(x / scale);
+            final int yPos = Math.round(y / scale);
+            client.getRenderItem().renderItemAndEffectIntoGUI(stack, xPos, yPos);
+            client.getRenderItem().renderItemOverlays(fontRenderer, stack, xPos, yPos);
+
+            client.getRenderItem().zLevel = 0.0F;
+            RenderHelper.disableStandardItemLighting();
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glPopMatrix();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
