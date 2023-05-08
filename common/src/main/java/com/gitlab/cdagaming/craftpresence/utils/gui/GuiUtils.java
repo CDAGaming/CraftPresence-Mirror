@@ -128,7 +128,7 @@ public class GuiUtils implements Module {
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
-            new Thread(this::getAllData, "CraftPresence-Screen-Lookup").start();
+            scanForData();
             hasScanned = true;
         }
 

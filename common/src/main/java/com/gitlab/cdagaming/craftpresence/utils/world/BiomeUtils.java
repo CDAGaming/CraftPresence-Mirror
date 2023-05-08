@@ -106,7 +106,7 @@ public class BiomeUtils implements Module {
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
-            new Thread(this::getAllData, "CraftPresence-Biome-Lookup").start();
+            scanForData();
             hasScanned = true;
         }
 

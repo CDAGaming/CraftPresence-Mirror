@@ -108,7 +108,7 @@ public class DimensionUtils implements Module {
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
-            new Thread(this::getAllData, "CraftPresence-Dimension-Lookup").start();
+            scanForData();
             hasScanned = true;
         }
 

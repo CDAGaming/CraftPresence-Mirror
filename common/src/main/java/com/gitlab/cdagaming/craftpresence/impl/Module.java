@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 /**
@@ -36,43 +37,39 @@ public interface Module {
     /**
      * Clears FULL Data from this Module
      */
-    default void emptyData() {
-        // N/A
-    }
+    void emptyData();
 
     /**
      * Clears Runtime Client Data from this Module (PARTIAL Clear)
      */
-    default void clearClientData() {
-        // N/A
-    }
+    void clearClientData();
 
     /**
      * Module Event to Occur on each tick within the Application
      */
-    default void onTick() {
-        // N/A
-    }
+    void onTick();
 
     /**
      * Synchronizes Data related to this module, if needed
      */
-    default void updateData() {
-        // N/A
-    }
+    void updateData();
 
     /**
      * Updates RPC Data related to this Module
      */
-    default void updatePresence() {
-        // N/A
-    }
+    void updatePresence();
 
     /**
      * Updates and Initializes Module Data, based on found Information
      */
-    default void getAllData() {
-        // N/A
+    void getAllData();
+
+    /**
+     * Scans for applicable data related to this Module, within a new Thread.
+     */
+    default void scanForData() {
+        ModUtils.LOG.info("Debug: " + (ModUtils.NAME + "-" + getClass().getSimpleName() + "-Lookup"));
+        new Thread(this::getAllData, ModUtils.NAME + "-" + getClass().getSimpleName() + "-Lookup").start();
     }
 
     /**

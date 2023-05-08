@@ -181,7 +181,7 @@ public class EntityUtils implements Module {
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
-            new Thread(this::getAllData, "CraftPresence-Entity-Lookup").start();
+            scanForData();
             hasScanned = true;
         }
 

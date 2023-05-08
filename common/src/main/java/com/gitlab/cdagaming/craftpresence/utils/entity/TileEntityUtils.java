@@ -292,7 +292,7 @@ public class TileEntityUtils implements Module {
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
-            new Thread(this::getAllData, "CraftPresence-TileEntity-Lookup").start();
+            scanForData();
             hasScanned = true;
         }
 

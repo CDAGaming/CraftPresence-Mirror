@@ -92,7 +92,7 @@ public class ReplayModUtils implements Module {
         final boolean needsUpdate = enabled && !hasScanned;
 
         if (needsUpdate) {
-            new Thread(this::getAllData, "CraftPresence-ReplayMod-Screen-Lookup").start();
+            scanForData();
             hasScanned = true;
         }
 

@@ -244,7 +244,7 @@ public class ServerUtils implements Module {
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
-            new Thread(this::getAllData, "CraftPresence-Server-Lookup").start();
+            scanForData();
             hasScanned = true;
         }
 
@@ -310,7 +310,7 @@ public class ServerUtils implements Module {
                 final ServerList serverList = new ServerList(CraftPresence.instance);
                 serverList.loadServerList();
                 if (serverList.countServers() != serverIndex || CraftPresence.CONFIG.serverSettings.serverData.size() != serverIndex) {
-                    getAllData();
+                    scanForData();
                 }
             }
 
@@ -390,7 +390,7 @@ public class ServerUtils implements Module {
 
                 if (CraftPresence.ENTITIES.enabled) {
                     CraftPresence.ENTITIES.ENTITY_NAMES.removeAll(CraftPresence.ENTITIES.PLAYER_BINDINGS.keySet());
-                    CraftPresence.ENTITIES.getAllData();
+                    CraftPresence.ENTITIES.scanForData();
                 }
             }
         }
