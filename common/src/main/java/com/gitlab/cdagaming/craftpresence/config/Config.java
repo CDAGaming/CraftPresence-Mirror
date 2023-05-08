@@ -184,7 +184,10 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public Config getDefaults() {
-        return copy(DEFAULT, Config.class);
+        final Config results = copy(DEFAULT, Config.class);
+        // Hotfix: Preserve `dynamicIcons` as a cache setting
+        results.displaySettings.dynamicIcons = displaySettings.dynamicIcons;
+        return results;
     }
 
     @Override
