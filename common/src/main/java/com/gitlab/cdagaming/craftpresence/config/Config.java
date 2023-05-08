@@ -59,6 +59,7 @@ public final class Config extends Module implements Serializable {
     public transient boolean hasChanged = false, isNewFile = false;
     // Global Settings
     public String _README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
+    public String _SOURCE = "https://gitlab.com/CDAGaming/CraftPresence";
     public int _schemaVersion = 0;
     public int _lastMCVersionId = 0;
     // Other Settings

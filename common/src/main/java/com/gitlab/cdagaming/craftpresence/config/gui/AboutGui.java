@@ -36,8 +36,6 @@ import net.minecraft.client.gui.GuiScreen;
 import java.util.List;
 
 public class AboutGui extends ExtendedScreen {
-    private static final String SOURCE_URL = "https://gitlab.com/CDAGaming/CraftPresence";
-
     public AboutGui(GuiScreen parentScreen) {
         super(parentScreen);
     }
@@ -70,7 +68,7 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 51),
                         180, 20,
                         "gui.config.message.button.view_source",
-                        () -> UrlUtils.openUrl(SOURCE_URL)
+                        () -> UrlUtils.openUrl(CraftPresence.CONFIG._SOURCE)
                 )
         );
 
