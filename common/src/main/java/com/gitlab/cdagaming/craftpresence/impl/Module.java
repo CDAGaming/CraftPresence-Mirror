@@ -117,9 +117,9 @@ public interface Module {
     }
 
     /**
-     * Determines whether {@link FileUtils} data can be accessed by the module
+     * Determines whether we can check for data that can be accessed by the module
      *
-     * @return {@link Boolean#TRUE} if this module can access {@link FileUtils} data
+     * @return {@link Boolean#TRUE} if this module can access scan data
      */
     default boolean canFetchData() {
         return FileUtils.canScanClasses();
