@@ -264,7 +264,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
+        return !getCurrentData().isDefaults();
     }
 
     @Override
@@ -274,7 +274,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getOriginalData().getDefaults());
+        return setCurrentData(getCurrentData().getDefaults());
     }
 
     @Override

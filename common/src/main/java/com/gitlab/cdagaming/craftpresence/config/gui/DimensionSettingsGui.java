@@ -237,7 +237,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
+        return !getCurrentData().isDefaults();
     }
 
     @Override
@@ -247,7 +247,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getOriginalData().getDefaults());
+        return setCurrentData(getCurrentData().getDefaults());
     }
 
     @Override

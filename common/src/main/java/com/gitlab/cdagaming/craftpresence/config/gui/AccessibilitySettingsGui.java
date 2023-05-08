@@ -293,7 +293,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
+        return !getCurrentData().isDefaults();
     }
 
     @Override
@@ -303,7 +303,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getOriginalData().getDefaults());
+        return setCurrentData(getCurrentData().getDefaults());
     }
 
     @Override

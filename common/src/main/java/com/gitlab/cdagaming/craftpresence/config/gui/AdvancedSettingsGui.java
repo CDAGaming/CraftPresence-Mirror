@@ -625,7 +625,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().equals(getOriginalData().getDefaults());
+        return !getCurrentData().isDefaults();
     }
 
     @Override
@@ -635,7 +635,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getOriginalData().getDefaults());
+        return setCurrentData(getCurrentData().getDefaults());
     }
 
     @Override
