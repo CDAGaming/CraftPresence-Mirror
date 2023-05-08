@@ -645,6 +645,6 @@ public class CommandsGui extends ExtendedScreen {
                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
             }
             blockInteractions = false;
-        }, "CraftPresence-Asset-Exporter").start();
+        }, ModUtils.NAME + "-Asset-Exporter").start();
     }
 }

@@ -608,6 +608,13 @@ public class FileUtils {
     }
 
     /**
+     * Begin a new Thread, executing {@link FileUtils#scanClasses()}
+     */
+    public static void detectClasses() {
+        new Thread(FileUtils::scanClasses, ModUtils.NAME + "-Class-Discovery").start();
+    }
+
+    /**
      * Clear the existing class list, then retrieve and cache all known classes within the Class Loader
      *
      * @return a list of all known classes

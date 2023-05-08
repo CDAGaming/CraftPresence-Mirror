@@ -129,7 +129,8 @@ public class CraftPresence {
      * Consists of Data Initialization and RPC Setup
      */
     private void init() {
-        // Initialize Dynamic Mappings
+        // Initialize Dynamic Mappings and Critical Data
+        FileUtils.detectClasses();
         MappingUtils.getClassMap();
 
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info

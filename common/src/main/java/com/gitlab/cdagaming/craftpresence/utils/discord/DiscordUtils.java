@@ -234,7 +234,7 @@ public class DiscordUtils {
      * <p>In this case, ensures a Thread is in place to shut down the RPC onExit
      */
     public synchronized void setup() {
-        final Thread shutdownThread = new Thread("CraftPresence-ShutDown-Handler") {
+        final Thread shutdownThread = new Thread(ModUtils.NAME + "-ShutDown-Handler") {
             @Override
             public void run() {
                 CraftPresence.SYSTEM.IS_GAME_CLOSING = true;
