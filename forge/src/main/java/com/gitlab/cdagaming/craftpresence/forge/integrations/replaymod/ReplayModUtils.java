@@ -89,7 +89,7 @@ public class ReplayModUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
-        final boolean needsUpdate = enabled && !hasScanned;
+        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
             scanForData();
