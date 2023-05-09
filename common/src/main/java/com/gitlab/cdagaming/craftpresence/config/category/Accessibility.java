@@ -42,7 +42,7 @@ public class Accessibility extends Module implements Serializable {
     public boolean showBackgroundAsDark = true;
     public boolean stripTranslationColors = ModUtils.IS_LEGACY_SOFT && ModUtils.MCProtocolID <= 23;
     public boolean showLoggingInChat = false;
-    public boolean stripExtraGuiElements = ModUtils.IS_LEGACY_HARD;
+    public boolean stripExtraGuiElements = false;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
 
     @Override

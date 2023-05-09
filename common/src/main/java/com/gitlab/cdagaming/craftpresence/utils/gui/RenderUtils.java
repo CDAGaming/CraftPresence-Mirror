@@ -290,7 +290,12 @@ public class RenderUtils {
                                     final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
-                mc.getTextureManager().bindTexture(texLocation);
+                final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
+                if (data.getFirst()) {
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
+                } else {
+                    mc.getTextureManager().bindTexture(texLocation);
+                }
             }
         } catch (Exception ignored) {
             return;
@@ -320,7 +325,12 @@ public class RenderUtils {
                                     final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
-                mc.getTextureManager().bindTexture(texLocation);
+                final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
+                if (data.getFirst()) {
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
+                } else {
+                    mc.getTextureManager().bindTexture(texLocation);
+                }
             }
         } catch (Exception ignored) {
             return;
@@ -365,7 +375,12 @@ public class RenderUtils {
                                    final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
-                mc.getTextureManager().bindTexture(texLocation);
+                final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
+                if (data.getFirst()) {
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
+                } else {
+                    mc.getTextureManager().bindTexture(texLocation);
+                }
             }
         } catch (Exception ignored) {
             return;
