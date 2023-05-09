@@ -378,7 +378,7 @@ public class ScrollableListControl extends GuiSlot {
                     hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
             }
-        } else if (renderType == RenderType.ItemData) {
+        } else if (renderType == RenderType.ItemData && renderType.canRenderImage()) {
             final Map<String, ItemStack> data = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES;
             if (data.containsKey(originalName)) {
                 final ItemStack stack = data.get(originalName);
