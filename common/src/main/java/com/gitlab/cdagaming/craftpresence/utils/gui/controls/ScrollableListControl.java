@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
@@ -381,7 +382,7 @@ public class ScrollableListControl extends GuiSlot {
             final Map<String, ItemStack> data = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES;
             if (data.containsKey(originalName)) {
                 final ItemStack stack = data.get(originalName);
-                if (!stack.isEmpty()) {
+                if (!TileEntityUtils.isEmpty(stack)) {
                     RenderUtils.drawItemStack(
                             mc, getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
