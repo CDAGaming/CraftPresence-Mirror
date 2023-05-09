@@ -157,6 +157,11 @@ public class ReplayModUtils implements Module {
     }
 
     @Override
+    public boolean canFetchData() {
+        return FileUtils.canScanClasses();
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }

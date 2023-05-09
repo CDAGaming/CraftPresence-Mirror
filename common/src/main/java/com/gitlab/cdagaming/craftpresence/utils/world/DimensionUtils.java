@@ -249,6 +249,11 @@ public class DimensionUtils implements Module {
     }
 
     @Override
+    public boolean canFetchData() {
+        return FileUtils.canScanClasses(); // FIXME
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }

@@ -239,6 +239,11 @@ public class BiomeUtils implements Module {
     }
 
     @Override
+    public boolean canFetchData() {
+        return FileUtils.canScanClasses(); // FIXME
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }

@@ -122,6 +122,6 @@ public interface Module {
      * @return {@link Boolean#TRUE} if this module can access scan data
      */
     default boolean canFetchData() {
-        return FileUtils.canScanClasses();
+        return true;
     }
 }

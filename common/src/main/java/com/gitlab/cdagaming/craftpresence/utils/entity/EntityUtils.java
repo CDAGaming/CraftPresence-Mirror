@@ -338,11 +338,6 @@ public class EntityUtils implements Module {
     }
 
     @Override
-    public boolean canFetchData() {
-        return true;
-    }
-
-    @Override
     public boolean isEnabled() {
         return enabled;
     }
