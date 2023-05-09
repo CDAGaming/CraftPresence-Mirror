@@ -40,7 +40,7 @@ public class Accessibility extends Module implements Serializable {
     public String buttonBackgroundColor = RenderUtils.DEFAULT_BUTTON_BACKGROUND;
     public String languageId = ModUtils.TRANSLATOR.defaultLanguageId;
     public boolean showBackgroundAsDark = true;
-    public boolean stripTranslationColors = ModUtils.IS_LEGACY_SOFT && ModUtils.MCProtocolID <= 23;
+    public boolean stripTranslationColors = ModUtils.IS_TEXT_COLORS_BLOCKED;
     public boolean showLoggingInChat = false;
     public boolean stripExtraGuiElements = false;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;

@@ -429,6 +429,11 @@ public final class Config extends Module implements Serializable {
             _lastMCVersionId = newMCVer;
         }
 
+        // Sync Flag Data
+        if (ModUtils.IS_TEXT_COLORS_BLOCKED) {
+            accessibilitySettings.stripTranslationColors = true;
+        }
+
         // Sync Migration Data for later usage
         final KeyConverter.ConversionMode keyCodeMigrationId;
         final TranslationUtils.ConversionMode languageMigrationId;

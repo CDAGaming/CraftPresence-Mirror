@@ -136,6 +136,11 @@ public class ModUtils {
      */
     public static final TranslationUtils RAW_TRANSLATOR = findGameTranslations();
 
+    /**
+     * Flag used for determining if Text Colors are blocked
+     */
+    public static final boolean IS_TEXT_COLORS_BLOCKED = IS_LEGACY_SOFT && MCProtocolID <= 23;
+
     private static TranslationUtils findGameTranslations() {
         final boolean hasVanillaTranslations = !IS_LEGACY_SOFT || MCProtocolID >= 7;
         return hasVanillaTranslations ? new TranslationUtils(

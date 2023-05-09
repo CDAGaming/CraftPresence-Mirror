@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 /**
  * Module Section defining properties to be used for Rich Presence Displays
