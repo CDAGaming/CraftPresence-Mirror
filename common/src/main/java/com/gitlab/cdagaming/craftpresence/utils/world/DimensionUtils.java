@@ -184,12 +184,12 @@ public class DimensionUtils implements Module {
      */
     private List<DimensionType> getDimensionTypes() {
         List<DimensionType> dimensionTypes = StringUtils.newArrayList();
-        Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(DimensionType.class, null, "dimensionTypes");
 
         StringUtils.addEntriesNotPresent(dimensionTypes, DimensionType.values());
 
         if (dimensionTypes.isEmpty()) {
             // Fallback 1: Use Reflected Dimension Types
+            Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(DimensionType.class, null, "dimensionTypes");
             if (reflectedDimensionTypes != null) {
                 for (Object objectType : reflectedDimensionTypes.values()) {
                     DimensionType type = (objectType instanceof DimensionType) ? (DimensionType) objectType : null;
