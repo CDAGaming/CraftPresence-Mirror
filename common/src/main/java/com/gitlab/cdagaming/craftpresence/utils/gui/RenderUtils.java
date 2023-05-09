@@ -43,6 +43,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -208,18 +209,20 @@ public class RenderUtils {
         try {
             GL11.glPushMatrix();
             GL11.glScalef(scale, scale, 1.0f);
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             RenderHelper.enableGUIStandardItemLighting();
-            client.getRenderItem().zLevel = -100.0f;
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
             client.getRenderItem().renderItemAndEffectIntoGUI(stack, xPos, yPos);
             client.getRenderItem().renderItemOverlays(fontRenderer, stack, xPos, yPos);
 
-            client.getRenderItem().zLevel = 0.0F;
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             GL11.glPopMatrix();
         } catch (Exception ex) {
             ex.printStackTrace();
