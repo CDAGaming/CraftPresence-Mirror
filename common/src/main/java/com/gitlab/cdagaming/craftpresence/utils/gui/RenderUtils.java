@@ -213,12 +213,14 @@ public class RenderUtils {
             GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             RenderHelper.enableGUIStandardItemLighting();
+            client.getRenderItem().zLevel = -200.0f;
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
             client.getRenderItem().renderItemAndEffectIntoGUI(stack, xPos, yPos);
             client.getRenderItem().renderItemOverlays(fontRenderer, stack, xPos, yPos);
 
+            client.getRenderItem().zLevel = 0.0f;
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glDisable(GL11.GL_COLOR_MATERIAL);
