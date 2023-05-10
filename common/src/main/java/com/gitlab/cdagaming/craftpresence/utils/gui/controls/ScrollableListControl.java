@@ -485,11 +485,21 @@ public class ScrollableListControl extends GuiSlot {
         /**
          * Constant for the "Placeholder" Rendering Mode.
          */
-        Placeholder,
+        Placeholder(false),
         /**
          * Constant for the "Text Only" Rendering Mode.
          */
-        None;
+        None(false);
+
+        private final boolean canRenderImage;
+
+        RenderType() {
+            canRenderImage = true;
+        }
+
+        RenderType(final boolean canRenderImage) {
+            this.canRenderImage = canRenderImage;
+        }
 
         /**
          * Retrieve whether this Render Mode can render images
@@ -497,7 +507,7 @@ public class ScrollableListControl extends GuiSlot {
          * @return {@link Boolean#TRUE} if this Render Mode can render images
          */
         public boolean canRenderImage() {
-            return this != RenderType.None && !CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements;
+            return this.canRenderImage && !CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements;
         }
     }
 
