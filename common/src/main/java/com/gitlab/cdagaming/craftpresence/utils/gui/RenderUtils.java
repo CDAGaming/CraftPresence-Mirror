@@ -205,6 +205,16 @@ public class RenderUtils {
         client.addScheduledTask(() -> client.displayGuiScreen(targetScreen));
     }
 
+    /**
+     * Renders an {@link ItemStack} to the current Screen
+     *
+     * @param client       The current game instance
+     * @param fontRenderer The Font Renderer Instance
+     * @param x            The Starting X Position of the Object
+     * @param y            The Starting Y Position of the Object
+     * @param stack        The {@link ItemStack} instance to interpret
+     * @param scale        The Scale to render the Object at
+     */
     public static void drawItemStack(@Nonnull final Minecraft client, final FontRenderer fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
         try {
             GL11.glPushMatrix();
@@ -727,7 +737,7 @@ public class RenderUtils {
      * @param screenWidth  The maximum width to allow rendering to (Text will wrap if output is greater)
      * @param screenHeight The maximum height to allow rendering to (Text will wrap if output is greater)
      * @param maxTextWidth The maximum width the output can be before wrapping
-     * @param fontRenderer The font renderer to use to render the String
+     * @param fontRenderer The Font Renderer Instance
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
     public static void drawMultiLineString(@Nonnull final Minecraft mc,
