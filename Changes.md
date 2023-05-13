@@ -5,6 +5,8 @@
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0)_
 
+See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
+
 ### Changes
 
 * Java 7 is no longer supported! (You should be using at least Java 8 by now!)
@@ -268,26 +270,6 @@ The following known issues are present in this build:
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) contains the following known issues:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
 
-#### 1.13.x Build Info
-
-The Rift Edition of this Mod Requires the [Rift ModLoader](https://www.curseforge.com/minecraft/mc-mods/rift) and
-contains the following differences to take Note of:
-
-* KeyCodes have changed from an LWJGL Upgrade! Be Sure to check and edit your KeyBinds if migrating from 1.12.2 and
-  below.
-
-Starting in v1.5.0, The 1.13 Rift Port of CraftPresence was deprecated in favor of the 1.13.2 Rift Port.
-
-Starting in v1.6.1, Rift Versions are no longer supported, though the differences do still take effect for Forge.
-
-Starting in v1.7.0, The aforementioned KeyCode warning is now void, due to new systems introduced to convert keybindings
-between LWJGL versions.
-
-#### 1.14+ Build Info
-
-Some 1.14+ Ports of this Mod require the [FabricMC ModLoader](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
-and contains the same differences as the 1.13.x Port.
-
 #### Snapshot Build Info
 
 Some Versions of this Mod are for Minecraft Snapshots or Experimental Versions, and as such, caution should be noted.
@@ -298,23 +280,3 @@ and issues found.
 
 Snapshot Builds, depending on circumstances, may also contain changes for a future version of the mod, and will be noted
 as so if this is the case with the `-Staging` label.
-
-#### Legacy Build Info (Minecraft Versions 1.5.2 and Below)
-
-Ports of this Mod for Minecraft Versions 1.5.2 and Lower are on very limited support, if using CraftPresence v1.8.11 and
-lower.
-
-Please keep in mind the following:
-
-* Ports for MC 1.6.4 and lower will not show Image Previews in Scroll Lists, as Mojang did not implement the
-  logic for this until MC 1.7 and above
-* The MC a1.1.2_01 Port has its Dimension and Biome Modules **stubbed**, as Mojang did not implement the logic for this
-  until MC a1.2.x and above
-* Bugs that are related to or are caused by issues in the Vanilla Codebase, are unlikely to be fixed due to
-  Minecraft's limitations
-
-The following Mojang Bugs are currently known to affect CraftPresence's utilities:
-
-* On MC 1.1 and below, the `GuiTextField` contents can overflow, causing them to become unusable
-
-See the Mod Description // README for More Info

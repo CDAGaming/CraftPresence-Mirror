@@ -300,28 +300,48 @@ The following functions are available for use anywhere in CraftPresence:
   for
   the current language
 
-## Versions of CraftPresence
-
-Beginning in v1.5.2, CraftPresence is now split into different editions, based on the Minecraft Version you use it in:
-
-* Legacy Version (Minecraft 1.2.5 and Below):
-    * Server Support is unavailable in 1.2.5 and Below (Only SinglePlayer will work with showGameStatus enabled)
-    * Minecraft 1.1.0 and below may not work on Forge, and may require a Modified Minecraft Jar with Risugami's
-      ModLoader + ModLoaderMP
-    * Alpha 1.1.2_01 has its Dimension and Biome Modules disabled, since the logic for that was not present in the game
-      until a1.2.x
-
-**Support for issues related to Vanilla code, Forge, or older/deprecated ModLoaders is extremely limited**
-
 ## Disclaimers & Additional Info
 
-### Minecraft Object Obfuscation
+### Minecraft Issues + Additional Build Info
 
-Due to obfuscation in Minecraft, some of Minecraft Objects such as Screens, Dimensions, or Servers must be opened once
-in the session to be separately customized.
+Despite best efforts, issues can occur due to the state of Mojang's Codebase.
 
-This has been resolved in v1.8.12 for MC 1.12.x and below, due to newer Translation Logic, but some issues may still be
-present.
+These issues can hinder certain portions of the backend in addition to cause certain parts of the mod to not work.
+
+With this in mind, please note the following:
+
+* **Minecraft 1.16 and above**
+    * As more parts of the game become data-driven, modded data is no longer able to be automatically retrieved without
+      first being in the world.
+    * So far, Biome and Dimension Modules are effected by this change and only display default data, with extra data
+      needing to be discovered first.
+* **Minecraft 1.15 and below**
+    * `MC-112292`: When interacting with the `RenderUtils#drawItemStack` method, used in the v2 Item Renderer, blocks
+      using certain rendererers may fail to display properly.
+* **Minecraft a1.1.2_01 and below**
+    * On these versions, the Biome and Dimension Modules are **stubbed** with default data, due to the logic for these
+      methods being missing (Having been initially implemented in Alpha 1.2.6)
+* **Miscellaneous Issues**
+    * Due to obfuscation issues in earlier versions of Minecraft, the Biome and Dimension Modules may fail to
+      auto-detect some necesary information.
+        * As a fallback, the mod is also designed to add selectable Module Data when said biome/dimension is first
+          discovered.
+        * The "Add New" option found in some of the module lists can also be used to work around this issue.
+
+Aditionally, in select Minecraft Versions, the following config settings are effected:
+
+* `buttonBackgroundColor` (`RenderUtils#DEFAULT_BUTTON_BACKGROUND`)
+    * MC 1.6 and above: `minecraft:textures/gui/widgets.png`
+    * MC 1.5.2 and below: `/gui/gui.png`
+* `guiBackgroundColor` (`RenderUtils#DEFAULT_GUI_BACKGROUND`)
+    * MC 1.6 and above: `minecraft:textures/gui/options_background.png`
+    * MC 1.5.2 until a1.1.2_01: `/gui/background.png`
+    * MC a1.1.2_01 and below: `/dirt.png`
+* `stripTranslationColors` (`ModUtils#IS_TEXT_COLORS_BLOCKED`)
+    * This option is forcefully disabled on MC 1.1.0 and below due to various issues regarding TextColor usage,
+      including possible crashes
+    * This change is also auto-applied to existing configs trying to bypass this, unlike the background colors, since
+      resource packs can re-implement those textures
 
 ### Icon Requesting
 
