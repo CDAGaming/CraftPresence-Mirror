@@ -75,7 +75,6 @@ public class FunctionsLib {
         ss.set("getAssetUrl", FunctionsLib::getAssetUrl);
 
         // StringUtils
-        ss.set("rgbaToHex", FunctionsLib::rgbaToHex);
         ss.set("getOrDefault", FunctionsLib::getOrDefault);
         ss.set("replace", FunctionsLib::replace);
         ss.set("length", FunctionsLib::length);
@@ -417,31 +416,6 @@ public class FunctionsLib {
         }
         StringUtils.revlist(args);
         return Value.string(args.get(SystemUtils.RANDOM.nextInt(argCount)));
-    }
-
-    public static Value rgbaToHex(Starscript ss, int argCount) {
-        if (argCount < 3 || argCount > 4)
-            ss.error("rgbaToHex() can only be used with 3-4 arguments, got %d.", argCount);
-        int a = 255;
-        if (argCount == 4) {
-            a = (int) ss.popNumber("Fourth argument to rgbaToHex() needs to be a number.");
-            if (a < 0 || a > 255) {
-                ss.error("Fourth argument to rgbaToHex() is not a valid color index, can only be 0-255.");
-            }
-        }
-        int b = (int) ss.popNumber("Third argument to rgbaToHex() needs to be a number.");
-        if (b < 0 || b > 255) {
-            ss.error("Third argument to rgbaToHex() is not a valid color index, can only be 0-255.");
-        }
-        int g = (int) ss.popNumber("Second argument to rgbaToHex() needs to be a number.");
-        if (g < 0 || g > 255) {
-            ss.error("Second argument to rgbaToHex() is not a valid color index, can only be 0-255.");
-        }
-        int r = (int) ss.popNumber("First argument to rgbaToHex() needs to be a number.");
-        if (r < 0 || r > 255) {
-            ss.error("First argument to rgbaToHex() is not a valid color index, can only be 0-255.");
-        }
-        return Value.string(StringUtils.getHexFrom(r, g, b, a));
     }
 
     public static Value getOrDefault(Starscript ss, int argCount) {

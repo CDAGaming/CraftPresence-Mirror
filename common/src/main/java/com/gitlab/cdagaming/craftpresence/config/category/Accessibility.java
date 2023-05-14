@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
+import com.gitlab.cdagaming.craftpresence.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 
@@ -34,12 +36,25 @@ import java.io.Serializable;
 public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
     private static final Accessibility DEFAULT = new Accessibility();
-    public String tooltipBackgroundColor = "0xF0100010";
-    public String tooltipBorderColor = "0x505000FF";
-    public String guiBackgroundColor = RenderUtils.DEFAULT_GUI_BACKGROUND;
-    public String buttonBackgroundColor = RenderUtils.DEFAULT_BUTTON_BACKGROUND;
+    public ColorData tooltipBackgroundColor = new ColorData(
+            16, 0, 16, 240
+    );
+    public ColorData tooltipBorderColor = new ColorData(
+            new ColorSection(80, 0, 255, 80),
+            new ColorSection(40, 0, 127, 80),
+            ""
+    );
+    public ColorData guiBackgroundColor = new ColorData(
+            64, 64, 64, 255,
+            RenderUtils.DEFAULT_GUI_BACKGROUND
+    );
+    public ColorData worldGuiBackgroundColor = new ColorData(
+            new ColorSection(16, 16, 16, 192),
+            new ColorSection(16, 16, 16, 208),
+            ""
+    );
+    public ColorData buttonBackgroundColor = new ColorData(RenderUtils.DEFAULT_BUTTON_BACKGROUND);
     public String languageId = ModUtils.TRANSLATOR.defaultLanguageId;
-    public boolean showBackgroundAsDark = true;
     public boolean stripTranslationColors = ModUtils.IS_TEXT_COLORS_BLOCKED;
     public boolean showLoggingInChat = false;
     public boolean stripExtraGuiElements = false;
@@ -68,12 +83,12 @@ public class Accessibility extends Module implements Serializable {
         if (target instanceof Accessibility && !equals(target)) {
             final Accessibility data = (Accessibility) target;
 
-            tooltipBackgroundColor = data.tooltipBackgroundColor;
-            tooltipBorderColor = data.tooltipBorderColor;
-            guiBackgroundColor = data.guiBackgroundColor;
-            buttonBackgroundColor = data.buttonBackgroundColor;
+            tooltipBackgroundColor = new ColorData(data.tooltipBackgroundColor);
+            tooltipBorderColor = new ColorData(data.tooltipBorderColor);
+            guiBackgroundColor = new ColorData(data.guiBackgroundColor);
+            worldGuiBackgroundColor = new ColorData(data.worldGuiBackgroundColor);
+            buttonBackgroundColor = new ColorData(data.buttonBackgroundColor);
             languageId = data.languageId;
-            showBackgroundAsDark = data.showBackgroundAsDark;
             stripTranslationColors = data.stripTranslationColors;
             showLoggingInChat = data.showLoggingInChat;
             stripExtraGuiElements = data.stripExtraGuiElements;

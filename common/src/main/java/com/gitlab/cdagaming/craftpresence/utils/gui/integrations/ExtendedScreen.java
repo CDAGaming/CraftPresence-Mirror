@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -43,7 +44,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -362,9 +362,8 @@ public class ExtendedScreen extends GuiScreen {
         RenderUtils.drawBackground(mc,
                 getLeft(), getRight(),
                 getTop(), getBottom(),
-                getOffset(),
-                getPrimaryBg(), getSecondaryBg(),
-                getTint()
+                getOffset(), getTintFactor(),
+                getScreenBackground()
         );
     }
 
@@ -377,46 +376,14 @@ public class ExtendedScreen extends GuiScreen {
         return mc.world != null;
     }
 
-    /**
-     * Retrieve the raw primary background data
-     *
-     * @return the raw primary background
-     */
-    public String getPrimaryRaw() {
-        return getDefaultBg();
+    public ColorData getRawBackground() {
+        return hasWorld() ?
+                CraftPresence.CONFIG.accessibilitySettings.worldGuiBackgroundColor :
+                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
     }
 
-    /**
-     * Retrieve the primary background data
-     *
-     * @return the primary background data
-     */
-    public String getPrimaryBg() {
-        final String raw = getPrimaryRaw();
-        return hasWorld() && !StringUtils.isValidColorCode(raw) ?
-                "-1072689136" : // Color[16,16,16,192]
-                raw;
-    }
-
-    /**
-     * Retrieve the raw secondary background data
-     *
-     * @return the raw secondary background
-     */
-    public String getSecondaryRaw() {
-        return getPrimaryRaw();
-    }
-
-    /**
-     * Retrieve the secondary background data
-     *
-     * @return the secondary background data
-     */
-    public String getSecondaryBg() {
-        final String raw = getSecondaryRaw();
-        return hasWorld() && !StringUtils.isValidColorCode(raw) ?
-                "-804253680" : // Color[16,16,16,208]
-                raw;
+    public float getTintFactor() {
+        return 1.0f;
     }
 
     /**
@@ -424,8 +391,14 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @return the default background
      */
-    public String getDefaultBg() {
-        return CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
+    public ColorData getScreenBackground() {
+        final ColorData data = getRawBackground();
+        if (!hasWorld()) {
+            // Hotfix: When not in a world, animation issues can occur when alpha is under 255
+            data.getStart().alpha = 255;
+            data.getEnd().alpha = 255;
+        }
+        return data;
     }
 
     /**
@@ -435,44 +408,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     public double getOffset() {
         return 0;
-    }
-
-    /**
-     * Whether this screen is currently rendering with a darker tint
-     *
-     * @return if dark mode rendering is currently allowed
-     */
-    public boolean isDarkMode() {
-        return CraftPresence.CONFIG.accessibilitySettings.showBackgroundAsDark &&
-                !StringUtils.isValidColorCode(getPrimaryBg());
-    }
-
-    /**
-     * Retrieve the tint to be used when interpreting background data
-     *
-     * @return the tint color for background data
-     */
-    public Color getTint() {
-        return isDarkMode() ?
-                getDarkTint() : getLightTint();
-    }
-
-    /**
-     * Retrieve the tint to be used when in dark mode
-     *
-     * @return the dark mode tint
-     */
-    public Color getDarkTint() {
-        return Color.darkGray;
-    }
-
-    /**
-     * Retrieve the tint to be used when in light mode
-     *
-     * @return the light mode tint
-     */
-    public Color getLightTint() {
-        return Color.white;
     }
 
     /**

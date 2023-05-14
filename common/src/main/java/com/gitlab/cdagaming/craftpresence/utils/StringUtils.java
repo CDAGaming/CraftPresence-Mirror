@@ -39,8 +39,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -203,6 +203,15 @@ public class StringUtils {
         return new Pair<>(startColorObj, endColorObj);
     }
 
+    public static Color offsetColor(final Color color, final float factor) {
+        return new Color(
+                Math.max((int) (color.getRed() * factor), 0),
+                Math.max((int) (color.getGreen() * factor), 0),
+                Math.max((int) (color.getBlue() * factor), 0),
+                color.getAlpha()
+        );
+    }
+
     /**
      * Attempt to retrieve color info for the specified entries
      *
@@ -225,49 +234,6 @@ public class StringUtils {
             endColor = endColorObj instanceof Color ? (Color) endColorObj : startColor;
         }
         return new Pair<>(startColor, endColor);
-    }
-
-    /**
-     * This method takes in two integer values representing a base color and a tint color,
-     * <p>
-     * and returns an int value representing the tinted color.
-     *
-     * @param baseColor an int value representing the base color
-     * @param tintColor an int value representing the tint color
-     * @return an int value representing the tinted color
-     */
-    public static int tintColor(final int baseColor, final int tintColor) {
-        int alpha = baseColor >> 24 & 255;
-        int red = baseColor >> 16 & 255;
-        int green = baseColor >> 8 & 255;
-        int blue = baseColor & 255;
-
-        int tintAlpha = tintColor >> 24 & 255;
-        int tintRed = tintColor >> 16 & 255;
-        int tintGreen = tintColor >> 8 & 255;
-        int tintBlue = tintColor & 255;
-
-        red = (int) ((red * tintRed) / 255.0);
-        green = (int) ((green * tintGreen) / 255.0);
-        blue = (int) ((blue * tintBlue) / 255.0);
-        alpha = (int) ((alpha * tintAlpha) / 255.0);
-
-        return (alpha << 24) | (red << 16) | (green << 8) | blue;
-    }
-
-    /**
-     * This method takes in two Color objects representing a base color and a tint color,
-     * <p>
-     * and returns a Color object representing the tinted color.
-     *
-     * @param base a Color object representing the base color
-     * @param tint a Color object representing the tint color
-     * @return a Color object representing the tinted color
-     */
-    public static Color tintColor(final Color base, final Color tint) {
-        return getColorFrom(
-                tintColor(base.getRGB(), tint.getRGB())
-        );
     }
 
     /**
@@ -367,55 +333,6 @@ public class StringUtils {
         } else {
             return (Object[]) original;
         }
-    }
-
-    /**
-     * Converts the specified data into a Hexadecimal String, if able
-     *
-     * @param color The original Java Color Type to interpret
-     * @return The converted hexadecimal String
-     */
-    public static String getHexFrom(final Color color) {
-        return "0x" + toSafeHexValue(color.getAlpha()) + toSafeHexValue(color.getRed()) + toSafeHexValue(color.getGreen()) + toSafeHexValue(color.getBlue());
-    }
-
-    /**
-     * Converts the specified data into a Hexadecimal String, if able
-     *
-     * @param red   the red component
-     * @param green the green component
-     * @param blue  the blue component
-     * @param alpha the alpha component
-     * @return The converted hexadecimal String
-     */
-    public static String getHexFrom(final int red, final int green, final int blue, final int alpha) {
-        return getHexFrom(getColorFrom(red, green, blue, alpha));
-    }
-
-    /**
-     * Converts the specified data into a Hexadecimal String, if able
-     *
-     * @param red   the red component
-     * @param green the green component
-     * @param blue  the blue component
-     * @return The converted hexadecimal String
-     */
-    public static String getHexFrom(final int red, final int green, final int blue) {
-        return getHexFrom(getColorFrom(red, green, blue));
-    }
-
-    /**
-     * Converts an inputted number to a compatible Hexadecimal String
-     *
-     * @param number The original number
-     * @return The converted and compatible hexadecimal String
-     */
-    private static String toSafeHexValue(final int number) {
-        final StringBuilder builder = new StringBuilder(Integer.toHexString(number & 0xff));
-        while (builder.length() < 2) {
-            builder.append("0");
-        }
-        return builder.toString().toUpperCase();
     }
 
     /**

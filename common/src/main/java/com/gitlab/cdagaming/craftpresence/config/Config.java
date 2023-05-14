@@ -26,9 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
-import com.gitlab.cdagaming.craftpresence.config.element.Button;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.config.element.*;
 import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
@@ -337,7 +335,7 @@ public final class Config extends Module implements Serializable {
                 boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
-                    if (currentValue == null || !(parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
+                    if (currentValue == null || !(parentValue instanceof ColorData || parentValue instanceof ColorSection || parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
                         shouldContinue = false;
                     } else {
