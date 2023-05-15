@@ -70,10 +70,7 @@ public class Display extends Module implements Serializable {
 
     @Override
     public Display getDefaults() {
-        final Display results = new Display(DEFAULT);
-        // Hotfix: Preserve `dynamicIcons` as a cache setting
-        results.dynamicIcons = dynamicIcons;
-        return results;
+        return new Display(DEFAULT);
     }
 
     @Override

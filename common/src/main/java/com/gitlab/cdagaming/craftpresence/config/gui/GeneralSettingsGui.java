@@ -43,7 +43,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ConfigurationGui<General> {
-    private final General INSTANCE;
+    private final General INSTANCE, DEFAULTS;
     private ExtendedButtonControl partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
             detectMCUpdaterInstanceButton, detectTechnicPackButton, detectATLauncherButton,
@@ -55,6 +55,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
 
     GeneralSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.general");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
 
@@ -360,7 +361,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().isDefaults();
+        return !getCurrentData().equals(DEFAULTS);
     }
 
     @Override
@@ -370,7 +371,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getCurrentData().getDefaults());
+        return setCurrentData(DEFAULTS);
     }
 
     @Override

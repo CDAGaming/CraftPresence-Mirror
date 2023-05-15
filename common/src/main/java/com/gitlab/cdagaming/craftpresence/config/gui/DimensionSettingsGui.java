@@ -43,13 +43,14 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
-    private final Dimension INSTANCE;
+    private final Dimension INSTANCE, DEFAULTS;
     private final ModuleData defaultData;
     private ExtendedButtonControl dimensionMessagesButton;
     private ExtendedTextControl defaultMessage;
 
     DimensionSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.dimension_messages");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
         defaultData = getCurrentData().dimensionData.get("default");
     }
@@ -237,7 +238,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().isDefaults();
+        return !getCurrentData().equals(DEFAULTS);
     }
 
     @Override
@@ -247,7 +248,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getCurrentData().getDefaults());
+        return setCurrentData(DEFAULTS);
     }
 
     @Override

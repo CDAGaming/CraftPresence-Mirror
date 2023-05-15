@@ -43,13 +43,14 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class ServerSettingsGui extends ConfigurationGui<Server> {
-    private final Server INSTANCE;
+    private final Server INSTANCE, DEFAULTS;
     private final ModuleData defaultData;
     private ExtendedButtonControl serverMessagesButton;
     private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
 
     ServerSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.server_messages");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
         defaultData = getCurrentData().serverData.get("default");
     }
@@ -264,7 +265,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().isDefaults();
+        return !getCurrentData().equals(DEFAULTS);
     }
 
     @Override
@@ -274,7 +275,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getCurrentData().getDefaults());
+        return setCurrentData(DEFAULTS);
     }
 
     @Override

@@ -46,7 +46,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
-    private final Advanced INSTANCE;
+    private final Advanced INSTANCE, DEFAULTS;
     private ExtendedButtonControl guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
@@ -55,6 +55,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
     AdvancedSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.advanced");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
 
@@ -625,7 +626,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().isDefaults();
+        return !getCurrentData().equals(DEFAULTS);
     }
 
     @Override
@@ -635,7 +636,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getCurrentData().getDefaults());
+        return setCurrentData(DEFAULTS);
     }
 
     @Override

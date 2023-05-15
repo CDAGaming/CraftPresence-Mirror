@@ -36,13 +36,14 @@ import org.lwjgl.input.Keyboard;
 
 @SuppressWarnings("DuplicatedCode")
 public class MainGui extends ConfigurationGui<Config> {
-    private final Config INSTANCE;
+    private final Config INSTANCE, DEFAULTS;
     private ExtendedButtonControl biomeSet,
             dimensionSet,
             serverSet;
 
     public MainGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
 
@@ -247,7 +248,10 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().isDefaults();
+        // Hotfix: Preserve `dynamicIcons` as a cache setting
+        DEFAULTS.displaySettings.dynamicIcons = getCurrentData().displaySettings.dynamicIcons;
+
+        return !getCurrentData().equals(DEFAULTS);
     }
 
     @Override
@@ -257,7 +261,10 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getCurrentData().getDefaults());
+        // Hotfix: Preserve `dynamicIcons` as a cache setting
+        DEFAULTS.displaySettings.dynamicIcons = getCurrentData().displaySettings.dynamicIcons;
+
+        return setCurrentData(DEFAULTS);
     }
 
     @Override

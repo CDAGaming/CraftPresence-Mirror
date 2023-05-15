@@ -43,13 +43,14 @@ import java.util.List;
 
 public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
-    private final Accessibility INSTANCE;
+    private final Accessibility INSTANCE, DEFAULTS;
     private ExtendedTextControl languageIdText;
     private CheckBoxControl showBackgroundAsDarkButton, stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
     private ExtendedButtonControl controlsButton;
 
     AccessibilitySettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.accessibility");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
 
@@ -293,7 +294,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().isDefaults();
+        return !getCurrentData().equals(DEFAULTS);
     }
 
     @Override
@@ -303,7 +304,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getCurrentData().getDefaults());
+        return setCurrentData(DEFAULTS);
     }
 
     @Override

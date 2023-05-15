@@ -43,13 +43,14 @@ import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class BiomeSettingsGui extends ConfigurationGui<Biome> {
-    private final Biome INSTANCE;
+    private final Biome INSTANCE, DEFAULTS;
     private final ModuleData defaultData;
     private ExtendedButtonControl biomeMessagesButton;
     private ExtendedTextControl defaultMessage;
 
     BiomeSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.biome_messages");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
         defaultData = getCurrentData().biomeData.get("default");
     }
@@ -236,7 +237,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
 
     @Override
     protected boolean canReset() {
-        return !getCurrentData().isDefaults();
+        return !getCurrentData().equals(DEFAULTS);
     }
 
     @Override
@@ -246,7 +247,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
 
     @Override
     protected boolean resetData() {
-        return setCurrentData(getCurrentData().getDefaults());
+        return setCurrentData(DEFAULTS);
     }
 
     @Override
