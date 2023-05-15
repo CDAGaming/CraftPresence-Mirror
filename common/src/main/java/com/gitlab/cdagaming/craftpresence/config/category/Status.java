@@ -51,14 +51,22 @@ public class Status extends Module implements Serializable {
             null
     );
 
+    public Status(final Status other) {
+        transferFrom(other);
+    }
+
+    public Status() {
+        // N/A
+    }
+
     @Override
     public Status getDefaults() {
-        return copy(DEFAULT, Status.class);
+        return new Status(DEFAULT);
     }
 
     @Override
     public Status copy() {
-        return copy(this, Status.class);
+        return new Status(this);
     }
 
     @Override

@@ -60,9 +60,17 @@ public class Display extends Module implements Serializable {
             .put("mods", ModUtils.TRANSLATOR.translate("craftpresence.defaults.placeholder.mods"))
             .build();
 
+    public Display(final Display other) {
+        transferFrom(other);
+    }
+
+    public Display() {
+        // N/A
+    }
+
     @Override
     public Display getDefaults() {
-        final Display results = copy(DEFAULT, Display.class);
+        final Display results = new Display(DEFAULT);
         // Hotfix: Preserve `dynamicIcons` as a cache setting
         results.dynamicIcons = dynamicIcons;
         return results;
@@ -70,7 +78,7 @@ public class Display extends Module implements Serializable {
 
     @Override
     public Display copy() {
-        return copy(this, Display.class);
+        return new Display(this);
     }
 
     @Override

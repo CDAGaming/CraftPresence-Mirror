@@ -46,14 +46,22 @@ public class Server extends Module implements Serializable {
             ))
             .build();
 
+    public Server(final Server other) {
+        transferFrom(other);
+    }
+
+    public Server() {
+        // N/A
+    }
+
     @Override
     public Server getDefaults() {
-        return copy(DEFAULT, Server.class);
+        return new Server(DEFAULT);
     }
 
     @Override
     public Server copy() {
-        return copy(this, Server.class);
+        return new Server(this);
     }
 
     @Override

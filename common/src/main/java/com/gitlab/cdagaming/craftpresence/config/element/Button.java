@@ -60,6 +60,16 @@ public class Button extends Module implements Serializable {
     }
 
     @Override
+    public void transferFrom(Module target) {
+        if (target instanceof Button && !equals(target)) {
+            final Button data = (Button) target;
+
+            label = data.label;
+            url = data.url;
+        }
+    }
+
+    @Override
     public Object getProperty(final String name) {
         return StringUtils.getField(Button.class, this, name);
     }

@@ -72,8 +72,16 @@ public final class Config extends Module implements Serializable {
     public Accessibility accessibilitySettings = new Accessibility();
     public Display displaySettings = new Display();
 
+    public Config(final Config other) {
+        transferFrom(other);
+    }
+
+    public Config() {
+        // N/A
+    }
+
     public static Config getInstance() {
-        return copy(INSTANCE, Config.class);
+        return new Config(INSTANCE);
     }
 
     public static String getConfigPath() {
@@ -185,7 +193,7 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public Config getDefaults() {
-        final Config results = copy(DEFAULT, Config.class);
+        final Config results = new Config(DEFAULT);
         // Hotfix: Preserve `dynamicIcons` as a cache setting
         results.displaySettings.dynamicIcons = displaySettings.dynamicIcons;
         return results;
@@ -193,7 +201,7 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public Config copy() {
-        return copy(this, Config.class);
+        return new Config(this);
     }
 
     @Override

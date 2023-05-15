@@ -50,14 +50,22 @@ public class General extends Module implements Serializable {
     public boolean resetTimeOnInit = false;
     public boolean autoRegister = false;
 
+    public General(final General other) {
+        transferFrom(other);
+    }
+
+    public General() {
+        // N/A
+    }
+
     @Override
     public General getDefaults() {
-        return copy(DEFAULT, General.class);
+        return new General(DEFAULT);
     }
 
     @Override
     public General copy() {
-        return copy(this, General.class);
+        return new General(this);
     }
 
     @Override

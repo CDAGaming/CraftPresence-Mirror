@@ -50,14 +50,22 @@ public class Entity extends Module implements Serializable {
             ))
             .build();
 
+    public Entity(final Entity other) {
+        transferFrom(other);
+    }
+
+    public Entity() {
+        // N/A
+    }
+
     @Override
     public Entity getDefaults() {
-        return copy(DEFAULT, Entity.class);
+        return new Entity(DEFAULT);
     }
 
     @Override
     public Entity copy() {
-        return copy(this, Entity.class);
+        return new Entity(this);
     }
 
     @Override

@@ -45,6 +45,10 @@ public class Gui extends Module implements Serializable {
             ))
             .build();
 
+    public Gui(final Gui other) {
+        transferFrom(other);
+    }
+
     public Gui() {
         if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
             guiData.put("GuiReplayViewer", new ModuleData(
@@ -64,12 +68,12 @@ public class Gui extends Module implements Serializable {
 
     @Override
     public Gui getDefaults() {
-        return copy(DEFAULT, Gui.class);
+        return new Gui(DEFAULT);
     }
 
     @Override
     public Gui copy() {
-        return copy(this, Gui.class);
+        return new Gui(this);
     }
 
     @Override

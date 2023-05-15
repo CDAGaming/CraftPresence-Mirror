@@ -55,18 +55,7 @@ public class PresenceData extends Module implements Serializable {
             .build();
 
     public PresenceData(final PresenceData other) {
-        if (other != null) {
-            enabled = other.enabled;
-            useAsMain = other.useAsMain;
-            setDetails(other.details);
-            setGameState(other.gameState);
-            setLargeImage(other.largeImageKey, other.largeImageText);
-            setSmallImage(other.smallImageKey, other.smallImageText);
-            setTimes(other.startTimestamp, other.endTimestamp);
-            for (Map.Entry<String, Button> data : other.buttons.entrySet()) {
-                addButton(data.getKey(), data.getValue());
-            }
-        }
+        transferFrom(other);
     }
 
     public PresenceData() {
@@ -76,6 +65,24 @@ public class PresenceData extends Module implements Serializable {
     @Override
     public PresenceData getDefaults() {
         return new PresenceData(DEFAULT);
+    }
+
+    @Override
+    public void transferFrom(Module target) {
+        if (target instanceof PresenceData && !equals(target)) {
+            final PresenceData data = (PresenceData) target;
+
+            enabled = data.enabled;
+            useAsMain = data.useAsMain;
+            setDetails(data.details);
+            setGameState(data.gameState);
+            setLargeImage(data.largeImageKey, data.largeImageText);
+            setSmallImage(data.smallImageKey, data.smallImageText);
+            setTimes(data.startTimestamp, data.endTimestamp);
+            for (Map.Entry<String, Button> entry : data.buttons.entrySet()) {
+                addButton(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     @Override

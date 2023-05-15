@@ -65,6 +65,17 @@ public class ModuleData extends Module implements Serializable {
         return new ModuleData(this);
     }
 
+    @Override
+    public void transferFrom(Module target) {
+        if (target instanceof ModuleData && !equals(target)) {
+            final ModuleData data = (ModuleData) target;
+
+            setTextOverride(data.getTextOverride());
+            setIconOverride(data.getIconOverride());
+            setData(data.getData());
+        }
+    }
+
     public String getTextOverride() {
         return textOverride;
     }

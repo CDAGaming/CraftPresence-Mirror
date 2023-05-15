@@ -45,14 +45,22 @@ public class Accessibility extends Module implements Serializable {
     public boolean stripExtraGuiElements = false;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
 
+    public Accessibility(final Accessibility other) {
+        transferFrom(other);
+    }
+
+    public Accessibility() {
+        // N/A
+    }
+
     @Override
     public Accessibility getDefaults() {
-        return copy(DEFAULT, Accessibility.class);
+        return new Accessibility(DEFAULT);
     }
 
     @Override
     public Accessibility copy() {
-        return copy(this, Accessibility.class);
+        return new Accessibility(this);
     }
 
     @Override

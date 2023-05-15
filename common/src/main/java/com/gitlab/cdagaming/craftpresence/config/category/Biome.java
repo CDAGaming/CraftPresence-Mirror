@@ -44,14 +44,22 @@ public class Biome extends Module implements Serializable {
             ))
             .build();
 
+    public Biome(final Biome other) {
+        transferFrom(other);
+    }
+
+    public Biome() {
+        // N/A
+    }
+
     @Override
     public Biome getDefaults() {
-        return copy(DEFAULT, Biome.class);
+        return new Biome(DEFAULT);
     }
 
     @Override
     public Biome copy() {
-        return copy(this, Biome.class);
+        return new Biome(this);
     }
 
     @Override

@@ -55,14 +55,22 @@ public class Advanced extends Module implements Serializable {
     public String serverIconEndpoint = "https://api.mcsrvstat.us/icon/{server.address.short}";
     public String playerSkinEndpoint = "https://mc-heads.net/avatar/{getOrDefault(player.uuid.short, player.name)}";
 
+    public Advanced(final Advanced other) {
+        transferFrom(other);
+    }
+
+    public Advanced() {
+        // N/A
+    }
+
     @Override
     public Advanced getDefaults() {
-        return copy(DEFAULT, Advanced.class);
+        return new Advanced(DEFAULT);
     }
 
     @Override
     public Advanced copy() {
-        return copy(this, Advanced.class);
+        return new Advanced(this);
     }
 
     @Override

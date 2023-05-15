@@ -44,14 +44,22 @@ public class Dimension extends Module implements Serializable {
             ))
             .build();
 
+    public Dimension(final Dimension other) {
+        transferFrom(other);
+    }
+
+    public Dimension() {
+        // N/A
+    }
+
     @Override
     public Dimension getDefaults() {
-        return copy(DEFAULT, Dimension.class);
+        return new Dimension(DEFAULT);
     }
 
     @Override
     public Dimension copy() {
-        return copy(this, Dimension.class);
+        return new Dimension(this);
     }
 
     @Override
