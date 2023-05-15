@@ -89,9 +89,9 @@ public class Advanced extends Module implements Serializable {
             roundSize = data.roundSize;
             includeExtraGuiClasses = data.includeExtraGuiClasses;
             allowPlaceholderPreviews = data.allowPlaceholderPreviews;
-            guiSettings.transferFrom(data.guiSettings);
+            guiSettings = new Gui(data.guiSettings);
             itemMessages = data.itemMessages;
-            entitySettings.transferFrom(data.entitySettings);
+            entitySettings = new Entity(data.entitySettings);
             allowEndpointIcons = data.allowEndpointIcons;
             serverIconEndpoint = data.serverIconEndpoint;
             playerSkinEndpoint = data.playerSkinEndpoint;

@@ -225,7 +225,7 @@ public class MainGui extends ConfigurationGui<Config> {
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             if (getCurrentData().hasChanged) {
-                setCurrentData(Config.loadOrCreate());
+                syncData();
             }
             CraftPresence.GUIS.configGUIOpened = false;
         }

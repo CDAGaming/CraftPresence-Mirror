@@ -86,7 +86,7 @@ public class Display extends Module implements Serializable {
         if (target instanceof Display && !equals(target)) {
             final Display data = (Display) target;
 
-            presenceData = data.presenceData;
+            presenceData = new PresenceData(data.presenceData);
             dynamicIcons = data.dynamicIcons;
             dynamicVariables = data.dynamicVariables;
         }

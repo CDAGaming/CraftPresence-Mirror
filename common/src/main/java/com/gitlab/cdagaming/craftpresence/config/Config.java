@@ -208,15 +208,22 @@ public final class Config extends Module implements Serializable {
     public void transferFrom(Module target) {
         if (target instanceof Config && !equals(target)) {
             final Config data = (Config) target;
+            hasChanged = data.hasChanged;
+            isNewFile = data.isNewFile;
 
-            generalSettings = data.generalSettings;
-            biomeSettings = data.biomeSettings;
-            dimensionSettings = data.dimensionSettings;
-            serverSettings = data.serverSettings;
-            statusMessages = data.statusMessages;
-            advancedSettings = data.advancedSettings;
-            accessibilitySettings = data.accessibilitySettings;
-            displaySettings = data.displaySettings;
+            _README = data._README;
+            _SOURCE = data._SOURCE;
+            _schemaVersion = data._schemaVersion;
+            _lastMCVersionId = data._lastMCVersionId;
+
+            generalSettings = new General(data.generalSettings);
+            biomeSettings = new Biome(data.biomeSettings);
+            dimensionSettings = new Dimension(data.dimensionSettings);
+            serverSettings = new Server(data.serverSettings);
+            statusMessages = new Status(data.statusMessages);
+            advancedSettings = new Advanced(data.advancedSettings);
+            accessibilitySettings = new Accessibility(data.accessibilitySettings);
+            displaySettings = new Display(data.displaySettings);
         }
     }
 

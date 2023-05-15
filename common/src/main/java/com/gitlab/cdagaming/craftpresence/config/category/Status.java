@@ -74,10 +74,10 @@ public class Status extends Module implements Serializable {
         if (target instanceof Status && !equals(target)) {
             final Status data = (Status) target;
 
-            mainMenuData = data.mainMenuData;
-            loadingData = data.loadingData;
-            lanData = data.lanData;
-            singleplayerData = data.singleplayerData;
+            mainMenuData = new ModuleData(data.mainMenuData);
+            loadingData = new ModuleData(data.loadingData);
+            lanData = new ModuleData(data.lanData);
+            singleplayerData = new ModuleData(data.singleplayerData);
         }
     }
 
