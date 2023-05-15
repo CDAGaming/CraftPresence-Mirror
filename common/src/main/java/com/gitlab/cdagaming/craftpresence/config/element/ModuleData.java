@@ -84,11 +84,13 @@ public class ModuleData extends Module implements Serializable {
     }
 
     public PresenceData getData() {
-        return new PresenceData(data);
+        return data != null ? new PresenceData(data) : null;
     }
 
     public ModuleData setData(final PresenceData data) {
-        this.data = new PresenceData(data);
+        if (data != null) {
+            this.data = new PresenceData(data);
+        }
         return this;
     }
 
