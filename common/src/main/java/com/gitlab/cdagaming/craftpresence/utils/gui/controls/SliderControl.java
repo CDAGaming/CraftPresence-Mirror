@@ -267,7 +267,7 @@ public class SliderControl extends ExtendedButtonControl {
             denormalizedSlideValue = MathUtils.denormalizeValue(newValue, valueStep, minValue, maxValue);
         } else {
             sliderValue = MathUtils.normalizeValue(newValue, valueStep, minValue, maxValue);
-            denormalizedSlideValue = newValue;
+            denormalizedSlideValue = MathUtils.clamp(newValue, minValue, maxValue);
         }
         setControlMessage(windowTitle + ": " + denormalizedSlideValue);
     }
