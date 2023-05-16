@@ -282,7 +282,7 @@ public class TextDisplayWidget implements DynamicWidget {
 
     @Override
     public void setControlHeight(int height) {
-        throw new UnsupportedOperationException();
+        contentHeight = height;
     }
 
     /**
@@ -296,7 +296,7 @@ public class TextDisplayWidget implements DynamicWidget {
                 getMessage(),
                 width
         );
-        contentHeight = content.size() * (parent.getFontHeight() + 1);
+        setControlHeight(content.size() * (parent.getFontHeight() + 1));
         return content;
     }
 }

@@ -212,9 +212,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
                 RenderUtils.renderButton(mc, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, getZLevel(), texLocation);
             }
 
-            if (isOverScreen()) {
-                mouseDragged(mc, mouseX, mouseY);
-            }
+            mouseDragged(mc, mouseX, mouseY);
             final int color;
 
             if (!isControlEnabled()) {

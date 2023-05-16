@@ -166,9 +166,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
                     contentColor, contentColor
             );
 
-            if (isOverScreen()) {
-                mouseDragged(mc, mouseX, mouseY);
-            }
+            mouseDragged(mc, mouseX, mouseY);
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (isChecked())

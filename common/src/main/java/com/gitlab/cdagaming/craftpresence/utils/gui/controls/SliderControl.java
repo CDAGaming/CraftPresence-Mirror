@@ -89,12 +89,11 @@ public class SliderControl extends ExtendedButtonControl {
     public SliderControl(final int buttonId, final Pair<Integer, Integer> positionData, final Pair<Integer, Integer> dimensions, final float startValue, final float minValue, final float maxValue, final float valueStep, final String displayString) {
         super(buttonId, positionData.getFirst(), positionData.getSecond(), dimensions.getFirst(), dimensions.getSecond(), "");
 
-        setSliderValue(startValue);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.valueStep = valueStep;
-        this.displayString = displayString + ": " + denormalizedSlideValue;
         this.windowTitle = displayString;
+        setSliderValue(startValue);
     }
 
     /**
@@ -218,7 +217,7 @@ public class SliderControl extends ExtendedButtonControl {
     @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            if (dragging) {
+            if (isDragging()) {
                 sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
                 sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
                 denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);
@@ -261,10 +260,11 @@ public class SliderControl extends ExtendedButtonControl {
      * Updates the Current Slider Value<p>
      * Note: Both Normalized and denormalized values are supported
      *
-     * @param newValue The New Slider Value
+     * @param newValue  The New Slider Value
+     * @param useNormal Whether to get the normalized value
      */
-    public void setSliderValue(final float newValue) {
-        if (newValue >= 0.0f && newValue <= 1.0f) {
+    public void setSliderValue(final float newValue, final boolean useNormal) {
+        if (useNormal) {
             sliderValue = newValue;
             denormalizedSlideValue = MathUtils.denormalizeValue(newValue, valueStep, minValue, maxValue);
         } else {
@@ -275,6 +275,16 @@ public class SliderControl extends ExtendedButtonControl {
     }
 
     /**
+     * Updates the Current Slider Value<p>
+     * Note: Both Normalized and denormalized values are supported
+     *
+     * @param newValue The New Slider Value
+     */
+    public void setSliderValue(final float newValue) {
+        setSliderValue(newValue, false);
+    }
+
+    /**
      * Retrieves the Current Normalized / denormalized Slider Value
      *
      * @param useNormal Whether to get the normalized value
@@ -282,6 +292,15 @@ public class SliderControl extends ExtendedButtonControl {
      */
     public float getSliderValue(final boolean useNormal) {
         return useNormal ? sliderValue : denormalizedSlideValue;
+    }
+
+    /**
+     * Retrieves the Current Normalized / denormalized Slider Value
+     *
+     * @return The Current Normalized / denormalized Slider Value
+     */
+    public float getSliderValue() {
+        return getSliderValue(false);
     }
 
     /**
