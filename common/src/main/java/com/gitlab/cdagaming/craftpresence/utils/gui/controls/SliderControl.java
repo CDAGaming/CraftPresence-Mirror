@@ -218,11 +218,10 @@ public class SliderControl extends ExtendedButtonControl {
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
             if (isDragging()) {
-                sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
-                sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
-                denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);
-
-                setControlMessage(windowTitle + ": " + denormalizedSlideValue);
+                setSliderValue(
+                        (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8),
+                        true
+                );
             }
 
             onSlide();
@@ -244,11 +243,10 @@ public class SliderControl extends ExtendedButtonControl {
     @Override
     public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
-            sliderValue = (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8);
-            sliderValue = MathUtils.clamp(sliderValue, 0.0F, 1.0F);
-            denormalizedSlideValue = MathUtils.denormalizeValue(sliderValue, valueStep, minValue, maxValue);
-
-            setControlMessage(windowTitle + ": " + denormalizedSlideValue);
+            setSliderValue(
+                    (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8),
+                    true
+            );
             dragging = true;
             return true;
         } else {
@@ -265,7 +263,7 @@ public class SliderControl extends ExtendedButtonControl {
      */
     public void setSliderValue(final float newValue, final boolean useNormal) {
         if (useNormal) {
-            sliderValue = newValue;
+            sliderValue = MathUtils.clamp(newValue, 0.0f, 1.0f);
             denormalizedSlideValue = MathUtils.denormalizeValue(newValue, valueStep, minValue, maxValue);
         } else {
             sliderValue = MathUtils.normalizeValue(newValue, valueStep, minValue, maxValue);
