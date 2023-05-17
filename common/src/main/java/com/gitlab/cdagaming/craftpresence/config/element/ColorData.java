@@ -150,7 +150,7 @@ public class ColorData extends Module implements Serializable {
     }
 
     public String getTexLocation() {
-        return texLocation;
+        return StringUtils.isNullOrEmpty(texLocation) ? "" : texLocation;
     }
 
     public void setTexLocation(String texLocation) {
