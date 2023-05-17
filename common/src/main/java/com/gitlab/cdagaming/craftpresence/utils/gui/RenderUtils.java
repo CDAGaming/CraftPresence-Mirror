@@ -888,7 +888,7 @@ public class RenderUtils {
                                       final double offset, float tintFactor,
                                       final ColorData data) {
         // Setup Colors + Tint Data
-        tintFactor = Math.max(0.0f, Math.min(tintFactor, 1.0f));
+        tintFactor = MathUtils.clamp(tintFactor, 0.0f, 1.0f);
         final Color startColor = StringUtils.offsetColor(data.getStartColor(), tintFactor);
         final Color endColor = StringUtils.offsetColor(data.getEndColor(), tintFactor);
 
