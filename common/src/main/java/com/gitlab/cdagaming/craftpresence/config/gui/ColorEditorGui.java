@@ -31,10 +31,10 @@ import com.gitlab.cdagaming.craftpresence.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TexturedWidget;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -46,7 +46,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     // End Color Data
     private SliderControl endRed, endGreen, endBlue, endAlpha;
     // General Data
-    private ExtendedTextControl textureLocationText;
+    private TextWidget textureLocationText, startColorText, endColorText;
 
     ColorEditorGui(GuiScreen parentScreen, ColorData moduleData) {
         super(parentScreen, "gui.config.title", "gui.config.title.editor.color");
@@ -62,21 +62,41 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
+        final String generalTitle = ModUtils.TRANSLATOR.translate("gui.config.title.general");
+
         final String redTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.red");
         final String greenTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.green");
         final String blueTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.blue");
         final String alphaTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.alpha");
 
-        // Start Color Section
+        // General Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, true,
                 0, getButtonY(0),
+                getScreenWidth(),
+                generalTitle
+        ));
+        textureLocationText = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(1),
+                        180, 20,
+                        () -> getInstance().setTexLocation(textureLocationText.getControlMessage()),
+                        "gui.config.message.editor.texture_path"
+                )
+        );
+        textureLocationText.setControlMessage(getInstance().getTexLocation());
+
+        // Start Color Section
+        childFrame.addWidget(new TextDisplayWidget(
+                childFrame, true,
+                0, getButtonY(2),
                 getScreenWidth(),
                 "Start Color"
         ));
         startRed = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(1)),
+                        new Pair<>(calc1, getButtonY(3)),
                         new Pair<>(180, 20),
                         getInstance().getStart().red,
                         0.0f, 255.0f, 1.0f,
@@ -99,7 +119,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startGreen = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(1)),
+                        new Pair<>(calc2, getButtonY(3)),
                         new Pair<>(180, 20),
                         getInstance().getStart().green,
                         0.0f, 255.0f, 1.0f,
@@ -122,7 +142,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startBlue = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(2)),
+                        new Pair<>(calc1, getButtonY(4)),
                         new Pair<>(180, 20),
                         getInstance().getStart().blue,
                         0.0f, 255.0f, 1.0f,
@@ -145,7 +165,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startAlpha = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(2)),
+                        new Pair<>(calc2, getButtonY(4)),
                         new Pair<>(180, 20),
                         getInstance().getStart().alpha,
                         0.0f, 255.0f, 1.0f,
@@ -170,13 +190,13 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // End Color Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, true,
-                0, getButtonY(3),
+                0, getButtonY(5),
                 getScreenWidth(),
                 "End Color"
         ));
         endRed = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(4)),
+                        new Pair<>(calc1, getButtonY(6)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().red,
                         0.0f, 255.0f, 1.0f,
@@ -199,7 +219,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endGreen = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(4)),
+                        new Pair<>(calc2, getButtonY(6)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().green,
                         0.0f, 255.0f, 1.0f,
@@ -222,7 +242,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endBlue = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(5)),
+                        new Pair<>(calc1, getButtonY(7)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().blue,
                         0.0f, 255.0f, 1.0f,
@@ -245,7 +265,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endAlpha = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(5)),
+                        new Pair<>(calc2, getButtonY(7)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().alpha,
                         0.0f, 255.0f, 1.0f,
@@ -270,13 +290,13 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // Preview Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, true,
-                0, getButtonY(6),
+                0, getButtonY(8),
                 getScreenWidth(),
                 "Preview"
         ));
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
-                30, getButtonY(7),
+                30, getButtonY(9),
                 getScreenWidth() - 30, 120,
                 0.0D, 1.0F,
                 this::getInstance, true
