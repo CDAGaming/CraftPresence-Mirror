@@ -223,7 +223,7 @@ public class StringUtils {
         Color startColor = null, endColor = null;
         endColorObj = endColorObj == null ? startColorObj : endColorObj;
         if (startColorObj instanceof String) {
-            final Pair<Color, Color> colorData = StringUtils.findColor(
+            final Pair<Color, Color> colorData = findColor(
                     (String) startColorObj,
                     endColorObj instanceof String ? (String) endColorObj : null
             );

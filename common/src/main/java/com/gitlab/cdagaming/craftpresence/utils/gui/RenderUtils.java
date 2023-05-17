@@ -424,53 +424,6 @@ public class RenderUtils {
     }
 
     /**
-     * Draws a Textured Gradient Rectangle, following the defined arguments
-     *
-     * @param mc            The current game instance
-     * @param left          The Left Position of the Object
-     * @param right         The Right Position of the Object
-     * @param top           The Top Position of the Object
-     * @param bottom        The Bottom Position of the Object
-     * @param zLevel        The Z Level Position of the Object
-     * @param minU          The minimum horizontal axis to render this Object by
-     * @param maxU          The maximum horizontal axis to render this Object by
-     * @param minV          The minimum vertical axis to render this Object by
-     * @param maxV          The minimum vertical axis to render this Object by
-     * @param startColorObj The starting texture RGB data to interpret
-     * @param endColorObj   The starting texture RGB data to interpret
-     * @param texLocation   The game texture to render the object as
-     */
-    public static void drawTextureGradient(@Nonnull final Minecraft mc,
-                                           final double left, final double right, final double top, final double bottom,
-                                           final double zLevel,
-                                           final double minU, final double maxU, final double minV, final double maxV,
-                                           Object startColorObj, Object endColorObj,
-                                           final ResourceLocation texLocation) {
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-
-        drawTexture(mc,
-                left, right,
-                top, bottom,
-                zLevel,
-                minU, maxU,
-                minV, maxV,
-                startColorObj, endColorObj,
-                texLocation
-        );
-
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-    }
-
-    /**
      * Draws a Gradient Rectangle, following the defined arguments
      *
      * @param left          The Left side length of the Object
@@ -651,31 +604,6 @@ public class RenderUtils {
             ++scaleFactor;
         }
         return scaleFactor;
-    }
-
-    /**
-     * Retrieve color data for the specified string, if possible
-     *
-     * @param texture The data to interpret
-     * @return a {@link Pair} with the mapping "isColorCode:data"
-     */
-    public static Pair<Boolean, String> getColorData(String texture) {
-        final Pair<Boolean, String> result = new Pair<>(false, texture);
-        if (!StringUtils.isNullOrEmpty(texture)) {
-            texture = texture.trim();
-        } else {
-            return result;
-        }
-
-        final boolean isColorCode = StringUtils.isValidColorCode(texture);
-        if (isColorCode) {
-            if (texture.length() == 6) {
-                texture = "#" + texture;
-            } else if (texture.startsWith("0x")) {
-                texture = Long.toString(Long.decode(texture).intValue());
-            }
-        }
-        return result.put(isColorCode, texture);
     }
 
     /**
