@@ -214,7 +214,7 @@ public class StringUtils {
         Color startColor = null, endColor = null;
         endColorObj = endColorObj == null ? startColorObj : endColorObj;
         if (startColorObj instanceof String) {
-            final Pair<Color, Color> colorData = StringUtils.findColor(
+            final Pair<Color, Color> colorData = findColor(
                     (String) startColorObj,
                     endColorObj instanceof String ? (String) endColorObj : null
             );
@@ -225,6 +225,16 @@ public class StringUtils {
             endColor = endColorObj instanceof Color ? (Color) endColorObj : startColor;
         }
         return new Pair<>(startColor, endColor);
+    }
+
+    /**
+     * Attempt to retrieve color info for the specified entries
+     *
+     * @param startColorObj The Starting Color Object
+     * @return the processed output
+     */
+    public static Color findColor(Object startColorObj) {
+        return findColor(startColorObj, null).getFirst();
     }
 
     /**

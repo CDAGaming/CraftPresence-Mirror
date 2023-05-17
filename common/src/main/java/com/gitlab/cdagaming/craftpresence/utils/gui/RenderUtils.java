@@ -423,53 +423,6 @@ public class RenderUtils {
     }
 
     /**
-     * Draws a Textured Gradient Rectangle, following the defined arguments
-     *
-     * @param mc            The current game instance
-     * @param left          The Left Position of the Object
-     * @param right         The Right Position of the Object
-     * @param top           The Top Position of the Object
-     * @param bottom        The Bottom Position of the Object
-     * @param zLevel        The Z Level Position of the Object
-     * @param minU          The minimum horizontal axis to render this Object by
-     * @param maxU          The maximum horizontal axis to render this Object by
-     * @param minV          The minimum vertical axis to render this Object by
-     * @param maxV          The minimum vertical axis to render this Object by
-     * @param startColorObj The starting texture RGB data to interpret
-     * @param endColorObj   The starting texture RGB data to interpret
-     * @param texLocation   The game texture to render the object as
-     */
-    public static void drawTextureGradient(@Nonnull final Minecraft mc,
-                                           final double left, final double right, final double top, final double bottom,
-                                           final double zLevel,
-                                           final double minU, final double maxU, final double minV, final double maxV,
-                                           Object startColorObj, Object endColorObj,
-                                           final ResourceLocation texLocation) {
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-
-        drawTexture(mc,
-                left, right,
-                top, bottom,
-                zLevel,
-                minU, maxU,
-                minV, maxV,
-                startColorObj, endColorObj,
-                texLocation
-        );
-
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-    }
-
-    /**
      * Draws a Gradient Rectangle, following the defined arguments
      *
      * @param left          The Left side length of the Object
@@ -653,31 +606,6 @@ public class RenderUtils {
     }
 
     /**
-     * Retrieve color data for the specified string, if possible
-     *
-     * @param texture The data to interpret
-     * @return a {@link Pair} with the mapping "isColorCode:data"
-     */
-    public static Pair<Boolean, String> getColorData(String texture) {
-        final Pair<Boolean, String> result = new Pair<>(false, texture);
-        if (!StringUtils.isNullOrEmpty(texture)) {
-            texture = texture.trim();
-        } else {
-            return result;
-        }
-
-        final boolean isColorCode = StringUtils.isValidColorCode(texture);
-        if (isColorCode) {
-            if (texture.length() == 6) {
-                texture = "#" + texture;
-            } else if (texture.startsWith("0x")) {
-                texture = Long.toString(Long.decode(texture).intValue());
-            }
-        }
-        return result.put(isColorCode, texture);
-    }
-
-    /**
      * Retrieve texture data for the specified string, if possible
      *
      * @param texture The data to interpret
@@ -692,10 +620,9 @@ public class RenderUtils {
             return result;
         }
 
-        final boolean isColorCode = StringUtils.isValidColorCode(texture);
         boolean usingExternalTexture = false;
 
-        if (!isColorCode) {
+        if (!StringUtils.isValidColorCode(texture)) {
             usingExternalTexture = ImageUtils.isExternalImage(texture);
 
             // Only Perform Texture Conversion Steps if not an external Url
@@ -829,16 +756,14 @@ public class RenderUtils {
             final int zLevel = 300;
 
             if (!StringUtils.isNullOrEmpty(backgroundColorInfo)) {
-                final Pair<Boolean, String> backgroundColorData = getColorData(backgroundColorInfo);
-                if (backgroundColorData.getFirst()) {
-                    final String backgroundColor = backgroundColorData.getSecond();
+                if (StringUtils.isValidColorCode(backgroundColorInfo)) {
 
                     // Draw with Colors
-                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 4, tooltipY - 3, zLevel, backgroundColor, backgroundColor);
-                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, tooltipY + tooltipHeight + 4, zLevel, backgroundColor, backgroundColor);
-                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundColor, backgroundColor);
-                    drawGradient(tooltipX - 4, tooltipX - 3, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundColor, backgroundColor);
-                    drawGradient(tooltipX + tooltipTextWidth + 3, tooltipX + tooltipTextWidth + 4, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundColor, backgroundColor);
+                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 4, tooltipY - 3, zLevel, backgroundColorInfo, backgroundColorInfo);
+                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, tooltipY + tooltipHeight + 4, zLevel, backgroundColorInfo, backgroundColorInfo);
+                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundColorInfo, backgroundColorInfo);
+                    drawGradient(tooltipX - 4, tooltipX - 3, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundColorInfo, backgroundColorInfo);
+                    drawGradient(tooltipX + tooltipTextWidth + 3, tooltipX + tooltipTextWidth + 4, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundColorInfo, backgroundColorInfo);
                 } else {
                     final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundColorInfo);
                     final ResourceLocation backGroundTexture = textureData.getThird();
@@ -868,17 +793,15 @@ public class RenderUtils {
             }
 
             if (!StringUtils.isNullOrEmpty(borderColorInfo)) {
-                final Pair<Boolean, String> borderColorData = getColorData(borderColorInfo);
-                if (borderColorData.getFirst()) {
-                    final String borderColor = borderColorData.getSecond();
+                if (StringUtils.isValidColorCode(borderColorInfo)) {
 
                     // Draw with Colors
-                    final int borderColorCode = (borderColor.startsWith("#") ? StringUtils.getColorFrom(borderColor).getRGB() : Integer.parseInt(borderColor));
+                    final int borderColorCode = (borderColorInfo.startsWith("#") ? StringUtils.getColorFrom(borderColorInfo).getRGB() : Integer.parseInt(borderColorInfo));
                     final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
 
-                    drawGradient(tooltipX - 3, tooltipX - 3 + 1, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, zLevel, borderColor, borderColorEnd);
-                    drawGradient(tooltipX + tooltipTextWidth + 2, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, zLevel, borderColor, borderColorEnd);
-                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY - 3 + 1, zLevel, borderColor, borderColor);
+                    drawGradient(tooltipX - 3, tooltipX - 3 + 1, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, zLevel, borderColorInfo, borderColorEnd);
+                    drawGradient(tooltipX + tooltipTextWidth + 2, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, zLevel, borderColorInfo, borderColorEnd);
+                    drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY - 3 + 1, zLevel, borderColorInfo, borderColorInfo);
                     drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 2, tooltipY + tooltipHeight + 3, zLevel, borderColorEnd, borderColorEnd);
                 } else {
                     final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(borderColorInfo);
