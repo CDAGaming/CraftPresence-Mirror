@@ -237,6 +237,16 @@ public class StringUtils {
     }
 
     /**
+     * Attempt to retrieve color info for the specified entries
+     *
+     * @param startColorObj The Starting Color Object
+     * @return the processed output
+     */
+    public static Color findColor(Object startColorObj) {
+        return findColor(startColorObj, null).getFirst();
+    }
+
+    /**
      * Determines whether an inputted String classifies as a valid Color Code
      *
      * @param entry The String to evaluate

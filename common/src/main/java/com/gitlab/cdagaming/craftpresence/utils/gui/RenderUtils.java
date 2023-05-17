@@ -693,10 +693,9 @@ public class RenderUtils {
             return result;
         }
 
-        final boolean isColorCode = StringUtils.isValidColorCode(texture);
         boolean usingExternalTexture = false;
 
-        if (!isColorCode) {
+        if (!StringUtils.isValidColorCode(texture)) {
             usingExternalTexture = ImageUtils.isExternalImage(texture);
 
             // Only Perform Texture Conversion Steps if not an external Url
