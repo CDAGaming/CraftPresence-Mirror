@@ -376,12 +376,22 @@ public class ExtendedScreen extends GuiScreen {
         return mc.world != null;
     }
 
+    /**
+     * Retrieve the raw background data
+     *
+     * @return the raw background data
+     */
     public ColorData getRawBackground() {
         return hasWorld() ?
                 CraftPresence.CONFIG.accessibilitySettings.worldGuiBackground :
                 CraftPresence.CONFIG.accessibilitySettings.guiBackground;
     }
 
+    /**
+     * Retrieve the factor at which to tint the background
+     *
+     * @return the current tint factor
+     */
     public float getTintFactor() {
         return 1.0f;
     }

@@ -26,11 +26,17 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
 import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.function.Supplier;
 
+/**
+ * Implementation for a Simple Textured Graphic Widget
+ *
+ * @author CDAGaming
+ */
 public class TexturedWidget implements DynamicWidget {
     /**
      * The parent or source screen to refer to
@@ -52,9 +58,21 @@ public class TexturedWidget implements DynamicWidget {
      * The height of the widget's content, used for scrolling
      */
     private int height;
+    /**
+     * The vertical offset to render the content to
+     */
     private double offset;
+    /**
+     * The factor at which to tint the content to
+     */
     private float tintFactor;
+    /**
+     * Supplier for the {@link ColorData} to be used to render the content
+     */
     private Supplier<ColorData> infoSupplier;
+    /**
+     * Whether the content should have a surrounding border
+     */
     private boolean hasBorder;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")

@@ -203,6 +203,13 @@ public class StringUtils {
         return new Pair<>(startColorObj, endColorObj);
     }
 
+    /**
+     * Offset the specified {@link Color} by the specified factor
+     *
+     * @param color  the {@link Color} to offset
+     * @param factor the offset factor
+     * @return the modified {@link Color} instance
+     */
     public static Color offsetColor(final Color color, final float factor) {
         return new Color(
                 Math.max((int) (color.getRed() * factor), 0),

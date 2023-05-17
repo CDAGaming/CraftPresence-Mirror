@@ -879,6 +879,8 @@ public class RenderUtils {
      * @param top    The Top Position of the Object
      * @param bottom The Bottom Position of the Object
      * @param offset The vertical offset to render the background to
+     * @param tintFactor The factor at which to tint the background to
+     * @param data The {@link ColorData} to be used to render the background
      */
     public static void drawBackground(@Nonnull final Minecraft mc,
                                       final double left, final double right,
