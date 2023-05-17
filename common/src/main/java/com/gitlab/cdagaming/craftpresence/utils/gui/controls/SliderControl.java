@@ -273,16 +273,6 @@ public class SliderControl extends ExtendedButtonControl {
     }
 
     /**
-     * Updates the Current Slider Value<p>
-     * Note: Both Normalized and denormalized values are supported
-     *
-     * @param newValue The New Slider Value
-     */
-    public void setSliderValue(final float newValue) {
-        setSliderValue(newValue, false);
-    }
-
-    /**
      * Retrieves the Current Normalized / denormalized Slider Value
      *
      * @param useNormal Whether to get the normalized value
@@ -299,6 +289,16 @@ public class SliderControl extends ExtendedButtonControl {
      */
     public float getSliderValue() {
         return getSliderValue(false);
+    }
+
+    /**
+     * Updates the Current Slider Value<p>
+     * Note: Both Normalized and denormalized values are supported
+     *
+     * @param newValue The New Slider Value
+     */
+    public void setSliderValue(final float newValue) {
+        setSliderValue(newValue, false);
     }
 
     /**
