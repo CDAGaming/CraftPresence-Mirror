@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
@@ -86,7 +87,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.red = (int) startRed.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.red = (int) startRed.getSliderValue();
@@ -108,7 +110,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.green = (int) startGreen.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.green = (int) startGreen.getSliderValue();
@@ -130,7 +133,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.blue = (int) startBlue.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.blue = (int) startBlue.getSliderValue();
@@ -152,7 +156,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.alpha = (int) startAlpha.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.alpha = (int) startAlpha.getSliderValue();
@@ -182,7 +187,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.red = (int) endRed.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.red = (int) endRed.getSliderValue();
@@ -204,7 +210,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.green = (int) endGreen.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.green = (int) endGreen.getSliderValue();
@@ -226,7 +233,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.blue = (int) endBlue.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.blue = (int) endBlue.getSliderValue();
@@ -248,7 +256,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.alpha = (int) endAlpha.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {},
+                                () -> {
+                                },
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.alpha = (int) endAlpha.getSliderValue();
@@ -291,6 +300,14 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
     @Override
     protected boolean setCurrentData(ColorData data) {
+        // Hotfix: Ensure Optional Data Persistance
+        if (data.getStart() != null && data.getStart().equals(data.getEnd())) {
+            data.setEndColor(null);
+        }
+        if (StringUtils.isNullOrEmpty(data.getTexLocation())) {
+            data.setTexLocation(null);
+        }
+
         if (!getCurrentData().equals(data)) {
             getCurrentData().transferFrom(data);
             CraftPresence.CONFIG.hasChanged = true;

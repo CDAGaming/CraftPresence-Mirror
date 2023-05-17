@@ -166,21 +166,4 @@ public class ColorData extends Module implements Serializable {
     protected void setProperty(String name, Object value) {
         StringUtils.updateField(ColorData.class, this, value, name);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        // Ensure Optional Data remains as-such
-        if (obj instanceof ColorData) {
-            final ColorData data = (ColorData) obj;
-
-            if (data.getStart().equals(data.getEnd())) {
-                data.setEndColor(null);
-            }
-            if (StringUtils.isNullOrEmpty(data.getTexLocation())) {
-                data.setTexLocation(null);
-            }
-        }
-
-        return super.equals(obj);
-    }
 }

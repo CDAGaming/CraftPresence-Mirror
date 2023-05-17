@@ -873,12 +873,12 @@ public class RenderUtils {
     /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
-     * @param mc      The current game instance
-     * @param left    The Left Position of the Object
-     * @param right   The Right Position of the Object
-     * @param top     The Top Position of the Object
-     * @param bottom  The Bottom Position of the Object
-     * @param offset  The vertical offset to render the background to
+     * @param mc     The current game instance
+     * @param left   The Left Position of the Object
+     * @param right  The Right Position of the Object
+     * @param top    The Top Position of the Object
+     * @param bottom The Bottom Position of the Object
+     * @param offset The vertical offset to render the background to
      */
     public static void drawBackground(@Nonnull final Minecraft mc,
                                       final double left, final double right,
