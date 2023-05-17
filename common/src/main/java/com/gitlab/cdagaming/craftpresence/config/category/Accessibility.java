@@ -37,21 +37,19 @@ public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
     private static final Accessibility DEFAULT = new Accessibility();
     public ColorData tooltipBackgroundColor = new ColorData(
-            16, 0, 16, 240
+            new ColorSection(16, 0, 16, 240)
     );
     public ColorData tooltipBorderColor = new ColorData(
             new ColorSection(80, 0, 255, 80),
-            new ColorSection(40, 0, 127, 80),
-            ""
+            new ColorSection(40, 0, 127, 80)
     );
     public ColorData guiBackgroundColor = new ColorData(
-            64, 64, 64, 255,
+            new ColorSection(64, 64, 64, 255),
             RenderUtils.DEFAULT_GUI_BACKGROUND
     );
     public ColorData worldGuiBackgroundColor = new ColorData(
             new ColorSection(16, 16, 16, 192),
-            new ColorSection(16, 16, 16, 208),
-            ""
+            new ColorSection(16, 16, 16, 208)
     );
     public ColorData buttonBackgroundColor = new ColorData(RenderUtils.DEFAULT_BUTTON_BACKGROUND);
     public String languageId = ModUtils.TRANSLATOR.defaultLanguageId;

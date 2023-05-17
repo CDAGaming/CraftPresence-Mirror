@@ -37,38 +37,52 @@ public class ColorData extends Module implements Serializable {
     private ColorSection end;
     private String texLocation;
 
+    // `ColorSection` Constructors
+
     public ColorData(final ColorSection start, final ColorSection end, final String texLocation) {
         setStartColor(start);
         setEndColor(end);
         setTexLocation(texLocation);
     }
 
+    public ColorData(final ColorSection start, final ColorSection end) {
+        this(start, end, "");
+    }
+
     public ColorData(final ColorSection start, final String texLocation) {
         this(start, null, texLocation);
     }
 
-    public ColorData(final int red, final int green, final int blue, final int alpha, final String texLocation) {
-        this(new ColorSection(red, green, blue, alpha), texLocation);
+    public ColorData(final ColorSection start) {
+        this(start, "");
     }
 
-    public ColorData(final Color color, final String texLocation) {
-        this(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), texLocation);
+    // `java.awt.Color` Constructors
+
+    public ColorData(final Color start, final Color end, final String texLocation) {
+        this(new ColorSection(start), end != null ? new ColorSection(end) : null, texLocation);
     }
 
-    public ColorData(final Color color) {
-        this(color, "");
+    public ColorData(final Color start, final Color end) {
+        this(start, end, "");
     }
+
+    public ColorData(final Color start, final String texLocation) {
+        this(start, null, texLocation);
+    }
+
+    public ColorData(final Color start) {
+        this(start, "");
+    }
+
+    // Default Constructors
 
     public ColorData(final String texLocation) {
-        this(Color.white, texLocation);
+        this(new ColorSection(), texLocation);
     }
 
     public ColorData() {
-        this(Color.white);
-    }
-
-    public ColorData(final int red, final int green, final int blue, final int alpha) {
-        this(red, green, blue, alpha, "");
+        this("");
     }
 
     public ColorData(final ColorData other) {
