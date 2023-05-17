@@ -378,8 +378,8 @@ public class ExtendedScreen extends GuiScreen {
 
     public ColorData getRawBackground() {
         return hasWorld() ?
-                CraftPresence.CONFIG.accessibilitySettings.worldGuiBackgroundColor :
-                CraftPresence.CONFIG.accessibilitySettings.guiBackgroundColor;
+                CraftPresence.CONFIG.accessibilitySettings.worldGuiBackground :
+                CraftPresence.CONFIG.accessibilitySettings.guiBackground;
     }
 
     public float getTintFactor() {
@@ -721,8 +721,8 @@ public class ExtendedScreen extends GuiScreen {
                 getFontRenderer(),
                 new Tuple<>(
                         CraftPresence.CONFIG.advancedSettings.renderTooltips,
-                        CraftPresence.CONFIG.accessibilitySettings.tooltipBackgroundColor,
-                        CraftPresence.CONFIG.accessibilitySettings.tooltipBorderColor
+                        CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
+                        CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
                 )
         );
     }

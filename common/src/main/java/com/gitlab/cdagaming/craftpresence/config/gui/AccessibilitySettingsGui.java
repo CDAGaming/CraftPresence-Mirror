@@ -69,7 +69,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().tooltipBackgroundColor
+                                        getCurrentData().tooltipBackground
                                 )
                         )
                 )
@@ -83,7 +83,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().tooltipBorderColor
+                                        getCurrentData().tooltipBorder
                                 )
                         )
                 )
@@ -97,7 +97,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().guiBackgroundColor
+                                        getCurrentData().guiBackground
                                 )
                         )
                 )
@@ -111,7 +111,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().buttonBackgroundColor
+                                        getCurrentData().buttonBackground
                                 )
                         )
                 )

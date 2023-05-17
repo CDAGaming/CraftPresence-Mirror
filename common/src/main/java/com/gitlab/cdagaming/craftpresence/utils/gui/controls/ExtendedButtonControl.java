@@ -202,7 +202,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
             final int hoverState = getHoverState(isHoveringOrFocusingOver());
 
-            final ColorData backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
+            final ColorData backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackground;
 
             if (StringUtils.isNullOrEmpty(backgroundCode.getTexLocation())) {
                 RenderUtils.drawGradient(

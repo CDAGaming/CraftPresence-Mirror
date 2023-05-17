@@ -36,22 +36,22 @@ import java.io.Serializable;
 public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
     private static final Accessibility DEFAULT = new Accessibility();
-    public ColorData tooltipBackgroundColor = new ColorData(
+    public ColorData tooltipBackground = new ColorData(
             new ColorSection(16, 0, 16, 240)
     );
-    public ColorData tooltipBorderColor = new ColorData(
+    public ColorData tooltipBorder = new ColorData(
             new ColorSection(80, 0, 255, 80),
             new ColorSection(40, 0, 127, 80)
     );
-    public ColorData guiBackgroundColor = new ColorData(
+    public ColorData guiBackground = new ColorData(
             new ColorSection(64, 64, 64, 255),
             RenderUtils.DEFAULT_GUI_BACKGROUND
     );
-    public ColorData worldGuiBackgroundColor = new ColorData(
+    public ColorData worldGuiBackground = new ColorData(
             new ColorSection(16, 16, 16, 192),
             new ColorSection(16, 16, 16, 208)
     );
-    public ColorData buttonBackgroundColor = new ColorData(RenderUtils.DEFAULT_BUTTON_BACKGROUND);
+    public ColorData buttonBackground = new ColorData(RenderUtils.DEFAULT_BUTTON_BACKGROUND);
     public String languageId = ModUtils.TRANSLATOR.defaultLanguageId;
     public boolean stripTranslationColors = ModUtils.IS_TEXT_COLORS_BLOCKED;
     public boolean showLoggingInChat = false;
@@ -81,11 +81,11 @@ public class Accessibility extends Module implements Serializable {
         if (target instanceof Accessibility && !equals(target)) {
             final Accessibility data = (Accessibility) target;
 
-            tooltipBackgroundColor = new ColorData(data.tooltipBackgroundColor);
-            tooltipBorderColor = new ColorData(data.tooltipBorderColor);
-            guiBackgroundColor = new ColorData(data.guiBackgroundColor);
-            worldGuiBackgroundColor = new ColorData(data.worldGuiBackgroundColor);
-            buttonBackgroundColor = new ColorData(data.buttonBackgroundColor);
+            tooltipBackground = new ColorData(data.tooltipBackground);
+            tooltipBorder = new ColorData(data.tooltipBorder);
+            guiBackground = new ColorData(data.guiBackground);
+            worldGuiBackground = new ColorData(data.worldGuiBackground);
+            buttonBackground = new ColorData(data.buttonBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
             showLoggingInChat = data.showLoggingInChat;
