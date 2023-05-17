@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
 import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -75,6 +74,19 @@ public class TexturedWidget implements DynamicWidget {
      */
     private boolean hasBorder;
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent       The parent or source screen to refer to
+     * @param startX       The starting X position of the widget
+     * @param startY       The starting Y position of the widget
+     * @param width        The width of the widget
+     * @param height       The height of the widget
+     * @param offset       The vertical offset to render the content to
+     * @param tintFactor   The factor at which to tint the content to
+     * @param infoSupplier The Supplier for the {@link ColorData} to be used to render the content
+     * @param hasBorder    Whether the content should have a surrounding border
+     */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public TexturedWidget(final ExtendedScreen parent,
                           final int startX, final int startY,
@@ -87,16 +99,15 @@ public class TexturedWidget implements DynamicWidget {
         setControlPosY(startY);
         setControlWidth(width);
         setControlHeight(height);
-
-        this.offset = offset;
-        this.tintFactor = tintFactor;
-        this.infoSupplier = infoSupplier;
-        this.hasBorder = hasBorder;
+        setOffset(offset);
+        setTintFactor(tintFactor);
+        setInfoSupplier(infoSupplier);
+        setBorderState(hasBorder);
     }
 
     @Override
     public void draw(ExtendedScreen screen) {
-        if (hasBorder) {
+        if (hasBorder()) {
             RenderUtils.drawGradientBox(
                     getControlPosX() - 1, getControlPosY() - 1,
                     getControlWidth() + 2, getControlHeight() + 2,
@@ -110,8 +121,89 @@ public class TexturedWidget implements DynamicWidget {
                 parent.mc,
                 getLeft(), getRight(),
                 getTop(), getBottom(),
-                offset, tintFactor, infoSupplier.get()
+                getOffset(), getTintFactor(), getInfo()
         );
+    }
+
+    /**
+     * Retrieve the vertical offset to render the content to
+     *
+     * @return the current vertical offset
+     */
+    public double getOffset() {
+        return offset;
+    }
+
+    /**
+     * Set the vertical offset to render the content to
+     *
+     * @param offset the new vertical offset
+     */
+    public void setOffset(double offset) {
+        this.offset = offset;
+    }
+
+    /**
+     * Retrieve the factor at which to tint the content to
+     *
+     * @return the current tint factor
+     */
+    public float getTintFactor() {
+        return tintFactor;
+    }
+
+    /**
+     * Set the factor at which to tint the content to
+     *
+     * @param tintFactor the new tint factor
+     */
+    public void setTintFactor(float tintFactor) {
+        this.tintFactor = tintFactor;
+    }
+
+    /**
+     * Retrieve the Supplier for the {@link ColorData} to be used to render the content
+     *
+     * @return the current supplier for the {@link ColorData} info
+     */
+    public Supplier<ColorData> getInfoSupplier() {
+        return infoSupplier;
+    }
+
+    /**
+     * Retrieve the {@link ColorData} to be used to render the content
+     *
+     * @return the {@link ColorData} info
+     */
+    public ColorData getInfo() {
+        return getInfoSupplier().get();
+    }
+
+    /**
+     * Set the Supplier for the {@link ColorData} to be used to render the content
+     *
+     * @param infoSupplier the new supplier for the {@link ColorData} info
+     */
+    public void setInfoSupplier(Supplier<ColorData> infoSupplier) {
+        this.infoSupplier = infoSupplier;
+    }
+
+    /**
+     * Retrieve whether the content should have a surrounding border
+     *
+     * @return the current border state
+     */
+    public boolean hasBorder() {
+        return hasBorder;
+    }
+
+    /**
+     * Set whether the content should have a surrounding border
+     *
+     * @param hasBorder the new border state
+     */
+    public void setBorderState(boolean hasBorder) {
+        this.hasBorder = hasBorder;
     }
 
     @Override
