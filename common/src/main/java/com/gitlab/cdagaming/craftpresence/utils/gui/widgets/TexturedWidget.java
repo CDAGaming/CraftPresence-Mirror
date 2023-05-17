@@ -171,21 +171,21 @@ public class TexturedWidget implements DynamicWidget {
     }
 
     /**
-     * Retrieve the {@link ColorData} to be used to render the content
-     *
-     * @return the {@link ColorData} info
-     */
-    public ColorData getInfo() {
-        return getInfoSupplier().get();
-    }
-
-    /**
      * Set the Supplier for the {@link ColorData} to be used to render the content
      *
      * @param infoSupplier the new supplier for the {@link ColorData} info
      */
     public void setInfoSupplier(Supplier<ColorData> infoSupplier) {
         this.infoSupplier = infoSupplier;
+    }
+
+    /**
+     * Retrieve the {@link ColorData} to be used to render the content
+     *
+     * @return the {@link ColorData} info
+     */
+    public ColorData getInfo() {
+        return getInfoSupplier().get();
     }
 
     /**
