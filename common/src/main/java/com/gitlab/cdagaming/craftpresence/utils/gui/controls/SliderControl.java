@@ -224,7 +224,6 @@ public class SliderControl extends ExtendedButtonControl {
                 );
             }
 
-            onSlide();
             final int hoverState = super.getHoverState(isHoveringOrFocusingOver());
             RenderUtils.renderSlider(mc,
                     getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(),
@@ -269,7 +268,7 @@ public class SliderControl extends ExtendedButtonControl {
             sliderValue = MathUtils.normalizeValue(newValue, valueStep, minValue, maxValue);
             denormalizedSlideValue = MathUtils.clamp(newValue, minValue, maxValue);
         }
-        setControlMessage(windowTitle + ": " + denormalizedSlideValue);
+        onSlide();
     }
 
     /**
@@ -326,6 +325,7 @@ public class SliderControl extends ExtendedButtonControl {
         if (onSlideEvent != null) {
             onSlideEvent.run();
         }
+        setControlMessage(windowTitle + ": " + denormalizedSlideValue);
     }
 
     /**
