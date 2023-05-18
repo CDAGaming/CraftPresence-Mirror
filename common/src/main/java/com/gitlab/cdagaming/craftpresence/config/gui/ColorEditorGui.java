@@ -38,8 +38,13 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TexturedWidget;
 import net.minecraft.client.gui.GuiScreen;
 
+import java.awt.*;
+import java.util.function.Supplier;
+
+@SuppressWarnings("DuplicatedCode")
 public class ColorEditorGui extends ConfigurationGui<ColorData> {
-    private final ColorData ORIGINAL, INSTANCE, CURRENT;
+    private final ColorData DEFAULTS, INSTANCE, CURRENT;
+    private final Supplier<ColorData> syncSupplier;
 
     // Start Color Data
     private SliderControl startRed, startGreen, startBlue, startAlpha;
@@ -48,11 +53,12 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     // General Data
     private TextWidget textureLocationText, startColorText, endColorText;
 
-    ColorEditorGui(GuiScreen parentScreen, ColorData moduleData) {
+    ColorEditorGui(GuiScreen parentScreen, ColorData moduleData, ColorData defaultData, Supplier<ColorData> syncData) {
         super(parentScreen, "gui.config.title", "gui.config.title.editor.color");
-        ORIGINAL = moduleData.copy();
+        DEFAULTS = defaultData;
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;
+        syncSupplier = syncData;
     }
 
     @Override
@@ -63,6 +69,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         final int calc2 = (getScreenWidth() / 2) + 3;
 
         final String generalTitle = ModUtils.TRANSLATOR.translate("gui.config.title.general");
+        final String startColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.start");
+        final String endColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.end");
+        final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview");
 
         final String redTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.red");
         final String greenTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.green");
@@ -92,7 +101,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 childFrame, true,
                 0, getButtonY(2),
                 getScreenWidth(),
-                "Start Color"
+                startColorTitle
         ));
         startColorText = childFrame.addControl(
                 new TextWidget(
@@ -100,7 +109,14 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         getButtonY(3),
                         180, 20,
                         () -> {
-                            //
+                            final String newText = startColorText.getControlMessage();
+                            if (StringUtils.isValidColorCode(newText)) {
+                                final Color newColor = StringUtils.findColor(newText);
+                                startRed.setSliderValue(newColor.getRed());
+                                startGreen.setSliderValue(newColor.getGreen());
+                                startBlue.setSliderValue(newColor.getBlue());
+                                startAlpha.setSliderValue(newColor.getAlpha());
+                            }
                         },
                         "gui.config.message.editor.hex_code"
                 )
@@ -199,7 +215,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 childFrame, true,
                 0, getButtonY(6),
                 getScreenWidth(),
-                "End Color"
+                endColorTitle
         ));
         endColorText = childFrame.addControl(
                 new TextWidget(
@@ -207,7 +223,14 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         getButtonY(7),
                         180, 20,
                         () -> {
-                            //
+                            final String newText = endColorText.getControlMessage();
+                            if (StringUtils.isValidColorCode(newText)) {
+                                final Color newColor = StringUtils.findColor(newText);
+                                endRed.setSliderValue(newColor.getRed());
+                                endGreen.setSliderValue(newColor.getGreen());
+                                endBlue.setSliderValue(newColor.getBlue());
+                                endAlpha.setSliderValue(newColor.getAlpha());
+                            }
                         },
                         "gui.config.message.editor.hex_code"
                 )
@@ -306,7 +329,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 childFrame, true,
                 0, getButtonY(10),
                 getScreenWidth(),
-                "Preview"
+                previewTitle
         ));
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
@@ -318,13 +341,43 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     }
 
     @Override
+    protected boolean canReset() {
+        return !getCurrentData().equals(DEFAULTS);
+    }
+
+    @Override
+    protected boolean allowedToReset() {
+        return true;
+    }
+
+    @Override
+    protected boolean resetData() {
+        return setCurrentData(DEFAULTS);
+    }
+
+    @Override
+    protected boolean canSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean allowedToSync() {
+        return true;
+    }
+
+    @Override
+    protected boolean syncData() {
+        return setCurrentData(syncSupplier.get());
+    }
+
+    @Override
     protected void applySettings() {
         setCurrentData(getInstance());
     }
 
     @Override
     protected ColorData getOriginalData() {
-        return ORIGINAL;
+        return DEFAULTS;
     }
 
     @Override

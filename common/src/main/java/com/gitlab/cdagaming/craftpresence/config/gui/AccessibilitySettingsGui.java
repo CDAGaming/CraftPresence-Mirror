@@ -69,7 +69,9 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().tooltipBackground
+                                        getCurrentData().tooltipBackground,
+                                        DEFAULTS.tooltipBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.tooltipBackground
                                 )
                         )
                 )
@@ -83,7 +85,9 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().tooltipBorder
+                                        getCurrentData().tooltipBorder,
+                                        DEFAULTS.tooltipBorder,
+                                        () -> Config.loadOrCreate().accessibilitySettings.tooltipBorder
                                 )
                         )
                 )
@@ -97,7 +101,9 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().guiBackground
+                                        getCurrentData().guiBackground,
+                                        DEFAULTS.guiBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.guiBackground
                                 )
                         )
                 )
@@ -111,7 +117,9 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().buttonBackground
+                                        getCurrentData().buttonBackground,
+                                        DEFAULTS.buttonBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.buttonBackground
                                 )
                         )
                 )
