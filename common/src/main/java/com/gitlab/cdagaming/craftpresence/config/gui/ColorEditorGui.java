@@ -94,9 +94,20 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 getScreenWidth(),
                 "Start Color"
         ));
+        startColorText = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(3),
+                        180, 20,
+                        () -> {
+                            //
+                        },
+                        "gui.config.message.editor.hex_code"
+                )
+        );
         startRed = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(3)),
+                        new Pair<>(calc1, getButtonY(4)),
                         new Pair<>(180, 20),
                         getInstance().getStart().red,
                         0.0f, 255.0f, 1.0f,
@@ -107,8 +118,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.red = (int) startRed.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.red = (int) startRed.getSliderValue();
@@ -119,7 +129,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startGreen = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(3)),
+                        new Pair<>(calc2, getButtonY(4)),
                         new Pair<>(180, 20),
                         getInstance().getStart().green,
                         0.0f, 255.0f, 1.0f,
@@ -130,8 +140,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.green = (int) startGreen.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.green = (int) startGreen.getSliderValue();
@@ -142,7 +151,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startBlue = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(4)),
+                        new Pair<>(calc1, getButtonY(5)),
                         new Pair<>(180, 20),
                         getInstance().getStart().blue,
                         0.0f, 255.0f, 1.0f,
@@ -153,8 +162,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.blue = (int) startBlue.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.blue = (int) startBlue.getSliderValue();
@@ -165,7 +173,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startAlpha = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(4)),
+                        new Pair<>(calc2, getButtonY(5)),
                         new Pair<>(180, 20),
                         getInstance().getStart().alpha,
                         0.0f, 255.0f, 1.0f,
@@ -176,8 +184,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.alpha = (int) startAlpha.getSliderValue();
                                     getInstance().setStartColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getStart();
                                     sect.alpha = (int) startAlpha.getSliderValue();
@@ -190,13 +197,24 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // End Color Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, true,
-                0, getButtonY(5),
+                0, getButtonY(6),
                 getScreenWidth(),
                 "End Color"
         ));
+        endColorText = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(7),
+                        180, 20,
+                        () -> {
+                            //
+                        },
+                        "gui.config.message.editor.hex_code"
+                )
+        );
         endRed = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(6)),
+                        new Pair<>(calc1, getButtonY(8)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().red,
                         0.0f, 255.0f, 1.0f,
@@ -207,8 +225,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.red = (int) endRed.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.red = (int) endRed.getSliderValue();
@@ -219,7 +236,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endGreen = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(6)),
+                        new Pair<>(calc2, getButtonY(8)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().green,
                         0.0f, 255.0f, 1.0f,
@@ -230,8 +247,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.green = (int) endGreen.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.green = (int) endGreen.getSliderValue();
@@ -242,7 +258,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endBlue = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(7)),
+                        new Pair<>(calc1, getButtonY(9)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().blue,
                         0.0f, 255.0f, 1.0f,
@@ -253,8 +269,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.blue = (int) endBlue.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.blue = (int) endBlue.getSliderValue();
@@ -265,7 +280,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endAlpha = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc2, getButtonY(7)),
+                        new Pair<>(calc2, getButtonY(9)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().alpha,
                         0.0f, 255.0f, 1.0f,
@@ -276,8 +291,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                     sect.alpha = (int) endAlpha.getSliderValue();
                                     getInstance().setEndColor(sect);
                                 },
-                                () -> {
-                                },
+                                null,
                                 () -> {
                                     final ColorSection sect = getInstance().getEnd();
                                     sect.alpha = (int) endAlpha.getSliderValue();
@@ -290,14 +304,14 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // Preview Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, true,
-                0, getButtonY(8),
+                0, getButtonY(10),
                 getScreenWidth(),
                 "Preview"
         ));
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
-                30, getButtonY(9),
-                getScreenWidth() - 30, 120,
+                32, getButtonY(11),
+                getScreenWidth() - 32, 120,
                 0.0D, 1.0F,
                 this::getInstance, true
         ));
