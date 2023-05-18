@@ -253,13 +253,15 @@ public class RenderUtils {
      * @param borderColor     The starting border color for the object
      * @param borderColorEnd  The ending border color for the object
      * @param border          The full width of the border for the object
+     * @param borderOffset    The offset to apply to the vertical border bounds (Useful for Drop Shadows)
      * @param contentColor    The starting content color for the object
      * @param contentColorEnd The ending content color for the object
      */
     public static void drawGradientBox(final double posX, final double posY,
                                        final double width, final double height,
                                        final double zLevel,
-                                       final Object borderColor, final Object borderColorEnd, final int border,
+                                       final Object borderColor, final Object borderColorEnd,
+                                       final int border, final int borderOffset,
                                        final Object contentColor, final Object contentColorEnd) {
         final double canvasWidth = width - (border * 2);
         final double canvasHeight = height - (border * 2);
@@ -270,19 +272,49 @@ public class RenderUtils {
         // Draw Borders
         if (borderColor != null) {
             // Top Left
-            drawGradient(posX, posX + border, posY, canvasBottom + border, zLevel, borderColor, borderColorEnd);
+            drawGradient(posX, posX + border, posY + border, canvasBottom, zLevel, borderColor, borderColorEnd);
             // Top Right
-            drawGradient(canvasRight, canvasRight + border, posY, canvasBottom + border, zLevel, borderColor, borderColorEnd);
+            drawGradient(canvasRight, canvasRight + border, posY + border, canvasBottom, zLevel, borderColor, borderColorEnd);
             // Bottom Left
-            drawGradient(posX, canvasRight + border, canvasBottom, canvasBottom + border, zLevel, borderColor, borderColorEnd);
+            drawGradient(posX - borderOffset, canvasRight + border + borderOffset, canvasBottom, canvasBottom + border, zLevel, borderColorEnd, borderColorEnd);
             // Bottom Right
-            drawGradient(posX, canvasRight + border, posY, posY + border, zLevel, borderColor, borderColorEnd);
+            drawGradient(posX - borderOffset, canvasRight + border + borderOffset, posY, posY + border, zLevel, borderColor, borderColor);
         }
 
         // Draw Content Box
         if (contentColor != null) {
             drawGradient(posX + border, canvasRight, posY + border, canvasBottom, zLevel, contentColor, contentColorEnd);
         }
+    }
+
+    /**
+     * Renders a Gradient Box from the defined arguments
+     *
+     * @param posX            The Starting X Position to render the object
+     * @param posY            The Starting Y Position to render the object
+     * @param width           The full width for the object to render to
+     * @param height          The full height for the object to render to
+     * @param zLevel          The Z level position for the object to render at
+     * @param borderColor     The starting border color for the object
+     * @param borderColorEnd  The ending border color for the object
+     * @param border          The full width of the border for the object
+     * @param contentColor    The starting content color for the object
+     * @param contentColorEnd The ending content color for the object
+     */
+    public static void drawGradientBox(final double posX, final double posY,
+                                       final double width, final double height,
+                                       final double zLevel,
+                                       final Object borderColor, final Object borderColorEnd,
+                                       final int border,
+                                       final Object contentColor, final Object contentColorEnd) {
+        drawGradientBox(
+                posX, posY,
+                width, height,
+                zLevel,
+                borderColor, borderColorEnd,
+                border, 0,
+                contentColor, contentColorEnd
+        );
     }
 
     /**
@@ -409,6 +441,12 @@ public class RenderUtils {
             return;
         }
 
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_FOG);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -421,6 +459,11 @@ public class RenderUtils {
         buffer.pos(right, top, zLevel).tex(maxU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
         buffer.pos(left, top, zLevel).tex(minU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
         tessellator.draw();
+
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
     /**
@@ -765,33 +808,34 @@ public class RenderUtils {
             // Render Background
             if (StringUtils.isNullOrEmpty(backgroundColorInfo.getTexLocation())) {
                 // Draw with Colors
-                drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 4, tooltipY - 3, zLevel, backgroundStart, backgroundEnd);
-                drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, tooltipY + tooltipHeight + 4, zLevel, backgroundStart, backgroundEnd);
-                drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundStart, backgroundEnd);
-                drawGradient(tooltipX - 4, tooltipX - 3, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundStart, backgroundEnd);
-                drawGradient(tooltipX + tooltipTextWidth + 3, tooltipX + tooltipTextWidth + 4, tooltipY - 3, tooltipY + tooltipHeight + 3, zLevel, backgroundStart, backgroundEnd);
+                drawGradientBox(
+                        tooltipX - 4, tooltipY - 4,
+                        tooltipTextWidth + 8, tooltipHeight + 8,
+                        zLevel,
+                        backgroundStart, backgroundEnd,
+                        1, -1,
+                        backgroundStart, backgroundEnd
+                );
             } else {
                 final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundColorInfo.getTexLocation());
+                final boolean usingExternalTexture = textureData.getFirst();
                 final ResourceLocation backGroundTexture = textureData.getThird();
-                double widthDivider = 32.0D, heightDivider = 32.0D;
 
                 final double width = tooltipTextWidth + 4;
                 final double height = tooltipHeight + 4;
-                if (textureData.getFirst()) {
-                    widthDivider = width;
-                    heightDivider = height;
-                }
 
                 final double left = tooltipX - 4;
                 final double right = tooltipX + width;
                 final double top = tooltipY - 4;
-                final double bottom = tooltipY + tooltipHeight + 4;
+                final double bottom = tooltipY + height;
 
                 drawTexture(mc,
                         left, right, top, bottom,
                         0.0D,
-                        0.0D, width / widthDivider,
-                        0.0D, height / heightDivider,
+                        usingExternalTexture ? 0.0D : (left / 32.0D),
+                        usingExternalTexture ? 1.0D : (right / 32.0D),
+                        usingExternalTexture ? 0.0D : (top / 32.0D),
+                        usingExternalTexture ? 1.0D : (bottom / 32.0D),
                         backgroundStart, backgroundEnd,
                         backGroundTexture
                 );
@@ -800,14 +844,17 @@ public class RenderUtils {
             // Render Border
             if (StringUtils.isNullOrEmpty(borderColorInfo.getTexLocation())) {
                 // Draw with Colors
-                drawGradient(tooltipX - 3, tooltipX - 3 + 1, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, zLevel, borderStart, borderEnd);
-                drawGradient(tooltipX + tooltipTextWidth + 2, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, tooltipY + tooltipHeight + 3 - 1, zLevel, borderStart, borderEnd);
-                drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipY - 3 + 1, zLevel, borderStart, borderStart);
-                drawGradient(tooltipX - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 2, tooltipY + tooltipHeight + 3, zLevel, borderEnd, borderEnd);
+                drawGradientBox(
+                        tooltipX - 3, tooltipY - 3,
+                        tooltipTextWidth + 6, tooltipHeight + 6,
+                        zLevel, borderStart, borderEnd,
+                        1,
+                        null, null
+                );
             } else {
                 final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(borderColorInfo.getTexLocation());
-                final ResourceLocation borderTexture = textureData.getThird();
                 final boolean usingExternalTexture = textureData.getFirst();
+                final ResourceLocation borderTexture = textureData.getThird();
 
                 final double border = 1;
                 final double renderX = tooltipX - 3;
@@ -815,16 +862,15 @@ public class RenderUtils {
                 final double canvasRight = tooltipX + tooltipTextWidth + 2;
                 final double canvasBottom = tooltipY + tooltipHeight + 2;
 
-                final double primaryDivider = (usingExternalTexture ? tooltipTextWidth + 5 : 32.0D);
-                final double secondaryDivider = (usingExternalTexture ? 1 : 32.0D);
-
                 // Draw Borders
                 // Top Left
                 drawTexture(mc,
                         renderX, renderX + border, renderY, canvasBottom + border,
                         zLevel,
-                        0.0D, border / primaryDivider,
-                        0.0D, border / secondaryDivider,
+                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                        usingExternalTexture ? 1.0D : ((renderX + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
                         borderStart, borderEnd,
                         borderTexture
                 );
@@ -832,8 +878,10 @@ public class RenderUtils {
                 drawTexture(mc,
                         canvasRight, canvasRight + border, renderY, canvasBottom + border,
                         zLevel,
-                        0.0D, border / primaryDivider,
-                        0.0D, border / secondaryDivider,
+                        usingExternalTexture ? 0.0D : (canvasRight / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
                         borderStart, borderEnd,
                         borderTexture
                 );
@@ -841,8 +889,10 @@ public class RenderUtils {
                 drawTexture(mc,
                         renderX, canvasRight + border, canvasBottom, canvasBottom + border,
                         zLevel,
-                        0.0D, border / primaryDivider,
-                        0.0D, border / secondaryDivider,
+                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (canvasBottom / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
                         borderStart, borderEnd,
                         borderTexture
                 );
@@ -850,8 +900,10 @@ public class RenderUtils {
                 drawTexture(mc,
                         renderX, canvasRight + border, renderY, renderY + border,
                         zLevel,
-                        0.0D, border / primaryDivider,
-                        0.0D, border / secondaryDivider,
+                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                        usingExternalTexture ? 1.0D : ((renderY + border) / 32.0D),
                         borderStart, borderEnd,
                         borderTexture
                 );
@@ -899,17 +951,16 @@ public class RenderUtils {
             );
         } else {
             final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(data.getTexLocation());
+            final boolean usingExternalTexture = textureData.getFirst();
             final ResourceLocation texLocation = textureData.getThird();
-
-            final double widthDivider = textureData.getFirst() ? (right - left) : 32.0D;
-            final double heightDivider = textureData.getFirst() ? (bottom - top) : 32.0D;
-            final double offsetAmount = textureData.getFirst() ? 0.0D : offset;
 
             drawTexture(mc,
                     left, right, top, bottom,
                     0.0D,
-                    left / widthDivider, right / widthDivider,
-                    (top + offsetAmount) / heightDivider, (bottom + offsetAmount) / heightDivider,
+                    usingExternalTexture ? 0.0D : (left / 32.0D),
+                    usingExternalTexture ? 1.0D : (right / 32.0D),
+                    usingExternalTexture ? 0.0D : ((top + offset) / 32.0D),
+                    usingExternalTexture ? 1.0D : ((bottom + offset) / 32.0D),
                     startColor, endColor,
                     texLocation
             );
