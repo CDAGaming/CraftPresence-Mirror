@@ -433,7 +433,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     }
 
     private void setEndColor(final ColorSection sect) {
-        getInstance().setStartColor(sect);
+        getInstance().setEndColor(sect);
         storedEnd.setStartColor(sect);
     }
 }
