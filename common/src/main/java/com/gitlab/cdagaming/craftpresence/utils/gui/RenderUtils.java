@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
@@ -716,7 +717,7 @@ public class RenderUtils {
                                            final int screenWidth, final int screenHeight,
                                            final int maxTextWidth,
                                            final FontRenderer fontRenderer,
-                                           final Tuple<Boolean, String, String> colorInfo) {
+                                           final Tuple<Boolean, ColorData, ColorData> colorInfo) {
         if (colorInfo.getFirst() && !textToInput.isEmpty() && fontRenderer != null) {
             List<String> textLines = textToInput;
             int tooltipTextWidth = 0;
@@ -794,122 +795,118 @@ public class RenderUtils {
                 tooltipY = screenHeight - tooltipHeight - 4;
             }
 
-            final String backgroundColorInfo = colorInfo.getSecond();
-            final String borderColorInfo = colorInfo.getThird();
+            final ColorData backgroundColorInfo = colorInfo.getSecond();
+            final ColorData borderColorInfo = colorInfo.getThird();
             final int zLevel = 300;
 
+            final Color backgroundStart = backgroundColorInfo.getStartColor();
+            final Color backgroundEnd = backgroundColorInfo.getEndColor();
+
+            final Color borderStart = borderColorInfo.getStartColor();
+            final Color borderEnd = borderColorInfo.getEndColor();
+
             // Render Background
-            if (!StringUtils.isNullOrEmpty(backgroundColorInfo)) {
-                if (StringUtils.isValidColorCode(backgroundColorInfo)) {
+            if (StringUtils.isNullOrEmpty(backgroundColorInfo.getTexLocation())) {
+                // Draw with Colors
+                drawGradientBox(
+                        tooltipX - 4, tooltipY - 4,
+                        tooltipTextWidth + 8, tooltipHeight + 8,
+                        zLevel,
+                        backgroundStart, backgroundEnd,
+                        1, -1,
+                        backgroundStart, backgroundEnd
+                );
+            } else {
+                final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundColorInfo.getTexLocation());
+                final boolean usingExternalTexture = textureData.getFirst();
+                final ResourceLocation backGroundTexture = textureData.getThird();
 
-                    // Draw with Colors
-                    drawGradientBox(
-                            tooltipX - 4, tooltipY - 4,
-                            tooltipTextWidth + 8, tooltipHeight + 8,
-                            zLevel,
-                            backgroundColorInfo, backgroundColorInfo,
-                            1, -1,
-                            backgroundColorInfo, backgroundColorInfo
-                    );
-                } else {
-                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundColorInfo);
-                    final boolean usingExternalTexture = textureData.getFirst();
-                    final ResourceLocation backGroundTexture = textureData.getThird();
+                final double width = tooltipTextWidth + 4;
+                final double height = tooltipHeight + 4;
 
-                    final double width = tooltipTextWidth + 4;
-                    final double height = tooltipHeight + 4;
+                final double left = tooltipX - 4;
+                final double right = tooltipX + width;
+                final double top = tooltipY - 4;
+                final double bottom = tooltipY + height;
 
-                    final double left = tooltipX - 4;
-                    final double right = tooltipX + width;
-                    final double top = tooltipY - 4;
-                    final double bottom = tooltipY + height;
-
-                    drawTexture(mc,
-                            left, right, top, bottom,
-                            0.0D,
-                            usingExternalTexture ? 0.0D : (left / 32.0D),
-                            usingExternalTexture ? 1.0D : (right / 32.0D),
-                            usingExternalTexture ? 0.0D : (top / 32.0D),
-                            usingExternalTexture ? 1.0D : (bottom / 32.0D),
-                            Color.white, Color.white,
-                            backGroundTexture
-                    );
-                }
+                drawTexture(mc,
+                        left, right, top, bottom,
+                        0.0D,
+                        usingExternalTexture ? 0.0D : (left / 32.0D),
+                        usingExternalTexture ? 1.0D : (right / 32.0D),
+                        usingExternalTexture ? 0.0D : (top / 32.0D),
+                        usingExternalTexture ? 1.0D : (bottom / 32.0D),
+                        backgroundStart, backgroundEnd,
+                        backGroundTexture
+                );
             }
 
             // Render Border
-            if (!StringUtils.isNullOrEmpty(borderColorInfo)) {
-                if (StringUtils.isValidColorCode(borderColorInfo)) {
-                    // Draw with Colors
-                    final Color borderColor = StringUtils.findColor(borderColorInfo);
-                    final int borderColorCode = borderColor.getRGB();
-                    final String borderColorEndCode = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
-                    final Color borderColorEnd = StringUtils.findColor(borderColorEndCode);
+            if (StringUtils.isNullOrEmpty(borderColorInfo.getTexLocation())) {
+                // Draw with Colors
+                drawGradientBox(
+                        tooltipX - 3, tooltipY - 3,
+                        tooltipTextWidth + 6, tooltipHeight + 6,
+                        zLevel, borderStart, borderEnd,
+                        1,
+                        null, null
+                );
+            } else {
+                final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(borderColorInfo.getTexLocation());
+                final boolean usingExternalTexture = textureData.getFirst();
+                final ResourceLocation borderTexture = textureData.getThird();
 
-                    drawGradientBox(
-                            tooltipX - 3, tooltipY - 3,
-                            tooltipTextWidth + 6, tooltipHeight + 6,
-                            zLevel, borderColor, borderColorEnd,
-                            1,
-                            null, null
-                    );
-                } else {
-                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(borderColorInfo);
-                    final boolean usingExternalTexture = textureData.getFirst();
-                    final ResourceLocation borderTexture = textureData.getThird();
+                final double border = 1;
+                final double renderX = tooltipX - 3;
+                final double renderY = tooltipY - 3;
+                final double canvasRight = tooltipX + tooltipTextWidth + 2;
+                final double canvasBottom = tooltipY + tooltipHeight + 2;
 
-                    final double border = 1;
-                    final double renderX = tooltipX - 3;
-                    final double renderY = tooltipY - 3;
-                    final double canvasRight = tooltipX + tooltipTextWidth + 2;
-                    final double canvasBottom = tooltipY + tooltipHeight + 2;
-
-                    // Draw Borders
-                    // Top Left
-                    drawTexture(mc,
-                            renderX, renderX + border, renderY, canvasBottom + border,
-                            zLevel,
-                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                            usingExternalTexture ? 1.0D : ((renderX + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
-                            Color.white, Color.white,
-                            borderTexture
-                    );
-                    // Top Right
-                    drawTexture(mc,
-                            canvasRight, canvasRight + border, renderY, canvasBottom + border,
-                            zLevel,
-                            usingExternalTexture ? 0.0D : (canvasRight / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
-                            Color.white, Color.white,
-                            borderTexture
-                    );
-                    // Bottom Left
-                    drawTexture(mc,
-                            renderX, canvasRight + border, canvasBottom, canvasBottom + border,
-                            zLevel,
-                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (canvasBottom / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
-                            Color.white, Color.white,
-                            borderTexture
-                    );
-                    // Right Border
-                    drawTexture(mc,
-                            renderX, canvasRight + border, renderY, renderY + border,
-                            zLevel,
-                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                            usingExternalTexture ? 1.0D : ((renderY + border) / 32.0D),
-                            Color.white, Color.white,
-                            borderTexture
-                    );
-                }
+                // Draw Borders
+                // Top Left
+                drawTexture(mc,
+                        renderX, renderX + border, renderY, canvasBottom + border,
+                        zLevel,
+                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                        usingExternalTexture ? 1.0D : ((renderX + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                        borderStart, borderEnd,
+                        borderTexture
+                );
+                // Top Right
+                drawTexture(mc,
+                        canvasRight, canvasRight + border, renderY, canvasBottom + border,
+                        zLevel,
+                        usingExternalTexture ? 0.0D : (canvasRight / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                        borderStart, borderEnd,
+                        borderTexture
+                );
+                // Bottom Left
+                drawTexture(mc,
+                        renderX, canvasRight + border, canvasBottom, canvasBottom + border,
+                        zLevel,
+                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (canvasBottom / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                        borderStart, borderEnd,
+                        borderTexture
+                );
+                // Right Border
+                drawTexture(mc,
+                        renderX, canvasRight + border, renderY, renderY + border,
+                        zLevel,
+                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                        usingExternalTexture ? 1.0D : ((renderY + border) / 32.0D),
+                        borderStart, borderEnd,
+                        borderTexture
+                );
             }
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
@@ -928,35 +925,32 @@ public class RenderUtils {
     /**
      * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
      *
-     * @param mc      The current game instance
-     * @param left    The Left Position of the Object
-     * @param right   The Right Position of the Object
-     * @param top     The Top Position of the Object
-     * @param bottom  The Bottom Position of the Object
-     * @param offset  The vertical offset to render the background to
-     * @param startBg The starting background render data to interpret
-     * @param endBg   The ending background render data to interpret
-     * @param color   The background RGB data to interpret
+     * @param mc         The current game instance
+     * @param left       The Left Position of the Object
+     * @param right      The Right Position of the Object
+     * @param top        The Top Position of the Object
+     * @param bottom     The Bottom Position of the Object
+     * @param offset     The vertical offset to render the background to
+     * @param tintFactor The factor at which to tint the background to
+     * @param data       The {@link ColorData} to be used to render the background
      */
     public static void drawBackground(@Nonnull final Minecraft mc,
                                       final double left, final double right,
                                       final double top, final double bottom,
-                                      final double offset,
-                                      final String startBg, final String endBg, final Color color) {
-        if (StringUtils.isValidColorCode(startBg)) {
-            final Pair<Color, Color> colorData = StringUtils.findColor(startBg, endBg);
-            if (color != null) {
-                colorData.setFirst(StringUtils.tintColor(colorData.getFirst(), color));
-                colorData.setSecond(StringUtils.tintColor(colorData.getSecond(), color));
-            }
+                                      final double offset, float tintFactor,
+                                      final ColorData data) {
+        // Setup Colors + Tint Data
+        tintFactor = MathUtils.clamp(tintFactor, 0.0f, 1.0f);
+        final Color startColor = StringUtils.offsetColor(data.getStartColor(), tintFactor);
+        final Color endColor = StringUtils.offsetColor(data.getEndColor(), tintFactor);
 
+        if (StringUtils.isNullOrEmpty(data.getTexLocation())) {
             drawGradient(left, right, top, bottom,
                     300.0F,
-                    colorData.getFirst(),
-                    colorData.getSecond()
+                    startColor, endColor
             );
         } else {
-            final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(startBg);
+            final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(data.getTexLocation());
             final boolean usingExternalTexture = textureData.getFirst();
             final ResourceLocation texLocation = textureData.getThird();
 
@@ -967,30 +961,10 @@ public class RenderUtils {
                     usingExternalTexture ? 1.0D : (right / 32.0D),
                     usingExternalTexture ? 0.0D : ((top + offset) / 32.0D),
                     usingExternalTexture ? 1.0D : ((bottom + offset) / 32.0D),
-                    color, color,
+                    startColor, endColor,
                     texLocation
             );
         }
-    }
-
-    /**
-     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
-     *
-     * @param mc     The current game instance
-     * @param left   The Left Position of the Object
-     * @param right  The Right Position of the Object
-     * @param top    The Top Position of the Object
-     * @param bottom The Bottom Position of the Object
-     * @param offset The vertical offset to render the background to
-     * @param bgCode The background render data to interpret
-     * @param color  The background RGB data to interpret
-     */
-    public static void drawBackground(@Nonnull final Minecraft mc,
-                                      final double left, final double right,
-                                      final double top, final double bottom,
-                                      double offset,
-                                      final String bgCode, final Color color) {
-        drawBackground(mc, left, right, top, bottom, offset, bgCode, bgCode, color);
     }
 
     /**

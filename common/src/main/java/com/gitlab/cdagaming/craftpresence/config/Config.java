@@ -26,9 +26,7 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
-import com.gitlab.cdagaming.craftpresence.config.element.Button;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.config.element.*;
 import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
@@ -38,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.*;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,7 +50,7 @@ public final class Config extends Module implements Serializable {
     // Constants
     private static final long serialVersionUID = -4853238501768086595L;
     private static final int MC_VERSION = ModUtils.MCProtocolID;
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     private static final Config DEFAULT = new Config().applyDefaults();
@@ -306,6 +305,52 @@ public final class Config extends Module implements Serializable {
                     ).apply(this, rawJson);
                     currentVer = 3;
                 }
+                if (MathUtils.isWithinValue(currentVer, 3, 4, true, false)) {
+                    // Schema Changes (v3 -> v4)
+                    //  - Migrate Color-Related Settings to new System
+                    final JsonObject oldData = rawJson.getAsJsonObject()
+                            .getAsJsonObject("accessibilitySettings");
+                    final boolean showBackgroundAsDark = oldData
+                            .getAsJsonPrimitive("showBackgroundAsDark").getAsBoolean();
+                    final Map<String, String> propsToChange = new HashMapBuilder<String, String>()
+                            .put("tooltipBackgroundColor", "tooltipBackground")
+                            .put("tooltipBorderColor", "tooltipBorder")
+                            .put("guiBackgroundColor", "guiBackground")
+                            .put("buttonBackgroundColor", "buttonBackground")
+                            .build();
+
+                    for (Map.Entry<String, String> entry : propsToChange.entrySet()) {
+                        final String oldValue = oldData.getAsJsonPrimitive(entry.getKey()).getAsString();
+                        final ColorData newValue = new ColorData();
+
+                        if (!StringUtils.isNullOrEmpty(oldValue)) {
+                            if (StringUtils.isValidColorCode(oldValue)) {
+                                final ColorSection startColor = new ColorSection(
+                                        StringUtils.findColor(oldValue)
+                                );
+                                newValue.setStartColor(startColor);
+
+                                if (entry.getKey().equalsIgnoreCase("tooltipBorderColor")) {
+                                    final int borderColorCode = startColor.getColor().getRGB();
+                                    final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
+                                    newValue.setEndColor(new ColorSection(
+                                            StringUtils.findColor(borderColorEnd)
+                                    ));
+                                }
+                            } else {
+                                final boolean applyTint = showBackgroundAsDark && entry.getKey().equalsIgnoreCase("guiBackgroundColor");
+                                if (applyTint) {
+                                    newValue.setStartColor(
+                                            new ColorSection(64, 64, 64, 255)
+                                    );
+                                }
+                                newValue.setTexLocation(oldValue);
+                            }
+                        }
+
+                        accessibilitySettings.setProperty(entry.getValue(), newValue);
+                    }
+                }
 
                 save();
             }
@@ -337,7 +382,7 @@ public final class Config extends Module implements Serializable {
                 boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
-                    if (currentValue == null || !(parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
+                    if (currentValue == null || !(parentValue instanceof ColorData || parentValue instanceof ColorSection || parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
                         ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
                         shouldContinue = false;
                     } else {

@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ColorEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
@@ -45,7 +44,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     private final Accessibility INSTANCE, DEFAULTS;
     private ExtendedTextControl languageIdText;
-    private CheckBoxControl showBackgroundAsDarkButton, stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
+    private CheckBoxControl stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
     private ExtendedButtonControl controlsButton;
 
     AccessibilitySettingsGui(GuiScreen parentScreen) {
@@ -69,23 +68,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.tooltip_background_color",
                         () -> openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_background_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(getCurrentData().tooltipBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().tooltipBackgroundColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1 && !screenInstance.currentTexturePath.equals(getCurrentData().tooltipBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().tooltipBackgroundColor = screenInstance.currentTexturePath;
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(getCurrentData().tooltipBackgroundColor)) {
-                                                screenInstance.startingHexValue = getCurrentData().tooltipBackgroundColor;
-                                            } else if (!StringUtils.isNullOrEmpty(getCurrentData().tooltipBackgroundColor)) {
-                                                screenInstance.startingTexturePath = getCurrentData().tooltipBackgroundColor;
-                                            }
-                                        }
+                                        currentScreen,
+                                        getCurrentData().tooltipBackground,
+                                        DEFAULTS.tooltipBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.tooltipBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -103,23 +89,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.tooltip_border_color",
                         () -> openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.tooltip_border_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(getCurrentData().tooltipBorderColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().tooltipBorderColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1 && !screenInstance.currentTexturePath.equals(getCurrentData().tooltipBorderColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().tooltipBorderColor = screenInstance.currentTexturePath;
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(getCurrentData().tooltipBorderColor)) {
-                                                screenInstance.startingHexValue = getCurrentData().tooltipBorderColor;
-                                            } else if (!StringUtils.isNullOrEmpty(getCurrentData().tooltipBorderColor)) {
-                                                screenInstance.startingTexturePath = getCurrentData().tooltipBorderColor;
-                                            }
-                                        }
+                                        currentScreen,
+                                        getCurrentData().tooltipBorder,
+                                        DEFAULTS.tooltipBorder,
+                                        () -> Config.loadOrCreate().accessibilitySettings.tooltipBorder
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -137,23 +110,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.gui_background_color",
                         () -> openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.gui_background_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(getCurrentData().guiBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().guiBackgroundColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1 && !screenInstance.currentTexturePath.equals(getCurrentData().guiBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().guiBackgroundColor = screenInstance.currentTexturePath;
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(getCurrentData().guiBackgroundColor)) {
-                                                screenInstance.startingHexValue = getCurrentData().guiBackgroundColor;
-                                            } else if (!StringUtils.isNullOrEmpty(getCurrentData().guiBackgroundColor)) {
-                                                screenInstance.startingTexturePath = getCurrentData().guiBackgroundColor;
-                                            }
-                                        }
+                                        currentScreen,
+                                        getCurrentData().guiBackground,
+                                        DEFAULTS.guiBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.guiBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -163,31 +123,39 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         )
                 )
         );
-        // Adding Button Background Color Button
+        // Adding World-Specific Gui Background Color Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(1),
                         180, 20,
+                        "gui.config.name.accessibility.world_gui_background_color",
+                        () -> openScreen(
+                                new ColorEditorGui(
+                                        currentScreen,
+                                        getCurrentData().worldGuiBackground,
+                                        DEFAULTS.worldGuiBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.worldGuiBackground
+                                )
+                        ),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.world_gui_background_color")
+                                )
+                        )
+                )
+        );
+        // Adding Button Background Color Button
+        childFrame.addControl(
+                new ExtendedButtonControl(
+                        (getScreenWidth() / 2) - 90, getButtonY(2),
+                        180, 20,
                         "gui.config.name.accessibility.button_background_color",
                         () -> openScreen(
                                 new ColorEditorGui(
-                                        currentScreen, ModUtils.TRANSLATOR.translate("gui.config.name.accessibility.button_background_color"),
-                                        (pageNumber, screenInstance) -> {
-                                            if (pageNumber == 0 && !screenInstance.currentNormalHexValue.equals(getCurrentData().buttonBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().buttonBackgroundColor = screenInstance.currentNormalHexValue;
-                                            } else if (pageNumber == 1 && !screenInstance.currentTexturePath.equals(getCurrentData().buttonBackgroundColor)) {
-                                                CraftPresence.CONFIG.hasChanged = true;
-                                                getCurrentData().buttonBackgroundColor = screenInstance.currentTexturePath;
-                                            }
-                                        },
-                                        (screenInstance) -> {
-                                            if (StringUtils.isValidColorCode(getCurrentData().buttonBackgroundColor)) {
-                                                screenInstance.startingHexValue = getCurrentData().buttonBackgroundColor;
-                                            } else if (!StringUtils.isNullOrEmpty(getCurrentData().buttonBackgroundColor)) {
-                                                screenInstance.startingTexturePath = getCurrentData().buttonBackgroundColor;
-                                            }
-                                        }
+                                        currentScreen,
+                                        getCurrentData().buttonBackground,
+                                        DEFAULTS.buttonBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.buttonBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -201,7 +169,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         languageIdText = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(2),
+                        getButtonY(3),
                         180, 20,
                         "gui.config.name.accessibility.language_id",
                         () -> drawMultiLineString(
@@ -213,22 +181,9 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         languageIdText.setControlMessage(getCurrentData().languageId);
 
-        showBackgroundAsDarkButton = childFrame.addControl(
-                new CheckBoxControl(
-                        calc1, getButtonY(3),
-                        "gui.config.name.accessibility.show_background_as_dark",
-                        getCurrentData().showBackgroundAsDark,
-                        null,
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_background_as_dark")
-                                )
-                        )
-                )
-        );
         stripTranslationColorsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, getButtonY(3),
+                        calc1, getButtonY(4),
                         "gui.config.name.accessibility.strip_translation_colors",
                         getCurrentData().stripTranslationColors,
                         null,
@@ -241,7 +196,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         showLoggingInChatButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(4, -10),
+                        calc2, getButtonY(4),
                         "gui.config.name.accessibility.show_logging_in_chat",
                         getCurrentData().showLoggingInChat,
                         null,
@@ -254,7 +209,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         stripExtraGuiElementsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, getButtonY(4, -10),
+                        calc1, getButtonY(5, -10),
                         "gui.config.name.accessibility.strip_extra_gui_elements",
                         getCurrentData().stripExtraGuiElements,
                         null,
@@ -279,7 +234,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         final KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(4, 5),
+                        (getScreenWidth() / 2) - 90, getButtonY(5, 5),
                         180, 20,
                         "gui.config.message.button.controls",
                         () -> openScreen(
@@ -337,10 +292,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         if (!languageIdText.getControlMessage().equals(getCurrentData().languageId)) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().languageId = languageIdText.getControlMessage();
-        }
-        if (showBackgroundAsDarkButton.isChecked() != getCurrentData().showBackgroundAsDark) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().showBackgroundAsDark = showBackgroundAsDarkButton.isChecked();
         }
         if (stripTranslationColorsButton.isChecked() != getCurrentData().stripTranslationColors) {
             CraftPresence.CONFIG.hasChanged = true;

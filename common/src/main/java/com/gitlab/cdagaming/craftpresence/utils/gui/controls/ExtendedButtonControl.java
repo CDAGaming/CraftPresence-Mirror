@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -201,12 +202,17 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
             final int hoverState = getHoverState(isHoveringOrFocusingOver());
 
-            final String backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackgroundColor;
+            final ColorData backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackground;
 
-            if (StringUtils.isValidColorCode(backgroundCode)) {
-                RenderUtils.drawGradient(getLeft(), getRight(), getTop(), getBottom(), getZLevel(), backgroundCode, backgroundCode);
+            if (StringUtils.isNullOrEmpty(backgroundCode.getTexLocation())) {
+                RenderUtils.drawGradient(
+                        getLeft(), getRight(),
+                        getTop(), getBottom(),
+                        getZLevel(),
+                        backgroundCode.getStartColor(), backgroundCode.getEndColor()
+                );
             } else {
-                final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(backgroundCode);
+                final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(backgroundCode.getTexLocation());
                 final ResourceLocation texLocation = textureData.getThird();
 
                 RenderUtils.renderButton(mc, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, getZLevel(), texLocation);

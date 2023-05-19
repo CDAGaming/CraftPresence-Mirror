@@ -291,7 +291,6 @@ public class Legacy2Modern implements DataMigrator {
             .put("playerSkinEndpoint", "advancedSettings.playerSkinEndpoint")
             //
             .put("languageId", "accessibilitySettings.languageId")
-            .put("reducedBackgroundTint", "accessibilitySettings.showBackgroundAsDark")
             .put("stripTranslationColors", "accessibilitySettings.stripTranslationColors")
             .put("showLoggingInChat", "accessibilitySettings.showLoggingInChat")
             .put("stripExtraGuiElements", "accessibilitySettings.stripExtraGuiElements")
