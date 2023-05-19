@@ -129,7 +129,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param parentScreen The Parent Screen for this Instance
      */
     public ExtendedScreen(final GuiScreen parentScreen) {
-        mc = CraftPresence.instance;
+        setGameInstance(CraftPresence.instance);
         currentScreen = this;
         this.parentScreen = parentScreen;
         this.canClose = true;
@@ -266,7 +266,7 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon Window Reload
      */
     public void reloadUi() {
-        onResize(mc, width, height);
+        onResize(getGameInstance(), getScreenWidth(), getScreenHeight());
     }
 
     /**
@@ -359,7 +359,8 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering critical elements before other elements
      */
     public void renderCriticalData() {
-        RenderUtils.drawBackground(mc,
+        RenderUtils.drawBackground(
+                getGameInstance(),
                 getLeft(), getRight(),
                 getTop(), getBottom(),
                 getOffset(), getTintFactor(),
@@ -373,7 +374,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public boolean hasWorld() {
-        return mc.world != null;
+        return getGameInstance().world != null;
     }
 
     /**
@@ -464,7 +465,7 @@ public class ExtendedScreen extends GuiScreen {
             final int scale = computeGuiScale();
             RenderUtils.drawWithin(
                     getLeft() * scale,
-                    mc.displayHeight - getBottom() * scale,
+                    getGameInstance().displayHeight - getBottom() * scale,
                     getScreenWidth() * scale,
                     getScreenHeight() * scale
             );
@@ -663,12 +664,30 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Retrieve the Game Instance attached to this Screen
+     *
+     * @return the current game instance
+     */
+    public Minecraft getGameInstance() {
+        return mc;
+    }
+
+    /**
+     * Sets the Game Instance attached to this Screen
+     *
+     * @param instance the new game instance
+     */
+    public void setGameInstance(final Minecraft instance) {
+        this.mc = instance;
+    }
+
+    /**
      * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
      *
      * @param targetScreen The target Gui Screen to display
      */
     public void openScreen(final GuiScreen targetScreen) {
-        RenderUtils.openScreen(mc, targetScreen);
+        RenderUtils.openScreen(getGameInstance(), targetScreen);
     }
 
     /**
@@ -679,7 +698,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the current GUI scale
      */
     public int computeGuiScale() {
-        return RenderUtils.computeGuiScale(mc);
+        return RenderUtils.computeGuiScale(getGameInstance());
     }
 
     /**
@@ -723,7 +742,8 @@ public class ExtendedScreen extends GuiScreen {
      * @param posY        The starting Y position to render the String
      */
     public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY) {
-        RenderUtils.drawMultiLineString(mc,
+        RenderUtils.drawMultiLineString(
+                getGameInstance(),
                 textToInput,
                 posX, posY,
                 getScreenWidth(), getScreenHeight(),
@@ -1029,7 +1049,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Renderer for this Screen
      */
     public FontRenderer getFontRenderer() {
-        return mc.fontRenderer != null ? mc.fontRenderer : GuiUtils.getDefaultFontRenderer();
+        return getGameInstance().fontRenderer != null ? getGameInstance().fontRenderer : GuiUtils.getDefaultFontRenderer();
     }
 
     /**

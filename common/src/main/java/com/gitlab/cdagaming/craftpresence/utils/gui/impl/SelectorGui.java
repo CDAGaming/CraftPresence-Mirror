@@ -202,7 +202,7 @@ public class SelectorGui extends ExtendedScreen {
 
             scrollList = addList(
                     new ScrollableListControl(
-                            mc, this,
+                            getGameInstance(), this,
                             getScreenWidth(), getScreenHeight(),
                             32, getScreenHeight() - 32,
                             itemList, originalValue,
