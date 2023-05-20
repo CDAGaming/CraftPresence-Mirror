@@ -248,8 +248,6 @@
   "craftpresence.placeholders.removeRepeatWords.usage": "removeRepeatWords(input)",
   "craftpresence.placeholders.replace.description": "Replaces Data in a String",
   "craftpresence.placeholders.replace.usage": "replace(input, matchCase ?: false, matchWholeWord ?: false, useRegex ?: true, data=[from, to]...)",
-  "craftpresence.placeholders.rgbaToHex.description": "Converts the specified RGBA color into a Hexadecimal String",
-  "craftpresence.placeholders.rgbaToHex.usage": "rgbaToHex(r,g,b,a ?: 255)",
   "craftpresence.placeholders.screen.default.icon.description": "The default Gui Screen icon",
   "craftpresence.placeholders.screen.icon.description": "The current Gui Screen icon",
   "craftpresence.placeholders.screen.message.description": "Данные отображения текущего графического интерфейса, если они применимы",
