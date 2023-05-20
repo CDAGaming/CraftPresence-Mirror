@@ -287,7 +287,6 @@ The following functions are available for use anywhere in CraftPresence:
 * `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
 * `replace(input, matchCase ?: false, matchWholeWord ?: false, useRegex ?: true, data=[from, to]...)` - Replaces Data in
   a String
-* `rgbaToHex(r,g,b,a ?: 255)` - Converts the specified RGBA color into a Hexadecimal String
 * `split(input, regex, limit ?: 0)` - Splits this string around matches of the given regular expression
 * `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
 * `timeFromEpoch(epochTime)` - Retrive a Time Instant from the specified epoch time
