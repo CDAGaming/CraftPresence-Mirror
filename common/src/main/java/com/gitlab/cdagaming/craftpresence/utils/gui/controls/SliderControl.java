@@ -217,7 +217,7 @@ public class SliderControl extends ExtendedButtonControl {
     @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            if (isDragging()) {
+            if (dragging) {
                 setValueFromMouse(mouseX);
             }
 
@@ -252,7 +252,7 @@ public class SliderControl extends ExtendedButtonControl {
      *
      * @param mouseX The Mouse's Current X Position
      */
-    private void setValueFromMouse(final int mouseX) {
+    private void setValueFromMouse(final double mouseX) {
         setSliderValue(
                 (float) (mouseX - (getControlPosX() + 4)) / (float) (getControlWidth() - 8),
                 true
@@ -332,14 +332,5 @@ public class SliderControl extends ExtendedButtonControl {
             onSlideEvent.run();
         }
         setControlMessage(windowTitle + ": " + denormalizedSlideValue);
-    }
-
-    /**
-     * Retrieves whether the Slider is currently being manually dragged
-     *
-     * @return whether the Slider is currently being manually dragged
-     */
-    public boolean isDragging() {
-        return dragging;
     }
 }

@@ -643,6 +643,7 @@ public class ExtendedScreen extends GuiScreen {
                     ((ExtendedScreen) extendedControl).updateScreen();
                 }
             }
+            super.updateScreen();
         }
     }
 
