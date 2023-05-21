@@ -768,7 +768,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Renders a String in the Screen, in the style of a notice
+     * Renders a String on the Screen, in the style of a notice
      *
      * @param notice The List of Strings to render
      */
@@ -777,7 +777,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Renders a String in the Screen, in the style of a notice
+     * Renders a String on the Screen, in the style of a notice
      *
      * @param notice      The List of Strings to render
      * @param widthScale  The Scale/Value away from the center X to render at
@@ -788,7 +788,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Renders a String in the Screen, in the style of a notice
+     * Renders a String on the Screen, in the style of a notice
      *
      * @param notice       The List of Strings to render
      * @param widthScale   The Scale/Value away from the center X to render at
@@ -806,7 +806,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Renders a String in the Screen, in the style of centered text
+     * Renders a String on the Screen, in the style of centered text
      *
      * @param text  The text to render to the screen
      * @param xPos  The X position to render the text at
@@ -814,11 +814,11 @@ public class ExtendedScreen extends GuiScreen {
      * @param color The color to render the text in
      */
     public void renderCenteredString(final String text, final float xPos, final float yPos, final int color) {
-        renderString(text, xPos - (getStringWidth(text) / 2f), yPos, color);
+        RenderUtils.renderCenteredString(getFontRenderer(), text, xPos, yPos, color);
     }
 
     /**
-     * Renders a String in the Screen, in the style of normal text
+     * Renders a String on the Screen, in the style of normal text
      *
      * @param text  The text to render to the screen
      * @param xPos  The X position to render the text at
@@ -826,17 +826,17 @@ public class ExtendedScreen extends GuiScreen {
      * @param color The color to render the text in
      */
     public void renderString(final String text, final float xPos, final float yPos, final int color) {
-        getFontRenderer().drawStringWithShadow(text, xPos, yPos, color);
+        RenderUtils.renderString(getFontRenderer(), text, xPos, yPos, color);
     }
 
     /**
-     * Get the Width of a String from the FontRenderer
+     * Get the Width of a String from the Font Renderer
      *
      * @param string The string to interpret
      * @return the string's width from the font renderer
      */
     public int getStringWidth(final String string) {
-        return getFontRenderer().getStringWidth(string);
+        return RenderUtils.getStringWidth(getFontRenderer(), string);
     }
 
     /**
@@ -1059,7 +1059,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Height for this Screen
      */
     public int getFontHeight() {
-        return getFontRenderer().FONT_HEIGHT;
+        return RenderUtils.getFontHeight(getFontRenderer());
     }
 
     /**

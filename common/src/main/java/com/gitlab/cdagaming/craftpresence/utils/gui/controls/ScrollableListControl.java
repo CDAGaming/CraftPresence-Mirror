@@ -264,7 +264,7 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Current Font Height for this Control
      */
     public int getFontHeight() {
-        return getFontRenderer().FONT_HEIGHT;
+        return RenderUtils.getFontHeight(getFontRenderer());
     }
 
     /**
@@ -451,7 +451,7 @@ public class ScrollableListControl extends GuiSlot {
         if (!identifierName.equals(displayName) && isHovering) {
             hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
-        getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+        RenderUtils.renderString(getFontRenderer(), displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 
         if (isHovering) {
             currentHoverText = hoverText;

@@ -170,9 +170,9 @@ public class CheckBoxControl extends ExtendedButtonControl {
             int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (isChecked())
-                drawCenteredString(getFontRenderer(), "x", getControlPosX() + getBoxWidth() / 2 + 1, getControlPosY() + 1, color);
+                RenderUtils.renderCenteredString(getFontRenderer(), "x", getControlPosX() + (getBoxWidth() / 2f) + 1, getControlPosY() + 1, color);
 
-            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getBoxWidth() + 2, getControlPosY() + 2, color);
+            RenderUtils.renderString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getBoxWidth() + 2, getControlPosY() + 2, color);
         }
     }
 
@@ -246,7 +246,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
 
     private void syncRenderStates() {
         setControlHeight(getBoxWidth());
-        setControlWidth(getBoxWidth() + (getBorderWidth() * 2) + getFontRenderer().getStringWidth(getDisplayMessage()));
+        setControlWidth(getBoxWidth() + (getBorderWidth() * 2) + RenderUtils.getStringWidth(getFontRenderer(), getDisplayMessage()));
     }
 
     private void resetRenderStates() {
