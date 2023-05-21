@@ -87,7 +87,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // General Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, false,
-                16, getButtonY(0),
+                calc1, getButtonY(0),
                 getScreenWidth(),
                 generalTitle
         ));
@@ -105,7 +105,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // Start Color Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, false,
-                16, getButtonY(2),
+                calc1, getButtonY(2),
                 getScreenWidth(),
                 startColorTitle
         ));
@@ -226,7 +226,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // End Color Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, false,
-                16, getButtonY(8),
+                calc1, getButtonY(8),
                 getScreenWidth(),
                 endColorTitle
         ));
@@ -347,14 +347,14 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         // Preview Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, false,
-                16, getButtonY(14),
+                calc1, getButtonY(14),
                 getScreenWidth(),
                 previewTitle
         ));
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
-                32, getButtonY(15),
-                calcAlt, 120,
+                calc1 + 1, getButtonY(15),
+                calcAlt, 186,
                 0.0D, 1.0F,
                 this::getInstance, true
         ));
