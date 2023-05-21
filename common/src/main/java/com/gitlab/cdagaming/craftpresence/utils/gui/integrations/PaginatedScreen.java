@@ -323,7 +323,7 @@ public class PaginatedScreen extends ExtendedScreen {
     }
 
     /**
-     * Renders a String on the Screen, in the style of normal text
+     * Renders a String in the Screen, in the style of normal text
      *
      * @param text         The text to render to the screen
      * @param xPos         The X position to render the text at

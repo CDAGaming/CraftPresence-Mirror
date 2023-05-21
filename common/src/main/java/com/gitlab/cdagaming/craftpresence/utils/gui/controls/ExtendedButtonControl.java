@@ -229,11 +229,11 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
                 color = 14737632;
             }
 
-            RenderUtils.renderCenteredString(
+            drawCenteredString(
                     getFontRenderer(),
                     getDisplayMessage(),
-                    getRight() - (getControlWidth() / 2f),
-                    getBottom() - (getControlHeight() / 2f) - (getFontHeight() / 2f),
+                    getRight() - (getControlWidth() / 2),
+                    getBottom() - (getControlHeight() / 2) - (getFontHeight() / 2),
                     color
             );
         }
@@ -321,7 +321,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return The Current Font Height for this Control
      */
     public int getFontHeight() {
-        return RenderUtils.getFontHeight(getFontRenderer());
+        return getFontRenderer().FONT_HEIGHT;
     }
 
     /**

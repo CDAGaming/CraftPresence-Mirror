@@ -399,53 +399,6 @@ public class RenderUtils {
     }
 
     /**
-     * Renders a String on the Screen, in the style of centered text
-     *
-     * @param fontRenderer The Font Renderer Instance
-     * @param text         The text to render to the screen
-     * @param xPos         The X position to render the text at
-     * @param yPos         The Y position to render the text at
-     * @param color        The color to render the text in
-     */
-    public static void renderCenteredString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
-        renderString(fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2f), yPos, color);
-    }
-
-    /**
-     * Renders a String on the Screen, in the style of normal text
-     *
-     * @param fontRenderer The Font Renderer Instance
-     * @param text         The text to render to the screen
-     * @param xPos         The X position to render the text at
-     * @param yPos         The Y position to render the text at
-     * @param color        The color to render the text in
-     */
-    public static void renderString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
-        fontRenderer.drawStringWithShadow(text, xPos, yPos, color);
-    }
-
-    /**
-     * Get the Width of a String from the Font Renderer
-     *
-     * @param fontRenderer The Font Renderer Instance
-     * @param string       The string to interpret
-     * @return the string's width from the font renderer
-     */
-    public static int getStringWidth(final FontRenderer fontRenderer, final String string) {
-        return fontRenderer.getStringWidth(string);
-    }
-
-    /**
-     * Get the Current Font Height for this Renderer
-     *
-     * @param fontRenderer The Font Renderer Instance
-     * @return The Current Font Height for this Renderer
-     */
-    public static int getFontHeight(final FontRenderer fontRenderer) {
-        return fontRenderer.FONT_HEIGHT;
-    }
-
-    /**
      * Draws a Textured Rectangle, following the defined arguments
      *
      * @param mc            The current game instance
@@ -768,7 +721,7 @@ public class RenderUtils {
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
-                final int textLineWidth = getStringWidth(fontRenderer, textLine);
+                final int textLineWidth = fontRenderer.getStringWidth(textLine);
 
                 if (textLineWidth > tooltipTextWidth) {
                     tooltipTextWidth = textLineWidth;
@@ -807,7 +760,7 @@ public class RenderUtils {
                     }
 
                     for (String line : wrappedLine) {
-                        int lineWidth = getStringWidth(fontRenderer, line);
+                        int lineWidth = fontRenderer.getStringWidth(line);
                         if (lineWidth > wrappedTooltipWidth) {
                             wrappedTooltipWidth = lineWidth;
                         }
@@ -956,7 +909,7 @@ public class RenderUtils {
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 final String line = textLines.get(lineNumber);
-                renderString(fontRenderer, line, tooltipX, tooltipY, -1);
+                fontRenderer.drawStringWithShadow(line, tooltipX, tooltipY, -1);
 
                 if (lineNumber + 1 == titleLinesCount) {
                     tooltipY += 2;
@@ -1082,7 +1035,7 @@ public class RenderUtils {
                         StringUtils.STRIP_COLOR_PATTERN.matcher(stringOfCharacter).find());
             }
 
-            charWidth += getStringWidth(fontRenderer, stringOfCharacter);
+            charWidth += fontRenderer.getStringWidth(stringOfCharacter);
             if (flag) {
                 ++charWidth;
             }
