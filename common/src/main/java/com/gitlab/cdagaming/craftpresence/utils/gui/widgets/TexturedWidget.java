@@ -62,9 +62,9 @@ public class TexturedWidget implements DynamicWidget {
      */
     private double offset;
     /**
-     * The factor at which to tint the content to
+     * Supplier for the factor at which to tint the content to
      */
-    private float tintFactor;
+    private Supplier<Float> tintSupplier;
     /**
      * Supplier for the {@link ColorData} to be used to render the content
      */
@@ -83,7 +83,7 @@ public class TexturedWidget implements DynamicWidget {
      * @param width        The width of the widget
      * @param height       The height of the widget
      * @param offset       The vertical offset to render the content to
-     * @param tintFactor   The factor at which to tint the content to
+     * @param tintSupplier The Supplier for the factor at which to tint the content to
      * @param infoSupplier The Supplier for the {@link ColorData} to be used to render the content
      * @param hasBorder    Whether the content should have a surrounding border
      */
@@ -91,7 +91,8 @@ public class TexturedWidget implements DynamicWidget {
     public TexturedWidget(final ExtendedScreen parent,
                           final int startX, final int startY,
                           final int width, final int height,
-                          final double offset, final float tintFactor,
+                          final double offset,
+                          final Supplier<Float> tintSupplier,
                           final Supplier<ColorData> infoSupplier,
                           final boolean hasBorder) {
         this.parent = parent;
@@ -100,7 +101,7 @@ public class TexturedWidget implements DynamicWidget {
         setControlWidth(width);
         setControlHeight(height);
         setOffset(offset);
-        setTintFactor(tintFactor);
+        setTintSupplier(tintSupplier);
         setInfoSupplier(infoSupplier);
         setBorderState(hasBorder);
     }
@@ -144,21 +145,30 @@ public class TexturedWidget implements DynamicWidget {
     }
 
     /**
+     * Retrieve the Supplier for the factor at which to tint the content to
+     *
+     * @return the current tint factor supplier
+     */
+    public Supplier<Float> getTintSupplier() {
+        return tintSupplier;
+    }
+
+    /**
+     * Set the Supplier for the factor at which to tint the content to
+     *
+     * @param tintSupplier the new tint factor supplier
+     */
+    public void setTintSupplier(Supplier<Float> tintSupplier) {
+        this.tintSupplier = tintSupplier;
+    }
+
+    /**
      * Retrieve the factor at which to tint the content to
      *
      * @return the current tint factor
      */
     public float getTintFactor() {
-        return tintFactor;
-    }
-
-    /**
-     * Set the factor at which to tint the content to
-     *
-     * @param tintFactor the new tint factor
-     */
-    public void setTintFactor(float tintFactor) {
-        this.tintFactor = tintFactor;
+        return getTintSupplier().get();
     }
 
     /**

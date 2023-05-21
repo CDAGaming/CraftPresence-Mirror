@@ -53,6 +53,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private SliderControl endRed, endGreen, endBlue, endAlpha;
     // General Data
     private TextWidget textureLocationText, startColorText, endColorText;
+    private SliderControl tintFactor;
 
     ColorEditorGui(GuiScreen parentScreen, ColorData moduleData, ColorData defaultData, Supplier<ColorData> syncData) {
         super(parentScreen, "gui.config.title", "gui.config.title.editor.color");
@@ -71,10 +72,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
-
         final int calcAlt = calc2 + 180;
 
-        final String generalTitle = ModUtils.TRANSLATOR.translate("gui.config.title.general");
         final String startColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.start");
         final String endColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.end");
         final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview");
@@ -84,35 +83,17 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         final String blueTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.blue");
         final String alphaTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.alpha");
 
-        // General Section
-        childFrame.addWidget(new TextDisplayWidget(
-                childFrame, false,
-                calc1, getButtonY(0),
-                getScreenWidth(),
-                generalTitle
-        ));
-        textureLocationText = childFrame.addControl(
-                new TextWidget(
-                        getFontRenderer(),
-                        getButtonY(1),
-                        180, 20,
-                        () -> getInstance().setTexLocation(textureLocationText.getControlMessage()),
-                        "gui.config.message.editor.texture_path"
-                )
-        );
-        textureLocationText.setControlMessage(getInstance().getTexLocation());
-
         // Start Color Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, false,
-                calc1, getButtonY(2),
+                calc1, getButtonY(0),
                 getScreenWidth(),
                 startColorTitle
         ));
         startColorText = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(3),
+                        getButtonY(1),
                         180, 20,
                         () -> {
                             final String newText = startColorText.getControlMessage();
@@ -129,7 +110,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startRed = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(4)),
+                        new Pair<>(calc1, getButtonY(2)),
                         new Pair<>(180, 20),
                         getInstance().getStart().red,
                         0.0f, 255.0f, 1.0f,
@@ -151,7 +132,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startGreen = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(5)),
+                        new Pair<>(calc1, getButtonY(3)),
                         new Pair<>(180, 20),
                         getInstance().getStart().green,
                         0.0f, 255.0f, 1.0f,
@@ -173,7 +154,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startBlue = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(6)),
+                        new Pair<>(calc1, getButtonY(4)),
                         new Pair<>(180, 20),
                         getInstance().getStart().blue,
                         0.0f, 255.0f, 1.0f,
@@ -195,7 +176,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startAlpha = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(7)),
+                        new Pair<>(calc1, getButtonY(5)),
                         new Pair<>(180, 20),
                         getInstance().getStart().alpha,
                         0.0f, 255.0f, 1.0f,
@@ -217,23 +198,23 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
-                calc2, getButtonY(4, 1),
+                calc2, getButtonY(2, 1),
                 calcAlt, 93,
-                0.0D, 1.0F,
+                0.0D, () -> 1.0F,
                 () -> storedStart, true
         ));
 
         // End Color Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, false,
-                calc1, getButtonY(8),
+                calc1, getButtonY(6),
                 getScreenWidth(),
                 endColorTitle
         ));
         endColorText = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(9),
+                        getButtonY(7),
                         180, 20,
                         () -> {
                             final String newText = endColorText.getControlMessage();
@@ -250,7 +231,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endRed = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(10)),
+                        new Pair<>(calc1, getButtonY(8)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().red,
                         0.0f, 255.0f, 1.0f,
@@ -272,7 +253,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endGreen = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(11)),
+                        new Pair<>(calc1, getButtonY(9)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().green,
                         0.0f, 255.0f, 1.0f,
@@ -294,7 +275,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endBlue = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(12)),
+                        new Pair<>(calc1, getButtonY(10)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().blue,
                         0.0f, 255.0f, 1.0f,
@@ -316,7 +297,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endAlpha = childFrame.addControl(
                 new SliderControl(
-                        new Pair<>(calc1, getButtonY(13)),
+                        new Pair<>(calc1, getButtonY(11)),
                         new Pair<>(180, 20),
                         getInstance().getEnd().alpha,
                         0.0f, 255.0f, 1.0f,
@@ -338,24 +319,43 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
-                calc2, getButtonY(10, 1),
+                calc2, getButtonY(8, 1),
                 calcAlt, 93,
-                0.0D, 1.0F,
+                0.0D, () -> 1.0F,
                 () -> storedEnd, true
         ));
 
         // Preview Section
         childFrame.addWidget(new TextDisplayWidget(
                 childFrame, false,
-                calc1, getButtonY(14),
+                calc1, getButtonY(12),
                 getScreenWidth(),
                 previewTitle
         ));
+        textureLocationText = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(13),
+                        180, 20,
+                        () -> getInstance().setTexLocation(textureLocationText.getControlMessage()),
+                        "gui.config.message.editor.texture_path"
+                )
+        );
+        textureLocationText.setControlMessage(getInstance().getTexLocation());
+        tintFactor = childFrame.addControl(
+                new SliderControl(
+                        new Pair<>(calc1, getButtonY(14)),
+                        new Pair<>(180, 20),
+                        100,
+                        0.0f, 100.0f, 1.0f,
+                        "Tint Factor"
+                )
+        );
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
-                calc1 + 1, getButtonY(15),
-                calcAlt, 186,
-                0.0D, 1.0F,
+                calc2, getButtonY(14, 1),
+                calcAlt, 93,
+                0.0D, () -> tintFactor.getSliderValue(true),
                 this::getInstance, true
         ));
     }
