@@ -76,12 +76,14 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         final String startColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.start");
         final String endColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.end");
-        final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview");
+        final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.preview");
 
         final String redTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.red");
         final String greenTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.green");
         final String blueTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.blue");
         final String alphaTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.alpha");
+
+        final String tintFactorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.tint_factor");
 
         // Start Color Section
         childFrame.addWidget(new TextDisplayWidget(
@@ -348,7 +350,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         new Pair<>(180, 20),
                         100,
                         0.0f, 100.0f, 1.0f,
-                        "Tint Factor"
+                        tintFactorTitle
                 )
         );
         childFrame.addWidget(new TexturedWidget(
