@@ -60,14 +60,16 @@ public class MathUtils {
                 max = 0;
             }
         }
-        // Contains Checks
-        if (!contains_min) {
-            min = min + 1;
+        // Checking value within range based on contains_min and contains_max
+        if (contains_min && contains_max) {
+            return value >= min && value <= max;
+        } else if (contains_min) {
+            return value >= min && value < max;
+        } else if (contains_max) {
+            return value > min && value <= max;
+        } else {
+            return value > min && value < max;
         }
-        if (!contains_max) {
-            max = max - 1;
-        }
-        return (value >= min && value <= max);
     }
 
     /**
