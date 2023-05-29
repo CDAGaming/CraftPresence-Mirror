@@ -42,6 +42,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -50,9 +51,18 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class CommandUtils {
     /**
+     * Thread Factory Instance for this Class, used for Scheduling Events
+     */
+    private static final ThreadFactory threadFactory = r -> {
+        final Thread t = new Thread(r);
+        t.setName(ModUtils.NAME);
+        t.setDaemon(true);
+        return t;
+    };
+    /**
      * Timer Instance for this Class, used for Scheduling Events
      */
-    private static final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor(threadFactory);
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
@@ -132,6 +142,15 @@ public class CommandUtils {
      */
     public static ScheduledExecutorService getThreadPool() {
         return exec;
+    }
+
+    /**
+     * Retrieve the Thread Factory Instance for this Class, used for Scheduling Events
+     *
+     * @return the Thread Factory Instance for this class
+     */
+    public static ThreadFactory getThreadFactory() {
+        return threadFactory;
     }
 
     /**

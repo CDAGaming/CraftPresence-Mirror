@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 
 /**
  * Module Section defining properties to be used for Rich Presence Displays
@@ -67,7 +67,7 @@ public interface Module {
      * Scans for applicable data related to this Module, within a new Thread.
      */
     default void scanForData() {
-        new Thread(this::getAllData, ModUtils.NAME + "-" + getClass().getSimpleName() + "-Lookup").start();
+        CommandUtils.getThreadPool().execute(this::getAllData);
     }
 
     /**

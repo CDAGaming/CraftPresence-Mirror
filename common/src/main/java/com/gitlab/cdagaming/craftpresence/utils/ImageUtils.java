@@ -67,84 +67,78 @@ public class ImageUtils {
      * Format: textureName;[[textureInputType, textureObj], [textureIndex, imageData], textureData]
      */
     private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = StringUtils.newHashMap();
-    /**
-     * The thread used for Url Image Events to take place within
-     */
-    private static final Thread urlQueue;
 
     static {
-        urlQueue = new Thread("Url Queue") {
-            @Override
-            public void run() {
-                try {
-                    while (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
-                        final Pair<String, Pair<InputType, Object>> request = urlRequests.take();
-                        boolean isGif = request.getFirst().endsWith(".gif");
+        CommandUtils.getThreadFactory().newThread(
+                () -> {
+                    try {
+                        while (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
+                            final Pair<String, Pair<InputType, Object>> request = urlRequests.take();
+                            boolean isGif = request.getFirst().endsWith(".gif");
 
-                        final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(request.getFirst()).getSecond();
-                        if (bufferData != null) {
-                            // Retrieve Data from external source
-                            try {
-                                final InputStream streamData;
-                                final Object originData = request.getSecond().getSecond();
-                                switch (request.getSecond().getFirst()) {
-                                    case FileData:
-                                        streamData = Files.newInputStream(((File) originData).toPath());
-                                        break;
-                                    case FileStream:
-                                        streamData = Files.newInputStream(Paths.get(originData.toString()));
-                                        break;
-                                    case ByteStream:
-                                        final Tuple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());
-                                        final byte[] dataSet = base64Data.getFirst() ?
-                                                decodeBase64(base64Data.getThird(), "UTF-8", false, false) :
-                                                (originData instanceof byte[] ? (byte[]) originData : StringUtils.getBytes(originData.toString()));
-                                        streamData = dataSet != null ? new ByteArrayInputStream(dataSet) : null;
-                                        isGif = base64Data.getSecond().contains("gif");
-                                        break;
-                                    case Url:
-                                        streamData = UrlUtils.getURLStream(originData instanceof URL ? (URL) originData : new URL(originData.toString()));
-                                        isGif = originData.toString().endsWith(".gif");
-                                        break;
-                                    default:
-                                        streamData = null;
-                                        break;
-                                }
+                            final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(request.getFirst()).getSecond();
+                            if (bufferData != null) {
+                                // Retrieve Data from external source
+                                try {
+                                    final InputStream streamData;
+                                    final Object originData = request.getSecond().getSecond();
+                                    switch (request.getSecond().getFirst()) {
+                                        case FileData:
+                                            streamData = Files.newInputStream(((File) originData).toPath());
+                                            break;
+                                        case FileStream:
+                                            streamData = Files.newInputStream(Paths.get(originData.toString()));
+                                            break;
+                                        case ByteStream:
+                                            final Tuple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());
+                                            final byte[] dataSet = base64Data.getFirst() ?
+                                                    decodeBase64(base64Data.getThird(), "UTF-8", false, false) :
+                                                    (originData instanceof byte[] ? (byte[]) originData : StringUtils.getBytes(originData.toString()));
+                                            streamData = dataSet != null ? new ByteArrayInputStream(dataSet) : null;
+                                            isGif = base64Data.getSecond().contains("gif");
+                                            break;
+                                        case Url:
+                                            streamData = UrlUtils.getURLStream(originData instanceof URL ? (URL) originData : new URL(originData.toString()));
+                                            isGif = originData.toString().endsWith(".gif");
+                                            break;
+                                        default:
+                                            streamData = null;
+                                            break;
+                                    }
 
-                                if (streamData != null) {
-                                    if (isGif) {
-                                        final ImageFrame[] frames = ImageFrame.readGif(streamData);
+                                    if (streamData != null) {
+                                        if (isGif) {
+                                            final ImageFrame[] frames = ImageFrame.readGif(streamData);
 
-                                        for (ImageFrame frame : frames) {
-                                            try {
-                                                bufferData.getSecond().add(frame);
-                                            } catch (Exception ex) {
-                                                if (CommandUtils.isVerboseMode()) {
-                                                    ex.printStackTrace();
+                                            for (ImageFrame frame : frames) {
+                                                try {
+                                                    bufferData.getSecond().add(frame);
+                                                } catch (Exception ex) {
+                                                    if (CommandUtils.isVerboseMode()) {
+                                                        ex.printStackTrace();
+                                                    }
                                                 }
                                             }
+                                        } else {
+                                            bufferData.getSecond().add(new ImageFrame(ImageIO.read(streamData)));
                                         }
-                                    } else {
-                                        bufferData.getSecond().add(new ImageFrame(ImageIO.read(streamData)));
+                                        cachedImages.get(request.getFirst()).setSecond(bufferData);
+                                        cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
                                     }
-                                    cachedImages.get(request.getFirst()).setSecond(bufferData);
-                                    cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
-                                }
-                            } catch (Exception ex) {
-                                if (CommandUtils.isVerboseMode()) {
-                                    ex.printStackTrace();
+                                } catch (Exception ex) {
+                                    if (CommandUtils.isVerboseMode()) {
+                                        ex.printStackTrace();
+                                    }
                                 }
                             }
                         }
-                    }
-                } catch (Exception ex) {
-                    if (CommandUtils.isVerboseMode()) {
-                        ex.printStackTrace();
+                    } catch (Exception ex) {
+                        if (CommandUtils.isVerboseMode()) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
-            }
-        };
-        urlQueue.start();
+        ).start();
     }
 
     /**
