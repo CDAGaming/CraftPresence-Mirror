@@ -40,6 +40,7 @@ The customization possibilities are limitless, with the only real limit being ho
 
 CraftPresence will detect whether your Launch Directory contains:
 
+* A ATLauncher Instance (instance.json)
 * A valid Twitch/Overwolf/Curse/GDLauncher Manifest (manifest.json, minecraftinstance.json)
 * A MultiMC Instance (instance.cfg)
 * A MCUpdater Instance (instance.json)
