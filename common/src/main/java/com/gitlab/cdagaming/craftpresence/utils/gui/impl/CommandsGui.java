@@ -563,7 +563,7 @@ public class CommandsGui extends ExtendedScreen {
      * @param doFullCopy Whether to do a full copy or a text-only copy
      */
     private void exportAssets(final String clientId, final boolean doFullCopy, final String urlMeta) {
-        CommandUtils.getThreadPool().execute(() -> {
+        CommandUtils.getThreadFactory().newThread(() -> {
             blockInteractions = true;
             final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
 
@@ -645,6 +645,6 @@ public class CommandsGui extends ExtendedScreen {
                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
             }
             blockInteractions = false;
-        });
+        }).start();
     }
 }

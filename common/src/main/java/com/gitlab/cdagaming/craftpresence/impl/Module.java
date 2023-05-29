@@ -67,7 +67,7 @@ public interface Module {
      * Scans for applicable data related to this Module, within a new Thread.
      */
     default void scanForData() {
-        CommandUtils.getThreadPool().execute(this::getAllData);
+        CommandUtils.getThreadFactory().newThread(this::getAllData).start();
     }
 
     /**

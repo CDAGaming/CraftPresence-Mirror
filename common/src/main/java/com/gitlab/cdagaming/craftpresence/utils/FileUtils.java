@@ -611,7 +611,7 @@ public class FileUtils {
      * Begin a new Thread, executing {@link FileUtils#scanClasses()}
      */
     public static void detectClasses() {
-        CommandUtils.getThreadPool().execute(FileUtils::scanClasses);
+        CommandUtils.getThreadFactory().newThread(FileUtils::scanClasses).start();
     }
 
     /**
