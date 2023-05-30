@@ -266,6 +266,9 @@ public class HypherConverter implements DataMigrator {
         data.largeImageText = processPlaceholder(entry.get("largeImageText"));
         data.smallImageText = processPlaceholder(entry.get("smallImageText"));
 
+        // SimpleRPC always has the Start Timestamp enabled, so we prefill it here
+        data.startTimestamp = "{data.general.time}";
+
         int buttonIndex = 1;
         if (entry.get("buttons") instanceof List<?>) {
             for (Object buttonEntryObj : (List<?>) entry.get("buttons")) {
