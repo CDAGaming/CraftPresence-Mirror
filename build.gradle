@@ -81,7 +81,7 @@ subprojects {
     unimined.useGlobalCache = false
 
     unimined.minecraft(sourceSets.main) {
-        side (isJarMod ? "client" : "combined")
+        side(isJarMod ? "client" : "combined")
         version "${rootProject.mc_version}"
 
         switch (path) {
