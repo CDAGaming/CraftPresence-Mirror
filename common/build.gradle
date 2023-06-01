@@ -188,7 +188,7 @@ publisher {
         modrinth = System.getenv("MODRINTH_TOKEN")
     }
 
-    debug = true
+    debug = false
     curseID = "297038"
     modrinthID = "DFqQfIBR"
     versionType = "${deploymentType}".toLowerCase()
