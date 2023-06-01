@@ -3,32 +3,11 @@ plugins {
     id "me.hypherionmc.modutils.modpublisher" version "1.0.17"
 }
 
-def accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
-
-minecraft {
-    if (!isJarMod) {
-        fabric {
-            if (accessWidenerFile.exists()) {
-                accessWidener = accessWidenerFile
-            }
-        }
-    } else {
-        jarMod {
-            // required when using mcp mappings
-            if (protocol <= 2) { // MC a1.1.2_01 and below
-                devNamespace = "searge"
-            } else {
-                devFallbackNamespace = "searge"
-            }
-        }
-    }
-}
-
 remapJar {
     if (isJarMod && protocol <= 2) { // MC a1.1.2_01 and below
-        target = "searge"
+        prodNamespace "searge"
     } else {
-        target = (isLegacy || protocol < 498) ? "mcp" : "mojmap"
+        prodNamespace ((isLegacy || protocol < 498) ? "mcp" : "mojmap")
     }
 }
 
@@ -41,10 +20,6 @@ configurations {
 }
 
 dependencies {
-    if (!isJarMod) {
-        fabric "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    }
-
     // Legacy Dependencies, based on Protocol Version
     if (isLegacy) {
         if (protocol <= 61) { // MC 1.5.2 and below

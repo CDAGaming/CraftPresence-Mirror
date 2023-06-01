@@ -2,50 +2,13 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-// Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
-// due to the way Forge requires core-mods for lower version usage
-def canUseATs = false
-def accessWidenerFile = null
-if (!isJarMod) {
-    accessWidenerFile = project(":common").minecraft.mcPatcher.accessWidener
-    canUseATs = accessWidenerFile != null && (!isLegacy || protocol > 60)
-}
-
-// Note: Required for proper mixin remaps
-mods {
-    modRemapper.setRemapMixins("TINY_HARD")
-}
-
-minecraft {
-    if (!isJarMod) {
-        forge {
-            if (canUseATs) {
-                accessTransformer = aw2at(accessWidenerFile)
+unimined.minecraft(sourceSets.main) {
+    runs {
+        config("client") {
+            if (use_replay_mod.toBoolean()) {
+                jvmArgs += ["-Dfml.coreMods.load=com.replaymod.core.LoadingPlugin", "-Dmixin.env.remapRefMap=true"]
             }
         }
-    } else {
-        jarMod {
-            // required when using mcp mappings
-            if (protocol <= 2) { // MC a1.1.2_01 and below
-                devNamespace = "searge"
-            } else {
-                devFallbackNamespace = "searge"
-            }
-        }
-    }
-}
-
-mappings {
-    // ability to add custom mappings
-    // available targets are "CLIENT", "SERVER", "COMBINED"
-    def target = (isLegacy || protocol < 498) ? "mcp" : "mojmap"
-    getStub("COMBINED").withMappings(["searge", target]) {
-        c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-        c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-    }
-    getStub("CLIENT").withMappings(["searge", target]) {
-        c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-        c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
     }
 }
 
@@ -59,9 +22,7 @@ configurations {
 
 dependencies {
     if (isJarMod) {
-        jarModClient "risugami:modloader:${rootProject.forge_version}"
-    } else {
-        forge "net.minecraftforge:forge:${rootProject.mc_version}-${rootProject.forge_version}"
+        jarMod "risugami:modloader:${rootProject.forge_version}"
     }
 
     common project(path: ':common'), { transitive false }
@@ -106,14 +67,7 @@ processResources {
 }
 
 exportMappings {
-    export("CLIENT") {
-        targetNamespaces = ["searge"]
-        sourceNamespace = "official"
-        location = "$projectDir/src/main/resources/mappings-${fmlName}.srg"
-        type = "SRG"
-    }
-
-    export("COMBINED") {
+    export {
         targetNamespaces = ["searge"]
         sourceNamespace = "official"
         location = "$projectDir/src/main/resources/mappings-${fmlName}.srg"
@@ -157,9 +111,11 @@ remapJar {
 }
 
 jar {
-    if (canUseATs) {
-        manifest {
-            attributes 'FMLAT': 'accesstransformer.cfg'
+    doFirst {
+        if (canUseATs) {
+            manifest {
+                attributes 'FMLAT': 'accesstransformer.cfg'
+            }
         }
     }
     archiveClassifier.set "dev"
