@@ -188,13 +188,13 @@ publisher {
         modrinth = System.getenv("MODRINTH_TOKEN")
     }
 
-    debug = false
+    debug = true
     curseID = "297038"
     modrinthID = "DFqQfIBR"
     versionType = "${deploymentType}".toLowerCase()
     changelog = file("$rootDir/Changes.md").text
     version = "v${versionFormat}".replaceAll("\\s", "").toLowerCase() // Modrinth Only
-    displayName = "${archive_name} v${versionId} ${versionLabel} (${mcVersionLabel})"
+    displayName = "${archive_name} v${versionId}${versionLabel.isEmpty() ? "" : " ${versionLabel}"} (${mcVersionLabel})"
     gameVersions = [mc_version.toString()]
     loaders = rootProject.enabled_platforms.split(",").toList()
     curseEnvironment = "client"

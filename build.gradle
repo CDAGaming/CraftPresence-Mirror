@@ -10,8 +10,9 @@ plugins {
 }
 
 def ext_mcVersionLabel = rootProject.hasProperty("mc_version_extra") ? "${mc_version_extra}" : "${mc_version}"
+def ext_versionLabel = "${rootProject.versionLabel.equalsIgnoreCase("release") ? "" : "${rootProject.versionLabel}"}"
 
-def ext_versionInfoLabel = "${rootProject.versionLabel.equalsIgnoreCase("release") ? "" : "-${rootProject.versionLabel}"}"
+def ext_versionInfoLabel = "${ext_versionLabel.isEmpty() ? "" : "-${ext_versionLabel}"}"
 def ext_baseVersionLabel = "${rootProject.versionId + ext_versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
 def ext_classPath = "${rootProject.group}".replace(".", "/") + "/${mod_name}".toLowerCase()
 
@@ -40,6 +41,7 @@ subprojects {
         isJarMod = ext_isJarMod
         fmlName = "${ext_fmlName}"
         mcVersionLabel = "${ext_mcVersionLabel}"
+        versionLabel = "${ext_versionLabel}"
     }
 
     spotless {
