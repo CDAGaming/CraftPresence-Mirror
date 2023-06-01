@@ -22,6 +22,7 @@ def ext_fileFormat = "${rootProject.mod_name}-${ext_versionFormat}"
 int ext_protocol = "${mc_protocol}".toInteger()
 boolean ext_isLegacy = "${isLegacy}".toBoolean()
 boolean ext_isJarMod = "${isJarMod}".toBoolean()
+boolean ext_isModern = !ext_isLegacy && ext_protocol >= 498
 
 def ext_fmlName = ext_isJarMod ? "modloader" : "forge"
 
@@ -44,6 +45,7 @@ subprojects {
         protocol = ext_protocol
         isLegacy = ext_isLegacy
         isJarMod = ext_isJarMod
+        isModern = ext_isModern
         fmlName = "${ext_fmlName}"
         accessWidenerFile = "${ext_accessWidenerFile}"
         canUseATs = ext_canUseATs
@@ -81,8 +83,10 @@ subprojects {
     unimined.useGlobalCache = false
 
     unimined.minecraft(sourceSets.main) {
+        def mc_version = "${rootProject.mc_version}"
+
         side(isJarMod ? "client" : "combined")
-        version "${rootProject.mc_version}"
+        version mc_version
 
         switch (path) {
             case ":common":
@@ -93,7 +97,7 @@ subprojects {
                         }
                         loader rootProject.fabric_loader_version
                     }
-                    if (!isLegacy && protocol >= 498) {
+                    if (ext_isModern) {
                         fabric fabricData
                     } else {
                         legacyFabric fabricData
@@ -110,7 +114,7 @@ subprojects {
                         prodNamespace "official"
                     }
                 }
-                if (!isLegacy && protocol >= 498) {
+                if (ext_isModern) {
                     fabric fabricData
                 } else {
                     legacyFabric fabricData
@@ -137,20 +141,22 @@ subprojects {
 
         mappings {
             def mc_mappings = "${rootProject.mc_mappings}"
-            def mc_version = "${rootProject.mc_version}"
             switch ("${rootProject.mc_mappings_type}") {
                 case "mcp":
                     searge()
-                    mcp("stable", mc_mappings)
+                    mcp(isJarMod ? "legacy" : "stable", mc_mappings)
+                    break
+                case "forgeMCP":
+                    forgeBuiltinMCP("${rootProject.forge_version}")
                     break
                 case "retroMCP":
-                    retroMCP(mc_version)
+                    retroMCP()
                     break
                 case "yarn":
                     yarn(mc_mappings)
                     break
                 case "mojmap":
-                    mojmap(mc_version)
+                    mojmap()
                     break
                 case "parchment":
                     parchment(mc_version, mc_mappings)
@@ -161,7 +167,7 @@ subprojects {
 
             // ability to add custom mappings
             // available targets are "CLIENT", "SERVER", "COMBINED"
-            def target = (isLegacy || protocol < 498) ? "mcp" : "mojmap"
+            def target = !ext_isModern ? "mcp" : "mojmap"
             stub.withMappings(["searge", target]) {
                 c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
                 c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")

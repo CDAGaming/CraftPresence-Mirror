@@ -7,7 +7,7 @@ remapJar {
     if (isJarMod && protocol <= 2) { // MC a1.1.2_01 and below
         prodNamespace "searge"
     } else {
-        prodNamespace((isLegacy || protocol < 498) ? "mcp" : "mojmap")
+        prodNamespace(!isModern ? "mcp" : "mojmap")
     }
 }
 
