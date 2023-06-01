@@ -111,11 +111,9 @@ remapJar {
 }
 
 jar {
-    doFirst {
-        if (canUseATs) {
-            manifest {
-                attributes 'FMLAT': 'accesstransformer.cfg'
-            }
+    if (canUseATs) {
+        manifest {
+            attributes 'FMLAT': 'accesstransformer.cfg'
         }
     }
     archiveClassifier.set "dev"
