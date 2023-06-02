@@ -96,6 +96,7 @@ subprojects {
                             accessWidener accessWidenerFile
                         }
                         loader rootProject.fabric_loader_version
+                        customIntermediaries = true
                     }
                     if (ext_isModern) {
                         fabric fabricData
@@ -113,6 +114,7 @@ subprojects {
                     if (isJarMod) {
                         prodNamespace "official"
                     }
+                    customIntermediaries = true
                 }
                 if (ext_isModern) {
                     fabric fabricData
@@ -143,7 +145,9 @@ subprojects {
             def mc_mappings = "${rootProject.mc_mappings}"
             switch ("${rootProject.mc_mappings_type}") {
                 case "mcp":
-                    searge()
+                    if (!isJarMod) {
+                        searge()
+                    }
                     mcp(isJarMod ? "legacy" : "stable", mc_mappings)
                     break
                 case "forgeMCP":
@@ -163,6 +167,15 @@ subprojects {
                     break
                 default:
                     throw new GradleException("Unknown or Unsupported Mappings version")
+            }
+
+            // Only use Intermediaries on Versions that support it
+            if ((isLegacy && protocol >= 39) || !isLegacy) {
+                if (ext_isModern) {
+                    intermediary()
+                } else {
+                    legacyIntermediary()
+                }
             }
 
             // ability to add custom mappings
