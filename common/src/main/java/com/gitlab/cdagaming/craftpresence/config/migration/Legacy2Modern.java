@@ -191,8 +191,8 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&SCREEN:ICON&", "{screen.icon}", IS_ICON),
             generatePair("&ICON&", "{screen.icon}", IS_ICON, IS_SCREEN_MODULE),
             generatePair("&SCREEN&", "{screen.icon}", IS_ICON),
-            generatePair("&SCREEN:CLASS&", "{data.screen.class}", IS_TEXT),
-            generatePair("&CLASS&", "{data.screen.class}", IS_TEXT, IS_SERVER_MODULE),
+            generatePair("&SCREEN:CLASS&", "{getClass(data.screen.instance)}", IS_TEXT),
+            generatePair("&CLASS&", "{getClass(data.screen.instance)}", IS_TEXT, IS_SERVER_MODULE),
             //
             generatePair("&TARGETENTITY:ENTITY&", "{entity.target.name}", IS_TEXT),
             generatePair("&ENTITY&", "{entity.target.name}", IS_TEXT, IS_ENTITY_TARGET_MODULE),

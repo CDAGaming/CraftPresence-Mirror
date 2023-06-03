@@ -162,7 +162,7 @@ related systems:
       From `worldDataPlaceholder`) => `world.time.day`
     * `&SCREEN:SCREEN&`, `&SCREEN&` (From Gui Settings) => `screen.name`
     * `&SCREEN:ICON&`, `&ICON&` (From Gui Settings) => `screen.icon`
-    * `&SCREEN:CLASS&`, `&CLASS&` (From Gui Settings) => `data.screen.class`
+    * `&SCREEN:CLASS&`, `&CLASS&` (From Gui Settings) => `getClass(data.screen.instance)`
     * `&SCREEN&` => `screen.message`, `screen.icon` (Depends on config setting)
     * `&TARGETENTITY:ENTITY&`, `&ENTITY&` (From Target Entity Settings) => `entity.target.name`
     * `&TARGETENTITY:ICON&`, `&ICON&` (From Target Entity Settings) => `entity.target.icon`

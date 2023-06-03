@@ -50,7 +50,7 @@ public final class Config extends Module implements Serializable {
     // Constants
     private static final long serialVersionUID = -4853238501768086595L;
     private static final int MC_VERSION = ModUtils.MCProtocolID;
-    private static final int VERSION = 4;
+    private static final int VERSION = 5;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     private static final Config DEFAULT = new Config().applyDefaults();
@@ -350,6 +350,19 @@ public final class Config extends Module implements Serializable {
 
                         accessibilitySettings.setProperty(entry.getValue(), newValue);
                     }
+                    currentVer = 4;
+                }
+                if (MathUtils.isWithinValue(currentVer, 4, 5, true, false)) {
+                    // Schema Changes (v2 -> v3)
+                    //  - Placeholder: `data.screen.class` -> `getClass(data.screen.instance)`
+                    new TextReplacer(
+                            new HashMapBuilder<String, String>()
+                                    .put("data.screen.class", "getClass(data.screen.instance)")
+                                    .build(),
+                            true,
+                            true, false, true
+                    ).apply(this, rawJson);
+                    currentVer = 5;
                 }
 
                 save();

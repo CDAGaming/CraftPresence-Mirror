@@ -220,7 +220,6 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `data.item.[slotId].instance` - An instance of the current `slotId`
     * `data.item.[slotId].class` - The class object for the current `slotId`
     * `data.screen.instance` - An instance of the current Gui Screen
-    * `data.screen.class` - The class object for the current Gui Screen
     * `data.server.motd.line_[number]` - Retrieves a specific line of `server.motd.raw`
     * `data.[moduleName].time` - The timestamp at which a module has changed its primary state
         * Use `data.general.time` for the current RPC Starting Timestamp
