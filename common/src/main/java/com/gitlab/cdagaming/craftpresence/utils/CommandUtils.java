@@ -54,8 +54,7 @@ public class CommandUtils {
      * Thread Factory Instance for this Class, used for Scheduling Events
      */
     private static final ThreadFactory threadFactory = r -> {
-        final Thread t = new Thread(r);
-        t.setName(ModUtils.NAME);
+        final Thread t = new Thread(r, ModUtils.NAME);
         t.setDaemon(true);
         return t;
     };
