@@ -12,10 +12,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Backend: Rewritten Classpath Scanning to fully utilize [Classgraph](https://github.com/classgraph/classgraph)
     * Several APIs in `FileUtils` and `MappingUtils` have been revised for this change
     * Fixes Issues related to [this ticket](https://gitlab.com/CDAGaming/CraftPresence/issues/192)
-    * Improved performance and stability in the Per-GUI module, as well as the Dimension/Biome modules (On certain MC
-      Versions)
-    * Removed the ability for the Dimension/Biome Modules, on certain MC versions, to create WorldProviders
-      via `.newInstance()` due to the logic being error-prone and causing various incompatibilities
+    * Improved performance and stability in the Per-GUI module
     * Removed the `data.screen.class` placeholder (Use `getClass(data.screen.instance)` instead)
 
 ### Fixes

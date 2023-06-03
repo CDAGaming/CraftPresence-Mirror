@@ -28,8 +28,11 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import io.github.classgraph.ClassInfo;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 
@@ -196,6 +199,22 @@ public class DimensionUtils implements Module {
                         dimensionTypes.add(type);
                     }
                 }
+            } else {
+                // Fallback 2: Use Manual Class Lookup
+                for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+                    if (classObj != null) {
+                        try {
+                            WorldProvider providerObj = (WorldProvider) classObj.loadClass().getDeclaredConstructor().newInstance();
+                            if (!dimensionTypes.contains(providerObj.getDimensionType())) {
+                                dimensionTypes.add(providerObj.getDimensionType());
+                            }
+                        } catch (Throwable ex) {
+                            if (CommandUtils.isVerboseMode()) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -228,6 +247,11 @@ public class DimensionUtils implements Module {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean canFetchData() {
+        return FileUtils.canScanClasses();
     }
 
     @Override

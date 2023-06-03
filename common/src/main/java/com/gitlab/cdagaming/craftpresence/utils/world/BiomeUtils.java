@@ -28,8 +28,11 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import io.github.classgraph.ClassInfo;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
@@ -187,6 +190,24 @@ public class BiomeUtils implements Module {
             }
         }
 
+        if (biomeTypes.isEmpty()) {
+            // Fallback: Use Manual Class Lookup
+            for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(Biome.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+                if (classObj != null) {
+                    try {
+                        Biome biomeObj = (Biome) classObj.loadClass().getDeclaredConstructor().newInstance();
+                        if (!biomeTypes.contains(biomeObj)) {
+                            biomeTypes.add(biomeObj);
+                        }
+                    } catch (Throwable ex) {
+                        if (CommandUtils.isVerboseMode()) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
         return biomeTypes;
     }
 
@@ -216,6 +237,11 @@ public class BiomeUtils implements Module {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean canFetchData() {
+        return FileUtils.canScanClasses();
     }
 
     @Override
