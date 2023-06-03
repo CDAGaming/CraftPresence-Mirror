@@ -201,12 +201,15 @@ public class DimensionUtils implements Module {
                 }
             } else {
                 // Fallback 2: Use Manual Class Lookup
-                for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
-                    if (classObj != null) {
+                for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+                    if (classInfo != null) {
                         try {
-                            WorldProvider providerObj = (WorldProvider) classObj.loadClass().getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj.getDimensionType())) {
-                                dimensionTypes.add(providerObj.getDimensionType());
+                            Class<?> classObj = FileUtils.findValidClass(MappingUtils.CLASS_LOADER, true, classInfo.getName());
+                            if (classObj != null) {
+                                WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
+                                if (!dimensionTypes.contains(providerObj.getDimensionType())) {
+                                    dimensionTypes.add(providerObj.getDimensionType());
+                                }
                             }
                         } catch (Throwable ex) {
                             if (CommandUtils.isVerboseMode()) {

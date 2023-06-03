@@ -192,12 +192,15 @@ public class BiomeUtils implements Module {
 
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
-            for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(Biome.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
-                if (classObj != null) {
+            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Biome.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+                if (classInfo != null) {
                     try {
-                        Biome biomeObj = (Biome) classObj.loadClass().getDeclaredConstructor().newInstance();
-                        if (!biomeTypes.contains(biomeObj)) {
-                            biomeTypes.add(biomeObj);
+                        Class<?> classObj = FileUtils.findValidClass(MappingUtils.CLASS_LOADER, true, classInfo.getName());
+                        if (classObj != null) {
+                            Biome biomeObj = (Biome) classObj.getDeclaredConstructor().newInstance();
+                            if (!biomeTypes.contains(biomeObj)) {
+                                biomeTypes.add(biomeObj);
+                            }
                         }
                     } catch (Throwable ex) {
                         if (CommandUtils.isVerboseMode()) {
