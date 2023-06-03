@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
@@ -66,6 +67,10 @@ public class RenderUtils {
      * The Default Screen Background Resources
      */
     public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    /**
+     * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, FontRenderer, int, int, ItemStack, float)}
+     */
+    private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
 
     /**
      * Retrieve the default Screen Textures as Texture Data
@@ -217,6 +222,7 @@ public class RenderUtils {
      * @param scale        The Scale to render the Object at
      */
     public static void drawItemStack(@Nonnull final Minecraft client, final FontRenderer fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
+        if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
             GL11.glPushMatrix();
             GL11.glScalef(scale, scale, 1.0f);
@@ -238,7 +244,12 @@ public class RenderUtils {
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             GL11.glPopMatrix();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (CommandUtils.isVerboseMode()) {
+                ex.printStackTrace();
+            }
+            if (!BLOCKED_RENDER_ITEMS.contains(stack)) {
+                BLOCKED_RENDER_ITEMS.add(stack);
+            }
         }
     }
 
