@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
@@ -534,7 +535,7 @@ public class ScrollableListControl extends GuiSlot {
             String identifierName;
             switch (this) {
                 case Gui: {
-                    final Class<?> target = CraftPresence.GUIS.GUI_CLASSES.get(originalName);
+                    final ClassInfo target = CraftPresence.GUIS.GUI_CLASSES.get(originalName);
                     identifierName = target != null ? MappingUtils.getCanonicalName(target) : originalName;
                     break;
                 }

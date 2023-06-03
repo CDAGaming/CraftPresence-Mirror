@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.replaymod.lib.de.johni0702.minecraft.gui.container.*;
 import com.replaymod.render.gui.GuiVideoRenderer;
 import com.replaymod.render.rendering.VideoRenderer;
+import io.github.classgraph.ClassInfo;
 
 import java.util.List;
 
@@ -63,10 +64,6 @@ public class ReplayModUtils implements Module {
      */
     private String CURRENT_GUI_NAME;
     /**
-     * The Class Type of the Current Gui the player is in
-     */
-    private Class<?> CURRENT_GUI_CLASS;
-    /**
      * The Current Instance of the Gui the player is in
      */
     private AbstractGuiContainer<?> CURRENT_SCREEN;
@@ -80,7 +77,6 @@ public class ReplayModUtils implements Module {
     public void clearClientData() {
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
-        CURRENT_GUI_CLASS = null;
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("replaymod");
@@ -119,19 +115,14 @@ public class ReplayModUtils implements Module {
                 clearClientData();
             } else {
                 final AbstractGuiContainer<?> newScreen = possibleOverlay != null ? possibleOverlay : possibleScreen;
-                final Class<?> newScreenClass = newScreen.getClass();
                 final String newScreenName = MappingUtils.getClassName(newScreen);
 
-                if (!newScreen.equals(CURRENT_SCREEN) || !newScreenClass.equals(CURRENT_GUI_CLASS) || !newScreenName.equals(CURRENT_GUI_NAME)) {
+                if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
                     CURRENT_SCREEN = newScreen;
-                    CURRENT_GUI_CLASS = newScreenClass;
                     CURRENT_GUI_NAME = newScreenName;
 
                     if (!CraftPresence.GUIS.GUI_NAMES.contains(newScreenName)) {
                         CraftPresence.GUIS.GUI_NAMES.add(newScreenName);
-                    }
-                    if (!CraftPresence.GUIS.GUI_CLASSES.containsKey(newScreenName)) {
-                        CraftPresence.GUIS.GUI_CLASSES.put(newScreenName, newScreenClass);
                     }
 
                     updatePresence();
@@ -145,7 +136,7 @@ public class ReplayModUtils implements Module {
     public void getAllData() {
         final List<Class<?>> searchClasses = StringUtils.newArrayList(AbstractGuiContainer.class, AbstractGuiScreen.class, AbstractGuiOverlay.class);
 
-        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
+        for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);
             if (!CraftPresence.GUIS.GUI_NAMES.contains(screenName)) {
                 CraftPresence.GUIS.GUI_NAMES.add(screenName);
@@ -182,11 +173,6 @@ public class ReplayModUtils implements Module {
     }
 
     @Override
-    public boolean canBeLoaded() {
-        return true;
-    }
-
-    @Override
     public void updatePresence() {
         final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
@@ -201,7 +187,6 @@ public class ReplayModUtils implements Module {
 
         CraftPresence.CLIENT.syncArgument("data.screen.instance", CURRENT_SCREEN);
         CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
-        CraftPresence.CLIENT.syncArgument("data.screen.class", CURRENT_GUI_CLASS);
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);

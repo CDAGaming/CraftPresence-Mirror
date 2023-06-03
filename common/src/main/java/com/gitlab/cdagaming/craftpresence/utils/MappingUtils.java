@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import io.github.classgraph.ClassInfo;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -155,16 +156,49 @@ public class MappingUtils {
      * @param simpleName Whether to return the simple name of the found class
      * @return the mapped class name
      */
+    public static String getClassName(ClassInfo object, boolean simpleName) {
+        return getClassName(simpleName, object.getName(), object.getSimpleName());
+    }
+
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object     The class object to interpret
+     * @param simpleName Whether to return the simple name of the found class
+     * @return the mapped class name
+     */
     public static String getClassName(Class<?> object, boolean simpleName) {
+        return getClassName(simpleName, object.getName(), object.getSimpleName());
+    }
+
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param simpleName Whether to return the simple name of the found class
+     * @param primary    The primary object to interpret
+     * @param secondary  The secondary object to interpret
+     * @return the mapped class name
+     */
+    private static String getClassName(final boolean simpleName, final String primary, final String secondary) {
         String result = classMap.get(
-                object.getName().replace(".", "/")
+                primary.replace(".", "/")
         );
         if (result == null) {
-            result = simpleName ? object.getSimpleName() : object.getName();
+            result = simpleName ? secondary : primary;
         } else {
             result = simpleName ? result.substring(result.lastIndexOf("/") + 1) : result.replace("/", ".");
         }
         return result;
+    }
+
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object The class object to interpret
+     * @return the mapped class name
+     */
+    public static String getCanonicalName(ClassInfo object) {
+        return getClassName(object, false);
     }
 
     /**
@@ -185,6 +219,16 @@ public class MappingUtils {
      */
     public static String getCanonicalName(Object object) {
         return getCanonicalName(object.getClass());
+    }
+
+    /**
+     * Retrieve the mapped class name matching the requested object
+     *
+     * @param object The class object to interpret
+     * @return the mapped class name
+     */
+    public static String getClassName(ClassInfo object) {
+        return getClassName(object, true);
     }
 
     /**

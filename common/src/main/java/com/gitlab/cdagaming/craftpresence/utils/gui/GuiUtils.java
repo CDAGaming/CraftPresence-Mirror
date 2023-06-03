@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import io.github.classgraph.ClassInfo;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -49,7 +50,7 @@ public class GuiUtils implements Module {
     /**
      * A List of the detected Gui Screen Classes
      */
-    public final Map<String, Class<?>> GUI_CLASSES = StringUtils.newHashMap();
+    public final Map<String, ClassInfo> GUI_CLASSES = StringUtils.newHashMap();
     /**
      * If the Config GUI is currently open
      */
@@ -87,10 +88,6 @@ public class GuiUtils implements Module {
      * The name of the Current Gui the player is in
      */
     private String CURRENT_GUI_NAME;
-    /**
-     * The Class Type of the Current Gui the player is in
-     */
-    private Class<?> CURRENT_GUI_CLASS;
 
     /**
      * Gets the Default/Global Font Renderer
@@ -114,7 +111,6 @@ public class GuiUtils implements Module {
     public void clearClientData() {
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
-        CURRENT_GUI_CLASS = null;
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("screen", "data.screen");
@@ -156,12 +152,10 @@ public class GuiUtils implements Module {
             clearClientData();
         } else {
             final GuiScreen newScreen = CraftPresence.instance.currentScreen;
-            final Class<?> newScreenClass = newScreen.getClass();
             final String newScreenName = MappingUtils.getClassName(newScreen);
 
-            if (!newScreen.equals(CURRENT_SCREEN) || !newScreenClass.equals(CURRENT_GUI_CLASS) || !newScreenName.equals(CURRENT_GUI_NAME)) {
+            if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
                 CURRENT_SCREEN = newScreen;
-                CURRENT_GUI_CLASS = newScreenClass;
                 CURRENT_GUI_NAME = newScreenName;
 
                 if (!DEFAULT_NAMES.contains(newScreenName)) {
@@ -169,9 +163,6 @@ public class GuiUtils implements Module {
                 }
                 if (!GUI_NAMES.contains(newScreenName)) {
                     GUI_NAMES.add(newScreenName);
-                }
-                if (!GUI_CLASSES.containsKey(newScreenName)) {
-                    GUI_CLASSES.put(newScreenName, newScreenClass);
                 }
 
                 updatePresence();
@@ -183,7 +174,7 @@ public class GuiUtils implements Module {
     public void getAllData() {
         final List<Class<?>> searchClasses = StringUtils.newArrayList(GuiScreen.class, GuiContainer.class);
 
-        for (Class<?> classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses)) {
+        for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);
             if (!DEFAULT_NAMES.contains(screenName)) {
                 DEFAULT_NAMES.add(screenName);
@@ -229,11 +220,6 @@ public class GuiUtils implements Module {
     }
 
     @Override
-    public boolean canBeLoaded() {
-        return true;
-    }
-
-    @Override
     public void updatePresence() {
         final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
@@ -248,7 +234,6 @@ public class GuiUtils implements Module {
 
         CraftPresence.CLIENT.syncArgument("data.screen.instance", CURRENT_SCREEN);
         CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
-        CraftPresence.CLIENT.syncArgument("data.screen.class", CURRENT_GUI_CLASS);
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
         CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);

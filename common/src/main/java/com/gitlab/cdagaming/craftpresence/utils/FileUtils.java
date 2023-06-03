@@ -57,11 +57,7 @@ public class FileUtils {
     /**
      * The list of the currently detected class names
      */
-    private static final List<ClassInfo> CLASS_LIST = StringUtils.newArrayList();
-    /**
-     * The list of the currently detected class names
-     */
-    private static final Map<String, Class<?>> CLASS_MAP = StringUtils.newHashMap();
+    private static final Map<String, ClassInfo> CLASS_MAP = StringUtils.newHashMap();
     /**
      * Whether the class list from {@link FileUtils#scanClasses()} is being iterated upon
      */
@@ -430,36 +426,36 @@ public class FileUtils {
      * @param sourcePackages      The root package directories to search within
      * @return The List of found class names from the search
      */
-    public static List<Class<?>> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final boolean includeExtraClasses, final String... sourcePackages) {
-        final List<Class<?>> matchingClasses = StringUtils.newArrayList();
+    public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final boolean includeExtraClasses, final String... sourcePackages) {
+        final Map<String, ClassInfo> matchingClasses = StringUtils.newHashMap();
         final List<String> sourceData = StringUtils.newArrayList(sourcePackages);
 
         if (!sourceData.isEmpty() && includeExtraClasses) {
             sourceData.addAll(getModClassNames());
         }
 
-        Pair<Boolean, List<Class<?>>> subClassData = new Pair<>(false, StringUtils.newArrayList());
-        for (Class<?> loadedInstance : getClasses(sourceData)) {
+        Pair<Boolean, Map<String, ClassInfo>> subClassData = new Pair<>(false, StringUtils.newHashMap());
+        for (Map.Entry<String, ClassInfo> classInfo : getClasses(sourceData).entrySet()) {
             for (Class<?> searchClass : searchList) {
-                subClassData = isSubclassOf(loadedInstance, searchClass, subClassData.getSecond());
+                subClassData = isSubclassOf(classInfo.getValue(), searchClass, subClassData.getSecond());
 
                 if (subClassData.getFirst()) {
                     // If superclass data was found, add the scanned classes
                     // as well as the original class
-                    if (!matchingClasses.contains(loadedInstance)) {
-                        matchingClasses.add(loadedInstance);
+                    if (!matchingClasses.containsKey(classInfo.getKey())) {
+                        matchingClasses.put(classInfo.getKey(), classInfo.getValue());
                     }
 
-                    for (Class<?> subClassInfo : subClassData.getSecond()) {
-                        if (!matchingClasses.contains(subClassInfo)) {
-                            matchingClasses.add(subClassInfo);
+                    for (Map.Entry<String, ClassInfo> subClassInfo : subClassData.getSecond().entrySet()) {
+                        if (!matchingClasses.containsKey(subClassInfo.getKey())) {
+                            matchingClasses.put(subClassInfo.getKey(), subClassInfo.getValue());
                         }
                     }
 
                     break;
                 } else {
                     // If no superclass data found, reset for next data
-                    subClassData = new Pair<>(false, StringUtils.newArrayList());
+                    subClassData = new Pair<>(false, StringUtils.newHashMap());
                 }
             }
         }
@@ -475,25 +471,26 @@ public class FileUtils {
      * @param scannedClasses The class hierarchy of scanned data
      * @return A pair with the format of isSubclassOf:scannedClasses
      */
-    protected static Pair<Boolean, List<Class<?>>> isSubclassOf(final Class<?> originalClass, final Class<?> superClass, final List<Class<?>> scannedClasses) {
+    protected static Pair<Boolean, Map<String, ClassInfo>> isSubclassOf(final ClassInfo originalClass, final Class<?> superClass, final Map<String, ClassInfo> scannedClasses) {
         if (originalClass == null || superClass == null) {
             // Top of hierarchy, or no super class defined
             return new Pair<>(false, scannedClasses);
-        } else if (originalClass.equals(superClass)) {
+        } else if (originalClass.getName().equals(superClass.getName())) {
             return new Pair<>(true, scannedClasses);
         } else {
             // Attempt to see if things match with their deobfuscated names
+            final String originalName = MappingUtils.getMappedPath(originalClass.getName());
             final String className = MappingUtils.getCanonicalName(originalClass);
             final String superClassName = MappingUtils.getCanonicalName(superClass);
             if (className.equals(superClassName)) {
                 return new Pair<>(true, scannedClasses);
             } else {
                 // try the next level up the hierarchy and add this class to scanned history.
-                scannedClasses.add(originalClass);
-                final Pair<Boolean, List<Class<?>>> subClassInfo = isSubclassOf(originalClass.getSuperclass(), superClass, scannedClasses);
+                scannedClasses.put(originalName, originalClass);
+                final Pair<Boolean, Map<String, ClassInfo>> subClassInfo = isSubclassOf(originalClass.getSuperclass(), superClass, scannedClasses);
 
                 if (!subClassInfo.getFirst() && originalClass.getInterfaces() != null) {
-                    for (final Class<?> inter : originalClass.getInterfaces()) {
+                    for (final ClassInfo inter : originalClass.getInterfaces()) {
                         if (isSubclassOf(inter, superClass, scannedClasses).getFirst()) {
                             return new Pair<>(true, scannedClasses);
                         }
@@ -513,7 +510,7 @@ public class FileUtils {
      * @param sourcePackages      The root package directories to search within
      * @return The List of found classes from the search
      */
-    public static List<Class<?>> getClassNamesMatchingSuperType(final Class<?> searchTarget, final boolean includeExtraClasses, final String... sourcePackages) {
+    public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final Class<?> searchTarget, final boolean includeExtraClasses, final String... sourcePackages) {
         return getClassNamesMatchingSuperType(StringUtils.newArrayList(searchTarget), includeExtraClasses, sourcePackages);
     }
 
@@ -617,12 +614,12 @@ public class FileUtils {
     /**
      * Clear the existing class list, then retrieve and cache all known classes within the Class Loader
      *
-     * @return a list of all known classes
+     * @return a map of all known classes
      */
-    public static List<ClassInfo> scanClasses() {
+    public static Map<String, ClassInfo> scanClasses() {
         if (canScanClasses()) {
             ARE_CLASSES_LOADING = true;
-            CLASS_LIST.clear();
+            CLASS_MAP.clear();
 
             // Attempt to get all possible classes from the JVM Class Loader
             final ClassGraph graphInfo = new ClassGraph()
@@ -641,31 +638,27 @@ public class FileUtils {
             try (ScanResult scanResult = graphInfo.scan()) {
                 for (ClassInfo result : scanResult.getAllClasses()) {
                     final String resultName = MappingUtils.getMappedPath(result.getName());
-                    if (!CLASS_LIST.contains(result) && !resultName.toLowerCase().contains("mixin")) {
-                        CLASS_LIST.add(result);
-                        try {
-                            CLASS_MAP.put(resultName, result.loadClass(true));
-                        } catch (Throwable ignored) {
-                        }
+                    if (!CLASS_MAP.containsKey(resultName) && !resultName.toLowerCase().contains("mixin")) {
+                        CLASS_MAP.put(resultName, result);
                     }
                 }
             }
 
             ARE_CLASSES_LOADING = false;
         }
-        return StringUtils.newArrayList(CLASS_LIST);
+        return StringUtils.newHashMap(CLASS_MAP);
     }
 
     /**
      * Retrieve and Cache all known classes within the Class Loader
      *
-     * @return a list of all known classes
+     * @return a map of all known classes
      */
-    public static List<ClassInfo> getClassList() {
-        if (CLASS_LIST.isEmpty()) {
+    public static Map<String, ClassInfo> getClassMap() {
+        if (CLASS_MAP.isEmpty()) {
             return scanClasses();
         }
-        return StringUtils.newArrayList(CLASS_LIST);
+        return StringUtils.newHashMap(CLASS_MAP);
     }
 
     /**
@@ -674,16 +667,16 @@ public class FileUtils {
      * @param paths A nullable list of paths to be interpreted
      * @return the resulting list
      */
-    public static List<Class<?>> getClasses(final List<String> paths) {
-        final List<Class<?>> results = StringUtils.newArrayList();
+    public static Map<String, ClassInfo> getClasses(final List<String> paths) {
+        final Map<String, ClassInfo> results = StringUtils.newHashMap();
         final Map<String, Set<String>> unmappedNames = StringUtils.newHashMap();
         for (String path : paths) {
             unmappedNames.put(path, MappingUtils.getUnmappedClassesMatching(path));
         }
 
-        for (ClassInfo classInfo : getClassList()) {
+        for (Map.Entry<String, ClassInfo> classInfo : getClassMap().entrySet()) {
             if (classInfo != null) {
-                final String classPath = MappingUtils.getMappedPath(classInfo.getName());
+                final String classPath = classInfo.getKey();
                 boolean hasMatch = paths.isEmpty();
                 // Attempt to Add Classes Matching any of the Source Packages
                 for (String path : paths) {
@@ -696,7 +689,7 @@ public class FileUtils {
 
                 if (hasMatch) {
                     try {
-                        results.add(CLASS_MAP.get(classPath));
+                        results.put(classPath, classInfo.getValue());
                     } catch (Throwable ignored) {
                     }
                 }
