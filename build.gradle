@@ -47,7 +47,7 @@ subprojects {
         isJarMod = ext_isJarMod
         isModern = ext_isModern
         fmlName = "${ext_fmlName}"
-        accessWidenerFile = "${ext_accessWidenerFile}"
+        accessWidenerFile = ext_accessWidenerFile
         canUseATs = ext_canUseATs
         mcVersionLabel = "${ext_mcVersionLabel}"
         versionLabel = "${ext_versionLabel}"
@@ -150,7 +150,7 @@ subprojects {
             case ":common":
                 if (!isJarMod) {
                     def fabricData = {
-                        if (ext_accessWidenerFile.exists()) {
+                        if (accessWidenerFile.exists()) {
                             accessWidener accessWidenerFile
                         }
                         loader rootProject.fabric_loader_version
@@ -165,12 +165,13 @@ subprojects {
                 break
             case ":fabric":
                 def fabricData = {
-                    if (accessWidenerFile != null) {
+                    if (accessWidenerFile.exists()) {
                         accessWidener accessWidenerFile
                     }
                     loader rootProject.fabric_loader_version
                     if (isJarMod) {
                         prodNamespace "official"
+                        devMappings = null
                     }
                     customIntermediaries = true
                 }
@@ -196,6 +197,9 @@ subprojects {
                         }
                     }
                 }
+                break
+            case ":modloader":
+                jarMod {}
                 break
         }
 
@@ -245,10 +249,6 @@ subprojects {
             }
 
             if (isJarMod) {
-                if (path == ":fabric") {
-                    devMappings = null
-                }
-
                 // required when using mcp mappings
                 if (protocol <= 2) { // MC a1.1.2_01 and below
                     devNamespace "searge"
