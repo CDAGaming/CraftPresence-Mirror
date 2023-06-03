@@ -52,7 +52,7 @@ processResources {
 }
 
 exportMappings {
-    def target = isJarMod ? "searge" : (!isModern ? "mcp" : "mojmap")
+    def target = isMCPJar ? "searge" : (!isModern ? "mcp" : "mojmap")
     export {
         targetNamespaces = [target]
         sourceNamespace = isJarMod ? "official" : "intermediary"

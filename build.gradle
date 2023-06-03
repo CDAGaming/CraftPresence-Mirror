@@ -23,6 +23,7 @@ int ext_protocol = "${mc_protocol}".toInteger()
 boolean ext_isLegacy = "${isLegacy}".toBoolean()
 boolean ext_isJarMod = "${isJarMod}".toBoolean()
 boolean ext_isModern = !ext_isLegacy && ext_protocol >= 498
+boolean ext_isMCPJar = ext_isJarMod && mc_mappings_type == "mcp"
 
 def ext_fmlName = ext_isJarMod ? "modloader" : "forge"
 
@@ -46,6 +47,7 @@ subprojects {
         isLegacy = ext_isLegacy
         isJarMod = ext_isJarMod
         isModern = ext_isModern
+        isMCPJar = ext_isMCPJar
         fmlName = "${ext_fmlName}"
         accessWidenerFile = ext_accessWidenerFile
         canUseATs = ext_canUseATs
@@ -248,8 +250,7 @@ subprojects {
                 c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
             }
 
-            if (isJarMod) {
-                // required when using mcp mappings
+            if (isMCPJar) {
                 if (protocol <= 2) { // MC a1.1.2_01 and below
                     devNamespace "searge"
                 } else {

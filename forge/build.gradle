@@ -68,7 +68,7 @@ processResources {
 
 exportMappings {
     export {
-        targetNamespaces = ["searge"]
+        targetNamespaces = [mc_mappings_type == "retroMCP" ? "mcp" : "searge"]
         sourceNamespace = "official"
         location = "$projectDir/src/main/resources/mappings-${fmlName}.srg"
         type = "SRG"

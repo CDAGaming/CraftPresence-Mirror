@@ -4,7 +4,7 @@ plugins {
 }
 
 remapJar {
-    if (isJarMod && protocol <= 2) { // MC a1.1.2_01 and below
+    if (isMCPJar && protocol <= 2) { // MC a1.1.2_01 and below
         prodNamespace "searge"
     } else {
         prodNamespace(!isModern ? "mcp" : "mojmap")
