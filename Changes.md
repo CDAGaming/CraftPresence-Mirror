@@ -1,258 +1,28 @@
 # CraftPresence Changes
 
-## v2.0.0 (06/01/2023)
+## v2.0.5 (06/03/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv1.9.6...release%2Fv2.0.0)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.0.0...release%2Fv2.0.5)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
-* Java 7 is no longer supported! (You should be using at least Java 8 by now!)
-    * The mod will still display as using Java 7 bytecode on legacy versions, but will be utilizing Java 8 APIs
-    * The mod will crash on initialization with a `UnsupportedOperationException` when used on anything below Java 8
-* Reworked the way placeholders are interpreted to utilize [Starscript](https://github.com/MeteorDevelopment/starscript)
-    * This integration will allow for significantly more flexibility and overall control over placeholders and how they
-      can be used
-    * Due to this change, all placeholder names have been adjusted (See the `Placeholders` section of this changelog)
-    * Over 40+ new functions have also been added, including Reflection, JSON, and additional backend utilities for
-      users to create custom placeholders with!
-    * Additionally, the `allowPlaceholderOperators` option has been removed, due to being redundant
-    * Several new commands, such as `/cp compile` and `/cp search` have also been implemented
-* Adjusted module logic to perform within their own sub-threads, in an effort to avoid waiting on them to retrieve data
-    * IE the initial retrieval of data when a module is first enabled is now multithreaded, taking up much less time!
-* Migrated the Config Systems from `Properties` to `GSON`
-    * A one-time migration layer has been put into place to migrate your v1.x settings over to the v2.x format
-    * The logic behind data validation has been condensed to be more performant, and this change allows config settings
-      to be more easily migrated across major updates
-    * Background Options, such as the tooltip and GUI backgrounds, have been reset, since `splitCharacter` was also
-      removed, since we don't use Arrays in this new system
-* Added the ability for Module elements to supply their own `PresenceData`
-    * When supplied and enabled, this will do one of two things:
-        * If `useAsMain` is enabled, this will allow an event to become the generic event rather than simple argument
-          replacement, which is similar to the
-          way [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) presents its
-          data.
-        * Otherwise, if `useAsMain` is disabled, this allows a placeholder to be interpreted differently depending on
-          the RPC field that placeholder is within. An example of this would be being able to make a module's
-          placeholder (`[module].message, [module].icon`)
-          equal `this` if it is used in the `Details` Presence
-          Field, while equaling `that` if used in the `Game State` Presence Field.
-* Added more flexibility and usage to endpoint icons, including the addition of the `allowEndpointIcons`
-    * For users, the new usages also include fetching the server icon in the Server Settings Scroll Lists, if the Base64
-      icon is unavailable
-    * It also allows for fetching a dynamic server icon if the icon's the module is looking for do not exist within the
-      Discord Asset List, and doing similar activity for the player's head icon.
-* Multiple Accessibility improvements have been made to the GUI in an effort to be more descriptive and user-friendly
-* Added support for the per-gui, per-item, and per-entity systems to have RPC Icon Support
-* Added support for transferring
-  a [SimpleRPC (By Hypherion)](https://www.curseforge.com/minecraft/mc-mods/simple-discord-rpc) config to
-  CraftPresence (With permission, of course!)
-* Removed the ViveCraft Message Option and Fallback Placeholder Message
-    * Developer Note: You can now use Starscript functions to make custom placeholders for specific brands
-* UUIDs are now refreshed in the Entity Module List when the Server's Player List changes
-    * This prevents a lot of extra elements from coming into the module list, which should keep things cleaner
-* Backend: Increased the default text limit for all `ExtendedTextControl`'s
-    * Due to this change, minified placeholder support has been removed from the backend
+* Backend: Rewritten Classpath Scanning to fully utilize [Classgraph](https://github.com/classgraph/classgraph)
+    * Several APIs in `FileUtils` and `MappingUtils` have been revised for this change
+    * Fixes Issues related to [this ticket](https://gitlab.com/CDAGaming/CraftPresence/issues/192)
+    * Improved performance and stability in the Per-GUI module, as well as the Dimension/Biome modules (On certain MC
+      Versions)
+    * Removed the ability for the Dimension/Biome Modules, on certain MC versions, to create WorldProviders
+      via `.newInstance()` due to the logic being error-prone and causing various incompatibilities
+    * Removed the `data.screen.class` placeholder (Use `getClass(data.screen.instance)` instead)
 
 ### Fixes
 
-* Fixed the GUI module systems not working properly on 1.14+ ports
-    * Note: Different Loaders may have different screen names, depending on mappings
-* Fixed improper options being available in the Dynamic Editor Screen when adding data that was preliminary-supplied
-  from other modules
-* Fixed interpreting Dynamic Icons with Spaces in them
-    * As part of this fix, `formatAsIcon` is now ignored for Custom Assets, but null checks
-      do remain
-* Fixed Texture saving issues for the `tooltipBackgroundColor`, `tooltipBorderColor`, `guiBackgroundColor`, and
-  `buttonBackgroundColor` setting
-* Backend: Fixed issues that could occur when `ExtendedTextControl#setControlMessage` was fired with a null argument
-* Fixed the UUID placeholders in `&IGN&` (Now known as `player.*`) being available, even if it wasn't a valid UUID
-* Fixed a regression in MultiMC-type instance detection from `v1.9.0` that caused a normal error to not be suppressed
-  properly
-* Fixed multiple issues that were preventing the ability to hide placeholder output depending on a per-module value
-    * IE You can now set the `textOverride` to be an empty string in the frontend, and the mod will respect that
-* Fixed preliminary-supplied data being able to be removed via the Dynamic Editor Screen
-    * Only the config entry should have been effected, not the actual module data list
-* Fixed Out-Of-Bound issues when there are less than 3 or 4 search results in a Scrollable List
-    * This issue caused no elements to display until you scrolled, causing it to clamp back to normal values
-    * The list will now reset the scroll when the list is updated
-* Fixed Issues where data relying on the `children` list was unavailable in 1.13+ ports (Tab-Focus changing)
-* Fixed Issues where the focus status was not being checked for `keyPressed` and `charTyped` on 1.13+ ports
-    * This also fixes hearing a clicking sound when `KP_ENTER`, `ENTER` or the spacebar was pushed while focused on a
-      text box
-* Backend: Fixed `ImageUtils` dynamic texture creation not complying with 1.13+ namespace requirements
-
-### Placeholders
-
-One of the foundational changes that have been made to CraftPresence, is with placeholder interpretation.
-
-With the integration of Starscript, several changes, additions, and removals have been made to placeholders and their
-related systems:
-
-* Placeholders can now be used anywhere, without restrictions
-* Programmer expressions (Such as formatting, operators, as well as custom functions) have been implemented to allow an
-  even greater level of configurability then we've ever had prior
-    * See [their wiki](https://github.com/MeteorDevelopment/starscript/wiki) for some standard functions now
-      available
-* The OR operator, initially added in v1.9.x, has been replaced with Starscript usages
-    * Prior usages will migrate to an `{getOrDefault(foo, bar)}` format to replicate the prior behavior
-* All Placeholders have been renamed, converting to an `{foo.bar}` format instead
-  of `&FOO:BAR&`
-    * All prior usages from v1 configs will also be migrated to follow the new names as mentioned below:
-
-* Renamed Placeholders (`old` => `new`, Surround with `{}` when using new names):
-    * `&DEFAULT&` => `general.icon` (Icons Only)
-    * `&MAINMENU&` => `menu.message`, `menu.icon` (Depends on config setting)
-    * `&BRAND&` => `general.brand`
-    * `&MCVERSION&` => `general.version`
-    * `&IGN&` => `custom.player_info_out`, `player.icon` (Depends on config setting)
-    * `&IGN:NAME&`, `&NAME&` (From `playerOuterInfoPlaceholder`) => `player.name`
-    * `&IGN:UUID&`, `&UUID&` (From `playerOuterInfoPlaceholder`) => `player.uuid.short`
-    * `&IGN:UUID_FULL&`, `&UUID_FULL&` (From `playerOuterInfoPlaceholder`) => `player.uuid.full`
-    * `&MODS` => `custom.mods`
-    * `&MODS:MODCOUNT&`, `&MODCOUNT&` (From `modsPlaceholder`) => `general.mods`
-    * `&PACK&` => `custom.pack`, `pack.icon` (Depends on config setting)
-    * `&PACK:NAME&`, `&NAME&` (From `modpackMessage`) => `pack.name`
-    * `&DIMENSION:DIMENSION&`, `&DIMENSION&` (From Dimension Settings) => `dimension.name`
-    * `&DIMENSION:ICON&`, `&ICON&` (From Dimension Settings) => `dimension.icon`
-    * `&DIMENSION&` => `dimension.message`, `dimension.icon` (Depends on config setting)
-    * `&BIOME:BIOME&`, `&BIOME&` (From Biome Settings) => `biome.name`
-    * `&BIOME:ICON&`, `&ICON&` (From Biome Settings) => `biome.icon`
-    * `&BIOME&` => `biome.message`, `biome.icon` (Depends on config setting)
-    * `&SERVER:IP&`, `&IP&` (From Server Settings) => `server.address.short`
-    * `&SERVER:NAME&`, `&NAME&` (From Server Settings) => `server.name`
-    * `&SERVER:MOTD&`, `&MOTD&` (From Server Settings) => `server.motd.raw`
-    * `&SERVER:ICON&`, `&ICON&` (From Server Settings) => `server.icon`
-    * `&SERVER&` => `server.message`, `server.icon` (Depends on config setting)
-    * `&SERVER:PLAYERS&`, `&PLAYERS&` (From Server Settings) => `custom.players`
-    * `&SERVER:WORLDINFO&`, `&WORLDINFO&` (From Server Settings) => `custom.world_info`
-    * `&SERVER:PLAYERINFO&`, `&PLAYERINFO&` (From Server Settings) => `custom.player_info_in`
-    * `&SERVER:PLAYERINFO:COORDS&`, `&PLAYERINFO:COORDS&` (From Server Settings), `&COORDS&` (
-      From `playerInnerInfoPlaceholder`) => `custom.player_info_coordinate`
-    * `&SERVER:PLAYERINFO:HEALTH&`, `&PLAYERINFO:HEALTH&` (From Server Settings), `&HEALTH&` (
-      From `playerInnerInfoPlaceholder`) => `custom.player_info_health`
-    * `&SERVER:PLAYERINFO:COORDS:xPosition&`, `&PLAYERINFO:COORDS:xPosition&` (From Server Settings)
-      , `&COORDS:xPosition&` (From `playerInnerInfoPlaceholder`), `&xPosition&` (From `playerCoordinatePlaceholder`)
-      => `player.position.x`
-    * `&SERVER:PLAYERINFO:COORDS:yPosition&`, `&PLAYERINFO:COORDS:yPosition&` (From Server Settings)
-      , `&COORDS:yPosition&` (From `playerInnerInfoPlaceholder`), `&yPosition&` (From `playerCoordinatePlaceholder`)
-      => `player.position.y`
-    * `&SERVER:PLAYERINFO:COORDS:zPosition&`, `&PLAYERINFO:COORDS:zPosition&` (From Server Settings)
-      , `&COORDS:zPosition&` (From `playerInnerInfoPlaceholder`), `&zPosition&` (From `playerCoordinatePlaceholder`)
-      => `player.position.z`
-    * `&SERVER:PLAYERINFO:HEALTH:CURRENT&`, `&PLAYERINFO:HEALTH:CURRENT&` (From Server Settings), `&HEALTH:CURRENT&` (
-      From `playerInnerInfoPlaceholder`), `&CURRENT&` (From `playerHealthPlaceholder`) => `player.health.current`
-    * `&SERVER:PLAYERINFO:HEALTH:MAX&`, `&PLAYERINFO:HEALTH:MAX&` (From Server Settings), `&HEALTH:MAX&` (
-      From `playerInnerInfoPlaceholder`), `&MAX&` (From `playerHealthPlaceholder`) => `player.health.max`
-    * `&SERVER:PLAYERS:CURRENT&`, `&PLAYERS:CURRENT&` (From Server Settings), `&CURRENT&` (From `playerListPlaceholder`)
-      => `server.players.current`
-    * `&SERVER:PLAYERS:MAX&`, `&PLAYERS:MAX&` (From Server Settings), `&MAX&` (From `playerListPlaceholder`)
-      => `server.players.max`
-    * `&SERVER:WORLDINFO:DIFFICULTY&`, `&WORLDINFO:DIFFICULTY&` (From Server Settings), `&DIFFICULTY&` (
-      From `worldDataPlaceholder`) => `world.difficulty`
-    * `&SERVER:WORLDINFO:WORLDNAME&`, `&WORLDINFO:WORLDNAME&` (From Server Settings), `&WORLDNAME&` (
-      From `worldDataPlaceholder`) => `world.name`
-    * `&SERVER:WORLDINFO:WORLDTIME&`, `&WORLDINFO:WORLDTIME&` (From Server Settings), `&WORLDTIME&` (
-      From `worldDataPlaceholder`) => `world.time.format_24`
-    * `&SERVER:WORLDINFO:WORLDTIME12&`, `&WORLDINFO:WORLDTIME12&` (From Server Settings), `&WORLDTIME12&` (
-      From `worldDataPlaceholder`) => `world.time.format_12`
-    * `&SERVER:WORLDINFO:WORLDDAY&`, `&WORLDINFO:WORLDDAY&` (From Server Settings), `&WORLDDAY&` (
-      From `worldDataPlaceholder`) => `world.time.day`
-    * `&SCREEN:SCREEN&`, `&SCREEN&` (From Gui Settings) => `screen.name`
-    * `&SCREEN:ICON&`, `&ICON&` (From Gui Settings) => `screen.icon`
-    * `&SCREEN:CLASS&`, `&CLASS&` (From Gui Settings) => `getClass(data.screen.instance)`
-    * `&SCREEN&` => `screen.message`, `screen.icon` (Depends on config setting)
-    * `&TARGETENTITY:ENTITY&`, `&ENTITY&` (From Target Entity Settings) => `entity.target.name`
-    * `&TARGETENTITY:ICON&`, `&ICON&` (From Target Entity Settings) => `entity.target.icon`
-    * `&TARGETENTITY&` => `entity.target.message`, `entity.target.icon` (Depends on config setting)
-    * `&RIDINGENTITY:ENTITY&`, `&ENTITY&` (From Riding Entity Settings) => `entity.riding.name`
-    * `&RIDINGENTITY:ICON&`, `&ICON&` (From Riding Entity Settings) => `entity.riding.icon`
-    * `&RIDINGENTITY&` => `entity.riding.message`, `entity.riding.icon` (Depends on config setting)
-    * `&TILEENTITY:[SLOT]&`, `&[SLOT]&` (From `playerItemsPlaceholder`) => `item.[slotIdentifier].message`
-    * `&TILEENTITY&` => `item.message.default`
-    * `&ITEM&` (From Item Settings) => `item.message.holding`
-* Added Placeholders:
-    * `data.server.motd.line.*` added to display only the specified line from `server.motd.raw`
-    * `world.time.format_12` added to display `world.time.format_24` in an `xx:xx AM/PM` format
-    * `player.icon` added if `allowEndpointIcons` is active and a valid `playerSkinEndpoint` is supplied
-    * `*.instance` and `*.class` placeholders added to relevant Modules
-* Removed (or moved) Placeholders:
-    * NBT placeholders have been removed for the entity and item modules, replaced by the `getNbt` function
-    * `player.position.*` and `player.health.*` placeholders now identify as `Double` instead of Strings
-    * `server.players.*` placeholders now identify as `Integer` instead of Strings
-
-### Translations
-
-The following changes have been made for translations:
-
-* Added:
-    * `craftpresence.command.[compile,search]` (New Commands)
-    * `craftpresence.command.usage.[compile,search]` (New Commands)
-    * `craftpresence.command.usage.main` (Modified for `/cp compile` and `/cp search` addition)
-    * `craftpresence.command.usage.view` (Modified for `/cp view placeholders` addition)
-    * `craftpresence.command.export.progress` (Added Progress notifier for `/cp export assets`)
-    * `craftpresence.logger.error.compiler` (Error message for new `/cp compile` command)
-    * `craftpresence.logger.error.config.backup` (Logging added for Backing up a Config)
-    * `craftpresence.logger.error.pack` (Replacement of Pack Error Translations, previously under `file.*`)
-    * `craftpresence.logger.error.parser` (Error message for new `/cp compile` command)
-    * `craftpresence.logger.error.verbose` (Generalized `Verbose Mode` error addition)
-    * `craftpresence.logger.info.config.outdated` (Logging for Migration Layers in outdated Configs)
-    * `craftpresence.logger.info.pack.[init,loaded]` (Replacement for old pack initialization/loaded logging)
-    * `gui.config.[name,comment].advanced.allow_endpoint_icons` (Added Property)
-    * `gui.config.comment.button.reset.config` (Added tooltip for the `Reset Config` Button)
-    * `gui.config.[name,comment].display.dynamic_variables` (Added Property)
-    * `gui.config.[name,comment].display.enabled` (Added Property)
-    * `gui.config.name.display.[start,end]_timestamp` (Added Property)
-    * `gui.config.[name,comment].display.use_as_main` (Added Property)
-    * `gui.config.[name,comment].general.detect_atlauncher_instance` (Added Property)
-    * `gui.config.message.button.remove` (Used in Dynamic Editors)
-    * `gui.config.message.button.wiki` (Used in the About Gui)
-    * `gui.config.message.editor.description` (Used in Scroll List tooltips)
-    * `gui.config.message.editor.original` (Used in Scroll List tooltips)
-    * `gui.config.message.editor.usage` (Used in Scroll List tooltips)
-* Modified:
-    * `craftpresence.defaults.*` (Related to `Placeholders` Section)
-    * `craftpresence.logger.error.data.close` (Modifified for Consistency fixes)
-    * `craftpresence.logger.error.updater.failed` (Fixed a typo between debug mode and verbose mode)
-    * `craftpresence.logger.info.updater.*` (Consistency passthrough for Update Checker Rewrites)
-    * `craftpresence.placeholders.*` (See `Placeholders` Section)
-    * `gui.config.comment.advanced.[gui,item,entity_target,entity_riding]_messages` (Modified to remove obsolete info)
-    * `gui.config.comment.[biome,dimension,server]_messages.[biome,dimension,server]_messages` (Modified to remove
-      obsolete info)
-    * `gui.config.comment.button.sync.config` (Modified for new config systems)
-    * `gui.config.comment.display.[button_messages,dynamic_icons]` (Modified to remove outdated info)
-    * `gui.config.message.changelog` (Consistency passthrough for Update Checker Rewrites)
-    * `gui.config.message.presence.[generalArgs,iconArgs]` (Edited to move duplicated data
-      to `craftpresence.placeholders.notes`)
-* Removed:
-    * `craftpresence.exception.config.prop.null` (Obsolete, removed from Config System Upgrade)
-    * `craftpresence.logger.error.config.adjust.global` (Obsolete, removed from Config System Upgrade)
-    * `craftpresence.logger.error.config.invalid.icon.[pre,post]` (Obsolete, Invalid Icons no longer are replaced)
-    * `craftpresence.logger.error.file.*` (Removed old pack translations, replaced by `craftpresence.logger.error.pack`)
-    * `craftpresence.logger.error.technic.limitation` (Obsolete, removed in Pack Implementation Rewrites)
-    * `craftpresence.logger.error.updater.changelog` (Obsolete, removed in Mod Update Checker Rewrites)
-    * `craftpresence.logger.info.config.notice` (Obsolete, removed from Config System Upgrade)
-    * `craftpresence.logger.info.[instance,manifest,mcupdater,technic].*` (Removed old pack translations, replaced
-      by `craftpresence.logger.info.pack.*`)
-    * `craftpresence.logger.info.update.dynamic` (Obsolete and Redundant logging for Reflection updates)
-    * `craftpresence.logger.info.updater.receive.changelog` (Redundant
-      Logging, `craftpresence.logger.info.updater.receive.data`)
-    * `craftpresence.logger.info.updater.status` (Redundant Logging)
-    * `craftpresence.logger.warning.updater.data.missing` (Obsolete, dummy data is no longer supplied)
-    * `craftpresence.logger.warning.updater.homepage` (Obsolete, removed in Mod Update Checker Rewrites)
-    * `craftpresence.logger.warning.updater.incompatible.json` (Obsolete, removed in Mod Update Checker Rewrites)
-    * `craftpresence.multiplayer.status.*` (Obsolete, related code migrated to check MC's Translations instead)
-    * `gui.config.[name,comment].advanced.allow_placeholder_operators` (Removed Property)
-    * `gui.config.[name,comment].advanced.enable_commands` (Removed Property)
-    * `gui.config.[name,comment].advanced.split_character` (Removed Property)
-    * `gui.config.[name,comment].general.show_time` (Obsolete Property, replaced with `Presence Data` Edits)
-    * `gui.config.[name,comment].status_messages.fallback.pack_placeholder_message` (Removed Property)
-    * `gui.config.[name,comment].status_messages.placeholder.*` (Removed Properties, Moved to the `Dynamic Variables`
-      UI)
-    * `gui.config.message.remove` (Obsolete, Replaced via button in related areas)
-    * `gui.config.message.tags` (Obsolete, Merged into main placeholder tooltips)
+* Fixed error spam when using `RenderUtils#drawItemStack` under certain Blocks/Items
+    * Errors now only display if in Verbose Mode
+    * A blacklist has also been added to the backend to prevent repeated failed renders
 
 ___
 
