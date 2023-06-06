@@ -642,6 +642,10 @@ public class FileUtils {
                         CLASS_MAP.put(resultName, result);
                     }
                 }
+            } catch (Throwable ex) {
+                if (CommandUtils.isVerboseMode()) {
+                    ex.printStackTrace();
+                }
             }
 
             ARE_CLASSES_LOADING = false;
