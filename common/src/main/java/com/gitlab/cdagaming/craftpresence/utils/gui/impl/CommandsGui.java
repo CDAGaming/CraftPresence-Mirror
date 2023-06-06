@@ -65,8 +65,9 @@ public class CommandsGui extends ExtendedScreen {
     private String[] commandArgs, filteredCommandArgs;
     private List<String> tabCompletions = StringUtils.newArrayList();
 
-    public CommandsGui(GuiScreen parentScreen) {
+    public CommandsGui(GuiScreen parentScreen, String... commandArgs) {
         super(parentScreen);
+        executionCommandArgs = commandArgs;
         executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
     }
 
