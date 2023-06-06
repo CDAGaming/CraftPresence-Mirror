@@ -55,6 +55,7 @@ import java.util.Objects;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class ServerUtils implements Module {
     /**
      * The List of invalid MOTD (Message of the Day) Translations
@@ -171,10 +172,6 @@ public class ServerUtils implements Module {
      */
     private ServerData currentServerData;
     /**
-     * The Queued Server Connection Data and Info to Join, if any
-     */
-    private ServerData requestedServerData;
-    /**
      * The Player's Current Connection Data
      */
     private NetHandlerPlayClient currentConnection;
@@ -184,7 +181,7 @@ public class ServerUtils implements Module {
      */
     private boolean queuedForUpdate = false;
     /**
-     * If in Progress of Joining a World/Server from another World/Server
+     * Whether a Join Request is currently in progress
      */
     private boolean joinInProgress = false;
     /**
@@ -225,12 +222,9 @@ public class ServerUtils implements Module {
         maxPlayers = 0;
 
         queuedForUpdate = false;
+        joinInProgress = false;
         isOnLAN = false;
         setInUse(false);
-
-        if (!joinInProgress) {
-            requestedServerData = null;
-        }
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
         CraftPresence.CLIENT.clearOverride("server.message", "server.icon");
@@ -257,10 +251,6 @@ public class ServerUtils implements Module {
             }
         } else if (isInUse()) {
             emptyData();
-        }
-
-        if (joinInProgress && requestedServerData != null) {
-            CraftPresence.instance.addScheduledTask(() -> joinServer(requestedServerData));
         }
     }
 
@@ -342,7 +332,7 @@ public class ServerUtils implements Module {
             // 'world' Sub-Arguments
 
             // 'world.difficulty' Argument = Current Difficulty of the World
-            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() ?
+            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
                     StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
             if (!newDifficulty.equals(currentDifficulty)) {
@@ -454,14 +444,11 @@ public class ServerUtils implements Module {
         final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            if (CraftPresence.CONFIG.generalSettings.enableJoinRequests) {
-                requestedServerData = new ServerData(serverName, serverIP, false);
-            } else {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.config.disabled.enable_join_request"));
-            }
+            CraftPresence.instance.addScheduledTask(() -> joinServer(new ServerData(serverName, serverIP, false)));
         } else {
             ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }
+        CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
     }
 
     /**
@@ -471,6 +458,14 @@ public class ServerUtils implements Module {
      */
     private void joinServer(final ServerData serverData) {
         try {
+            if (!serverData.pinged) {
+                // Stub Server Data if not pinged
+                serverData.pinged = true;
+                serverData.pingToServer = -2L;
+                serverData.serverMOTD = "";
+                serverData.populationInfo = "";
+            }
+
             if (CraftPresence.player != null) {
                 CraftPresence.player.world.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.loadWorld(null);
@@ -480,8 +475,6 @@ public class ServerUtils implements Module {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
-        } finally {
-            requestedServerData = null;
         }
     }
 

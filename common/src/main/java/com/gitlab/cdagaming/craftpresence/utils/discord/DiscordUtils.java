@@ -202,10 +202,6 @@ public class DiscordUtils {
      */
     public IPCClient ipcInstance;
     /**
-     * Whether Discord is currently awaiting a response to an Ask to Join or Spectate Request, if any
-     */
-    public boolean awaitingReply = false;
-    /**
      * When this is not null, {@link DiscordUtils#buildRichPresence(PresenceData)} will use this data instead of the generic data
      */
     public PresenceData forcedData = null;
@@ -1316,9 +1312,7 @@ public class DiscordUtils {
      */
     public void clearPartyData(final boolean clearRequestData, final boolean updateRPC) {
         if (clearRequestData) {
-            awaitingReply = false;
-            REQUESTER_USER = null;
-            CraftPresence.SYSTEM.TIMER = 0;
+            respondToJoinRequest(IPCClient.ApprovalMode.DENY);
         }
         JOIN_SECRET = null;
         PARTY_ID = null;
@@ -1519,15 +1513,23 @@ public class DiscordUtils {
         // Join Request Tick Event
         if (!CraftPresence.CONFIG.hasChanged && isFullyLoaded) {
             // Processing for Join Request Systems
-            if (awaitingReply && CraftPresence.SYSTEM.TIMER == 0) {
-                StringUtils.sendMessageToPlayer(CraftPresence.player, ModUtils.TRANSLATOR.translate("craftpresence.command.request.ignored", REQUESTER_USER.getName()));
-                ipcInstance.respondToJoinRequest(REQUESTER_USER, IPCClient.ApprovalMode.DENY);
-                awaitingReply = false;
-                STATUS = DiscordStatus.Ready;
-            } else if (!awaitingReply && REQUESTER_USER != null) {
-                REQUESTER_USER = null;
-                STATUS = DiscordStatus.Ready;
+            if (REQUESTER_USER != null && CraftPresence.SYSTEM.TIMER == 0) {
+                respondToJoinRequest(IPCClient.ApprovalMode.DENY);
             }
         }
+    }
+
+    /**
+     * Respond to a Join Request with the specified {@link com.jagrosh.discordipc.IPCClient.ApprovalMode}
+     *
+     * @param mode the approval state
+     */
+    public void respondToJoinRequest(final IPCClient.ApprovalMode mode) {
+        if (STATUS == DiscordStatus.JoinRequest) {
+            ipcInstance.respondToJoinRequest(REQUESTER_USER, mode);
+            STATUS = DiscordStatus.Ready;
+        }
+        CraftPresence.SYSTEM.TIMER = 0;
+        REQUESTER_USER = null;
     }
 }
