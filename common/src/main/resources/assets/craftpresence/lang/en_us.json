@@ -56,6 +56,7 @@
   "craftpresence.defaults.weather.thunder": "Thundering",
   "craftpresence.defaults.world_name": "World",
   "craftpresence.logger.error.command": "An error has occurred executing this command",
+  "craftpresence.logger.error.module": "A module exception has occurred:",
   "craftpresence.logger.error.compiler": "A compiler exception has occurred:",
   "craftpresence.logger.error.config.backup": "A backup of your config file has been made to prevent data loss...",
   "craftpresence.logger.error.config.invalid.icon.empty": "Unable to detect any usable icons! Please submit a mod issue if this is a mistake...",

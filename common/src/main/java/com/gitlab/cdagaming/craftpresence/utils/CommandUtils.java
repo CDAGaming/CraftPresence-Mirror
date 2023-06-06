@@ -39,6 +39,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.pack.technic.TechnicUtils
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -253,18 +254,35 @@ public class CommandUtils {
 
         CraftPresence.SYSTEM.TICK_LOCK.lock();
         try {
-            for (Module module : modules.values()) {
-                if (module.canBeLoaded()) {
-                    module.onTick();
-                    if (forceUpdateRPC && module.isInUse()) {
-                        module.updatePresence();
+            if (CraftPresence.CLIENT.isAvailable()) {
+                for (Module module : modules.values()) {
+                    if (module.canBeLoaded()) {
+                        module.onTick();
+                        if (forceUpdateRPC && module.isInUse()) {
+                            module.updatePresence();
+                        }
                     }
                 }
+                if (forceUpdateRPC) {
+                    updateMenuPresence();
+                }
+                CraftPresence.CLIENT.onTick();
             }
-            if (forceUpdateRPC) {
-                updateMenuPresence();
+        } catch (Throwable ex) {
+            final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
+            final String messagePrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
+
+            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.module"));
+            if (CommandUtils.isVerboseMode()) {
+                ModUtils.LOG.error(messagePrefix);
+                ex.printStackTrace();
+            } else {
+                ModUtils.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
+                if (splitEx.size() > 1) {
+                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.verbose"));
+                }
             }
-            CraftPresence.CLIENT.onTick();
+            CraftPresence.CLIENT.shutDown(false);
         } finally {
             CraftPresence.SYSTEM.TICK_LOCK.unlock();
             CraftPresence.SYSTEM.postTick();

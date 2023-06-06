@@ -1346,8 +1346,10 @@ public class DiscordUtils {
 
     /**
      * Shutdown the RPC and close related resources, as well as Clearing any remaining Runtime Client Data
+     *
+     * @param clearModules Whether to clear Module Data
      */
-    public synchronized void shutDown() {
+    public synchronized void shutDown(final boolean clearModules) {
         if (CraftPresence.SYSTEM.HAS_LOADED) {
             try {
                 ipcInstance.close();
@@ -1367,11 +1369,20 @@ public class DiscordUtils {
             lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
-            CommandUtils.clearModuleData();
+            if (clearModules) {
+                CommandUtils.clearModuleData();
+            }
 
             CraftPresence.SYSTEM.HAS_LOADED = false;
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
         }
+    }
+
+    /**
+     * Shutdown the RPC and close related resources, as well as Clearing any remaining Runtime Client Data
+     */
+    public synchronized void shutDown() {
+        shutDown(true);
     }
 
     /**
@@ -1517,6 +1528,15 @@ public class DiscordUtils {
                 respondToJoinRequest(IPCClient.ApprovalMode.DENY);
             }
         }
+    }
+
+    /**
+     * Whether the RPC Service is currently available
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean isAvailable() {
+        return STATUS != DiscordStatus.Disconnected && STATUS != DiscordStatus.Invalid;
     }
 
     /**
