@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
+import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.CommandsGui;
@@ -62,8 +63,11 @@ public class ModIPCListener implements IPCListener {
 
     @Override
     public void onActivityJoinRequest(IPCClient client, String secret, User user) {
-        // On Receiving a New Join Request
-        if (CraftPresence.CLIENT.STATUS != DiscordStatus.JoinRequest || !CraftPresence.CLIENT.REQUESTER_USER.equals(user)) {
+        // On Receiving a New Join Request (Applies when Party is not Public)
+        if (CraftPresence.CLIENT.PARTY_PRIVACY != PartyPrivacy.Public && (
+                CraftPresence.CLIENT.STATUS != DiscordStatus.JoinRequest ||
+                        !CraftPresence.CLIENT.REQUESTER_USER.equals(user)
+        )) {
             CraftPresence.SYSTEM.TIMER = 30;
             CraftPresence.CLIENT.STATUS = DiscordStatus.JoinRequest;
             CraftPresence.CLIENT.REQUESTER_USER = user;
