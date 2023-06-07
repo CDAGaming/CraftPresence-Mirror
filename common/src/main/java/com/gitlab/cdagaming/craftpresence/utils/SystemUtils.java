@@ -287,6 +287,8 @@ public class SystemUtils {
             } else {
                 checkTimer();
             }
+        } else if (isTiming) {
+            isTiming = false;
         }
 
         // Every <passTime> Seconds, refresh Callbacks and load state status
@@ -351,8 +353,6 @@ public class SystemUtils {
         if (TIMER > 0) {
             final long remainingTime = BEGINNING_INSTANT.getEpochSecond() - TimeUtils.getCurrentTime().getEpochSecond();
             TIMER = (int) remainingTime;
-        } else if (isTiming) {
-            isTiming = false;
         }
     }
 }
