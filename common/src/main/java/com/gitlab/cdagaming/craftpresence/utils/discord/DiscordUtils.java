@@ -1524,7 +1524,7 @@ public class DiscordUtils {
         // Join Request Tick Event
         if (!CraftPresence.CONFIG.hasChanged && isFullyLoaded) {
             // Processing for Join Request Systems
-            if (REQUESTER_USER != null && CraftPresence.SYSTEM.TIMER == 0) {
+            if (REQUESTER_USER != null && CraftPresence.SYSTEM.TIMER <= 0) {
                 respondToJoinRequest(IPCClient.ApprovalMode.DENY);
             }
         }
