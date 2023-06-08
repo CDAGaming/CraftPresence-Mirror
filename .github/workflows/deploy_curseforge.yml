@@ -33,13 +33,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew --build-cache build
+        run: ./gradlew --build-cache --stacktrace build
 
       - name: Merge Jars with Gradle
-        run: ./gradlew --build-cache mergeJars
+        run: ./gradlew --build-cache --stacktrace mergeJars
 
       - name: Deploy with Gradle
-        run: ./gradlew --build-cache :common:publishCurseforge
+        run: ./gradlew --build-cache --stacktrace :common:publishCurseforge
 
       - uses: actions/upload-artifact@v3
         with:
