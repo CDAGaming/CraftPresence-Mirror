@@ -49,22 +49,6 @@ dependencies {
     common project(path: ":common", configuration: "runtime")
     shadowCommon project(path: ":common", configuration: "shadeOnly")
     shadowCommon project(path: ':common'), { transitive false }
-
-    // Additional Integrations
-    if (use_replay_mod.toBoolean()) {
-        modImplementation(fabricApi.module("fabric-networking-api-v1", rootProject.fabric_api_version))
-        modImplementation(fabricApi.module("fabric-key-binding-api-v1", rootProject.fabric_api_version))
-        // Apply Legacy APIs on select MC Versions
-        if (protocol < 755) { // 1.17 and below
-            modImplementation(fabricApi.module("fabric-networking-v0", rootProject.fabric_api_version))
-            if (protocol < 735) { // 1.16 and below
-                modImplementation(fabricApi.module("fabric-keybindings-v0", rootProject.fabric_api_version))
-            }
-        }
-        modImplementation(fabricApi.module("fabric-api-base", rootProject.fabric_api_version))
-
-        modImplementation("com.replaymod:replaymod-${rootProject.mc_version}:${rootProject.replaymod_ver}")
-    }
 }
 
 // Fix: mcversion constaint does not apply below 1.0

@@ -25,9 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.forge.integrations.replaymod.ReplayModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import net.minecraftforge.fml.common.Mod;
 
@@ -53,8 +50,6 @@ public class CraftPresenceForge {
      * Setup external integrations and attachments to the primary application
      */
     public void setupIntegrations() {
-        if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
-            CommandUtils.addModule("integration.replaymod", new ReplayModUtils());
-        }
+        // N/A
     }
 }

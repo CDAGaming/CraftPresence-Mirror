@@ -33,12 +33,6 @@ minecraft {
             }
         }
     }
-
-    runs.client = {
-        if (use_replay_mod.toBoolean()) {
-            jvmArgs.addAll(["-Dfml.coreMods.load=com.replaymod.core.LoadingPlugin", "-Dmixin.env.remapRefMap=true"])
-        }
-    }
 }
 
 mappings {
@@ -75,11 +69,6 @@ dependencies {
     common project(path: ":common", configuration: "runtime")
     shadowCommon project(path: ":common", configuration: "shadeOnly")
     shadowCommon project(path: ':common'), { transitive false }
-
-    // Additional Integrations
-    if (use_replay_mod.toBoolean()) {
-        modImplementation("com.replaymod:replaymod-${rootProject.mc_version}:${rootProject.replaymod_ver}")
-    }
 }
 
 processResources {

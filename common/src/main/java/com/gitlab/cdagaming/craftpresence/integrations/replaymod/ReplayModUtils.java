@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.forge.integrations.replaymod;
+package com.gitlab.cdagaming.craftpresence.integrations.replaymod;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
@@ -31,10 +31,8 @@ import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.replaymod.lib.de.johni0702.minecraft.gui.container.*;
-import com.replaymod.render.gui.GuiVideoRenderer;
-import com.replaymod.render.rendering.VideoRenderer;
 import io.github.classgraph.ClassInfo;
+import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 
@@ -47,6 +45,14 @@ import java.util.List;
  */
 @SuppressWarnings("DuplicatedCode")
 public class ReplayModUtils implements Module {
+    // CLASS REFLECTION STORAGE -- DO NOT TOUCH !!!
+    private final Class<?> screenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiScreen");
+    private final Class<?> overlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiOverlay");
+    private final Class<?> abstractContainerClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiContainer");
+    private final Class<?> abstractScreenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiScreen");
+    private final Class<?> abstractOverlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiOverlay");
+    private final Class<?> videoRendererScreen = FileUtils.findValidClass("com.replaymod.render.gui.GuiVideoRenderer");
+    private final Class<?> videoRendererInfo = FileUtils.findValidClass("com.replaymod.render.rendering.VideoRenderer");
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -66,7 +72,7 @@ public class ReplayModUtils implements Module {
     /**
      * The Current Instance of the Gui the player is in
      */
-    private AbstractGuiContainer<?> CURRENT_SCREEN;
+    private Object CURRENT_SCREEN;
 
     @Override
     public void emptyData() {
@@ -109,12 +115,12 @@ public class ReplayModUtils implements Module {
         if (CraftPresence.GUIS.CURRENT_SCREEN == null) {
             clearClientData();
         } else {
-            final AbstractGuiScreen<?> possibleScreen = GuiScreen.from(CraftPresence.GUIS.CURRENT_SCREEN);
-            final AbstractGuiOverlay<?> possibleOverlay = GuiOverlay.from(CraftPresence.GUIS.CURRENT_SCREEN);
+            final Object possibleScreen = StringUtils.executeMethod(screenClass, null, "from", new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN});
+            final Object possibleOverlay = StringUtils.executeMethod(overlayClass, null, "from", new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN});
             if (possibleScreen == null && possibleOverlay == null) {
                 clearClientData();
             } else {
-                final AbstractGuiContainer<?> newScreen = possibleOverlay != null ? possibleOverlay : possibleScreen;
+                final Object newScreen = possibleOverlay != null ? possibleOverlay : possibleScreen;
                 final String newScreenName = MappingUtils.getClassName(newScreen);
 
                 if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
@@ -134,7 +140,7 @@ public class ReplayModUtils implements Module {
 
     @Override
     public void getAllData() {
-        final List<Class<?>> searchClasses = StringUtils.newArrayList(AbstractGuiContainer.class, AbstractGuiScreen.class, AbstractGuiOverlay.class);
+        final List<Class<?>> searchClasses = StringUtils.newArrayList(abstractContainerClass, abstractScreenClass, abstractOverlayClass);
 
         for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);
@@ -195,25 +201,26 @@ public class ReplayModUtils implements Module {
 
     private void syncPlaceholders() {
         // Additional Data for Replay Mod
-        if (CURRENT_SCREEN instanceof GuiVideoRenderer) {
+        if (CURRENT_SCREEN != null && CURRENT_SCREEN.getClass() == videoRendererScreen) {
             CraftPresence.CLIENT.syncArgument("replaymod.time.current", secToString(
                     StringUtils.getValidInteger(StringUtils.getField(
-                            GuiVideoRenderer.class, CURRENT_SCREEN, "renderTimeTaken"
+                            videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
                     )).getSecond() / 1000
             ));
             CraftPresence.CLIENT.syncArgument("replaymod.time.remaining", secToString(
                     StringUtils.getValidInteger(StringUtils.getField(
-                            GuiVideoRenderer.class, CURRENT_SCREEN, "renderTimeLeft"
+                            videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
                     )).getSecond() / 1000
             ));
 
             final Object rendererObj = StringUtils.getField(
-                    GuiVideoRenderer.class, CURRENT_SCREEN, "renderer"
+                    videoRendererScreen, CURRENT_SCREEN, "renderer"
             );
-            if (rendererObj instanceof VideoRenderer) {
-                final VideoRenderer renderer = (VideoRenderer) rendererObj;
-                CraftPresence.CLIENT.syncArgument("replaymod.frames.current", renderer.getFramesDone());
-                CraftPresence.CLIENT.syncArgument("replaymod.frames.total", renderer.getTotalFrames());
+            if (rendererObj != null && rendererObj.getClass() == videoRendererInfo) {
+                CraftPresence.CLIENT.syncArgument("replaymod.frames.current",
+                        StringUtils.executeMethod(videoRendererInfo, rendererObj, "getFramesDone", null, null));
+                CraftPresence.CLIENT.syncArgument("replaymod.frames.total",
+                        StringUtils.executeMethod(videoRendererInfo, rendererObj, "getTotalFrames", null, null));
             }
         } else {
             CraftPresence.CLIENT.removeArguments("replaymod");

@@ -19,6 +19,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
         * These exceptions now appear similar to the compiler/parser error logging
     * In the event of an unrecoverable error, the RPC will now shut down to prevent further issues
         * The user has the ability to reboot the RPC via `/cp reboot` but it will shut down again if issues persist
+* Backend: Adjusted ReplayMod Integration to be a reflection-based module
+    * This means it is now in the common sourceSet and is using the same logic on both platforms
 
 ### Fixes
 

@@ -36,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater.MCUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.technic.TechnicUtils;
+import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
@@ -339,6 +340,12 @@ public class CommandUtils {
         }
         DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.generalSettings.clientId, true);
         CraftPresence.KEYBINDINGS.register();
+
+        // Setup Mod Integrations that are not Platform-Dependent
+        // Use the loader-specific `setupIntegrations` methods for platform-dependent modules
+        if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
+            addModule("integration.replaymod", new ReplayModUtils());
+        }
     }
 
     /**
