@@ -2,16 +2,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-unimined.minecraft(sourceSets.main) {
-    runs {
-        config("client") {
-            if (use_replay_mod.toBoolean()) {
-                jvmArgs += ["-Dfml.coreMods.load=com.replaymod.core.LoadingPlugin", "-Dmixin.env.remapRefMap=true"]
-            }
-        }
-    }
-}
-
 configurations {
     common
     shadowCommon
