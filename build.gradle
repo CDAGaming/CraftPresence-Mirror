@@ -212,10 +212,29 @@ subprojects {
                     if (!isJarMod) {
                         searge()
                     }
-                    mcp(isJarMod ? "legacy" : "stable", mc_mappings)
+                    mcp(isJarMod ? "legacy" : "stable", mc_mappings) {
+                        if (!isJarMod) {
+                            clearOutputs()
+                            outputs("mcp", true) { ["searge", "intermediary"] }
+                        }
+                    }
                     break
                 case "forgeMCP":
-                    forgeBuiltinMCP("${rootProject.forge_version}")
+                    forgeBuiltinMCP("${rootProject.forge_version}") {
+                        clearContains()
+                        contains({ _, t ->
+                            !t.contains("MCP")
+                        }) {
+                            onlyExistingSrc()
+                            outputs("searge", false) { ["official"] }
+                        }
+                        contains({ _, t ->
+                            t.contains("MCP")
+                        }) {
+                            outputs("mcp", true) { ["searge", "intermediary"] }
+                            sourceNamespace("searge")
+                        }
+                    }
                     break
                 case "retroMCP":
                     retroMCP()
@@ -249,12 +268,16 @@ subprojects {
                 c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
             }
 
+            freeze()
+
             if (isMCPJar) {
                 if (protocol <= 2) { // MC a1.1.2_01 and below
                     devNamespace "searge"
                 } else {
                     devFallbackNamespace "searge"
                 }
+            } else {
+                devFallbackNamespace "intermediary"
             }
         }
 
