@@ -124,7 +124,7 @@ public class ModUtils {
     /**
      * The Application's Instance of {@link ModLogger} for Logging Information
      */
-    public static final ModLogger LOG = new ModLogger(NAME);
+    public static final ModLogger LOG = new ModLogger(MOD_ID);
 
     /**
      * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
