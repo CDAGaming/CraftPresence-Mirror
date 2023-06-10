@@ -820,24 +820,7 @@ public class StringUtils {
             if (containsWhitespace(formattedKey)) {
                 formattedKey = formattedKey.replaceAll("\\s+", whitespaceIndex);
             }
-            if (formattedKey.contains("'")) {
-                formattedKey = formattedKey.replaceAll("'", "");
-            }
-            if (formattedKey.contains(".")) {
-                formattedKey = formattedKey.replaceAll("\\.", "_");
-            }
-            if (formattedKey.contains("(")) {
-                formattedKey = formattedKey.replaceAll("\\(", "_");
-            }
-            if (formattedKey.contains(")")) {
-                formattedKey = formattedKey.replaceAll("\\)", "_");
-            }
-            if (BRACKET_PATTERN.matcher(formattedKey).find()) {
-                formattedKey = BRACKET_PATTERN.matcher(formattedKey).replaceAll("");
-            }
-            if (STRIP_COLOR_PATTERN.matcher(formattedKey).find()) {
-                formattedKey = STRIP_COLOR_PATTERN.matcher(formattedKey).replaceAll("");
-            }
+            formattedKey = formattedKey.replaceAll("[^a-zA-Z0-9_-]", "_");
             return formattedKey.toLowerCase().trim();
         }
     }
@@ -1190,7 +1173,7 @@ public class StringUtils {
             }
 
             if (formatToId) {
-                return formatAsIcon(formattedKey.toString().replace(" ", "_"));
+                return formatAsIcon(formattedKey.toString(), "_");
             } else {
                 return formatWord(formattedKey.toString(), avoid);
             }
