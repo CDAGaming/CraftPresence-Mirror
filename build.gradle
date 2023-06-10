@@ -195,7 +195,7 @@ subprojects {
                     // Note: Required for proper mixin remaps
                     mods {
                         modImplementation {
-                            mixinRemap("TINY_HARD")
+                            mixinRemap("UNIMINED")
                         }
                     }
                 }
@@ -243,7 +243,6 @@ subprojects {
             }
 
             // ability to add custom mappings
-            // available targets are "CLIENT", "SERVER", "COMBINED"
             def target = !ext_isModern ? "mcp" : "mojmap"
             stub.withMappings(["searge", target]) {
                 c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
