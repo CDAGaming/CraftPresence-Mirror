@@ -2,27 +2,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-def accessWidenerFile = !isJarMod ? project(":common").minecraft.mcPatcher.accessWidener : null
-
-minecraft {
-    fabric {
-        if (accessWidenerFile != null) {
-            accessWidener = accessWidenerFile
-        }
-        if (isJarMod) {
-            devMappings = null
-            prodNamespace = "official"
-
-            // required when using mcp mappings
-            if (protocol <= 2) { // MC a1.1.2_01 and below
-                devNamespace = "searge"
-            } else {
-                devFallbackNamespace = "searge"
-            }
-        }
-    }
-}
-
 configurations {
     common
     shadowCommon
@@ -32,13 +11,11 @@ configurations {
 }
 
 dependencies {
-    fabric "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-
     // Fabric Integrations (1.14+)
-    if (protocol >= 498) {
+    if (isModern) {
         // Required for loading translation data
-        modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
-        include(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_api_version))
+        modImplementation(fabricApi.fabricModule("fabric-resource-loader-v0", rootProject.fabric_api_version))
+        include(fabricApi.fabricModule("fabric-resource-loader-v0", rootProject.fabric_api_version))
 
         // Mod Menu API Implementation
         modImplementation "${rootProject.modmenu_group}:modmenu:${rootProject.modmenu_version}"
@@ -75,15 +52,8 @@ processResources {
 }
 
 exportMappings {
-    def target = isJarMod ? "searge" : ((isLegacy || protocol < 498) ? "mcp" : "mojmap")
-    export("CLIENT") {
-        targetNamespaces = [target]
-        sourceNamespace = isJarMod ? "official" : "intermediary"
-        location = "$projectDir/src/main/resources/mappings-fabric.srg"
-        type = "SRG"
-    }
-
-    export("COMBINED") {
+    def target = isMCPJar ? "searge" : (!isModern ? "mcp" : "mojmap")
+    export {
         targetNamespaces = [target]
         sourceNamespace = isJarMod ? "official" : "intermediary"
         location = "$projectDir/src/main/resources/mappings-fabric.srg"
@@ -122,7 +92,7 @@ shadowJar {
 
 remapJar {
     if (isJarMod) {
-        target = "official"
+        prodNamespace "official"
     }
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar

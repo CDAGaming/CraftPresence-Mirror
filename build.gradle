@@ -4,7 +4,7 @@ import org.gradle.internal.jvm.Jvm
 import java.nio.file.Files
 
 plugins {
-    id 'xyz.wagyourtail.unimined' version '0.4.10-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '1.0.0-SNAPSHOT' apply false
     id "com.diffplug.gradle.spotless" version "6.18.0" apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
@@ -22,8 +22,15 @@ def ext_fileFormat = "${rootProject.mod_name}-${ext_versionFormat}"
 int ext_protocol = "${mc_protocol}".toInteger()
 boolean ext_isLegacy = "${isLegacy}".toBoolean()
 boolean ext_isJarMod = "${isJarMod}".toBoolean()
+boolean ext_isModern = !ext_isLegacy && ext_protocol >= 498
+boolean ext_isMCPJar = ext_isJarMod && mc_mappings_type == "mcp"
 
 def ext_fmlName = ext_isJarMod ? "modloader" : "forge"
+
+// Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
+// due to the way Forge requires core-mods for lower version usage
+def ext_accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
+def ext_canUseATs = ext_accessWidenerFile != null && (!ext_isLegacy || ext_protocol > 60)
 
 subprojects {
     apply plugin: 'java'
@@ -39,7 +46,11 @@ subprojects {
         protocol = ext_protocol
         isLegacy = ext_isLegacy
         isJarMod = ext_isJarMod
+        isModern = ext_isModern
+        isMCPJar = ext_isMCPJar
         fmlName = "${ext_fmlName}"
+        accessWidenerFile = ext_accessWidenerFile
+        canUseATs = ext_canUseATs
         mcVersionLabel = "${ext_mcVersionLabel}"
         versionLabel = "${ext_versionLabel}"
     }
@@ -68,30 +79,6 @@ subprojects {
 
     java {
         withSourcesJar()
-    }
-
-    unimined {
-        // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
-        // I recommend you leave this off until unimined is stable
-        useGlobalCache = false
-    }
-
-    minecraft {
-        if (isLegacy) {
-            clientSourceSets = [sourceSets.main]
-        }
-        mcRemapper.tinyRemapperConf = {
-            // most mcp mappings (except older format) dont include field desc
-            ignoreFieldDesc(true)
-            // this also fixes some issues with them, as it tells tiny remapper to try harder to resolve conflicts
-            ignoreConflicts(true)
-        }
-    }
-
-    remapJar {
-        if (isJarMod) {
-            setEnv("CLIENT")
-        }
     }
 
     repositories {
@@ -151,31 +138,136 @@ subprojects {
         }
     }
 
-    dependencies {
-        minecraft "net.minecraft:minecraft:${rootProject.mc_version}"
-        // If a Legacy Build or below 1.14.4, use MCP Data; otherwise use mojmaps
-        if (isLegacy || protocol < 498) {
-            if (isJarMod) {
-                mappings "de.oceanlabs.mcp:mcp_legacy:${rootProject.mc_mappings}-${rootProject.mc_version}@zip"
-            } else if (!isLegacy) {
-                if (protocol >= 340) {
-                    mappings "de.oceanlabs.mcp:mcp_config:${rootProject.mc_version}@zip"
-                } else {
-                    mappings "de.oceanlabs.mcp:mcp:${rootProject.mc_version}:srg@zip"
+    // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
+    unimined.useGlobalCache = false
+
+    unimined.minecraft(sourceSets.main) {
+        def mc_version = "${rootProject.mc_version}"
+        def mc_mapping_type = "${rootProject.mc_mappings_type}"
+
+        side(isJarMod ? "client" : "combined")
+        version mc_version
+
+        switch (path) {
+            case ":common":
+                if (!isJarMod) {
+                    def fabricData = {
+                        if (accessWidenerFile.exists()) {
+                            accessWidener accessWidenerFile
+                        }
+                        loader rootProject.fabric_loader_version
+                        customIntermediaries = true
+                    }
+                    if (ext_isModern) {
+                        fabric fabricData
+                    } else {
+                        legacyFabric fabricData
+                    }
                 }
-                mappings "de.oceanlabs.mcp:mcp_stable:${rootProject.mc_mappings}@zip"
-            } else {
-                mappings "net.minecraftforge:forge:${rootProject.mc_version}-${rootProject.forge_version}:src@zip"
+                break
+            case ":fabric":
+                def fabricData = {
+                    if (accessWidenerFile.exists()) {
+                        accessWidener accessWidenerFile
+                    }
+                    loader rootProject.fabric_loader_version
+                    if (isJarMod) {
+                        prodNamespace "official"
+                        devMappings = null
+                    }
+                    customIntermediaries = true
+                }
+                if (ext_isModern) {
+                    fabric fabricData
+                } else {
+                    legacyFabric fabricData
+                }
+                break
+            case ":forge":
+                if (!isJarMod) {
+                    forge {
+                        if (canUseATs) {
+                            accessTransformer aw2at(accessWidenerFile)
+                        }
+                        forge rootProject.forge_version
+                        customSearge = (mc_mapping_type == "mcp")
+                    }
+                    // Note: Required for proper mixin remaps
+                    mods {
+                        modImplementation {
+                            mixinRemap("TINY_HARD")
+                        }
+                    }
+                }
+                break
+            case ":modloader":
+                jarMod {}
+                break
+        }
+
+        mappings {
+            def mc_mappings = "${rootProject.mc_mappings}"
+            switch (mc_mapping_type) {
+                case "mcp":
+                    if (!isJarMod) {
+                        searge()
+                    }
+                    mcp(isJarMod ? "legacy" : "stable", mc_mappings)
+                    break
+                case "forgeMCP":
+                    forgeBuiltinMCP("${rootProject.forge_version}")
+                    break
+                case "retroMCP":
+                    retroMCP()
+                    break
+                case "yarn":
+                    yarn(mc_mappings)
+                    break
+                case "mojmap":
+                    mojmap()
+                    break
+                case "parchment":
+                    parchment(mc_version, mc_mappings)
+                    break
+                default:
+                    throw new GradleException("Unknown or Unsupported Mappings version")
             }
-        } else {
-            mappings "net.minecraft:minecraft:${rootProject.mc_version}:client-mappings"
+
+            // Only use Intermediaries on Versions that support it
+            if ((isLegacy && protocol >= 39) || !isLegacy) {
+                if (ext_isModern) {
+                    intermediary()
+                } else {
+                    legacyIntermediary()
+                }
+            }
+
+            // ability to add custom mappings
+            // available targets are "CLIENT", "SERVER", "COMBINED"
+            def target = !ext_isModern ? "mcp" : "mojmap"
+            stub.withMappings(["searge", target]) {
+                c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
+                c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
+            }
+
+            if (isMCPJar) {
+                if (protocol <= 2) { // MC a1.1.2_01 and below
+                    devNamespace "searge"
+                } else {
+                    devFallbackNamespace "searge"
+                }
+            }
         }
 
-        // Only use Intermediaries on Versions that support it
-        if ((isLegacy && protocol >= 39) || !isLegacy) {
-            mappings "${rootProject.fabric_group}:intermediary:${rootProject.mc_version}:v2"
+        minecraftRemapper.config {
+            // most mcp mappings (except older format) dont include field desc
+            ignoreFieldDesc(true)
+            // this also fixes some issues with them, as it tells tiny remapper to try harder to resolve conflicts
+            ignoreConflicts(true)
         }
+    }
 
+    dependencies {
         if (!modern_target_support) {
             // If we are targeting a release below Java 9,
             // work around JDK-8206937 by providing a shim for inaccessible classes.
