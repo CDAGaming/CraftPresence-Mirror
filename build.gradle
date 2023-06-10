@@ -30,7 +30,7 @@ def ext_fmlName = ext_isJarMod ? "modloader" : "forge"
 // Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
 // due to the way Forge requires core-mods for lower version usage
 def ext_accessWidenerFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
-def ext_canUseATs = ext_accessWidenerFile != null && (!ext_isLegacy || ext_protocol > 60)
+def ext_canUseATs = ext_accessWidenerFile.exists() && (!ext_isLegacy || ext_protocol > 60)
 
 subprojects {
     apply plugin: 'java'
@@ -190,7 +190,7 @@ subprojects {
                             accessTransformer aw2at(accessWidenerFile)
                         }
                         forge rootProject.forge_version
-                        customSearge = (mc_mapping_type == "mcp")
+                        customSearge = (mc_mapping_type != "mojmap")
                     }
                     // Note: Required for proper mixin remaps
                     mods {
@@ -215,13 +215,14 @@ subprojects {
                     mcp(isJarMod ? "legacy" : "stable", mc_mappings) {
                         if (!isJarMod) {
                             clearOutputs()
-                            outputs("mcp", true) { ["searge", "intermediary"] }
+                            outputs("mcp", true) { ["intermediary"] }
                         }
                     }
                     break
                 case "forgeMCP":
                     forgeBuiltinMCP("${rootProject.forge_version}") {
                         clearContains()
+                        clearOutputs()
                         contains({ _, t ->
                             !t.contains("MCP")
                         }) {
@@ -231,9 +232,14 @@ subprojects {
                         contains({ _, t ->
                             t.contains("MCP")
                         }) {
-                            outputs("mcp", true) { ["searge", "intermediary"] }
+                            outputs("mcp", true) { ["intermediary"] }
                             sourceNamespace("searge")
                         }
+                    }
+                    officialMappingsFromJar {
+                        clearContains()
+                        clearOutputs()
+                        outputs("official", false) { [] }
                     }
                     break
                 case "retroMCP":
