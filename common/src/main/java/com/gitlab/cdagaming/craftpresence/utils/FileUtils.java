@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -162,8 +163,11 @@ public class FileUtils {
      * @param args The Command Arguments to parse
      * @return the resulting json string
      */
-    public static String toJsonData(final Object obj, final Modifiers... args) {
+    public static String toJsonData(Object obj, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
+        if (obj instanceof String) {
+            obj = new JsonParser().parse((String) obj);
+        }
         return builder.create().toJson(obj);
     }
 
