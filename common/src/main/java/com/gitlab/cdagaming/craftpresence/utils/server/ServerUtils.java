@@ -397,9 +397,11 @@ public class ServerUtils implements Module {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     private boolean isInvalidMotd(final String serverMotd) {
-        for (String item : invalidMotds) {
-            if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.RAW_TRANSLATOR.translate(item))) {
-                return true;
+        if (!StringUtils.isNullOrEmpty(serverMotd)) {
+            for (String item : invalidMotds) {
+                if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.RAW_TRANSLATOR.translate(item))) {
+                    return true;
+                }
             }
         }
         return false;
