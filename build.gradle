@@ -249,7 +249,9 @@ subprojects {
                     yarn(mc_mappings)
                     break
                 case "mojmap":
-                    mojmap()
+                    mojmap() {
+                        skipIfNotIn("searge")
+                    }
                     break
                 case "parchment":
                     parchment(mc_version, mc_mappings)
