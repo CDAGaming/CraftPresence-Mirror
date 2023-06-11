@@ -1426,27 +1426,30 @@ public class DiscordUtils {
 
         // Format Buttons Array based on Config Value
         BUTTONS = new JsonArray();
-        for (Map.Entry<String, Button> buttonElement : configData.buttons.entrySet()) {
-            final JsonObject buttonObj = new JsonObject();
-            final String overrideId = buttonElement.getKey();
-            final Button button = buttonElement.getValue();
-            if (!StringUtils.isNullOrEmpty(overrideId) &&
-                    !overrideId.equalsIgnoreCase("default") &&
-                    !StringUtils.isNullOrEmpty(button.label)) {
-                String label = StringUtils.formatWord(
-                        getResult(button.label, overrideId + ".label"),
-                        !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
-                );
-                String url = !StringUtils.isNullOrEmpty(button.url) ? getResult(
-                        button.url, overrideId + ".url"
-                ) : "";
+        if (StringUtils.isNullOrEmpty(JOIN_SECRET) && StringUtils.isNullOrEmpty(MATCH_SECRET) && StringUtils.isNullOrEmpty(SPECTATE_SECRET)) {
+            // Only add Buttons if Discord is not overriding it
+            for (Map.Entry<String, Button> buttonElement : configData.buttons.entrySet()) {
+                final JsonObject buttonObj = new JsonObject();
+                final String overrideId = buttonElement.getKey();
+                final Button button = buttonElement.getValue();
+                if (!StringUtils.isNullOrEmpty(overrideId) &&
+                        !overrideId.equalsIgnoreCase("default") &&
+                        !StringUtils.isNullOrEmpty(button.label)) {
+                    String label = StringUtils.formatWord(
+                            getResult(button.label, overrideId + ".label"),
+                            !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
+                    );
+                    String url = !StringUtils.isNullOrEmpty(button.url) ? getResult(
+                            button.url, overrideId + ".url"
+                    ) : "";
 
-                label = sanitizePlaceholders(label, 32);
-                url = sanitizePlaceholders(url, 512);
-                if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
-                    buttonObj.addProperty("label", label);
-                    buttonObj.addProperty("url", url);
-                    BUTTONS.add(buttonObj);
+                    label = sanitizePlaceholders(label, 32);
+                    url = sanitizePlaceholders(url, 512);
+                    if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
+                        buttonObj.addProperty("label", label);
+                        buttonObj.addProperty("url", url);
+                        BUTTONS.add(buttonObj);
+                    }
                 }
             }
         }
