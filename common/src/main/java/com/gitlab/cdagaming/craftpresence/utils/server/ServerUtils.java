@@ -418,11 +418,11 @@ public class ServerUtils implements Module {
         boolean containsServerIP = false;
 
         if (!StringUtils.isNullOrEmpty(currentServer_Name)) {
-            formattedKey += "-" + currentServer_Name.toLowerCase();
+            formattedKey += "-" + currentServer_Name;
             containsServerName = true;
         }
         if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
-            formattedKey += "-" + currentServer_IP.toLowerCase();
+            formattedKey += "-" + currentServer_IP;
             containsServerIP = true;
         }
 
