@@ -274,8 +274,6 @@ subprojects {
                 c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
             }
 
-            freeze()
-
             if (isMCPJar) {
                 if (protocol <= 2) { // MC a1.1.2_01 and below
                     devNamespace "searge"
