@@ -261,7 +261,8 @@ subprojects {
             }
 
             // Only use Intermediaries on Versions that support it
-            if ((isLegacy && protocol >= 39) || !isLegacy) {
+            def usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
+            if (usingIntermediary) {
                 if (ext_isModern) {
                     intermediary()
                 } else {
@@ -282,7 +283,7 @@ subprojects {
                 } else {
                     devFallbackNamespace "searge"
                 }
-            } else {
+            } else if (usingIntermediary) {
                 devFallbackNamespace "intermediary"
             }
         }
