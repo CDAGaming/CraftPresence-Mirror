@@ -183,7 +183,14 @@ public class NbtUtils {
                 return converted;
             }
             case 10:
-                return FileUtils.toJsonData(tag.toString());
+                try {
+                    return FileUtils.toJsonData(tag.toString());
+                } catch (Throwable ex) {
+                    if (CommandUtils.isVerboseMode()) {
+                        ex.printStackTrace();
+                    }
+                    return tag.toString();
+                }
             case 11:
                 return ((NBTTagIntArray) tag).getIntArray();
             case 0:
