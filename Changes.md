@@ -27,6 +27,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Backend: Fixed `ServerUtils#isInvalidMotd` throwing an exception when `serverMotd` was null
     * Primarily occurs with Direct Connections to a server
 * Fixed Logging not properly working on select MC versions
+* Fixed cases of Log Spam when locating a Discord Image
+  * Occurs when Verbose Mode was enabled, and it diverted to a cached icon from a prior lookup
+  * This area of code now properly respects the `showLogging` parameter to avoid this
 
 ___
 
