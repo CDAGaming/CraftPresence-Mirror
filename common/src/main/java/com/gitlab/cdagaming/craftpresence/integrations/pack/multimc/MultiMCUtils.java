@@ -43,10 +43,6 @@ import java.util.Properties;
  * @author CDAGaming
  */
 public class MultiMCUtils extends Pack {
-    public MultiMCUtils() {
-        setPackType(getLauncherType());
-    }
-
     @Override
     public boolean isEnabled() {
         return CraftPresence.CONFIG.generalSettings.detectMultiMCManifest;
@@ -54,7 +50,11 @@ public class MultiMCUtils extends Pack {
 
     @Override
     public boolean load() {
-        return findWithSystem() || findWithLegacy();
+        final boolean result = findWithSystem() || findWithLegacy();
+        if (result) {
+            setPackType(getLauncherType());
+        }
+        return result;
     }
 
     @Override
@@ -142,14 +142,20 @@ public class MultiMCUtils extends Pack {
      * @return the launcher type
      */
     private String getLauncherType() {
-        final File prismLocation = new File(
-                new File(SystemUtils.USER_DIR)
-                        .getParentFile()
-                        .getParentFile()
-                        .getParentFile() + File.separator + "prismlauncher.cfg"
-        );
-        if (prismLocation.exists()) {
-            return "prism";
+        try {
+            final File prismLocation = new File(
+                    new File(SystemUtils.USER_DIR)
+                            .getParentFile()
+                            .getParentFile()
+                            .getParentFile() + File.separator + "prismlauncher.cfg"
+            );
+            if (prismLocation.exists()) {
+                return "prism";
+            }
+        } catch (Exception ex) {
+            if (showException(ex)) {
+                ex.printStackTrace();
+            }
         }
         return "multimc";
     }
