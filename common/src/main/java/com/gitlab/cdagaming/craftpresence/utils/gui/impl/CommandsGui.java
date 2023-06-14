@@ -55,7 +55,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandsGui extends ExtendedScreen {
-    public ExtendedButtonControl proceedButton;
+    public ExtendedButtonControl proceedButton, copyButton;
     private String[] executionCommandArgs;
     private ExtendedTextControl commandInput;
     private ExtendedScreen childFrame;
@@ -126,6 +126,14 @@ public class CommandsGui extends ExtendedScreen {
                         () -> openScreen(parentScreen)
                 )
         );
+        copyButton = addControl(
+                new ExtendedButtonControl(
+                        6, 6,
+                        95, 20,
+                        "gui.config.message.button.copy",
+                        () -> copyToClipboard(executionString)
+                )
+        );
 
         commandInput = addControl(
                 new ExtendedTextControl(
@@ -157,6 +165,7 @@ public class CommandsGui extends ExtendedScreen {
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         proceedButton.setControlEnabled(!blockInteractions);
+        copyButton.setControlEnabled(!blockInteractions);
         commandInput.setEnabled(!blockInteractions);
 
         if (!blockInteractions) {

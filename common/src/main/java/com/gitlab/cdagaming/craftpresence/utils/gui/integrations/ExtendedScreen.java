@@ -452,6 +452,15 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Copies the Specified Text to the System's Clipboard
+     *
+     * @param input the text to interpret
+     */
+    public void copyToClipboard(final String input) {
+        setClipboardString(input);
+    }
+
+    /**
      * Renders this Screen, including controls and post-Hover Events
      *
      * @param mouseX       The Event Mouse X Coordinate
