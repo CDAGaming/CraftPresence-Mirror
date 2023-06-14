@@ -49,6 +49,11 @@ public abstract class Pack {
      */
     private String packType;
 
+    /**
+     * Whether this pack is currently enabled (or allowed to load)
+     *
+     * @return the current enable state
+     */
     public boolean isEnabled() {
         return true;
     }

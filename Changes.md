@@ -33,6 +33,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Misc. UI Rendering Fixes
     * Migrations to `GLStateManager` and `RenderSystem` as necesary
     * Fixed cases of incorrect Render Phases in Scroll Lists, causing some visual discrepencies
+* Fixed a regression where Pack Data was being interpreted despite not being enabled
+* Fixed a potential `NullPointerException` with `pack.type` in the MultiMC Pack Integration
 
 ___
 
@@ -48,8 +50,7 @@ The following known issues are present in this build:
 
 * On 1.14+, the `isFocused` state in the GUI module is improperly represented
     * This can cause issues such as the Config GUI opening while typing into another GUI
-* On certain MC versions, Scrolling while in a Scroll List drawing `ItemStack`'s may cause GUI Scale distortions for a
-  few frames
+* On certain MC versions, Scrolling while in a Scroll List drawing `ItemStack`'s may cause GUI distortions
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) contains the following known issues:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
