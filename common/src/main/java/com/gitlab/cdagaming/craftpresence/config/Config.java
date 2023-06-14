@@ -353,7 +353,7 @@ public final class Config extends Module implements Serializable {
                     currentVer = 4;
                 }
                 if (MathUtils.isWithinValue(currentVer, 4, 5, true, false)) {
-                    // Schema Changes (v2 -> v3)
+                    // Schema Changes (v4 -> v5)
                     //  - Placeholder: `data.screen.class` -> `getClass(data.screen.instance)`
                     new TextReplacer(
                             new HashMapBuilder<String, String>()
