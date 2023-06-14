@@ -71,6 +71,10 @@ public class StringUtils {
      */
     public static final Predicate<String> NULL_OR_EMPTY = StringUtils::isNullOrEmpty;
     /**
+     * Regex Pattern for Possible New Line Characters
+     */
+    public static final Pattern NEW_LINE_PATTERN = Pattern.compile("(\\r\\n|\\r|\\n|\\\\n)");
+    /**
      * Regex Pattern for Color and Formatting Codes
      */
     public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
@@ -1262,7 +1266,7 @@ public class StringUtils {
      */
     public static List<String> splitTextByNewLine(final String original, final boolean allowWhitespace) {
         if (!isNullOrEmpty(original, allowWhitespace)) {
-            return newArrayList(original.split("(\\r\\n|\\r|\\n|\\\\n)"));
+            return newArrayList(NEW_LINE_PATTERN.split(original));
         } else {
             return newArrayList();
         }
@@ -1741,5 +1745,25 @@ public class StringUtils {
      */
     public static String stripColors(final String input) {
         return isNullOrEmpty(input) ? input : STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
+    }
+
+    /**
+     * Normalize Line Seperator Characters within the inputted String
+     *
+     * @param input The original String to evaluate
+     * @return The Normalized and evaluated String
+     */
+    public static String normalizeLines(final String input) {
+        return isNullOrEmpty(input) ? input : NEW_LINE_PATTERN.matcher(input).replaceAll("\n");
+    }
+
+    /**
+     * Normalize the Line Seperator and Extra Color Data within the inputted String
+     *
+     * @param input The original String to evaluate
+     * @return The Normalized and evaluated String
+     */
+    public static String normalize(final String input) {
+        return stripColors(normalizeLines(input));
     }
 }

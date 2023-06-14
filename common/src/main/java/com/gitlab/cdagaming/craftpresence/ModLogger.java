@@ -153,7 +153,12 @@ public class ModLogger {
     }
 
     private String parse(final String message, Object... args) {
-        return String.format(message, args)
-                .replace("\\n", "\n");
+        String result = StringUtils.normalizeLines(
+                String.format(message, args)
+        );
+        if (!canShowAsChat()) {
+            result = StringUtils.stripColors(result);
+        }
+        return result;
     }
 }

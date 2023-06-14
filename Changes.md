@@ -16,6 +16,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Backend: Adjusted Button detection to resolve an IPC error
     * As per Discord: `secrets cannot currently be sent with buttons`
     * When a `JOIN`, `MATCH`, or `SPECTATE` secret is active, Button Data is now discarded to prevent this issue
+* Added a `Copy` Button to the Commands GUI
+  * This allows for easily copying the output of a command for easier debugging and overall accessibility
 
 ### Fixes
 
@@ -35,6 +37,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Fixed cases of incorrect Render Phases in Scroll Lists, causing some visual discrepencies
 * Fixed a regression where Pack Data was being interpreted despite not being enabled
 * Fixed a potential `NullPointerException` with `pack.type` in the MultiMC Pack Integration
+* Fixed some Line Seperator Characters not being properly normalized in Logging
+  * The new check now match the same Regex as the `splitTextByNewLine` method instead of just `\\n`
+* Removed the ability for Color Codes to be present in Text Logs
+  * This was normally only supposed to be allowed when Logs can be pushed to chat
 
 ___
 

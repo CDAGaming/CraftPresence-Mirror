@@ -457,7 +457,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param input the text to interpret
      */
     public void copyToClipboard(final String input) {
-        setClipboardString(input);
+        setClipboardString(StringUtils.normalize(input));
     }
 
     /**
