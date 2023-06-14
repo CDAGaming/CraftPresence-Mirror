@@ -471,13 +471,14 @@ public class ExtendedScreen extends GuiScreen {
             );
 
             renderCriticalData();
-            preRender();
 
             for (ScrollableListControl listControl : getLists()) {
                 if (listControl.getEnabled()) {
                     listControl.drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
+
+            preRender();
 
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {

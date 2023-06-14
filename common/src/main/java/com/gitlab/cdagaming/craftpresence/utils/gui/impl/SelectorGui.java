@@ -283,11 +283,6 @@ public class SelectorGui extends ExtendedScreen {
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
 
-        super.preRender();
-    }
-
-    @Override
-    public void postRender() {
         final String searchText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.search");
         final float renderY = searchBox.getBottom() - (searchBox.getControlHeight() / 2f) - (getFontHeight() / 2f);
 
@@ -297,6 +292,11 @@ public class SelectorGui extends ExtendedScreen {
         renderCenteredString(searchText, 30, renderY, 0xFFFFFF);
         renderCenteredString(displayText, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
+        super.preRender();
+    }
+
+    @Override
+    public void postRender() {
         if (scrollList.currentHoverText != null && !scrollList.currentHoverText.isEmpty()) {
             drawMultiLineString(scrollList.currentHoverText);
         }
