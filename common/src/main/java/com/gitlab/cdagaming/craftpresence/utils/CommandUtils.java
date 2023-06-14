@@ -196,7 +196,7 @@ public class CommandUtils {
                 data.setPackType(pack.getKey());
             }
 
-            if (data.hasPackName()) {
+            if (data.isEnabled() && data.hasPackName()) {
                 CraftPresence.CLIENT.syncArgument("pack.type", data.getPackType());
                 CraftPresence.CLIENT.syncArgument("pack.name", data.getPackName());
                 CraftPresence.CLIENT.syncArgument("pack.icon",
@@ -330,12 +330,14 @@ public class CommandUtils {
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
             final String type = pack.getKey();
             final Pack data = pack.getValue();
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
-            if (data.load()) {
-                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
-                break; // Only iterate until the first pack is found
-            } else {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
+            if (data.isEnabled()) {
+                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
+                if (data.load()) {
+                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
+                    break; // Only iterate until the first pack is found
+                } else {
+                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
+                }
             }
         }
         DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.generalSettings.clientId, true);
