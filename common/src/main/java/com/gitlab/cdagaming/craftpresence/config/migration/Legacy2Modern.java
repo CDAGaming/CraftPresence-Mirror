@@ -70,7 +70,7 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&MAINMENU&", "{menu.message}", IS_TEXT),
             generatePair("&MAINMENU&", "{menu.icon}", IS_ICON),
             generatePair("&BRAND&", "{general.brand}", IS_TEXT),
-            generatePair("&MCVERSION&", "{general.version}", IS_TEXT),
+            generatePair("&MCVERSION&", "{general.title}", IS_TEXT),
             //
             generatePair("&IGN&", "{custom.player_info_out}", IS_TEXT),
             generatePair("&IGN&", "{player.icon}", IS_ICON),

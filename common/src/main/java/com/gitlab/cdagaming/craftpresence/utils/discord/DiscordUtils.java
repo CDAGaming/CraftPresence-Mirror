@@ -284,6 +284,9 @@ public class DiscordUtils {
         lastStartTime = newStartTime;
 
         // Initialize Static Data
+        syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
+        syncArgument("general.version", ModUtils.MCVersion);
+        syncArgument("general.brand", ModUtils.BRAND);
         syncArgument("general.mods", FileUtils.getModCount());
     }
 
@@ -1110,9 +1113,6 @@ public class DiscordUtils {
         )) {
             syncArgument("player.icon", playerName);
         }
-
-        syncArgument("general.version", ModUtils.MCVersion);
-        syncArgument("general.brand", ModUtils.BRAND);
 
         // Sync any advanced arguments
         syncArgument("data.general.time", currentStartTime);
