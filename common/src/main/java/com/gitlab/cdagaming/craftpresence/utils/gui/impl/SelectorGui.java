@@ -275,7 +275,6 @@ public class SelectorGui extends ExtendedScreen {
         }
 
         scrollList.setList(itemList);
-        scrollList.currentHoverText.clear();
 
         proceedButton.setControlMessage(
                 allowContinuing && scrollList.currentValue != null &&
@@ -299,6 +298,7 @@ public class SelectorGui extends ExtendedScreen {
     public void postRender() {
         if (scrollList.currentHoverText != null && !scrollList.currentHoverText.isEmpty()) {
             drawMultiLineString(scrollList.currentHoverText);
+            scrollList.currentHoverText.clear();
         }
 
         super.postRender();
