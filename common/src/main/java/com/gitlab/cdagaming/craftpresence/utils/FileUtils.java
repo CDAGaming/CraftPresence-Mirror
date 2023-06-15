@@ -312,27 +312,6 @@ public class FileUtils {
     }
 
     /**
-     * Attempts to load the specified file as a DLL
-     *
-     * @param file The file to attempt to load
-     */
-    public static void loadFileAsDLL(final File file) {
-        try {
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.dll.init", file.getName()));
-            final boolean isPermsSet = file.setReadable(true) && file.setWritable(true);
-            if (isPermsSet) {
-                System.load(file.getAbsolutePath());
-            }
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.dll.loaded", file.getName()));
-        } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.dll", file.getName()));
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * Attempts to convert a File's data into a readable String
      *
      * @param file     The file to access
