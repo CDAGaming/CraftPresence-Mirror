@@ -38,12 +38,9 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 /**
  * File Utilities for interpreting Files and Class Objects
@@ -404,8 +401,8 @@ public class FileUtils {
     /**
      * Retrieve a List of Classes that extend or implement anything in the search list
      *
-     * @param searchList          The Super Type Classes to look for
-     * @param sourcePackages      The root package directories to search within
+     * @param searchList     The Super Type Classes to look for
+     * @param sourcePackages The root package directories to search within
      * @return The List of found class names from the search
      */
     public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final String... sourcePackages) {
@@ -483,8 +480,8 @@ public class FileUtils {
     /**
      * Retrieve a List of Classes that extend or implement anything in the search list
      *
-     * @param searchTarget        The Super Type Class to look for
-     * @param sourcePackages      The root package directories to search within
+     * @param searchTarget   The Super Type Class to look for
+     * @param sourcePackages The root package directories to search within
      * @return The List of found classes from the search
      */
     public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final Class<?> searchTarget, final String... sourcePackages) {

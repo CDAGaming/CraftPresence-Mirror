@@ -21,6 +21,13 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Added two new function placeholders, for Identifier/ResourceLocation usage
     * `getNamespace(input)` - Retrieve the namespace portion of an Identifier-Style Object
     * `getPath(input)` - Retrieve the path portion of an Identifier-Style Object
+* Misc Changes to remove and/or consolodate deprecated/unused data
+    * Backend: Removed `loadFileAsDLL` and related translations -- unused since v1.6.0
+    * Added a new `general.title` placeholder (`Minecraft {general.version}`) -- `Legacy2Modern` layer also updated
+    * Removed the `roundSize` and `includeExtraGuiClasses` Advanced options
+    * Adjusted the `Strip Translation Colors` tooltip message when `IS_TEXT_COLORS_BLOCKED` flag is enabled
+    * Removed several unused/deprecated translations (See Technical Changelog)
+    * Renamed some Translation Identifiers to comply with namespace restrictions
 
 ### Fixes
 

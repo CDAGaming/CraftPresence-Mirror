@@ -134,8 +134,9 @@ The following placeholders are available for use anywhere in CraftPresence:
 * General Placeholders:
     * `general.brand` - The Minecraft branding label
     * `general.icon` - The default display icon
-    * `general.version` - The Minecraft version label
     * `general.mods` - The amount of mods currently in your mods folder
+    * `general.title` - The Minecraft title label
+    * `general.version` - The Minecraft version label
 * Menu Event Placeholders (Loading and Main Menu):
     * `menu.message` - The main menu's display data, while applicable
     * `menu.icon` - The main menu's display icon, while applicable

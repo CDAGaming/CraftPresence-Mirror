@@ -146,6 +146,7 @@
   "craftpresence.placeholders.general.brand.description": "The Minecraft branding label",
   "craftpresence.placeholders.general.icon.description": "The default display icon",
   "craftpresence.placeholders.general.mods.description": "The amount of mods currently in your mods folder",
+  "craftpresence.placeholders.general.title.description": "The Minecraft title label",
   "craftpresence.placeholders.general.version.description": "The Minecraft version label",
   "craftpresence.placeholders.getArrayElement.description": "Retrieves the array element from the specified content, or null if unable",
   "craftpresence.placeholders.getArrayElement.usage": "getArrayElement(content=Array, index)",
