@@ -404,18 +404,13 @@ public class FileUtils {
     /**
      * Retrieve a List of Classes that extend or implement anything in the search list
      *
-     * @param searchList          The Super Type Classes to look for within the source packages specified
-     * @param includeExtraClasses Whether to include any extra subclasses
+     * @param searchList          The Super Type Classes to look for
      * @param sourcePackages      The root package directories to search within
      * @return The List of found class names from the search
      */
-    public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final boolean includeExtraClasses, final String... sourcePackages) {
+    public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final List<Class<?>> searchList, final String... sourcePackages) {
         final Map<String, ClassInfo> matchingClasses = StringUtils.newHashMap();
         final List<String> sourceData = StringUtils.newArrayList(sourcePackages);
-
-        if (!sourceData.isEmpty() && includeExtraClasses) {
-            sourceData.addAll(getModClassNames());
-        }
 
         Pair<Boolean, Map<String, ClassInfo>> subClassData = new Pair<>(false, StringUtils.newHashMap());
         for (Map.Entry<String, ClassInfo> classInfo : getClasses(sourceData).entrySet()) {
@@ -488,13 +483,12 @@ public class FileUtils {
     /**
      * Retrieve a List of Classes that extend or implement anything in the search list
      *
-     * @param searchTarget        The Super Type Class to look for within the source packages specified
-     * @param includeExtraClasses Whether to include any extra subclasses
+     * @param searchTarget        The Super Type Class to look for
      * @param sourcePackages      The root package directories to search within
      * @return The List of found classes from the search
      */
-    public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final Class<?> searchTarget, final boolean includeExtraClasses, final String... sourcePackages) {
-        return getClassNamesMatchingSuperType(StringUtils.newArrayList(searchTarget), includeExtraClasses, sourcePackages);
+    public static Map<String, ClassInfo> getClassNamesMatchingSuperType(final Class<?> searchTarget, final String... sourcePackages) {
+        return getClassNamesMatchingSuperType(StringUtils.newArrayList(searchTarget), sourcePackages);
     }
 
     /**
@@ -683,43 +677,6 @@ public class FileUtils {
             }
         }
         return results;
-    }
-
-    /**
-     * Retrieves a List of all readable Class Names for the active mods
-     *
-     * @return The list of viewable Mod Class Names
-     */
-    public static List<String> getModClassNames() {
-        final List<String> classNames = StringUtils.newArrayList();
-        final File[] mods = new File(ModUtils.modsDir).listFiles();
-
-        if (mods != null) {
-            for (File modFile : mods) {
-                if (getFileExtension(modFile).equals(".jar")) {
-                    try {
-                        final JarFile jarFile = new JarFile(modFile.getAbsolutePath());
-                        final Enumeration<JarEntry> allEntries = jarFile.entries();
-                        while (allEntries.hasMoreElements()) {
-                            final JarEntry entry = allEntries.nextElement();
-                            final String file = entry.getName();
-                            if (file.endsWith(".class")) {
-                                final String className = file.replace('/', '.').substring(0, file.length() - 6);
-                                classNames.add(className);
-                            }
-                        }
-                        jarFile.close();
-                    } catch (Throwable ex) {
-                        if (CommandUtils.isVerboseMode()) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }
-            }
-            return classNames;
-        } else {
-            return StringUtils.newArrayList();
-        }
     }
 
     /**

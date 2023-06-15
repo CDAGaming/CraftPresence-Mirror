@@ -201,7 +201,7 @@ public class DimensionUtils implements Module {
                 }
             } else {
                 // Fallback 2: Use Manual Class Lookup
-                for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+                for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
                     if (classInfo != null) {
                         try {
                             Class<?> classObj = FileUtils.findValidClass(MappingUtils.CLASS_LOADER, true, classInfo.getName());

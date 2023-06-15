@@ -192,7 +192,7 @@ public class BiomeUtils implements Module {
 
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Biome.class, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Biome.class).values()) {
                 if (classInfo != null) {
                     try {
                         Class<?> classObj = FileUtils.findValidClass(MappingUtils.CLASS_LOADER, true, classInfo.getName());

@@ -174,7 +174,7 @@ public class GuiUtils implements Module {
     public void getAllData() {
         final List<Class<?>> searchClasses = StringUtils.newArrayList(GuiScreen.class, GuiContainer.class);
 
-        for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+        for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);
             if (!DEFAULT_NAMES.contains(screenName)) {
                 DEFAULT_NAMES.add(screenName);

@@ -43,7 +43,6 @@ public class Advanced extends Module implements Serializable {
     public boolean debugMode = false;
     public boolean verboseMode = false;
     public int refreshRate = 2;
-    public boolean includeExtraGuiClasses = false;
     public boolean allowPlaceholderPreviews = false;
     public Gui guiSettings = new Gui();
     public Map<String, String> itemMessages = new HashMapBuilder<String, String>()
@@ -85,7 +84,6 @@ public class Advanced extends Module implements Serializable {
             debugMode = data.debugMode;
             verboseMode = data.verboseMode;
             refreshRate = data.refreshRate;
-            includeExtraGuiClasses = data.includeExtraGuiClasses;
             allowPlaceholderPreviews = data.allowPlaceholderPreviews;
             guiSettings = new Gui(data.guiSettings);
             itemMessages = data.itemMessages;

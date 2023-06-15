@@ -280,7 +280,6 @@ public class Legacy2Modern implements DataMigrator {
             .put("debugMode", "advancedSettings.debugMode")
             .put("verboseMode", "advancedSettings.verboseMode")
             .put("refreshRate", "advancedSettings.refreshRate")
-            .put("includeExtraGuiClasses", "advancedSettings.includeExtraGuiClasses")
             .put("allowPlaceholderPreviews", "advancedSettings.allowPlaceholderPreviews")
             .put("allowPlaceholderOperators", "advancedSettings.allowPlaceholderOperators")
             .put("guiMessages", "advancedSettings.guiSettings.guiData")

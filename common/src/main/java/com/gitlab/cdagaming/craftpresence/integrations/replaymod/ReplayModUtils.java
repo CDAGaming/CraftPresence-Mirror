@@ -142,7 +142,7 @@ public class ReplayModUtils implements Module {
     public void getAllData() {
         final List<Class<?>> searchClasses = StringUtils.newArrayList(abstractContainerClass, abstractScreenClass, abstractOverlayClass);
 
-        for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses, CraftPresence.CONFIG.advancedSettings.includeExtraGuiClasses).values()) {
+        for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);
             if (!CraftPresence.GUIS.GUI_NAMES.contains(screenName)) {
                 CraftPresence.GUIS.GUI_NAMES.add(screenName);
