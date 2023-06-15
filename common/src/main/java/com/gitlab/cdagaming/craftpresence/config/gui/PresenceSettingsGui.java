@@ -114,7 +114,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.details_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -128,7 +128,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.game_state_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -142,7 +142,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.large_image_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -156,7 +156,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.small_image_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -206,7 +206,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.small_image_key",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.icon",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -223,7 +223,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.large_image_key",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.iconArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.icon",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -244,7 +244,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.start_timestamp",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -258,7 +258,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.end_timestamp",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.generalArgs",
+                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )

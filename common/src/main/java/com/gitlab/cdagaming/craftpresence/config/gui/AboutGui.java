@@ -47,7 +47,7 @@ public class AboutGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.versionInfo",
+                        "gui.config.message.button.version_info",
                         () -> openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER))
                 )
         );

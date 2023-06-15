@@ -62,7 +62,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.checkForUpdates",
+                        "gui.config.message.button.check_for_updates",
                         () -> {
                             resetNotes();
                             modUpdater.checkForUpdates(this::updateNotes);
