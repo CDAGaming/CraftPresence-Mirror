@@ -783,7 +783,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param notice The List of Strings to render
      */
     public void renderNotice(final List<String> notice) {
-        renderNotice(notice, 2, 3, false, false);
+        renderNotice(notice, 2, 3);
     }
 
     /**
