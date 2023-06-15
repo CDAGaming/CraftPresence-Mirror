@@ -310,9 +310,9 @@ public class ServerUtils implements Module {
 
             // `player.position` Argument = Current Coordinates of Player
             final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(
-                    MathUtils.roundDouble(CraftPresence.player.posX, CraftPresence.CONFIG.advancedSettings.roundSize),
-                    MathUtils.roundDouble(CraftPresence.player.posY, CraftPresence.CONFIG.advancedSettings.roundSize),
-                    MathUtils.roundDouble(CraftPresence.player.posZ, CraftPresence.CONFIG.advancedSettings.roundSize)
+                    MathUtils.roundDouble(CraftPresence.player.posX, 3),
+                    MathUtils.roundDouble(CraftPresence.player.posY, 3),
+                    MathUtils.roundDouble(CraftPresence.player.posZ, 3)
             );
             if (!Objects.equals(newCoordinates, currentCoordinates)) {
                 currentCoordinates = newCoordinates;

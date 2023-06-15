@@ -43,7 +43,6 @@ public class Advanced extends Module implements Serializable {
     public boolean debugMode = false;
     public boolean verboseMode = false;
     public int refreshRate = 2;
-    public int roundSize = 3;
     public boolean includeExtraGuiClasses = false;
     public boolean allowPlaceholderPreviews = false;
     public Gui guiSettings = new Gui();
@@ -86,7 +85,6 @@ public class Advanced extends Module implements Serializable {
             debugMode = data.debugMode;
             verboseMode = data.verboseMode;
             refreshRate = data.refreshRate;
-            roundSize = data.roundSize;
             includeExtraGuiClasses = data.includeExtraGuiClasses;
             allowPlaceholderPreviews = data.allowPlaceholderPreviews;
             guiSettings = new Gui(data.guiSettings);
