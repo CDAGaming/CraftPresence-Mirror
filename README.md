@@ -319,6 +319,7 @@ With this in mind, please note the following:
 * **Minecraft 1.15 and below**
     * `MC-112292`: When interacting with the `RenderUtils#drawItemStack` method, used in the v2 Item Renderer, blocks
       using certain rendererers may fail to display properly.
+    * Aditionally, on 1.15.x exclusively, z-level issues may occur on Screens using this method
 * **Minecraft a1.1.2_01 and below**
     * On these versions, the Biome and Dimension Modules are **stubbed** with default data, due to the logic for these
       methods being missing (Having been initially implemented in Alpha 1.2.6)

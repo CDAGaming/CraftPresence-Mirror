@@ -187,11 +187,21 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.strip_translation_colors",
                         getCurrentData().stripTranslationColors,
                         null,
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
-                                )
-                        )
+                        () -> {
+                            if (stripTranslationColorsButton.isControlEnabled()) {
+                                drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
+                                        )
+                                );
+                            } else if (ModUtils.IS_TEXT_COLORS_BLOCKED) {
+                                drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                ModUtils.TRANSLATOR.translate("craftpresence.message.unsupported")
+                                        )
+                                );
+                            }
+                        }
                 )
         );
         showLoggingInChatButton = childFrame.addControl(
