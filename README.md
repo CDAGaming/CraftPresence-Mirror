@@ -261,9 +261,11 @@ The following functions are available for use anywhere in CraftPresence:
 * `getJsonElement(url|jsonString, path=Object...)` - Retrieves the json element from the specified content, or null if
   unable
 * `getMethods(classObj=Object|String|Class)` - Retrieve the available method names for a class object
+* `getNamespace(input)` - Retrieve the namespace portion of an Identifier-Style Object
 * `getNbt(data=Entity|ItemStack, path=String...)` - Attempt to retrieve the NBT Tag with the specified path
 * `getOrDefault(target, alternative ?: '')` - Retrieve the primary value if non-empty; Otherwise, use the secondary
   value
+* `getPath(input)` - Retrieve the path portion of an Identifier-Style Object
 * `getResult(input)` - Perform recursive conversion on the specified input
 * `hasAlphaNumeric(input)` - Whether the specified string contains alphanumeric characters
 * `hasField(classObj=Object|String|Class, fieldName)` - Retrieves whether the specified class contains the specified

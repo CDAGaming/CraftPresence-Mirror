@@ -58,6 +58,8 @@ public class FunctionsLib {
         ss.set("randomString", FunctionsLib::randomString);
         ss.set("getFirst", FunctionsLib::getFirst);
         ss.set("getNbt", FunctionsLib::getNbt);
+        ss.set("getNamespace", FunctionsLib::getNamespace);
+        ss.set("getPath", FunctionsLib::getPath);
 
         // MathUtils
         ss.set("isWithinValue", FunctionsLib::isWithinValue);
@@ -322,6 +324,18 @@ public class FunctionsLib {
                 NbtUtils.getNbt(data, path.toArray(new String[0]))
         );
         return result != null ? Value.object(result) : Value.null_();
+    }
+
+    public static Value getNamespace(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("getNamespace() can only be used with one argument, got %d.", argCount);
+        return Value.string(ss.pop().toString().split(":")[0]);
+    }
+
+    public static Value getPath(Starscript ss, int argCount) {
+        if (argCount != 1)
+            ss.error("getPath() can only be used with one argument, got %d.", argCount);
+        return Value.string(ss.pop().toString().split(":")[1]);
     }
 
     public static Value isWithinValue(Starscript ss, int argCount) {
