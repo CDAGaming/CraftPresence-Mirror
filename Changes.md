@@ -11,6 +11,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * Backend: Buildscripts have been overhauled to allow for future enhancements to CraftPresence
     * This includes the possibility of new ports *below* a1.1.2_01
+    * DiscordIPC has also been updated to integrate future-proofing for the Pomelo API Changes
 * Backend: Added `NBTLongArray` support in `NBTUtils#parseTag` in MC 1.13+
     * May adjust the output of some `getNbt` parses
 * Backend: Adjusted Button detection to resolve an IPC error
