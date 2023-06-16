@@ -129,13 +129,6 @@ subprojects {
             name = 'TerraformersMC'
             url = 'https://maven.terraformersmc.com/releases/'
         }
-        ivy {
-            name = "ReplayMod"
-            url = "https://minio.replaymod.com/replaymod/"
-            patternLayout { artifact("[artifact]-[revision](-[classifier])(.[ext])") }
-            metadataSources { it.artifact() }
-            content { includeGroup("com.replaymod") }
-        }
     }
 
     // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
