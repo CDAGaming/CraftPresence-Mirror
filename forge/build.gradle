@@ -22,27 +22,18 @@ dependencies {
     shadowCommon project(path: ':common'), { transitive false }
 }
 
+def resourceTargets = [
+        "mcmod.info", "META-INF/mods.toml", "mod_${mod_name}.info".toString()
+]
+def replaceProperties = [
+        version: baseVersionLabel.toString(), mcversion: mcVersionLabel.toString()
+]
+
 processResources {
-    inputs.property "version", "${baseVersionLabel}"
-    inputs.property "mcversion", "${mcVersionLabel}"
+    inputs.properties replaceProperties
 
-    // replace stuff in mcmod.info, nothing else
-    filesMatching("mcmod.info") {
-        // replace version and mcversion
-        expand "version": "${baseVersionLabel}",
-                "mcversion": "${mcVersionLabel}"
-    }
-
-    // replace stuff in mods.toml, nothing else
-    filesMatching("META-INF/mods.toml") {
-        expand "version": "${baseVersionLabel}",
-                "mcversion": "${mcVersionLabel}"
-    }
-
-    // replace stuff in mod_modId.info, nothing else
-    filesMatching("mod_${mod_name}.info") {
-        // replace version
-        expand "version": "${baseVersionLabel}"
+    filesMatching(resourceTargets) {
+        expand replaceProperties
     }
 
     filesMatching("mappings-${fmlName}.srg") {

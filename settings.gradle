@@ -1,28 +1,13 @@
 pluginManagement {
     repositories {
-        maven {
-            name = 'Fabric'
-            url = "https://maven.fabricmc.net/"
-        }
-        maven {
-            name = 'Forge'
-            url = "https://maven.minecraftforge.net/"
-        }
+        // Gradle Plugin Portal
+        gradlePluginPortal()
         // WagYourTail Mavens
         maven { url "https://maven.wagyourtail.xyz/releases" }
         maven { url "https://maven.wagyourtail.xyz/snapshots" }
-        // OSS Mavens
-        maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
-        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots" }
         // HypherionMC Mavens
         maven { url "https://maven.firstdarkdev.xyz/releases" }
         maven { url "https://maven.firstdarkdev.xyz/snapshots" }
-        mavenCentral()
-        gradlePluginPortal() {
-            content {
-                excludeGroup "org.apache.logging.log4j"
-            }
-        }
     }
 }
 
