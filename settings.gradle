@@ -17,4 +17,4 @@ for (String loaderName : enabled_platforms.split(",")) {
     include(loaderName)
 }
 
-rootProject.name = 'craftpresence'
+rootProject.name = 'CraftPresence'
