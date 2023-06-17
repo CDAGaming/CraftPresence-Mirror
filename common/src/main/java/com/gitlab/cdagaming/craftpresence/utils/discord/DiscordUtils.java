@@ -284,10 +284,12 @@ public class DiscordUtils {
         lastStartTime = newStartTime;
 
         // Initialize Static Data
-        syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
-        syncArgument("general.version", ModUtils.MCVersion);
         syncArgument("general.brand", ModUtils.BRAND);
         syncArgument("general.mods", FileUtils.getModCount());
+        syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
+        syncArgument("general.version", ModUtils.MCVersion);
+        // Initialize Additional Data
+        syncArgument("data.general.time", currentStartTime);
     }
 
     /**
@@ -1113,9 +1115,6 @@ public class DiscordUtils {
         )) {
             syncArgument("player.icon", playerName);
         }
-
-        // Sync any advanced arguments
-        syncArgument("data.general.time", currentStartTime);
 
         // Sync the Default Icon Argument
         syncArgument("general.icon", CraftPresence.CONFIG.generalSettings.defaultIcon);
