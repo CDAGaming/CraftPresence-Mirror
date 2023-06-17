@@ -277,7 +277,7 @@ public class DiscordUtils {
         }
 
         // Update Start Timestamp onInit, if needed
-        final long newStartTime = TimeUtils.getCurrentTime().getEpochSecond();
+        final long newStartTime = TimeUtils.getCurrentTime().toEpochMilli();
         currentStartTime = !updateTimestamp && lastStartTime > 0 ?
                 lastStartTime :
                 newStartTime;
@@ -289,7 +289,7 @@ public class DiscordUtils {
         syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
         syncArgument("general.version", ModUtils.MCVersion);
         // Initialize Additional Data
-        syncArgument("data.general.time", currentStartTime);
+        syncArgument("data.general.time", Long.toString(currentStartTime));
     }
 
     /**
@@ -642,9 +642,9 @@ public class DiscordUtils {
      * @param args The Specified Arguments to Synchronize for
      */
     public void syncTimestamp(final String... args) {
-        final long newTimestamp = TimeUtils.getCurrentTime().getEpochSecond();
+        final long newTimestamp = TimeUtils.getCurrentTime().toEpochMilli();
         for (String argumentName : args) {
-            syncArgument(argumentName, newTimestamp);
+            syncArgument(argumentName, Long.toString(newTimestamp));
         }
     }
 
