@@ -41,6 +41,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class TileEntityUtils implements Module {
     /**
      * An Instance of an Empty Item
