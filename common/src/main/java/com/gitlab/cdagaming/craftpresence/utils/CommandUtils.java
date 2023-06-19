@@ -37,7 +37,6 @@ import com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater.MCUpdaterU
 import com.gitlab.cdagaming.craftpresence.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.util.List;
@@ -255,20 +254,18 @@ public class CommandUtils {
 
         CraftPresence.SYSTEM.TICK_LOCK.lock();
         try {
-            if (CraftPresence.CLIENT.isAvailable()) {
-                for (Module module : modules.values()) {
-                    if (module.canBeLoaded()) {
-                        module.onTick();
-                        if (forceUpdateRPC && module.isInUse()) {
-                            module.updatePresence();
-                        }
+            for (Module module : modules.values()) {
+                if (module.canBeLoaded()) {
+                    module.onTick();
+                    if (forceUpdateRPC && module.isInUse()) {
+                        module.updatePresence();
                     }
                 }
-                if (forceUpdateRPC) {
-                    updateMenuPresence();
-                }
-                CraftPresence.CLIENT.onTick();
             }
+            if (forceUpdateRPC) {
+                updateMenuPresence();
+            }
+            CraftPresence.CLIENT.onTick();
         } catch (Throwable ex) {
             final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
             final String messagePrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
@@ -283,7 +280,7 @@ public class CommandUtils {
                     ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.verbose"));
                 }
             }
-            CraftPresence.CLIENT.shutDown(false);
+            CraftPresence.CLIENT.shutDown();
         } finally {
             CraftPresence.SYSTEM.TICK_LOCK.unlock();
             CraftPresence.SYSTEM.postTick();
@@ -292,39 +289,20 @@ public class CommandUtils {
 
     /**
      * Restarts and Initializes the RPC Data
-     *
-     * @param flushOverride Whether to purge existing RPC assets, to be later refreshed
      */
-    public static void rebootRPC(boolean flushOverride) {
-        final String clientId = CraftPresence.CONFIG.generalSettings.clientId;
-        flushOverride = flushOverride || !CraftPresence.CLIENT.CLIENT_ID.equals(
-                clientId
-        );
+    public static void setupRPC() {
         CraftPresence.CLIENT.shutDown();
 
-        if (flushOverride) {
-            DiscordAssetUtils.emptyData();
-            CraftPresence.CLIENT.CLIENT_ID = clientId;
-        }
+        CraftPresence.CLIENT.CLIENT_ID = CraftPresence.CONFIG.generalSettings.clientId;
+        CraftPresence.CLIENT.AUTO_REGISTER = CraftPresence.CONFIG.generalSettings.autoRegister;
+        CraftPresence.CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
+        CraftPresence.CLIENT.UPDATE_TIMESTAMP = CraftPresence.CONFIG.generalSettings.resetTimeOnInit;
 
-        final DiscordBuild preferredBuild = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
-        if (!CraftPresence.CLIENT.PREFERRED_CLIENT.equals(preferredBuild)) {
-            CraftPresence.CLIENT.PREFERRED_CLIENT = preferredBuild;
-        }
-        DiscordAssetUtils.loadAssets(clientId, true);
-        CraftPresence.CLIENT.init(CraftPresence.CONFIG.generalSettings.resetTimeOnInit);
+        CraftPresence.CLIENT.init();
     }
 
     /**
-     * Restarts and Initializes the RPC Data
-     */
-    public static void rebootRPC() {
-        rebootRPC(false);
-    }
-
-    /**
-     * Initializes Essential Data<p>
-     * (In this case, Pack Data and Available RPC Icons)
+     * Initializes Essential Module Data
      */
     public static void init() {
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
@@ -340,7 +318,6 @@ public class CommandUtils {
                 }
             }
         }
-        DiscordAssetUtils.loadAssets(CraftPresence.CONFIG.generalSettings.clientId, true);
         CraftPresence.KEYBINDINGS.register();
 
         // Setup Mod Integrations that are not Platform-Dependent
@@ -360,7 +337,7 @@ public class CommandUtils {
         final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
         final String formattedIcon = CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon);
 
-        CraftPresence.CLIENT.clearPartyData(true, false);
+        CraftPresence.CLIENT.clearPartyData();
         CraftPresence.CLIENT.syncOverride(currentData, "menu.message", "menu.icon");
         CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
         CraftPresence.CLIENT.syncArgument("menu.icon", formattedIcon);

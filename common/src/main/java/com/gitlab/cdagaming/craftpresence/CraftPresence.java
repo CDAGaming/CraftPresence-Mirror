@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
-import com.jagrosh.discordipc.entities.DiscordBuild;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -144,23 +143,13 @@ public class CraftPresence {
         CONFIG = Config.getInstance();
         CommandUtils.init();
 
-        try {
-            CLIENT.CLIENT_ID = CONFIG.generalSettings.clientId;
-            CLIENT.AUTO_REGISTER = CONFIG.generalSettings.autoRegister;
-            CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CONFIG.generalSettings.preferredClientLevel);
-            CLIENT.setup();
-            CLIENT.init(true);
-        } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.load"));
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
-        } finally {
-            if (initCallback != null) {
-                initCallback.run();
-            }
-            initialized = true;
+        CLIENT.setup();
+        CommandUtils.setupRPC();
+
+        if (initCallback != null) {
+            initCallback.run();
         }
+        initialized = true;
     }
 
     /**

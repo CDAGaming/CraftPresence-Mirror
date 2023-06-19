@@ -241,12 +241,12 @@ public final class Config extends Module implements Serializable {
             needsReboot = true; // Reset Time On Init changed
         } else if (generalSettings.autoRegister != old.generalSettings.autoRegister) {
             needsReboot = true; // Auto Register changed
-        } else if (!accessibilitySettings.languageId.equals(old.accessibilitySettings.languageId)) { // Fallback Language ID Changed
-            ModUtils.TRANSLATOR.syncTranslations();
+        } else if (!accessibilitySettings.languageId.equals(old.accessibilitySettings.languageId)) {
+            ModUtils.TRANSLATOR.syncTranslations(); // Fallback Language ID Changed
         }
 
         if (needsReboot) {
-            CommandUtils.rebootRPC();
+            CommandUtils.setupRPC();
         }
     }
 

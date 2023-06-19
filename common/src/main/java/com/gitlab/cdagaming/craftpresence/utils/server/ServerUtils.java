@@ -228,7 +228,7 @@ public class ServerUtils implements Module {
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
         CraftPresence.CLIENT.clearOverride("server.message", "server.icon");
-        CraftPresence.CLIENT.clearPartyData(true, false);
+        CraftPresence.CLIENT.clearPartyData();
     }
 
     @Override

@@ -32,6 +32,11 @@ import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
  */
 public enum DiscordStatus {
     /**
+     * Constant for the "closed" Discord Status.
+     */
+    Closed,
+
+    /**
      * Constant for the "disconnected" Discord Status.
      */
     Disconnected,

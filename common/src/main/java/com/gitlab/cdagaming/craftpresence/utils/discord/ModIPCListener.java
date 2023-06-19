@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.CommandsGui;
 import com.google.gson.JsonObject;
@@ -82,12 +81,18 @@ public class ModIPCListener implements IPCListener {
 
     @Override
     public void onClose(IPCClient client, JsonObject json) {
-        closeData(null);
+        // Closing the Game, nothing else to do here
+        if (CraftPresence.CLIENT.isAvailable()) {
+            CraftPresence.CLIENT.STATUS = DiscordStatus.Closed;
+        }
     }
 
     @Override
     public void onDisconnect(IPCClient client, Throwable t) {
-        closeData(t.getMessage());
+        if (CraftPresence.CLIENT.STATUS != DiscordStatus.Disconnected) {
+            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.rpc", t.getMessage()));
+            CraftPresence.CLIENT.shutDown(true);
+        }
     }
 
     @Override
@@ -106,16 +111,6 @@ public class ModIPCListener implements IPCListener {
             CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
             CraftPresence.CLIENT.CURRENT_USER = client.getCurrentUser();
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.load", CraftPresence.CLIENT.CLIENT_ID, CraftPresence.CLIENT.CURRENT_USER != null ? CraftPresence.CLIENT.CURRENT_USER.getName() : "null"));
-        }
-    }
-
-    private void closeData(final String disconnectMessage) {
-        if (CraftPresence.CLIENT.STATUS != DiscordStatus.Disconnected) {
-            if (!StringUtils.isNullOrEmpty(disconnectMessage)) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.rpc", disconnectMessage));
-            }
-            CraftPresence.CLIENT.STATUS = DiscordStatus.Disconnected;
-            CraftPresence.CLIENT.shutDown();
         }
     }
 }

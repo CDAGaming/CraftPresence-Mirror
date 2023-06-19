@@ -112,7 +112,7 @@ public interface Module {
      * @return {@link Boolean#TRUE} if this module can currently be loaded
      */
     default boolean canBeLoaded() {
-        return CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
+        return CraftPresence.SYSTEM.HAS_GAME_LOADED;
     }
 
     /**

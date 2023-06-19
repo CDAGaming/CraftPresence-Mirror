@@ -31,7 +31,6 @@ import com.gitlab.cdagaming.craftpresence.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
@@ -93,7 +92,7 @@ public class DiscordUtils {
     /**
      * The current RPC Status (Ex: ready, errored, disconnected)
      */
-    public DiscordStatus STATUS = DiscordStatus.Disconnected;
+    public DiscordStatus STATUS = DiscordStatus.Closed;
     /**
      * The Current Message tied to the Party/Game Status Field of the RPC
      */
@@ -146,6 +145,10 @@ public class DiscordUtils {
      * Whether to register this application as an application with discord
      */
     public boolean AUTO_REGISTER;
+    /**
+     * Whether to update the Starting Timestamp upon RPC Initialization
+     */
+    public boolean UPDATE_TIMESTAMP;
     /**
      * The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
      */
@@ -221,15 +224,14 @@ public class DiscordUtils {
      */
     private long lastStartTime;
     /**
-     * The duration or timestamp of the current running instance
+     * Whether the Auto-Reconnection Thread is currently in progress
      */
-    private long currentStartTime;
+    private boolean connectThreadActive = false;
 
     /**
      * Setup any Critical Methods needed for the RPC
-     * <p>In this case, ensures a Thread is in place to shut down the RPC onExit
      */
-    public synchronized void setup() {
+    public void setup() {
         Runtime.getRuntime().addShutdownHook(
                 CommandUtils.getThreadFactory().newThread(() -> {
                     CraftPresence.SYSTEM.IS_GAME_CLOSING = true;
@@ -237,25 +239,68 @@ public class DiscordUtils {
                     shutDown();
                 })
         );
+
+        // Setup Default / Static Placeholders
+        FunctionsLib.init(scriptEngine);
+        syncArgument("general.brand", ModUtils.BRAND);
+        syncArgument("general.mods", FileUtils.getModCount());
+        syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
+        syncArgument("general.version", ModUtils.MCVersion);
     }
 
     /**
-     * Initializes and Synchronizes Initial Rich Presence Data
+     * Initializes Critical Rich Presence Data
      *
-     * @param debugMode       Whether to enable debug mode for this instance
-     * @param verboseMode     Whether to enable verbose mode for this instance
-     * @param updateTimestamp Whether to update the starting timestamp
+     * @param debugMode   Whether to enable debug mode for this instance
+     * @param verboseMode Whether to enable verbose mode for this instance
      */
-    public synchronized void init(final boolean debugMode, final boolean verboseMode, final boolean updateTimestamp) {
-        try {
-            // Create IPC Instance and Listener and Make a Connection if possible
-            scriptEngine = new Starscript();
-            FunctionsLib.init(scriptEngine);
+    public void init(final boolean debugMode, final boolean verboseMode) {
+        // Create IPC Instance
+        ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
+        ipcInstance.setListener(new ModIPCListener());
+        // Mark as Disconnected to trigger auto-sync
+        STATUS = DiscordStatus.Disconnected;
+    }
 
-            ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
-            ipcInstance.setListener(new ModIPCListener());
+    /**
+     * Initializes Critical Initial Rich Presence Data
+     *
+     * @param debugMode Whether to enable debug mode for this instance
+     */
+    public void init(final boolean debugMode) {
+        init(debugMode, CommandUtils.isVerboseMode());
+    }
+
+    /**
+     * Initializes Critical Initial Rich Presence Data
+     */
+    public void init() {
+        init(CommandUtils.isDebugMode());
+    }
+
+    /**
+     * Synchronizes Initial Rich Presence Data
+     */
+    public void postInit() {
+        // Update Start Timestamp, if needed
+        final long newStartTime = TimeUtils.toEpoch();
+        final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
+                lastStartTime :
+                newStartTime;
+        lastStartTime = currentStartTime;
+        syncArgument("data.general.time", Long.toString(currentStartTime));
+
+        // Initialize Discord Assets
+        DiscordAssetUtils.loadAssets(CLIENT_ID, true);
+    }
+
+    /**
+     * Attempt to Connect to the {@link IPCClient} service
+     */
+    private void attemptConnection() {
+        try {
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
-                ipcInstance.connect(PREFERRED_CLIENT, DiscordBuild.ANY);
+                ipcInstance.connect(PREFERRED_CLIENT);
             } else {
                 ipcInstance.connect();
             }
@@ -264,51 +309,14 @@ public class DiscordUtils {
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_JOIN);
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_JOIN_REQUEST);
             ipcInstance.subscribe(IPCClient.Event.ACTIVITY_SPECTATE);
+
+            postInit();
+            connectThreadActive = false;
         } catch (Exception ex) {
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         }
-
-        // Ensure Initial Data Resets properly
-        synchronized (placeholderData) {
-            overrideData.clear();
-            placeholderData.clear();
-        }
-
-        // Update Start Timestamp onInit, if needed
-        final long newStartTime = TimeUtils.toEpoch();
-        currentStartTime = !updateTimestamp && lastStartTime > 0 ?
-                lastStartTime :
-                newStartTime;
-        lastStartTime = newStartTime;
-
-        // Initialize Static Data
-        syncArgument("general.brand", ModUtils.BRAND);
-        syncArgument("general.mods", FileUtils.getModCount());
-        syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
-        syncArgument("general.version", ModUtils.MCVersion);
-        // Initialize Additional Data
-        syncArgument("data.general.time", Long.toString(currentStartTime));
-    }
-
-    /**
-     * Initializes and Synchronizes Initial Rich Presence Data
-     *
-     * @param debugMode       Whether to enable debug mode for this instance
-     * @param updateTimestamp Whether to update the starting timestamp
-     */
-    public synchronized void init(final boolean debugMode, final boolean updateTimestamp) {
-        init(debugMode, CommandUtils.isVerboseMode(), updateTimestamp);
-    }
-
-    /**
-     * Initializes and Synchronizes Initial Rich Presence Data
-     *
-     * @param updateTimestamp Whether to update the starting timestamp
-     */
-    public synchronized void init(final boolean updateTimestamp) {
-        init(CommandUtils.isDebugMode(), updateTimestamp);
     }
 
     /**
@@ -1183,9 +1191,20 @@ public class DiscordUtils {
      * @param presence The New Presence Data to apply
      */
     public void updatePresence(final RichPresence presence) {
-        if (presence != null &&
-                (currentPresence == null || !presence.toJson().toString().equals(currentPresence.toJson().toString())) &&
-                ipcInstance.getStatus() == PipeStatus.CONNECTED) {
+        if (!isConnected() && !isClosed() && !connectThreadActive) {
+            CommandUtils.getThreadFactory().newThread(
+                    () -> {
+                        while (!isConnected()) {
+                            attemptConnection();
+                        }
+                    }
+            ).start();
+            connectThreadActive = true;
+        }
+
+        if (isConnected() && presence != null &&
+                (currentPresence == null || !presence.toJson().toString().equals(currentPresence.toJson().toString()))
+        ) {
             ipcInstance.sendRichPresence(presence);
             currentPresence = presence;
         }
@@ -1306,29 +1325,20 @@ public class DiscordUtils {
 
     /**
      * Clears Related Party Session Information from the RPC, and updates if needed
-     *
-     * @param clearRequestData Whether to clear Ask to Join / Spectate Request Data
-     * @param updateRPC        Whether to immediately update the RPC following changes
      */
-    public void clearPartyData(final boolean clearRequestData, final boolean updateRPC) {
-        if (clearRequestData) {
-            respondToJoinRequest(IPCClient.ApprovalMode.DENY);
-        }
+    public void clearPartyData() {
+        respondToJoinRequest(IPCClient.ApprovalMode.DENY);
+
         JOIN_SECRET = null;
         PARTY_ID = null;
         PARTY_SIZE = 0;
         PARTY_MAX = 0;
-        if (updateRPC) {
-            updatePresence();
-        }
     }
 
     /**
-     * Clears Presence Data from the RPC, and updates if needed
-     *
-     * @param partyClearArgs Arguments for {@link DiscordUtils#clearPartyData(boolean, boolean)}
+     * Clears all Presence Data from the RPC
      */
-    public void clearPresenceData(final Tuple<Boolean, Boolean, Boolean> partyClearArgs) {
+    public void clearPresenceData() {
         GAME_STATE = "";
         DETAILS = "";
         LARGE_IMAGE_ASSET = null;
@@ -1338,51 +1348,45 @@ public class DiscordUtils {
         SMALL_IMAGE_KEY = "";
         SMALL_IMAGE_TEXT = "";
         BUTTONS = new JsonArray();
+        clearPartyData();
 
-        if (partyClearArgs.getFirst()) {
-            clearPartyData(partyClearArgs.getSecond(), partyClearArgs.getThird());
-        }
+        // Clear Available Discord Assets
+        DiscordAssetUtils.emptyData();
     }
 
     /**
-     * Shutdown the RPC and close related resources, as well as Clearing any remaining Runtime Client Data
+     * Shutdown the RPC and close related resources
      *
-     * @param clearModules Whether to clear Module Data
+     * @param allowReconnects Whether to mark the {@link DiscordStatus} to allow auto-reconnections
      */
-    public synchronized void shutDown(final boolean clearModules) {
-        if (CraftPresence.SYSTEM.HAS_LOADED) {
-            try {
+    public void shutDown(final boolean allowReconnects) {
+        try {
+            if (isConnected()) {
                 ipcInstance.close();
-            } catch (Exception ex) {
-                if (CommandUtils.isVerboseMode()) {
-                    ex.printStackTrace();
-                }
             }
-
-            // Clear User Data before final clear and shutdown
-            STATUS = DiscordStatus.Disconnected;
-            currentPresence = null;
-            // Empty RPC Data
-            clearPresenceData(new Tuple<>(true, true, false));
-
-            CURRENT_USER = null;
-            lastRequestedImageData = new Pair<>();
-            cachedImageData.clear();
-
-            if (clearModules) {
-                CommandUtils.clearModuleData();
+        } catch (Exception ex) {
+            if (CommandUtils.isVerboseMode()) {
+                ex.printStackTrace();
             }
-
-            CraftPresence.SYSTEM.HAS_LOADED = false;
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
         }
+
+        // Clear User Data before final clear and shutdown
+        currentPresence = null;
+        clearPresenceData();
+        STATUS = allowReconnects ? DiscordStatus.Disconnected : DiscordStatus.Closed;
+
+        CURRENT_USER = null;
+        lastRequestedImageData = new Pair<>();
+        cachedImageData.clear();
+
+        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
     }
 
     /**
-     * Shutdown the RPC and close related resources, as well as Clearing any remaining Runtime Client Data
+     * Shutdown the RPC and close related resources
      */
-    public synchronized void shutDown() {
-        shutDown(true);
+    public void shutDown() {
+        shutDown(false);
     }
 
     /**
@@ -1392,6 +1396,11 @@ public class DiscordUtils {
      * @return A New Instance of {@link RichPresence}
      */
     public RichPresence buildRichPresence(final PresenceData configData) {
+        // Do not compile Presence while offline or in-progress of connecting
+        if (!isAvailable() || !isConnected() || connectThreadActive) {
+            return null;
+        }
+
         // Format Presence based on Arguments available in argumentData
         DETAILS = StringUtils.formatWord(getResult(configData.details, "details"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
         GAME_STATE = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
@@ -1539,7 +1548,25 @@ public class DiscordUtils {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public boolean isAvailable() {
-        return STATUS != DiscordStatus.Disconnected && STATUS != DiscordStatus.Invalid;
+        return STATUS != DiscordStatus.Disconnected && !isClosed() && STATUS != DiscordStatus.Invalid;
+    }
+
+    /**
+     * Whether the RPC Service is currently uninitialized or manually closed
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean isClosed() {
+        return STATUS == DiscordStatus.Closed;
+    }
+
+    /**
+     * Whether the RPC Service is currently connected to an IPC Pipe
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean isConnected() {
+        return ipcInstance.getStatus() == PipeStatus.CONNECTED;
     }
 
     /**
@@ -1549,7 +1576,9 @@ public class DiscordUtils {
      */
     public void respondToJoinRequest(final IPCClient.ApprovalMode mode) {
         if (STATUS == DiscordStatus.JoinRequest) {
-            ipcInstance.respondToJoinRequest(REQUESTER_USER, mode);
+            if (isConnected()) {
+                ipcInstance.respondToJoinRequest(REQUESTER_USER, mode);
+            }
             STATUS = DiscordStatus.Ready;
         }
         CraftPresence.SYSTEM.TIMER = 0;
