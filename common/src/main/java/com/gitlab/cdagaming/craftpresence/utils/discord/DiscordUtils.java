@@ -1515,12 +1515,12 @@ public class DiscordUtils {
         // Menu Tick Event
         final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
         final boolean isFullyLoaded = CraftPresence.SYSTEM.HAS_LOADED && CraftPresence.SYSTEM.HAS_GAME_LOADED;
-        if (!isFullyLoaded && !isMenuActive) {
+        if (!isFullyLoaded) {
             // Ensure Loading Presence has already passed, before any other type of presence displays
             CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
-        } else if (CraftPresence.player == null && CommandUtils.getMenuState() != CommandUtils.MenuStatus.MainMenu) {
+        } else if (CraftPresence.player == null) {
             CommandUtils.setMenuState(CommandUtils.MenuStatus.MainMenu);
-        } else if (CraftPresence.player != null && isMenuActive) {
+        } else if (isMenuActive) {
             CommandUtils.clearMenuState();
         }
         // Join Request Tick Event

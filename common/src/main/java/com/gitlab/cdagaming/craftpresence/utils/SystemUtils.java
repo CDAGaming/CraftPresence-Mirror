@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.impl.LockObject;
-import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -294,12 +293,8 @@ public class SystemUtils {
         // Every <passTime> Seconds, refresh Callbacks and load state status
         if (LAST_TICKED != ELAPSED_TIME && ELAPSED_TIME % getRefreshRate() == 0) {
             if (!refreshedCallbacks) {
-                if (!HAS_LOADED && CraftPresence.CLIENT.STATUS == DiscordStatus.Ready) {
-                    HAS_LOADED = true;
-                }
-                if (HAS_LOADED && !HAS_GAME_LOADED && CraftPresence.instance.currentScreen != null) {
-                    HAS_GAME_LOADED = true;
-                }
+                HAS_LOADED = CraftPresence.CLIENT.isAvailable();
+                HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
                 refreshedCallbacks = true;
             }
         }
