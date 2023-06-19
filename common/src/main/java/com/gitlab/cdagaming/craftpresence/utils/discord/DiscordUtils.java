@@ -1358,29 +1358,29 @@ public class DiscordUtils {
      * @param allowReconnects Whether to mark the {@link DiscordStatus} to allow auto-reconnections
      */
     public void shutDown(final boolean allowReconnects) {
-        try {
-            if (isConnected()) {
+        if (isAvailable()) {
+            try {
                 ipcInstance.close();
+            } catch (Exception ex) {
+                if (CommandUtils.isVerboseMode()) {
+                    ex.printStackTrace();
+                }
             }
-        } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
+
+            // Clear User Data before final clear and shutdown
+            currentPresence = null;
+            clearPresenceData();
+            STATUS = allowReconnects ? DiscordStatus.Disconnected : DiscordStatus.Closed;
+
+            CURRENT_USER = null;
+            lastRequestedImageData = new Pair<>();
+            cachedImageData.clear();
+
+            // Clear Available Discord Assets
+            DiscordAssetUtils.emptyData();
+
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
         }
-
-        // Clear User Data before final clear and shutdown
-        currentPresence = null;
-        clearPresenceData();
-        STATUS = allowReconnects ? DiscordStatus.Disconnected : DiscordStatus.Closed;
-
-        CURRENT_USER = null;
-        lastRequestedImageData = new Pair<>();
-        cachedImageData.clear();
-
-        // Clear Available Discord Assets
-        DiscordAssetUtils.emptyData();
-
-        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
     }
 
     /**

@@ -310,9 +310,13 @@ public class CommandsGui extends ExtendedScreen {
                     CommandUtils.reloadData(true);
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reload.complete");
                 } else if (executionCommandArgs[0].equalsIgnoreCase("shutdown")) {
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.shutdown.pre");
-                    CraftPresence.CLIENT.shutDown();
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.shutdown.post");
+                    if (CraftPresence.CLIENT.isAvailable()) {
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.shutdown.pre");
+                        CraftPresence.CLIENT.shutDown();
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.shutdown.post");
+                    } else {
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.offline");
+                    }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reboot")) {
                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reboot.pre");
                     CommandUtils.setupRPC();
