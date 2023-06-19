@@ -257,11 +257,11 @@ public class ImageUtils {
                     if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
                         if (doesContinue) {
                             bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(
-                                    TimeUtils.getCurrentTime().toEpochMilli()
+                                    TimeUtils.toEpoch()
                             );
                         } else if (shouldRepeat) {
                             bufferData.getSecond().get(bufferData.setFirst(0)).setRenderTime(
-                                    TimeUtils.getCurrentTime().toEpochMilli()
+                                    TimeUtils.toEpoch()
                             );
                         }
                     }
@@ -273,7 +273,7 @@ public class ImageUtils {
                     if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
                         if (doesContinue) {
                             bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(
-                                    TimeUtils.getCurrentTime().toEpochMilli()
+                                    TimeUtils.toEpoch()
                             );
                         } else if (shouldRepeat) {
                             bufferData.setFirst(0);

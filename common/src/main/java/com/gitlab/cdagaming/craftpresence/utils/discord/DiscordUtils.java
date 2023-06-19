@@ -277,7 +277,7 @@ public class DiscordUtils {
         }
 
         // Update Start Timestamp onInit, if needed
-        final long newStartTime = TimeUtils.getCurrentTime().toEpochMilli();
+        final long newStartTime = TimeUtils.toEpoch();
         currentStartTime = !updateTimestamp && lastStartTime > 0 ?
                 lastStartTime :
                 newStartTime;
@@ -642,7 +642,7 @@ public class DiscordUtils {
      * @param args The Specified Arguments to Synchronize for
      */
     public void syncTimestamp(final String... args) {
-        final long newTimestamp = TimeUtils.getCurrentTime().toEpochMilli();
+        final long newTimestamp = TimeUtils.toEpoch();
         for (String argumentName : args) {
             syncArgument(argumentName, Long.toString(newTimestamp));
         }

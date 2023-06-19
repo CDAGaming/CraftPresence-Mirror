@@ -307,6 +307,6 @@ public class ImageFrame {
      * @return Whether this frame has rendered up to or past the delay
      */
     public boolean shouldRenderNext() {
-        return TimeUtils.getCurrentTime().toEpochMilli() - getRenderTime() > getDelay() * 10L;
+        return TimeUtils.toEpoch() - getRenderTime() > getDelay() * 10L;
     }
 }

@@ -250,18 +250,26 @@ public class TimeUtils {
     }
 
     /**
-     * Gets the number of seconds from the Java Epoch, derived from specified args
+     * Gets the number of milliseconds from the Java Epoch, derived from specified args
      *
      * @param data The timestamp data to interpret
      * @return the number of seconds from the Java Epoch, from specified args
      */
     public static long toEpoch(final Instant data) {
-        // Convert milliseconds to seconds
-        return data != null ? data.getEpochSecond() : 0L;
+        return data != null ? data.toEpochMilli() : 0L;
     }
 
     /**
-     * Retrieve the current time
+     * Gets the number of milliseconds from the Java Epoch, derived from specified args
+     *
+     * @return the number of seconds from the Java Epoch, from specified args
+     */
+    public static long toEpoch() {
+        return toEpoch(getCurrentTime());
+    }
+
+    /**
+     * Retrieve the current time, using the System Clock
      *
      * @return the current timestamp, as an {@link Instant}
      */
