@@ -5,6 +5,7 @@
   "craftpresence.command.export.post": "§2§lЗавершен экспорт %1$s значков из ID клиента %2$s со статусом полного копирования %3$s",
   "craftpresence.command.export.pre": "§6§lНачат экспорт %1$s значков из ID клиента %2$s со статусом полного копирования %3$s",
   "craftpresence.command.export.progress": "§6§lЭкспорт актива(ов) из идентификатора клиента %1$s: %2$s из %3$s",
+  "craftpresence.command.offline": "§c§lUnable to execute command - Client is currently Offline...",
   "craftpresence.command.reboot.post": "§2§lCraftPresence был перезагружен!",
   "craftpresence.command.reboot.pre": "§6§lПерезагрузка CraftPresence...",
   "craftpresence.command.reload": "§6§lПерезагрузка данных CraftPresence в зависимости от настроек!",
