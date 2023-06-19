@@ -1,14 +1,17 @@
 # CraftPresence Changes
 
-## v2.0.10 (06/20/2023)
+## v2.1.0 (06/27/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.0.7...release%2Fv2.0.10)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.0.7...release%2Fv2.1.0)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
+* Backend: Numerous System Changes to the RPC and Scripting Engine to allow for proper "offline mode" support
+    * These changes are designed to add support for re-connecting to Discord automatically following a disconnect
+    * They also allow for configuring the Modules without needing the RPC to be active.
 * Backend: Buildscripts have been overhauled to allow for future enhancements to CraftPresence
     * This includes the possibility of new ports *below* a1.1.2_01
     * DiscordIPC has also been updated to integrate future-proofing for the Pomelo API Changes
@@ -22,6 +25,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Added two new function placeholders, for Identifier/ResourceLocation usage
     * `getNamespace(input)` - Retrieve the namespace portion of an Identifier-Style Object
     * `getPath(input)` - Retrieve the path portion of an Identifier-Style Object
+* All existing `.time` placeholders now are sync'd as `milliseconds` instead of `seconds`
+    * To account for this change going over Starscript's limits, it's type is now a `String`
+    * This type can however be converted back into the type that you need it for
 * Misc Changes to remove and/or consolodate deprecated/unused data
     * Backend: Removed `loadFileAsDLL` and related translations -- unused since v1.6.0
     * Added a new `general.title` placeholder (`Minecraft {general.version}`) -- `Legacy2Modern` layer also updated
@@ -52,6 +58,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * The new check now match the same Regex as the `splitTextByNewLine` method instead of just `\\n`
 * Removed the ability for Color Codes to be present in Text Logs
     * This was normally only supposed to be allowed when Logs can be pushed to chat
+* Work around an Issue in Starscript that would cause some placeholders to be unexpectedly removed
 
 ___
 
