@@ -5,6 +5,7 @@
   "craftpresence.command.export.post": "§2§lCompleted export of %1$s Asset(s) from Client Id %2$s with Full Copy Status as %3$s",
   "craftpresence.command.export.pre": "§6§lBeginning export of %1$s Asset(s) from Client Id %2$s with Full Copy Status as %3$s",
   "craftpresence.command.export.progress": "§6§lExporting Asset(s) from Client Id %1$s: %2$s of %3$s",
+  "craftpresence.command.offline": "§c§lUnable to execute command - Client is currently Offline...",
   "craftpresence.command.reboot.post": "§2§lCraftPresence has been rebooted!",
   "craftpresence.command.reboot.pre": "§6§lRebooting CraftPresence...",
   "craftpresence.command.reload": "§6§lReloading CraftPresence data, depending on settings!",
