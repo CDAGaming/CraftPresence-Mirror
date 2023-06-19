@@ -51,6 +51,11 @@ public class GuiUtils implements Module {
      */
     public final Map<String, ClassInfo> GUI_CLASSES = StringUtils.newHashMap();
     /**
+     * If an Element is being focused on in a GUI or if a GUI is currently open
+     * <p>Conditions depend on Game Version
+     */
+    public boolean isFocused = false;
+    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
@@ -110,6 +115,7 @@ public class GuiUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
+        isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.isFocused();
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {

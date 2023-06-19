@@ -154,8 +154,7 @@ public class KeyUtils {
                         new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.accessibilitySettings.configKeyCode, "key.craftpresence.category"),
                         new Tuple<>(
                                 () -> {
-                                    final boolean isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.isFocused();
-                                    if (!isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
+                                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
                                         RenderUtils.openScreen(CraftPresence.instance, new MainGui(CraftPresence.instance.currentScreen));
                                     }
                                 },
