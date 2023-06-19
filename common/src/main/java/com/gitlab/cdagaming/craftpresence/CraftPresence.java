@@ -147,7 +147,7 @@ public class CraftPresence {
         try {
             CLIENT.CLIENT_ID = CONFIG.generalSettings.clientId;
             CLIENT.AUTO_REGISTER = CONFIG.generalSettings.autoRegister;
-            CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
+            CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CONFIG.generalSettings.preferredClientLevel);
             CLIENT.setup();
             CLIENT.init(true);
         } catch (Exception ex) {
