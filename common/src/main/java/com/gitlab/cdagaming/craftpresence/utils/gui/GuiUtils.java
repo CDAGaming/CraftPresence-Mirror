@@ -31,7 +31,6 @@ import com.gitlab.cdagaming.craftpresence.impl.Module;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -51,15 +50,6 @@ public class GuiUtils implements Module {
      * A List of the detected Gui Screen Classes
      */
     public final Map<String, ClassInfo> GUI_CLASSES = StringUtils.newHashMap();
-    /**
-     * If the Config GUI is currently open
-     */
-    public boolean configGUIOpened = false;
-    /**
-     * If an Element is being focused on in a GUI or if a GUI is currently open
-     * <p>Conditions depend on Game Version
-     */
-    public boolean isFocused = false;
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -120,7 +110,6 @@ public class GuiUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
-        isFocused = CraftPresence.instance.currentScreen != null && CraftPresence.instance.currentScreen.isFocused();
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
@@ -137,12 +126,6 @@ public class GuiUtils implements Module {
             }
         } else if (isInUse()) {
             emptyData();
-        }
-
-        // Fallback Switch for Config Gui, used for situations where the Gui is forced closed
-        // Example: This can occur during server transitions where you transition to a different world
-        if (configGUIOpened && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
-            configGUIOpened = false;
         }
     }
 

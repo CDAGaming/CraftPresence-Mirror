@@ -50,7 +50,6 @@ public class MainGui extends ConfigurationGui<Config> {
     @Override
     protected void appendControls() {
         super.appendControls();
-        CraftPresence.GUIS.configGUIOpened = true;
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
@@ -224,11 +223,8 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == Keyboard.KEY_ESCAPE) {
-            if (getCurrentData().hasChanged) {
-                syncData();
-            }
-            CraftPresence.GUIS.configGUIOpened = false;
+        if (keyCode == Keyboard.KEY_ESCAPE && getCurrentData().hasChanged) {
+            syncData();
         }
         super.keyTyped(typedChar, keyCode);
     }
@@ -289,7 +285,6 @@ public class MainGui extends ConfigurationGui<Config> {
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
             getCurrentData().applyFrom(getOriginalData());
         }
-        CraftPresence.GUIS.configGUIOpened = false;
     }
 
     @Override
