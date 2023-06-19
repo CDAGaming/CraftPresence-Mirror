@@ -213,16 +213,6 @@ public class CommandUtils {
     }
 
     /**
-     * Clears Runtime Client Data from all active Modules (PARTIAL Clear)
-     */
-    public static void clearModuleData() {
-        for (Module module : modules.values()) {
-            module.clearClientData();
-        }
-        clearMenuState();
-    }
-
-    /**
      * Adds a module for ticking and RPC Syncronization
      *
      * @param moduleId The name of the module

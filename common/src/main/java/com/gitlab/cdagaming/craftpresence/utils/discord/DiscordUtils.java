@@ -1336,7 +1336,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Clears all Presence Data from the RPC
+     * Clears all Data from the RPC Presence Fields
      */
     public void clearPresenceData() {
         GAME_STATE = "";
@@ -1348,10 +1348,8 @@ public class DiscordUtils {
         SMALL_IMAGE_KEY = "";
         SMALL_IMAGE_TEXT = "";
         BUTTONS = new JsonArray();
-        clearPartyData();
 
-        // Clear Available Discord Assets
-        DiscordAssetUtils.emptyData();
+        clearPartyData();
     }
 
     /**
@@ -1378,6 +1376,9 @@ public class DiscordUtils {
         CURRENT_USER = null;
         lastRequestedImageData = new Pair<>();
         cachedImageData.clear();
+
+        // Clear Available Discord Assets
+        DiscordAssetUtils.emptyData();
 
         ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
     }
