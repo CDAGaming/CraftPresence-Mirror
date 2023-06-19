@@ -202,32 +202,36 @@ public class CommandsGui extends ExtendedScreen {
                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[0])) {
                 if (executionCommandArgs[0].equalsIgnoreCase("request")) {
-                    if (executionCommandArgs.length == 1) {
-                        if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.info",
-                                    CraftPresence.CLIENT.REQUESTER_USER.getName(), CraftPresence.SYSTEM.TIMER
-                            );
-                        } else {
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
-                        }
-                    } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
-                        if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
-                            if (executionCommandArgs[1].equalsIgnoreCase("accept")) {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.accept",
-                                        CraftPresence.CLIENT.REQUESTER_USER.getName()
+                    if (CraftPresence.CLIENT.isAvailable()) {
+                        if (executionCommandArgs.length == 1) {
+                            if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
+                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.info",
+                                        CraftPresence.CLIENT.REQUESTER_USER.getName(), CraftPresence.SYSTEM.TIMER
                                 );
-                                CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.ACCEPT);
-                            } else if (executionCommandArgs[1].equalsIgnoreCase("deny")) {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.denied",
-                                        CraftPresence.CLIENT.REQUESTER_USER.getName()
-                                );
-                                CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.DENY);
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
                             }
-                        } else {
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
+                        } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
+                            if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
+                                if (executionCommandArgs[1].equalsIgnoreCase("accept")) {
+                                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.accept",
+                                            CraftPresence.CLIENT.REQUESTER_USER.getName()
+                                    );
+                                    CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.ACCEPT);
+                                } else if (executionCommandArgs[1].equalsIgnoreCase("deny")) {
+                                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.denied",
+                                            CraftPresence.CLIENT.REQUESTER_USER.getName()
+                                    );
+                                    CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.DENY);
+                                } else {
+                                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                                }
+                            } else {
+                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
+                            }
                         }
+                    } else {
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.offline");
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("export")) {
                     String clientId = CraftPresence.CONFIG.generalSettings.clientId;
@@ -412,26 +416,30 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("currentData")) {
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.current_data",
-                                    CraftPresence.CLIENT.CURRENT_USER.getName(),
-                                    StringUtils.convertString(CraftPresence.CLIENT.DETAILS, "UTF-8", true),
-                                    StringUtils.convertString(CraftPresence.CLIENT.GAME_STATE, "UTF-8", true),
-                                    CraftPresence.CLIENT.START_TIMESTAMP,
-                                    CraftPresence.CLIENT.CLIENT_ID,
-                                    StringUtils.convertString(CraftPresence.CLIENT.LARGE_IMAGE_KEY, "UTF-8", true),
-                                    StringUtils.convertString(CraftPresence.CLIENT.LARGE_IMAGE_TEXT, "UTF-8", true),
-                                    StringUtils.convertString(CraftPresence.CLIENT.SMALL_IMAGE_KEY, "UTF-8", true),
-                                    StringUtils.convertString(CraftPresence.CLIENT.SMALL_IMAGE_TEXT, "UTF-8", true),
-                                    CraftPresence.CLIENT.PARTY_ID,
-                                    CraftPresence.CLIENT.PARTY_SIZE,
-                                    CraftPresence.CLIENT.PARTY_MAX,
-                                    CraftPresence.CLIENT.PARTY_PRIVACY.name(),
-                                    CraftPresence.CLIENT.JOIN_SECRET,
-                                    CraftPresence.CLIENT.END_TIMESTAMP,
-                                    CraftPresence.CLIENT.MATCH_SECRET, CraftPresence.CLIENT.SPECTATE_SECRET,
-                                    CraftPresence.CLIENT.BUTTONS.toString(),
-                                    CraftPresence.CLIENT.INSTANCE
-                            );
+                            if (CraftPresence.CLIENT.isAvailable()) {
+                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.current_data",
+                                        CraftPresence.CLIENT.CURRENT_USER.getName(),
+                                        StringUtils.convertString(CraftPresence.CLIENT.DETAILS, "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.GAME_STATE, "UTF-8", true),
+                                        CraftPresence.CLIENT.START_TIMESTAMP,
+                                        CraftPresence.CLIENT.CLIENT_ID,
+                                        StringUtils.convertString(CraftPresence.CLIENT.LARGE_IMAGE_KEY, "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.LARGE_IMAGE_TEXT, "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.SMALL_IMAGE_KEY, "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.SMALL_IMAGE_TEXT, "UTF-8", true),
+                                        CraftPresence.CLIENT.PARTY_ID,
+                                        CraftPresence.CLIENT.PARTY_SIZE,
+                                        CraftPresence.CLIENT.PARTY_MAX,
+                                        CraftPresence.CLIENT.PARTY_PRIVACY.name(),
+                                        CraftPresence.CLIENT.JOIN_SECRET,
+                                        CraftPresence.CLIENT.END_TIMESTAMP,
+                                        CraftPresence.CLIENT.MATCH_SECRET, CraftPresence.CLIENT.SPECTATE_SECRET,
+                                        CraftPresence.CLIENT.BUTTONS.toString(),
+                                        CraftPresence.CLIENT.INSTANCE
+                                );
+                            } else {
+                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.offline");
+                            }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("assets")) {
                             if (executionCommandArgs.length == 2) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.view.assets");
@@ -579,8 +587,12 @@ public class CommandsGui extends ExtendedScreen {
                             hasError = true;
                         }
                         // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
+                        String encoding = "UTF-8";
+                        if (CraftPresence.CLIENT.isAvailable()) {
+                            encoding = CraftPresence.CLIENT.ipcInstance.getEncoding();
+                        }
                         outputData = Files.newOutputStream(dataDir.toPath());
-                        outputStream = new OutputStreamWriter(outputData, CraftPresence.CLIENT.ipcInstance.getEncoding());
+                        outputStream = new OutputStreamWriter(outputData, encoding);
                         bw = new BufferedWriter(outputStream);
 
                         bw.write("## Export Data => " + clientId);
