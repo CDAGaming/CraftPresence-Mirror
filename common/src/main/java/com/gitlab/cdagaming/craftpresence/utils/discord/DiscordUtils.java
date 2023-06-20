@@ -258,6 +258,8 @@ public class DiscordUtils {
         // Create IPC Instance
         ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
         ipcInstance.setListener(new ModIPCListener());
+        // Initialize Discord Assets
+        DiscordAssetUtils.loadAssets(CLIENT_ID, true);
         // Mark as Disconnected to trigger auto-sync
         STATUS = DiscordStatus.Disconnected;
     }
@@ -289,9 +291,6 @@ public class DiscordUtils {
                 newStartTime;
         lastStartTime = currentStartTime;
         syncArgument("data.general.time", Long.toString(currentStartTime));
-
-        // Initialize Discord Assets
-        DiscordAssetUtils.loadAssets(CLIENT_ID, true);
     }
 
     /**
@@ -1375,9 +1374,6 @@ public class DiscordUtils {
             CURRENT_USER = null;
             lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
-
-            // Clear Available Discord Assets
-            DiscordAssetUtils.emptyData();
 
             ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
         }
