@@ -12,6 +12,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Backend: Numerous System Changes to the RPC and Scripting Engine to allow for proper "offline mode" support
     * These changes are designed to add support for re-connecting to Discord automatically following a disconnect
     * They also allow for configuring the Modules without needing the RPC to be active.
+    * Two new options added to `Advanced`: `allowDuplicatePackets` and `maxConnectionAttempts`
 * Backend: Buildscripts have been overhauled to allow for future enhancements to CraftPresence
     * This includes the possibility of new ports *below* a1.1.2_01
     * DiscordIPC has also been updated to integrate future-proofing for the Pomelo API Changes
@@ -32,6 +33,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Backend: Removed `loadFileAsDLL` and related translations -- unused since v1.6.0
     * Added a new `general.title` placeholder (`Minecraft {general.version}`) -- `Legacy2Modern` layer also updated
     * Removed the `roundSize` and `includeExtraGuiClasses` Advanced options
+    * Moved the `renderTooltips` option from `Advanced` to `Accessibility` (Schema now v6)
     * Adjusted the `Strip Translation Colors` tooltip message when `IS_TEXT_COLORS_BLOCKED` flag is enabled
     * Removed several unused/deprecated translations (See Technical Changelog)
     * Renamed some Translation Identifiers to comply with namespace restrictions
