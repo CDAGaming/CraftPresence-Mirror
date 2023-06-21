@@ -44,6 +44,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
+import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -150,6 +151,14 @@ public class DiscordUtils {
      */
     public boolean UPDATE_TIMESTAMP;
     /**
+     * Whether to allow sending duplicate {@link RichPresence} states through {@link DiscordUtils#updatePresence(RichPresence)}
+     */
+    public boolean ALLOW_DUPLICATE_PACKETS;
+    /**
+     * How many attempts to make a connection to Discord, before failing
+     */
+    public int MAX_CONNECTION_ATTEMPTS;
+    /**
      * The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
      */
     public long START_TIMESTAMP;
@@ -227,6 +236,10 @@ public class DiscordUtils {
      * Whether the Auto-Reconnection Thread is currently in progress
      */
     private boolean connectThreadActive = false;
+    /**
+     * How many attempts remain before giving up on connecting to an IPC Pipe
+     */
+    private int attemptsRemaining = 0;
 
     /**
      * Setup any Critical Methods needed for the RPC
@@ -298,8 +311,10 @@ public class DiscordUtils {
      */
     private void attemptConnection() {
         try {
+            final int attemptCount = (MAX_CONNECTION_ATTEMPTS - attemptsRemaining) + 1;
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.connect", attemptCount, MAX_CONNECTION_ATTEMPTS));
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
-                ipcInstance.connect(PREFERRED_CLIENT);
+                ipcInstance.connect(PREFERRED_CLIENT, DiscordBuild.ANY);
             } else {
                 ipcInstance.connect();
             }
@@ -312,8 +327,15 @@ public class DiscordUtils {
             postInit();
             connectThreadActive = false;
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
+            if (ex.getClass() != NoDiscordClientException.class) {
+                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.connect"));
+                if (CommandUtils.isVerboseMode()) {
+                    ex.printStackTrace();
+                }
+
+                // Mark as Closed if we experience an actual Exception
+                STATUS = DiscordStatus.Closed;
+                connectThreadActive = false;
             }
         }
     }
@@ -1193,19 +1215,35 @@ public class DiscordUtils {
         if (!isConnected() && !isClosed() && !connectThreadActive) {
             CommandUtils.getThreadFactory().newThread(
                     () -> {
-                        while (!isConnected()) {
+                        attemptsRemaining = MAX_CONNECTION_ATTEMPTS;
+                        while (!isConnected() && attemptsRemaining > 0) {
                             attemptConnection();
+                            attemptsRemaining--;
+                        }
+
+                        if (attemptsRemaining <= 0) {
+                            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.connect"));
+                            STATUS = DiscordStatus.Closed;
                         }
                     }
             ).start();
             connectThreadActive = true;
         }
 
-        if (isConnected() && presence != null &&
-                (currentPresence == null || !presence.toJson().toString().equals(currentPresence.toJson().toString()))
-        ) {
-            ipcInstance.sendRichPresence(presence);
-            currentPresence = presence;
+        if (isConnected()) {
+            boolean allowed = ALLOW_DUPLICATE_PACKETS;
+            if (!allowed) {
+                allowed = (currentPresence == null && presence != null) ||
+                        (presence == null && currentPresence != null) ||
+                        (presence != null &&
+                                !presence.toJson().toString().equals(currentPresence.toJson().toString())
+                        );
+            }
+
+            if (allowed) {
+                ipcInstance.sendRichPresence(presence);
+                currentPresence = presence;
+            }
         }
     }
 
