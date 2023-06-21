@@ -49,8 +49,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     private final Advanced INSTANCE, DEFAULTS;
     private ExtendedButtonControl guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
-            renderTooltipsButton, formatWordsButton, debugModeButton, verboseModeButton,
-            allowPlaceholderPreviewsButton, allowEndpointIconsButton;
+            formatWordsButton, debugModeButton, verboseModeButton,
+            allowPlaceholderPreviewsButton, allowEndpointIconsButton, allowDuplicatePacketsButton;
     private ExtendedTextControl refreshRate;
 
     AdvancedSettingsGui(GuiScreen parentScreen) {
@@ -535,15 +535,15 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        renderTooltipsButton = childFrame.addControl(
+        debugModeButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc2, getButtonY(4, -10),
-                        "gui.config.name.advanced.render_tooltips",
-                        getCurrentData().renderTooltips,
+                        "gui.config.name.advanced.debug_mode",
+                        getCurrentData().debugMode,
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.render_tooltips")
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", ModUtils.IS_DEV_FLAG)
                                 )
                         )
                 )
@@ -561,22 +561,9 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        debugModeButton = childFrame.addControl(
-                new CheckBoxControl(
-                        calc2, getButtonY(5, -20),
-                        "gui.config.name.advanced.debug_mode",
-                        getCurrentData().debugMode,
-                        null,
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", ModUtils.IS_DEV_FLAG)
-                                )
-                        )
-                )
-        );
         verboseModeButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(6, -30),
+                        calc2, getButtonY(5, -20),
                         "gui.config.name.advanced.verbose_mode",
                         getCurrentData().verboseMode,
                         null,
@@ -589,7 +576,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         allowPlaceholderPreviewsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, getButtonY(6, -30),
+                        calc1, getButtonY(6, -30),
                         "gui.config.name.advanced.allow_placeholder_previews",
                         getCurrentData().allowPlaceholderPreviews,
                         null,
@@ -602,13 +589,26 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         );
         allowEndpointIconsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(7, -40),
+                        calc2, getButtonY(6, -30),
                         "gui.config.name.advanced.allow_endpoint_icons",
                         getCurrentData().allowEndpointIcons,
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_endpoint_icons")
+                                )
+                        )
+                )
+        );
+        allowDuplicatePacketsButton = childFrame.addControl(
+                new CheckBoxControl(
+                        calc1, getButtonY(7, -40),
+                        "gui.config.name.advanced.allow_duplicate_packets",
+                        getCurrentData().allowDuplicatePackets,
+                        null,
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_duplicate_packets")
                                 )
                         )
                 )
@@ -691,10 +691,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().enablePerEntity = enablePerEntityButton.isChecked();
         }
-        if (renderTooltipsButton.isChecked() != getCurrentData().renderTooltips) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().renderTooltips = renderTooltipsButton.isChecked();
-        }
         if (formatWordsButton.isChecked() != getCurrentData().formatWords) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().formatWords = formatWordsButton.isChecked();
@@ -710,6 +706,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         if (allowPlaceholderPreviewsButton.isChecked() != getCurrentData().allowPlaceholderPreviews) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked();
+        }
+        if (allowDuplicatePacketsButton.isChecked() != getCurrentData().allowDuplicatePackets) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().allowDuplicatePackets = allowDuplicatePacketsButton.isChecked();
         }
     }
 

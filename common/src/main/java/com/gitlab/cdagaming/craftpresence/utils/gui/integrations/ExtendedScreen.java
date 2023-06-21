@@ -761,7 +761,7 @@ public class ExtendedScreen extends GuiScreen {
                 getWrapWidth(),
                 getFontRenderer(),
                 new Tuple<>(
-                        CraftPresence.CONFIG.advancedSettings.renderTooltips,
+                        CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
                         CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
                         CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
                 )

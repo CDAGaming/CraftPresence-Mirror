@@ -287,8 +287,8 @@ public class CommandUtils {
         CraftPresence.CLIENT.AUTO_REGISTER = CraftPresence.CONFIG.generalSettings.autoRegister;
         CraftPresence.CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
         CraftPresence.CLIENT.UPDATE_TIMESTAMP = CraftPresence.CONFIG.generalSettings.resetTimeOnInit;
-        CraftPresence.CLIENT.ALLOW_DUPLICATE_PACKETS = CraftPresence.CONFIG.generalSettings.allowDuplicatePackets;
-        CraftPresence.CLIENT.MAX_CONNECTION_ATTEMPTS = CraftPresence.CONFIG.generalSettings.maxConnectionAttempts;
+        CraftPresence.CLIENT.ALLOW_DUPLICATE_PACKETS = CraftPresence.CONFIG.advancedSettings.allowDuplicatePackets;
+        CraftPresence.CLIENT.MAX_CONNECTION_ATTEMPTS = CraftPresence.CONFIG.advancedSettings.maxConnectionAttempts;
 
         CraftPresence.CLIENT.init();
     }

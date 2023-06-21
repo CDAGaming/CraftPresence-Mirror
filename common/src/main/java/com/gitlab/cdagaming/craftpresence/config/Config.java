@@ -50,7 +50,7 @@ public final class Config extends Module implements Serializable {
     // Constants
     private static final long serialVersionUID = -4853238501768086595L;
     private static final int MC_VERSION = ModUtils.MCProtocolID;
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     private static final Config DEFAULT = new Config().applyDefaults();
@@ -243,6 +243,10 @@ public final class Config extends Module implements Serializable {
             needsReboot = true; // Auto Register changed
         } else if (!accessibilitySettings.languageId.equals(old.accessibilitySettings.languageId)) {
             ModUtils.TRANSLATOR.syncTranslations(); // Fallback Language ID Changed
+        } else if (advancedSettings.allowDuplicatePackets != old.advancedSettings.allowDuplicatePackets) {
+            needsReboot = true; // Allow Duplicate Packets changed
+        } else if (advancedSettings.maxConnectionAttempts != old.advancedSettings.maxConnectionAttempts) {
+            needsReboot = true; // Max Connection Attempts changed
         }
 
         if (needsReboot) {
@@ -363,6 +367,14 @@ public final class Config extends Module implements Serializable {
                             true, false, true
                     ).apply(this, rawJson);
                     currentVer = 5;
+                }
+                if (MathUtils.isWithinValue(currentVer, 5, 6, true, false)) {
+                    // Schema Changes (v5 -> v6)
+                    //  - Property: `advancedSettings.renderTooltips` -> `accessibilitySettings.renderTooltips`
+                    accessibilitySettings.renderTooltips = rawJson.getAsJsonObject()
+                            .getAsJsonObject("advancedSettings")
+                            .getAsJsonPrimitive("renderTooltips").getAsBoolean();
+                    currentVer = 6;
                 }
 
                 save();

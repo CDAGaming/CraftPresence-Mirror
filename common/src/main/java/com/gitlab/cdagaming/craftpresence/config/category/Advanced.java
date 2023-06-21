@@ -38,7 +38,6 @@ public class Advanced extends Module implements Serializable {
     public boolean enablePerGui = false;
     public boolean enablePerItem = false;
     public boolean enablePerEntity = false;
-    public boolean renderTooltips = true;
     public boolean formatWords = true;
     public boolean debugMode = false;
     public boolean verboseMode = false;
@@ -52,6 +51,8 @@ public class Advanced extends Module implements Serializable {
     public boolean allowEndpointIcons = true;
     public String serverIconEndpoint = "https://api.mcsrvstat.us/icon/{server.address.short}";
     public String playerSkinEndpoint = "https://mc-heads.net/avatar/{getOrDefault(player.uuid.short, player.name)}";
+    public boolean allowDuplicatePackets = false;
+    public int maxConnectionAttempts = 10;
 
     public Advanced(final Advanced other) {
         transferFrom(other);
@@ -79,7 +80,6 @@ public class Advanced extends Module implements Serializable {
             enablePerGui = data.enablePerGui;
             enablePerItem = data.enablePerItem;
             enablePerEntity = data.enablePerEntity;
-            renderTooltips = data.renderTooltips;
             formatWords = data.formatWords;
             debugMode = data.debugMode;
             verboseMode = data.verboseMode;
@@ -91,6 +91,8 @@ public class Advanced extends Module implements Serializable {
             allowEndpointIcons = data.allowEndpointIcons;
             serverIconEndpoint = data.serverIconEndpoint;
             playerSkinEndpoint = data.playerSkinEndpoint;
+            allowDuplicatePackets = data.allowDuplicatePackets;
+            maxConnectionAttempts = data.maxConnectionAttempts;
         }
     }
 

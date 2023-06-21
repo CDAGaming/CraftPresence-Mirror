@@ -275,7 +275,6 @@ public class Legacy2Modern implements DataMigrator {
             .put("enablePerGuiSystem", "advancedSettings.enablePerGui")
             .put("enablePerItemSystem", "advancedSettings.enablePerItem")
             .put("enablePerEntitySystem", "advancedSettings.enablePerEntity")
-            .put("renderTooltips", "advancedSettings.renderTooltips")
             .put("formatWords", "advancedSettings.formatWords")
             .put("debugMode", "advancedSettings.debugMode")
             .put("verboseMode", "advancedSettings.verboseMode")
@@ -292,6 +291,7 @@ public class Legacy2Modern implements DataMigrator {
             .put("stripTranslationColors", "accessibilitySettings.stripTranslationColors")
             .put("showLoggingInChat", "accessibilitySettings.showLoggingInChat")
             .put("stripExtraGuiElements", "accessibilitySettings.stripExtraGuiElements")
+            .put("renderTooltips", "accessibilitySettings.renderTooltips")
             .put("configGuiKeybind", "accessibilitySettings.configKeyCode")
             //
             .put("gameStateMessageFormat", "displaySettings.presenceData.gameState")

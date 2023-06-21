@@ -56,6 +56,7 @@ public class Accessibility extends Module implements Serializable {
     public boolean stripTranslationColors = ModUtils.IS_TEXT_COLORS_BLOCKED;
     public boolean showLoggingInChat = false;
     public boolean stripExtraGuiElements = false;
+    public boolean renderTooltips = true;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
 
     public Accessibility(final Accessibility other) {
@@ -90,6 +91,7 @@ public class Accessibility extends Module implements Serializable {
             stripTranslationColors = data.stripTranslationColors;
             showLoggingInChat = data.showLoggingInChat;
             stripExtraGuiElements = data.stripExtraGuiElements;
+            renderTooltips = data.renderTooltips;
             configKeyCode = data.configKeyCode;
         }
     }

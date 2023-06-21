@@ -44,7 +44,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     private final Accessibility INSTANCE, DEFAULTS;
     private ExtendedTextControl languageIdText;
-    private CheckBoxControl stripTranslationColorsButton, showLoggingInChatButton, stripExtraGuiElementsButton;
+    private CheckBoxControl stripTranslationColorsButton, showLoggingInChatButton,
+            stripExtraGuiElementsButton, renderTooltipsButton;
     private ExtendedButtonControl controlsButton;
 
     AccessibilitySettingsGui(GuiScreen parentScreen) {
@@ -230,6 +231,19 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         )
                 )
         );
+        renderTooltipsButton = childFrame.addControl(
+                new CheckBoxControl(
+                        calc2, getButtonY(5, -10),
+                        "gui.config.name.accessibility.render_tooltips",
+                        getCurrentData().renderTooltips,
+                        null,
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.render_tooltips")
+                                )
+                        )
+                )
+        );
 
         // Adding Controls Button
         final List<String> controlInfo = StringUtils.newArrayList("key.craftpresence.category");
@@ -314,6 +328,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         if (stripExtraGuiElementsButton.isChecked() != getCurrentData().stripExtraGuiElements) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().stripExtraGuiElements = stripExtraGuiElementsButton.isChecked();
+        }
+        if (renderTooltipsButton.isChecked() != getCurrentData().renderTooltips) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().renderTooltips = renderTooltipsButton.isChecked();
         }
     }
 

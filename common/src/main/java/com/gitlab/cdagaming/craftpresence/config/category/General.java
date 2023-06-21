@@ -47,10 +47,8 @@ public class General extends Module implements Serializable {
     public boolean enableJoinRequests = false;
     public int partyPrivacyLevel = PartyPrivacy.Public.ordinal();
     public int preferredClientLevel = DiscordBuild.ANY.ordinal();
-    public int maxConnectionAttempts = 10;
     public boolean resetTimeOnInit = false;
     public boolean autoRegister = false;
-    public boolean allowDuplicatePackets = false;
 
     public General(final General other) {
         transferFrom(other);
@@ -88,10 +86,8 @@ public class General extends Module implements Serializable {
             enableJoinRequests = data.enableJoinRequests;
             partyPrivacyLevel = data.partyPrivacyLevel;
             preferredClientLevel = data.preferredClientLevel;
-            maxConnectionAttempts = data.maxConnectionAttempts;
             resetTimeOnInit = data.resetTimeOnInit;
             autoRegister = data.autoRegister;
-            allowDuplicatePackets = data.allowDuplicatePackets;
         }
     }
 
