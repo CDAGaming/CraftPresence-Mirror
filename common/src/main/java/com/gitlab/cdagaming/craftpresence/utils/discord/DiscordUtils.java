@@ -803,8 +803,7 @@ public class DiscordUtils {
             for (String key : items) {
                 for (String format : args) {
                     if (key.startsWith(format)) {
-                        // Workaround `.remove` not properly supporting dot-notation
-                        scriptEngine.set(key, Value.null_());
+                        scriptEngine.remove(key);
                         placeholderData.remove(key);
                         break;
                     }
