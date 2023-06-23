@@ -206,7 +206,7 @@ public class CommandsGui extends ExtendedScreen {
                         if (executionCommandArgs.length == 1) {
                             if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.info",
-                                        CraftPresence.CLIENT.REQUESTER_USER.getName(), CraftPresence.SYSTEM.TIMER
+                                        CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName(), CraftPresence.SYSTEM.TIMER
                                 );
                             } else {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
@@ -215,12 +215,12 @@ public class CommandsGui extends ExtendedScreen {
                             if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
                                 if (executionCommandArgs[1].equalsIgnoreCase("accept")) {
                                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.accept",
-                                            CraftPresence.CLIENT.REQUESTER_USER.getName()
+                                            CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName()
                                     );
                                     CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.ACCEPT);
                                 } else if (executionCommandArgs[1].equalsIgnoreCase("deny")) {
                                     executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.denied",
-                                            CraftPresence.CLIENT.REQUESTER_USER.getName()
+                                            CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName()
                                     );
                                     CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.DENY);
                                 } else {
@@ -420,7 +420,7 @@ public class CommandsGui extends ExtendedScreen {
                         } else if (executionCommandArgs[1].equalsIgnoreCase("currentData")) {
                             if (CraftPresence.CLIENT.isAvailable()) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.current_data",
-                                        CraftPresence.CLIENT.CURRENT_USER.getName(),
+                                        CraftPresence.CLIENT.CURRENT_USER.getEffectiveName(),
                                         StringUtils.convertString(CraftPresence.CLIENT.DETAILS, "UTF-8", true),
                                         StringUtils.convertString(CraftPresence.CLIENT.GAME_STATE, "UTF-8", true),
                                         CraftPresence.CLIENT.START_TIMESTAMP,

@@ -110,7 +110,7 @@ public class ModIPCListener implements IPCListener {
         if (CraftPresence.CLIENT.STATUS != DiscordStatus.Ready) {
             CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
             CraftPresence.CLIENT.CURRENT_USER = client.getCurrentUser();
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.load", CraftPresence.CLIENT.CLIENT_ID, CraftPresence.CLIENT.CURRENT_USER != null ? CraftPresence.CLIENT.CURRENT_USER.getName() : "null"));
+            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.load", CraftPresence.CLIENT.CLIENT_ID, CraftPresence.CLIENT.CURRENT_USER != null ? CraftPresence.CLIENT.CURRENT_USER.getEffectiveName() : "null"));
         }
     }
 }
