@@ -29,6 +29,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * All existing `.time` placeholders now are sync'd as `milliseconds` instead of `seconds`
     * To account for this change going over Starscript's limits, it's type is now a `String`
     * This type can however be converted back into the type that you need it for
+* Backend: Adjusted `GuiUtils#isFocused` to include a check for in-world interactions
+    * This was mostly an issue in 1.14+ where certain screens did not follow GUI `getFocused` calls
+    * To mitigate this, if the focused state is null, but we are in a world, we'll still consider `isFocused` as true
+    * This resolves issues of the Config GUI opening in other in-world GUIs, at the cost of no longer allowing in-world
+      GUI opening from another UI
 * Misc Changes to remove and/or consolodate deprecated/unused data
     * Backend: Removed `loadFileAsDLL` and related translations -- unused since v1.6.0
     * Added a new `general.title` placeholder (`Minecraft {general.version}`) -- `Legacy2Modern` layer also updated
@@ -75,8 +80,6 @@ added/iterated upon between releases.
 
 The following known issues are present in this build:
 
-* On 1.14+, the `isFocused` state in the GUI module is improperly represented
-    * This can cause issues such as the Config GUI opening while typing into another GUI
 * On certain MC versions, Scrolling while in a Scroll List drawing `ItemStack`'s may cause GUI distortions
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) contains the following known issues:
