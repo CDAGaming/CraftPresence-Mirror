@@ -60,7 +60,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * The new check now match the same Regex as the `splitTextByNewLine` method instead of just `\\n`
 * Removed the ability for Color Codes to be present in Text Logs
     * This was normally only supposed to be allowed when Logs can be pushed to chat
-* Work around an Issue in Starscript that would cause some placeholders to be unexpectedly removed
+* Fixed an Issue in Starscript that would cause some placeholders to be unexpectedly removed
+* Fixed an Issue where Modules could load earlier than expected in 1.13+
 
 ___
 
