@@ -84,11 +84,6 @@ public class SystemUtils {
      */
     public int TIMER = 0;
     /**
-     * If Loading of critical data has been completed<p>
-     * Becomes true after callbacks synchronize once if previously false
-     */
-    public boolean HAS_LOADED = false;
-    /**
      * If Loading of game data has been completed<p>
      * Becomes true after callbacks synchronize if previously false but game is loaded
      */
@@ -293,8 +288,9 @@ public class SystemUtils {
         // Every <passTime> Seconds, refresh Callbacks and load state status
         if (LAST_TICKED != ELAPSED_TIME && ELAPSED_TIME % getRefreshRate() == 0) {
             if (!refreshedCallbacks) {
-                HAS_LOADED = CraftPresence.CLIENT.isAvailable();
-                HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
+                if (!HAS_GAME_LOADED) {
+                    HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
+                }
                 refreshedCallbacks = true;
             }
         }
