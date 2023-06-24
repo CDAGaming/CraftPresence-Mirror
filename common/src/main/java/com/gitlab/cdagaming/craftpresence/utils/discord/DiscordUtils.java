@@ -278,7 +278,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Initializes Critical Initial Rich Presence Data
+     * Initializes Critical Rich Presence Data
      *
      * @param debugMode Whether to enable debug mode for this instance
      */
@@ -287,7 +287,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Initializes Critical Initial Rich Presence Data
+     * Initializes Critical Rich Presence Data
      */
     public void init() {
         init(CommandUtils.isDebugMode());

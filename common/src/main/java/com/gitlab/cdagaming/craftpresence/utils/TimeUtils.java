@@ -269,7 +269,7 @@ public class TimeUtils {
     }
 
     /**
-     * Retrieve the current time, using the System Clock
+     * Retrieve the current time
      *
      * @return the current timestamp, as an {@link Instant}
      */
