@@ -259,6 +259,9 @@ public class DiscordUtils {
         syncArgument("general.mods", FileUtils.getModCount());
         syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
         syncArgument("general.version", ModUtils.MCVersion);
+        syncArgument("general.protocol", ModUtils.MCProtocolID);
+        syncArgument("data.general.version", ModUtils.MCBuildVersion);
+        syncArgument("data.general.protocol", ModUtils.MCBuildProtocol);
     }
 
     /**

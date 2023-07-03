@@ -57,10 +57,14 @@ public class MainGui extends ConfigurationGui<Config> {
 
         // Add Tentative Release Notice, if able
         // Note: This only is meant for a one-line notice -- any bigger and `getButtonY` will be wrong
+        String releaseNotice = "";
         if (ModUtils.VERSION_TYPE.equalsIgnoreCase("alpha")) {
+            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID);
+        } else if (!ModUtils.MCVersion.equalsIgnoreCase(ModUtils.MCBuildVersion)) {
+            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, ModUtils.MCBuildVersion);
+        }
+        if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;
-
-            final String releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID);
             childFrame.addWidget(
                     new TextDisplayWidget(
                             childFrame, true,

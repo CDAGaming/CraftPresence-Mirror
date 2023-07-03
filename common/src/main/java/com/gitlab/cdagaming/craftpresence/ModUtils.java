@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
+import net.minecraft.realms.RealmsSharedConstants;
 
 import java.io.File;
 
@@ -59,14 +60,24 @@ public class ModUtils {
     public static final String MOD_ID = "craftpresence";
 
     /**
+     * The Minecraft Version this Mod was compiled with
+     */
+    public static final String MCBuildVersion = "@MC_VERSION@";
+
+    /**
+     * The Protocol Version this Mod was compiled with
+     */
+    public static final int MCBuildProtocol = StringUtils.getValidInteger("@MC_PROTOCOL@").getSecond();
+
+    /**
      * The Detected Minecraft Version
      */
-    public static final String MCVersion = "@MC_VERSION@";
+    public static final String MCVersion = RealmsSharedConstants.VERSION_STRING;
 
     /**
      * The Detected Minecraft Protocol Version
      */
-    public static final int MCProtocolID = StringUtils.getValidInteger("@MC_PROTOCOL@").getSecond();
+    public static final int MCProtocolID = RealmsSharedConstants.NETWORK_PROTOCOL_VERSION;
 
     /**
      * The Detected Brand Information within Minecraft
