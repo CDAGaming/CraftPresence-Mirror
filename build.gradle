@@ -9,15 +9,15 @@ plugins {
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
-def ext_mcVersionLabel = rootProject.hasProperty("mc_version_extra") ? "${mc_version_extra}" : "${mc_version}"
-def ext_versionLabel = "${rootProject.versionLabel.equalsIgnoreCase("release") ? "" : "${rootProject.versionLabel}"}"
+def ext_mcVersionLabel = !display_version.isEmpty() ? "${display_version}" : "${mc_version}"
+def ext_versionLabel = "${versionLabel.equalsIgnoreCase("release") ? "" : "${versionLabel}"}"
 
 def ext_versionInfoLabel = "${ext_versionLabel.isEmpty() ? "" : "-${ext_versionLabel}"}"
-def ext_baseVersionLabel = "${rootProject.versionId + ext_versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
+def ext_baseVersionLabel = "${versionId + ext_versionInfoLabel.replaceAll("\\s", ".")}".toLowerCase()
 def ext_classPath = "${rootProject.group}".replace(".", "/") + "/${mod_name}".toLowerCase()
 
 def ext_versionFormat = "${ext_baseVersionLabel + "+" + ext_mcVersionLabel}"
-def ext_fileFormat = "${rootProject.mod_name}-${ext_versionFormat}"
+def ext_fileFormat = "${mod_name}-${ext_versionFormat}"
 
 int ext_protocol = "${mc_protocol}".toInteger()
 boolean ext_isLegacy = "${isLegacy}".toBoolean()
@@ -105,8 +105,8 @@ subprojects {
     unimined.useGlobalCache = false
 
     unimined.minecraft(sourceSets.main) {
-        def mc_version = "${rootProject.mc_version}"
-        def mc_mapping_type = "${rootProject.mc_mappings_type}"
+        def mc_version = "${mc_version}"
+        def mc_mapping_type = "${mc_mappings_type}"
 
         side(isJarMod ? "client" : "combined")
         version mc_version
@@ -118,7 +118,7 @@ subprojects {
                         if (accessWidenerFile.exists()) {
                             accessWidener accessWidenerFile
                         }
-                        loader rootProject.fabric_loader_version
+                        loader fabric_loader_version
                         customIntermediaries = true
                     }
                     if (ext_isModern) {
@@ -133,7 +133,7 @@ subprojects {
                     if (accessWidenerFile.exists()) {
                         accessWidener accessWidenerFile
                     }
-                    loader rootProject.fabric_loader_version
+                    loader fabric_loader_version
                     if (isJarMod) {
                         prodNamespace "official"
                         devMappings = null
@@ -152,7 +152,7 @@ subprojects {
                         if (canUseATs) {
                             accessTransformer aw2at(accessWidenerFile)
                         }
-                        forge rootProject.forge_version
+                        forge forge_version
                         customSearge = (mc_mapping_type != "mojmap")
                     }
                     // Note: Required for proper mixin remaps
@@ -169,7 +169,7 @@ subprojects {
         }
 
         mappings {
-            def mc_mappings = "${rootProject.mc_mappings}"
+            def mc_mappings = "${mc_mappings}"
             switch (mc_mapping_type) {
                 case "mcp":
                     if (!isJarMod) {
@@ -183,7 +183,7 @@ subprojects {
                     }
                     break
                 case "forgeMCP":
-                    forgeBuiltinMCP("${rootProject.forge_version}") {
+                    forgeBuiltinMCP("${forge_version}") {
                         clearContains()
                         clearOutputs()
                         contains({ _, t ->

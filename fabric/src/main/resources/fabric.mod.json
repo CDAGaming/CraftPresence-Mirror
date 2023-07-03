@@ -24,8 +24,8 @@
     "modmenu:clientsideOnly": true
   },
   "depends": {
-    "fabricloader": ">=0.13.0",
-    "minecraft": "${mcversion}",
+    "fabricloader": "${loader_version_range}",
+    "minecraft": "${game_version_range}",
     "java": ">=8"
   }
 }

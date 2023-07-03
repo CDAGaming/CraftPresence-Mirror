@@ -14,11 +14,11 @@ dependencies {
     // Fabric Integrations (1.14+)
     if (isModern) {
         // Required for loading translation data
-        modImplementation(fabricApi.fabricModule("fabric-resource-loader-v0", rootProject.fabric_api_version))
-        include(fabricApi.fabricModule("fabric-resource-loader-v0", rootProject.fabric_api_version))
+        modImplementation(fabricApi.fabricModule("fabric-resource-loader-v0", fabric_api_version))
+        include(fabricApi.fabricModule("fabric-resource-loader-v0", fabric_api_version))
 
         // Mod Menu API Implementation
-        modImplementation "${rootProject.modmenu_group}:modmenu:${rootProject.modmenu_version}"
+        modImplementation "${modmenu_group}:modmenu:${modmenu_version}"
     }
 
     common project(path: ':common'), { transitive false }
@@ -35,7 +35,9 @@ def resourceTargets = [
         "fabric.mod.json"
 ]
 def replaceProperties = [
-        version: baseVersionLabel.toString(), mcversion: mcVersionTarget.toString()
+        version: baseVersionLabel.toString(), mcversion: mcVersionTarget.toString(),
+        game_version_range: fabric_game_version_range.toString(),
+        loader_version_range: fabric_loader_version_range.toString()
 ]
 
 processResources {

@@ -36,10 +36,10 @@ dependencies {
     implementation "com.github.spotbugs:spotbugs-annotations:4.7.3"
 
     // DiscordIPC (Originally by jagrosh)
-    shade("io.github.CDAGaming:DiscordIPC:${rootProject.ipc_version}")
+    shade("io.github.CDAGaming:DiscordIPC:${ipc_version}")
     // StarScript (Used for Placeholder Expressions)
-    shade("io.github.CDAGaming:starscript:${rootProject.starscript_version + (isLegacy ? "-legacy" : "")}")
-    shade("io.github.classgraph:classgraph:${rootProject.classgraph_version}")
+    shade("io.github.CDAGaming:starscript:${starscript_version + (isLegacy ? "-legacy" : "")}")
+    shade("io.github.classgraph:classgraph:${classgraph_version}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
         shade('org.slf4j:slf4j-api:1.7.36')
@@ -61,8 +61,8 @@ dependencies {
     // Additional Integrations
     if (!isLegacy) {
         // Moon Config (Used for HypherConverter)
-        shade("me.hypherionmc.moon-config:core:${moonconf_ver}")
-        shade("me.hypherionmc.moon-config:toml:${moonconf_ver}")
+        shade("me.hypherionmc.moon-config:core:${moonconf_version}")
+        shade("me.hypherionmc.moon-config:toml:${moonconf_version}")
     }
 }
 
@@ -161,7 +161,7 @@ tasks.register('generateMyResources') {
                     }
                 }
                 def resultName = file.name.replace(".json", ".lang")
-                if ("${rootProject.mc_protocol}".toInteger() <= 210) {
+                if ("${mc_protocol}".toInteger() <= 210) {
                     // On 1.10.2 (Pack Format 2 or below) or Legacy MC
                     // Adjust name format from xx_xx to xx_XX
                     var matches = Pattern.compile("_.+?\\.").matcher(resultName);
@@ -179,11 +179,28 @@ tasks.register('generateMyResources') {
     }
 }
 
-def archive_name = "${rootProject.mod_name}"
+// Setup Name Schema for Uploading
+def archive_name = "${mod_name}"
 def targetFile = file("$rootDir/build/libs/${fileFormat}.jar")
 if (!targetFile.exists() && isJarMod) {
     // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
     targetFile = file("$rootDir/${fmlName}/build/libs/${fileFormat}-${fmlName}.jar")
+}
+
+// Setup Game Versions to upload for
+def uploadVersions = [mc_version.toString()]
+for (String v : additional_mc_versions.split(',')) {
+    if (v) {
+        uploadVersions.add(v)
+    }
+}
+
+// Setup Game Loaders to upload for
+def uploadLoaders = enabled_platforms.split(',').toList()
+for (String v : additional_loaders.split(',')) {
+    if (v) {
+        uploadLoaders.add(v)
+    }
 }
 
 publisher {
@@ -199,8 +216,8 @@ publisher {
     changelog = file("$rootDir/Changes.md").text
     version = "v${versionFormat}".replaceAll("\\s", "").toLowerCase() // Modrinth Only
     displayName = "${archive_name} v${versionId}${versionLabel.isEmpty() ? "" : " ${versionLabel}"} (${mcVersionLabel})"
-    gameVersions = [mc_version.toString()]
-    loaders = rootProject.enabled_platforms.split(",").toList()
+    gameVersions = uploadVersions
+    loaders = uploadLoaders
     curseEnvironment = "client"
     artifact = targetFile
 }
