@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -50,7 +49,7 @@ public class TileEntityUtils implements Module {
     /**
      * An Instance of an Empty ItemStack
      */
-    public static final ItemStack EMPTY_STACK = ItemStack.EMPTY;
+    public static final ItemStack EMPTY_STACK = new ItemStack(EMPTY_ITEM);
     /**
      * A List of the detected Block Names
      */
@@ -172,8 +171,8 @@ public class TileEntityUtils implements Module {
         final ItemStack itemStack = getStackFrom(data);
         if (itemStack == null || itemStack.equals(EMPTY_STACK)) {
             return true;
-        } else if (itemStack.getItem() != EMPTY_ITEM && itemStack.getItem() != Items.AIR) {
-            if (itemStack.getCount() <= 0) {
+        } else if (itemStack.getItem() != EMPTY_ITEM) {
+            if (itemStack.stackSize <= 0) {
                 return true;
             } else {
                 return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
@@ -312,10 +311,10 @@ public class TileEntityUtils implements Module {
     public void updateData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
         final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getHeldItemOffhand();
-        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory.get(3);
-        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory.get(2);
-        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory.get(1);
-        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory.get(0);
+        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory[3];
+        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory[2];
+        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory[1];
+        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory[0];
 
         final boolean hasMainHandChanged = NEW_CURRENT_MAIN_HAND_ITEM != CURRENT_MAIN_HAND_ITEM;
         final boolean hasOffHandChanged = NEW_CURRENT_OFFHAND_ITEM != CURRENT_OFFHAND_ITEM;
