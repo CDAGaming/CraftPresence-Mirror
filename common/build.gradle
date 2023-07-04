@@ -141,8 +141,8 @@ import java.util.regex.Pattern
 
 tasks.register('generateMyResources') {
     doFirst {
-        def langDir = new File(mainResources, "/assets/$rootProject.name/lang")
-        def resultDir = new File(generatedResources, "/assets/$rootProject.name/lang")
+        def langDir = new File(mainResources, "/assets/${rootProject.name.toLowerCase()}/lang")
+        def resultDir = new File(generatedResources, "/assets/${rootProject.name.toLowerCase()}/lang")
         langDir.mkdirs()
         resultDir.mkdirs()
         langDir.eachFileRecurse(FileType.FILES) { file ->
@@ -151,7 +151,7 @@ tasks.register('generateMyResources') {
                 System.out.println("Converting json to lang: " + file.path)
                 // Logic from TranslationUtils#getTranslationMap
                 // Does not include the escape replacements, as those are done later
-                for (currentString in file.text.readLines()) {
+                for (currentString in file.getText("UTF-8").readLines()) {
                     currentString = currentString.trim()
                     if (!currentString.startsWith("#") && !currentString.startsWith("[{}]") && currentString.contains(":")) {
                         final String[] splitTranslation = currentString.split(":", 2)
@@ -173,7 +173,7 @@ tasks.register('generateMyResources') {
                 def resultFile = new File(resultDir, resultName)
                 resultFile.createNewFile()
                 System.out.println("Outputting to: " + resultFile.path)
-                resultFile.text = contents.replaceAll("(?s)\\\\(.)", '$1')
+                resultFile.setText(contents.replaceAll("(?s)\\\\(.)", '$1'), "UTF-8")
             }
         }
     }

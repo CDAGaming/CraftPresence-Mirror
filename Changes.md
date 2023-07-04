@@ -37,6 +37,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Background Rendering now override's stock MC methods rather than using its own method
     * This will allow some mods to also be able to properly override and interpret the Background State
     * An additional fix has been made to properly apply the Background to Scroll Lists as well
+* Fixed `.lang` files being missing, leading to Translation Errors and Data Loss on select MC Versions
+    * This was caused from a regression in v2.1.0
+* Fixed an issue where generated `.lang` files, converted from `.json`, would be in the wrong file encoding
+    * This could cause issues such as Color Codes not appearing properly, which has been fixed from this and by ensuring
+      both files are in `UTF-8` encoding
 
 ___
 
