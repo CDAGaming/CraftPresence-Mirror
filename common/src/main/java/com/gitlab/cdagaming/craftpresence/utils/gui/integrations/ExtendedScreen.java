@@ -460,6 +460,11 @@ public class ExtendedScreen extends GuiScreen {
         setClipboardString(StringUtils.normalize(input));
     }
 
+    @Override
+    public void drawWorldBackground(int tint) {
+        renderCriticalData();
+    }
+
     /**
      * Renders this Screen, including controls and post-Hover Events
      *
@@ -479,7 +484,7 @@ public class ExtendedScreen extends GuiScreen {
                     getScreenHeight() * scale
             );
 
-            renderCriticalData();
+            drawDefaultBackground();
 
             for (ScrollableListControl listControl : getLists()) {
                 if (listControl.getEnabled()) {

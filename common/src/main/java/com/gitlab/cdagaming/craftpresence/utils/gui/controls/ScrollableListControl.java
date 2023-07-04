@@ -217,7 +217,7 @@ public class ScrollableListControl extends GuiSlot {
      */
     @Override
     protected void drawBackground() {
-        // N/A
+        currentScreen.drawDefaultBackground();
     }
 
     /**
