@@ -99,7 +99,7 @@ public class GuiUtils implements ExtendedModule {
      * @return The Default/Global Font Renderer
      */
     public static FontRenderer getDefaultFontRenderer() {
-        return CraftPresence.instance.fontRenderer;
+        return CraftPresence.instance.fontRendererObj;
     }
 
     @Override
