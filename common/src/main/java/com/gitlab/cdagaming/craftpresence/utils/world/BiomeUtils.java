@@ -120,7 +120,7 @@ public class BiomeUtils implements Module {
 
     @Override
     public void updateData() {
-        final MobSpawnerBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
+        final MobSpawnerBase newBiome = CraftPresence.player.worldObj.func_4075_a().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
         final String newBiomeName = StringUtils.formatIdentifier(newBiome.biomeName, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
         final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
