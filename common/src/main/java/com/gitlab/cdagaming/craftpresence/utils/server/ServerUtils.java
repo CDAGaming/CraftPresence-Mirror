@@ -260,7 +260,7 @@ public class ServerUtils implements Module {
     @Override
     public void updateData() {
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
+        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
 
         try {
             String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "ab");
