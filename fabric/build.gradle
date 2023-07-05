@@ -28,14 +28,11 @@ dependencies {
     shadowCommon project(path: ':common'), { transitive false }
 }
 
-// Fix: mcversion constaint does not apply below 1.0
-def mcVersionTarget = (isLegacy && protocol < 22) ? "*" : "${mcVersionLabel}"
-
 def resourceTargets = [
         "fabric.mod.json"
 ]
 def replaceProperties = [
-        version: baseVersionLabel.toString(), mcversion: mcVersionTarget.toString(),
+        version: baseVersionLabel.toString(), mcversion: mcVersionLabel.toString(),
         game_version_range: fabric_game_version_range.toString(),
         loader_version_range: fabric_loader_version_range.toString()
 ]
