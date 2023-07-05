@@ -263,17 +263,17 @@ public class ServerUtils implements Module {
         final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
-            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "ac");
-            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ad");
+            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "ab");
+            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ac");
             newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerData(retrievedIP, retrievedPort) : null;
         } catch (Exception ex) {
             newServerData = null;
         }
 
         if (!joinInProgress) {
-            final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.field_35786_c) : StringUtils.newArrayList();
-            final int newCurrentPlayers = newConnection != null ? newConnection.field_35786_c.size() : 1;
-            final int newMaxPlayers = newConnection != null && newConnection.field_35785_d >= newCurrentPlayers ? newConnection.field_35785_d : newCurrentPlayers + 1;
+            final List<String> newPlayerList = StringUtils.newArrayList();
+            final int newCurrentPlayers = 1;
+            final int newMaxPlayers = newCurrentPlayers + 1;
             final boolean newLANStatus = false;
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.getServerIP()) ? newServerData.getServerIP() : "127.0.0.1";

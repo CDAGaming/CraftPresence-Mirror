@@ -124,9 +124,9 @@ public class EntityUtils implements Module {
         String name = "clear";
         if (worldObj != null) {
             final WorldInfo info = worldObj.getWorldInfo();
-            if (info.getIsThundering()) {
+            if (info.getThundering()) {
                 name = "thunder";
-            } else if (info.getIsRaining()) {
+            } else if (info.getRaining()) {
                 name = "rain";
             } else {
                 name = "clear";

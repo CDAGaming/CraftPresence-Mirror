@@ -174,14 +174,6 @@ public class BiomeUtils implements Module {
     private List<BiomeGenBase> getBiomeTypes() {
         List<BiomeGenBase> biomeTypes = StringUtils.newArrayList();
 
-        if (BiomeGenBase.field_35486_a != null) {
-            for (BiomeGenBase biome : BiomeGenBase.field_35486_a) {
-                if (biome != null && !biomeTypes.contains(biome)) {
-                    biomeTypes.add(biome);
-                }
-            }
-        }
-
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
             for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class).values()) {
