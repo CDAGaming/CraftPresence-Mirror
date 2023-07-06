@@ -33,13 +33,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew --build-cache --stacktrace build
+        run: ./gradlew --build-cache --info --stacktrace build
 
       - name: Merge Jars with Gradle
-        run: ./gradlew --build-cache --stacktrace mergeJars
+        run: ./gradlew --build-cache --info --stacktrace mergeJars
 
       - name: Deploy with Gradle
-        run: ./gradlew --build-cache --stacktrace :common:publishMod
+        run: ./gradlew --build-cache --info --stacktrace :common:publishMod
 
       - uses: actions/upload-artifact@v3
         with:
