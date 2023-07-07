@@ -259,6 +259,12 @@ subprojects {
             stub.withMappings(["searge", target]) {
                 c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
                 c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
+                // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
+                if (!isLegacy && (protocol == 735 || protocol == 736)) {
+                    c("dng", ["net/minecraft/client/gui/widget/Widget", "net/minecraft/client/gui/components/AbstractWidget"]) {
+                        m("e", "()I", "func_238483_d_", "getHeightRealms")
+                    }
+                }
             }
 
             if (isMCPJar) {
