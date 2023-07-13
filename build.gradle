@@ -5,7 +5,7 @@ import java.nio.file.Files
 
 plugins {
     id 'xyz.wagyourtail.unimined' version '1.0.0-SNAPSHOT' apply false
-    id "com.diffplug.gradle.spotless" version "6.18.0" apply false
+    id "com.diffplug.gradle.spotless" version "6.19.0" apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
 }
 
@@ -67,7 +67,7 @@ subprojects {
 
     Jvm currentJvm = Jvm.current()
     JavaVersion sourceVersion = currentJvm.getJavaVersion()
-    JavaVersion targetVersion = JavaVersion.VERSION_1_8
+    JavaVersion targetVersion = JavaVersion.toVersion("${java_version}")
 
     boolean modern_source_support = sourceVersion.isJava9Compatible()
     boolean modern_target_support = targetVersion.isJava9Compatible()
