@@ -24,11 +24,10 @@
 
 package com.gitlab.cdagaming.craftpresence.core.utils;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.core.integrations.FieldReflectionUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 import java.awt.*;
 import java.io.PrintWriter;
@@ -1575,7 +1574,7 @@ public class StringUtils {
                     break;
                 }
             } catch (Throwable ex) {
-                if (CommandUtils.isVerboseMode()) {
+                if (Constants.LOG.isDebugMode()) {
                     ex.printStackTrace();
                 }
             }
@@ -1664,7 +1663,7 @@ public class StringUtils {
             lookupMethod.setAccessible(true);
             result = lookupMethod.invoke(instance, parameters);
         } catch (Throwable ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
         }

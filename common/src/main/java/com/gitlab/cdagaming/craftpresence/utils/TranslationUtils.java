@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;

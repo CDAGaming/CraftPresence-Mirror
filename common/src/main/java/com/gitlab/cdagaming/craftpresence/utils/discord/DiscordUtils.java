@@ -34,11 +34,11 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -251,9 +251,9 @@ public class DiscordUtils {
      */
     public void setup() {
         Runtime.getRuntime().addShutdownHook(
-                CommandUtils.getThreadFactory().newThread(() -> {
+                Constants.getThreadFactory().newThread(() -> {
                     CraftPresence.SYSTEM.IS_GAME_CLOSING = true;
-                    CommandUtils.getThreadPool().shutdown();
+                    Constants.getThreadPool().shutdown();
                     shutDown();
                 })
         );
@@ -1220,7 +1220,7 @@ public class DiscordUtils {
      */
     public void updatePresence(final RichPresence presence) {
         if (!isConnected() && !isClosed() && !connectThreadActive) {
-            CommandUtils.getThreadFactory().newThread(
+            Constants.getThreadFactory().newThread(
                     () -> {
                         attemptsRemaining = MAX_CONNECTION_ATTEMPTS;
                         while (!isConnected() && attemptsRemaining > 0) {

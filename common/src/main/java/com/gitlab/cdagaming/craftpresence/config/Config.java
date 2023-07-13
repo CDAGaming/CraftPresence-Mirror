@@ -35,9 +35,13 @@ import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.*;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
+import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

@@ -22,14 +22,10 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -182,32 +178,15 @@ public class FileUtils {
      */
     public static void writeJsonData(final Object json, final File file, final String encoding, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
-        Writer writer = null;
-        OutputStream outputStream = null;
 
-        try {
+        try (Writer writer = new OutputStreamWriter(Files.newOutputStream(file.toPath()), Charset.forName(encoding))) {
             if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
                 throw new UnsupportedOperationException("Failed to setup parent directory @ " + file.getAbsolutePath());
             }
-            outputStream = Files.newOutputStream(file.toPath());
-            writer = new OutputStreamWriter(outputStream, Charset.forName(encoding));
             builder.create().toJson(json, writer);
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
-        }
-
-        try {
-            if (writer != null) {
-                writer.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        } catch (Exception ex) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
-            if (CommandUtils.isVerboseMode()) {
+            Constants.LOG.error("Failed to write json data @ " + file.getAbsolutePath());
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
         }
@@ -221,19 +200,16 @@ public class FileUtils {
      */
     public static void downloadFile(final String urlString, final File file) {
         try {
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.init", file.getName(), file.getAbsolutePath(), urlString));
+            Constants.LOG.info("Downloading \"%s\" to \"%s\"... (From: \"%s\")", file.getName(), file.getAbsolutePath(), urlString);
             final URL url = new URL(urlString);
-            if (file.exists()) {
-                final boolean fileDeleted = file.delete();
-                if (!fileDeleted) {
-                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.delete.file", file.getName()));
-                }
+            if (file.exists() && !file.delete()) {
+                Constants.LOG.error("Failed to remove: " + file.getName());
             }
             copyStreamToFile(UrlUtils.getURLStream(url), file);
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.loaded", file.getName(), file.getAbsolutePath(), urlString));
+            Constants.LOG.info("\"%s\" has been successfully downloaded to \"%s\"! (From: \"%s\")", file.getName(), file.getAbsolutePath(), urlString);
         } catch (Exception ex) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.download", file.getName(), urlString, file.getAbsolutePath()));
-            if (CommandUtils.isVerboseMode()) {
+            Constants.LOG.error("Failed to download \"%s\" from \"%s\"", file.getName(), urlString);
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
         }
@@ -389,7 +365,7 @@ public class FileUtils {
     public static int getRawModCount() {
         // Mod is within ClassLoader if in a Dev Environment
         // and is thus automatically counted if this is the case
-        int modCount = CommandUtils.isDebugMode() ? 1 : 0;
+        int modCount = 0;
         final File[] mods = new File(Constants.modsDir).listFiles();
 
         if (mods != null) {
@@ -399,7 +375,7 @@ public class FileUtils {
                 }
             }
         }
-        return modCount;
+        return Math.max(1, modCount);
     }
 
     /**
@@ -586,7 +562,7 @@ public class FileUtils {
      * Begin a new Thread, executing {@link FileUtils#scanClasses()}
      */
     public static void detectClasses() {
-        CommandUtils.getThreadFactory().newThread(FileUtils::scanClasses).start();
+        Constants.getThreadFactory().newThread(FileUtils::scanClasses).start();
     }
 
     /**
@@ -621,7 +597,7 @@ public class FileUtils {
                     }
                 }
             } catch (Throwable ex) {
-                if (CommandUtils.isVerboseMode()) {
+                if (Constants.LOG.isDebugMode()) {
                     ex.printStackTrace();
                 }
             }

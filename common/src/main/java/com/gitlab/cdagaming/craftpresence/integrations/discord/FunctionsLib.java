@@ -26,11 +26,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;

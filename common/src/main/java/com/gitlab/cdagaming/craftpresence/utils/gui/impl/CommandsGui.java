@@ -28,9 +28,9 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -46,7 +46,6 @@ import org.meteordev.starscript.value.Value;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.util.Collection;
@@ -569,88 +568,67 @@ public class CommandsGui extends ExtendedScreen {
      * @param doFullCopy Whether to do a full copy or a text-only copy
      */
     private void exportAssets(final String clientId, final boolean doFullCopy, final String urlMeta) {
-        CommandUtils.getThreadFactory().newThread(() -> {
+        Constants.getThreadFactory().newThread(() -> {
             blockInteractions = true;
             final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
-
-            OutputStream outputData = null;
-            OutputStreamWriter outputStream = null;
-            BufferedWriter bw = null;
             boolean hasError = false;
 
             if (assetList != null) {
                 final String filePath = Constants.MOD_ID + File.separator + "export" + File.separator + clientId + File.separator;
                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.pre", assetList.length, clientId, doFullCopy);
 
-                if (!doFullCopy) {
-                    try {
-                        // Create Data Directory if non-existent
-                        final File dataDir = new File(filePath + "downloads.txt");
-                        if (!dataDir.getParentFile().exists() && !dataDir.getParentFile().mkdirs()) {
-                            hasError = true;
-                        }
-                        // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
-                        String encoding = "UTF-8";
-                        if (CraftPresence.CLIENT.isAvailable()) {
-                            encoding = CraftPresence.CLIENT.ipcInstance.getEncoding();
-                        }
-                        outputData = Files.newOutputStream(dataDir.toPath());
-                        outputStream = new OutputStreamWriter(outputData, encoding);
-                        bw = new BufferedWriter(outputStream);
+                final File dataDir = new File(filePath + "downloads.txt");
+                final String encoding = CraftPresence.CLIENT.isAvailable() ?
+                        CraftPresence.CLIENT.ipcInstance.getEncoding() : "UTF-8";
 
-                        bw.write("## Export Data => " + clientId);
-                        bw.newLine();
-                        bw.newLine();
-                    } catch (Exception ex) {
-                        if (CommandUtils.isVerboseMode()) {
-                            ex.printStackTrace();
-                        }
-                        hasError = true;
+                try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(dataDir.toPath()), encoding))) {
+                    // Create Data Directory if non-existent
+                    if (!dataDir.getParentFile().exists() && !dataDir.getParentFile().mkdirs()) {
+                        throw new UnsupportedOperationException("Failed to setup parent directory @ " + dataDir.getAbsolutePath());
                     }
-                }
 
-                for (int i = 0; i < assetList.length; i++) {
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.progress",
-                            clientId, i + 1, assetList.length
-                    );
-                    final DiscordAsset asset = assetList[i];
-                    final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false) + urlMeta;
-                    final String assetName = asset.getName() + ".png";
-                    if (doFullCopy) {
-                        FileUtils.downloadFile(assetUrl, new File(filePath + assetName));
-                    } else if (!hasError) {
-                        try {
-                            bw.write("* " + assetName + " => " + assetUrl);
-                            bw.newLine();
-                        } catch (Exception ex) {
-                            if (CommandUtils.isVerboseMode()) {
-                                ex.printStackTrace();
+                    // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
+                    bw.write("## Export Data => " + clientId);
+                    bw.newLine();
+                    bw.newLine();
+
+                    for (int i = 0; i < assetList.length; i++) {
+                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.progress",
+                                clientId, i + 1, assetList.length
+                        );
+                        final DiscordAsset asset = assetList[i];
+                        final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false) + urlMeta;
+                        final String assetName = asset.getName() + ".png";
+                        if (doFullCopy) {
+                            FileUtils.downloadFile(assetUrl, new File(filePath + assetName));
+                        }
+
+                        if (!hasError) {
+                            try {
+                                bw.write("* " + assetName + " => " + assetUrl);
+                                bw.newLine();
+                            } catch (Exception ex) {
+                                if (CommandUtils.isVerboseMode()) {
+                                    ex.printStackTrace();
+                                }
+                                hasError = true;
                             }
-                            hasError = true;
+                        } else {
+                            break;
                         }
-                    } else {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
-                    }
-                }
-
-                try {
-                    if (bw != null) {
-                        bw.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
-                    if (outputData != null) {
-                        outputData.close();
                     }
                 } catch (Exception ex) {
-                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
                     if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
                     }
+                    hasError = true;
                 }
 
-                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.post", assetList.length, clientId, doFullCopy);
+                if (!hasError) {
+                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.post", assetList.length, clientId, doFullCopy);
+                } else {
+                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
+                }
             } else {
                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
             }

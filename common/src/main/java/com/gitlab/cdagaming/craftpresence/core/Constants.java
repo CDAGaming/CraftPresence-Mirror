@@ -28,6 +28,9 @@ import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 
 import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Constant Variables and Methods used throughout the Application
@@ -100,4 +103,36 @@ public class Constants {
      * The Application's Instance of {@link ModLogger} for Logging Information
      */
     public static final ModLogger LOG = new ModLogger(MOD_ID);
+
+    /**
+     * Thread Factory Instance for this Class, used for Scheduling Events
+     */
+    private static final ThreadFactory threadFactory = r -> {
+        final Thread t = new Thread(r, Constants.NAME);
+        t.setDaemon(true);
+        return t;
+    };
+
+    /**
+     * Timer Instance for this Class, used for Scheduling Events
+     */
+    private static final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor(threadFactory);
+
+    /**
+     * Retrieve the Timer Instance for this Class, used for Scheduling Events
+     *
+     * @return the Timer Instance for this Class
+     */
+    public static ScheduledExecutorService getThreadPool() {
+        return exec;
+    }
+
+    /**
+     * Retrieve the Thread Factory Instance for this Class, used for Scheduling Events
+     *
+     * @return the Thread Factory Instance for this class
+     */
+    public static ThreadFactory getThreadFactory() {
+        return threadFactory;
+    }
 }

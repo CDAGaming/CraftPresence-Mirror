@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.core.utils;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import io.github.classgraph.ClassInfo;
 
 import java.io.BufferedReader;

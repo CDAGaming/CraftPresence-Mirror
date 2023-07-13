@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.TreeMapBuilder;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.atlauncher.ATLauncherUtils;
@@ -43,9 +44,6 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Command Utilities for Synchronizing and Initializing Data
@@ -53,18 +51,6 @@ import java.util.concurrent.ThreadFactory;
  * @author CDAGaming
  */
 public class CommandUtils {
-    /**
-     * Thread Factory Instance for this Class, used for Scheduling Events
-     */
-    private static final ThreadFactory threadFactory = r -> {
-        final Thread t = new Thread(r, Constants.NAME);
-        t.setDaemon(true);
-        return t;
-    };
-    /**
-     * Timer Instance for this Class, used for Scheduling Events
-     */
-    private static final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor(threadFactory);
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
@@ -135,24 +121,6 @@ public class CommandUtils {
                 clearMenuPresence();
                 break;
         }
-    }
-
-    /**
-     * Retrieve the Timer Instance for this Class, used for Scheduling Events
-     *
-     * @return the Timer Instance for this Class
-     */
-    public static ScheduledExecutorService getThreadPool() {
-        return exec;
-    }
-
-    /**
-     * Retrieve the Thread Factory Instance for this Class, used for Scheduling Events
-     *
-     * @return the Thread Factory Instance for this class
-     */
-    public static ThreadFactory getThreadFactory() {
-        return threadFactory;
     }
 
     /**

@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.config;
 
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 
 /**
  * Module Section defining properties to be used in a configuration

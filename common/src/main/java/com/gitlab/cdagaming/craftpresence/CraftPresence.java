@@ -26,10 +26,10 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
@@ -163,7 +163,7 @@ public class CraftPresence {
      */
     private void scheduleTick() {
         if (!SYSTEM.IS_GAME_CLOSING) {
-            CommandUtils.getThreadPool().scheduleAtFixedRate(
+            Constants.getThreadPool().scheduleAtFixedRate(
                     this::clientTick,
                     0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
             );

@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
@@ -72,7 +73,7 @@ public class ImageUtils {
     private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = StringUtils.newHashMap();
 
     static {
-        CommandUtils.getThreadFactory().newThread(
+        Constants.getThreadFactory().newThread(
                 () -> {
                     try {
                         while (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {

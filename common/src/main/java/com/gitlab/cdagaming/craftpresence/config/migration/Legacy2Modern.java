@@ -37,10 +37,10 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.google.gson.JsonElement;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -321,12 +321,7 @@ public class Legacy2Modern implements DataMigrator {
 
     @Override
     public Config apply(Config instance, JsonElement rawJson, Object... args) {
-        Reader configReader = null;
-        FileInputStream inputStream = null;
-
-        try {
-            inputStream = new FileInputStream(configFile);
-            configReader = new InputStreamReader(inputStream, Charset.forName(encoding));
+        try (Reader configReader = new InputStreamReader(Files.newInputStream(configFile.toPath()), Charset.forName(encoding))) {
             properties.load(configReader);
         } catch (Exception ex) {
             Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
@@ -427,26 +422,12 @@ public class Legacy2Modern implements DataMigrator {
             }
         }
 
-        try {
-            if (configReader != null) {
-                configReader.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        } catch (Exception ex) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
-        } finally {
-            if (!configFile.delete()) {
-                Constants.LOG.error("Failed to remove: " + configFile.getName());
-            }
-            // Force Schema Version to the latest schema, before saving
-            instance._schemaVersion = Config.getSchemaVersion();
-            instance.save();
+        if (!configFile.delete()) {
+            Constants.LOG.error("Failed to remove: " + configFile.getName());
         }
+        // Force Schema Version to the latest schema, before saving
+        instance._schemaVersion = Config.getSchemaVersion();
+        instance.save();
         return instance;
     }
 
