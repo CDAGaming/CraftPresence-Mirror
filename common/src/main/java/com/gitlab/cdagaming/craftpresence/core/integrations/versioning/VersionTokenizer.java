@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.versioning;
+package com.gitlab.cdagaming.craftpresence.core.integrations.versioning;
 
 /**
  * Parser for Version Strings

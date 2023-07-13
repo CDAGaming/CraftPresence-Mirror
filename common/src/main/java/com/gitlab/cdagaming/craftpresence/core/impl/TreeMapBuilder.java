@@ -22,27 +22,47 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl;
+package com.gitlab.cdagaming.craftpresence.core.impl;
+
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+
+import java.util.Map;
 
 /**
- * Represents an operation that accepts a single input argument and returns no
- * result. Unlike most other functional interfaces, {@code Consumer} is expected
- * to operate via side effects.
+ * A builder class for creating a new TreeMap instance and adding key-value pairs to it.
  *
- * <p>This is a functional interface,
- * whose functional method is {@link #accept(Object, Object, Object)}.
- *
- * @param <T> the type of the input to the operation
+ * @param <K> the type of keys in the TreeMap
+ * @param <V> the type of values in the TreeMap
+ * @author CDAGaming
  */
-public interface TupleConsumer<T, U, V> {
+public class TreeMapBuilder<K extends Comparable<K>, V> {
+    private final Map<K, V> map;
 
     /**
-     * Performs this operation on the given argument.
-     *
-     * @param t the input argument
-     * @param u the input argument
-     * @param v the input argument
+     * Constructs a new TreeMapBuilder with a new TreeMap instance.
      */
-    void accept(T t, U u, V v);
-}
+    public TreeMapBuilder() {
+        map = StringUtils.newTreeMap();
+    }
 
+    /**
+     * Adds a new key-value pair to the TreeMap.
+     *
+     * @param key   the key to add to the TreeMap
+     * @param value the value to associate with the key in the TreeMap
+     * @return a reference to this TreeMapBuilder instance
+     */
+    public TreeMapBuilder<K, V> put(K key, V value) {
+        map.put(key, value);
+        return this;
+    }
+
+    /**
+     * Returns the final TreeMap instance with all key-value pairs added using the builder.
+     *
+     * @return the final TreeMap instance
+     */
+    public Map<K, V> build() {
+        return StringUtils.newTreeMap(map);
+    }
+}

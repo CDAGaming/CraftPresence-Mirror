@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.gui.FontRenderer;

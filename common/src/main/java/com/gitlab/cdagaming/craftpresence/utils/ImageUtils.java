@@ -25,9 +25,12 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.impl.ImageFrame;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 

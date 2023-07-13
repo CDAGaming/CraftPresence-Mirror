@@ -26,10 +26,11 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
-import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -393,11 +394,11 @@ public class ScrollableListControl extends GuiSlot {
             }
         } else if (renderType == RenderType.Placeholder && isHovering) {
             final String placeholderTranslation = String.format("%s.placeholders.%s.description",
-                    ModUtils.MOD_ID,
+                    Constants.MOD_ID,
                     originalName
             );
             final String placeholderUsage = String.format("%s.placeholders.%s.usage",
-                    ModUtils.MOD_ID,
+                    Constants.MOD_ID,
                     originalName
             );
             if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {

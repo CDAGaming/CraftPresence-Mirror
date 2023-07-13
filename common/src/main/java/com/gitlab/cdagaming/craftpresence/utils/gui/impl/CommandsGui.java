@@ -26,10 +26,11 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -187,7 +188,7 @@ public class CommandsGui extends ExtendedScreen {
             filteredCommandArgs = commandInput.getControlMessage()
                     .replace("/", "")
                     .replace("cp", "")
-                    .replace(ModUtils.MOD_ID, "")
+                    .replace(Constants.MOD_ID, "")
                     .trim().split(" ");
             tabCompletions = getTabCompletions(filteredCommandArgs);
         }
@@ -489,7 +490,7 @@ public class CommandsGui extends ExtendedScreen {
                     commandInput.setControlFocused(false);
                 } else {
                     if (commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
-                            (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(ModUtils.MOD_ID))) {
+                            (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(Constants.MOD_ID))) {
                         if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
@@ -578,7 +579,7 @@ public class CommandsGui extends ExtendedScreen {
             boolean hasError = false;
 
             if (assetList != null) {
-                final String filePath = ModUtils.MOD_ID + File.separator + "export" + File.separator + clientId + File.separator;
+                final String filePath = Constants.MOD_ID + File.separator + "export" + File.separator + clientId + File.separator;
                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.pre", assetList.length, clientId, doFullCopy);
 
                 if (!doFullCopy) {
@@ -643,7 +644,7 @@ public class CommandsGui extends ExtendedScreen {
                         outputData.close();
                     }
                 } catch (Exception ex) {
-                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
+                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.data.close"));
                     if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
                     }

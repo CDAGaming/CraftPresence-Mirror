@@ -26,11 +26,12 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
@@ -169,7 +170,7 @@ public class ControlsGui extends PaginatedScreen {
             if (!preRenderQueue.containsKey(currentAllocatedPage)) {
                 preRenderQueue.put(currentAllocatedPage, StringUtils.newArrayList());
             }
-            if (!ModUtils.IS_LEGACY_SOFT) {
+            if (!Constants.IS_LEGACY_SOFT) {
                 preRenderQueue.get(currentAllocatedPage).add(categoryData);
             }
 

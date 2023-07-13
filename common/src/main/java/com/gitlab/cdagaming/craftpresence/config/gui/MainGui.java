@@ -27,7 +27,8 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
@@ -58,10 +59,10 @@ public class MainGui extends ConfigurationGui<Config> {
         // Add Tentative Release Notice, if able
         // Note: This only is meant for a one-line notice -- any bigger and `getButtonY` will be wrong
         String releaseNotice = "";
-        if (ModUtils.VERSION_TYPE.equalsIgnoreCase("alpha")) {
-            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", ModUtils.VERSION_ID);
-        } else if (!ModUtils.MCVersion.equalsIgnoreCase(ModUtils.MCBuildVersion)) {
-            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, ModUtils.MCBuildVersion);
+        if (Constants.VERSION_TYPE.equalsIgnoreCase("alpha")) {
+            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", Constants.VERSION_ID);
+        } else if (!ModUtils.MCVersion.equalsIgnoreCase(Constants.MCBuildVersion)) {
+            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, Constants.MCBuildVersion);
         }
         if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;
@@ -286,7 +287,7 @@ public class MainGui extends ConfigurationGui<Config> {
     protected void applySettings() {
         if (getCurrentData().hasChanged) {
             getCurrentData().save();
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
             getCurrentData().applyFrom(getOriginalData());
         }
     }

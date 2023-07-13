@@ -28,8 +28,9 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -44,7 +45,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     private final Accessibility INSTANCE, DEFAULTS;
     private ExtendedTextControl languageIdText;
-    private CheckBoxControl stripTranslationColorsButton, showLoggingInChatButton,
+    private CheckBoxControl stripTranslationColorsButton,
             stripExtraGuiElementsButton, renderTooltipsButton;
     private ExtendedButtonControl controlsButton;
 
@@ -205,19 +206,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         }
                 )
         );
-        showLoggingInChatButton = childFrame.addControl(
-                new CheckBoxControl(
-                        calc2, getButtonY(4),
-                        "gui.config.name.accessibility.show_logging_in_chat",
-                        getCurrentData().showLoggingInChat,
-                        null,
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.show_logging_in_chat")
-                                )
-                        )
-                )
-        );
         stripExtraGuiElementsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(5, -10),
@@ -248,7 +236,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         // Adding Controls Button
         final List<String> controlInfo = StringUtils.newArrayList("key.craftpresence.category");
         KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
-        if (ModUtils.IS_LEGACY_SOFT) {
+        if (Constants.IS_LEGACY_SOFT) {
             controlInfo.clear();
             StringUtils.addEntriesNotPresent(controlInfo, CraftPresence.KEYBINDINGS.getRawKeyMappings().keySet());
 
@@ -320,10 +308,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         if (stripTranslationColorsButton.isChecked() != getCurrentData().stripTranslationColors) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().stripTranslationColors = stripTranslationColorsButton.isChecked();
-        }
-        if (showLoggingInChatButton.isChecked() != getCurrentData().showLoggingInChat) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().showLoggingInChat = showLoggingInChatButton.isChecked();
         }
         if (stripExtraGuiElementsButton.isChecked() != getCurrentData().stripExtraGuiElements) {
             CraftPresence.CONFIG.hasChanged = true;

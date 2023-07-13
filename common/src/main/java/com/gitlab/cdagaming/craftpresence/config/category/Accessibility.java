@@ -26,9 +26,9 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
-import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.config.element.ColorSection;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 
 import java.io.Serializable;
@@ -54,7 +54,6 @@ public class Accessibility extends Module implements Serializable {
     public ColorData buttonBackground = new ColorData(RenderUtils.DEFAULT_BUTTON_BACKGROUND);
     public String languageId = ModUtils.TRANSLATOR.defaultLanguageId;
     public boolean stripTranslationColors = ModUtils.IS_TEXT_COLORS_BLOCKED;
-    public boolean showLoggingInChat = false;
     public boolean stripExtraGuiElements = false;
     public boolean renderTooltips = true;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
@@ -89,7 +88,6 @@ public class Accessibility extends Module implements Serializable {
             buttonBackground = new ColorData(data.buttonBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
-            showLoggingInChat = data.showLoggingInChat;
             stripExtraGuiElements = data.stripExtraGuiElements;
             renderTooltips = data.renderTooltips;
             configKeyCode = data.configKeyCode;

@@ -25,13 +25,13 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
-import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;

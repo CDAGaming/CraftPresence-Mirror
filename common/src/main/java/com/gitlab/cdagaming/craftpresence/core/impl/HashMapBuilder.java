@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl;
+package com.gitlab.cdagaming.craftpresence.core.impl;
 
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 
 import java.util.Map;
 

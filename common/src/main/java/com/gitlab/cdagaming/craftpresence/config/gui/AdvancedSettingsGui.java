@@ -28,9 +28,10 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Advanced;
-import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
@@ -543,7 +544,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", ModUtils.IS_DEV_FLAG)
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", Constants.IS_DEV_FLAG)
                                 )
                         )
                 )
@@ -569,7 +570,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", ModUtils.IS_VERBOSE_FLAG)
+                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", Constants.IS_VERBOSE_FLAG)
                                 )
                         )
                 )

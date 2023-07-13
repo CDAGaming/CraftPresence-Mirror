@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
-import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 

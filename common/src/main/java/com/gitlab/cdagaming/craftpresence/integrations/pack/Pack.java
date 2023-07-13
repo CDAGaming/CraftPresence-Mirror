@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.pack;
 
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.nio.file.NoSuchFileException;

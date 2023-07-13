@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl;
+package com.gitlab.cdagaming.craftpresence.core.impl;
 
 /**
  * A Set of Three Objects contained within a Mapping

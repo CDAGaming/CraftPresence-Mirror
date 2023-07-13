@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence;
+package com.gitlab.cdagaming.craftpresence.core;
 
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,18 +35,32 @@ import org.apache.logging.log4j.Logger;
  */
 public class ModLogger {
     /**
-     * Name of the Logger, primarily used for Chat Formatting
-     */
-    private final String loggerName;
-
-    /**
      * The Instance of the Root Logging Manager, for sending messages to logs
      */
     private final Logger logInstance;
+    /**
+     * Whether this Logger is operating in Debug Mode
+     */
+    private boolean debugMode;
 
-    ModLogger(final String loggerName) {
-        this.loggerName = loggerName;
+    /**
+     * Initializes a new Logger
+     *
+     * @param loggerName The name of the Logger
+     * @param debug      Whether to initialize the logger in debug mode
+     */
+    public ModLogger(final String loggerName, final boolean debug) {
         this.logInstance = LogManager.getLogger(loggerName);
+        this.debugMode = debug;
+    }
+
+    /**
+     * Initializes a new Logger
+     *
+     * @param loggerName The name of the Logger
+     */
+    public ModLogger(final String loggerName) {
+        this(loggerName, false);
     }
 
     /**
@@ -60,18 +73,33 @@ public class ModLogger {
     }
 
     /**
+     * Get whether this {@link ModLogger} is in Debug Mode
+     *
+     * @return the debug mode status
+     */
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    /**
+     * Set whether this {@link ModLogger} is in Debug Mode
+     *
+     * @param debugMode the new debug mode status
+     */
+    public void setDebugMode(final boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    /**
      * Sends a Message with an ERROR Level to either Chat or Logs
      *
      * @param logMessage   The Log Message to Send
      * @param logArguments Additional Formatting Arguments
      */
     public void error(final String logMessage, Object... logArguments) {
-        final String message = parse(logMessage, logArguments);
-        if (canShowAsChat()) {
-            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§c " + message);
-        } else {
-            getLogInstance().error(message);
-        }
+        getLogInstance().error(
+                parse(logMessage, logArguments)
+        );
     }
 
     /**
@@ -81,12 +109,9 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void warn(final String logMessage, Object... logArguments) {
-        final String message = parse(logMessage, logArguments);
-        if (canShowAsChat()) {
-            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r§e " + message);
-        } else {
-            getLogInstance().warn(message);
-        }
+        getLogInstance().warn(
+                parse(logMessage, logArguments)
+        );
     }
 
     /**
@@ -96,12 +121,9 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void info(final String logMessage, Object... logArguments) {
-        final String message = parse(logMessage, logArguments);
-        if (canShowAsChat()) {
-            StringUtils.sendMessageToPlayer(CraftPresence.player, "§6§l[§f§l" + loggerName + "§6]§r " + message);
-        } else {
-            getLogInstance().info(message);
-        }
+        getLogInstance().info(
+                parse(logMessage, logArguments)
+        );
     }
 
     /**
@@ -111,7 +133,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void debugInfo(final String logMessage, Object... logArguments) {
-        if (CommandUtils.isDebugMode()) {
+        if (isDebugMode()) {
             info("[DEBUG] " + logMessage, logArguments);
         }
     }
@@ -123,7 +145,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void debugWarn(final String logMessage, Object... logArguments) {
-        if (CommandUtils.isDebugMode()) {
+        if (isDebugMode()) {
             warn("[DEBUG] " + logMessage, logArguments);
         }
     }
@@ -135,30 +157,14 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void debugError(final String logMessage, Object... logArguments) {
-        if (CommandUtils.isDebugMode()) {
+        if (isDebugMode()) {
             error("[DEBUG] " + logMessage, logArguments);
         }
     }
 
-    /**
-     * Whether the logger can show output as chat messages
-     *
-     * @return {@link Boolean#TRUE} if condition is satisfied
-     */
-    public boolean canShowAsChat() {
-        return CraftPresence.player != null &&
-                !CraftPresence.CONFIG.hasChanged &&
-                !CraftPresence.SYSTEM.IS_GAME_CLOSING &&
-                CraftPresence.CONFIG.accessibilitySettings.showLoggingInChat;
-    }
-
     private String parse(final String message, Object... args) {
-        String result = StringUtils.normalizeLines(
+        return StringUtils.normalize(
                 String.format(message, args)
         );
-        if (!canShowAsChat()) {
-            result = StringUtils.stripColors(result);
-        }
-        return result;
     }
 }

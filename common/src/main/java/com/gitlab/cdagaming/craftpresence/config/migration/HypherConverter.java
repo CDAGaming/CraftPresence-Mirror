@@ -24,13 +24,13 @@
 
 package com.gitlab.cdagaming.craftpresence.config.migration;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.config.element.Button;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.google.gson.JsonElement;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
@@ -108,13 +108,13 @@ public class HypherConverter implements DataMigrator {
     @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     @Override
     public Config apply(Config instance, JsonElement rawJson, Object... args) {
-        ModUtils.LOG.info("Simple RPC (By: HypherionSA) config data found, attempting to migrate settings to CraftPresence...");
+        Constants.LOG.info("Simple RPC (By: HypherionSA) config data found, attempting to migrate settings to CraftPresence...");
         try (FileConfig conf = FileConfig.of(configPath)) {
             conf.load();
             configVersion = conf.get("general.version");
-            ModUtils.LOG.debugInfo("Main Config file found (Version: %d, File Version: %d), interpreting data...", configVersion, fileVersion);
+            Constants.LOG.debugInfo("Main Config file found (Version: %d, File Version: %d), interpreting data...", configVersion, fileVersion);
             if (configVersion < LOWEST_SUPPORTED) {
-                ModUtils.LOG.error("You are using an outdated Simple RPC config file (Must be at least v%d, you have v%d), skipping...", LOWEST_SUPPORTED, configVersion);
+                Constants.LOG.error("You are using an outdated Simple RPC config file (Must be at least v%d, you have v%d), skipping...", LOWEST_SUPPORTED, configVersion);
                 return instance;
             }
 
@@ -192,7 +192,7 @@ public class HypherConverter implements DataMigrator {
             try (FileConfig conf = FileConfig.of(serverEntriesFile)) {
                 conf.load();
                 serverEntryVersion = conf.get("version");
-                ModUtils.LOG.debugInfo("Server Entries file found (Version: %d, File Version: %d), interpreting data...", serverEntryVersion, fileVersion);
+                Constants.LOG.debugInfo("Server Entries file found (Version: %d, File Version: %d), interpreting data...", serverEntryVersion, fileVersion);
 
                 final boolean areOverridesEnabled = conf.get("enabled");
                 if (conf.get("entry") instanceof List<?>) {
@@ -215,7 +215,7 @@ public class HypherConverter implements DataMigrator {
             try (FileConfig conf = FileConfig.of(replayModFile)) {
                 conf.load();
                 replayModVersion = conf.get("general.version");
-                ModUtils.LOG.debugInfo("Replay Mod Integration file found (Version: %d, File Version: %d), interpreting data...", replayModVersion, fileVersion);
+                Constants.LOG.debugInfo("Replay Mod Integration file found (Version: %d, File Version: %d), interpreting data...", replayModVersion, fileVersion);
 
                 instance.advancedSettings.enablePerGui = true;
                 instance.advancedSettings.guiSettings.guiData.put("GuiReplayViewer", new ModuleData()
@@ -229,7 +229,7 @@ public class HypherConverter implements DataMigrator {
             }
         }
 
-        ModUtils.LOG.info("Migration complete, thanks for using our mods! ~~ CDAGaming and HypherionSA");
+        Constants.LOG.info("Migration complete, thanks for using our mods! ~~ CDAGaming and HypherionSA");
         return instance;
     }
 

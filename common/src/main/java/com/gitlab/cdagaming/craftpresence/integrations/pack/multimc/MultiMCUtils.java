@@ -25,8 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.integrations.pack.multimc;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 
 import java.io.File;

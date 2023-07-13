@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations;
+package com.gitlab.cdagaming.craftpresence.core.integrations;
 
 import sun.misc.Unsafe;
 

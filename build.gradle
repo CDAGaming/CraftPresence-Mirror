@@ -406,4 +406,6 @@ forgix {
     fabric {
         jarLocation = "build/libs/${ext_fileFormat}-fabric.jar"
     }
+
+    removeDuplicate "com.gitlab.cdagaming.craftpresence.core"
 }

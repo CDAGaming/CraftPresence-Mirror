@@ -26,10 +26,11 @@ package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
-import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 
 import java.util.Map;
 
@@ -248,7 +249,7 @@ public class DiscordAssetUtils {
             DiscordAsset[] values = ASSET_LIST.values().toArray(new DiscordAsset[0]);
             return values[SystemUtils.RANDOM.nextInt(values.length)];
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
@@ -316,8 +317,8 @@ public class DiscordAssetUtils {
      * @return The list of discord asset data attached to this client id
      */
     public static DiscordAsset[] loadAssets(final String clientId, final boolean filterToMain) {
-        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load", clientId));
-        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load.credits"));
+        Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load", clientId));
+        Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load.credits"));
 
         try {
             final String url = applicationEndpoint + clientId + "/assets";
@@ -342,13 +343,13 @@ public class DiscordAssetUtils {
             }
             return assets;
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.load"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.load"));
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
             return null;
         } finally {
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.detected", String.valueOf(ASSET_LIST.size())));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.detected", String.valueOf(ASSET_LIST.size())));
         }
     }
 

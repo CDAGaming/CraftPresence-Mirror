@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl;
+package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 
 import java.util.Map;
 
@@ -328,7 +329,7 @@ public class KeyConverter {
         }
 
         if (resultKey == originalKey && mode != ConversionMode.None) {
-            ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", Integer.toString(resultKey), mode.name()));
+            Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", Integer.toString(resultKey), mode.name()));
         }
 
         return resultKey;

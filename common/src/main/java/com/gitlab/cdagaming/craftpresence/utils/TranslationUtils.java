@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -153,10 +155,32 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         }
 
         if (resultId.equals(originalId) && mode != ConversionMode.None) {
-            ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", resultId, mode.name()));
+            Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", resultId, mode.name()));
         }
 
         return resultId.trim();
+    }
+
+    /**
+     * Attempt to retrieve the localized equivalent of the specified string
+     *
+     * @param original The string to interpret
+     * @return The equivalent localized string, if present
+     */
+    public String getLocalizedMessage(final String original) {
+        String result = original.trim();
+        if (result.contains(" ")) {
+            String adjusted = result;
+            for (String dataPart : result.split(" ")) {
+                if (hasTranslation(dataPart)) {
+                    adjusted = adjusted.replace(dataPart, translate(dataPart));
+                }
+            }
+            result = adjusted;
+        } else if (hasTranslation(original)) {
+            result = translate(result);
+        }
+        return result;
     }
 
     /**
@@ -407,7 +431,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
 
                         in.close();
                     } catch (Exception ex) {
-                        ModUtils.LOG.error("An exception has occurred while loading Translation Mappings, aborting scan to prevent issues...");
+                        Constants.LOG.error("An exception has occurred while loading Translation Mappings, aborting scan to prevent issues...");
                         if (CommandUtils.isVerboseMode()) {
                             ex.printStackTrace();
                         }
@@ -424,12 +448,12 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         }
 
         if (hasError) {
-            ModUtils.LOG.error("Translations for " + modId + " do not exist for " + languageId);
+            Constants.LOG.error("Translations for " + modId + " do not exist for " + languageId);
             translationMap.clear();
             requestMap.put(languageId, translationMap);
             setLanguage(defaultLanguageId);
         } else {
-            ModUtils.LOG.debugInfo((hadBefore ? "Refreshed" : "Added") + " translations for " + modId + " for " + languageId);
+            Constants.LOG.debugInfo((hadBefore ? "Refreshed" : "Added") + " translations for " + modId + " for " + languageId);
             requestMap.put(languageId, translationMap);
         }
         return translationMap;
@@ -481,22 +505,17 @@ public class TranslationUtils implements IResourceManagerReloadListener {
                 hasError = true;
             }
         } catch (Exception ex) {
-            ModUtils.LOG.error("Exception parsing " + translationKey + " from " + languageId);
+            Constants.LOG.error("Exception parsing " + translationKey + " from " + languageId);
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
-            hasError = true;
+            return translationKey;
         }
 
         if (hasError) {
-            showErrors = CraftPresence.SYSTEM.HAS_GAME_LOADED || languageId.equals(getDefaultLanguage());
-            if (showErrors) {
-                ModUtils.LOG.error("Unable to retrieve a translation for " + translationKey + " from " + languageId);
-            }
+            Constants.LOG.debugError("Unable to retrieve a translation for " + translationKey + " from " + languageId);
             if (!languageId.equals(getDefaultLanguage())) {
-                if (showErrors) {
-                    ModUtils.LOG.error("Attempting to retrieve default translation for " + translationKey);
-                }
+                Constants.LOG.debugError("Attempting to retrieve default translation for " + translationKey);
                 return translateFrom(getDefaultLanguage(), stripColors, translationKey, parameters);
             }
         }

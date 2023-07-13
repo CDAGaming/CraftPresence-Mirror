@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl;
+package com.gitlab.cdagaming.craftpresence.core.impl;
 
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.TimeUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

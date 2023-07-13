@@ -27,7 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Module;
 import com.gitlab.cdagaming.craftpresence.config.gui.AboutGui;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
@@ -122,9 +122,9 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         final boolean hasMainTitle = !StringUtils.isNullOrEmpty(title);
         final boolean hasSubTitle = !StringUtils.isNullOrEmpty(subTitle);
         if (hasMainTitle) {
-            final String mainTitle = StringUtils.getLocalizedMessage(title);
+            final String mainTitle = ModUtils.TRANSLATOR.getLocalizedMessage(title);
             if (hasSubTitle) {
-                final String otherTitle = StringUtils.getLocalizedMessage(subTitle);
+                final String otherTitle = ModUtils.TRANSLATOR.getLocalizedMessage(subTitle);
 
                 renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
                 renderCenteredString(otherTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);

@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.utils.MathUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

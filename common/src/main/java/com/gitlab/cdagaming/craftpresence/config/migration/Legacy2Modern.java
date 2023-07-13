@@ -26,13 +26,14 @@ package com.gitlab.cdagaming.craftpresence.config.migration;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.config.element.Button;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.HashMapBuilder;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import com.google.gson.JsonElement;
 
 import java.io.File;
@@ -289,7 +290,6 @@ public class Legacy2Modern implements DataMigrator {
             //
             .put("languageId", "accessibilitySettings.languageId")
             .put("stripTranslationColors", "accessibilitySettings.stripTranslationColors")
-            .put("showLoggingInChat", "accessibilitySettings.showLoggingInChat")
             .put("stripExtraGuiElements", "accessibilitySettings.stripExtraGuiElements")
             .put("renderTooltips", "accessibilitySettings.renderTooltips")
             .put("configGuiKeybind", "accessibilitySettings.configKeyCode")
@@ -329,7 +329,7 @@ public class Legacy2Modern implements DataMigrator {
             configReader = new InputStreamReader(inputStream, Charset.forName(encoding));
             properties.load(configReader);
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
@@ -419,7 +419,7 @@ public class Legacy2Modern implements DataMigrator {
                         }
 
                         if (!currentValue.equals(newValue)) {
-                            ModUtils.LOG.debugInfo("Migrating modified legacy property " + originalName + " to JSON property " + newName);
+                            Constants.LOG.debugInfo("Migrating modified legacy property " + originalName + " to JSON property " + newName);
                             instance.setProperty(newName, newValue);
                         }
                     }
@@ -435,13 +435,13 @@ public class Legacy2Modern implements DataMigrator {
                 inputStream.close();
             }
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
         } finally {
             if (!configFile.delete()) {
-                ModUtils.LOG.error("Failed to remove: " + configFile.getName());
+                Constants.LOG.error("Failed to remove: " + configFile.getName());
             }
             // Force Schema Version to the latest schema, before saving
             instance._schemaVersion = Config.getSchemaVersion();
@@ -460,7 +460,7 @@ public class Legacy2Modern implements DataMigrator {
             final Predicate<String> typeCheck = entry.getSecond();
             final Predicate<String> optionCheck = entry.getThird();
             if (typeCheck.test(argumentType) && optionCheck.test(originalName) && result.toLowerCase().contains(original.toLowerCase())) {
-                ModUtils.LOG.debugInfo("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue);
+                Constants.LOG.debugInfo("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue);
                 result = StringUtils.replace(result, original, newValue, false, false, true); // v1 Placeholders were case-insensitive
             }
         }
@@ -472,7 +472,7 @@ public class Legacy2Modern implements DataMigrator {
                 split[0] = split[0].replaceAll("[{}]", "");
                 split[1] = split[1].replaceAll("[{}]", "");
                 final String replacement = String.format("{getOrDefault(%1$s, %2$s)}", split[0], split[1]);
-                ModUtils.LOG.debugInfo("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, match, replacement);
+                Constants.LOG.debugInfo("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, match, replacement);
                 result = result.replace(match, replacement);
             }
         }

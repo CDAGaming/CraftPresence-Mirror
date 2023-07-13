@@ -22,9 +22,11 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -49,7 +51,7 @@ public class UrlUtils {
     /**
      * The User Agent to Identify As when Accessing other URLs
      */
-    private static final String USER_AGENT = ModUtils.MOD_ID + "/" + ModUtils.MCVersion;
+    private static final String USER_AGENT = Constants.MOD_ID + "/" + Constants.VERSION_ID;
     /**
      * The GSON Json Builder to Use while Parsing Json
      */
@@ -254,7 +256,7 @@ public class UrlUtils {
         if (SystemUtils.browseWithSystem(targetUrl.toString())) {
             return true;
         }
-        ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.web", targetUrl.toString()));
+        Constants.LOG.error("Failed to go to page: %s", targetUrl.toString());
         return false;
     }
 
@@ -267,21 +269,21 @@ public class UrlUtils {
     public static boolean browseWithDesktop(final URI uri) {
         try {
             if (!java.awt.Desktop.isDesktopSupported()) {
-                ModUtils.LOG.debugInfo("Platform is not supported.");
+                Constants.LOG.debugInfo("Platform is not supported.");
                 return false;
             }
 
             if (!java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
-                ModUtils.LOG.debugInfo("BROWSE is not supported.");
+                Constants.LOG.debugInfo("BROWSE is not supported.");
                 return false;
             }
 
-            ModUtils.LOG.debugInfo("Trying to use Desktop.getDesktop().browse() with " + uri.toString());
+            Constants.LOG.debugInfo("Trying to use Desktop.getDesktop().browse() with " + uri.toString());
             java.awt.Desktop.getDesktop().browse(uri);
 
             return true;
         } catch (Throwable t) {
-            ModUtils.LOG.debugError("Error using desktop browse.", t);
+            Constants.LOG.debugError("Error using desktop browse.", t);
             return false;
         }
     }

@@ -26,9 +26,9 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;

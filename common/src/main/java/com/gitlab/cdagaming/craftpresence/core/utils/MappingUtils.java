@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 import io.github.classgraph.ClassInfo;
 
 import java.io.BufferedReader;
@@ -77,7 +78,7 @@ public class MappingUtils {
                                 StringUtils.DEFAULT_CHARSET
                         )
                 )) {
-                    ModUtils.LOG.info("Loading Mappings...");
+                    Constants.LOG.debugInfo("Loading Mappings...");
                     final Instant time = TimeUtils.getCurrentTime();
                     for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                         String[] parts = line.split(" ");
@@ -85,7 +86,7 @@ public class MappingUtils {
                             cm.put(parts[1], parts[2]);
                         }
                     }
-                    ModUtils.LOG.info("Loaded Mappings in " + TimeUtils.getDurationFrom(time).toMillis() + "ms");
+                    Constants.LOG.debugInfo("Loaded Mappings in " + TimeUtils.getDurationFrom(time).toMillis() + "ms");
                 }
             } catch (Throwable e) {
                 e.printStackTrace();

@@ -25,8 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.config.category;
 
 import com.gitlab.cdagaming.craftpresence.config.Module;
-import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
 import java.io.Serializable;

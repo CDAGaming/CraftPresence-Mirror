@@ -25,11 +25,12 @@
 package com.gitlab.cdagaming.craftpresence.utils.updater;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.versioning.VersionComparator;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.integrations.versioning.VersionComparator;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -131,11 +132,11 @@ public class ModUpdaterUtils {
             flushData();
 
             if (StringUtils.isNullOrEmpty(updateUrl)) return;
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
 
             final String data = UrlUtils.getURLText(updateUrl, "UTF-8");
 
-            ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", data));
+            Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", data));
 
             @SuppressWarnings("unchecked") final Map<String, Object> json = FileUtils.getJsonData(data, Map.class);
             @SuppressWarnings("unchecked") final Map<String, String> promos = (Map<String, String>) json.get("promos");
@@ -172,7 +173,7 @@ public class ModUpdaterUtils {
             } else
                 currentState = UpdateState.BETA;
 
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
 
             changelogData.clear();
             @SuppressWarnings("unchecked") final Map<String, String> tmp = (Map<String, String>) json.get(currentGameVersion);
@@ -191,7 +192,7 @@ public class ModUpdaterUtils {
             }
         } catch (Throwable ex) {
             // Log Failure and Set Update State to FAILED
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
 
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();

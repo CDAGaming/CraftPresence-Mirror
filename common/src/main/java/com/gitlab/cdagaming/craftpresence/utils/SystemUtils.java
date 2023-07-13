@@ -26,7 +26,10 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.LockObject;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.impl.LockObject;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -129,7 +132,7 @@ public class SystemUtils {
 
             TICK_LOCK.unlock();
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.system"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.system"));
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
@@ -191,7 +194,7 @@ public class SystemUtils {
      * @return {@link Boolean#TRUE} upon success
      */
     private static boolean runCommand(final String command, final String args, final String file) {
-        ModUtils.LOG.debugInfo("Trying to exec: [cmd=\"%s\", args=\"%s\", file=\"%s\"]", command, args, file);
+        Constants.LOG.debugInfo("Trying to exec: [cmd=\"%s\", args=\"%s\", file=\"%s\"]", command, args, file);
         final String[] parts = prepareCommand(command, args, file);
 
         try {
@@ -200,17 +203,17 @@ public class SystemUtils {
             try {
                 int retval = p.exitValue();
                 if (retval == 0) {
-                    ModUtils.LOG.debugError("Process ended immediately.");
+                    Constants.LOG.debugError("Process ended immediately.");
                 } else {
-                    ModUtils.LOG.debugError("Process crashed.");
+                    Constants.LOG.debugError("Process crashed.");
                 }
                 return false;
             } catch (IllegalThreadStateException itse) {
-                ModUtils.LOG.debugError("Process is running.");
+                Constants.LOG.debugError("Process is running.");
                 return true;
             }
         } catch (IOException e) {
-            ModUtils.LOG.debugError("Error running command.", e);
+            Constants.LOG.debugError("Error running command.", e);
             return false;
         }
     }

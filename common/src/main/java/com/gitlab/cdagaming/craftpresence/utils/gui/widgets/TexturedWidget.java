@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.config.element.ColorData;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

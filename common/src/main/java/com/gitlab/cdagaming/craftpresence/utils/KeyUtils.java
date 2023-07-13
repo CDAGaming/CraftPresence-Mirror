@@ -27,9 +27,11 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
-import com.gitlab.cdagaming.craftpresence.impl.KeyConverter;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiControls;
@@ -258,7 +260,7 @@ public class KeyUtils {
                                 if (keyData.getThird() != null) {
                                     keyData.getThird().accept(ex);
                                 } else {
-                                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
+                                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
                                     syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
                                 }
                             } finally {
@@ -303,7 +305,7 @@ public class KeyUtils {
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
             if (CommandUtils.isVerboseMode()) {
-                ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
+                Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
             }
         }
     }

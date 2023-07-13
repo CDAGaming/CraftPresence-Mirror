@@ -27,14 +27,19 @@ package com.gitlab.cdagaming.craftpresence.utils.discord;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.config.element.Button;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.discord.DiscordStatus;
-import com.gitlab.cdagaming.craftpresence.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
+import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
-import com.gitlab.cdagaming.craftpresence.utils.*;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonArray;
@@ -260,8 +265,8 @@ public class DiscordUtils {
         syncArgument("general.title", ModUtils.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
         syncArgument("general.version", ModUtils.MCVersion);
         syncArgument("general.protocol", ModUtils.MCProtocolID);
-        syncArgument("data.general.version", ModUtils.MCBuildVersion);
-        syncArgument("data.general.protocol", ModUtils.MCBuildProtocol);
+        syncArgument("data.general.version", Constants.MCBuildVersion);
+        syncArgument("data.general.protocol", Constants.MCBuildProtocol);
     }
 
     /**
@@ -315,7 +320,7 @@ public class DiscordUtils {
     private void attemptConnection() {
         try {
             final int attemptCount = (MAX_CONNECTION_ATTEMPTS - attemptsRemaining) + 1;
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.connect", attemptCount, MAX_CONNECTION_ATTEMPTS));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.connect", attemptCount, MAX_CONNECTION_ATTEMPTS));
             if (PREFERRED_CLIENT != DiscordBuild.ANY) {
                 ipcInstance.connect(PREFERRED_CLIENT, DiscordBuild.ANY);
             } else {
@@ -331,7 +336,7 @@ public class DiscordUtils {
             connectThreadActive = false;
         } catch (Exception ex) {
             if (ex.getClass() != NoDiscordClientException.class) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.connect"));
+                Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.connect"));
                 if (CommandUtils.isVerboseMode()) {
                     ex.printStackTrace();
                 }
@@ -492,9 +497,9 @@ public class DiscordUtils {
         final String verbosePrefix = ModUtils.TRANSLATOR.translate("craftpresence.logger.error.verbose");
         if (result == null || result.hasErrors()) {
             if (result != null) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.parser"));
-                ModUtils.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
-                ModUtils.LOG.error(messagePrefix);
+                Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.parser"));
+                Constants.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
+                Constants.LOG.error(messagePrefix);
                 for (Error error : result.errors) {
                     if (output != null) {
                         try {
@@ -502,7 +507,7 @@ public class DiscordUtils {
                         } catch (Exception ignored) {
                         }
                     }
-                    ModUtils.LOG.error("\t" + error.toString());
+                    Constants.LOG.error("\t" + error.toString());
                 }
             }
             return Value::null_;
@@ -521,8 +526,8 @@ public class DiscordUtils {
                     script.decompile(output);
                 }
             } catch (Throwable ex) {
-                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.compiler"));
-                ModUtils.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
+                Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.compiler"));
+                Constants.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
                 final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
                 // Dispatch to Appendable WriteStream if possible
                 if (output != null) {
@@ -543,12 +548,12 @@ public class DiscordUtils {
                 }
                 // Perform the same to Logging, so the same information is available on both ends
                 if (CommandUtils.isVerboseMode()) {
-                    ModUtils.LOG.error(messagePrefix);
+                    Constants.LOG.error(messagePrefix);
                     ex.printStackTrace();
                 } else {
-                    ModUtils.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
+                    Constants.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
                     if (splitEx.size() > 1) {
-                        ModUtils.LOG.error(verbosePrefix);
+                        Constants.LOG.error(verbosePrefix);
                     }
                 }
                 return Value.null_();
@@ -996,12 +1001,12 @@ public class DiscordUtils {
     public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, Supplier<Value>> args) {
         final StringBuilder resultString = new StringBuilder(
                 ModUtils.TRANSLATOR.translate(
-                        String.format("%s.placeholders.notes", ModUtils.MOD_ID)
+                        String.format("%s.placeholders.notes", Constants.MOD_ID)
                 )
         );
         resultString.append("\\n\\n").append(
                 ModUtils.TRANSLATOR.translate(
-                        String.format("%s.placeholders.title", ModUtils.MOD_ID)
+                        String.format("%s.placeholders.title", Constants.MOD_ID)
                 )
         );
         if (!formats.isEmpty()) {
@@ -1014,11 +1019,11 @@ public class DiscordUtils {
             for (Map.Entry<String, Supplier<Value>> argData : args.entrySet()) {
                 final String placeholderName = argData.getKey();
                 final String placeholderTranslation = String.format("%s.placeholders.%s.description",
-                        ModUtils.MOD_ID,
+                        Constants.MOD_ID,
                         placeholderName
                 );
                 final String placeholderUsage = String.format("%s.placeholders.%s.usage",
-                        ModUtils.MOD_ID,
+                        Constants.MOD_ID,
                         placeholderName
                 );
 
@@ -1224,7 +1229,7 @@ public class DiscordUtils {
                         }
 
                         if (attemptsRemaining <= 0) {
-                            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.connect"));
+                            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.connect"));
                             STATUS = DiscordStatus.Closed;
                         }
                     }
@@ -1279,21 +1284,21 @@ public class DiscordUtils {
                     if (foundAsset != null) {
                         finalKey = foundAsset.getName();
                         if (showLogging && !isPrimaryEntry) {
-                            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.fallback", primaryKey, finalKey));
+                            Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.fallback", primaryKey, finalKey));
                         }
                         break;
                     } else {
                         i++;
                         if (i < evalStrings.length) {
                             if (showLogging) {
-                                ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.fallback", currentString, evalStrings[i]));
+                                Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.fallback", currentString, evalStrings[i]));
                                 if (isPrimaryEntry) {
-                                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", currentString));
+                                    Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", currentString));
                                 }
                             }
                         } else {
                             if (showLogging) {
-                                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.default", primaryKey, defaultIcon));
+                                Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.default", primaryKey, defaultIcon));
                             }
                             finalKey = defaultIcon;
                         }
@@ -1306,8 +1311,8 @@ public class DiscordUtils {
                 result = cachedImageData.get(primaryKey);
                 if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
                     if (showLogging && CommandUtils.isVerboseMode() && !result.equals(primaryKey)) {
-                        ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
-                        ModUtils.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
+                        Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
+                        Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
                     }
                 }
             }
@@ -1415,7 +1420,7 @@ public class DiscordUtils {
             lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
         }
     }
 

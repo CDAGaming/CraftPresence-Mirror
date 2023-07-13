@@ -27,9 +27,11 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.impl.TreeMapBuilder;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.impl.TreeMapBuilder;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.atlauncher.ATLauncherUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.CurseUtils;
@@ -55,7 +57,7 @@ public class CommandUtils {
      * Thread Factory Instance for this Class, used for Scheduling Events
      */
     private static final ThreadFactory threadFactory = r -> {
-        final Thread t = new Thread(r, ModUtils.NAME);
+        final Thread t = new Thread(r, Constants.NAME);
         t.setDaemon(true);
         return t;
     };
@@ -159,7 +161,7 @@ public class CommandUtils {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isDebugMode() {
-        return ModUtils.IS_DEV_FLAG ||
+        return Constants.IS_DEV_FLAG ||
                 isVerboseMode() || (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.debugMode);
     }
 
@@ -169,7 +171,7 @@ public class CommandUtils {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isVerboseMode() {
-        return ModUtils.IS_VERBOSE_FLAG ||
+        return Constants.IS_VERBOSE_FLAG ||
                 (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
     }
 
@@ -238,6 +240,9 @@ public class CommandUtils {
      * @param forceUpdateRPC Whether to Force an Update to the RPC Data
      */
     public static void reloadData(final boolean forceUpdateRPC) {
+        // Ensure Logger Settings
+        Constants.LOG.setDebugMode(isDebugMode());
+
         ModUtils.TRANSLATOR.onTick();
         CraftPresence.SYSTEM.onTick();
         CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
@@ -260,14 +265,14 @@ public class CommandUtils {
             final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
             final String messagePrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
 
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.module"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.module"));
             if (CommandUtils.isVerboseMode()) {
-                ModUtils.LOG.error(messagePrefix);
+                Constants.LOG.error(messagePrefix);
                 ex.printStackTrace();
             } else {
-                ModUtils.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
+                Constants.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
                 if (splitEx.size() > 1) {
-                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.verbose"));
+                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.verbose"));
                 }
             }
             CraftPresence.CLIENT.shutDown();
@@ -301,12 +306,12 @@ public class CommandUtils {
             final String type = pack.getKey();
             final Pack data = pack.getValue();
             if (data.isEnabled()) {
-                ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
+                Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
                 if (data.load()) {
-                    ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
+                    Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
                     break; // Only iterate until the first pack is found
                 } else {
-                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
+                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
                 }
             }
         }

@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
 import net.minecraftforge.fml.common.Mod;
 
 /**

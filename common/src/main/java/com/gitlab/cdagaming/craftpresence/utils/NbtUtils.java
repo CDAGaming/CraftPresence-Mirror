@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;

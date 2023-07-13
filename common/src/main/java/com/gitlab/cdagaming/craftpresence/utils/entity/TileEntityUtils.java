@@ -26,8 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Module;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;

@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.impl.discord;
+package com.gitlab.cdagaming.craftpresence.core.impl.discord;
 
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 
 /**
  * Constants representing various Discord client party privacy levels,

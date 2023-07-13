@@ -22,15 +22,13 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.integrations.FieldReflectionUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
+import com.gitlab.cdagaming.craftpresence.core.integrations.FieldReflectionUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
 
 import java.awt.*;
 import java.io.PrintWriter;
@@ -1093,28 +1091,6 @@ public class StringUtils {
     }
 
     /**
-     * Attempt to retrieve the localized equivalent of the specified string
-     *
-     * @param original The string to interpret
-     * @return The equivalent localized string, if present
-     */
-    public static String getLocalizedMessage(final String original) {
-        String result = original.trim();
-        if (result.contains(" ")) {
-            String adjusted = result;
-            for (String dataPart : result.split(" ")) {
-                if (ModUtils.TRANSLATOR.hasTranslation(dataPart)) {
-                    adjusted = adjusted.replace(dataPart, ModUtils.TRANSLATOR.translate(dataPart));
-                }
-            }
-            result = adjusted;
-        } else if (ModUtils.TRANSLATOR.hasTranslation(original)) {
-            result = ModUtils.TRANSLATOR.translate(result);
-        }
-        return result;
-    }
-
-    /**
      * Converts an Identifier into a properly formatted and interpretable Name
      * <p>
      * Note: Additional Logic in Place for Older MC Versions
@@ -1142,13 +1118,12 @@ public class StringUtils {
         if (isNullOrEmpty(formattedKey.toString())) {
             return formattedKey.toString();
         } else {
-            if (formattedKey.toString().contains("WorldProvider")) {
-                if (ModUtils.IS_LEGACY_SOFT && ModUtils.MCProtocolID <= 11 && formattedKey.toString().equals("WorldProvider")) {
-                    formattedKey = new StringBuilder("overworld");
-                } else {
-                    formattedKey = new StringBuilder(formattedKey.toString().replace("WorldProvider", ""));
-                }
+            if (formattedKey.toString().equals("WorldProvider")) {
+                formattedKey = new StringBuilder("overworld");
+            } else if (formattedKey.toString().contains("WorldProvider")) {
+                formattedKey = new StringBuilder(formattedKey.toString().replace("WorldProvider", ""));
             }
+
             if (formattedKey.toString().contains("BiomeGen")) {
                 formattedKey = new StringBuilder(formattedKey.toString().replace("BiomeGen", ""));
             }
@@ -1304,24 +1279,6 @@ public class StringUtils {
 
         return sb.toString();
 
-    }
-
-    /**
-     * Display a Message to the Player, via the in-game Chat Hud
-     *
-     * @param sender  The Entity to Send to (Must be a Player)
-     * @param message The Message to send and display in chat
-     */
-    public static void sendMessageToPlayer(final Entity sender, final String message) {
-        if (sender instanceof EntityPlayer) {
-            final EntityPlayer player = (EntityPlayer) sender;
-            final List<String> lines = splitTextByNewLine(message);
-            if (!lines.isEmpty()) {
-                for (String line : lines) {
-                    player.sendMessage(new TextComponentString(line));
-                }
-            }
-        }
     }
 
     /**

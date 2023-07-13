@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
 /**
  * String Utilities for interpreting equations and Math-Related Data Types

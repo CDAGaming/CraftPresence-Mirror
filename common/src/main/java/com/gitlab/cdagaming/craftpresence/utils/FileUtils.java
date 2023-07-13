@@ -25,7 +25,11 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -202,7 +206,7 @@ public class FileUtils {
                 outputStream.close();
             }
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.data.close"));
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
@@ -217,18 +221,18 @@ public class FileUtils {
      */
     public static void downloadFile(final String urlString, final File file) {
         try {
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.init", file.getName(), file.getAbsolutePath(), urlString));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.init", file.getName(), file.getAbsolutePath(), urlString));
             final URL url = new URL(urlString);
             if (file.exists()) {
                 final boolean fileDeleted = file.delete();
                 if (!fileDeleted) {
-                    ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.delete.file", file.getName()));
+                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.delete.file", file.getName()));
                 }
             }
             copyStreamToFile(UrlUtils.getURLStream(url), file);
-            ModUtils.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.loaded", file.getName(), file.getAbsolutePath(), urlString));
+            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.download.loaded", file.getName(), file.getAbsolutePath(), urlString));
         } catch (Exception ex) {
-            ModUtils.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.download", file.getName(), urlString, file.getAbsolutePath()));
+            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.download", file.getName(), urlString, file.getAbsolutePath()));
             if (CommandUtils.isVerboseMode()) {
                 ex.printStackTrace();
             }
@@ -378,7 +382,7 @@ public class FileUtils {
     }
 
     /**
-     * Retrieve the Amount of Active Mods in the {@link ModUtils#modsDir}
+     * Retrieve the Amount of Active Mods in the {@link Constants#modsDir}
      *
      * @return The Mods that are active in the directory
      */
@@ -386,7 +390,7 @@ public class FileUtils {
         // Mod is within ClassLoader if in a Dev Environment
         // and is thus automatically counted if this is the case
         int modCount = CommandUtils.isDebugMode() ? 1 : 0;
-        final File[] mods = new File(ModUtils.modsDir).listFiles();
+        final File[] mods = new File(Constants.modsDir).listFiles();
 
         if (mods != null) {
             for (File modFile : mods) {

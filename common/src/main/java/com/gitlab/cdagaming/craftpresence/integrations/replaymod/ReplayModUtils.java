@@ -26,11 +26,11 @@ package com.gitlab.cdagaming.craftpresence.integrations.replaymod;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.utils.MappingUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.client.gui.GuiScreen;
 

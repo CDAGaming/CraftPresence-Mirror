@@ -24,51 +24,13 @@
 
 package com.gitlab.cdagaming.craftpresence;
 
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.realms.RealmsSharedConstants;
 
-import java.io.File;
-
-/**
- * Constant Variables and Methods used throughout the Application
- *
- * @author CDAGaming
- */
 public class ModUtils {
-    /**
-     * The Application's Name
-     */
-    public static final String NAME = "@MOD_NAME@";
-
-    /**
-     * The Application's Version ID
-     */
-    public static final String VERSION_ID = "v@VERSION_ID@";
-
-    /**
-     * The Application's Version Release Type
-     */
-    public static final String VERSION_TYPE = "@VERSION_TYPE@";
-
-    /**
-     * The Application's Identifier
-     */
-    public static final String MOD_ID = "craftpresence";
-
-    /**
-     * The Minecraft Version this Mod was compiled with
-     */
-    public static final String MCBuildVersion = "@MC_VERSION@";
-
-    /**
-     * The Protocol Version this Mod was compiled with
-     */
-    public static final int MCBuildProtocol = StringUtils.getValidInteger("@MC_PROTOCOL@").getSecond();
-
     /**
      * The Detected Minecraft Version
      */
@@ -85,36 +47,10 @@ public class ModUtils {
     public static final String BRAND = ClientBrandRetriever.getClientModName();
 
     /**
-     * The Application's Configuration Directory
-     */
-    public static final String configDir = SystemUtils.USER_DIR + File.separator + "config";
-
-    /**
-     * The Application's "mods" Directory
-     */
-    public static final String modsDir = SystemUtils.USER_DIR + File.separator + "mods";
-
-    /**
-     * The URL to receive Update Information from
-     */
-    public static final String UPDATE_JSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json";
-
-    /**
-     * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
-     */
-    public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(MOD_ID, UPDATE_JSON, VERSION_ID, MCVersion);
-
-    /**
-     * If this Application is within the Soft Floor of Legacy Mode
-     * <p>This variable becomes true only on versions before 13w41a (When the protocol number was reset)
-     */
-    public final static boolean IS_LEGACY_SOFT = StringUtils.getValidBoolean("@IS_LEGACY@").getSecond();
-
-    /**
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
      */
-    public final static boolean IS_LEGACY_HARD = IS_LEGACY_SOFT && MCProtocolID <= 61;
+    public final static boolean IS_LEGACY_HARD = Constants.IS_LEGACY_SOFT && MCProtocolID <= 61;
 
     /**
      * If this Application is in the Alpha Floor of Legacy Mode
@@ -123,24 +59,19 @@ public class ModUtils {
     public final static boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCProtocolID <= 2;
 
     /**
-     * If this Application is flagged to be run in a Developer or Debug State
+     * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
      */
-    public static final boolean IS_DEV_FLAG = StringUtils.getValidBoolean("@IS_DEV@").getSecond();
-
-    /**
-     * If this Application is flagged to be running in a de-obfuscated or Developer environment
-     */
-    public static final boolean IS_VERBOSE_FLAG = StringUtils.getValidBoolean("@IS_VERBOSE@").getSecond();
-
-    /**
-     * The Application's Instance of {@link ModLogger} for Logging Information
-     */
-    public static final ModLogger LOG = new ModLogger(MOD_ID);
+    public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(
+            Constants.MOD_ID,
+            Constants.UPDATE_JSON,
+            Constants.VERSION_ID,
+            MCVersion
+    );
 
     /**
      * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
      */
-    public static final TranslationUtils TRANSLATOR = new TranslationUtils(MOD_ID, true).build();
+    public static final TranslationUtils TRANSLATOR = new TranslationUtils(Constants.MOD_ID, true).build();
 
     /**
      * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
@@ -150,12 +81,12 @@ public class ModUtils {
     /**
      * Flag used for determining if Text Colors are blocked
      */
-    public static final boolean IS_TEXT_COLORS_BLOCKED = IS_LEGACY_SOFT && MCProtocolID <= 23;
+    public static final boolean IS_TEXT_COLORS_BLOCKED = Constants.IS_LEGACY_SOFT && MCProtocolID <= 23;
 
     private static TranslationUtils findGameTranslations() {
-        final boolean hasVanillaTranslations = !IS_LEGACY_SOFT || MCProtocolID >= 7;
+        final boolean hasVanillaTranslations = !Constants.IS_LEGACY_SOFT || MCProtocolID >= 7;
         return hasVanillaTranslations ? new TranslationUtils(
-                "minecraft", !IS_LEGACY_SOFT && MCProtocolID >= 353
-        ).setUsingAssetsPath(!IS_LEGACY_SOFT || MCProtocolID >= 72).build() : null;
+                "minecraft", !Constants.IS_LEGACY_SOFT && MCProtocolID >= 353
+        ).setUsingAssetsPath(!Constants.IS_LEGACY_SOFT || MCProtocolID >= 72).build() : null;
     }
 }

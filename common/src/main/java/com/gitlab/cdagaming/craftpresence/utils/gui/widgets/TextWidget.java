@@ -24,7 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
@@ -278,7 +279,7 @@ public class TextWidget extends ExtendedTextControl {
         setControlPosX(calc2);
 
         if (!StringUtils.isNullOrEmpty(title)) {
-            final String mainTitle = StringUtils.getLocalizedMessage(title);
+            final String mainTitle = ModUtils.TRANSLATOR.getLocalizedMessage(title);
             setTitleX((calc1 + getControlWidth()) - (getControlWidth() / 2f));
             setTitleY(getBottom() - (getControlHeight() / 2f) - (screen.getFontHeight() / 2f));
             screen.renderCenteredString(mainTitle, getTitleX(), getTitleY(), 0xFFFFFF);
@@ -288,7 +289,7 @@ public class TextWidget extends ExtendedTextControl {
     @Override
     public void postDraw(ExtendedScreen screen) {
         if (!StringUtils.isNullOrEmpty(title)) {
-            final String mainTitle = StringUtils.getLocalizedMessage(title);
+            final String mainTitle = ModUtils.TRANSLATOR.getLocalizedMessage(title);
             final int titleWidth = screen.getStringWidth(mainTitle);
             if (screen.isOverScreen() && RenderUtils.isMouseOver(
                     screen.getMouseX(), screen.getMouseY(),

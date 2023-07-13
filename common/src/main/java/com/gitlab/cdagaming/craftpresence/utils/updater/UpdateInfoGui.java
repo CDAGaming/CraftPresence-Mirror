@@ -26,8 +26,9 @@ package com.gitlab.cdagaming.craftpresence.utils.updater;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.UrlUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
@@ -131,7 +132,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         if (RenderUtils.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, getStringWidth(mainTitle), getFontHeight())) {
             drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", ModUtils.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
+                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", Constants.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
                     )
             );
         }

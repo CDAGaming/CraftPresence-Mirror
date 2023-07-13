@@ -25,7 +25,13 @@
 package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.utils.*;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
+import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
@@ -134,8 +140,8 @@ public class CraftPresence {
         MappingUtils.getClassMap();
 
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
-        ModUtils.LOG.debugWarn(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.warning.debug_mode"));
-        ModUtils.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", SystemUtils.OS_NAME, SystemUtils.OS_ARCH, SystemUtils.IS_64_BIT));
+        Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.warning.debug_mode"));
+        Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", SystemUtils.OS_NAME, SystemUtils.OS_ARCH, SystemUtils.IS_64_BIT));
 
         // Check for Updates before continuing
         ModUtils.UPDATER.checkForUpdates();

@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
