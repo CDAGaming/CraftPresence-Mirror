@@ -1,47 +1,34 @@
 # CraftPresence Changes
 
-## v2.1.2 (07/11/2023)
+## v2.2.0 (08/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.1.0...release%2Fv2.1.2)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.1.2...release%2Fv2.2.0)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
-* Backend: Multiple Buildscript Overhauls to centralize repeated data and allow for new versioning support
-    * Added support for 1.14, 1.14.1, 1.14.2, and 1.14.3 for the 1.14.4 Build
-    * Added support for 1.15 and 1.15.1 for the 1.15.2 Build
-    * Added a new 1.16.1 Build to cover both MC 1.16.1 and 1.16
-    * Added support for 1.16.2 for the 1.16.3 Build
-    * Added support for 1.16.4 for the 1.16.5 Build
-    * Added support for 1.17 for the 1.17.1 Build
-    * Added support for 1.18 for the 1.18.1 Build
-    * Added support for 1.19.1 for the 1.19.2 Build
-    * Added support for 1.20 for the 1.20.1 Build
-* Placeholder Adjustments for `general` data:
-    * On 1.7.10 and above: `general.version` now properly retrieves the detected MC Version (On lower versions, prior
-      behavior is used)
-    * Added a `general.protocol` version to allow a frontend method to retrieve the detected MC Protocol Version
-    * Added a `data` version for the aforementioned placeholders to differentiate between `detected` and `compiled for`
-      data
-* Added a notice in the `MainUI` for when the Game Version differs from the Game Version the mod was compiled with
-    * Given the newer relaxed versioning, there are cases where things may not work 100% which this warning is meant to
-      symbolize
-    * Primarily, the Per-GUI module may fail in certain cases, due to mismatches in the mapping file that it uses for
-      auto-lookups
+* Backend: Added a new `core` module, splitting the Mod API into its pure-java segments and game-segments
+    * This changes comes with many API changes, rewrites, and adjustments to critical logic
+    * Please report any issues with existing features breaking or unexpected crashes
+* Backend: Adjusted `TranslationUtils#translateFrom` exception reporting
+    * If a parser exception occurs, the raw `translationKey` is early-returned to prevent early logging and cases of
+      spam
+    * Falling back to the default language has its logging only show up as debug logging, since it isn't necesarily an
+      error
+* Backend: Removed excess logging relating to `MappingUtils` (`Debug` instead of `Info` level)
+* Backend: Adjusted the `/cp export assets` command to always generate a `downloads.txt` file, regardless
+  of `doFullCopy` status
+* Removed the `showLoggingInChat` option from the `Accessibility` Section
+    * This option was hardly used, and hardly iterated on since its original creation in early v1
+    * It was removed as a result to the aforementioned refactors
 
 ### Fixes
 
-* Fixed an issue where Background Rendering could be incorrect in some UIs
-    * Background Rendering now override's stock MC methods rather than using its own method
-    * This will allow some mods to also be able to properly override and interpret the Background State
-    * An additional fix has been made to properly apply the Background to Scroll Lists as well
-* Fixed `.lang` files being missing, leading to Translation Errors and Data Loss on select MC Versions
-    * This was caused from a regression in v2.1.0
-* Fixed an issue where generated `.lang` files, converted from `.json`, would be in the wrong file encoding
-    * This could cause issues such as Color Codes not appearing properly, which has been fixed from this and by ensuring
-      both files are in `UTF-8` encoding
+* Fixed various issues with Translations being incorrect in several languages
+    * Aditionally, only approved translations are now filtered into the repository
+    * Several obsolete translations have also been removed (Or had its existing translation reset)
 
 ___
 
