@@ -24,9 +24,9 @@
 
 package com.gitlab.cdagaming.craftpresence.core.impl;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
-import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -37,9 +37,13 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Base64;
 
 /**
  * Image Conversion Layers and Utilities used to translate other Image Types
@@ -83,7 +87,7 @@ public class ImageFrame {
      * @param height   The height of this image
      */
     public ImageFrame(final BufferedImage image, final int delay, final String disposal, final int width, final int height) {
-        this.image = ImageUtils.deepCopy(image);
+        this.image = deepCopy(image);
         this.delay = delay;
         this.disposal = disposal;
         this.width = width;
@@ -97,6 +101,55 @@ public class ImageFrame {
      */
     public ImageFrame(final BufferedImage image) {
         this(image, -1, null, -1, -1);
+    }
+
+    /**
+     * Perform a deep-copy on the specified {@link BufferedImage}
+     *
+     * @param bi the target {@link BufferedImage}
+     * @return the copied {@link BufferedImage}
+     */
+    public static BufferedImage deepCopy(final BufferedImage bi) {
+        final ColorModel cm = bi.getColorModel();
+        final boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        final WritableRaster raster = bi.copyData(bi.getRaster().createCompatibleWritableRaster());
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null).getSubimage(0, 0, bi.getWidth(), bi.getHeight());
+    }
+
+    /**
+     * Returns Whether the inputted string matches the format of an external image type
+     *
+     * @param input The original string to parse
+     * @return Whether the inputted string matches the format of an external image type
+     */
+    public static boolean isExternalImage(final String input) {
+        return !StringUtils.isNullOrEmpty(input) &&
+                (input.toLowerCase().startsWith("http") || StringUtils.isBase64(input).getFirst() || input.toLowerCase().startsWith("file://"));
+    }
+
+    /**
+     * Decodes the inputted string into valid Base64 data if possible
+     *
+     * @param input             The string to parse data
+     * @param encoding          The encoding to parse data in
+     * @param useDecodingMethod Whether we're using the alternative decoding method
+     * @param repeatCycle       Whether this is a repeat run with the same input, should be false except for internal usage
+     * @return Valid Base64 data, if possible to convert string data
+     */
+    public static byte[] decodeBase64(final String input, final String encoding, final boolean useDecodingMethod, final boolean repeatCycle) {
+        try {
+            return Base64.getDecoder().decode(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
+        } catch (Exception ex) {
+            if (Constants.LOG.isDebugMode()) {
+                ex.printStackTrace();
+            }
+
+            if (!repeatCycle) {
+                return decodeBase64(input, encoding, !useDecodingMethod, true);
+            } else {
+                return null;
+            }
+        }
     }
 
     /**
@@ -217,7 +270,7 @@ public class ImageFrame {
                     }
 
                     if (from != null) {
-                        master = ImageUtils.deepCopy(from);
+                        master = deepCopy(from);
                     }
                 } else if (disposal.equals("restoreToBackgroundColor") && backgroundColor != null && (!hasBackground || frameIndex > 1)) {
                     master.createGraphics().fillRect(lastX, lastY, frames.get(frameIndex - 1).getWidth(), frames.get(frameIndex - 1).getHeight());
@@ -228,7 +281,7 @@ public class ImageFrame {
                 lastY = y;
             }
 
-            final BufferedImage copy = ImageUtils.deepCopy(master);
+            final BufferedImage copy = deepCopy(master);
             frames.add(new ImageFrame(copy, delay, disposal, image.getWidth(), image.getHeight()));
 
             master.flush();
@@ -244,7 +297,7 @@ public class ImageFrame {
      * @return The current buffered image being stored
      */
     public BufferedImage getImage() {
-        return ImageUtils.deepCopy(image);
+        return deepCopy(image);
     }
 
     /**

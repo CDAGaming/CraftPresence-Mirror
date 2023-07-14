@@ -36,18 +36,13 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -96,7 +91,7 @@ public class ImageUtils {
                                         case ByteStream:
                                             final Tuple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());
                                             final byte[] dataSet = base64Data.getFirst() ?
-                                                    decodeBase64(base64Data.getThird(), "UTF-8", false, false) :
+                                                    ImageFrame.decodeBase64(base64Data.getThird(), "UTF-8", false, false) :
                                                     (originData instanceof byte[] ? (byte[]) originData : StringUtils.getBytes(originData.toString()));
                                             streamData = dataSet != null ? new ByteArrayInputStream(dataSet) : null;
                                             isGif = base64Data.getSecond().contains("gif");
@@ -300,42 +295,6 @@ public class ImageUtils {
     }
 
     /**
-     * Returns Whether the inputted string matches the format of an external image type
-     *
-     * @param input The original string to parse
-     * @return Whether the inputted string matches the format of an external image type
-     */
-    public static boolean isExternalImage(final String input) {
-        return !StringUtils.isNullOrEmpty(input) &&
-                (input.toLowerCase().startsWith("http") || StringUtils.isBase64(input).getFirst() || input.toLowerCase().startsWith("file://"));
-    }
-
-    /**
-     * Decodes the inputted string into valid Base64 data if possible
-     *
-     * @param input             The string to parse data
-     * @param encoding          The encoding to parse data in
-     * @param useDecodingMethod Whether we're using the alternative decoding method
-     * @param repeatCycle       Whether this is a repeat run with the same input, should be false except for internal usage
-     * @return Valid Base64 data, if possible to convert string data
-     */
-    public static byte[] decodeBase64(final String input, final String encoding, final boolean useDecodingMethod, final boolean repeatCycle) {
-        try {
-            return Base64.getDecoder().decode(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
-        } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
-
-            if (!repeatCycle) {
-                return decodeBase64(input, encoding, !useDecodingMethod, true);
-            } else {
-                return null;
-            }
-        }
-    }
-
-    /**
      * Detects whether the specified Texture lacks critical information
      *
      * @param location The texture to parse
@@ -343,19 +302,6 @@ public class ImageUtils {
      */
     public static boolean isTextureNull(final ResourceLocation location) {
         return location == null || (StringUtils.isNullOrEmpty(location.getNamespace()) || StringUtils.isNullOrEmpty(location.getPath()));
-    }
-
-    /**
-     * Perform a deep-copy on the specified {@link BufferedImage}
-     *
-     * @param bi the target {@link BufferedImage}
-     * @return the copied {@link BufferedImage}
-     */
-    public static BufferedImage deepCopy(final BufferedImage bi) {
-        final ColorModel cm = bi.getColorModel();
-        final boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        final WritableRaster raster = bi.copyData(bi.getRaster().createCompatibleWritableRaster());
-        return new BufferedImage(cm, raster, isAlphaPremultiplied, null).getSubimage(0, 0, bi.getWidth(), bi.getHeight());
     }
 
     /**

@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
+import com.gitlab.cdagaming.craftpresence.core.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
@@ -674,7 +675,7 @@ public class RenderUtils {
         boolean usingExternalTexture = false;
 
         if (!StringUtils.isValidColorCode(texture)) {
-            usingExternalTexture = ImageUtils.isExternalImage(texture);
+            usingExternalTexture = ImageFrame.isExternalImage(texture);
 
             // Only Perform Texture Conversion Steps if not an external Url
             // As an external Url should be parsed as-is in most use cases

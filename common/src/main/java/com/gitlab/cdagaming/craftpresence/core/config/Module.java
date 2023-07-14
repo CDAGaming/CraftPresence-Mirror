@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config;
+package com.gitlab.cdagaming.craftpresence.core.config;
 
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 
@@ -37,14 +37,14 @@ public abstract class Module {
      *
      * @return the default instance of this {@link Module}
      */
-    protected abstract Module getDefaults();
+    public abstract Module getDefaults();
 
     /**
      * Retrieve a copy of this {@link Module} instance
      *
      * @return a copy of this {@link Module} instance
      */
-    protected abstract Module copy();
+    public abstract Module copy();
 
     /**
      * Clone the properties of one {@link Module} instance to another
@@ -61,7 +61,7 @@ public abstract class Module {
      * @param name the name of the property
      * @return the property value, if found
      */
-    protected abstract Object getProperty(final String name);
+    public abstract Object getProperty(final String name);
 
     /**
      * Sets the specified property for this {@link Module}
@@ -69,7 +69,7 @@ public abstract class Module {
      * @param name  the name of the property
      * @param value the property value to assign
      */
-    protected abstract void setProperty(final String name, final Object value);
+    public abstract void setProperty(final String name, final Object value);
 
     /**
      * Resets the specified property to that which matches the default instance for this {@link Module}

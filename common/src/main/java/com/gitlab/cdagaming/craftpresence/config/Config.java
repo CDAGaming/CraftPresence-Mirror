@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.*;
 import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
@@ -451,7 +452,7 @@ public final class Config extends Module implements Serializable {
                                             if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
                                                 shouldReset = true;
                                             } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
-                                                final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), keyCodeMigrationId);
+                                                final int migratedKeyCode = KeyUtils.convertKey(boolData.getSecond(), keyCodeMigrationId);
                                                 if (migratedKeyCode != boolData.getSecond()) {
                                                     Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
                                                     setProperty(migratedKeyCode, pathData);

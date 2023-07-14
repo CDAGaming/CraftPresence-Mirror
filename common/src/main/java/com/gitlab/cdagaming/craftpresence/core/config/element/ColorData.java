@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.core.config.element;
 
-import com.gitlab.cdagaming.craftpresence.config.Module;
+import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 
 import java.awt.*;
@@ -158,12 +158,12 @@ public class ColorData extends Module implements Serializable {
     }
 
     @Override
-    protected Object getProperty(String name) {
+    public Object getProperty(String name) {
         return StringUtils.getField(ColorData.class, this);
     }
 
     @Override
-    protected void setProperty(String name, Object value) {
+    public void setProperty(String name, Object value) {
         StringUtils.updateField(ColorData.class, this, value, name);
     }
 }
