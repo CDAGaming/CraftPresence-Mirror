@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.TreeMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.atlauncher.ATLauncherUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater.MCUpdaterUtils;

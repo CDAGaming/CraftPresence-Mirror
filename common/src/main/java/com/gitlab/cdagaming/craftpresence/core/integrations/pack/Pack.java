@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.pack;
+package com.gitlab.cdagaming.craftpresence.core.integrations.pack;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 
 import java.io.FileNotFoundException;
 import java.nio.file.NoSuchFileException;
@@ -173,7 +173,7 @@ public abstract class Pack {
      * @return {@link Boolean#TRUE} if operation is allowed
      */
     protected boolean showException(final Exception ex) {
-        return CommandUtils.isVerboseMode() || (
+        return Constants.LOG.isDebugMode() || (
                 ex.getClass() != FileNotFoundException.class &&
                         ex.getClass() != NoSuchFileException.class
         );

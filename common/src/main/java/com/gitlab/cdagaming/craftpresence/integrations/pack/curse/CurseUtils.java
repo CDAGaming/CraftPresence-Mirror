@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.pack.curse;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
 
 import java.io.File;
 
