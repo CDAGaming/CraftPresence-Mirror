@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.LockObject;
 import java.time.Instant;
 
 /**
- * System and General Use Utilities
+ * Utilities relating to Timing and Scheduling Tasks
  *
  * @author CDAGaming
  */
@@ -50,7 +50,13 @@ public class ScheduleUtils {
      * The Current Epoch Unix Timestamp in Milliseconds
      */
     public Instant CURRENT_INSTANT;
+    /**
+     * The refresh rate for the callback event
+     */
     private int refreshRate;
+    /**
+     * The event to perform every {@link ScheduleUtils#refreshRate}
+     */
     private Runnable callbackEvent;
     /**
      * Whether the Timer is Currently Active
@@ -76,7 +82,10 @@ public class ScheduleUtils {
     private long LAST_TICKED;
 
     /**
-     * Initialize OS and Timer Information
+     * Initialize Timer Information
+     *
+     * @param rate  The refresh rate for the callback event
+     * @param event The event to perform every {@link ScheduleUtils#refreshRate}
      */
     public ScheduleUtils(final int rate, final Runnable event) {
         CURRENT_INSTANT = TimeUtils.getCurrentTime();
@@ -86,16 +95,13 @@ public class ScheduleUtils {
         TICK_LOCK.unlock();
     }
 
-    public ScheduleUtils(final int rate) {
-        this(rate, null);
-    }
-
+    /**
+     * Initialize Timer Information
+     *
+     * @param event The event to perform every {@link ScheduleUtils#refreshRate}
+     */
     public ScheduleUtils(final Runnable event) {
         this(MINIMUM_REFRESH_RATE, event);
-    }
-
-    public ScheduleUtils() {
-        this(MINIMUM_REFRESH_RATE);
     }
 
     /**
@@ -133,8 +139,8 @@ public class ScheduleUtils {
         if (refreshedCallbacks) {
             try {
                 TICK_LOCK.waitForUnlock((() -> {
-                    if (callbackEvent != null) {
-                        callbackEvent.run();
+                    if (getCallbackEvent() != null) {
+                        getCallbackEvent().run();
                     }
 
                     LAST_TICKED = ELAPSED_TIME;
@@ -155,14 +161,29 @@ public class ScheduleUtils {
         return refreshRate;
     }
 
+    /**
+     * Sets the current rate at which to execute callbacks
+     *
+     * @param refreshRate the new refresh rate
+     */
     public void setRefreshRate(final int refreshRate) {
         this.refreshRate = Math.max(MINIMUM_REFRESH_RATE, refreshRate);
     }
 
+    /**
+     * Gets the event to perform every {@link ScheduleUtils#refreshRate}
+     *
+     * @return the current callback event
+     */
     public Runnable getCallbackEvent() {
         return callbackEvent;
     }
 
+    /**
+     * Sets the event to perform every {@link ScheduleUtils#refreshRate}
+     *
+     * @param callbackEvent the new callback event
+     */
     public void setCallbackEvent(final Runnable callbackEvent) {
         this.callbackEvent = callbackEvent;
     }

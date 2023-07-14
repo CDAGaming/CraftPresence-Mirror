@@ -290,6 +290,11 @@ public class CommandUtils {
         }
     }
 
+    /**
+     * The Event to Run on each Scheduled Tick, if passed postTick events
+     * <p>
+     * Consists of Synchronizing Data, and Updating related Data as needed
+     */
     public static void onTick() {
         if (!Constants.HAS_GAME_LOADED) {
             Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
@@ -297,6 +302,9 @@ public class CommandUtils {
         CraftPresence.CLIENT.updatePresence();
     }
 
+    /**
+     * Synchronize Data for the Logging Engine and IPC Instance
+     */
     public static void updateModes() {
         Constants.LOG.setDebugMode(isVerboseMode());
         if (CraftPresence.CLIENT.isAvailable()) {

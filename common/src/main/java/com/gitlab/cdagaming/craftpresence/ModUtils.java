@@ -30,6 +30,13 @@ import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.realms.RealmsSharedConstants;
 
+/**
+ * Constant Variables and Methods used throughout the Application
+ * <p>
+ * See {@link Constants} for more General Purpose Data
+ *
+ * @author CDAGaming
+ */
 public class ModUtils {
     /**
      * The Detected Minecraft Version

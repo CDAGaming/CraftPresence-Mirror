@@ -30,6 +30,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Utilities related to OS and System Properties
+ *
+ * @author CDAGaming
+ */
 public class OSUtils {
     /**
      * An instance of a random number generator, used for select parts of the mod

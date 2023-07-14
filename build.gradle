@@ -310,8 +310,8 @@ subprojects {
             it.options.encoding = "UTF-8"
 
             exclude "**/*Gui.java"
-            exclude "${classPath}/config/**"
-            exclude "${classPath}/integrations/**"
+            exclude "${classPath}/**/config/**"
+            exclude "${classPath}/**/integrations/**"
         }
     }
 
