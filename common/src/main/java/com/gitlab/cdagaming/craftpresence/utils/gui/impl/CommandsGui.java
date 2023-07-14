@@ -206,7 +206,7 @@ public class CommandsGui extends ExtendedScreen {
                         if (executionCommandArgs.length == 1) {
                             if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.info",
-                                        CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName(), CraftPresence.SYSTEM.TIMER
+                                        CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName(), CraftPresence.SCHEDULER.TIMER
                                 );
                             } else {
                                 executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
@@ -602,22 +602,10 @@ public class CommandsGui extends ExtendedScreen {
                         if (doFullCopy) {
                             FileUtils.downloadFile(assetUrl, new File(filePath + assetName));
                         }
-
-                        if (!hasError) {
-                            try {
-                                bw.write("* " + assetName + " => " + assetUrl);
-                                bw.newLine();
-                            } catch (Exception ex) {
-                                if (CommandUtils.isVerboseMode()) {
-                                    ex.printStackTrace();
-                                }
-                                hasError = true;
-                            }
-                        } else {
-                            break;
-                        }
+                        bw.write("* " + assetName + " => " + assetUrl);
+                        bw.newLine();
                     }
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     if (CommandUtils.isVerboseMode()) {
                         ex.printStackTrace();
                     }

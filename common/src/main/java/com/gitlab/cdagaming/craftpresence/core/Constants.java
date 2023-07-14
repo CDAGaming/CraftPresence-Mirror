@@ -24,8 +24,9 @@
 
 package com.gitlab.cdagaming.craftpresence.core;
 
+import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -37,6 +38,7 @@ import java.util.concurrent.ThreadFactory;
  *
  * @author CDAGaming
  */
+@SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class Constants {
     /**
      * The Application's Name
@@ -71,12 +73,12 @@ public class Constants {
     /**
      * The Application's Configuration Directory
      */
-    public static final String configDir = SystemUtils.USER_DIR + File.separator + "config";
+    public static final String configDir = OSUtils.USER_DIR + File.separator + "config";
 
     /**
      * The Application's "mods" Directory
      */
-    public static final String modsDir = SystemUtils.USER_DIR + File.separator + "mods";
+    public static final String modsDir = OSUtils.USER_DIR + File.separator + "mods";
 
     /**
      * The URL to receive Update Information from
@@ -117,6 +119,17 @@ public class Constants {
      * Timer Instance for this Class, used for Scheduling Events
      */
     private static final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor(threadFactory);
+
+    /**
+     * If Loading of game data has been completed<p>
+     * Becomes true after callbacks synchronize if previously false but game is loaded
+     */
+    public static boolean HAS_GAME_LOADED = false;
+
+    /**
+     * If the Mod is Currently Closing and Clearing Data
+     */
+    public static boolean IS_GAME_CLOSING = false;
 
     /**
      * Retrieve the Timer Instance for this Class, used for Scheduling Events

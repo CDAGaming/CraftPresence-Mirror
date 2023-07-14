@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonElement;
@@ -432,7 +431,7 @@ public class FunctionsLib {
             args.add(ss.pop().toString());
         }
         StringUtils.revlist(args);
-        return Value.string(args.get(SystemUtils.RANDOM.nextInt(argCount)));
+        return Value.string(args.get(OSUtils.RANDOM.nextInt(argCount)));
     }
 
     public static Value getOrDefault(Starscript ss, int argCount) {

@@ -27,10 +27,10 @@ package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 
 import java.util.Map;
 
@@ -247,7 +247,7 @@ public class DiscordAssetUtils {
     public static DiscordAsset getRandomAsset() {
         try {
             DiscordAsset[] values = ASSET_LIST.values().toArray(new DiscordAsset[0]);
-            return values[SystemUtils.RANDOM.nextInt(values.length)];
+            return values[OSUtils.RANDOM.nextInt(values.length)];
         } catch (Exception ex) {
             Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
             if (CommandUtils.isVerboseMode()) {

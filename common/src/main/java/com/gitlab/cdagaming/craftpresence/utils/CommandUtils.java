@@ -208,14 +208,11 @@ public class CommandUtils {
      * @param forceUpdateRPC Whether to Force an Update to the RPC Data
      */
     public static void reloadData(final boolean forceUpdateRPC) {
-        // Ensure Logger Settings
-        Constants.LOG.setDebugMode(isDebugMode());
-
         ModUtils.TRANSLATOR.onTick();
-        CraftPresence.SYSTEM.onTick();
+        CraftPresence.SCHEDULER.onTick();
         CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
 
-        CraftPresence.SYSTEM.TICK_LOCK.lock();
+        CraftPresence.SCHEDULER.TICK_LOCK.lock();
         try {
             for (Module module : modules.values()) {
                 if (module.canBeLoaded()) {
@@ -245,8 +242,8 @@ public class CommandUtils {
             }
             CraftPresence.CLIENT.shutDown();
         } finally {
-            CraftPresence.SYSTEM.TICK_LOCK.unlock();
-            CraftPresence.SYSTEM.postTick();
+            CraftPresence.SCHEDULER.TICK_LOCK.unlock();
+            CraftPresence.SCHEDULER.postTick();
         }
     }
 
@@ -270,6 +267,7 @@ public class CommandUtils {
      * Initializes Essential Module Data
      */
     public static void init() {
+        updateModes();
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
             final String type = pack.getKey();
             final Pack data = pack.getValue();
@@ -290,6 +288,22 @@ public class CommandUtils {
         if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
             addModule("integration.replaymod", new ReplayModUtils());
         }
+    }
+
+    public static void onTick() {
+        if (!Constants.HAS_GAME_LOADED) {
+            Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
+        }
+        CraftPresence.CLIENT.updatePresence();
+    }
+
+    public static void updateModes() {
+        Constants.LOG.setDebugMode(isVerboseMode());
+        if (CraftPresence.CLIENT.isAvailable()) {
+            CraftPresence.CLIENT.ipcInstance.setDebugMode(isDebugMode());
+            CraftPresence.CLIENT.ipcInstance.setVerboseLogging(isVerboseMode());
+        }
+        CraftPresence.SCHEDULER.setRefreshRate(CraftPresence.CONFIG.advancedSettings.refreshRate);
     }
 
     /**

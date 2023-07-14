@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.integrations.pack.multimc;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -117,7 +117,7 @@ public class MultiMCUtils extends Pack {
      */
     private boolean findWithLegacy() {
         // Utilize Legacy Property Route, if unable to use System Properties
-        final Path instanceFile = Paths.get(new File(SystemUtils.USER_DIR).getParent() + File.separator + "instance.cfg");
+        final Path instanceFile = Paths.get(new File(OSUtils.USER_DIR).getParent() + File.separator + "instance.cfg");
         if (Files.exists(instanceFile)) {
             try (InputStream inputStream = Files.newInputStream(instanceFile)) {
                 final Properties configFile = new Properties();
@@ -144,7 +144,7 @@ public class MultiMCUtils extends Pack {
     private String getLauncherType() {
         try {
             final File prismLocation = new File(
-                    new File(SystemUtils.USER_DIR)
+                    new File(OSUtils.USER_DIR)
                             .getParentFile()
                             .getParentFile()
                             .getParentFile() + File.separator + "prismlauncher.cfg"

@@ -207,7 +207,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         final String currentLanguageId = getCurrentLanguage();
         final boolean hasLanguageChanged = (!languageId.equals(currentLanguageId) &&
                 (!hasTranslationsFrom(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty()));
-        if (CraftPresence.SYSTEM.HAS_GAME_LOADED) {
+        if (Constants.HAS_GAME_LOADED) {
             if (needsInit || needsSync) {
                 if (needsInit && CraftPresence.instance.getResourceManager() != null) {
                     ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);

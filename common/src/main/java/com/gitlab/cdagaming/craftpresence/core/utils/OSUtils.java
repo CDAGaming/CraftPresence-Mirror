@@ -22,34 +22,19 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.impl.LockObject;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Random;
 
-/**
- * System and General Use Utilities
- *
- * @author CDAGaming
- */
-public class SystemUtils {
+public class OSUtils {
     /**
      * An instance of a random number generator, used for select parts of the mod
      */
     public static final Random RANDOM = new Random();
-    /**
-     * The minimum time to wait by default (In Seconds) before callbacks refresh
-     */
-    public static final int MINIMUM_REFRESH_RATE = 2;
     /**
      * The Name of the User's Operating System
      */
@@ -63,81 +48,21 @@ public class SystemUtils {
      */
     public static final String USER_DIR = System.getProperty("user.dir");
     /**
-     * If the {@link SystemUtils#OS_NAME} can be classified as LINUX
+     * If the {@link OSUtils#OS_NAME} can be classified as LINUX
      */
     public static final boolean IS_LINUX = OS_NAME.startsWith("Linux") || OS_NAME.startsWith("LINUX");
     /**
-     * If the {@link SystemUtils#OS_NAME} can be classified as MAC
+     * If the {@link OSUtils#OS_NAME} can be classified as MAC
      */
     public static final boolean IS_MAC = OS_NAME.startsWith("Mac");
     /**
-     * If the {@link SystemUtils#OS_NAME} can be classified as WINDOWS
+     * If the {@link OSUtils#OS_NAME} can be classified as WINDOWS
      */
     public static final boolean IS_WINDOWS = OS_NAME.startsWith("Windows");
     /**
-     * If the {@link SystemUtils#OS_ARCH} is 64-bit or x64
+     * If the {@link OSUtils#OS_ARCH} is 64-bit or x64
      */
     public static final boolean IS_64_BIT = OS_ARCH.contains("amd64") || OS_ARCH.contains("x86_64");
-    /**
-     * An instance of {@link LockObject} to await certain tasks
-     */
-    public final LockObject TICK_LOCK = new LockObject();
-    /**
-     * The Current Time Remaining on the Timer
-     */
-    public int TIMER = 0;
-    /**
-     * If Loading of game data has been completed<p>
-     * Becomes true after callbacks synchronize if previously false but game is loaded
-     */
-    public boolean HAS_GAME_LOADED = false;
-    /**
-     * If the Mod is Currently Closing and Clearing Data
-     */
-    public boolean IS_GAME_CLOSING = false;
-    /**
-     * The Current Epoch Unix Timestamp in Milliseconds
-     */
-    public Instant CURRENT_INSTANT;
-    /**
-     * Whether the Timer is Currently Active
-     */
-    private boolean isTiming = false;
-    /**
-     * Whether the Callbacks related to the Mod have been refreshed
-     * <p>
-     * In this case, the RPC Updates every 2 Seconds with this check ensuring such
-     */
-    private boolean refreshedCallbacks = false;
-    /**
-     * The Beginning Unix Timestamp to count down from
-     */
-    private Instant BEGINNING_INSTANT;
-    /**
-     * The Elapsed Time since the application started (In Seconds)
-     */
-    private long ELAPSED_TIME;
-    /**
-     * The Last Timestamp at which the refresh rate was successfully passed (and related events ticked)
-     */
-    private long LAST_TICKED;
-
-    /**
-     * Initialize OS and Timer Information
-     */
-    public SystemUtils() {
-        try {
-            CURRENT_INSTANT = TimeUtils.getCurrentTime();
-            ELAPSED_TIME = 0;
-
-            TICK_LOCK.unlock();
-        } catch (Exception ex) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.system"));
-            if (CommandUtils.isVerboseMode()) {
-                ex.printStackTrace();
-            }
-        }
-    }
 
     /**
      * Attempt to browse to the specified command utilizing the OS-Specific APIs
@@ -219,7 +144,7 @@ public class SystemUtils {
     }
 
     /**
-     * Attempt to prepare the specified command for {@link SystemUtils#runCommand(String, String, String)}
+     * Attempt to prepare the specified command for {@link OSUtils#runCommand(String, String, String)}
      *
      * @param command The command to interpret
      * @param args    The arguments to interpret
@@ -268,85 +193,5 @@ public class SystemUtils {
     public static boolean isKDE() {
         final String gdmSession = System.getenv("GDMSESSION");
         return gdmSession != null && gdmSession.toLowerCase().contains("kde");
-    }
-
-    /**
-     * The Event to Run on each Client Tick, if passed initialization events
-     * <p>
-     * Consists of Synchronizing Data, and Updating Timer-Related Data as needed
-     */
-    void onTick() {
-        ELAPSED_TIME = TimeUtils.getDurationFrom(CURRENT_INSTANT).getSeconds();
-
-        if (TIMER > 0) {
-            if (!isTiming) {
-                startTimer();
-            } else {
-                checkTimer();
-            }
-        } else if (isTiming) {
-            isTiming = false;
-        }
-
-        // Every <passTime> Seconds, refresh Callbacks and load state status
-        if (LAST_TICKED != ELAPSED_TIME && ELAPSED_TIME % getRefreshRate() == 0) {
-            if (!refreshedCallbacks) {
-                if (!HAS_GAME_LOADED) {
-                    HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
-                }
-                refreshedCallbacks = true;
-            }
-        }
-    }
-
-    /**
-     * The Event to Run on each Client Tick, after passing initialization events
-     * <p>
-     * Consists of Scheduling awaited tasks, after a successful {@link SystemUtils#onTick()}
-     */
-    void postTick() {
-        if (refreshedCallbacks) {
-            try {
-                TICK_LOCK.waitForUnlock((() -> {
-                    CraftPresence.CLIENT.updatePresence();
-
-                    LAST_TICKED = ELAPSED_TIME;
-                    refreshedCallbacks = false;
-                }));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Retrieve the current rate at which to execute callbacks
-     *
-     * @return the current refresh rate
-     */
-    private int getRefreshRate() {
-        int result = CraftPresence.CONFIG.advancedSettings.refreshRate;
-        if (result < MINIMUM_REFRESH_RATE) {
-            result = MINIMUM_REFRESH_RATE;
-        }
-        return result;
-    }
-
-    /**
-     * Begins the Timer, counting down from {@link SystemUtils#BEGINNING_INSTANT}
-     */
-    private void startTimer() {
-        BEGINNING_INSTANT = TimeUtils.getCurrentTime().plusSeconds(TIMER);
-        isTiming = true;
-    }
-
-    /**
-     * Determines the Remaining Time until 0, and Stops the Timer @ 0 remaining
-     */
-    private void checkTimer() {
-        if (TIMER > 0) {
-            final long remainingTime = BEGINNING_INSTANT.getEpochSecond() - TimeUtils.getCurrentTime().getEpochSecond();
-            TIMER = (int) remainingTime;
-        }
     }
 }

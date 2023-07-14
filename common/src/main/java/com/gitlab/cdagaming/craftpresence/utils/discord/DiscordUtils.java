@@ -35,11 +35,11 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.ScheduleUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonArray;
@@ -252,7 +252,7 @@ public class DiscordUtils {
     public void setup() {
         Runtime.getRuntime().addShutdownHook(
                 Constants.getThreadFactory().newThread(() -> {
-                    CraftPresence.SYSTEM.IS_GAME_CLOSING = true;
+                    Constants.IS_GAME_CLOSING = true;
                     Constants.getThreadPool().shutdown();
                     shutDown();
                 })
@@ -1112,17 +1112,6 @@ public class DiscordUtils {
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
-        // Sync Internal Values
-        if (!CraftPresence.CONFIG.hasChanged) {
-            final boolean isDebugMode = CraftPresence.CONFIG.advancedSettings.debugMode;
-            if (ipcInstance.isDebugMode() != isDebugMode) {
-                ipcInstance.setDebugMode(isDebugMode);
-            }
-            final boolean isVerboseMode = CraftPresence.CONFIG.advancedSettings.verboseMode;
-            if (ipcInstance.isVerboseLogging() != isVerboseMode) {
-                ipcInstance.setVerboseLogging(isVerboseMode);
-            }
-        }
         syncArgument("_general.instance", CraftPresence.instance);
         syncArgument("_general.player", CraftPresence.player);
         syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.world : null);
@@ -1557,7 +1546,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Perform any needed Tick events, tied to {@link SystemUtils#MINIMUM_REFRESH_RATE} ticks
+     * Perform any needed Tick events, tied to {@link ScheduleUtils#MINIMUM_REFRESH_RATE} ticks
      */
     public void onTick() {
         CommandUtils.syncModuleArguments();
@@ -1566,7 +1555,7 @@ public class DiscordUtils {
 
         // Menu Tick Event
         final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
-        final boolean isFullyLoaded = CraftPresence.SYSTEM.HAS_GAME_LOADED && CraftPresence.CLIENT.isAvailable();
+        final boolean isFullyLoaded = Constants.HAS_GAME_LOADED && CraftPresence.CLIENT.isAvailable();
         if (!isFullyLoaded) {
             // Ensure Loading Presence has already passed, before any other type of presence displays
             CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
@@ -1578,7 +1567,7 @@ public class DiscordUtils {
         // Join Request Tick Event
         if (!CraftPresence.CONFIG.hasChanged && isFullyLoaded) {
             // Processing for Join Request Systems
-            if (REQUESTER_USER != null && CraftPresence.SYSTEM.TIMER <= 0) {
+            if (REQUESTER_USER != null && CraftPresence.SCHEDULER.TIMER <= 0) {
                 respondToJoinRequest(IPCClient.ApprovalMode.DENY);
             }
         }
@@ -1623,7 +1612,7 @@ public class DiscordUtils {
             }
             STATUS = DiscordStatus.Ready;
         }
-        CraftPresence.SYSTEM.TIMER = 0;
+        CraftPresence.SCHEDULER.TIMER = 0;
         REQUESTER_USER = null;
     }
 }

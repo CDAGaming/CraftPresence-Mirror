@@ -76,7 +76,7 @@ public class ImageUtils {
         Constants.getThreadFactory().newThread(
                 () -> {
                     try {
-                        while (!CraftPresence.SYSTEM.IS_GAME_CLOSING) {
+                        while (!Constants.IS_GAME_CLOSING) {
                             final Pair<String, Pair<InputType, Object>> request = urlRequests.take();
                             boolean isGif = request.getFirst().endsWith(".gif");
 

@@ -25,8 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.core.utils;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -219,7 +217,7 @@ public class UrlUtils {
         try {
             return openUrl(new URI(targetUrl));
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return false;
@@ -236,7 +234,7 @@ public class UrlUtils {
         try {
             return openUrl(targetUrl.toURI());
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return false;
@@ -253,7 +251,7 @@ public class UrlUtils {
         if (browseWithDesktop(targetUrl)) {
             return true;
         }
-        if (SystemUtils.browseWithSystem(targetUrl.toString())) {
+        if (OSUtils.browseWithSystem(targetUrl.toString())) {
             return true;
         }
         Constants.LOG.error("Failed to go to page: %s", targetUrl.toString());

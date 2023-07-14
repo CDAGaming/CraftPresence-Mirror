@@ -37,10 +37,10 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -256,6 +256,12 @@ public final class Config extends Module implements Serializable {
             needsReboot = true; // Max Connection Attempts changed
         }
 
+        if (advancedSettings.debugMode != old.advancedSettings.debugMode ||
+                advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
+                advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
+            CommandUtils.updateModes();
+        }
+
         if (needsReboot) {
             CommandUtils.setupRPC();
         }
@@ -270,7 +276,7 @@ public final class Config extends Module implements Serializable {
                 // fileVersion, configDirectories[main,server-entries]
                 final Map<Integer, String> hypherionFiles = new HashMapBuilder<Integer, String>()
                         .put(0, Constants.configDir + File.separator)
-                        .put(31, SystemUtils.USER_DIR + File.separator + "simple-rpc" + File.separator)
+                        .put(31, OSUtils.USER_DIR + File.separator + "simple-rpc" + File.separator)
                         .put(32, Constants.configDir + File.separator + "simple-rpc" + File.separator)
                         .build();
                 for (Map.Entry<Integer, String> entry : hypherionFiles.entrySet()) {

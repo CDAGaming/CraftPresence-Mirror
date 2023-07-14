@@ -31,8 +31,8 @@ import com.gitlab.cdagaming.craftpresence.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.core.utils.ScheduleUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -661,7 +661,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
         final Pair<Boolean, Integer> refreshRateData = StringUtils.getValidInteger(refreshRate.getControlMessage());
         proceedButton.setControlEnabled(
-                (refreshRateData.getFirst() && refreshRateData.getSecond() >= SystemUtils.MINIMUM_REFRESH_RATE)
+                (refreshRateData.getFirst() && refreshRateData.getSecond() >= ScheduleUtils.MINIMUM_REFRESH_RATE)
         );
 
         guiMessagesButton.setControlEnabled(CraftPresence.GUIS.enabled);

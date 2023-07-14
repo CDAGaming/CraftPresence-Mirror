@@ -26,12 +26,9 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
-import com.gitlab.cdagaming.craftpresence.utils.SystemUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
@@ -84,10 +81,6 @@ public class CraftPresence {
      */
     public static final GuiUtils GUIS = new GuiUtils();
     /**
-     * The {@link SystemUtils} Instance for this Mod
-     */
-    public static final SystemUtils SYSTEM = new SystemUtils();
-    /**
      * The Minecraft Instance attached to this Mod
      */
     public static Minecraft instance;
@@ -99,6 +92,10 @@ public class CraftPresence {
      * The Current Player detected from the Minecraft Instance
      */
     public static EntityPlayer player;
+    /**
+     * The {@link ScheduleUtils} Instance for this Mod
+     */
+    public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
     /**
      * The {@link Config} Instance for this Mod
      */
@@ -141,7 +138,7 @@ public class CraftPresence {
 
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
         Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.warning.debug_mode"));
-        Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", SystemUtils.OS_NAME, SystemUtils.OS_ARCH, SystemUtils.IS_64_BIT));
+        Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", OSUtils.OS_NAME, OSUtils.OS_ARCH, OSUtils.IS_64_BIT));
 
         // Check for Updates before continuing
         ModUtils.UPDATER.checkForUpdates();
@@ -162,7 +159,7 @@ public class CraftPresence {
      * Schedules the Next Tick to Occur if not currently closing
      */
     private void scheduleTick() {
-        if (!SYSTEM.IS_GAME_CLOSING) {
+        if (!Constants.IS_GAME_CLOSING) {
             Constants.getThreadPool().scheduleAtFixedRate(
                     this::clientTick,
                     0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
@@ -176,7 +173,7 @@ public class CraftPresence {
      * Consists of Synchronizing Data, and Updating RPC Data as needed
      */
     private void clientTick() {
-        if (!SYSTEM.IS_GAME_CLOSING) {
+        if (!Constants.IS_GAME_CLOSING) {
             instance = Minecraft.getMinecraft();
             if (initialized) {
                 session = instance.getSession();

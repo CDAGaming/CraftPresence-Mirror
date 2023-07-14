@@ -68,7 +68,7 @@ public class ModIPCListener implements IPCListener {
                 CraftPresence.CLIENT.STATUS != DiscordStatus.JoinRequest ||
                         !CraftPresence.CLIENT.REQUESTER_USER.equals(user)
         )) {
-            CraftPresence.SYSTEM.TIMER = 30;
+            CraftPresence.SCHEDULER.TIMER = 30;
             CraftPresence.CLIENT.STATUS = DiscordStatus.JoinRequest;
             CraftPresence.CLIENT.REQUESTER_USER = user;
 
