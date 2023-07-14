@@ -110,7 +110,7 @@ public final class Config extends Module implements Serializable {
         } catch (Exception ex) {
             if (ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) {
                 Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-                if (CommandUtils.isVerboseMode()) {
+                if (Constants.LOG.isDebugMode()) {
                     ex.printStackTrace();
                 }
 
@@ -294,9 +294,7 @@ public final class Config extends Module implements Serializable {
         if (!isNewFile) {
             int currentVer = oldVer;
             if (currentVer < newVer) {
-                if (CommandUtils.isVerboseMode()) {
-                    Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.outdated", currentVer, newVer));
-                }
+                Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.outdated", currentVer, newVer));
 
                 if (MathUtils.isWithinValue(currentVer, 1, 2, true, false)) {
                     // Schema Changes (v1 -> v2)

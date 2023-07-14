@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.google.gson.JsonElement;
 
 import java.io.File;
@@ -325,7 +324,7 @@ public class Legacy2Modern implements DataMigrator {
             properties.load(configReader);
         } catch (Exception ex) {
             Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
         } finally {

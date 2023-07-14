@@ -25,13 +25,13 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -243,7 +243,7 @@ public class RenderUtils {
             GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             if (!BLOCKED_RENDER_ITEMS.contains(stack)) {

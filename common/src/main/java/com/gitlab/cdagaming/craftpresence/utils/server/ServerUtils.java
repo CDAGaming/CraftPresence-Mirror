@@ -37,7 +37,6 @@ import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.multiplayer.GuiConnecting;
@@ -475,7 +474,7 @@ public class ServerUtils implements Module {
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
         }
@@ -616,7 +615,7 @@ public class ServerUtils implements Module {
                 }
             }
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
         }

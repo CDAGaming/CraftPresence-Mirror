@@ -314,7 +314,7 @@ public class KeyUtils {
                     }
                 }
             } catch (Throwable ex) {
-                if (CommandUtils.isVerboseMode()) {
+                if (Constants.LOG.isDebugMode()) {
                     ex.printStackTrace();
                 }
             }
@@ -338,9 +338,7 @@ public class KeyUtils {
             syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
-            if (CommandUtils.isVerboseMode()) {
-                Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
-            }
+            Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
         }
     }
 

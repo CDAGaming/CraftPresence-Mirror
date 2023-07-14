@@ -22,33 +22,47 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.pack.atlauncher;
+package com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 
 import java.io.File;
+import java.util.function.Supplier;
 
-public class ATLauncherUtils extends Pack {
-    @Override
-    public boolean isEnabled() {
-        return CraftPresence.CONFIG.generalSettings.detectATLauncherInstance;
+/**
+ * Set of Utilities used to Parse Technic Launcher Pack Information
+ *
+ * @author CDAGaming
+ */
+public class TechnicUtils extends Pack {
+    public TechnicUtils(final Supplier<Boolean> isEnabled) {
+        super(isEnabled);
+    }
+
+    public TechnicUtils(final boolean isEnabled) {
+        super(isEnabled);
+    }
+
+    public TechnicUtils() {
+        super();
     }
 
     @Override
     public boolean load() {
-        final File packLocation = new File("instance.json");
+        final File packLocation = new File(new File(OSUtils.USER_DIR).getParentFile().getParentFile() + File.separator + "installedPacks");
 
         if (packLocation.exists()) {
             try {
-                setPackData(
-                        FileUtils.getJsonData(packLocation)
-                                .getAsJsonObject()
-                                .getAsJsonObject("launcher")
-                                .getAsJsonPrimitive("name")
-                                .getAsString()
-                );
+                final String selected = FileUtils.getJsonData(packLocation)
+                        .getAsJsonObject()
+                        .getAsJsonPrimitive("selected")
+                        .getAsString();
+
+                if (OSUtils.USER_DIR.contains(selected)) {
+                    setPackData(selected);
+                }
             } catch (Exception ex) {
                 if (showException(ex)) {
                     ex.printStackTrace();

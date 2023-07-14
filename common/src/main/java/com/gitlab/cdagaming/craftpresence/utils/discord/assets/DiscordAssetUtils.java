@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 
 import java.util.Map;
 
@@ -250,7 +249,7 @@ public class DiscordAssetUtils {
             return values[OSUtils.RANDOM.nextInt(values.length)];
         } catch (Exception ex) {
             Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return null;
@@ -344,7 +343,7 @@ public class DiscordAssetUtils {
             return assets;
         } catch (Exception ex) {
             Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.load"));
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return null;

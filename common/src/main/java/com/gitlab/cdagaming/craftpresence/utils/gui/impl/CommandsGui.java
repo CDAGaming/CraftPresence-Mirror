@@ -606,7 +606,7 @@ public class CommandsGui extends ExtendedScreen {
                         bw.newLine();
                     }
                 } catch (Throwable ex) {
-                    if (CommandUtils.isVerboseMode()) {
+                    if (Constants.LOG.isDebugMode()) {
                         ex.printStackTrace();
                     }
                     hasError = true;

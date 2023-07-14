@@ -113,7 +113,7 @@ public class ImageUtils {
                                                 try {
                                                     bufferData.getSecond().add(frame);
                                                 } catch (Exception ex) {
-                                                    if (CommandUtils.isVerboseMode()) {
+                                                    if (Constants.LOG.isDebugMode()) {
                                                         ex.printStackTrace();
                                                     }
                                                 }
@@ -125,14 +125,14 @@ public class ImageUtils {
                                         cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
                                     }
                                 } catch (Exception ex) {
-                                    if (CommandUtils.isVerboseMode()) {
+                                    if (Constants.LOG.isDebugMode()) {
                                         ex.printStackTrace();
                                     }
                                 }
                             }
                         }
                     } catch (Exception ex) {
-                        if (CommandUtils.isVerboseMode()) {
+                        if (Constants.LOG.isDebugMode()) {
                             ex.printStackTrace();
                         }
                     }
@@ -151,7 +151,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(textureName, new URL(url));
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return new ResourceLocation("");
@@ -169,7 +169,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(textureName, new Pair<>(InputType.Url, url));
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return new ResourceLocation("");
@@ -187,7 +187,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(textureName, new Pair<>(InputType.FileData, url));
         } catch (Exception ex) {
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return new ResourceLocation("");
@@ -236,7 +236,7 @@ public class ImageUtils {
                 try {
                     urlRequests.put(new Pair<>(textureName, stream));
                 } catch (Exception ex) {
-                    if (CommandUtils.isVerboseMode()) {
+                    if (Constants.LOG.isDebugMode()) {
                         ex.printStackTrace();
                     }
                 }
@@ -283,7 +283,7 @@ public class ImageUtils {
                     }
                     return cachedTexture;
                 } catch (Exception ex) {
-                    if (CommandUtils.isVerboseMode()) {
+                    if (Constants.LOG.isDebugMode()) {
                         ex.printStackTrace();
                     }
                     return new ResourceLocation("");

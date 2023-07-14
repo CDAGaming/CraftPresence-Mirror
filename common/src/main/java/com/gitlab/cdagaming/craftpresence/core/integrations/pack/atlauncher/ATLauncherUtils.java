@@ -22,23 +22,25 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater;
+package com.gitlab.cdagaming.craftpresence.core.integrations.pack.atlauncher;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 
 import java.io.File;
+import java.util.function.Supplier;
 
-/**
- * Set of Utilities used to Parse MCUpdater Instance Information
- *
- * @author CDAGaming
- */
-public class MCUpdaterUtils extends Pack {
-    @Override
-    public boolean isEnabled() {
-        return CraftPresence.CONFIG.generalSettings.detectMCUpdaterInstance;
+public class ATLauncherUtils extends Pack {
+    public ATLauncherUtils(final Supplier<Boolean> isEnabled) {
+        super(isEnabled);
+    }
+
+    public ATLauncherUtils(final boolean isEnabled) {
+        super(isEnabled);
+    }
+
+    public ATLauncherUtils() {
+        super();
     }
 
     @Override
@@ -50,7 +52,8 @@ public class MCUpdaterUtils extends Pack {
                 setPackData(
                         FileUtils.getJsonData(packLocation)
                                 .getAsJsonObject()
-                                .getAsJsonPrimitive("packName")
+                                .getAsJsonObject("launcher")
+                                .getAsJsonPrimitive("name")
                                 .getAsString()
                 );
             } catch (Exception ex) {

@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.versioning.VersionCo
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -194,7 +193,7 @@ public class ModUpdaterUtils {
             // Log Failure and Set Update State to FAILED
             Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
 
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             currentState = UpdateState.FAILED;

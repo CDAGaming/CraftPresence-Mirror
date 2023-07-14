@@ -22,40 +22,57 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.pack.technic;
+package com.gitlab.cdagaming.craftpresence.core.integrations.pack.curse;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 
 import java.io.File;
+import java.util.function.Supplier;
 
 /**
- * Set of Utilities used to Parse Technic Launcher Pack Information
+ * Set of Utilities used to Parse Curse Manifest Information
+ * <p>Applies to: Twitch, Curse, and GDLauncher
  *
  * @author CDAGaming
  */
-public class TechnicUtils extends Pack {
-    @Override
-    public boolean isEnabled() {
-        return CraftPresence.CONFIG.generalSettings.detectTechnicPack;
+public class CurseUtils extends Pack {
+    public CurseUtils(final Supplier<Boolean> isEnabled) {
+        super(isEnabled);
+    }
+
+    public CurseUtils(final boolean isEnabled) {
+        super(isEnabled);
+    }
+
+    public CurseUtils() {
+        super();
     }
 
     @Override
     public boolean load() {
-        final File packLocation = new File(new File(OSUtils.USER_DIR).getParentFile().getParentFile() + File.separator + "installedPacks");
+        File packLocation;
+
+        // Attempt to Gain Curse Pack Info from the manifest.json file
+        // This will typically work on released/exported/imported packs
+        // But will fail with Custom/User-Created Packs
+        // Note: This additionally works in the same way for GDLauncher packs of the same nature
+        packLocation = new File("manifest.json");
+        if (!packLocation.exists()) {
+            // If it fails to get the information from the manifest.json
+            // Attempt to read Pack info from the minecraftinstance.json file
+            // As Most if not all types of Curse Packs contain this file
+            packLocation = new File("minecraftinstance.json");
+        }
 
         if (packLocation.exists()) {
             try {
-                final String selected = FileUtils.getJsonData(packLocation)
-                        .getAsJsonObject()
-                        .getAsJsonPrimitive("selected")
-                        .getAsString();
-
-                if (OSUtils.USER_DIR.contains(selected)) {
-                    setPackData(selected);
-                }
+                setPackData(
+                        FileUtils.getJsonData(packLocation)
+                                .getAsJsonObject()
+                                .getAsJsonPrimitive("name")
+                                .getAsString()
+                );
             } catch (Exception ex) {
                 if (showException(ex)) {
                     ex.printStackTrace();

@@ -31,14 +31,14 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.TreeMapBuilder;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.atlauncher.ATLauncherUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.curse.CurseUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater.MCUpdaterUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMCUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.atlauncher.ATLauncherUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.curse.CurseUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.mcupdater.MCUpdaterUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.multimc.MultiMCUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
@@ -66,11 +66,21 @@ public class CommandUtils {
      * A mapping of the currently loaded Pack Extension Modules
      */
     private static final Map<String, Pack> packModules = new TreeMapBuilder<String, Pack>()
-            .put("atlauncher", new ATLauncherUtils())
-            .put("curse", new CurseUtils())
-            .put("multimc", new MultiMCUtils())
-            .put("mcupdater", new MCUpdaterUtils())
-            .put("technic", new TechnicUtils())
+            .put("atlauncher", new ATLauncherUtils(
+                    () -> CraftPresence.CONFIG.generalSettings.detectATLauncherInstance
+            ))
+            .put("curse", new CurseUtils(
+                    () -> CraftPresence.CONFIG.generalSettings.detectCurseManifest
+            ))
+            .put("multimc", new MultiMCUtils(
+                    () -> CraftPresence.CONFIG.generalSettings.detectMultiMCManifest
+            ))
+            .put("mcupdater", new MCUpdaterUtils(
+                    () -> CraftPresence.CONFIG.generalSettings.detectMCUpdaterInstance
+            ))
+            .put("technic", new TechnicUtils(
+                    () -> CraftPresence.CONFIG.generalSettings.detectTechnicPack
+            ))
             .build();
     /**
      * The Current {@link MenuStatus} representing where we are at in the load process
@@ -231,7 +241,7 @@ public class CommandUtils {
             final String messagePrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
 
             Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.module"));
-            if (CommandUtils.isVerboseMode()) {
+            if (Constants.LOG.isDebugMode()) {
                 Constants.LOG.error(messagePrefix);
                 ex.printStackTrace();
             } else {

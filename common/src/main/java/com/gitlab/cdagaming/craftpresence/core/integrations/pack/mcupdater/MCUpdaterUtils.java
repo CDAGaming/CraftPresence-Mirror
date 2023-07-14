@@ -22,48 +22,42 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.pack.curse;
+package com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
+import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 
 import java.io.File;
+import java.util.function.Supplier;
 
 /**
- * Set of Utilities used to Parse Curse Manifest Information
- * <p>Applies to: Twitch, Curse, and GDLauncher
+ * Set of Utilities used to Parse MCUpdater Instance Information
  *
  * @author CDAGaming
  */
-public class CurseUtils extends Pack {
-    @Override
-    public boolean isEnabled() {
-        return CraftPresence.CONFIG.generalSettings.detectCurseManifest;
+public class MCUpdaterUtils extends Pack {
+    public MCUpdaterUtils(final Supplier<Boolean> isEnabled) {
+        super(isEnabled);
+    }
+
+    public MCUpdaterUtils(final boolean isEnabled) {
+        super(isEnabled);
+    }
+
+    public MCUpdaterUtils() {
+        super();
     }
 
     @Override
     public boolean load() {
-        File packLocation;
-
-        // Attempt to Gain Curse Pack Info from the manifest.json file
-        // This will typically work on released/exported/imported packs
-        // But will fail with Custom/User-Created Packs
-        // Note: This additionally works in the same way for GDLauncher packs of the same nature
-        packLocation = new File("manifest.json");
-        if (!packLocation.exists()) {
-            // If it fails to get the information from the manifest.json
-            // Attempt to read Pack info from the minecraftinstance.json file
-            // As Most if not all types of Curse Packs contain this file
-            packLocation = new File("minecraftinstance.json");
-        }
+        final File packLocation = new File("instance.json");
 
         if (packLocation.exists()) {
             try {
                 setPackData(
                         FileUtils.getJsonData(packLocation)
                                 .getAsJsonObject()
-                                .getAsJsonPrimitive("name")
+                                .getAsJsonPrimitive("packName")
                                 .getAsString()
                 );
             } catch (Exception ex) {

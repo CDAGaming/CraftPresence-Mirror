@@ -337,7 +337,7 @@ public class DiscordUtils {
         } catch (Exception ex) {
             if (ex.getClass() != NoDiscordClientException.class) {
                 Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.connect"));
-                if (CommandUtils.isVerboseMode()) {
+                if (Constants.LOG.isDebugMode()) {
                     ex.printStackTrace();
                 }
 
@@ -532,7 +532,7 @@ public class DiscordUtils {
                 // Dispatch to Appendable WriteStream if possible
                 if (output != null) {
                     try {
-                        if (CommandUtils.isVerboseMode()) {
+                        if (Constants.LOG.isDebugMode()) {
                             for (String line : splitEx) {
                                 line = line.replace("\t", "    ");
                                 output.append(line).append('\n');
@@ -547,7 +547,7 @@ public class DiscordUtils {
                     }
                 }
                 // Perform the same to Logging, so the same information is available on both ends
-                if (CommandUtils.isVerboseMode()) {
+                if (Constants.LOG.isDebugMode()) {
                     Constants.LOG.error(messagePrefix);
                     ex.printStackTrace();
                 } else {
@@ -1299,7 +1299,7 @@ public class DiscordUtils {
             } else {
                 result = cachedImageData.get(primaryKey);
                 if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
-                    if (showLogging && CommandUtils.isVerboseMode() && !result.equals(primaryKey)) {
+                    if (showLogging && Constants.LOG.isDebugMode() && !result.equals(primaryKey)) {
                         Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.discord.assets.cached", primaryKey, result));
                         Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.discord.assets.request", primaryKey));
                     }
@@ -1395,7 +1395,7 @@ public class DiscordUtils {
             try {
                 ipcInstance.close();
             } catch (Exception ex) {
-                if (CommandUtils.isVerboseMode()) {
+                if (Constants.LOG.isDebugMode()) {
                     ex.printStackTrace();
                 }
             }

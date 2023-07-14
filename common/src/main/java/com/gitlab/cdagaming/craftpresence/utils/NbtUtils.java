@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import net.minecraft.entity.Entity;
@@ -188,7 +189,7 @@ public class NbtUtils {
                 try {
                     return FileUtils.toJsonData(tag.toString());
                 } catch (Throwable ex) {
-                    if (CommandUtils.isVerboseMode()) {
+                    if (Constants.LOG.isDebugMode()) {
                         ex.printStackTrace();
                     }
                     return tag.toString();

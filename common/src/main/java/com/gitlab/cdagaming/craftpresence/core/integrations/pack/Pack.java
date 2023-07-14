@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.nio.file.NoSuchFileException;
+import java.util.function.Supplier;
 
 /**
  * Set of Utilities used to Parse Pack Instance Information
@@ -48,6 +49,22 @@ public abstract class Pack {
      * The Pack Instance Type
      */
     private String packType;
+    /**
+     * Whether this {@link Pack} instance is enabled
+     */
+    private Supplier<Boolean> enabled;
+
+    public Pack(final Supplier<Boolean> isEnabled) {
+        setEnabled(isEnabled);
+    }
+
+    public Pack(final boolean isEnabled) {
+        setEnabled(isEnabled);
+    }
+
+    public Pack() {
+        this(true);
+    }
 
     /**
      * Whether this pack is currently enabled (or allowed to load)
@@ -55,7 +72,25 @@ public abstract class Pack {
      * @return the current enable state
      */
     public boolean isEnabled() {
-        return true;
+        return enabled.get();
+    }
+
+    /**
+     * Sets whether this pack is currently enabled (or allowed to load)
+     *
+     * @param enabled the new enable state
+     */
+    public void setEnabled(final Supplier<Boolean> enabled) {
+        this.enabled = enabled;
+    }
+
+    /**
+     * Sets whether this pack is currently enabled (or allowed to load)
+     *
+     * @param enabled the new enable state
+     */
+    public void setEnabled(final boolean enabled) {
+        setEnabled(() -> enabled);
     }
 
     /**

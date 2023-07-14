@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.pack.multimc;
+package com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
 
 import java.io.File;
 import java.io.InputStream;
@@ -36,6 +35,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * Set of Utilities used to Parse MultiMC Instance Information
@@ -43,9 +43,16 @@ import java.util.Properties;
  * @author CDAGaming
  */
 public class MultiMCUtils extends Pack {
-    @Override
-    public boolean isEnabled() {
-        return CraftPresence.CONFIG.generalSettings.detectMultiMCManifest;
+    public MultiMCUtils(final Supplier<Boolean> isEnabled) {
+        super(isEnabled);
+    }
+
+    public MultiMCUtils(final boolean isEnabled) {
+        super(isEnabled);
+    }
+
+    public MultiMCUtils() {
+        super();
     }
 
     @Override

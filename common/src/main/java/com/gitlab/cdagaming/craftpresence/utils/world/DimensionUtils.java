@@ -26,12 +26,12 @@ package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
@@ -212,7 +212,7 @@ public class DimensionUtils implements Module {
                                 }
                             }
                         } catch (Throwable ex) {
-                            if (CommandUtils.isVerboseMode()) {
+                            if (Constants.LOG.isDebugMode()) {
                                 ex.printStackTrace();
                             }
                         }
