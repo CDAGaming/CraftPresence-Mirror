@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.config.category;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
@@ -39,7 +39,7 @@ public class Biome extends Module implements Serializable {
     public String fallbackBiomeIcon = "unknown";
     public Map<String, ModuleData> biomeData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
-                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.biome_messages.biome_messages"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.biome_messages.biome_messages"),
                     null // Defaults to the Biome Name if nothing is supplied
             ))
             .build();

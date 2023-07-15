@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -376,7 +376,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return The control's current display message
      */
     public String getDisplayMessage() {
-        return ModUtils.TRANSLATOR.getLocalizedMessage(
+        return Constants.TRANSLATOR.getLocalizedMessage(
                 getControlMessage()
         );
     }

@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
@@ -350,7 +349,7 @@ public class ScrollableListControl extends GuiSlot {
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                 if (currentScreen.isDebugMode() && isHovering) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
+                    hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
             }
         } else if (renderType == RenderType.DiscordAsset || renderType == RenderType.CustomDiscordAsset) {
@@ -359,7 +358,7 @@ public class ScrollableListControl extends GuiSlot {
                     originalName
             );
             if (currentScreen.isDebugMode() && isHovering) {
-                hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
+                hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
             }
             texture = ImageUtils.getTextureFromUrl(originalName, assetUrl);
         } else if (renderType == RenderType.EntityData) {
@@ -377,7 +376,7 @@ public class ScrollableListControl extends GuiSlot {
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(originalName, endpointUrl);
                 if (currentScreen.isDebugMode() && isHovering) {
-                    hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
+                    hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
             }
         } else if (renderType == RenderType.ItemData && renderType.canRenderImage()) {
@@ -401,16 +400,16 @@ public class ScrollableListControl extends GuiSlot {
                     Constants.MOD_ID,
                     originalName
             );
-            if (ModUtils.TRANSLATOR.hasTranslation(placeholderTranslation)) {
+            if (Constants.TRANSLATOR.hasTranslation(placeholderTranslation)) {
                 hoverText.add(String.format("%s \"%s\"",
-                        ModUtils.TRANSLATOR.translate("gui.config.message.editor.description"),
-                        ModUtils.TRANSLATOR.translate(placeholderTranslation)
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.description"),
+                        Constants.TRANSLATOR.translate(placeholderTranslation)
                 ));
             }
-            if (ModUtils.TRANSLATOR.hasTranslation(placeholderUsage)) {
+            if (Constants.TRANSLATOR.hasTranslation(placeholderUsage)) {
                 hoverText.add(String.format("%s \"%s\"",
-                        ModUtils.TRANSLATOR.translate("gui.config.message.editor.usage"),
-                        ModUtils.TRANSLATOR.translate(placeholderUsage)
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.usage"),
+                        Constants.TRANSLATOR.translate(placeholderUsage)
                 ));
             }
 
@@ -423,7 +422,7 @@ public class ScrollableListControl extends GuiSlot {
                     final String tagValue = rawValue.toString();
                     if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
                         hoverText.add(String.format("%s \"%s\"",
-                                ModUtils.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                                Constants.TRANSLATOR.translate("gui.config.message.editor.preview"),
                                 (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
                         ));
                     }
@@ -443,7 +442,7 @@ public class ScrollableListControl extends GuiSlot {
                     texture
             );
             if (currentScreen.isDebugMode() && isHovering) {
-                hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
+                hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
             }
             // Note: 35 Added to xOffset to accommodate for Image Size
             xOffset += 35;
@@ -451,7 +450,7 @@ public class ScrollableListControl extends GuiSlot {
 
         final String identifierName = identifierType.getIdentifier(originalName);
         if (!identifierName.equals(displayName) && isHovering) {
-            hoverText.add(ModUtils.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
+            hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
         getFontRenderer().drawStringWithShadow(displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
 

@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.config.category;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -45,7 +45,7 @@ public class Advanced extends Module implements Serializable {
     public boolean allowPlaceholderPreviews = false;
     public Gui guiSettings = new Gui();
     public Map<String, String> itemMessages = new HashMapBuilder<String, String>()
-            .put("default", ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.item_messages"))
+            .put("default", Constants.TRANSLATOR.translate("craftpresence.defaults.advanced.item_messages"))
             .build();
     public Entity entitySettings = new Entity();
     public boolean allowEndpointIcons = true;

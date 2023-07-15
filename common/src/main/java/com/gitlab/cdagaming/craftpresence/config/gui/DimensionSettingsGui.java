@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Dimension;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -69,7 +69,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         "gui.config.message.default.dimension",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                        Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                 CraftPresence.CLIENT.generateArgumentMessage("dimension."))
                                 )
                         )
@@ -85,7 +85,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.dimension"), CraftPresence.DIMENSIONS.DIMENSION_NAMES,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.dimension"), CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
@@ -118,7 +118,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 screenInstance.defaultData = getCurrentData().dimensionData.get("default");
                                                                 screenInstance.currentData = getCurrentData().dimensionData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -156,7 +156,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                     openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
-                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                                                                     specificIcon, attributeName,
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
@@ -171,7 +171,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("dimension."))
                                                                         )
                                                                 );
@@ -185,14 +185,14 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                             if (!dimensionMessagesButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("dimension."))
                                         )
                                 );
@@ -209,7 +209,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         getCurrentData().fallbackDimensionIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
@@ -220,7 +220,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
                                 )
                         )
                 )
@@ -229,7 +229,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
                         )
                 );
             }

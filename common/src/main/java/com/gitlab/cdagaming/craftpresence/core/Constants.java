@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.core;
 
 import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.TranslationUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
@@ -107,10 +108,15 @@ public class Constants {
     public static final ModLogger LOG = new ModLogger(MOD_ID);
 
     /**
+     * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
+     */
+    public static final TranslationUtils TRANSLATOR = new TranslationUtils(MOD_ID, true).build();
+
+    /**
      * Thread Factory Instance for this Class, used for Scheduling Events
      */
     private static final ThreadFactory threadFactory = r -> {
-        final Thread t = new Thread(r, Constants.NAME);
+        final Thread t = new Thread(r, NAME);
         t.setDaemon(true);
         return t;
     };

@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
@@ -91,7 +90,7 @@ public class ModIPCListener implements IPCListener {
     @Override
     public void onDisconnect(IPCClient client, Throwable t) {
         if (CraftPresence.CLIENT.STATUS != DiscordStatus.Disconnected) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.rpc", t.getMessage()));
+            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.rpc", t.getMessage()));
             CraftPresence.CLIENT.shutDown(true);
         }
     }
@@ -111,7 +110,7 @@ public class ModIPCListener implements IPCListener {
         if (CraftPresence.CLIENT.STATUS != DiscordStatus.Ready) {
             CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
             CraftPresence.CLIENT.CURRENT_USER = client.getCurrentUser();
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.load", CraftPresence.CLIENT.CLIENT_ID, CraftPresence.CLIENT.CURRENT_USER != null ? CraftPresence.CLIENT.CURRENT_USER.getEffectiveName() : "null"));
+            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.load", CraftPresence.CLIENT.CLIENT_ID, CraftPresence.CLIENT.CURRENT_USER != null ? CraftPresence.CLIENT.CURRENT_USER.getEffectiveName() : "null"));
         }
     }
 }

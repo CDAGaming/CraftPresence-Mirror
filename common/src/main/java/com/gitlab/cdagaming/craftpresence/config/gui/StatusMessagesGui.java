@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Status;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
@@ -51,7 +51,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
             .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
                     "mainMenuData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
+                            Constants.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                     )
             )
@@ -59,7 +59,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
             .put("gui.config.name.status_messages.loading_message", new Pair<>(
                     "loadingData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
+                            Constants.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                     )
             )
@@ -67,7 +67,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
             .put("gui.config.name.status_messages.lan_message", new Pair<>(
                     "lanData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
+                            Constants.TRANSLATOR.translate("gui.config.comment.status_messages.lan_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
                     )
             )
@@ -75,7 +75,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
             .put("gui.config.name.status_messages.single_player_message", new Pair<>(
                     "singleplayerData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
+                            Constants.TRANSLATOR.translate("gui.config.comment.status_messages.single_player_message",
                                     CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
                     )
             )
@@ -122,7 +122,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.defaultData = (ModuleData) getCurrentData().getDefaults().getProperty(attributeName);
                                                 screenInstance.currentData = (ModuleData) getCurrentData().getProperty(attributeName);
                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
+                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                 screenInstance.resetText = "gui.config.message.button.reset";
@@ -158,7 +158,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                     openScreen(
                                                             new SelectorGui(
                                                                     screenInstance,
-                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                                                     specificIcon, attributeName,
                                                                     true, false, ScrollableListControl.RenderType.DiscordAsset,
                                                                     (innerAttributeName, innerCurrentValue) -> {

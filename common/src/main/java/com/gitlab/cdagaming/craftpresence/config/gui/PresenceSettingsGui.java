@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Display;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -85,7 +85,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         textControl.getControlMessage(), null,
                                         true, false, ScrollableListControl.RenderType.DiscordAsset,
                                         onUpdatedCallback,
@@ -114,7 +114,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.details_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -128,7 +128,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.game_state_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -142,7 +142,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.large_image_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -156,7 +156,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.small_image_message",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -177,7 +177,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                             null,
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
-                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.enabled")
+                                            Constants.TRANSLATOR.translate("gui.config.comment.display.enabled")
                                     )
                             )
                     )
@@ -190,7 +190,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                             null,
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
-                                            ModUtils.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
+                                            Constants.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
                                     )
                             )
                     )
@@ -206,7 +206,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.small_image_key",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.icon",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.icon",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -223,7 +223,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.large_image_key",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.icon",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.icon",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -244,7 +244,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.start_timestamp",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -258,7 +258,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.end_timestamp",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
@@ -277,7 +277,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(PRESENCE.buttons),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(PRESENCE.buttons),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.None,
                                         null,
@@ -289,19 +289,19 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList(PRESENCE.buttons).size();
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
+                                                                screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 final Button defaultData = PRESENCE.buttons.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(defaultData, "label") != null ? defaultData.label : "";
                                                                 screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = Config.getProperty(defaultData, "url") != null ? defaultData.url : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.overrideSecondaryRender = true;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
                                                                 final Button defaultData = PRESENCE.buttons.get("default");
                                                                 final Button currentData = PRESENCE.buttons.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentData == null;
@@ -324,7 +324,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when Hovering over Primary Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.display.button_messages")
                                                                         )
                                                                 );
                                                             },
@@ -332,7 +332,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when Hovering over Secondary Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.display.button_messages")
                                                                         )
                                                                 );
                                                             }
@@ -343,7 +343,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.display.button_messages")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.display.button_messages")
                                 )
                         )
                 )
@@ -358,7 +358,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.CustomDiscordAsset,
                                         null,
@@ -369,19 +369,19 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.maxPrimaryLength = 32767;
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getCurrentData().dynamicIcons.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.url");
+                                                                screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.maxPrimaryLength = 32767;
-                                                                screenInstance.secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.label");
+                                                                screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
                                                                 screenInstance.originalPrimaryMessage = getCurrentData().dynamicIcons.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getCurrentData().dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
@@ -417,7 +417,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when Hovering over Primary Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
                                                                         )
                                                                 );
                                                             },
@@ -425,7 +425,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when Hovering over Secondary Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
                                                                         )
                                                                 );
                                                             }
@@ -436,7 +436,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.display.dynamic_icons")
                                 )
                         )
                 )
@@ -451,7 +451,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.item"), getCurrentData().dynamicVariables.keySet(),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.item"), getCurrentData().dynamicVariables.keySet(),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.None,
                                         null,
@@ -470,7 +470,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
                                                                 screenInstance.originalPrimaryMessage = getCurrentData().dynamicVariables.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getCurrentData().dynamicVariables.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
@@ -488,7 +488,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when Hovering over Primary Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
                                                                         )
                                                                 );
                                                             },
@@ -496,7 +496,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when Hovering over Secondary Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
                                                                         )
                                                                 );
                                                             }
@@ -507,7 +507,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.display.dynamic_variables")
                                 )
                         )
                 )

@@ -52,6 +52,10 @@ import java.util.Map;
  */
 public class CommandUtils {
     /**
+     * A mapping of currently loaded {@link TranslationManager} instances
+     */
+    private static final Map<String, TranslationManager> translationManagerList = StringUtils.newHashMap();
+    /**
      * A mapping of the currently loaded Rich Presence Modules
      */
     private static final Map<String, Module> modules = new TreeMapBuilder<String, Module>()
@@ -213,12 +217,24 @@ public class CommandUtils {
     }
 
     /**
+     * Adds a module for ticking and RPC Syncronization
+     *
+     * @param moduleId The name of the module
+     * @param instance The instance of the module
+     */
+    public static void addModule(final String moduleId, final TranslationManager instance) {
+        translationManagerList.put(moduleId, instance);
+    }
+
+    /**
      * Reloads and Synchronizes Data, as needed, and performs onTick Events
      *
      * @param forceUpdateRPC Whether to Force an Update to the RPC Data
      */
     public static void reloadData(final boolean forceUpdateRPC) {
-        ModUtils.TRANSLATOR.onTick();
+        for (TranslationManager manager : translationManagerList.values()) {
+            manager.onTick();
+        }
         CraftPresence.SCHEDULER.onTick();
         CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
 
@@ -238,16 +254,16 @@ public class CommandUtils {
             CraftPresence.CLIENT.onTick();
         } catch (Throwable ex) {
             final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
-            final String messagePrefix = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
+            final String messagePrefix = Constants.TRANSLATOR.translate("gui.config.message.editor.message");
 
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.module"));
+            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.module"));
             if (Constants.LOG.isDebugMode()) {
                 Constants.LOG.error(messagePrefix);
                 ex.printStackTrace();
             } else {
                 Constants.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
                 if (splitEx.size() > 1) {
-                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.verbose"));
+                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.verbose"));
                 }
             }
             CraftPresence.CLIENT.shutDown();
@@ -282,12 +298,12 @@ public class CommandUtils {
             final String type = pack.getKey();
             final Pack data = pack.getValue();
             if (data.isEnabled()) {
-                Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
+                Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
                 if (data.load()) {
-                    Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
+                    Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
                     break; // Only iterate until the first pack is found
                 } else {
-                    Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
+                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
                 }
             }
         }
@@ -308,6 +324,12 @@ public class CommandUtils {
     public static void onTick() {
         if (!Constants.HAS_GAME_LOADED) {
             Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
+            if (Constants.HAS_GAME_LOADED) {
+                addModule(Constants.MOD_ID, new TranslationManager(Constants.TRANSLATOR.setStripColors(
+                        CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
+                )));
+                addModule("minecraft", new TranslationManager(ModUtils.RAW_TRANSLATOR));
+            }
         }
         CraftPresence.CLIENT.updatePresence();
     }

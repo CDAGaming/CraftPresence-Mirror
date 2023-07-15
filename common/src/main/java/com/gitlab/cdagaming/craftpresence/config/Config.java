@@ -36,13 +36,9 @@ import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
-import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -109,13 +105,13 @@ public final class Config extends Module implements Serializable {
             rawJson = FileUtils.getJsonData(getConfigFile());
         } catch (Exception ex) {
             if (ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) {
-                Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+                Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.save"));
                 if (Constants.LOG.isDebugMode()) {
                     ex.printStackTrace();
                 }
 
                 if (!getConfigFile().renameTo(new File(getConfigPath() + ".bak"))) {
-                    Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.backup"));
+                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.backup"));
                 }
             }
         }
@@ -141,9 +137,9 @@ public final class Config extends Module implements Serializable {
             config.save();
         }
         if (wasNewFile) {
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.new"));
+            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.config.new"));
         } else {
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
+            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.config.save"));
         }
         return config;
     }
@@ -250,7 +246,7 @@ public final class Config extends Module implements Serializable {
         } else if (generalSettings.autoRegister != old.generalSettings.autoRegister) {
             needsReboot = true; // Auto Register changed
         } else if (!accessibilitySettings.languageId.equals(old.accessibilitySettings.languageId)) {
-            ModUtils.TRANSLATOR.syncTranslations(); // Fallback Language ID Changed
+            Constants.TRANSLATOR.syncTranslations(); // Fallback Language ID Changed
         } else if (advancedSettings.allowDuplicatePackets != old.advancedSettings.allowDuplicatePackets) {
             needsReboot = true; // Allow Duplicate Packets changed
         } else if (advancedSettings.maxConnectionAttempts != old.advancedSettings.maxConnectionAttempts) {
@@ -260,7 +256,11 @@ public final class Config extends Module implements Serializable {
         if (advancedSettings.debugMode != old.advancedSettings.debugMode ||
                 advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
                 advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
-            CommandUtils.updateModes();
+            CommandUtils.updateModes(); // Debug Mode, Verbose Mode, or Refresh Rate changed
+        }
+
+        if (accessibilitySettings.stripTranslationColors != old.accessibilitySettings.stripTranslationColors) {
+            Constants.TRANSLATOR.setStripColors(accessibilitySettings.stripTranslationColors); // Strip Translation Colors changed
         }
 
         if (needsReboot) {
@@ -294,7 +294,7 @@ public final class Config extends Module implements Serializable {
         if (!isNewFile) {
             int currentVer = oldVer;
             if (currentVer < newVer) {
-                Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.outdated", currentVer, newVer));
+                Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.config.outdated", currentVer, newVer));
 
                 if (MathUtils.isWithinValue(currentVer, 1, 2, true, false)) {
                     // Schema Changes (v1 -> v2)
@@ -420,7 +420,7 @@ public final class Config extends Module implements Serializable {
 
                 if (defaultValue == null) {
                     if (currentValue == null || !(parentValue instanceof ColorData || parentValue instanceof ColorSection || parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
-                        Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.invalid", rawName));
+                        Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.prop.invalid", rawName));
                         shouldContinue = false;
                     } else {
                         defaultValue = currentValue;
@@ -452,7 +452,7 @@ public final class Config extends Module implements Serializable {
                                             } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
                                                 final int migratedKeyCode = KeyUtils.convertKey(boolData.getSecond(), keyCodeMigrationId);
                                                 if (migratedKeyCode != boolData.getSecond()) {
-                                                    Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
+                                                    Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
                                                     setProperty(migratedKeyCode, pathData);
                                                 }
                                             }
@@ -466,7 +466,7 @@ public final class Config extends Module implements Serializable {
                                 final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
                                 final Map<Object, Object> defaultData = StringUtils.newHashMap((Map<?, ?>) defaultValue);
                                 if (!newData.containsKey("default")) {
-                                    Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.missing.default", rawName));
+                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.missing.default", rawName));
                                     newData.putAll(defaultData);
                                     setProperty(newData, pathData);
                                 } else if (entry.getValue().isJsonObject()) {
@@ -487,9 +487,9 @@ public final class Config extends Module implements Serializable {
                                 for (String langTrigger : languageTriggers) {
                                     if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
                                         if (languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
-                                            final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, languageMigrationId);
+                                            final String migratedLanguageId = Constants.TRANSLATOR.convertId(rawStringValue, languageMigrationId);
                                             if (!migratedLanguageId.equals(rawStringValue)) {
-                                                Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
+                                                Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
                                                 setProperty((Object) migratedLanguageId, pathData);
                                             }
                                         }
@@ -500,7 +500,7 @@ public final class Config extends Module implements Serializable {
                         }
 
                         if (shouldReset) {
-                            Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.prop.empty", rawName));
+                            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.prop.empty", rawName));
                             resetProperty(pathData);
                         }
                     }
@@ -566,8 +566,8 @@ public final class Config extends Module implements Serializable {
             languageMigrationId = TranslationUtils.ConversionMode.Unknown;
         }
 
-        Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.add", keyCodeTriggers.toString(), keyCodeMigrationId, keyCodeMigrationId.equals(KeyConverter.ConversionMode.None) ? "Verification" : "Setting Change"));
-        Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.migration.add", languageTriggers.toString(), languageMigrationId, languageMigrationId.equals(TranslationUtils.ConversionMode.None) ? "Verification" : "Setting Change"));
+        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.add", keyCodeTriggers.toString(), keyCodeMigrationId, keyCodeMigrationId.equals(KeyConverter.ConversionMode.None) ? "Verification" : "Setting Change"));
+        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.add", languageTriggers.toString(), languageMigrationId, languageMigrationId.equals(TranslationUtils.ConversionMode.None) ? "Verification" : "Setting Change"));
         return !isNewFile ? handleVerification(rawJson, keyCodeMigrationId, languageMigrationId) : rawJson;
     }
 

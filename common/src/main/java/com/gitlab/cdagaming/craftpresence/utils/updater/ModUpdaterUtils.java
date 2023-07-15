@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.updater;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.integrations.versioning.VersionComparator;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
@@ -131,11 +130,11 @@ public class ModUpdaterUtils {
             flushData();
 
             if (StringUtils.isNullOrEmpty(updateUrl)) return;
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
+            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
 
             final String data = UrlUtils.getURLText(updateUrl, "UTF-8");
 
-            Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", data));
+            Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", data));
 
             @SuppressWarnings("unchecked") final Map<String, Object> json = FileUtils.getJsonData(data, Map.class);
             @SuppressWarnings("unchecked") final Map<String, String> promos = (Map<String, String>) json.get("promos");
@@ -172,7 +171,7 @@ public class ModUpdaterUtils {
             } else
                 currentState = UpdateState.BETA;
 
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
+            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
 
             changelogData.clear();
             @SuppressWarnings("unchecked") final Map<String, String> tmp = (Map<String, String>) json.get(currentGameVersion);
@@ -191,7 +190,7 @@ public class ModUpdaterUtils {
             }
         } catch (Throwable ex) {
             // Log Failure and Set Update State to FAILED
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
+            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
 
             if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();

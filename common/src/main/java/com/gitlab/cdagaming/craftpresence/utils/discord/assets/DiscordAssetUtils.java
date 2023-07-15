@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -248,7 +247,7 @@ public class DiscordAssetUtils {
             DiscordAsset[] values = ASSET_LIST.values().toArray(new DiscordAsset[0]);
             return values[OSUtils.RANDOM.nextInt(values.length)];
         } catch (Exception ex) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
+            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
             if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
@@ -316,8 +315,8 @@ public class DiscordAssetUtils {
      * @return The list of discord asset data attached to this client id
      */
     public static DiscordAsset[] loadAssets(final String clientId, final boolean filterToMain) {
-        Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load", clientId));
-        Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load.credits"));
+        Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load", clientId));
+        Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load.credits"));
 
         try {
             final String url = applicationEndpoint + clientId + "/assets";
@@ -342,13 +341,13 @@ public class DiscordAssetUtils {
             }
             return assets;
         } catch (Exception ex) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.load"));
+            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.load"));
             if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }
             return null;
         } finally {
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.detected", String.valueOf(ASSET_LIST.size())));
+            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.detected", String.valueOf(ASSET_LIST.size())));
         }
     }
 

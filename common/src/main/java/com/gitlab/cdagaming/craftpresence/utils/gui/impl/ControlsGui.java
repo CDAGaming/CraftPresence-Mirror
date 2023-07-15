@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
@@ -94,8 +93,8 @@ public class ControlsGui extends PaginatedScreen {
 
     @Override
     public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.message.button.controls");
+        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
+        final String subTitle = Constants.TRANSLATOR.translate("gui.config.message.button.controls");
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
         renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
@@ -105,7 +104,7 @@ public class ControlsGui extends PaginatedScreen {
             final Integer pageNumber = entry.getKey();
             final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
             for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
-                renderString(ModUtils.TRANSLATOR.translate(elementData.getFirst()), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), elementData.getThird(), pageNumber);
+                renderString(Constants.TRANSLATOR.translate(elementData.getFirst()), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), elementData.getThird(), pageNumber);
             }
         }
     }
@@ -116,10 +115,10 @@ public class ControlsGui extends PaginatedScreen {
             final Integer pageNumber = entry.getKey();
             final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
             for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
-                if (currentPage == pageNumber && RenderUtils.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(ModUtils.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
+                if (currentPage == pageNumber && RenderUtils.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(Constants.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
                     drawMultiLineString(
                             StringUtils.splitTextByNewLine(
-                                    ModUtils.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))
+                                    Constants.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))
                             )
                     );
                 }

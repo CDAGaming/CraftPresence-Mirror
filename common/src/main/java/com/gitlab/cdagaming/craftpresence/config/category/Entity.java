@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.config.category;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
@@ -39,13 +39,13 @@ public class Entity extends Module implements Serializable {
     public String fallbackEntityIcon = "unknown";
     public Map<String, ModuleData> targetData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
-                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_target_messages"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.advanced.entity_target_messages"),
                     null // Defaults to the Entity Name if nothing is supplied
             ))
             .build();
     public Map<String, ModuleData> ridingData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
-                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.entity_riding_messages"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.advanced.entity_riding_messages"),
                     null // Defaults to the Entity Name if nothing is supplied
             ))
             .build();

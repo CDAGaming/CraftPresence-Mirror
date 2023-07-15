@@ -114,8 +114,8 @@ public class UpdateInfoGui extends ExtendedScreen {
 
         checkButton.setControlEnabled(modUpdater.currentState != ModUpdaterUtils.UpdateState.PENDING);
 
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
+        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
+        final String subTitle = Constants.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
         renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
@@ -125,14 +125,14 @@ public class UpdateInfoGui extends ExtendedScreen {
 
     @Override
     public void postRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = ModUtils.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
+        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
+        final String subTitle = Constants.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
 
         // Hovering over Title Label
         if (RenderUtils.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, getStringWidth(mainTitle), getFontHeight())) {
             drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.title", Constants.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
+                            Constants.TRANSLATOR.translate("gui.config.comment.title", Constants.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
                     )
             );
         }
@@ -140,7 +140,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         if (RenderUtils.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, getStringWidth(subTitle), getFontHeight())) {
             drawMultiLineString(
                     StringUtils.splitTextByNewLine(
-                            ModUtils.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)
+                            Constants.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)
                     )
             );
         }
@@ -149,7 +149,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     }
 
     private void resetNotes() {
-        final String notice = ModUtils.TRANSLATOR.translate("gui.config.message.changelog") +
+        final String notice = Constants.TRANSLATOR.translate("gui.config.message.changelog") +
                 '\n' + "  " + "N/A";
         infoPane.setMessage(notice);
     }
@@ -157,7 +157,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     private void updateNotes() {
         if (modUpdater.changelogData.size() > 0) {
             final StringBuilder notice = new StringBuilder();
-            notice.append(ModUtils.TRANSLATOR.translate("gui.config.message.changelog"));
+            notice.append(Constants.TRANSLATOR.translate("gui.config.message.changelog"));
 
             for (Map.Entry<String, String> entry : modUpdater.changelogData.entrySet()) {
                 notice

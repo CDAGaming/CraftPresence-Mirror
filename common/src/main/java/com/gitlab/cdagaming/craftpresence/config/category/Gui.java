@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.config.category;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
@@ -40,7 +40,7 @@ public class Gui extends Module implements Serializable {
     public String fallbackGuiIcon = "unknown";
     public Map<String, ModuleData> guiData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
-                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.advanced.gui_messages"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.advanced.gui_messages"),
                     null // Defaults to the Gui Screen Name if nothing is supplied
             ))
             .build();
@@ -52,15 +52,15 @@ public class Gui extends Module implements Serializable {
     public Gui() {
         if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
             guiData.put("GuiReplayViewer", new ModuleData(
-                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.integrations.replaymod.viewer"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.integrations.replaymod.viewer"),
                     null
             ));
             guiData.put("GuiReplayOverlay", new ModuleData(
-                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.integrations.replaymod.editor"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.integrations.replaymod.editor"),
                     null
             ));
             guiData.put("GuiVideoRenderer", new ModuleData(
-                    ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.integrations.replaymod.renderer"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.integrations.replaymod.renderer"),
                     null
             ));
         }

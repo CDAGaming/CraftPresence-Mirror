@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -181,7 +181,7 @@ public class SelectorGui extends ExtendedScreen {
                                                 onUpdatedCallback.accept(attributeName, scrollList.currentValue);
                                                 openScreen(parentScreen);
                                             } else {
-                                                openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
+                                                openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.null"))));
                                             }
                                         } else {
                                             openScreen(parentScreen);
@@ -190,7 +190,7 @@ public class SelectorGui extends ExtendedScreen {
                                         if (allowDynamicEditing && onAdjustDynamicEntry != null) {
                                             onAdjustDynamicEntry.accept(scrollList.currentValue, parentScreen);
                                         } else {
-                                            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.null"))));
+                                            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.null"))));
                                         }
                                     }
                                 } else {
@@ -231,7 +231,7 @@ public class SelectorGui extends ExtendedScreen {
 
             super.initializeUi();
         } else {
-            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(ModUtils.TRANSLATOR.translate("gui.config.message.empty.list"))));
+            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.empty.list"))));
         }
     }
 
@@ -282,10 +282,10 @@ public class SelectorGui extends ExtendedScreen {
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
 
-        final String searchText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.search");
+        final String searchText = Constants.TRANSLATOR.translate("gui.config.message.editor.search");
         final float renderY = searchBox.getBottom() - (searchBox.getControlHeight() / 2f) - (getFontHeight() / 2f);
 
-        final String extraText = isVerboseMode() ? ModUtils.TRANSLATOR.translate("gui.config.title.selector.extra", itemList.size(), originalList.size()) : "";
+        final String extraText = isVerboseMode() ? Constants.TRANSLATOR.translate("gui.config.title.selector.extra", itemList.size(), originalList.size()) : "";
         final String displayText = mainTitle + " " + extraText;
 
         renderCenteredString(searchText, 30, renderY, 0xFFFFFF);

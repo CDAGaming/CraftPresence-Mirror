@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
@@ -68,7 +67,7 @@ public class CommandsGui extends ExtendedScreen {
     public CommandsGui(GuiScreen parentScreen, String... commandArgs) {
         super(parentScreen);
         executionCommandArgs = commandArgs;
-        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
+        executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.main");
     }
 
     /**
@@ -160,7 +159,7 @@ public class CommandsGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        final String mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.commands");
+        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.commands");
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
@@ -199,39 +198,39 @@ public class CommandsGui extends ExtendedScreen {
                             executionCommandArgs[0].equalsIgnoreCase("")
                     )
             ) {
-                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.main");
+                executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.main");
             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[0])) {
                 if (executionCommandArgs[0].equalsIgnoreCase("request")) {
                     if (CraftPresence.CLIENT.isAvailable()) {
                         if (executionCommandArgs.length == 1) {
                             if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.info",
+                                executionString = Constants.TRANSLATOR.translate("craftpresence.command.request.info",
                                         CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName(), CraftPresence.SCHEDULER.TIMER
                                 );
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
+                                executionString = Constants.TRANSLATOR.translate("craftpresence.command.request.none");
                             }
                         } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
                             if (CraftPresence.CLIENT.STATUS == DiscordStatus.JoinRequest && CraftPresence.CLIENT.REQUESTER_USER != null) {
                                 if (executionCommandArgs[1].equalsIgnoreCase("accept")) {
-                                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.accept",
+                                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.request.accept",
                                             CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName()
                                     );
                                     CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.ACCEPT);
                                 } else if (executionCommandArgs[1].equalsIgnoreCase("deny")) {
-                                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.denied",
+                                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.request.denied",
                                             CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName()
                                     );
                                     CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.DENY);
                                 } else {
-                                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.unrecognized");
                                 }
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.request.none");
+                                executionString = Constants.TRANSLATOR.translate("craftpresence.command.request.none");
                             }
                         }
                     } else {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.offline");
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.offline");
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("export")) {
                     String clientId = CraftPresence.CONFIG.generalSettings.clientId;
@@ -239,7 +238,7 @@ public class CommandsGui extends ExtendedScreen {
                     String urlMeta = "";
 
                     if (executionCommandArgs.length == 1) {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.export", clientId, false);
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.export", clientId, false);
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
                         if (executionCommandArgs[1].equalsIgnoreCase("assets")) {
                             if (executionCommandArgs.length >= 3 && executionCommandArgs.length <= 5) {
@@ -256,17 +255,17 @@ public class CommandsGui extends ExtendedScreen {
                                     }
                                 }
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                                executionString = Constants.TRANSLATOR.translate("craftpresence.command.unrecognized");
                             }
 
                             exportAssets(clientId, doFullCopy, urlMeta);
                         } else {
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                            executionString = Constants.TRANSLATOR.translate("craftpresence.command.unrecognized");
                         }
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("compile")) {
                     if (executionCommandArgs.length == 1) {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.compile");
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.compile");
                     } else {
                         final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandInput.getControlMessage());
                         if (matcher.find()) {
@@ -277,16 +276,16 @@ public class CommandsGui extends ExtendedScreen {
                             final String value = data.get().toString();
                             final int length = StringUtils.getBytes(value, "UTF-8").length;
 
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.compile",
+                            executionString = Constants.TRANSLATOR.translate("craftpresence.command.compile",
                                     value, length, out.toString().replace("\n", "\\n")
                             );
                         } else {
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                            executionString = Constants.TRANSLATOR.translate("craftpresence.command.unrecognized");
                         }
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("search")) {
                     if (executionCommandArgs.length == 1) {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.search");
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.search");
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
                         final List<String> results = StringUtils.newArrayList(
                                 CraftPresence.CLIENT.getArgumentEntries(executionCommandArgs[1])
@@ -295,33 +294,33 @@ public class CommandsGui extends ExtendedScreen {
                         if (!results.isEmpty()) {
                             openScreen(new SelectorGui(
                                     currentScreen,
-                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
+                                    Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                     results,
                                     null, null,
                                     false, false, RenderType.Placeholder,
                                     null, null
                             ));
                         } else {
-                            executionString = ModUtils.TRANSLATOR.translate("gui.config.message.empty.list");
+                            executionString = Constants.TRANSLATOR.translate("gui.config.message.empty.list");
                         }
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reload")) {
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reload");
+                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.reload");
                     CommandUtils.reloadData(true);
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.reload.complete");
+                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.reload.complete");
                 } else if (executionCommandArgs[0].equalsIgnoreCase("shutdown")) {
                     if (CraftPresence.CLIENT.isAvailable()) {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.shutdown.pre");
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.shutdown.pre");
                         CraftPresence.CLIENT.shutDown();
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.shutdown.post");
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.shutdown.post");
                     } else {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.offline");
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.offline");
                     }
                 } else if (executionCommandArgs[0].equalsIgnoreCase("reboot")) {
                     CommandUtils.setupRPC();
                 } else if (executionCommandArgs[0].equalsIgnoreCase("view")) {
                     if (executionCommandArgs.length == 1) {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.view");
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.view");
                     } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[1])) {
                         if (executionCommandArgs[1].equalsIgnoreCase("placeholders")) {
                             // Redirect: `/cp view placeholders` => `/cp search all`
@@ -331,95 +330,95 @@ public class CommandsGui extends ExtendedScreen {
                             if (CraftPresence.TILE_ENTITIES.enabled) {
                                 openScreen(new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.items"),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                         CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
                                         false, false, RenderType.ItemData,
                                         null, null
                                 ));
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item")
+                                executionString = Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item")
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("entities")) {
                             if (CraftPresence.ENTITIES.enabled) {
                                 openScreen(new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.entities"),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.view.entities"),
                                         CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
                                         false, false, RenderType.EntityData,
                                         null, null
                                 ));
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity")
+                                executionString = Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity")
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("servers")) {
                             if (CraftPresence.SERVER.enabled) {
                                 openScreen(new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.servers"),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.view.servers"),
                                         CraftPresence.SERVER.knownAddresses,
                                         null, null,
                                         false, false, RenderType.ServerData,
                                         null, null
                                 ));
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_world_data")
+                                executionString = Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_world_data")
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("screens")) {
                             if (CraftPresence.GUIS.enabled) {
                                 openScreen(new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
                                         CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
                                         false, false, null,
                                         null, null
                                 ));
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui")
+                                executionString = Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui")
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("biomes")) {
                             if (CraftPresence.BIOMES.enabled) {
                                 openScreen(new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
                                         CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
                                         false, false, null,
                                         null, null
                                 ));
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data")
+                                executionString = Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_biome_data")
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("dimensions")) {
                             if (CraftPresence.DIMENSIONS.enabled) {
                                 openScreen(new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
                                         CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
                                         false, false, null,
                                         null, null
                                 ));
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data")
+                                executionString = Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data")
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("currentData")) {
                             if (CraftPresence.CLIENT.isAvailable()) {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.current_data",
+                                executionString = Constants.TRANSLATOR.translate("craftpresence.command.current_data",
                                         CraftPresence.CLIENT.CURRENT_USER.getEffectiveName(),
                                         StringUtils.convertString(CraftPresence.CLIENT.DETAILS, "UTF-8", true),
                                         StringUtils.convertString(CraftPresence.CLIENT.GAME_STATE, "UTF-8", true),
@@ -440,16 +439,16 @@ public class CommandsGui extends ExtendedScreen {
                                         CraftPresence.CLIENT.INSTANCE
                                 );
                             } else {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.offline");
+                                executionString = Constants.TRANSLATOR.translate("craftpresence.command.offline");
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("assets")) {
                             if (executionCommandArgs.length == 2) {
-                                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.usage.view.assets");
+                                executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.view.assets");
                             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[2])) {
                                 if (executionCommandArgs[2].equalsIgnoreCase("custom")) {
                                     openScreen(new SelectorGui(
                                             currentScreen,
-                                            ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.custom"),
+                                            Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.custom"),
                                             DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                             null, null,
                                             false, false, RenderType.CustomDiscordAsset,
@@ -458,7 +457,7 @@ public class CommandsGui extends ExtendedScreen {
                                 } else if (executionCommandArgs[2].equalsIgnoreCase("all")) {
                                     openScreen(new SelectorGui(
                                             currentScreen,
-                                            ModUtils.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"),
+                                            Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"),
                                             DiscordAssetUtils.ASSET_LIST.keySet(),
                                             null, null,
                                             false, false, RenderType.DiscordAsset,
@@ -467,14 +466,14 @@ public class CommandsGui extends ExtendedScreen {
                                 }
                             }
                         } else {
-                            executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                            executionString = Constants.TRANSLATOR.translate("craftpresence.command.unrecognized");
                         }
                     }
                 } else {
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.unrecognized");
+                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.unrecognized");
                 }
             } else {
-                executionString = ModUtils.TRANSLATOR.translate("craftpresence.logger.error.command");
+                executionString = Constants.TRANSLATOR.translate("craftpresence.logger.error.command");
             }
         }
 
@@ -575,7 +574,7 @@ public class CommandsGui extends ExtendedScreen {
 
             if (assetList != null) {
                 final String filePath = Constants.MOD_ID + File.separator + "export" + File.separator + clientId + File.separator;
-                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.pre", assetList.length, clientId, doFullCopy);
+                executionString = Constants.TRANSLATOR.translate("craftpresence.command.export.pre", assetList.length, clientId, doFullCopy);
 
                 final File dataDir = new File(filePath + "downloads.txt");
                 final String encoding = CraftPresence.CLIENT.isAvailable() ?
@@ -593,7 +592,7 @@ public class CommandsGui extends ExtendedScreen {
                     bw.newLine();
 
                     for (int i = 0; i < assetList.length; i++) {
-                        executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.progress",
+                        executionString = Constants.TRANSLATOR.translate("craftpresence.command.export.progress",
                                 clientId, i + 1, assetList.length
                         );
                         final DiscordAsset asset = assetList[i];
@@ -613,12 +612,12 @@ public class CommandsGui extends ExtendedScreen {
                 }
 
                 if (!hasError) {
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.post", assetList.length, clientId, doFullCopy);
+                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.export.post", assetList.length, clientId, doFullCopy);
                 } else {
-                    executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
+                    executionString = Constants.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
                 }
             } else {
-                executionString = ModUtils.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
+                executionString = Constants.TRANSLATOR.translate("craftpresence.command.export.exception", clientId);
             }
             blockInteractions = false;
         }).start();

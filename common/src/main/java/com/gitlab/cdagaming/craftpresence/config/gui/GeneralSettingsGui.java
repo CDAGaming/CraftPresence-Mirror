@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.General;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -71,7 +71,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         "gui.config.name.general.client_id",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.client_id")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.client_id")
                                 )
                         )
                 )
@@ -94,7 +94,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         getCurrentData().defaultIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
@@ -105,7 +105,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.default_icon")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.default_icon")
                                 )
                         )
                 )
@@ -122,7 +122,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         },
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
                                 )
                         )
                 )
@@ -139,7 +139,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         },
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.preferred_client")
                                 )
                         )
                 )
@@ -152,7 +152,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_curse_manifest")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_curse_manifest")
                                 )
                         )
                 )
@@ -165,7 +165,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_multimc_manifest")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_multimc_manifest")
                                 )
                         )
                 )
@@ -178,7 +178,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_mcupdater_instance")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_mcupdater_instance")
                                 )
                         )
                 )
@@ -191,7 +191,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_technic_pack")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_technic_pack")
                                 )
                         )
                 )
@@ -204,7 +204,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_atlauncher_instance")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_atlauncher_instance")
                                 )
                         )
                 )
@@ -217,7 +217,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
                                 )
                         )
                 )
@@ -230,7 +230,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
                                 )
                         )
                 )
@@ -243,7 +243,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
                                 )
                         )
                 )
@@ -256,7 +256,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.auto_register")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.auto_register")
                                 )
                         )
                 )
@@ -269,7 +269,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
                                 )
                         )
                 )
@@ -282,7 +282,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
                                 )
                         )
                 )
@@ -292,7 +292,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
                         )
                 );
             }

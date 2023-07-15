@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.config.migration;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
@@ -323,7 +322,7 @@ public class Legacy2Modern implements DataMigrator {
         try (Reader configReader = new InputStreamReader(Files.newInputStream(configFile.toPath()), Charset.forName(encoding))) {
             properties.load(configReader);
         } catch (Exception ex) {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.error.config.save"));
+            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.save"));
             if (Constants.LOG.isDebugMode()) {
                 ex.printStackTrace();
             }

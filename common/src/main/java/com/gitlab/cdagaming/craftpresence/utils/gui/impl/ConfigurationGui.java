@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.gui.AboutGui;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -76,7 +76,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                             if (resetConfigButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.reset.config")
+                                                Constants.TRANSLATOR.translate("gui.config.comment.button.reset.config")
                                         )
                                 );
                             }
@@ -97,7 +97,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                             if (syncConfigButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.button.sync.config")
+                                                Constants.TRANSLATOR.translate("gui.config.comment.button.sync.config")
                                         )
                                 );
                             }
@@ -122,9 +122,9 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         final boolean hasMainTitle = !StringUtils.isNullOrEmpty(title);
         final boolean hasSubTitle = !StringUtils.isNullOrEmpty(subTitle);
         if (hasMainTitle) {
-            final String mainTitle = ModUtils.TRANSLATOR.getLocalizedMessage(title);
+            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
             if (hasSubTitle) {
-                final String otherTitle = ModUtils.TRANSLATOR.getLocalizedMessage(subTitle);
+                final String otherTitle = Constants.TRANSLATOR.getLocalizedMessage(subTitle);
 
                 renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
                 renderCenteredString(otherTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
@@ -177,7 +177,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         () -> openScreen(new AboutGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.button.about")
+                                        Constants.TRANSLATOR.translate("gui.config.message.button.about")
                                 )
                         )
                 )
@@ -191,7 +191,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         () -> openScreen(new CommandsGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.message.button.commands")
+                                        Constants.TRANSLATOR.translate("gui.config.message.button.commands")
                                 )
                         )
                 )

@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.config.category;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -35,19 +35,19 @@ public class Status extends Module implements Serializable {
     private static final long serialVersionUID = 3055410101315942491L;
     private static final Status DEFAULT = new Status();
     public ModuleData mainMenuData = new ModuleData(
-            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.main_menu"),
+            Constants.TRANSLATOR.translate("craftpresence.defaults.state.main_menu"),
             null
     );
     public ModuleData loadingData = new ModuleData(
-            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.loading"),
+            Constants.TRANSLATOR.translate("craftpresence.defaults.state.loading"),
             null
     );
     public ModuleData lanData = new ModuleData(
-            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.lan"),
+            Constants.TRANSLATOR.translate("craftpresence.defaults.state.lan"),
             null
     );
     public ModuleData singleplayerData = new ModuleData(
-            ModUtils.TRANSLATOR.translate(true, "craftpresence.defaults.state.single_player"),
+            Constants.TRANSLATOR.translate("craftpresence.defaults.state.single_player"),
             null
     );
 

@@ -342,7 +342,7 @@ public class ServerUtils implements Module {
 
             // `world.weather` Arguments = Current Weather Data of the World
             final String newWeatherData = EntityUtils.getWeather(CraftPresence.player);
-            final String newWeatherName = ModUtils.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
+            final String newWeatherName = Constants.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
             if (!newWeatherName.equals(currentWeatherName)) {
                 currentWeatherName = newWeatherName;
                 queuedForUpdate = true;
@@ -350,7 +350,7 @@ public class ServerUtils implements Module {
 
             // 'world.name' Argument = Current Name of the World
             final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), ModUtils.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             if (!newWorldName.equals(currentWorldName)) {
                 currentWorldName = newWorldName;
@@ -448,7 +448,7 @@ public class ServerUtils implements Module {
         if (isValidSecret) {
             CraftPresence.instance.addScheduledTask(() -> joinServer(new ServerData(serverName, serverIP, false)));
         } else {
-            Constants.LOG.error(ModUtils.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
+            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }
         CraftPresence.CLIENT.STATUS = DiscordStatus.Ready;
     }

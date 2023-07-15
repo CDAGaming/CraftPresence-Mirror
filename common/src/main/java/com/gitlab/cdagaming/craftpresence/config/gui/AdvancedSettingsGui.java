@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
@@ -75,7 +74,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         "gui.config.name.advanced.refresh_rate",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")
                                 )
                         )
                 )
@@ -91,7 +90,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.gui"), CraftPresence.GUIS.GUI_NAMES,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.gui"), CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
                                         true, true, RenderType.None,
                                         null,
@@ -110,7 +109,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getCurrentData().guiSettings.guiData.get("default");
                                                                 screenInstance.currentData = getCurrentData().guiSettings.guiData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -148,7 +147,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                     openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
-                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                                                                     specificIcon, attributeName,
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
@@ -163,7 +162,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("screen."))
                                                                         )
                                                                 );
@@ -177,13 +176,13 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                             if (!guiMessagesButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui"))
                                         ));
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.gui_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("screen."))
                                         )
                                 );
@@ -199,7 +198,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.item"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.item"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
                                         true, true, RenderType.ItemData,
                                         null,
@@ -214,7 +213,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
                                                                 screenInstance.originalPrimaryMessage = getCurrentData().itemMessages.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getCurrentData().itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
@@ -243,7 +242,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("item.")
                                                                                 )
                                                                         )
@@ -258,14 +257,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                             if (!itemMessagesButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.item_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("item.")
                                                 )
                                         )
@@ -282,7 +281,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
                                         true, true, RenderType.EntityData,
                                         null,
@@ -301,7 +300,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getCurrentData().entitySettings.targetData.get("default");
                                                                 screenInstance.currentData = getCurrentData().entitySettings.targetData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -339,7 +338,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                     openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
-                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                                                                     specificIcon, attributeName,
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
@@ -354,7 +353,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("entity.target.")
                                                                                 )
                                                                         )
@@ -369,14 +368,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                             if (!entityTargetMessagesButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.entity_target_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("entity.target.")
                                                 )
                                         )
@@ -393,7 +392,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
                                         true, true, RenderType.EntityData,
                                         null,
@@ -412,7 +411,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getCurrentData().entitySettings.ridingData.get("default");
                                                                 screenInstance.currentData = getCurrentData().entitySettings.ridingData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -450,7 +449,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                     openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
-                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                                                                     specificIcon, attributeName,
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
@@ -465,7 +464,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("entity.riding.")
                                                                                 )
                                                                         )
@@ -480,14 +479,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                             if (!entityRidingMessagesButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.advanced.entity_riding_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("entity.riding.")
                                                 )
                                         )
@@ -505,7 +504,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_gui")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_gui")
                                 )
                         )
                 )
@@ -518,7 +517,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_item")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_item")
                                 )
                         )
                 )
@@ -531,7 +530,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_entity")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_entity")
                                 )
                         )
                 )
@@ -544,7 +543,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", Constants.IS_DEV_FLAG)
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", Constants.IS_DEV_FLAG)
                                 )
                         )
                 )
@@ -557,7 +556,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.format_words")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.format_words")
                                 )
                         )
                 )
@@ -570,7 +569,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", Constants.IS_VERBOSE_FLAG)
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", Constants.IS_VERBOSE_FLAG)
                                 )
                         )
                 )
@@ -583,7 +582,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_placeholder_previews")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.allow_placeholder_previews")
                                 )
                         )
                 )
@@ -596,7 +595,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_endpoint_icons")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.allow_endpoint_icons")
                                 )
                         )
                 )
@@ -609,7 +608,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.advanced.allow_duplicate_packets")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.allow_duplicate_packets")
                                 )
                         )
                 )
@@ -618,7 +617,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
                         )
                 );
             }

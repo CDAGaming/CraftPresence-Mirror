@@ -93,13 +93,13 @@ public class CraftPresence {
      */
     public static EntityPlayer player;
     /**
-     * The {@link ScheduleUtils} Instance for this Mod
-     */
-    public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
-    /**
      * The {@link Config} Instance for this Mod
      */
     public static Config CONFIG;
+    /**
+     * The {@link ScheduleUtils} Instance for this Mod
+     */
+    public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
     /**
      * If specified, this callback runs on initial launch, once initialized
      */
@@ -137,8 +137,8 @@ public class CraftPresence {
         MappingUtils.getClassMap();
 
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
-        Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.warning.debug_mode"));
-        Constants.LOG.debugInfo(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.os", OSUtils.OS_NAME, OSUtils.OS_ARCH, OSUtils.IS_64_BIT));
+        Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.debug_mode"));
+        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.os", OSUtils.OS_NAME, OSUtils.OS_ARCH, OSUtils.IS_64_BIT));
 
         // Check for Updates before continuing
         ModUtils.UPDATER.checkForUpdates();

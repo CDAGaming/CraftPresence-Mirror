@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.core.config.element;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -49,8 +49,8 @@ public class PresenceData extends Module implements Serializable {
     public String endTimestamp = "";
     public Map<String, Button> buttons = new HashMapBuilder<String, Button>()
             .put("default", new Button(
-                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
-                    ModUtils.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
             ))
             .build();
 

@@ -26,9 +26,9 @@ package com.gitlab.cdagaming.craftpresence.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
-import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -157,8 +157,8 @@ public class FunctionsLib {
     }
 
     public static Value translate(Starscript ss, int argCount) {
-        if (ModUtils.TRANSLATOR == null) ss.error("No available translations from mod data, try again later.");
-        return parseWith(ModUtils.TRANSLATOR, ss, argCount);
+        if (Constants.TRANSLATOR == null) ss.error("No available translations from mod data, try again later.");
+        return parseWith(Constants.TRANSLATOR, ss, argCount);
     }
 
     public static Value mcTranslate(Starscript ss, int argCount) {

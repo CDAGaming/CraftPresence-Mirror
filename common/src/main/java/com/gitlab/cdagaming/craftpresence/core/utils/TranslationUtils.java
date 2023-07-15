@@ -22,18 +22,9 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -41,17 +32,19 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Translation and Localization Utilities based on Language Code
  *
  * @author CDAGaming
  */
-public class TranslationUtils implements IResourceManagerReloadListener {
+public class TranslationUtils {
     /**
      * The default/fallback Language ID to Locate and Retrieve Translations
      */
-    public final String defaultLanguageId = ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US";
+    public final String defaultLanguageId = Constants.MCBuildProtocol >= 315 ? "en_us" : "en_US";
     /**
      * The Stored Mapping of Language Request History
      * <p>
@@ -79,13 +72,25 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      */
     private boolean usingAssetsPath = true;
     /**
+     * Whether to Remove Color and Formatting Codes from Translated Strings
+     */
+    private boolean stripColors = false;
+    /**
+     * The function to use when retrieving additional {@link InputStream} data for resources
+     * <p>
+     * Function: [modId, langPath] => List of {@link InputStream} instances
+     */
+    private BiFunction<String, String, List<InputStream>> resourceSupplier = (id, langPath) -> StringUtils.newArrayList();
+    /**
+     * The function to use when retrieving the current language to use
+     * <p>
+     * Function: [fallbackLanguage] => currentLanguage
+     */
+    private Function<String, String> languageSupplier = (fallback) -> fallback;
+    /**
      * If this module needs a full sync
      */
     private boolean needsSync;
-    /**
-     * If this module needs to initialize
-     */
-    private boolean needsInit;
 
     /**
      * Sets initial Data and Retrieves Valid Translations
@@ -144,11 +149,11 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param mode       The Conversion Mode to convert the keycode to
      * @return The resulting converted Language Identifier, or the mode's unknown key
      */
-    public static String convertId(final String originalId, final ConversionMode mode) {
+    public String convertId(final String originalId, final ConversionMode mode) {
         String resultId = originalId;
 
         if (originalId.length() == 5 && originalId.contains("_")) {
-            if (mode == ConversionMode.PackFormat2 || (mode == ConversionMode.None && ModUtils.MCProtocolID < 315)) {
+            if (mode == ConversionMode.PackFormat2 || (mode == ConversionMode.None && Constants.MCBuildProtocol < 315)) {
                 resultId = resultId.substring(0, 3).toLowerCase() + resultId.substring(3).toUpperCase();
             } else if (mode == ConversionMode.PackFormat3 || mode == ConversionMode.None) {
                 resultId = resultId.toLowerCase();
@@ -156,7 +161,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         }
 
         if (resultId.equals(originalId) && mode != ConversionMode.None) {
-            Constants.LOG.debugWarn(ModUtils.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", resultId, mode.name()));
+            Constants.LOG.debugWarn(translate("craftpresence.logger.warning.convert.invalid", resultId, mode.name()));
         }
 
         return resultId.trim();
@@ -194,7 +199,6 @@ public class TranslationUtils implements IResourceManagerReloadListener {
         syncTranslations(getDefaultLanguage());
 
         needsSync = true;
-        needsInit = true;
         return this;
     }
 
@@ -203,23 +207,18 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * <p>
      * Consists of Synchronizing Data, and Updating Translation Data as needed
      */
-    void onTick() {
+    public void onTick() {
         final String currentLanguageId = getCurrentLanguage();
         final boolean hasLanguageChanged = (!languageId.equals(currentLanguageId) &&
                 (!hasTranslationsFrom(currentLanguageId) || !requestMap.get(currentLanguageId).isEmpty()));
         if (Constants.HAS_GAME_LOADED) {
-            if (needsInit || needsSync) {
-                if (needsInit && CraftPresence.instance.getResourceManager() != null) {
-                    ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
-                }
-
+            if (needsSync) {
                 // Sync All if we need to (Normally for initialization or reload purposes)
                 final List<String> requestedKeys = StringUtils.newArrayList(requestMap.keySet());
                 for (String key : requestedKeys) {
                     syncTranslations(key, false);
                 }
                 needsSync = false;
-                needsInit = false;
             } else if (hasLanguageChanged) {
                 // Otherwise, only sync the current language if needed
                 syncTranslations(currentLanguageId);
@@ -262,14 +261,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @return the current language id to be used
      */
     private String getCurrentLanguage() {
-        String result;
-        if (CraftPresence.instance.gameSettings != null) {
-            result = CraftPresence.instance.gameSettings.language;
-        } else if (CraftPresence.CONFIG != null) {
-            result = CraftPresence.CONFIG.accessibilitySettings.languageId;
-        } else {
-            result = defaultLanguageId;
-        }
+        final String result = languageSupplier.apply(defaultLanguageId);
         return usingJson ? result.toLowerCase() : result;
     }
 
@@ -290,6 +282,61 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      */
     public TranslationUtils setUsingAssetsPath(final boolean usingAssetsPath) {
         this.usingAssetsPath = usingAssetsPath;
+        return this;
+    }
+
+    /**
+     * Toggles whether to remove Color and Formatting Codes from Translated Strings
+     *
+     * @param stripColors the new "Strip Colors" status
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setStripColors(final boolean stripColors) {
+        this.stripColors = stripColors;
+        return this;
+    }
+
+    /**
+     * Sets the function to use when retrieving additional {@link InputStream} data for resources
+     *
+     * @param resourceSupplier the new resource-supplying function
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setResourceSupplier(final BiFunction<String, String, List<InputStream>> resourceSupplier) {
+        this.resourceSupplier = resourceSupplier;
+        return this;
+    }
+
+    /**
+     * Sets the function to use when retrieving additional {@link InputStream} data for resources
+     *
+     * @param resourceSupplier the new resource-supplying function
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setResourceSupplier(final List<InputStream> resourceSupplier) {
+        this.resourceSupplier = (id, langPath) -> resourceSupplier;
+        return this;
+    }
+
+    /**
+     * Sets the function to use when retrieving the current language to use
+     *
+     * @param languageSupplier the new language-supplying function
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setLanguageSupplier(final Function<String, String> languageSupplier) {
+        this.languageSupplier = languageSupplier;
+        return this;
+    }
+
+    /**
+     * Sets the function to use when retrieving the current language to use
+     *
+     * @param languageSupplier the new language-supplying function
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setLanguageSupplier(final String languageSupplier) {
+        this.languageSupplier = (fallback) -> languageSupplier;
         return this;
     }
 
@@ -341,58 +388,50 @@ public class TranslationUtils implements IResourceManagerReloadListener {
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the specified language
      *
-     * @param languageId      The language ID to interpret
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
-     * @param ext             The file extension to look for (Default: lang or json)
+     * @param languageId The language ID to interpret
+     * @param ext        The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager, final String ext) {
+    private List<InputStream> getLocaleStreamsFrom(final String languageId, final String ext) {
         final String assetsPath = usingAssetsPath ? String.format("/assets/%s/", modId) : "/";
         final String langPath = String.format("lang/%s.%s", languageId, ext);
-        final List<InputStream> results = StringUtils.newArrayList(
-                FileUtils.getResourceAsStream(TranslationUtils.class, assetsPath + langPath)
-        );
+        final List<InputStream> results = StringUtils.newArrayList();
 
-        try {
-            final List<IResource> resources = resourceManager.getAllResources(new ResourceLocation(modId, langPath));
-            for (IResource resource : resources) {
-                results.add(resource.getInputStream());
-            }
-        } catch (Exception ignored) {
+        final InputStream local = FileUtils.getResourceAsStream(TranslationUtils.class, assetsPath + langPath);
+        if (local != null) {
+            results.add(local);
         }
+        results.addAll(resourceSupplier.apply(modId, langPath));
         return results;
     }
 
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the specified language
      *
-     * @param languageId      The language ID to interpret
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
+     * @param languageId The language ID to interpret
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreamsFrom(final String languageId, final IResourceManager resourceManager) {
-        return getLocaleStreamsFrom(languageId, resourceManager, (usingJson ? "json" : "lang"));
+    private List<InputStream> getLocaleStreamsFrom(final String languageId) {
+        return getLocaleStreamsFrom(languageId, (usingJson ? "json" : "lang"));
     }
 
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the current language
      *
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
-     * @param ext             The file extension to look for (Default: lang or json)
+     * @param ext The file extension to look for (Default: lang or json)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager, final String ext) {
-        return getLocaleStreamsFrom(languageId, resourceManager, ext);
+    private List<InputStream> getLocaleStreams(final String ext) {
+        return getLocaleStreamsFrom(languageId, ext);
     }
 
     /**
      * Fetches a list of valid {@link InputStream}'s that can be used for the current language
      *
-     * @param resourceManager The resource manager to interpret (Resource Pack Support)
      * @return the interpreted list of valid {@link InputStream}'s
      */
-    private List<InputStream> getLocaleStreams(final IResourceManager resourceManager) {
-        return getLocaleStreamsFrom(languageId, resourceManager);
+    private List<InputStream> getLocaleStreams() {
+        return getLocaleStreamsFrom(languageId);
     }
 
     /**
@@ -403,7 +442,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param data       The {@link InputStream}'s to accept data from
      * @return the processed list of translations
      */
-    private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding, List<InputStream> data) {
+    private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding, final List<InputStream> data) {
         boolean hasError = false, hadBefore = hasTranslationsFrom(languageId);
         requestMap.remove(languageId);
         final Map<String, String> translationMap = StringUtils.newHashMap();
@@ -467,7 +506,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @param encoding   The Charset Encoding (Default: UTF-8)
      */
     private Map<String, String> getTranslationMapFrom(final String languageId, final String encoding) {
-        return getTranslationMapFrom(languageId, encoding, getLocaleStreamsFrom(languageId, CraftPresence.instance.getResourceManager()));
+        return getTranslationMapFrom(languageId, encoding, getLocaleStreamsFrom(languageId));
     }
 
     /**
@@ -496,7 +535,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @return The Localized Translated String
      */
     public String translateFrom(final String languageId, final boolean stripColors, final String translationKey, final Object... parameters) {
-        boolean hasError = false, showErrors;
+        boolean hasError = false;
         String translatedString = translationKey;
         try {
             if (hasTranslationFrom(languageId, translationKey)) {
@@ -556,7 +595,7 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      * @return The Localized Translated String
      */
     public String translateFrom(final String languageId, final String translationKey, final Object... parameters) {
-        return translateFrom(languageId, CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors, translationKey, parameters);
+        return translateFrom(languageId, stripColors, translationKey, parameters);
     }
 
     /**
@@ -638,11 +677,6 @@ public class TranslationUtils implements IResourceManagerReloadListener {
      */
     public String getTranslation(final String translationKey) {
         return getTranslationFrom(languageId, translationKey);
-    }
-
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
-        syncTranslations();
     }
 
     /**

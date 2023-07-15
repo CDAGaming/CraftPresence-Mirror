@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.TupleConsumer;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -67,7 +67,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.name")
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.value.name")
                         )
                 ));
     }
@@ -76,7 +76,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.value.message")
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.value.message")
                         )
                 ));
     }
@@ -87,7 +87,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         if (!isLoaded() && !initialized) {
             resetText = "gui.config.message.button.remove";
             if (isNewValue) {
-                mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new");
+                mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new");
                 if (onNewInit != null) {
                     onNewInit.accept(attributeName, this);
                 }
@@ -103,15 +103,15 @@ public class DynamicEditorGui extends ExtendedScreen {
         this.willRenderSecondaryInput = isNewValue || overrideSecondaryRender;
 
         if (StringUtils.isNullOrEmpty(primaryText)) {
-            primaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.message");
+            primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.message");
         }
         if (StringUtils.isNullOrEmpty(secondaryText)) {
-            secondaryText = ModUtils.TRANSLATOR.translate("gui.config.message.editor.value.name");
+            secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.value.name");
         }
 
         if (isNewValue || isPreliminaryData) {
             if (isPreliminaryData && !StringUtils.isNullOrEmpty(attributeName)) {
-                mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
+                mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
             }
             if (isModuleMode && defaultData != null && currentData == null) {
                 currentData = new ModuleData(defaultData);
@@ -218,7 +218,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                             if (!proceedButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
                                         )
                                 );
                             }

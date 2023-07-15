@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
@@ -74,16 +74,16 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         final int calc2 = (getScreenWidth() / 2) + 3;
         final int calcAlt = calc2 + 180;
 
-        final String startColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.start");
-        final String endColorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.end");
-        final String previewTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.preview");
+        final String startColorTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.start");
+        final String endColorTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.end");
+        final String previewTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.preview");
 
-        final String redTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.red");
-        final String greenTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.green");
-        final String blueTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.blue");
-        final String alphaTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.value.alpha");
+        final String redTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.value.red");
+        final String greenTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.value.green");
+        final String blueTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.value.blue");
+        final String alphaTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.value.alpha");
 
-        final String tintFactorTitle = ModUtils.TRANSLATOR.translate("gui.config.message.editor.color.tint_factor");
+        final String tintFactorTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.tint_factor");
 
         // Start Color Section
         childFrame.addWidget(new TextDisplayWidget(

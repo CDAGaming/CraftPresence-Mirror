@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.utils.TranslationUtils;
+import com.gitlab.cdagaming.craftpresence.core.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.realms.RealmsSharedConstants;
@@ -74,11 +74,6 @@ public class ModUtils {
             Constants.VERSION_ID,
             MCVersion
     );
-
-    /**
-     * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
-     */
-    public static final TranslationUtils TRANSLATOR = new TranslationUtils(Constants.MOD_ID, true).build();
 
     /**
      * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings

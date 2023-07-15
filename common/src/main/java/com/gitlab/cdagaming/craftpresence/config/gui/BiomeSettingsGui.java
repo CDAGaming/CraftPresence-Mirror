@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Biome;
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -69,7 +69,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         "gui.config.message.default.biome",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                        Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                 CraftPresence.CLIENT.generateArgumentMessage("biome."))
                                 )
                         )
@@ -85,7 +85,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
@@ -117,7 +117,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 screenInstance.defaultData = getCurrentData().biomeData.get("default");
                                                                 screenInstance.currentData = getCurrentData().biomeData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = ModUtils.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
+                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -155,7 +155,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                     openScreen(
                                                                             new SelectorGui(
                                                                                     screenInstance,
-                                                                                    ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                                                                     specificIcon, attributeName,
                                                                                     true, false, RenderType.DiscordAsset,
                                                                                     (innerAttributeName, innerCurrentValue) -> {
@@ -170,7 +170,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 // Event to occur when Hovering over Message Label
                                                                 screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
-                                                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                                                Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("biome."))
                                                                         )
                                                                 );
@@ -184,14 +184,14 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                             if (!biomeMessagesButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("biome."))
                                         )
                                 );
@@ -208,7 +208,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
-                                        ModUtils.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         getCurrentData().fallbackBiomeIcon, null,
                                         true, false, RenderType.DiscordAsset,
                                         (attributeName, currentValue) -> {
@@ -219,7 +219,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
                                 )
                         )
                 )
@@ -228,7 +228,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
                         StringUtils.splitTextByNewLine(
-                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
                         )
                 );
             }

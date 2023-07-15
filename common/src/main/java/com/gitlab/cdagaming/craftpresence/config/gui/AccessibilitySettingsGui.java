@@ -78,7 +78,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_background_color")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_background_color")
                                 )
                         )
                 )
@@ -99,7 +99,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_border_color")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_border_color")
                                 )
                         )
                 )
@@ -120,7 +120,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
                                 )
                         )
                 )
@@ -141,7 +141,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.world_gui_background_color")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.world_gui_background_color")
                                 )
                         )
                 )
@@ -162,7 +162,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.button_background_color")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.button_background_color")
                                 )
                         )
                 )
@@ -176,7 +176,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.language_id",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.language_id")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.language_id")
                                 )
                         )
                 )
@@ -193,13 +193,13 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                             if (stripTranslationColorsButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
+                                                Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
                                         )
                                 );
                             } else if (ModUtils.IS_TEXT_COLORS_BLOCKED) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("craftpresence.message.unsupported")
+                                                Constants.TRANSLATOR.translate("craftpresence.message.unsupported")
                                         )
                                 );
                             }
@@ -214,7 +214,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.strip_extra_gui_elements")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_extra_gui_elements")
                                 )
                         )
                 )
@@ -227,7 +227,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.accessibility.render_tooltips")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.render_tooltips")
                                 )
                         )
                 )

@@ -60,9 +60,9 @@ public class MainGui extends ConfigurationGui<Config> {
         // Note: This only is meant for a one-line notice -- any bigger and `getButtonY` will be wrong
         String releaseNotice = "";
         if (Constants.VERSION_TYPE.equalsIgnoreCase("alpha")) {
-            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.tentative", Constants.VERSION_ID);
+            releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.tentative", Constants.VERSION_ID);
         } else if (!ModUtils.MCVersion.equalsIgnoreCase(Constants.MCBuildVersion)) {
-            releaseNotice = ModUtils.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, Constants.MCBuildVersion);
+            releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, Constants.MCBuildVersion);
         }
         if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;
@@ -85,7 +85,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         () -> openScreen(new GeneralSettingsGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.title.general")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.title.general")
                                 )
                         )
                 )
@@ -100,14 +100,14 @@ public class MainGui extends ConfigurationGui<Config> {
                             if (!biomeSet.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_biome_data"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("biome."))
                                         )
                                 );
@@ -126,14 +126,14 @@ public class MainGui extends ConfigurationGui<Config> {
                             if (!dimensionSet.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_dimension_data"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("dimension."))
                                         )
                                 );
@@ -151,14 +151,14 @@ public class MainGui extends ConfigurationGui<Config> {
                             if (!serverSet.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.message.hover.access",
-                                                        ModUtils.TRANSLATOR.translate("gui.config.name.general.detect_world_data"))
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.access",
+                                                        Constants.TRANSLATOR.translate("gui.config.name.general.detect_world_data"))
                                         )
                                 );
                             } else {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                ModUtils.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
+                                                Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                         CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
                                         )
                                 );
@@ -176,7 +176,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         () -> openScreen(new StatusMessagesGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.title.status_messages")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.title.status_messages")
                                 )
                         )
                 )
@@ -190,7 +190,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         () -> openScreen(new AdvancedSettingsGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.title.advanced")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.title.advanced")
                                 )
                         )
                 )
@@ -205,7 +205,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         () -> openScreen(new AccessibilitySettingsGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.title.accessibility")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.title.accessibility")
                                 )
                         )
                 )
@@ -219,7 +219,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         () -> openScreen(new PresenceSettingsGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        ModUtils.TRANSLATOR.translate("gui.config.comment.presence_settings")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.presence_settings")
                                 )
                         )
                 )
@@ -287,7 +287,7 @@ public class MainGui extends ConfigurationGui<Config> {
     protected void applySettings() {
         if (getCurrentData().hasChanged) {
             getCurrentData().save();
-            Constants.LOG.info(ModUtils.TRANSLATOR.translate(true, "craftpresence.logger.info.config.save"));
+            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.config.save"));
             getCurrentData().applyFrom(getOriginalData());
         }
     }
