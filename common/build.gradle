@@ -66,12 +66,15 @@ dependencies {
     }
 }
 
+// JSON to LANG Conversion Setup (Below 18w02a, 1.13)
 def mainResources = "$projectDir/src/main/resources"
 def generatedResources = "$buildDir/generated-resources"
 
-sourceSets {
-    main {
-        output.dir(generatedResources, builtBy: 'generateMyResources')
+if (isLegacy || protocol < 353) {
+    sourceSets {
+        main {
+            output.dir(generatedResources, builtBy: 'generateMyResources')
+        }
     }
 }
 
@@ -134,6 +137,15 @@ shadowJar {
     archiveClassifier.set('shadow-dev')
 }
 
+processResources {
+    filesMatching("assets/${rootProject.name.toLowerCase()}/lang/**") { FileCopyDetails data ->
+        def text = data.file.getText("UTF-8")
+        if ((text == null || text.isEmpty()) || text == "{}") {
+            exclude()
+        }
+    }
+}
+tasks.processResources.outputs.upToDateWhen { false }
 
 import groovy.io.FileType
 
@@ -148,6 +160,7 @@ tasks.register('generateMyResources') {
         langDir.eachFileRecurse(FileType.FILES) { file ->
             if (file.path.endsWith(".json")) {
                 def contents = "#PARSE_ESCAPES\n"
+                def replacements = 0
                 System.out.println("Converting json to lang: " + file.path)
                 // Logic from TranslationUtils#getTranslationMap
                 // Does not include the escape replacements, as those are done later
@@ -158,22 +171,28 @@ tasks.register('generateMyResources') {
                         String str1 = splitTranslation[0].substring(1, splitTranslation[0].length() - 1).trim()
                         String str2 = splitTranslation[1].substring(2, splitTranslation[1].length() - (splitTranslation[1].endsWith(",") ? 2 : 1)).trim()
                         contents += "${str1}=${str2}\n"
+                        replacements++
                     }
                 }
-                def resultName = file.name.replace(".json", ".lang")
-                if ("${mc_protocol}".toInteger() <= 210) {
-                    // On 1.10.2 (Pack Format 2 or below) or Legacy MC
-                    // Adjust name format from xx_xx to xx_XX
-                    var matches = Pattern.compile("_.+?\\.").matcher(resultName);
-                    while (matches.find()) {
-                        def match = matches.group()
-                        resultName = resultName.replace(match, match.toUpperCase())
+                // Only proceed if we actually performed any replacements
+                if (replacements > 0) {
+                    def resultName = file.name.replace(".json", ".lang")
+                    if (protocol <= 210) {
+                        // On 1.10.2 (Pack Format 2 or below) or Legacy MC
+                        // Adjust name format from xx_xx to xx_XX
+                        var matches = Pattern.compile("_.+?\\.").matcher(resultName);
+                        while (matches.find()) {
+                            def match = matches.group()
+                            resultName = resultName.replace(match, match.toUpperCase())
+                        }
                     }
+                    def resultFile = new File(resultDir, resultName)
+                    resultFile.createNewFile()
+                    System.out.println("Outputting to: " + resultFile.path)
+                    resultFile.setText(contents.replaceAll("(?s)\\\\(.)", '$1'), "UTF-8")
+                } else {
+                    System.out.println("Skipping " + file.path + " (No content found)")
                 }
-                def resultFile = new File(resultDir, resultName)
-                resultFile.createNewFile()
-                System.out.println("Outputting to: " + resultFile.path)
-                resultFile.setText(contents.replaceAll("(?s)\\\\(.)", '$1'), "UTF-8")
             }
         }
     }
