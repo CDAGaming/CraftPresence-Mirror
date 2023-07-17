@@ -39,6 +39,7 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMC
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
