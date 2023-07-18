@@ -122,7 +122,7 @@ public class DimensionUtils implements Module {
 
     @Override
     public void updateData() {
-        final WorldProvider newProvider = CraftPresence.player.world.provider;
+        final WorldProvider newProvider = CraftPresence.player.worldObj.provider;
         final DimensionType newDimensionType = newProvider.getDimensionType();
         final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.getName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 

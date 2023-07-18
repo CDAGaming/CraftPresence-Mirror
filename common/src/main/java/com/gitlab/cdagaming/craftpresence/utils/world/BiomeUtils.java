@@ -120,7 +120,7 @@ public class BiomeUtils implements Module {
 
     @Override
     public void updateData() {
-        final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
+        final Biome newBiome = CraftPresence.player.worldObj.getBiome(CraftPresence.player.getPosition());
         final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
         final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
