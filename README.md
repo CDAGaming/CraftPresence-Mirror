@@ -320,18 +320,18 @@ With this in mind, please note the following:
 * **Minecraft 1.15 and below**
     * `MC-112292`: When interacting with the `RenderUtils#drawItemStack` method, used in the v2 Item Renderer, blocks
       using certain rendererers may fail to display properly.
-    * Aditionally, on 1.15.x exclusively, z-level issues may occur on Screens using this method
+    * Additionally, on 1.15.x exclusively, z-level issues may occur on Screens using this method
 * **Minecraft a1.1.2_01 and below**
     * On these versions, the Biome and Dimension Modules are **stubbed** with default data, due to the logic for these
       methods being missing (Having been initially implemented in Alpha 1.2.6)
 * **Miscellaneous Issues**
     * Due to obfuscation issues in earlier versions of Minecraft, the Biome and Dimension Modules may fail to
-      auto-detect some necesary information.
+      auto-detect some necessary information.
         * As a fallback, the mod is also designed to add selectable Module Data when said biome/dimension is first
           discovered.
         * The "Add New" option found in some of the module lists can also be used to work around this issue.
 
-Aditionally, in select Minecraft Versions, the following config settings are effected:
+Additionally, in select Minecraft Versions, the following config settings are effected:
 
 * `buttonBackgroundColor` (`RenderUtils#DEFAULT_BUTTON_BACKGROUND`)
     * MC 1.6 and above: `minecraft:textures/gui/widgets.png`
