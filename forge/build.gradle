@@ -26,9 +26,10 @@ def resourceTargets = [
         "mcmod.info", "META-INF/mods.toml", "mod_${mod_name}.info".toString()
 ]
 def replaceProperties = [
-        version: baseVersionLabel.toString(), mcversion: mcVersionLabel.toString(),
-        fml_version_range: fml_version_range.toString(),
-        game_version_range: forge_game_version_range.toString(),
+        version             : baseVersionLabel.toString(),
+        mcversion           : mcVersionLabel.toString(),
+        fml_version_range   : fml_version_range.toString(),
+        game_version_range  : forge_game_version_range.toString(),
         loader_version_range: forge_loader_version_range.toString()
 ]
 

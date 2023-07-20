@@ -63,7 +63,7 @@ subprojects {
 
     version = "${versionFormat}"
     group = rootProject.group
-    archivesBaseName = "${mod_name}"
+    base.archivesName = "${mod_name}"
 
     Jvm currentJvm = Jvm.current()
     JavaVersion sourceVersion = currentJvm.getJavaVersion()
@@ -72,12 +72,11 @@ subprojects {
     boolean modern_source_support = sourceVersion.isJava9Compatible()
     boolean modern_target_support = targetVersion.isJava9Compatible()
 
-    if (!modern_source_support) {
-        sourceCompatibility = sourceVersion
-        targetCompatibility = targetVersion
-    }
-
     java {
+        if (!modern_source_support) {
+            sourceCompatibility = sourceVersion
+            targetCompatibility = targetVersion
+        }
         withSourcesJar()
     }
 

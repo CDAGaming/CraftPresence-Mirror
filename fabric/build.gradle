@@ -32,8 +32,9 @@ def resourceTargets = [
         "fabric.mod.json"
 ]
 def replaceProperties = [
-        version: baseVersionLabel.toString(), mcversion: mcVersionLabel.toString(),
-        game_version_range: fabric_game_version_range.toString(),
+        version             : baseVersionLabel.toString(),
+        mcversion           : mcVersionLabel.toString(),
+        game_version_range  : fabric_game_version_range.toString(),
         loader_version_range: fabric_loader_version_range.toString()
 ]
 
