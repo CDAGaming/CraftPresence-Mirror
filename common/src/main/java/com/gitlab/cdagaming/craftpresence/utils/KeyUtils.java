@@ -151,12 +151,13 @@ public class KeyUtils {
      * Note: If None is Used on a Valid Value, this function can be used as verification, if any
      *
      * @param originalKey The original Key to Convert
+     * @param protocol    The Protocol to Target for this conversion
      * @param mode        The Conversion Mode to convert the keycode to
      * @return The resulting converted KeyCode, or the mode's unknown key
      */
-    public static int convertKey(final int originalKey, final KeyConverter.ConversionMode mode) {
+    public static int convertKey(final int originalKey, final int protocol, final KeyConverter.ConversionMode mode) {
         final Pair<Integer, String> unknownKeyData = mode == KeyConverter.ConversionMode.Lwjgl2 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0);
-        int resultKey = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
+        int resultKey = (protocol <= 340 ? -1 : 0);
 
         if (mode == KeyConverter.ConversionMode.Lwjgl2) {
             resultKey = KeyConverter.fromGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
@@ -165,9 +166,9 @@ public class KeyUtils {
         } else if (mode == KeyConverter.ConversionMode.None) {
             // If Input is a valid Integer and Valid KeyCode,
             // Retain the Original Value
-            if (ModUtils.MCProtocolID <= 340 && KeyConverter.toGlfw.containsKey(originalKey)) {
+            if (protocol <= 340 && KeyConverter.toGlfw.containsKey(originalKey)) {
                 resultKey = originalKey;
-            } else if (ModUtils.MCProtocolID > 340 && KeyConverter.fromGlfw.containsKey(originalKey)) {
+            } else if (protocol > 340 && KeyConverter.fromGlfw.containsKey(originalKey)) {
                 resultKey = originalKey;
             }
         }

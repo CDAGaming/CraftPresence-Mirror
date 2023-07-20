@@ -53,7 +53,7 @@ public class Accessibility extends Module implements Serializable {
             new ColorSection(16, 16, 16, 208)
     );
     public ColorData buttonBackground = new ColorData(RenderUtils.DEFAULT_BUTTON_BACKGROUND);
-    public String languageId = Constants.TRANSLATOR.defaultLanguageId;
+    public String languageId = Constants.TRANSLATOR.getDefaultLanguage();
     public boolean stripTranslationColors = ModUtils.IS_TEXT_COLORS_BLOCKED;
     public boolean stripExtraGuiElements = false;
     public boolean renderTooltips = true;

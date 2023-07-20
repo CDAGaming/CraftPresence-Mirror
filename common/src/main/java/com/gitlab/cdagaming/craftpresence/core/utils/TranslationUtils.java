@@ -42,15 +42,15 @@ import java.util.function.Function;
  */
 public class TranslationUtils {
     /**
-     * The default/fallback Language ID to Locate and Retrieve Translations
-     */
-    public final String defaultLanguageId = Constants.MCBuildProtocol >= 315 ? "en_us" : "en_US";
-    /**
      * The Stored Mapping of Language Request History
      * <p>
      * Format: languageId:doesExist
      */
     private final Map<String, Map<String, String>> requestMap = StringUtils.newHashMap();
+    /**
+     * The default/fallback Language ID to Locate and Retrieve Translations
+     */
+    private String defaultLanguageId = Constants.MCBuildProtocol >= 315 ? "en_us" : "en_US";
     /**
      * The current Language ID to Locate and Retrieve Translations
      */
@@ -146,14 +146,15 @@ public class TranslationUtils {
      * Note: If None is Used on a Valid Value, this function can be used as verification, if any
      *
      * @param originalId The original Key to Convert (5-Character Limit)
+     * @param protocol   The Protocol to Target for this conversion
      * @param mode       The Conversion Mode to convert the keycode to
      * @return The resulting converted Language Identifier, or the mode's unknown key
      */
-    public String convertId(final String originalId, final ConversionMode mode) {
+    public static String convertId(final String originalId, final int protocol, final ConversionMode mode) {
         String resultId = originalId;
 
         if (originalId.length() == 5 && originalId.contains("_")) {
-            if (mode == ConversionMode.PackFormat2 || (mode == ConversionMode.None && Constants.MCBuildProtocol < 315)) {
+            if (mode == ConversionMode.PackFormat2 || (mode == ConversionMode.None && protocol < 315)) {
                 resultId = resultId.substring(0, 3).toLowerCase() + resultId.substring(3).toUpperCase();
             } else if (mode == ConversionMode.PackFormat3 || mode == ConversionMode.None) {
                 resultId = resultId.toLowerCase();
@@ -161,7 +162,7 @@ public class TranslationUtils {
         }
 
         if (resultId.equals(originalId) && mode != ConversionMode.None) {
-            Constants.LOG.debugWarn(translate("craftpresence.logger.warning.convert.invalid", resultId, mode.name()));
+            Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", resultId, mode.name()));
         }
 
         return resultId.trim();
@@ -272,6 +273,17 @@ public class TranslationUtils {
      */
     public String getDefaultLanguage() {
         return usingJson ? defaultLanguageId.toLowerCase() : defaultLanguageId;
+    }
+
+    /**
+     * Sets the Default Language ID to Retrieve Translations for, if present
+     *
+     * @param languageId The Language ID (Default: en_US)
+     * @return the current instance, for chain-building
+     */
+    public TranslationUtils setDefaultLanguage(final String languageId) {
+        this.defaultLanguageId = languageId;
+        return this;
     }
 
     /**

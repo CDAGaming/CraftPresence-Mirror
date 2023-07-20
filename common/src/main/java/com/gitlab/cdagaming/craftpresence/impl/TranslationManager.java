@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TranslationUtils;
 import net.minecraft.client.resources.IResource;
@@ -55,6 +56,8 @@ public class TranslationManager implements IResourceManagerReloadListener {
     public TranslationManager(final TranslationUtils instance) {
         this.instance = instance;
         ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
+
+        getInstance().setDefaultLanguage(ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US");
 
         getInstance().setLanguageSupplier((fallback) -> {
             final String result;
