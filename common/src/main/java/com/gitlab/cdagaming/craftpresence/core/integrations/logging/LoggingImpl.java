@@ -22,22 +22,26 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core;
+package com.gitlab.cdagaming.craftpresence.core.integrations.logging;
 
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
- * Logging Manager for either Sending Info to Chat or in Logs
+ * Set of Utilities used to Parse Logging Information
  *
  * @author CDAGaming
  */
-public class ModLogger {
+public abstract class LoggingImpl {
     /**
-     * The Instance of the Root Logging Manager, for sending messages to logs
+     * Name of the Logger
      */
-    private final Logger logInstance;
+    private final String loggerName;
+    /**
+     * Whether to append the logger name to the message
+     * <p>
+     * INTERNAL USAGE ONLY
+     */
+    boolean appendName;
     /**
      * Whether this Logger is operating in Debug Mode
      */
@@ -48,10 +52,22 @@ public class ModLogger {
      *
      * @param loggerName The name of the Logger
      * @param debug      Whether to initialize the logger in debug mode
+     * @param appendName Whether to append the logger name to the message
      */
-    public ModLogger(final String loggerName, final boolean debug) {
-        this.logInstance = LogManager.getLogger(loggerName);
+    public LoggingImpl(final String loggerName, final boolean debug, final boolean appendName) {
+        this.loggerName = loggerName;
         this.debugMode = debug;
+        this.appendName = appendName;
+    }
+
+    /**
+     * Initializes a new Logger
+     *
+     * @param loggerName The name of the Logger
+     * @param debug      Whether to initialize the logger in debug mode
+     */
+    public LoggingImpl(final String loggerName, final boolean debug) {
+        this(loggerName, debug, false);
     }
 
     /**
@@ -59,21 +75,12 @@ public class ModLogger {
      *
      * @param loggerName The name of the Logger
      */
-    public ModLogger(final String loggerName) {
+    public LoggingImpl(final String loggerName) {
         this(loggerName, false);
     }
 
     /**
-     * Get the instance of the root logging manager
-     *
-     * @return An instance of the root logging manager
-     */
-    public Logger getLogInstance() {
-        return logInstance;
-    }
-
-    /**
-     * Get whether this {@link ModLogger} is in Debug Mode
+     * Get whether this {@link LoggingImpl} is in Debug Mode
      *
      * @return the debug mode status
      */
@@ -82,7 +89,7 @@ public class ModLogger {
     }
 
     /**
-     * Set whether this {@link ModLogger} is in Debug Mode
+     * Set whether this {@link LoggingImpl} is in Debug Mode
      *
      * @param debugMode the new debug mode status
      */
@@ -97,9 +104,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void error(final String logMessage, Object... logArguments) {
-        getLogInstance().error(
-                parse(logMessage, logArguments)
-        );
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -109,9 +114,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void warn(final String logMessage, Object... logArguments) {
-        getLogInstance().warn(
-                parse(logMessage, logArguments)
-        );
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -121,9 +124,7 @@ public class ModLogger {
      * @param logArguments Additional Formatting Arguments
      */
     public void info(final String logMessage, Object... logArguments) {
-        getLogInstance().info(
-                parse(logMessage, logArguments)
-        );
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -162,8 +163,16 @@ public class ModLogger {
         }
     }
 
-    private String parse(final String message, Object... args) {
-        return StringUtils.normalize(
+    /**
+     * Parse the specified message for Log Messages
+     *
+     * @param message The message to interpret
+     * @param args    The formatting arguments to be applied to the message
+     * @return the formatted message
+     */
+    public String parse(final String message, Object... args) {
+        final String prefix = appendName ? (loggerName + ": ") : "";
+        return prefix + StringUtils.normalize(
                 String.format(message, args)
         );
     }
