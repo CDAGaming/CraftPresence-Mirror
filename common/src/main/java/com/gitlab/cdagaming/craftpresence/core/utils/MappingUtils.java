@@ -87,8 +87,10 @@ public class MappingUtils {
                     }
                     Constants.LOG.debugInfo("Loaded Mappings in " + TimeUtils.getDurationFrom(time).toMillis() + "ms");
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
+            } catch (Throwable ex) {
+                if (Constants.LOG.isDebugMode()) {
+                    ex.printStackTrace();
+                }
             }
             classMap = cm;
         }
