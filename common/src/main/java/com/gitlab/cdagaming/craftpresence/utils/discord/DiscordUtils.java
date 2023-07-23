@@ -480,12 +480,13 @@ public class DiscordUtils {
     /**
      * Interpret the processed {@link Script} from parsing the specified args, and compile it
      *
-     * @param data       The data or expression to be parsed
-     * @param output     If specified, attach the decompiled info to this {@link Appendable}
-     * @param transforms Any additional expression transformations, to be done before compiling
+     * @param data        The data or expression to be parsed
+     * @param showLogging Whether to display logging for this function
+     * @param output      If specified, attach the decompiled info to this {@link Appendable}
+     * @param transforms  Any additional expression transformations, to be done before compiling
      * @return the processed output
      */
-    public Supplier<Value> getCompileResult(final String data, final Appendable output, Expr.Visitor... transforms) {
+    public Supplier<Value> getCompileResult(final String data, final boolean showLogging, final Appendable output, Expr.Visitor... transforms) {
         Parser.Result result = null;
         try {
             result = Parser.parse(data);
@@ -532,7 +533,7 @@ public class DiscordUtils {
                 // Dispatch to Appendable WriteStream if possible
                 if (output != null) {
                     try {
-                        if (Constants.LOG.isDebugMode()) {
+                        if (showLogging) {
                             for (String line : splitEx) {
                                 line = line.replace("\t", "    ");
                                 output.append(line).append('\n');
@@ -547,7 +548,7 @@ public class DiscordUtils {
                     }
                 }
                 // Perform the same to Logging, so the same information is available on both ends
-                if (Constants.LOG.isDebugMode()) {
+                if (showLogging) {
                     Constants.LOG.error(messagePrefix);
                     ex.printStackTrace();
                 } else {
@@ -560,6 +561,18 @@ public class DiscordUtils {
             }
             return !StringUtils.isNullOrEmpty(sect.toString()) ? Value.string(sect.toString()) : Value.null_();
         };
+    }
+
+    /**
+     * Interpret the processed {@link Script} from parsing the specified args, and compile it
+     *
+     * @param data       The data or expression to be parsed
+     * @param output     If specified, attach the decompiled info to this {@link Appendable}
+     * @param transforms Any additional expression transformations, to be done before compiling
+     * @return the processed output
+     */
+    public Supplier<Value> getCompileResult(final String data, final Appendable output, Expr.Visitor... transforms) {
+        return getCompileResult(data, Constants.LOG.isDebugMode(), output, transforms);
     }
 
     /**
