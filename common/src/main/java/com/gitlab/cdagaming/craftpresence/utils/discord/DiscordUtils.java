@@ -1299,9 +1299,9 @@ public class DiscordUtils {
             } else {
                 result = cachedImageData.get(primaryKey);
                 if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
-                    if (showLogging && Constants.LOG.isDebugMode() && !result.equals(primaryKey)) {
-                        Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.cached", primaryKey, result));
-                        Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.request", primaryKey));
+                    if (showLogging && !result.equals(primaryKey)) {
+                        Constants.LOG.debugError(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.cached", primaryKey, result));
+                        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.request", primaryKey));
                     }
                 }
             }
