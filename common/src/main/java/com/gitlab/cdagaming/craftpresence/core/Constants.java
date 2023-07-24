@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.core;
 
+import com.gitlab.cdagaming.craftpresence.core.integrations.logging.ApacheLogger;
 import com.gitlab.cdagaming.craftpresence.core.integrations.logging.JavaLogger;
-import com.gitlab.cdagaming.craftpresence.core.integrations.logging.Log4JLogger;
 import com.gitlab.cdagaming.craftpresence.core.integrations.logging.LoggingImpl;
 import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
@@ -108,7 +108,7 @@ public class Constants {
     /**
      * The Application's Instance of {@link LoggingImpl} for Logging Information
      */
-    public static final LoggingImpl LOG = IS_LEGACY_SOFT ? new JavaLogger(MOD_ID) : new Log4JLogger(MOD_ID);
+    public static final LoggingImpl LOG = IS_LEGACY_SOFT ? new JavaLogger(MOD_ID) : new ApacheLogger(MOD_ID);
 
     /**
      * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings

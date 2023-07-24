@@ -32,18 +32,18 @@ import org.apache.logging.log4j.Logger;
  *
  * @author CDAGaming
  */
-public class Log4JLogger extends LoggingImpl {
+public class ApacheLogger extends LoggingImpl {
     /**
      * The Instance of the Root Logging Manager, for sending messages to logs
      */
     private final Logger logInstance;
 
-    public Log4JLogger(final String loggerName, final boolean debug) {
+    public ApacheLogger(final String loggerName, final boolean debug) {
         super(loggerName, debug);
         this.logInstance = LogManager.getLogger(loggerName);
     }
 
-    public Log4JLogger(final String loggerName) {
+    public ApacheLogger(final String loggerName) {
         this(loggerName, false);
     }
 
