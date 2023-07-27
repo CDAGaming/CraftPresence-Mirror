@@ -98,7 +98,7 @@ public abstract class LoggingImpl {
     }
 
     /**
-     * Sends a Message with an ERROR Level to either Chat or Logs
+     * Sends a Message with an ERROR Level to Logs
      *
      * @param logMessage   The Log Message to Send
      * @param logArguments Additional Formatting Arguments
@@ -108,7 +108,26 @@ public abstract class LoggingImpl {
     }
 
     /**
-     * Sends a Message with an WARNING Level to either Chat or Logs
+     * Sends a Message with an ERROR Level to Logs
+     *
+     * @param logMessage The Log Message to Send
+     * @param ex         The exception to print alongside the message
+     */
+    public void error(final String logMessage, Throwable ex) {
+        error(logMessage + "\n" + StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an ERROR Level to Logs
+     *
+     * @param ex The exception to print
+     */
+    public void error(Throwable ex) {
+        error(StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an WARNING Level to Logs
      *
      * @param logMessage   The Log Message to Send
      * @param logArguments Additional Formatting Arguments
@@ -118,7 +137,26 @@ public abstract class LoggingImpl {
     }
 
     /**
-     * Sends a Message with an INFO Level to either Chat or Logs
+     * Sends a Message with an WARNING Level to Logs
+     *
+     * @param logMessage The Log Message to Send
+     * @param ex         The exception to print alongside the message
+     */
+    public void warn(final String logMessage, Throwable ex) {
+        warn(logMessage + "\n" + StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an WARNING Level to Logs
+     *
+     * @param ex The exception to print
+     */
+    public void warn(Throwable ex) {
+        warn(StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an INFO Level to Logs
      *
      * @param logMessage   The Log Message to Send
      * @param logArguments Additional Formatting Arguments
@@ -128,7 +166,26 @@ public abstract class LoggingImpl {
     }
 
     /**
-     * Sends a Message with an INFO Level to either Chat or Logs, if in Debug Mode
+     * Sends a Message with an INFO Level to Logs
+     *
+     * @param logMessage The Log Message to Send
+     * @param ex         The exception to print alongside the message
+     */
+    public void info(final String logMessage, Throwable ex) {
+        info(logMessage + "\n" + StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an INFO Level to Logs
+     *
+     * @param ex The exception to print
+     */
+    public void info(Throwable ex) {
+        info(StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an INFO Level to Logs, if in Debug Mode
      *
      * @param logMessage   The Log Message to Send
      * @param logArguments Additional Formatting Arguments
@@ -140,7 +197,26 @@ public abstract class LoggingImpl {
     }
 
     /**
-     * Sends a Message with an WARNING Level to either Chat or Logs, if in Debug Mode
+     * Sends a Message with an INFO Level to Logs, if in Debug Mode
+     *
+     * @param logMessage The Log Message to Send
+     * @param ex         The exception to print alongside the message
+     */
+    public void debugInfo(final String logMessage, Throwable ex) {
+        debugInfo(logMessage + "\n" + StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an INFO Level to Logs, if in Debug Mode
+     *
+     * @param ex The exception to print
+     */
+    public void debugInfo(Throwable ex) {
+        debugInfo(StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an WARNING Level to Logs, if in Debug Mode
      *
      * @param logMessage   The Log Message to Send
      * @param logArguments Additional Formatting Arguments
@@ -152,7 +228,26 @@ public abstract class LoggingImpl {
     }
 
     /**
-     * Sends a Message with an ERROR Level to either Chat or Logs, if in Debug Mode
+     * Sends a Message with an WARNING Level to Logs, if in Debug Mode
+     *
+     * @param logMessage The Log Message to Send
+     * @param ex         The exception to print alongside the message
+     */
+    public void debugWarn(final String logMessage, Throwable ex) {
+        debugWarn(logMessage + "\n" + StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an WARNING Level to Logs, if in Debug Mode
+     *
+     * @param ex The exception to print
+     */
+    public void debugWarn(Throwable ex) {
+        debugWarn(StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an ERROR Level to Logs, if in Debug Mode
      *
      * @param logMessage   The Log Message to Send
      * @param logArguments Additional Formatting Arguments
@@ -161,6 +256,25 @@ public abstract class LoggingImpl {
         if (isDebugMode()) {
             error("[DEBUG] " + logMessage, logArguments);
         }
+    }
+
+    /**
+     * Sends a Message with an ERROR Level to Logs, if in Debug Mode
+     *
+     * @param logMessage The Log Message to Send
+     * @param ex         The exception to print alongside the message
+     */
+    public void debugError(final String logMessage, Throwable ex) {
+        debugError(logMessage + "\n" + StringUtils.getStackTrace(ex));
+    }
+
+    /**
+     * Sends a Message with an ERROR Level to Logs, if in Debug Mode
+     *
+     * @param ex The exception to print
+     */
+    public void debugError(Throwable ex) {
+        debugError(StringUtils.getStackTrace(ex));
     }
 
     /**

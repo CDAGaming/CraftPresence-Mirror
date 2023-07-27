@@ -191,10 +191,7 @@ public class ModUpdaterUtils {
         } catch (Throwable ex) {
             // Log Failure and Set Update State to FAILED
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
-
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
             currentState = UpdateState.FAILED;
         } finally {
             if (callback != null) {

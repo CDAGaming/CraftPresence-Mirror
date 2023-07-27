@@ -484,9 +484,7 @@ public class TranslationUtils {
                         in.close();
                     } catch (Exception ex) {
                         Constants.LOG.error("An exception has occurred while loading Translation Mappings, aborting scan to prevent issues...");
-                        if (Constants.LOG.isDebugMode()) {
-                            ex.printStackTrace();
-                        }
+                        Constants.LOG.debugError(ex);
                         hasError = true;
                         break;
                     }
@@ -558,9 +556,7 @@ public class TranslationUtils {
             }
         } catch (Exception ex) {
             Constants.LOG.error("Exception parsing " + translationKey + " from " + languageId);
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
             return translationKey;
         }
 

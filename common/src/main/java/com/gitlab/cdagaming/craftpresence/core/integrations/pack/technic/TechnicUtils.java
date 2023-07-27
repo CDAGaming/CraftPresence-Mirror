@@ -64,9 +64,7 @@ public class TechnicUtils extends Pack {
                     setPackData(selected);
                 }
             } catch (Exception ex) {
-                if (showException(ex)) {
-                    ex.printStackTrace();
-                }
+                printException(ex);
             }
         }
         return hasPackName();

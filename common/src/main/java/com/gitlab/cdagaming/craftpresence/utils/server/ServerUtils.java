@@ -474,9 +474,7 @@ public class ServerUtils implements Module {
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
         } catch (Exception ex) {
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
         }
     }
 
@@ -615,9 +613,7 @@ public class ServerUtils implements Module {
                 }
             }
         } catch (Exception ex) {
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
         }
 
         for (String serverEntry : CraftPresence.CONFIG.serverSettings.serverData.keySet()) {

@@ -1574,9 +1574,7 @@ public class StringUtils {
                     break;
                 }
             } catch (Throwable ex) {
-                if (Constants.LOG.isDebugMode()) {
-                    ex.printStackTrace();
-                }
+                Constants.LOG.debugError(ex);
             }
         }
         return result;
@@ -1663,9 +1661,7 @@ public class StringUtils {
             lookupMethod.setAccessible(true);
             result = lookupMethod.invoke(instance, parameters);
         } catch (Throwable ex) {
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
         }
         return result;
     }

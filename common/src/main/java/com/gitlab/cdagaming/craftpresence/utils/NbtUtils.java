@@ -189,9 +189,7 @@ public class NbtUtils {
                 try {
                     return FileUtils.toJsonData(tag.toString());
                 } catch (Throwable ex) {
-                    if (Constants.LOG.isDebugMode()) {
-                        ex.printStackTrace();
-                    }
+                    Constants.LOG.debugError(ex);
                     return tag.toString();
                 }
             case 11:

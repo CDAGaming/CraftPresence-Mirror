@@ -106,9 +106,7 @@ public final class Config extends Module implements Serializable {
         } catch (Exception ex) {
             if (ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) {
                 Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.save"));
-                if (Constants.LOG.isDebugMode()) {
-                    ex.printStackTrace();
-                }
+                Constants.LOG.debugError(ex);
 
                 if (!getConfigFile().renameTo(new File(getConfigPath() + ".bak"))) {
                     Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.backup"));

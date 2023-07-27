@@ -186,9 +186,7 @@ public class FileUtils {
             builder.create().toJson(json, writer);
         } catch (Exception ex) {
             Constants.LOG.error("Failed to write json data @ " + file.getAbsolutePath());
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
         }
     }
 
@@ -209,9 +207,7 @@ public class FileUtils {
             Constants.LOG.info("\"%s\" has been successfully downloaded to \"%s\"! (From: \"%s\")", file.getName(), file.getAbsolutePath(), urlString);
         } catch (Exception ex) {
             Constants.LOG.error("Failed to download \"%s\" from \"%s\"", file.getName(), urlString);
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
         }
     }
 
@@ -597,9 +593,7 @@ public class FileUtils {
                     }
                 }
             } catch (Throwable ex) {
-                if (Constants.LOG.isDebugMode()) {
-                    ex.printStackTrace();
-                }
+                Constants.LOG.debugError(ex);
             }
 
             ARE_CLASSES_LOADING = false;

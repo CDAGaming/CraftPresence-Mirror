@@ -204,13 +204,24 @@ public abstract class Pack {
     /**
      * Whether to display the specified pack exception
      *
-     * @param ex The {@link Exception} to interpret
+     * @param ex The {@link Throwable} exception to interpret
      * @return {@link Boolean#TRUE} if operation is allowed
      */
-    protected boolean showException(final Exception ex) {
+    protected boolean showException(final Throwable ex) {
         return Constants.LOG.isDebugMode() || (
                 ex.getClass() != FileNotFoundException.class &&
                         ex.getClass() != NoSuchFileException.class
         );
+    }
+
+    /**
+     * Display the specified pack exception
+     *
+     * @param ex The {@link Throwable} exception to display
+     */
+    protected void printException(final Throwable ex) {
+        if (showException(ex)) {
+            Constants.LOG.error(ex);
+        }
     }
 }

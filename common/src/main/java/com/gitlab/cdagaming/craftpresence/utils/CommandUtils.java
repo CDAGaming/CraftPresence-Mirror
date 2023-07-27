@@ -260,7 +260,7 @@ public class CommandUtils {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.module"));
             if (Constants.LOG.isDebugMode()) {
                 Constants.LOG.error(messagePrefix);
-                ex.printStackTrace();
+                Constants.LOG.error(ex);
             } else {
                 Constants.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
                 if (splitEx.size() > 1) {

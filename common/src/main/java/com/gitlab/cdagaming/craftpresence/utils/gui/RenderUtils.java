@@ -243,9 +243,7 @@ public class RenderUtils {
             GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
         } catch (Exception ex) {
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
             if (!BLOCKED_RENDER_ITEMS.contains(stack)) {
                 BLOCKED_RENDER_ITEMS.add(stack);
             }

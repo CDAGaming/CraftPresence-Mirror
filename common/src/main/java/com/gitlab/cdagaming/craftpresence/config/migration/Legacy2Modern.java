@@ -323,9 +323,7 @@ public class Legacy2Modern implements DataMigrator {
             properties.load(configReader);
         } catch (Exception ex) {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.save"));
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
         } finally {
             String originalName, newName;
             Object originalValue, currentValue, newValue;

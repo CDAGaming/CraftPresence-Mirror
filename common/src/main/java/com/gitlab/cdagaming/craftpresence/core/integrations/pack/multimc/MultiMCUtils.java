@@ -110,9 +110,7 @@ public class MultiMCUtils extends Pack {
                     System.getProperty("multimc.instance.icon")
             );
         } catch (Exception ex) {
-            if (showException(ex)) {
-                ex.printStackTrace();
-            }
+            printException(ex);
         }
         return hasPackName() && hasPackIcon();
     }
@@ -135,9 +133,7 @@ public class MultiMCUtils extends Pack {
                         configFile.getProperty("iconKey")
                 );
             } catch (Exception ex) {
-                if (showException(ex)) {
-                    ex.printStackTrace();
-                }
+                printException(ex);
             }
         }
         return hasPackName() && hasPackIcon();
@@ -160,9 +156,7 @@ public class MultiMCUtils extends Pack {
                 return "prism";
             }
         } catch (Exception ex) {
-            if (showException(ex)) {
-                ex.printStackTrace();
-            }
+            printException(ex);
         }
         return "multimc";
     }

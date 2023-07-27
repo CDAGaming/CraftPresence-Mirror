@@ -203,9 +203,7 @@ public class BiomeUtils implements Module {
                             }
                         }
                     } catch (Throwable ex) {
-                        if (Constants.LOG.isDebugMode()) {
-                            ex.printStackTrace();
-                        }
+                        Constants.LOG.debugError(ex);
                     }
                 }
             }

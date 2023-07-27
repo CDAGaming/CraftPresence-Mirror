@@ -140,9 +140,7 @@ public class ImageFrame {
         try {
             return Base64.getDecoder().decode(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
         } catch (Exception ex) {
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
 
             if (!repeatCycle) {
                 return decodeBase64(input, encoding, !useDecodingMethod, true);

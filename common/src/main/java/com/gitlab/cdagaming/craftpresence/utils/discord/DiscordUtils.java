@@ -337,9 +337,7 @@ public class DiscordUtils {
         } catch (Exception ex) {
             if (ex.getClass() != NoDiscordClientException.class) {
                 Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.connect"));
-                if (Constants.LOG.isDebugMode()) {
-                    ex.printStackTrace();
-                }
+                Constants.LOG.debugError(ex);
 
                 // Mark as Closed if we experience an actual Exception
                 STATUS = DiscordStatus.Closed;
@@ -550,7 +548,7 @@ public class DiscordUtils {
                 // Perform the same to Logging, so the same information is available on both ends
                 if (showLogging) {
                     Constants.LOG.error(messagePrefix);
-                    ex.printStackTrace();
+                    Constants.LOG.error(ex);
                 } else {
                     Constants.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
                     if (splitEx.size() > 1) {
@@ -1408,9 +1406,7 @@ public class DiscordUtils {
             try {
                 ipcInstance.close();
             } catch (Exception ex) {
-                if (Constants.LOG.isDebugMode()) {
-                    ex.printStackTrace();
-                }
+                Constants.LOG.debugError(ex);
             }
 
             // Clear User Data before final clear and shutdown

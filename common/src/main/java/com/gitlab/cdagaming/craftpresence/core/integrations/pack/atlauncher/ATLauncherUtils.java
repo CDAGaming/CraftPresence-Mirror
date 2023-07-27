@@ -57,9 +57,7 @@ public class ATLauncherUtils extends Pack {
                                 .getAsString()
                 );
             } catch (Exception ex) {
-                if (showException(ex)) {
-                    ex.printStackTrace();
-                }
+                printException(ex);
             }
         }
         return hasPackName();

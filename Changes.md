@@ -9,7 +9,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Changes
 
-* TBD
+* Backend: Tweaked Exception Logging to use `LoggingImpl` instead of `System.err`
+    * This only effects the mod's logging, not dependency logging
+    * New Methods have been implemented in `LoggingImpl`, making use of `StringUtils#getStackTrace`
 
 ### Fixes
 

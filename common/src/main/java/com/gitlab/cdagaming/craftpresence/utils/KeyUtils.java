@@ -315,9 +315,7 @@ public class KeyUtils {
                     }
                 }
             } catch (Throwable ex) {
-                if (Constants.LOG.isDebugMode()) {
-                    ex.printStackTrace();
-                }
+                Constants.LOG.debugError(ex);
             }
         }
     }

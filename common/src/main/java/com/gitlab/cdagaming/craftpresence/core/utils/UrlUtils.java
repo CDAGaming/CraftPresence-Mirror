@@ -217,9 +217,7 @@ public class UrlUtils {
         try {
             return openUrl(new URI(targetUrl));
         } catch (Exception ex) {
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
             return false;
         }
     }
@@ -234,9 +232,7 @@ public class UrlUtils {
         try {
             return openUrl(targetUrl.toURI());
         } catch (Exception ex) {
-            if (Constants.LOG.isDebugMode()) {
-                ex.printStackTrace();
-            }
+            Constants.LOG.debugError(ex);
             return false;
         }
     }

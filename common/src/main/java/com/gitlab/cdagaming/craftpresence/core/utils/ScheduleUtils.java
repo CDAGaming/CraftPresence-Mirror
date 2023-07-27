@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.core.utils;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.LockObject;
 
 import java.time.Instant;
@@ -147,7 +148,7 @@ public class ScheduleUtils {
                     refreshedCallbacks = false;
                 }));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Constants.LOG.error(ex);
             }
         }
     }
