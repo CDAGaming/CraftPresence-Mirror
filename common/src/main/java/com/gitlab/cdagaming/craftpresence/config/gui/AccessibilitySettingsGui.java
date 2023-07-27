@@ -221,7 +221,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         renderTooltipsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc2, getButtonY(5, -10),
+                        calc1, getButtonY(6, -20),
                         "gui.config.name.accessibility.render_tooltips",
                         getCurrentData().renderTooltips,
                         null,
@@ -246,7 +246,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         final KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(5, 5),
+                        calc2, getButtonY(4, 4),
                         180, 20,
                         "gui.config.message.button.controls",
                         () -> openScreen(
