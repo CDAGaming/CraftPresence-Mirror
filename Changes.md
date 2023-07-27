@@ -1,34 +1,19 @@
 # CraftPresence Changes
 
-## v2.2.0 (07/25/2023)
+## v2.2.1 (08/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.1.2...release%2Fv2.2.0)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.0...release%2Fv2.2.1)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
-* Backend: Added a new `core` module, splitting the Mod API into its pure-java segments and game-segments
-    * This changes comes with many API changes, rewrites, and adjustments to critical logic
-    * Please report any issues with existing features breaking or unexpected crashes
-* Backend: Adjusted `TranslationUtils#translateFrom` exception reporting
-    * If a parser exception occurs, the raw `translationKey` is early-returned to prevent early logging and cases of
-      spam
-    * Falling back to the default language has its logging only show up as debug logging, since it isn't necesarily an
-      error
-* Backend: Removed excess logging relating to `MappingUtils` (`Debug` instead of `Info` level)
-* Backend: Adjusted the `/cp export assets` command to always generate a `downloads.txt` file, regardless
-  of `doFullCopy` status
-* Removed the `showLoggingInChat` option from the `Accessibility` Section
-    * This option was hardly used, and hardly iterated on since its original creation in early v1
-    * It was removed as a result to the aforementioned refactors
+* TBD
 
 ### Fixes
 
-* Fixed various issues with Translations being incorrect in several languages
-    * Aditionally, only approved translations are now filtered into the repository
-    * Several obsolete translations have also been removed (Or had its existing translation reset)
+* Fixed Jar Metadata being missing, causing misc. runtime issues
 
 ___
 

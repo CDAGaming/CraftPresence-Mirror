@@ -308,6 +308,20 @@ subprojects {
         }
     }
 
+    tasks.named('jar', Jar).configure {
+        manifest {
+            attributes([
+                    'Specification-Title'     : project.mod_name,
+                    'Specification-Vendor'    : "CDAGaming",
+                    'Specification-Version'   : '1', // We are version 1 of ourselves
+                    'Implementation-Title'    : project.mod_name,
+                    'Implementation-Version'  : project.jar.archiveVersion,
+                    'Implementation-Vendor'   : "CDAGaming",
+                    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            ])
+        }
+    }
+
     gradle.projectsEvaluated {
         tasks.withType(Javadoc).configureEach {
             it.options.encoding = "UTF-8"
