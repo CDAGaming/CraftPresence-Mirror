@@ -39,11 +39,9 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @SuppressWarnings("DuplicatedCode")
@@ -70,29 +68,6 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
     PresenceSettingsGui(GuiScreen parentScreen) {
         this(parentScreen, CraftPresence.CONFIG.displaySettings.presenceData, (output) ->
                 CraftPresence.CONFIG.displaySettings.presenceData = output
-        );
-    }
-
-    private void addIconSelector(final ExtendedScreen parent, final TextWidget textControl, final BiConsumer<String, String> onUpdatedCallback) {
-        final int left = (parent.getScreenWidth() / 2) + 3; // Left; Textbox
-        final int right = left + textControl.getControlWidth();
-        parent.addControl(
-                new ExtendedButtonControl(
-                        right + 4,
-                        textControl.getTop() - parent.getTop(),
-                        30, 20,
-                        "...",
-                        () -> openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        textControl.getControlMessage(), null,
-                                        true, false, ScrollableListControl.RenderType.DiscordAsset,
-                                        onUpdatedCallback,
-                                        null
-                                )
-                        )
-                )
         );
     }
 

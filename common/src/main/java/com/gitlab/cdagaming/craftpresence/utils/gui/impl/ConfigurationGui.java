@@ -28,10 +28,15 @@ import com.gitlab.cdagaming.craftpresence.config.gui.AboutGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
+
+import java.util.function.BiConsumer;
 
 public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen {
     private final String title, subTitle;
@@ -136,6 +141,29 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         syncRenderStates();
 
         super.preRender();
+    }
+
+    protected void addIconSelector(final ExtendedScreen parent, final TextWidget textControl, final BiConsumer<String, String> onUpdatedCallback) {
+        final int left = (parent.getScreenWidth() / 2) + 3; // Left; Textbox
+        final int right = left + textControl.getControlWidth();
+        parent.addControl(
+                new ExtendedButtonControl(
+                        right + 4,
+                        textControl.getTop() - parent.getTop(),
+                        30, 20,
+                        "...",
+                        () -> openScreen(
+                                new SelectorGui(
+                                        currentScreen,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
+                                        textControl.getControlMessage(), null,
+                                        true, false, ScrollableListControl.RenderType.DiscordAsset,
+                                        onUpdatedCallback,
+                                        null
+                                )
+                        )
+                )
+        );
     }
 
     protected boolean canProceed() {

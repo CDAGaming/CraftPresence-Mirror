@@ -33,10 +33,7 @@ import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import net.minecraft.client.gui.GuiScreen;
@@ -49,9 +46,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
             detectMCUpdaterInstanceButton, detectTechnicPackButton, detectATLauncherButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
             enableJoinRequestButton, resetTimeOnInitButton, autoRegisterButton;
-    private ExtendedTextControl clientId;
+    private TextWidget clientId, defaultIcon;
     private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
     private int currentPreferredClient = DiscordBuild.ANY.ordinal();
+    private String currentIcon;
 
     GeneralSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.general");
@@ -85,35 +83,30 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         final int checkboxCalc1 = (getScreenWidth() / 2) - 168;
         final int checkboxCalc2 = (getScreenWidth() / 2) + 18;
 
-        // Adding Default Icon Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        buttonCalc1, getButtonY(1),
-                        180, 20,
+        // Adding Default Icon Data
+        currentIcon = getCurrentData().defaultIcon;
+        defaultIcon = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(1),
+                        147, 20,
                         "gui.config.name.general.default_icon",
-                        () -> openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        getCurrentData().defaultIcon, null,
-                                        true, false, RenderType.DiscordAsset,
-                                        (attributeName, currentValue) -> {
-                                            CraftPresence.CONFIG.hasChanged = true;
-                                            getCurrentData().defaultIcon = currentValue;
-                                        }, null
-                                )
-                        ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.default_icon")
                                 )
                         )
-                )
+                ).setTitleXOffset(-16)
         );
+        addIconSelector(childFrame, defaultIcon,
+                (attributeName, currentValue) -> currentIcon = currentValue
+        );
+        defaultIcon.setControlMessage(currentIcon);
+
         currentPartyPrivacy = getCurrentData().partyPrivacyLevel;
         partyPrivacyLevelButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        buttonCalc2, getButtonY(1),
+                        buttonCalc1, getButtonY(2),
                         180, 20,
                         "gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name(),
                         () -> {
@@ -276,7 +269,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         resetTimeOnInitButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, getButtonY(2, 10),
+                        checkboxCalc1, getButtonY(8, -50),
                         "gui.config.name.general.reset_time_on_init",
                         getCurrentData().resetTimeOnInit,
                         null,
@@ -304,6 +297,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         if (!clientId.getControlMessage().equals(getCurrentData().clientId)) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().clientId = clientId.getControlMessage();
+        }
+        if (!defaultIcon.getControlMessage().equals(getCurrentData().defaultIcon)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().defaultIcon = defaultIcon.getControlMessage();
         }
         if (currentPartyPrivacy != getCurrentData().partyPrivacyLevel) {
             CraftPresence.CONFIG.hasChanged = true;
