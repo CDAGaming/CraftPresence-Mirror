@@ -141,7 +141,6 @@ public class CommandsGui extends ExtendedScreen {
                         (getScreenWidth() - 112), 20
                 )
         );
-        commandInput.setControlMaxLength(512);
 
         childFrame = addControl(
                 new ScrollPane(

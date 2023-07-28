@@ -12,10 +12,18 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Backend: Tweaked Exception Logging to use `LoggingImpl` instead of `System.err`
     * This only effects the mod's logging, not dependency logging
     * New Methods have been implemented in `LoggingImpl`, making use of `StringUtils#getStackTrace`
+* Quality-Of-Life UI Improvements:
+    * The Default Icon Button in `General Settings` has been changed to use the new Icon Selector
+      from `Presence Settings`
+    * Adjusted the positioning of several elements within `Accessibility Settings`
+    * Added `maxConnectionAttempts`, `playerSkinEndpoint`, and `serverIconEndpoint` to the `Advanced Settings` UI
+    * Removed the 3-digit limit for the `refreshRate` textbox
+    * Removed the `512` character limit for the `Commands` UI Input Textbox
 
 ### Fixes
 
 * Fixed Jar Metadata being missing, causing misc. runtime issues
+    * This was a hotfix for v2.2.0, but it has been noted here as well
 
 ___
 
