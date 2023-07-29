@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
@@ -46,7 +45,8 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     private final Server INSTANCE, DEFAULTS;
     private final ModuleData defaultData;
     private ExtendedButtonControl serverMessagesButton;
-    private ExtendedTextControl defaultMOTD, defaultName, defaultMessage;
+    private TextWidget defaultMOTD, defaultName, defaultMessage, defaultIcon;
+    private String currentIcon;
 
     ServerSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.server_messages");
@@ -105,9 +105,29 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         );
         defaultMessage.setControlMessage(defaultServerMessage);
 
+        // Adding Default Icon Data
+        currentIcon = getCurrentData().fallbackServerIcon;
+        defaultIcon = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(3),
+                        147, 20,
+                        "gui.config.name.server_messages.server_icon",
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_icon")
+                                )
+                        )
+                ).setTitleXOffset(-16)
+        );
+        addIconSelector(childFrame, defaultIcon,
+                (attributeName, currentValue) -> currentIcon = currentValue
+        );
+        defaultIcon.setControlMessage(currentIcon);
+
         serverMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(3),
+                        (getScreenWidth() / 2) - 90, getButtonY(4),
                         180, 20,
                         "gui.config.name.server_messages.server_messages",
                         () -> openScreen(
@@ -227,31 +247,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         }
                 )
         );
-        // Adding Default Icon Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(4),
-                        180, 20,
-                        "gui.config.name.server_messages.server_icon",
-                        () -> openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        getCurrentData().fallbackServerIcon, null,
-                                        true, false, RenderType.DiscordAsset,
-                                        (attributeName, currentValue) -> {
-                                            CraftPresence.CONFIG.hasChanged = true;
-                                            getCurrentData().fallbackServerIcon = currentValue;
-                                        }, null
-                                )
-                        ),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_icon")
-                                )
-                        )
-                )
-        );
+
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
@@ -317,6 +313,10 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
             final ModuleData defaultServerData = getCurrentData().serverData.getOrDefault("default", new ModuleData());
             defaultServerData.setTextOverride(defaultMessage.getControlMessage());
             getCurrentData().serverData.put("default", defaultServerData);
+        }
+        if (!defaultIcon.getControlMessage().equals(getCurrentData().fallbackServerIcon)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().fallbackServerIcon = defaultIcon.getControlMessage();
         }
     }
 

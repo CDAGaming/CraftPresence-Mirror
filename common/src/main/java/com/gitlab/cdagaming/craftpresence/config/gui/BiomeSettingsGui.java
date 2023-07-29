@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
@@ -46,7 +45,8 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     private final Biome INSTANCE, DEFAULTS;
     private final ModuleData defaultData;
     private ExtendedButtonControl biomeMessagesButton;
-    private ExtendedTextControl defaultMessage;
+    private TextWidget defaultMessage, defaultIcon;
+    private String currentIcon;
 
     BiomeSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.biome_messages");
@@ -77,9 +77,29 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
         );
         defaultMessage.setControlMessage(defaultBiomeMessage);
 
+        // Adding Default Icon Data
+        currentIcon = getCurrentData().fallbackBiomeIcon;
+        defaultIcon = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(1),
+                        147, 20,
+                        "gui.config.name.biome_messages.biome_icon",
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
+                                )
+                        )
+                ).setTitleXOffset(-16)
+        );
+        addIconSelector(childFrame, defaultIcon,
+                (attributeName, currentValue) -> currentIcon = currentValue
+        );
+        defaultIcon.setControlMessage(currentIcon);
+
         biomeMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(1),
+                        (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
                         "gui.config.name.biome_messages.biome_messages",
                         () -> openScreen(
@@ -199,31 +219,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         }
                 )
         );
-        // Adding Default Icon Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(2),
-                        180, 20,
-                        "gui.config.name.biome_messages.biome_icon",
-                        () -> openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        getCurrentData().fallbackBiomeIcon, null,
-                                        true, false, RenderType.DiscordAsset,
-                                        (attributeName, currentValue) -> {
-                                            CraftPresence.CONFIG.hasChanged = true;
-                                            getCurrentData().fallbackBiomeIcon = currentValue;
-                                        }, null
-                                )
-                        ),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
-                                )
-                        )
-                )
-        );
+
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
@@ -281,6 +277,10 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
             final ModuleData defaultBiomeData = getCurrentData().biomeData.getOrDefault("default", new ModuleData());
             defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
             getCurrentData().biomeData.put("default", defaultBiomeData);
+        }
+        if (!defaultIcon.getControlMessage().equals(getCurrentData().fallbackBiomeIcon)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().fallbackBiomeIcon = defaultIcon.getControlMessage();
         }
     }
 

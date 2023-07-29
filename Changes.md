@@ -13,8 +13,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This only effects the mod's logging, not dependency logging
     * New Methods have been implemented in `LoggingImpl`, making use of `StringUtils#getStackTrace`
 * Quality-Of-Life UI Improvements:
-    * The Default Icon Button in `General Settings` has been changed to use the new Icon Selector
-      from `Presence Settings`
+    * The Default Icon Button in `General Settings`, `Biome Settings`, `Dimension Settings`, and `Server Settings` have
+      been changed to use the new Icon Selector from `Presence Settings`
     * Adjusted the positioning of several elements within `Accessibility Settings`
     * Added `maxConnectionAttempts`, `playerSkinEndpoint`, and `serverIconEndpoint` to the `Advanced Settings` UI
     * Removed the 3-digit limit for the `refreshRate` textbox

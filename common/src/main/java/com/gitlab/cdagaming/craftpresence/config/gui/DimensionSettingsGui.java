@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
@@ -46,7 +45,8 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     private final Dimension INSTANCE, DEFAULTS;
     private final ModuleData defaultData;
     private ExtendedButtonControl dimensionMessagesButton;
-    private ExtendedTextControl defaultMessage;
+    private TextWidget defaultMessage, defaultIcon;
+    private String currentIcon;
 
     DimensionSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.dimension_messages");
@@ -77,9 +77,29 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
         );
         defaultMessage.setControlMessage(defaultDimensionMessage);
 
+        // Adding Default Icon Data
+        currentIcon = getCurrentData().fallbackDimensionIcon;
+        defaultIcon = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(1),
+                        147, 20,
+                        "gui.config.name.dimension_messages.dimension_icon",
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
+                                )
+                        )
+                ).setTitleXOffset(-16)
+        );
+        addIconSelector(childFrame, defaultIcon,
+                (attributeName, currentValue) -> currentIcon = currentValue
+        );
+        defaultIcon.setControlMessage(currentIcon);
+
         dimensionMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(1),
+                        (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
                         "gui.config.name.dimension_messages.dimension_messages",
                         () -> openScreen(
@@ -89,7 +109,6 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                         null, null,
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
-                                            // Event to Occur when proceeding with adjusted data
                                             final ModuleData defaultDimensionData = getCurrentData().dimensionData.get("default");
                                             final ModuleData currentDimensionData = getCurrentData().dimensionData.get(attributeName);
                                             final String defaultMessage = Config.getProperty(defaultDimensionData, "textOverride") != null ? defaultDimensionData.getTextOverride() : "";
@@ -200,31 +219,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         }
                 )
         );
-        // Adding Default Icon Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(2),
-                        180, 20,
-                        "gui.config.name.dimension_messages.dimension_icon",
-                        () -> openScreen(
-                                new SelectorGui(
-                                        currentScreen,
-                                        Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        getCurrentData().fallbackDimensionIcon, null,
-                                        true, false, RenderType.DiscordAsset,
-                                        (attributeName, currentValue) -> {
-                                            CraftPresence.CONFIG.hasChanged = true;
-                                            getCurrentData().fallbackDimensionIcon = currentValue;
-                                        }, null
-                                )
-                        ),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
-                                )
-                        )
-                )
-        );
+
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
@@ -282,6 +277,10 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
             final ModuleData defaultDimensionData = getCurrentData().dimensionData.getOrDefault("default", new ModuleData());
             defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
             getCurrentData().dimensionData.put("default", defaultDimensionData);
+        }
+        if (!defaultIcon.getControlMessage().equals(getCurrentData().fallbackDimensionIcon)) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().fallbackDimensionIcon = defaultIcon.getControlMessage();
         }
     }
 
