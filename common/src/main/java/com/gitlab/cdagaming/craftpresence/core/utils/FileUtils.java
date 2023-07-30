@@ -180,13 +180,29 @@ public class FileUtils {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
 
         try (Writer writer = new OutputStreamWriter(Files.newOutputStream(file.toPath()), Charset.forName(encoding))) {
-            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-                throw new UnsupportedOperationException("Failed to setup parent directory @ " + file.getAbsolutePath());
-            }
+            assertFileExists(file);
             builder.create().toJson(json, writer);
         } catch (Exception ex) {
             Constants.LOG.error("Failed to write json data @ " + file.getAbsolutePath());
             Constants.LOG.debugError(ex);
+        }
+    }
+
+    /**
+     * Asserts whether a file exists and is available
+     *
+     * @param file The target file to interpret or create
+     * @throws Exception if an exception occurs in the method
+     */
+    public static void assertFileExists(final File file) throws Exception {
+        final File parentDir = file.getParentFile();
+        final boolean parentDirPresent = file.getParentFile().exists() || file.getParentFile().mkdirs();
+        final boolean fileAvailable = (file.exists() && file.isFile()) || file.createNewFile();
+        if (!parentDirPresent) {
+            throw new UnsupportedOperationException("Failed to setup parent directory @ " + parentDir.getAbsolutePath());
+        }
+        if (!fileAvailable) {
+            throw new UnsupportedOperationException("Failed to setup target file (Unable to create or is not a file) @ " + file.getAbsolutePath());
         }
     }
 
@@ -227,15 +243,7 @@ public class FileUtils {
      */
     public static void copyStreamToFile(final InputStream stream, final File file, final boolean close) throws Exception {
         // Create File and Parent Directories as needed
-        final File parentDir = file.getParentFile();
-        final boolean parentDirPresent = file.getParentFile().exists() || file.getParentFile().mkdirs();
-        final boolean fileAvailable = (file.exists() && file.isFile()) || file.createNewFile();
-        if (!parentDirPresent) {
-            throw new UnsupportedOperationException("Failed to setup parent directory @ " + parentDir.getAbsolutePath());
-        }
-        if (!fileAvailable) {
-            throw new UnsupportedOperationException("Failed to setup target file (Unable to create or is not a file) @ " + file.getAbsolutePath());
-        }
+        assertFileExists(file);
 
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             byte[] buffer = new byte[1024];

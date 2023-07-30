@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.integrations.logging;
 
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.logging.Logger;
 
@@ -33,6 +34,7 @@ import java.util.logging.Logger;
  *
  * @author CDAGaming
  */
+@SuppressFBWarnings("EI_EXPOSE_REP")
 public class JavaLogger extends LoggingImpl {
     /**
      * The Instance of the Root Logging Manager, for sending messages to logs

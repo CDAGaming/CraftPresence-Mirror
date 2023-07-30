@@ -581,9 +581,7 @@ public class CommandsGui extends ExtendedScreen {
 
                 try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(dataDir.toPath()), encoding))) {
                     // Create Data Directory if non-existent
-                    if (!dataDir.getParentFile().exists() && !dataDir.getParentFile().mkdirs()) {
-                        throw new UnsupportedOperationException("Failed to setup parent directory @ " + dataDir.getAbsolutePath());
-                    }
+                    FileUtils.assertFileExists(dataDir);
 
                     // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
                     bw.write("## Export Data => " + clientId);

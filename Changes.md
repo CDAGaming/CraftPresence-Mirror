@@ -24,6 +24,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * Fixed Jar Metadata being missing, causing misc. runtime issues
     * This was a hotfix for v2.2.0, but it has been noted here as well
+* Fixed rare cases of exceptions during file I/O operations
+    * This primarily includes config saving, downloading files, and the `/cp export assets` logic
 
 ___
 
