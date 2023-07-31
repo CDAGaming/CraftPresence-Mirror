@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.2.1 (08/??/2023)
+## v2.2.1 (08/03/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.0...release%2Fv2.2.1)_
