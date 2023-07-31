@@ -179,12 +179,18 @@ public class FileUtils {
     public static void writeJsonData(final Object json, final File file, final String encoding, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
 
-        try (Writer writer = new OutputStreamWriter(Files.newOutputStream(file.toPath()), Charset.forName(encoding))) {
+        try {
             assertFileExists(file);
+        } catch (Exception ex1) {
+            Constants.LOG.error("Failed to create json data @ " + file.getAbsolutePath());
+            Constants.LOG.debugError(ex1);
+        }
+
+        try (Writer writer = new OutputStreamWriter(Files.newOutputStream(file.toPath()), Charset.forName(encoding))) {
             builder.create().toJson(json, writer);
-        } catch (Exception ex) {
+        } catch (Exception ex2) {
             Constants.LOG.error("Failed to write json data @ " + file.getAbsolutePath());
-            Constants.LOG.debugError(ex);
+            Constants.LOG.debugError(ex2);
         }
     }
 

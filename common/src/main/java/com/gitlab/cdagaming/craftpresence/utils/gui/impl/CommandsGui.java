@@ -579,10 +579,15 @@ public class CommandsGui extends ExtendedScreen {
                 final String encoding = CraftPresence.CLIENT.isAvailable() ?
                         CraftPresence.CLIENT.ipcInstance.getEncoding() : "UTF-8";
 
-                try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(dataDir.toPath()), encoding))) {
-                    // Create Data Directory if non-existent
+                // Create Data Directory if non-existent
+                try {
                     FileUtils.assertFileExists(dataDir);
+                } catch (Exception ex) {
+                    Constants.LOG.debugError(ex);
+                    hasError = true;
+                }
 
+                try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(dataDir.toPath()), encoding))) {
                     // Create and write initial data, using the encoding of our current ipc instance (UTF-8 by default)
                     bw.write("## Export Data => " + clientId);
                     bw.newLine();
