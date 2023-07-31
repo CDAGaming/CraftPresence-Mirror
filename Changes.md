@@ -26,6 +26,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This was a hotfix for v2.2.0, but it has been noted here as well
 * Fixed rare cases of exceptions during file I/O operations
     * This primarily includes config saving, downloading files, and the `/cp export assets` logic
+* Fixed a possible Concurrent Exception when Closing a GUI
+* Fixed missing Command Feedback with the `/cp reboot` command
 
 ___
 
