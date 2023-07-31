@@ -55,6 +55,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         super(parentScreen, "gui.config.title", "gui.config.title.general");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
+        currentIcon = getCurrentData().defaultIcon;
     }
 
     @Override
@@ -84,7 +85,6 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         final int checkboxCalc2 = (getScreenWidth() / 2) + 18;
 
         // Adding Default Icon Data
-        currentIcon = getCurrentData().defaultIcon;
         defaultIcon = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
@@ -98,7 +98,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 ).setTitleXOffset(-16)
         );
-        addIconSelector(childFrame, defaultIcon,
+        addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue
         );
         defaultIcon.setControlMessage(currentIcon);

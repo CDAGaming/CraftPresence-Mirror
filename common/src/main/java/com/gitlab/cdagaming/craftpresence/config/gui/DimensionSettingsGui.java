@@ -53,6 +53,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
         defaultData = getCurrentData().dimensionData.get("default");
+        currentIcon = getCurrentData().fallbackDimensionIcon;
     }
 
     @Override
@@ -78,7 +79,6 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
         defaultMessage.setControlMessage(defaultDimensionMessage);
 
         // Adding Default Icon Data
-        currentIcon = getCurrentData().fallbackDimensionIcon;
         defaultIcon = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
@@ -92,7 +92,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         )
                 ).setTitleXOffset(-16)
         );
-        addIconSelector(childFrame, defaultIcon,
+        addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue
         );
         defaultIcon.setControlMessage(currentIcon);

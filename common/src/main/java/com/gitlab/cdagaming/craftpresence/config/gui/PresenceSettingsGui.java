@@ -187,7 +187,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         )
                 ).setTitleXOffset(-16)
         );
-        addIconSelector(childFrame, smallImageKeyFormat,
+        addIconSelector(childFrame, () -> smallImageKeyFormat,
                 (attributeName, currentValue) -> PRESENCE.smallImageKey = currentValue
         );
         largeImageKeyFormat = childFrame.addControl(
@@ -204,7 +204,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                         )
                 ).setTitleXOffset(-16)
         );
-        addIconSelector(childFrame, largeImageKeyFormat,
+        addIconSelector(childFrame, () -> largeImageKeyFormat,
                 (attributeName, currentValue) -> PRESENCE.largeImageKey = currentValue
         );
 

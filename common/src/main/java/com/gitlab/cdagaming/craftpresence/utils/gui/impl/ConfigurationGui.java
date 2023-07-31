@@ -37,6 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen {
     private final String title, subTitle;
@@ -143,7 +144,8 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         super.preRender();
     }
 
-    protected void addIconSelector(final ExtendedScreen parent, final TextWidget textControl, final BiConsumer<String, String> onUpdatedCallback) {
+    protected void addIconSelector(final ExtendedScreen parent, final Supplier<TextWidget> textWidget, final BiConsumer<String, String> onUpdatedCallback) {
+        final TextWidget textControl = textWidget.get();
         final int left = (parent.getScreenWidth() / 2) + 3; // Left; Textbox
         final int right = left + textControl.getControlWidth();
         parent.addControl(
@@ -156,7 +158,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                                 new SelectorGui(
                                         currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        textControl.getControlMessage(), null,
+                                        textWidget.get().getControlMessage(), null,
                                         true, false, ScrollableListControl.RenderType.DiscordAsset,
                                         onUpdatedCallback,
                                         null

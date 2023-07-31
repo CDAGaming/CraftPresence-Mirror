@@ -53,6 +53,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
         defaultData = getCurrentData().serverData.get("default");
+        currentIcon = getCurrentData().fallbackServerIcon;
     }
 
     @Override
@@ -106,7 +107,6 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         defaultMessage.setControlMessage(defaultServerMessage);
 
         // Adding Default Icon Data
-        currentIcon = getCurrentData().fallbackServerIcon;
         defaultIcon = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
@@ -120,7 +120,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         )
                 ).setTitleXOffset(-16)
         );
-        addIconSelector(childFrame, defaultIcon,
+        addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue
         );
         defaultIcon.setControlMessage(currentIcon);

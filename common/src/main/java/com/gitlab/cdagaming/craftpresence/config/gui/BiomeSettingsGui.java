@@ -53,6 +53,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
         defaultData = getCurrentData().biomeData.get("default");
+        currentIcon = getCurrentData().fallbackBiomeIcon;
     }
 
     @Override
@@ -78,7 +79,6 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
         defaultMessage.setControlMessage(defaultBiomeMessage);
 
         // Adding Default Icon Data
-        currentIcon = getCurrentData().fallbackBiomeIcon;
         defaultIcon = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
@@ -92,7 +92,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         )
                 ).setTitleXOffset(-16)
         );
-        addIconSelector(childFrame, defaultIcon,
+        addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue
         );
         defaultIcon.setControlMessage(currentIcon);
