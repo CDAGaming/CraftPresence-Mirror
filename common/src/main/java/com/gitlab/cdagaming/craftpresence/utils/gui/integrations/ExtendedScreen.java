@@ -216,7 +216,7 @@ public class ExtendedScreen extends GuiScreen {
     public void initGui() {
         // Clear Data before Initialization
         super.initGui();
-        clearData(true);
+        clearData();
         Keyboard.enableRepeatEvents(true);
 
         currentPhase = Phase.INIT;
@@ -226,20 +226,16 @@ public class ExtendedScreen extends GuiScreen {
 
     /**
      * Clear the Screen Data
-     *
-     * @param clearWidgets Whether to clear widget data
      */
-    public void clearData(final boolean clearWidgets) {
+    public void clearData() {
         if (currentPhase != Phase.PREINIT) {
             currentPhase = Phase.PREINIT;
-            if (clearWidgets) {
-                setContentHeight(0);
+            setContentHeight(0);
 
-                buttonList.clear();
-                extendedControls.clear();
-                extendedWidgets.clear();
-                extendedLists.clear();
-            }
+            buttonList.clear();
+            extendedControls.clear();
+            extendedWidgets.clear();
+            extendedLists.clear();
         }
     }
 
@@ -677,7 +673,7 @@ public class ExtendedScreen extends GuiScreen {
                     ((ExtendedScreen) extendedControl).onGuiClosed();
                 }
             }
-            clearData(false);
+            clearData();
             resetIndex();
             Keyboard.enableRepeatEvents(false);
         }
