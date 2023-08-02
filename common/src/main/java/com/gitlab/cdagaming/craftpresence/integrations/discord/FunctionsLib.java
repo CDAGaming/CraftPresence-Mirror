@@ -736,12 +736,16 @@ public class FunctionsLib {
             }
         }
 
+        Object result = null;
+
         // If the className or field list is null, error as such
         if (classToAccess == null || fields == null) {
             ss.error("Insufficient or null arguments provided for required getField() params, please try again.");
+        } else {
+            result = StringUtils.getField(classToAccess, instance, fields.toArray(new String[0]));
         }
 
-        return Value.object(StringUtils.getField(classToAccess, instance, fields != null ? fields.toArray(new String[0]) : null));
+        return result != null ? Value.object(result) : Value.null_();
     }
 
     public static Value getClass(Starscript ss, int argCount) {
@@ -858,10 +862,12 @@ public class FunctionsLib {
             }
         }
 
-        return Value.object(StringUtils.executeMethod(classToAccess, instance, methodName,
+        Object result = StringUtils.executeMethod(classToAccess, instance, methodName,
                 parameterTypes != null ? parameterTypes.toArray(new Class<?>[0]) : null,
                 parameters != null ? parameters.toArray(new Object[0]) : null
-        ));
+        );
+
+        return result != null ? Value.object(result) : Value.null_();
     }
 
     public static Value stripColors(Starscript ss, int argCount) {
