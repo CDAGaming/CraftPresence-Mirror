@@ -46,6 +46,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class FunctionsLib {
     public static void init(Starscript ss) {
         StandardLib.init(ss);
@@ -686,28 +687,61 @@ public class FunctionsLib {
     }
 
     public static Value getField(Starscript ss, int argCount) {
-        if (argCount < 2 || argCount > 3) ss.error("getField() can only be used with 2-3 arguments, got %d.", argCount);
-        String fieldName;
-        Object instance, result = null;
-        if (argCount == 2) {
-            fieldName = ss.popString("Second argument to getField(instance, fieldName) needs to be a string.");
-            instance = CraftPresence.CLIENT.fromValue(ss.pop());
-            result = StringUtils.getField(instance.getClass(), instance, fieldName);
-        } else {
-            fieldName = ss.popString("Third argument to getField(classObj, instance, fieldName) needs to be a string.");
-            instance = CraftPresence.CLIENT.fromValue(ss.pop());
+        final List<Value> args = StringUtils.newArrayList();
+        if (argCount < 2)
+            ss.error("getField() requires two or more arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop());
+        }
+        StringUtils.revlist(args);
+        Value target = args.get(0);
 
-            Value classObject = ss.pop();
-            if (classObject.isObject()) {
-                result = StringUtils.getField(classObject.getObject(), instance, fieldName);
-            } else if (classObject.isString()) {
-                result = StringUtils.getField(classObject.getString(), instance, fieldName);
+        Class<?> classToAccess = null;
+        Object instance = null;
+        List<String> fields = null;
+
+        // Argument 1: classToAccess
+        if (target.isObject()) {
+            Object temp = target.getObject();
+            if (temp instanceof Class<?>) {
+                classToAccess = (Class<?>) temp;
             } else {
-                ss.error("First argument to getField() needs to be a string, object, or class.");
+                classToAccess = temp.getClass();
+                instance = temp;
+            }
+        } else if (target.isString()) {
+            classToAccess = FileUtils.findValidClass(target.getString());
+        } else {
+            ss.error("First argument to getField(), classToAccess, needs to be either a string, object, or class.");
+        }
+        args.remove(0); // Remove the classToAccess from parsing
+
+        // Argument 2 becomes instance, if not already supplied
+        if (instance == null) {
+            target = args.get(0);
+            instance = CraftPresence.CLIENT.fromValue(target);
+            args.remove(0); // Remove the instance from parsing
+        }
+
+        // Collect Field Names from remaining args
+        if (!args.isEmpty()) {
+            fields = StringUtils.newArrayList();
+
+            for (Value data : args) {
+                if (data.isString()) {
+                    fields.add(data.getString());
+                } else {
+                    ss.error("Incorrect argument type for getField() param, fieldName (needs to be a string).");
+                }
             }
         }
 
-        return result != null ? Value.object(result) : Value.null_();
+        // If the className or field list is null, error as such
+        if (classToAccess == null || fields == null) {
+            ss.error("Insufficient or null arguments provided for required getField() params, please try again.");
+        }
+
+        return Value.object(StringUtils.getField(classToAccess, instance, fields != null ? fields.toArray(new String[0]) : null));
     }
 
     public static Value getClass(Starscript ss, int argCount) {
@@ -767,15 +801,11 @@ public class FunctionsLib {
         }
         args.remove(0); // Remove the classToAccess from parsing
 
-        target = args.get(0); // This will either be the instance or methodName
-        boolean isInstanceNull = (instance == null);
-        if (isInstanceNull) {
-            // 2nd argument as instance (Object)
-            if (target.isObject()) {
-                instance = target.getObject();
-                args.remove(0); // Remove the instance from parsing
-                isInstanceNull = false;
-            }
+        // Argument 2 becomes instance, if not already supplied
+        if (instance == null) {
+            target = args.get(0);
+            instance = CraftPresence.CLIENT.fromValue(target);
+            args.remove(0); // Remove the instance from parsing
         }
 
         // Either the 2nd or 3rd param will be methodName, depending on args
@@ -784,7 +814,7 @@ public class FunctionsLib {
             if (target.isString()) {
                 methodName = target.getString();
             } else {
-                ss.error((isInstanceNull ? "Second" : "Third") + " argument to executeMethod(), methodName, needs to be a string.");
+                ss.error("Incorrect argument type for executeMethod() param, methodName (needs to be a string).");
             }
             args.remove(0); // Remove the methodName from parsing
         }

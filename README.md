@@ -244,7 +244,7 @@ The following functions are available for use anywhere in CraftPresence:
 * `dateToEpoch(dateString, format, timeZone ?: null)` - Convert Date String to Epoch Timestamp in seconds
 * `epochToDate(dateString, format, timeZone ?: null)` - Convert Epoch Timestamp to Date String in the given format and
   timezone
-* `executeMethod(classToAccess=Object|String|Class, instance=Object ?: null, methodName, <parameterType, parameter>...)` -
+* `executeMethod(classToAccess=Object|String|Class, instance=Object, methodName=String, <parameterType, parameter>...)` -
   Invokes the specified Method in the Target Class via Reflection
 * `format(input=String, args=Object...)` - Returns a formatted string using the specified format string and arguments
 * `formatAddress(input, returnPort ?: false)` - Formats an IP Address based on Input
@@ -256,7 +256,7 @@ The following functions are available for use anywhere in CraftPresence:
 * `getAssetUrl(input)` - Retrieves the Parsed Image Url from the specified key, if present
 * `getClass(reference=Object|String)` - Attempt to retrieve a class object, via the string path or object reference
 * `getCurrentTime()` - Retrieve the current time, as an Instant
-* `getField(classObj=Object|String|Class ?: instance.getClass(), instance=Object, fieldName=String)` - Retrieves the
+* `getField(classToAccess=Object|String|Class, instance=Object, fieldName=String...)` - Retrieves the
   Specified Field(s) via Reflection
 * `getFields(classObj=Object|String|Class)` - Retrieve the available field names for a class object
 * `getFirst(args)` - Retrieve the first non-null string from the specified arguments, or return null
