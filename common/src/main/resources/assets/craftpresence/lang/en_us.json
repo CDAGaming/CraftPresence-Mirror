@@ -262,7 +262,7 @@
   "craftpresence.placeholders.split.usage": "split(input, regex, limit ?: 0)",
   "craftpresence.placeholders.stripColors.description": "Strips Color and Formatting Codes from the inputted String",
   "craftpresence.placeholders.stripColors.usage": "stripColors(input)",
-  "craftpresence.placeholders.timeFromEpoch.description": "Retrive a Time Instant from the specified epoch time",
+  "craftpresence.placeholders.timeFromEpoch.description": "Retrieve a Time Instant from the specified epoch time",
   "craftpresence.placeholders.timeFromEpoch.usage": "timeFromEpoch(epochTime)",
   "craftpresence.placeholders.timeFromString.description": "Format a Date String from one timezone and format into a valid Instant instance",
   "craftpresence.placeholders.timeFromString.usage": "timeFromString(dateString, fromFormat, fromTimeZone ?: null)",

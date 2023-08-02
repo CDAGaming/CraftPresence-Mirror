@@ -293,7 +293,7 @@ The following functions are available for use anywhere in CraftPresence:
   a String
 * `split(input, regex, limit ?: 0)` - Splits this string around matches of the given regular expression
 * `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
-* `timeFromEpoch(epochTime)` - Retrive a Time Instant from the specified epoch time
+* `timeFromEpoch(epochTime)` - Retrieve a Time Instant from the specified epoch time
 * `timeFromString(dateString, fromFormat, fromTimeZone ?: null)` - Format a Date String from one timezone and format
   into a valid Instant instance
 * `timeToEpoch(data)` - Gets the number of seconds from the Java Epoch, derived from specified args
@@ -320,7 +320,7 @@ With this in mind, please note the following:
       needing to be discovered first.
 * **Minecraft 1.15 and below**
     * `MC-112292`: When interacting with the `RenderUtils#drawItemStack` method, used in the v2 Item Renderer, blocks
-      using certain rendererers may fail to display properly.
+      using certain renderers may fail to display properly.
     * Additionally, on 1.15.x exclusively, z-level issues may occur on Screens using this method
 * **Minecraft a1.1.2_01 and below**
     * On these versions, the Biome and Dimension Modules are **stubbed** with default data, due to the logic for these

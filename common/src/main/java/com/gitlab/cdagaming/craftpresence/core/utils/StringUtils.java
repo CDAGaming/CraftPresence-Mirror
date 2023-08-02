@@ -1264,7 +1264,7 @@ public class StringUtils {
      * @return The resulting string
      */
     public static String join(final String separator, final List<String> input) {
-        if (input == null || input.size() == 0) return "";
+        if (input == null || input.isEmpty()) return "";
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.size(); i++) {

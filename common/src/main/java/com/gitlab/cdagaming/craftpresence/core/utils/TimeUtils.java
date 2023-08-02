@@ -240,7 +240,7 @@ public class TimeUtils {
     }
 
     /**
-     * Retrive a Time {@link Instant} from the specified epoch time
+     * Retrieve a Time {@link Instant} from the specified epoch time
      *
      * @param epochTime The epoch time to interpret
      * @return the converted {@link Instant} representing the epoch time
