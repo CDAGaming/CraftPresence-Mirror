@@ -24,11 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
@@ -36,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
@@ -202,32 +197,18 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
 
-            final ColorData backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackground;
+            final int hoverState = getHoverState(isHoveringOrFocusingOver());
+            final int hoverValue = 46 + hoverState * 20;
+            final int xOffset = getControlWidth() / 2;
 
-            if (StringUtils.isNullOrEmpty(backgroundCode.getTexLocation())) {
-                RenderUtils.drawGradient(
-                        getLeft(), getRight(),
-                        getTop(), getBottom(),
-                        getZLevel(),
-                        backgroundCode.getStartColor(), backgroundCode.getEndColor()
-                );
-            } else {
-                final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(backgroundCode.getTexLocation());
-                final ResourceLocation texLocation = textureData.getThird();
-
-                final int hoverState = getHoverState(isHoveringOrFocusingOver());
-                final int hoverValue = 46 + hoverState * 20;
-                final int xOffset = getControlWidth() / 2;
-
-                RenderUtils.renderButton(mc,
-                        getControlPosX(), getControlPosY(),
-                        0, hoverValue,
-                        200 - xOffset, hoverValue,
-                        xOffset, getControlHeight(),
-                        getZLevel(),
-                        texLocation
-                );
-            }
+            RenderUtils.renderButton(mc,
+                    getControlPosX(), getControlPosY(),
+                    0, hoverValue,
+                    200 - xOffset, hoverValue,
+                    xOffset, getControlHeight(),
+                    getZLevel(),
+                    RenderUtils.getButtonTextures()
+            );
 
             mouseDragged(mc, mouseX, mouseY);
             final int color;

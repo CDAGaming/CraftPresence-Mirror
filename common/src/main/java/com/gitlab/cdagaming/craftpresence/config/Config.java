@@ -330,7 +330,6 @@ public final class Config extends Module implements Serializable {
                             .put("tooltipBackgroundColor", "tooltipBackground")
                             .put("tooltipBorderColor", "tooltipBorder")
                             .put("guiBackgroundColor", "guiBackground")
-                            .put("buttonBackgroundColor", "buttonBackground")
                             .build();
 
                     for (Map.Entry<String, String> entry : propsToChange.entrySet()) {

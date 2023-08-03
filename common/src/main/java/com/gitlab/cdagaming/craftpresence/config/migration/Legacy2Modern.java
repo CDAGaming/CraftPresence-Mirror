@@ -303,7 +303,7 @@ public class Legacy2Modern implements DataMigrator {
             .build();
     private final List<String> excludedOptions = StringUtils.newArrayList(
             "schemaVersion", "splitCharacter",
-            "guiBackgroundColor", "buttonBackgroundColor", "tooltipBackgroundColor", "tooltipBorderColor"
+            "guiBackgroundColor", "tooltipBackgroundColor", "tooltipBorderColor"
     );
 
     /**
