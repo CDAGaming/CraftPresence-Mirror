@@ -217,6 +217,8 @@ public class SliderControl extends ExtendedButtonControl {
     @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
+            super.mouseDragged(mc, mouseX, mouseY);
+
             if (dragging) {
                 setValueFromMouse(mouseX);
             }
