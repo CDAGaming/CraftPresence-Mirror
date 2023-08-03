@@ -168,6 +168,22 @@ public class SelectorGui extends ExtendedScreen {
     @Override
     public void initializeUi() {
         if (itemList != null && !itemList.isEmpty()) {
+            scrollList = addList(
+                    new ScrollableListControl(
+                            getGameInstance(), this,
+                            getScreenWidth(), getScreenHeight(),
+                            32, getScreenHeight() - 32,
+                            itemList, originalValue,
+                            renderType
+                    ).setIdentifierType(identifierType)
+            );
+            searchBox = addControl(
+                    new ExtendedTextControl(
+                            getFontRenderer(),
+                            60, (getScreenHeight() - 26),
+                            120, 20
+                    )
+            );
             proceedButton = addControl(
                     new ExtendedButtonControl(
                             (getScreenWidth() - 101), (getScreenHeight() - 26),
@@ -197,23 +213,6 @@ public class SelectorGui extends ExtendedScreen {
                                     openScreen(parentScreen);
                                 }
                             }
-                    )
-            );
-
-            scrollList = addList(
-                    new ScrollableListControl(
-                            getGameInstance(), this,
-                            getScreenWidth(), getScreenHeight(),
-                            32, getScreenHeight() - 32,
-                            itemList, originalValue,
-                            renderType
-                    ).setIdentifierType(identifierType)
-            );
-            searchBox = addControl(
-                    new ExtendedTextControl(
-                            getFontRenderer(),
-                            60, (getScreenHeight() - 26),
-                            120, 20
                     )
             );
 
