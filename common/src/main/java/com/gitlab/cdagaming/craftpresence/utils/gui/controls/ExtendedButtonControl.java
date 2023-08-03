@@ -192,6 +192,13 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     @Override
+    public void postDraw(final ExtendedScreen screen) {
+        if (isOverScreen() && isHoveringOver()) {
+            onHover();
+        }
+    }
+
+    @Override
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {

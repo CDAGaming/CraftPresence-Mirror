@@ -441,14 +441,6 @@ public class ExtendedScreen extends GuiScreen {
         for (DynamicWidget widget : getWidgets()) {
             widget.postDraw(this);
         }
-        for (Gui extendedControl : getControls()) {
-            if (extendedControl instanceof ExtendedButtonControl) {
-                final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                if (isOverScreen() && extendedButton.isHoveringOver()) {
-                    extendedButton.onHover();
-                }
-            }
-        }
     }
 
     /**
