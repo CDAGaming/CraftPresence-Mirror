@@ -272,16 +272,22 @@ public class TextWidget extends ExtendedTextControl {
     }
 
     @Override
-    public void draw(ExtendedScreen screen) {
+    public void preDraw(ExtendedScreen screen) {
         // Ensure correct positioning
         final int calc1 = (screen.getScreenWidth() / 2) - (getControlWidth() - 3); // Left; Title Text
         final int calc2 = (screen.getScreenWidth() / 2) + 3; // Left; Textbox
         setControlPosX(calc2);
 
         if (!StringUtils.isNullOrEmpty(title)) {
-            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
             setTitleX((calc1 + getControlWidth()) - (getControlWidth() / 2f));
             setTitleY(getBottom() - (getControlHeight() / 2f) - (screen.getFontHeight() / 2f));
+        }
+    }
+
+    @Override
+    public void draw(ExtendedScreen screen) {
+        if (!StringUtils.isNullOrEmpty(title)) {
+            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
             screen.renderCenteredString(mainTitle, getTitleX(), getTitleY(), 0xFFFFFF);
         }
     }

@@ -422,18 +422,29 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Preliminary Render Event, executes after renderCriticalData and before postRender
+     * Preliminary Render Event, executes after drawBackground and before super event
      * <p>
-     * Primarily used for rendering title data and preliminary elements
+     * Primarily used for preliminary element setup
      */
     public void preRender() {
+        for (DynamicWidget widget : getWidgets()) {
+            widget.preDraw(this);
+        }
+    }
+
+    /**
+     * Primary Widget Render event, executes after super event and before postRender
+     * <p>
+     * Primarily used for rendering title data and extra elements
+     */
+    public void renderExtra() {
         for (DynamicWidget widget : getWidgets()) {
             widget.draw(this);
         }
     }
 
     /**
-     * Post-Render event, executes after super event and preRender
+     * Post-Render event, executes at the end of drawScreen
      * <p>
      * Primarily used for rendering hover data
      */
@@ -477,6 +488,7 @@ public class ExtendedScreen extends GuiScreen {
             );
 
             drawDefaultBackground();
+            preRender();
 
             for (ScrollableListControl listControl : getLists()) {
                 if (listControl.getEnabled()) {
@@ -484,7 +496,7 @@ public class ExtendedScreen extends GuiScreen {
                 }
             }
 
-            preRender();
+            super.drawScreen(mouseX, mouseY, partialTicks);
 
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
@@ -493,7 +505,7 @@ public class ExtendedScreen extends GuiScreen {
                 }
             }
 
-            super.drawScreen(mouseX, mouseY, partialTicks);
+            renderExtra();
 
             RenderUtils.drawAnywhere();
 

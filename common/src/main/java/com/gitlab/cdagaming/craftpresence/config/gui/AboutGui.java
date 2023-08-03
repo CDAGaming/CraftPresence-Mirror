@@ -87,13 +87,13 @@ public class AboutGui extends ExtendedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.about.config");
         final List<String> notice = StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.credits"));
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
         renderNotice(notice);
 
-        super.preRender();
+        super.renderExtra();
     }
 }

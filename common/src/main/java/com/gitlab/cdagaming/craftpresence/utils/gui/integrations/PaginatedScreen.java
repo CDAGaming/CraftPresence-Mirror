@@ -215,7 +215,7 @@ public class PaginatedScreen extends ExtendedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         ensureDefaults();
         final List<DynamicWidget> widgetsToDraw = paginatedWidgets.getOrDefault(currentPage, defaultWidgets);
         final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
@@ -250,28 +250,27 @@ public class PaginatedScreen extends ExtendedScreen {
     }
 
     @Override
+    public void preRender() {
+        ensureDefaults();
+        final List<DynamicWidget> widgetsToDraw = paginatedWidgets.getOrDefault(currentPage, defaultWidgets);
+        for (DynamicWidget widget : getWidgets()) {
+            final boolean isDefault = defaultWidgets.contains(widget);
+            final boolean isRendering = widgetsToDraw.contains(widget);
+            if (isDefault || isRendering) {
+                widget.preDraw(this);
+            }
+        }
+    }
+
+    @Override
     public void postRender() {
         ensureDefaults();
         final List<DynamicWidget> widgetsToDraw = paginatedWidgets.getOrDefault(currentPage, defaultWidgets);
-        final List<Gui> elementsToRender = paginatedControls.getOrDefault(currentPage, defaultButtons);
         for (DynamicWidget widget : getWidgets()) {
             final boolean isDefault = defaultWidgets.contains(widget);
             final boolean isRendering = widgetsToDraw.contains(widget);
             if (isDefault || isRendering) {
                 widget.postDraw(this);
-            }
-        }
-        for (Gui extendedControl : getControls()) {
-            final boolean isDefault = defaultButtons.contains(extendedControl);
-            final boolean isRendering = elementsToRender.contains(extendedControl);
-
-            if (isDefault || isRendering) {
-                if (extendedControl instanceof ExtendedButtonControl) {
-                    final ExtendedButtonControl extendedButton = (ExtendedButtonControl) extendedControl;
-                    if (isOverScreen() && extendedButton.isHoveringOver()) {
-                        extendedButton.onHover();
-                    }
-                }
             }
         }
     }

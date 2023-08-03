@@ -157,7 +157,7 @@ public class CommandsGui extends ExtendedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.commands");
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
@@ -171,7 +171,7 @@ public class CommandsGui extends ExtendedScreen {
         }
         previewArea.setMessage(executionString);
 
-        super.preRender();
+        super.renderExtra();
     }
 
     /**

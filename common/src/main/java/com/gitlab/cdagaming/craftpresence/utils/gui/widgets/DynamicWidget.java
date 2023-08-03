@@ -39,6 +39,15 @@ public interface DynamicWidget {
      *
      * @param screen The Screen instance we're rendering to
      */
+    default void preDraw(final ExtendedScreen screen) {
+        // N/A
+    }
+
+    /**
+     * Render Event for this Control, including any extra data
+     *
+     * @param screen The Screen instance we're rendering to
+     */
     default void draw(final ExtendedScreen screen) {
         // N/A
     }

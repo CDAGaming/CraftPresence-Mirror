@@ -108,7 +108,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         downloadButton.setControlEnabled(modUpdater.currentState == ModUpdaterUtils.UpdateState.OUTDATED ||
                 modUpdater.currentState == ModUpdaterUtils.UpdateState.BETA_OUTDATED);
 
@@ -120,7 +120,7 @@ public class UpdateInfoGui extends ExtendedScreen {
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
         renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
-        super.preRender();
+        super.renderExtra();
     }
 
     @Override

@@ -236,7 +236,7 @@ public class SelectorGui extends ExtendedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         final List<String> originalItems = StringUtils.newArrayList(originalList);
         final List<String> modifiedList = StringUtils.newArrayList();
 
@@ -291,7 +291,7 @@ public class SelectorGui extends ExtendedScreen {
         renderCenteredString(searchText, 30, renderY, 0xFFFFFF);
         renderCenteredString(displayText, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
-        super.preRender();
+        super.renderExtra();
     }
 
     @Override

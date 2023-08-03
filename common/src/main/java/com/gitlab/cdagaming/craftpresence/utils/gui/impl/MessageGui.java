@@ -65,12 +65,12 @@ public class MessageGui extends ExtendedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.message");
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
         renderNotice(messageData);
 
-        super.preRender();
+        super.renderExtra();
     }
 }

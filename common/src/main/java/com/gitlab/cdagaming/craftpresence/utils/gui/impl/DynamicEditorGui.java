@@ -230,7 +230,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         proceedButton.setControlMessage(
@@ -240,7 +240,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
         proceedButton.setControlEnabled(isValidEntries());
 
-        super.preRender();
+        super.renderExtra();
     }
 
     /**

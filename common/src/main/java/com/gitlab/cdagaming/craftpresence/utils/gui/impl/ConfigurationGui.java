@@ -124,7 +124,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         final boolean hasMainTitle = !StringUtils.isNullOrEmpty(title);
         final boolean hasSubTitle = !StringUtils.isNullOrEmpty(subTitle);
         if (hasMainTitle) {
@@ -141,7 +141,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
 
         syncRenderStates();
 
-        super.preRender();
+        super.renderExtra();
     }
 
     protected void addIconSelector(final ExtendedScreen parent, final Supplier<TextWidget> textWidget, final BiConsumer<String, String> onUpdatedCallback) {

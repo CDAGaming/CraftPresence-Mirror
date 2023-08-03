@@ -92,13 +92,13 @@ public class ControlsGui extends PaginatedScreen {
     }
 
     @Override
-    public void preRender() {
+    public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
         final String subTitle = Constants.TRANSLATOR.translate("gui.config.message.button.controls");
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 10, 0xFFFFFF);
         renderCenteredString(subTitle, getScreenWidth() / 2f, 20, 0xFFFFFF);
 
-        super.preRender();
+        super.renderExtra();
 
         for (Map.Entry<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> entry : preRenderQueue.entrySet()) {
             final Integer pageNumber = entry.getKey();
