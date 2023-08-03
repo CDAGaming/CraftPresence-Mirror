@@ -153,6 +153,24 @@ public class CheckBoxControl extends ExtendedButtonControl {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
+
+            mouseDragged(mc, mouseX, mouseY);
+            int color = !isControlEnabled() ? 10526880 : 14737632;
+
+            if (isChecked())
+                drawCenteredString(getFontRenderer(), "x", getControlPosX() + getBoxWidth() / 2 + 1, getControlPosY() + 1, color);
+
+            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getBoxWidth() + 2, getControlPosY() + 2, color);
+        }
+    }
+
+    /**
+     * Fired when the mouse button is dragged.<p>
+     * Equivalent of MouseListener.mouseDragged(MouseEvent e).
+     */
+    @Override
+    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        if (isControlVisible()) {
             final int hoverState = getHoverState(isHoveringOrFocusingOver());
 
             final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
@@ -165,14 +183,6 @@ public class CheckBoxControl extends ExtendedButtonControl {
                     borderColor, borderColor, getBorderWidth(),
                     contentColor, contentColor
             );
-
-            mouseDragged(mc, mouseX, mouseY);
-            int color = !isControlEnabled() ? 10526880 : 14737632;
-
-            if (isChecked())
-                drawCenteredString(getFontRenderer(), "x", getControlPosX() + getBoxWidth() / 2 + 1, getControlPosY() + 1, color);
-
-            drawString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getBoxWidth() + 2, getControlPosY() + 2, color);
         }
     }
 

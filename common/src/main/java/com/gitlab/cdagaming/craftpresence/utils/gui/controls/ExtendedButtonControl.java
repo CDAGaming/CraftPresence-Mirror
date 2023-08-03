@@ -197,19 +197,6 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
 
-            final int hoverState = getHoverState(isHoveringOrFocusingOver());
-            final int hoverValue = 46 + hoverState * 20;
-            final int xOffset = getControlWidth() / 2;
-
-            RenderUtils.renderButton(mc,
-                    getControlPosX(), getControlPosY(),
-                    0, hoverValue,
-                    200 - xOffset, hoverValue,
-                    xOffset, getControlHeight(),
-                    getZLevel(),
-                    RenderUtils.getButtonTextures()
-            );
-
             mouseDragged(mc, mouseX, mouseY);
             final int color;
 
@@ -227,6 +214,28 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
                     getRight() - (getControlWidth() / 2),
                     getBottom() - (getControlHeight() / 2) - (getFontHeight() / 2),
                     color
+            );
+        }
+    }
+
+    /**
+     * Fired when the mouse button is dragged.<p>
+     * Equivalent of MouseListener.mouseDragged(MouseEvent e).
+     */
+    @Override
+    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        if (isControlVisible()) {
+            final int hoverState = getHoverState(isHoveringOrFocusingOver());
+            final int hoverValue = 46 + hoverState * 20;
+            final int xOffset = getControlWidth() / 2;
+
+            RenderUtils.renderButton(mc,
+                    getControlPosX(), getControlPosY(),
+                    0, hoverValue,
+                    200 - xOffset, hoverValue,
+                    xOffset, getControlHeight(),
+                    getZLevel(),
+                    RenderUtils.getButtonTextures()
             );
         }
     }
