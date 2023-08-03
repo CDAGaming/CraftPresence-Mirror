@@ -479,6 +479,8 @@ public class ExtendedScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         // Ensures initialization events have run first, preventing an NPE
         if (isLoaded()) {
+            preRender();
+
             final int scale = computeGuiScale();
             RenderUtils.drawWithin(
                     getLeft() * scale,
@@ -488,7 +490,6 @@ public class ExtendedScreen extends GuiScreen {
             );
 
             drawDefaultBackground();
-            preRender();
 
             for (ScrollableListControl listControl : getLists()) {
                 if (listControl.getEnabled()) {
