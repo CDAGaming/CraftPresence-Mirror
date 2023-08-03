@@ -326,58 +326,26 @@ public class RenderUtils {
     }
 
     /**
-     * Renders a Slider Object from the defined arguments
-     *
-     * @param mc          The current game instance
-     * @param x           The Starting X Position to render the slider
-     * @param y           The Starting Y Position to render the slider
-     * @param u           The U Mapping Value
-     * @param v           The V Mapping Value
-     * @param width       The full width for the slider to render to
-     * @param height      The full height for the slider to render to
-     * @param zLevel      The Z level position for the slider to render at
-     * @param texLocation The game texture to render the slider as
-     */
-    public static void renderSlider(@Nonnull final Minecraft mc,
-                                    final int x, final int y,
-                                    final int u, final int v,
-                                    final int width, final int height,
-                                    final double zLevel,
-                                    final ResourceLocation texLocation) {
-        try {
-            if (texLocation != null) {
-                final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
-                if (data.getFirst()) {
-                    GlStateManager.bindTexture(data.getSecond());
-                } else {
-                    mc.getTextureManager().bindTexture(texLocation);
-                }
-            }
-        } catch (Exception ignored) {
-            return;
-        }
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        blit(x, y, zLevel, u, v, width, height);
-        blit(x + 4, y, zLevel, u + 196, v, width, height);
-    }
-
-    /**
      * Renders a Button Object from the defined arguments
      *
      * @param mc          The current game instance
      * @param x           The Starting X Position to render the button
      * @param y           The Starting Y Position to render the button
+     * @param startU      The Starting U Mapping Value
+     * @param startV      The Starting V Mapping Value
+     * @param endU        The Ending U Mapping Value
+     * @param endV        The Ending V Mapping Value
      * @param width       The full width for the button to render to
      * @param height      The full height for the button to render to
-     * @param hoverState  The hover state for the button
      * @param zLevel      The Z level position for the button to render at
      * @param texLocation The game texture to render the button as
      */
     public static void renderButton(@Nonnull final Minecraft mc,
                                     final int x, final int y,
+                                    final int startU, final int startV,
+                                    final int endU, final int endV,
                                     final int width, final int height,
-                                    final int hoverState, final double zLevel,
+                                    final double zLevel,
                                     final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
@@ -396,11 +364,8 @@ public class RenderUtils {
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableDepth();
 
-        final int v = 46 + hoverState * 20;
-        final int xOffset = width / 2;
-
-        blit(x, y, zLevel, 0, v, xOffset, height);
-        blit(x + xOffset, y, zLevel, 200 - xOffset, v, xOffset, height);
+        blit(x, y, zLevel, startU, startV, width, height);
+        blit(x + width, y, zLevel, endU, endV, width, height);
 
         GlStateManager.disableDepth();
         GlStateManager.disableBlend();

@@ -201,7 +201,6 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
-            final int hoverState = getHoverState(isHoveringOrFocusingOver());
 
             final ColorData backgroundCode = CraftPresence.CONFIG.accessibilitySettings.buttonBackground;
 
@@ -216,7 +215,18 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
                 final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(backgroundCode.getTexLocation());
                 final ResourceLocation texLocation = textureData.getThird();
 
-                RenderUtils.renderButton(mc, getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight(), hoverState, getZLevel(), texLocation);
+                final int hoverState = getHoverState(isHoveringOrFocusingOver());
+                final int hoverValue = 46 + hoverState * 20;
+                final int xOffset = getControlWidth() / 2;
+
+                RenderUtils.renderButton(mc,
+                        getControlPosX(), getControlPosY(),
+                        0, hoverValue,
+                        200 - xOffset, hoverValue,
+                        xOffset, getControlHeight(),
+                        getZLevel(),
+                        texLocation
+                );
             }
 
             mouseDragged(mc, mouseX, mouseY);
