@@ -322,6 +322,9 @@ With this in mind, please note the following:
     * `MC-112292`: When interacting with the `RenderUtils#drawItemStack` method, used in the v2 Item Renderer, blocks
       using certain renderers may fail to display properly.
     * Additionally, on 1.15.x exclusively, z-level issues may occur on Screens using this method
+* **Minecraft 1.2.5 and below**
+    * On these versions, the text field contents may overflow due to their controls only supporting a native
+      32-character limit, while our text controls have a far higher limit
 * **Minecraft a1.1.2_01 and below**
     * On these versions, the Biome and Dimension Modules are **stubbed** with default data, due to the logic for these
       methods being missing (Having been initially implemented in Alpha 1.2.6)
@@ -334,9 +337,6 @@ With this in mind, please note the following:
 
 Additionally, in select Minecraft Versions, the following config settings are effected:
 
-* `buttonBackgroundColor` (`RenderUtils#DEFAULT_BUTTON_BACKGROUND`)
-    * MC 1.6 and above: `minecraft:textures/gui/widgets.png`
-    * MC 1.5.2 and below: `/gui/gui.png`
 * `guiBackgroundColor` (`RenderUtils#DEFAULT_GUI_BACKGROUND`)
     * MC 1.6 and above: `minecraft:textures/gui/options_background.png`
     * MC 1.5.2 until a1.1.2_01: `/gui/background.png`
