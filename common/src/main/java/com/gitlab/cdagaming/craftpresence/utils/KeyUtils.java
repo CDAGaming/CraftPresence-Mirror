@@ -40,7 +40,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -291,12 +290,6 @@ public class KeyUtils {
             if (CraftPresence.instance.gameSettings != null) {
                 for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
                     final KeyBinding mapping = entry.getValue().getFirst();
-                    final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
-                    if (!categoryMap.containsKey(mapping.getKeyCategory())) {
-                        final Optional<Integer> largest = categoryMap.values().stream().max(Integer::compareTo);
-                        final int largestInt = largest.orElse(0);
-                        categoryMap.put(mapping.getKeyCategory(), largestInt + 1);
-                    }
                     CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, mapping);
                 }
                 keysRegistered = true;

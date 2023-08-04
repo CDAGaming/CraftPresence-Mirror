@@ -115,7 +115,7 @@ public class GuiUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
-        isFocused = CraftPresence.instance.currentScreen != null && (CraftPresence.instance.currentScreen.isFocused() || CraftPresence.player != null);
+        isFocused = CraftPresence.instance.currentScreen != null && (CraftPresence.instance.inGameHasFocus || CraftPresence.player != null);
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {

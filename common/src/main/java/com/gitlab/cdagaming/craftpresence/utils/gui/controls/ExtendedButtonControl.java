@@ -203,7 +203,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     @Override
-    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
