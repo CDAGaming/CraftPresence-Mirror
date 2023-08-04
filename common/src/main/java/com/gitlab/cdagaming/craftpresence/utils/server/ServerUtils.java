@@ -39,7 +39,6 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.NetClientHandler;
@@ -264,7 +263,7 @@ public class ServerUtils implements Module {
     @Override
     public void updateData() {
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.getNetHandler();
+        final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
             newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "M");
@@ -507,7 +506,7 @@ public class ServerUtils implements Module {
                 CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.loadWorld(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
+            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData));
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }

@@ -336,9 +336,8 @@ public class RenderUtils {
                 final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
                 if (data.getFirst()) {
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
-                    mc.renderEngine.resetBoundTexture();
                 } else {
-                    mc.renderEngine.bindTexture(texLocation);
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture(texLocation));
                 }
             }
         } catch (Exception ignored) {
@@ -384,9 +383,8 @@ public class RenderUtils {
                 final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
                 if (data.getFirst()) {
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
-                    mc.renderEngine.resetBoundTexture();
                 } else {
-                    mc.renderEngine.bindTexture(texLocation);
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture(texLocation));
                 }
             }
         } catch (Exception ignored) {

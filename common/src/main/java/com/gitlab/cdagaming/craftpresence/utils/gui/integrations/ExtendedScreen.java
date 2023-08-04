@@ -41,6 +41,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -124,6 +125,10 @@ public class ExtendedScreen extends GuiScreen {
      * Whether the mouse is currently within screen bounds
      */
     private boolean isOverScreen;
+
+    private int prevEventButton = 0;
+    private long prevMouseEvent = 0L;
+    private int touchValue = 0;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -243,7 +248,7 @@ public class ExtendedScreen extends GuiScreen {
             currentPhase = Phase.PREINIT;
             setContentHeight(0);
 
-            buttonList.clear();
+            controlList.clear();
             extendedControls.clear();
             extendedWidgets.clear();
             extendedLists.clear();
@@ -311,8 +316,8 @@ public class ExtendedScreen extends GuiScreen {
         if (buttonIn instanceof DynamicWidget && !extendedWidgets.contains(buttonIn)) {
             addWidget((DynamicWidget) buttonIn);
         }
-        if (buttonIn instanceof GuiButton && !buttonList.contains(buttonIn)) {
-            buttonList.add((GuiButton) buttonIn);
+        if (buttonIn instanceof GuiButton && !controlList.contains(buttonIn)) {
+            controlList.add((GuiButton) buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
@@ -610,6 +615,10 @@ public class ExtendedScreen extends GuiScreen {
         }
     }
 
+    public static long getSystemTime() {
+        return Sys.getTime() * 1000L / Sys.getTimerResolution();
+    }
+
     /**
      * Event to trigger upon Mouse Input
      */
@@ -622,7 +631,30 @@ public class ExtendedScreen extends GuiScreen {
             if (dw != 0) {
                 mouseScrolled(getMouseX(), getMouseY(), (int) (dw / 60D));
             }
-            super.handleMouseInput();
+
+            // Stub: Re-implement handleMouseInput for method_4259 (mouseClickMove)
+            final int mouseX = Mouse.getEventX() * width / mc.displayWidth;
+            final int mouseY = height - Mouse.getEventY() * height / mc.displayHeight - 1;
+            final int eventButton = Mouse.getEventButton();
+            if (Mouse.getEventButtonState()) {
+                if (mc.gameSettings.touchscreen && touchValue++ > 0) {
+                    return;
+                }
+
+                prevEventButton = eventButton;
+                prevMouseEvent = getSystemTime();
+                mouseClicked(mouseX, mouseY, prevEventButton);
+            } else if (eventButton != -1) {
+                if (mc.gameSettings.touchscreen && --touchValue > 0) {
+                    return;
+                }
+
+                prevEventButton = -1;
+                mouseMovedOrUp(mouseX, mouseY, eventButton);
+            } else if (prevEventButton != -1 && prevMouseEvent > 0L) {
+                final long timeSinceLastClick = getSystemTime() - prevMouseEvent;
+                method_4259(mouseX, mouseY, prevEventButton, timeSinceLastClick);
+            }
         }
     }
 
