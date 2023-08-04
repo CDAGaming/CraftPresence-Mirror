@@ -54,7 +54,6 @@
   "gui.config.message.hover.empty.default": "**Standardinfo darf nicht leer sein und muss gültig sein**",
   "gui.config.message.hover.value.message": "Mit diesem Wert angehängte Nachrichtendaten",
   "gui.config.message.hover.value.name": "Name um diesen Wert zu identifizieren",
-  "gui.config.name.accessibility.button_background_color": "Button Hintergrundfarbe",
   "gui.config.name.accessibility.gui_background_color": "Gui Hintergrundfarbe",
   "gui.config.name.accessibility.language_id": "Sprach ID",
   "gui.config.name.accessibility.tooltip_background_color": "Tooltip Hintergrundfarbe",
