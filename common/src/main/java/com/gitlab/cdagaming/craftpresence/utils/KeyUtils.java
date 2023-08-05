@@ -181,6 +181,32 @@ public class KeyUtils {
     }
 
     /**
+     * Create a new KeyBinding with the specified info
+     *
+     * @param name       The name or description of the keybinding
+     * @param category   The category for the keybinding
+     * @param defaultKey The default key for this binding
+     * @param currentKey The current key for this binding
+     * @return the created KeyBind
+     */
+    KeyBinding createKey(final String name, final String category, final int defaultKey, final int currentKey) {
+        final KeyBinding result = new KeyBinding(name, defaultKey, category);
+        setKey(result, currentKey);
+        return result;
+    }
+
+    /**
+     * Set the key for the specified KeyBinding
+     *
+     * @param instance the KeyBind instance to modify
+     * @param newKey   the new key for the specified KeyBinding
+     */
+    void setKey(final KeyBinding instance, final int newKey) {
+        instance.setKeyCode(newKey);
+        KeyBinding.resetKeyBindingArrayAndHash();
+    }
+
+    /**
      * Registers KeyBindings and critical KeyCode information to MC's KeyCode systems
      * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
      */
@@ -188,7 +214,11 @@ public class KeyUtils {
         KEY_MAPPINGS.put(
                 "configKeyCode",
                 new Tuple<>(
-                        new KeyBinding("key.craftpresence.config_keycode.name", CraftPresence.CONFIG.accessibilitySettings.configKeyCode, "key.craftpresence.category"),
+                        createKey("key.craftpresence.config_keycode.name",
+                                "key.craftpresence.category",
+                                CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
+                                CraftPresence.CONFIG.accessibilitySettings.configKeyCode
+                        ),
                         new Tuple<>(
                                 () -> {
                                     if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
@@ -330,7 +360,7 @@ public class KeyUtils {
     private void syncKeyData(final String keyName, final ImportMode mode, final int keyCode) {
         final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
         if (mode == ImportMode.Config) {
-            keyData.getFirst().setKeyCode(keyCode);
+            setKey(keyData.getFirst(), keyCode);
         } else if (mode == ImportMode.Vanilla) {
             keyData.getSecond().getSecond().accept(keyCode, true);
         } else if (mode == ImportMode.Specific) {
