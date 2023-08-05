@@ -183,15 +183,16 @@ public class KeyUtils {
     /**
      * Create a new KeyBinding with the specified info
      *
+     * @param id         The keybinding internal identifier, used for the Key Sync Queue
      * @param name       The name or description of the keybinding
      * @param category   The category for the keybinding
      * @param defaultKey The default key for this binding
      * @param currentKey The current key for this binding
      * @return the created KeyBind
      */
-    KeyBinding createKey(final String name, final String category, final int defaultKey, final int currentKey) {
+    KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
         final KeyBinding result = new KeyBinding(name, defaultKey, category);
-        setKey(result, currentKey);
+        keySyncQueue.put(id, currentKey);
         return result;
     }
 
@@ -214,7 +215,9 @@ public class KeyUtils {
         KEY_MAPPINGS.put(
                 "configKeyCode",
                 new Tuple<>(
-                        createKey("key.craftpresence.config_keycode.name",
+                        createKey(
+                                "configKeyCode",
+                                "key.craftpresence.config_keycode.name",
                                 "key.craftpresence.category",
                                 CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
                                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode
