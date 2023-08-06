@@ -230,15 +230,20 @@ public class DynamicEditorGui extends ExtendedScreen {
     }
 
     @Override
-    public void renderExtra() {
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
-
+    public void preRender() {
         proceedButton.setControlMessage(
                 isAdjusting() ?
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
 
         proceedButton.setControlEnabled(isValidEntries());
+
+        super.preRender();
+    }
+
+    @Override
+    public void renderExtra() {
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         super.renderExtra();
     }

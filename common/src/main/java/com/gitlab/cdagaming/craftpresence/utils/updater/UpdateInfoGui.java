@@ -108,12 +108,17 @@ public class UpdateInfoGui extends ExtendedScreen {
     }
 
     @Override
-    public void renderExtra() {
+    public void preRender() {
         downloadButton.setControlEnabled(modUpdater.currentState == ModUpdaterUtils.UpdateState.OUTDATED ||
                 modUpdater.currentState == ModUpdaterUtils.UpdateState.BETA_OUTDATED);
 
         checkButton.setControlEnabled(modUpdater.currentState != ModUpdaterUtils.UpdateState.PENDING);
 
+        super.preRender();
+    }
+
+    @Override
+    public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
         final String subTitle = Constants.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
 

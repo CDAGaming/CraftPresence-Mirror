@@ -157,11 +157,7 @@ public class CommandsGui extends ExtendedScreen {
     }
 
     @Override
-    public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.commands");
-
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
-
+    public void preRender() {
         proceedButton.setControlEnabled(!blockInteractions);
         copyButton.setControlEnabled(!blockInteractions);
         commandInput.setEnabled(!blockInteractions);
@@ -170,6 +166,15 @@ public class CommandsGui extends ExtendedScreen {
             checkCommands();
         }
         previewArea.setMessage(executionString);
+
+        super.preRender();
+    }
+
+    @Override
+    public void renderExtra() {
+        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.commands");
+
+        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
 
         super.renderExtra();
     }

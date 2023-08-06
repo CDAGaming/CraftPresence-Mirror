@@ -235,7 +235,7 @@ public class SelectorGui extends ExtendedScreen {
     }
 
     @Override
-    public void renderExtra() {
+    public void preRender() {
         final List<String> originalItems = StringUtils.newArrayList(originalList);
         final List<String> modifiedList = StringUtils.newArrayList();
 
@@ -281,6 +281,11 @@ public class SelectorGui extends ExtendedScreen {
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
         );
 
+        super.preRender();
+    }
+
+    @Override
+    public void renderExtra() {
         final String searchText = Constants.TRANSLATOR.translate("gui.config.message.editor.search");
         final float renderY = searchBox.getBottom() - (searchBox.getControlHeight() / 2f) - (getFontHeight() / 2f);
 

@@ -124,6 +124,13 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     @Override
+    public void preRender() {
+        syncRenderStates();
+
+        super.preRender();
+    }
+
+    @Override
     public void renderExtra() {
         final boolean hasMainTitle = !StringUtils.isNullOrEmpty(title);
         final boolean hasSubTitle = !StringUtils.isNullOrEmpty(subTitle);
@@ -138,8 +145,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
             }
         }
-
-        syncRenderStates();
 
         super.renderExtra();
     }
