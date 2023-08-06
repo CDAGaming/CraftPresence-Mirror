@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.atlauncher.ATLauncherUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.curse.CurseUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater.MCUpdaterUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.pack.modrinth.ModrinthUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
@@ -85,6 +86,9 @@ public class CommandUtils {
             ))
             .put("technic", new TechnicUtils(
                     () -> CraftPresence.CONFIG.generalSettings.detectTechnicPack
+            ))
+            .put("modrinth", new ModrinthUtils(
+                    () -> CraftPresence.CONFIG.generalSettings.detectModrinthPack
             ))
             .build();
     /**

@@ -43,7 +43,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     private final General INSTANCE, DEFAULTS;
     private ExtendedButtonControl partyPrivacyLevelButton, preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
-            detectMCUpdaterInstanceButton, detectTechnicPackButton, detectATLauncherButton,
+            detectMCUpdaterInstanceButton, detectTechnicPackButton,
+            detectATLauncherButton, detectModrinthPackButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
             enableJoinRequestButton, resetTimeOnInitButton, autoRegisterButton;
     private TextWidget clientId, defaultIcon;
@@ -202,15 +203,15 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 )
         );
-        detectDimensionDataButton = childFrame.addControl(
+        detectModrinthPackButton = childFrame.addControl(
                 new CheckBoxControl(
                         checkboxCalc2, getButtonY(5, -20),
-                        "gui.config.name.general.detect_dimension_data",
-                        getCurrentData().detectDimensionData,
+                        "gui.config.name.general.detect_modrinth_pack",
+                        getCurrentData().detectModrinthPack,
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_modrinth_pack")
                                 )
                         )
                 )
@@ -228,15 +229,15 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 )
         );
-        detectBiomeDataButton = childFrame.addControl(
+        detectDimensionDataButton = childFrame.addControl(
                 new CheckBoxControl(
                         checkboxCalc2, getButtonY(6, -30),
-                        "gui.config.name.general.detect_biome_data",
-                        getCurrentData().detectBiomeData,
+                        "gui.config.name.general.detect_dimension_data",
+                        getCurrentData().detectDimensionData,
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
                                 )
                         )
                 )
@@ -254,15 +255,15 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 )
         );
-        detectWorldDataButton = childFrame.addControl(
+        detectBiomeDataButton = childFrame.addControl(
                 new CheckBoxControl(
                         checkboxCalc2, getButtonY(7, -40),
-                        "gui.config.name.general.detect_world_data",
-                        getCurrentData().detectWorldData,
+                        "gui.config.name.general.detect_biome_data",
+                        getCurrentData().detectBiomeData,
                         null,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
                                 )
                         )
                 )
@@ -276,6 +277,19 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
+                                )
+                        )
+                )
+        );
+        detectWorldDataButton = childFrame.addControl(
+                new CheckBoxControl(
+                        checkboxCalc2, getButtonY(8, -50),
+                        "gui.config.name.general.detect_world_data",
+                        getCurrentData().detectWorldData,
+                        null,
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
                                 )
                         )
                 )
@@ -329,6 +343,10 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         if (detectTechnicPackButton.isChecked() != getCurrentData().detectTechnicPack) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().detectTechnicPack = detectTechnicPackButton.isChecked();
+        }
+        if (detectModrinthPackButton.isChecked() != getCurrentData().detectModrinthPack) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().detectModrinthPack = detectModrinthPackButton.isChecked();
         }
         if (detectBiomeDataButton.isChecked() != getCurrentData().detectBiomeData) {
             CraftPresence.CONFIG.hasChanged = true;

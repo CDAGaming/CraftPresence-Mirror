@@ -39,6 +39,7 @@ public class General extends Module implements Serializable {
     public boolean detectMultiMCManifest = true;
     public boolean detectMCUpdaterInstance = true;
     public boolean detectTechnicPack = true;
+    public boolean detectModrinthPack = true;
     public boolean detectBiomeData = true;
     public boolean detectDimensionData = true;
     public boolean detectWorldData = true;

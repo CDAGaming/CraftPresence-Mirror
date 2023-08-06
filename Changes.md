@@ -7,6 +7,13 @@ available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2F
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
+### Changes
+
+* Pack Integration Changes:
+    * The Modrinth Launcher is now supported! (Read more about it [here](https://blog.modrinth.com/p/launcher))
+    * The `pack.icon` placeholder will now fall back to the `pack.type` placeholder value if the originally requested
+      icon does not exist
+
 ### Fixes
 
 * Fixed an issue with the Default KeyBinding in the MC Controls Gui being improperly set for keybinds registered

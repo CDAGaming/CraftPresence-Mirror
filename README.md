@@ -42,8 +42,9 @@ CraftPresence will detect whether your Launch Directory contains:
 
 * A ATLauncher Instance (instance.json)
 * A valid Twitch/Overwolf/Curse/GDLauncher Manifest (manifest.json, minecraftinstance.json)
-* A MultiMC Instance (instance.cfg)
 * A MCUpdater Instance (instance.json)
+* A Modrinth Instance (profile.json)
+* A MultiMC Instance (instance.cfg)
 * A Technic installedPacks File (installedPacks)
 
 If using any of these launchers, note the following:
