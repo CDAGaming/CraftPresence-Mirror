@@ -184,7 +184,8 @@ public class CommandUtils {
                 CraftPresence.CLIENT.syncArgument("pack.type", data.getPackType());
                 CraftPresence.CLIENT.syncArgument("pack.name", data.getPackName());
                 CraftPresence.CLIENT.syncArgument("pack.icon",
-                        CraftPresence.CLIENT.imageOf("pack.icon", true, data.getPackIcon())
+                        CraftPresence.CLIENT.imageOf("pack.icon", true,
+                                data.getPackIcon(), data.getPackType())
                 );
 
                 foundPack = true;
