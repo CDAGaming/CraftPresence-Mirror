@@ -533,7 +533,7 @@ public final class Config extends Module implements Serializable {
         // In this situation, if the currently parsed protocol version differs and
         // is a newer version then or exactly 17w43a (1.13, 341), then
         // we need to ensure any keycode assignments are in an LWJGL 3 format.
-        // Otherwise, if our current protocol version is anything less then 17w43a (1.13, 341),
+        // Otherwise, if our current protocol version is anything less than 17w43a (1.13, 341),
         // we need to ensure any keycode assignments are in an LWJGL 2 format.
         // If neither is true, then we mark the migration data as None, and it will be verified
         if (oldMCVer < 341 && newMCVer >= 341) {
@@ -550,7 +550,7 @@ public final class Config extends Module implements Serializable {
         // In this situation, if the currently parsed protocol version differs and
         // is a newer version then or exactly 16w32a (1.11, 301), then
         // we need to ensure any Language Locale's are complying with Pack Format 3 and above.
-        // Otherwise, if our current protocol version is anything less then 16w32a (1.11, 301),
+        // Otherwise, if our current protocol version is anything less than 16w32a (1.11, 301),
         // we need to ensure any Language Locale's are complying with Pack Format 2 and below.
         // If neither is true, then we mark the migration data as None, and it will be verified
         if (oldMCVer < 301 && newMCVer >= 301) {

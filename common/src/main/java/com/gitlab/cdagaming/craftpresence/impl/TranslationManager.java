@@ -85,7 +85,7 @@ public class TranslationManager implements IResourceManagerReloadListener {
     }
 
     /**
-     * Retrieve the current {@link TranslationUtils} instance we're attched to
+     * Retrieve the current {@link TranslationUtils} instance we're attached to
      *
      * @return the currently attached {@link TranslationUtils} instance
      */

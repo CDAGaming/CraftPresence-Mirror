@@ -323,7 +323,7 @@ public class ScrollPane extends ExtendedScreen {
      * Directly sets the current scroll amount
      * <p>It is recommended to use {@link ScrollPane#scrollBy(float)} or {@link ScrollPane#setScroll(float)} instead
      *
-     * @param scrolled the new scroll amound
+     * @param scrolled the new scroll amount
      */
     public void setAmountScrolled(final float scrolled) {
         this.amountScrolled = scrolled;

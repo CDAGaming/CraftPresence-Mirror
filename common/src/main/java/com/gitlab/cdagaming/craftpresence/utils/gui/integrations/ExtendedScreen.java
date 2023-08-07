@@ -864,7 +864,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param original  The text to interpret
      * @param wrapWidth The width to wrap the text to
-     * @return the modified lines, if successfull
+     * @return the modified lines
      */
     public List<String> createRenderLines(final List<String> original, final int wrapWidth) {
         final List<String> data = StringUtils.newArrayList();
@@ -881,7 +881,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param original  The text to interpret
      * @param wrapWidth The width to wrap the text to
-     * @return the modified lines, if successfull
+     * @return the modified lines
      */
     public List<String> createRenderLines(final String original, final int wrapWidth) {
         return createRenderLines(

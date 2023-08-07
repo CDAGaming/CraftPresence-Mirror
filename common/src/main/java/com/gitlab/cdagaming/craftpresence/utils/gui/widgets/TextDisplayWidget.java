@@ -219,7 +219,7 @@ public class TextDisplayWidget implements DynamicWidget {
     }
 
     /**
-     * Retrieve the multi-lined version of the interpreting messag
+     * Retrieve the multi-lined version of the interpreting message
      *
      * @return the multi-lined render message
      */

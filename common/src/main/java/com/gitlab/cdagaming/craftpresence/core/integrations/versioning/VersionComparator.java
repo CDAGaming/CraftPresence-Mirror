@@ -28,7 +28,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Comparator to compare two seperate version numbers
+ * Comparator to compare two separate version numbers
  *
  * @author CDAGaming, StackOverflow (<a href="https://stackoverflow.com/a/10034633">Markus Jarderot</a>)
  */
@@ -62,7 +62,7 @@ public class VersionComparator implements Comparator<Object>, Serializable {
                 do {
                     number1 = tokenizer1.getNumber();
                     suffix1 = tokenizer1.getSuffix();
-                    if (number1 != 0 || suffix1.length() != 0) {
+                    if (number1 != 0 || !suffix1.isEmpty()) {
                         // Version one is longer than number two, and non-zero
                         return 1;
                     }
@@ -87,8 +87,8 @@ public class VersionComparator implements Comparator<Object>, Serializable {
                 return 1;
             }
 
-            boolean empty1 = suffix1.length() == 0;
-            boolean empty2 = suffix2.length() == 0;
+            boolean empty1 = suffix1.isEmpty();
+            boolean empty2 = suffix2.isEmpty();
 
             if (empty1 && empty2) continue; // No suffixes
             if (empty1) return 1; // First suffix is empty (1.2 > 1.2b)
@@ -103,7 +103,7 @@ public class VersionComparator implements Comparator<Object>, Serializable {
             do {
                 number2 = tokenizer2.getNumber();
                 suffix2 = tokenizer2.getSuffix();
-                if (number2 != 0 || suffix2.length() != 0) {
+                if (number2 != 0 || !suffix2.isEmpty()) {
                     // Version one is longer than version two, and non-zero
                     return -1;
                 }

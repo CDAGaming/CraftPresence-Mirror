@@ -191,7 +191,7 @@ public class TranslationUtils {
     }
 
     /**
-     * Build and Perform Syncronization on this instance
+     * Build and Perform Synchronization on this instance
      *
      * @return the current instance, used for chain-building
      */

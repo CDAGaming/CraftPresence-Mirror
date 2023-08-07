@@ -160,7 +160,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     }
 
     private void updateNotes() {
-        if (modUpdater.changelogData.size() > 0) {
+        if (!modUpdater.changelogData.isEmpty()) {
             final StringBuilder notice = new StringBuilder();
             notice.append(Constants.TRANSLATOR.translate("gui.config.message.changelog"));
 

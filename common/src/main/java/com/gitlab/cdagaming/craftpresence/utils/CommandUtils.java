@@ -203,7 +203,7 @@ public class CommandUtils {
     }
 
     /**
-     * Adds a module for ticking and RPC Syncronization
+     * Adds a module for ticking and RPC Synchronization
      *
      * @param moduleId The name of the module
      * @param instance The instance of the module
@@ -213,7 +213,7 @@ public class CommandUtils {
     }
 
     /**
-     * Adds a module for ticking and RPC Syncronization
+     * Adds a module for ticking and RPC Synchronization
      *
      * @param moduleId The name of the module
      * @param instance The instance of the module
@@ -223,7 +223,7 @@ public class CommandUtils {
     }
 
     /**
-     * Adds a module for ticking and RPC Syncronization
+     * Adds a module for ticking and RPC Synchronization
      *
      * @param moduleId The name of the module
      * @param instance The instance of the module

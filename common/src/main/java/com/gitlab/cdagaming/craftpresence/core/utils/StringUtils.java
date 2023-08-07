@@ -1700,7 +1700,7 @@ public class StringUtils {
     }
 
     /**
-     * Normalize Line Seperator Characters within the inputted String
+     * Normalize Line Separator Characters within the inputted String
      *
      * @param input The original String to evaluate
      * @return The Normalized and evaluated String
@@ -1710,7 +1710,7 @@ public class StringUtils {
     }
 
     /**
-     * Normalize the Line Seperator and Extra Color Data within the inputted String
+     * Normalize the Line Separator and Extra Color Data within the inputted String
      *
      * @param input The original String to evaluate
      * @return The Normalized and evaluated String
