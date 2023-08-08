@@ -260,11 +260,11 @@ public class DiscordUtils {
 
         // Setup Default / Static Placeholders
         FunctionsLib.init(scriptEngine);
-        syncArgument("general.brand", ModUtils.BRAND);
         syncArgument("general.mods", FileUtils.getModCount());
         syncArgument("general.title", Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
         syncArgument("general.version", ModUtils.MCVersion);
         syncArgument("general.protocol", ModUtils.MCProtocolID);
+        syncArgument("general.brand", ModUtils.BRAND);
         syncArgument("data.general.version", Constants.MCBuildVersion);
         syncArgument("data.general.protocol", Constants.MCBuildProtocol);
     }

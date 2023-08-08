@@ -23,6 +23,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed an Issue with syncing `KeyUtils` keybindings from the Mod Config to Vanilla
     * For developers: Use `KeyUtils#setKey` to resolve this issue, which now resets the Key Hash to properly match,
       similar to how the MC Controls Gui operates for setting or resetting keybindings
+* Fixed a `NullPointerException` relating to adding `TranslationManager` modules
+    * Caused from a missing null check for the `ModUtils#RAW_TRANSLATOR` instance
+* Fixed an incorrect order with `syncArgument` calls in `DiscordUtils#setup`
+    * This had a rare chance to lock-up and eventually crash the mod, for some reason
 
 ___
 

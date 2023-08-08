@@ -334,7 +334,9 @@ public class CommandUtils {
                 addModule(Constants.MOD_ID, new TranslationManager(Constants.TRANSLATOR.setStripColors(
                         CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
                 )));
-                addModule("minecraft", new TranslationManager(ModUtils.RAW_TRANSLATOR));
+                if (ModUtils.RAW_TRANSLATOR != null) {
+                    addModule("minecraft", new TranslationManager(ModUtils.RAW_TRANSLATOR));
+                }
             }
         }
         CraftPresence.CLIENT.updatePresence();
