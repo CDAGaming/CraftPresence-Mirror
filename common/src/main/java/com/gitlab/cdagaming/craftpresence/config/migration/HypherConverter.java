@@ -50,8 +50,8 @@ import java.util.regex.Pattern;
  * Migration from SimpleRPC (Hypherion) Config to our {@link Config} format
  */
 public class HypherConverter implements DataMigrator {
-    private final static int LOWEST_SUPPORTED = 13;
-    private final static String EMPTY_QUOTES = "{''}";
+    private static final int LOWEST_SUPPORTED = 13;
+    private static final String EMPTY_QUOTES = "{''}";
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
     // oldName -> newName

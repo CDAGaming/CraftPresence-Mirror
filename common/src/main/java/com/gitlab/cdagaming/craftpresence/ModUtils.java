@@ -57,13 +57,13 @@ public class ModUtils {
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
      */
-    public final static boolean IS_LEGACY_HARD = Constants.IS_LEGACY_SOFT && MCProtocolID <= 61;
+    public static final boolean IS_LEGACY_HARD = Constants.IS_LEGACY_SOFT && MCProtocolID <= 61;
 
     /**
      * If this Application is in the Alpha Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
      */
-    public final static boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCProtocolID <= 2;
+    public static final boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCProtocolID <= 2;
 
     /**
      * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update

@@ -93,7 +93,7 @@ public class Constants {
      * If this Application is within the Soft Floor of Legacy Mode
      * <p>This variable becomes true only on versions before 13w41a (When the protocol number was reset)
      */
-    public final static boolean IS_LEGACY_SOFT = StringUtils.getValidBoolean("@IS_LEGACY@").getSecond();
+    public static final boolean IS_LEGACY_SOFT = StringUtils.getValidBoolean("@IS_LEGACY@").getSecond();
 
     /**
      * If this Application is flagged to be run in a Developer or Debug State
