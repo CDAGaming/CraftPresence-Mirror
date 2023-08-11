@@ -36,12 +36,15 @@ import io.github.classgraph.ScanResult;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.nio.file.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * File Utilities for interpreting Files and Class Objects
@@ -347,6 +350,19 @@ public class FileUtils {
     }
 
     /**
+     * Convert the specified String into an InputStream
+     *
+     * @param stream   The string to interpret
+     * @param encoding The encoding to parse the file as
+     * @return The string's data as an InputStream
+     */
+    public static InputStream stringToStream(final String stream, final String encoding) {
+        return new ByteArrayInputStream(
+                StringUtils.getBytes(stream, encoding)
+        );
+    }
+
+    /**
      * Gets the File Extension of a File (Ex: txt)
      *
      * @param file The file to access
@@ -368,6 +384,30 @@ public class FileUtils {
             return "";
         }
         return name.substring(lastIndexOf);
+    }
+
+    /**
+     * Gets the File Name without the File Extension
+     *
+     * @param file The file to access
+     * @return the trimmed file name
+     */
+    public static String getFileNameWithoutExtension(final File file) {
+        return getFileNameWithoutExtension(file.getName());
+    }
+
+    /**
+     * Gets the File Name without the File Extension
+     *
+     * @param name The file to access
+     * @return the trimmed file name
+     */
+    public static String getFileNameWithoutExtension(final String name) {
+        if (name.indexOf(".") > 0) {
+            return name.substring(0, name.lastIndexOf("."));
+        } else {
+            return name;
+        }
     }
 
     /**
@@ -703,6 +743,67 @@ public class FileUtils {
     }
 
     /**
+     * Retrieve a list of files in a directory
+     *
+     * @param fallbackClass Alternative Class Loader to Use to Locate the Resource
+     * @param pathToSearch  The File Path to search for
+     * @return the list of files found, if any
+     */
+    public static List<String> filesInDir(final Class<?> fallbackClass, String pathToSearch) {
+        final List<String> paths = StringUtils.newArrayList();
+        if (!pathToSearch.endsWith("/")) {
+            pathToSearch = pathToSearch + "/";
+        }
+
+        try {
+            final URI uri = getResource(fallbackClass, pathToSearch).toURI();
+            FileSystem fileSystem = null;
+            Path myPath;
+            if (uri.getScheme().equals("jar")) {
+                try {
+                    fileSystem = FileSystems.getFileSystem(uri);
+                } catch (Exception ex) {
+                    fileSystem = FileSystems.newFileSystem(uri, StringUtils.newHashMap());
+                }
+
+                myPath = fileSystem.getPath(pathToSearch);
+            } else {
+                myPath = Paths.get(uri);
+            }
+
+            final Stream<Path> walk = Files.walk(myPath, 1);
+
+            try {
+                final Iterator<Path> it = walk.iterator();
+                it.next();
+
+                while (it.hasNext()) {
+                    paths.add(pathToSearch + it.next().getFileName().toString());
+                }
+            } catch (Throwable ex) {
+                if (walk != null) {
+                    try {
+                        walk.close();
+                    } catch (Throwable ex2) {
+                        ex.addSuppressed(ex2);
+                    }
+                }
+
+                throw ex;
+            }
+
+            walk.close();
+
+            if (fileSystem != null) {
+                fileSystem.close();
+            }
+        } catch (Exception ignored) {
+        }
+
+        return paths;
+    }
+
+    /**
      * Attempts to Retrieve the Specified Resource as an InputStream
      *
      * @param fallbackClass Alternative Class Loader to Use to Locate the Resource
@@ -721,6 +822,29 @@ public class FileUtils {
 
         if (useFallback || in == null) {
             in = fallbackClass.getResourceAsStream(pathToSearch);
+        }
+        return in;
+    }
+
+    /**
+     * Attempts to Retrieve the Specified Resource
+     *
+     * @param fallbackClass Alternative Class Loader to Use to Locate the Resource
+     * @param pathToSearch  The File Path to search for
+     * @return The specified resource, if successful
+     */
+    public static URL getResource(final Class<?> fallbackClass, final String pathToSearch) {
+        URL in = null;
+        boolean useFallback = false;
+
+        try {
+            in = MappingUtils.CLASS_LOADER.getResource(pathToSearch);
+        } catch (Exception ex) {
+            useFallback = true;
+        }
+
+        if (useFallback || in == null) {
+            in = fallbackClass.getResource(pathToSearch);
         }
         return in;
     }
