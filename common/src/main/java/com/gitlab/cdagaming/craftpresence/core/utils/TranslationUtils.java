@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.utils;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.impl.TriFunction;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -32,7 +33,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -78,9 +78,9 @@ public class TranslationUtils {
     /**
      * The function to use when retrieving additional {@link InputStream} data for resources
      * <p>
-     * Function: [modId, langPath] => List of {@link InputStream} instances
+     * Function: [modId, assetsPath, langPath] => List of {@link InputStream} instances
      */
-    private BiFunction<String, String, List<InputStream>> resourceSupplier = (id, langPath) -> StringUtils.newArrayList();
+    private TriFunction<String, String, String, List<InputStream>> resourceSupplier = (id, assetsPath, langPath) -> StringUtils.newArrayList();
     /**
      * The function to use when retrieving the current language to use
      * <p>
@@ -314,7 +314,7 @@ public class TranslationUtils {
      * @param resourceSupplier the new resource-supplying function
      * @return the current instance, used for chain-building
      */
-    public TranslationUtils setResourceSupplier(final BiFunction<String, String, List<InputStream>> resourceSupplier) {
+    public TranslationUtils setResourceSupplier(final TriFunction<String, String, String, List<InputStream>> resourceSupplier) {
         this.resourceSupplier = resourceSupplier;
         return this;
     }
@@ -326,7 +326,7 @@ public class TranslationUtils {
      * @return the current instance, used for chain-building
      */
     public TranslationUtils setResourceSupplier(final List<InputStream> resourceSupplier) {
-        this.resourceSupplier = (id, langPath) -> resourceSupplier;
+        this.resourceSupplier = (id, assetsPath, langPath) -> resourceSupplier;
         return this;
     }
 
@@ -413,7 +413,7 @@ public class TranslationUtils {
         if (local != null) {
             results.add(local);
         }
-        results.addAll(resourceSupplier.apply(modId, langPath));
+        results.addAll(resourceSupplier.apply(modId, assetsPath, langPath));
         return results;
     }
 
