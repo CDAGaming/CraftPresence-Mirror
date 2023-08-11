@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -162,10 +163,27 @@ public class FileUtils {
      */
     public static String toJsonData(Object obj, final Modifiers... args) {
         final GsonBuilder builder = applyModifiers(GSON_BUILDER, args);
-        if (obj instanceof String) {
-            obj = new JsonParser().parse((String) obj);
+        if (obj instanceof String || obj instanceof Reader || obj instanceof JsonReader) {
+            obj = parseJson(obj);
         }
         return builder.create().toJson(obj);
+    }
+
+    /**
+     * Attempt to parse the specified object into a JsonElement
+     *
+     * @param json the object to interpret
+     * @return the processed JsonElement, if able
+     */
+    public static JsonElement parseJson(Object json) {
+        if (json instanceof String) {
+            return new JsonParser().parse((String) json);
+        } else if (json instanceof Reader) {
+            return new JsonParser().parse((Reader) json);
+        } else if (json instanceof JsonReader) {
+            return new JsonParser().parse((JsonReader) json);
+        }
+        return null;
     }
 
     /**
@@ -307,11 +325,22 @@ public class FileUtils {
      * @throws Exception If Unable to read the file
      */
     public static String fileToString(final File file, final String encoding) throws Exception {
+        return fileToString(Files.newInputStream(file.toPath()), encoding);
+    }
+
+    /**
+     * Attempts to convert a InputStream's data into a readable String
+     *
+     * @param stream   The InputStream to interpret
+     * @param encoding The encoding to parse the file as
+     * @return The file's data as a String
+     * @throws Exception If Unable to read the file
+     */
+    public static String fileToString(final InputStream stream, final String encoding) throws Exception {
         return UrlUtils.readerToString(
                 new BufferedReader(
                         new InputStreamReader(
-                                Files.newInputStream(file.toPath()),
-                                Charset.forName(encoding)
+                                stream, Charset.forName(encoding)
                         )
                 )
         );
@@ -324,7 +353,16 @@ public class FileUtils {
      * @return The file's extension String
      */
     public static String getFileExtension(final File file) {
-        String name = file.getName();
+        return getFileExtension(file.getName());
+    }
+
+    /**
+     * Gets the File Extension of a File (Ex: txt)
+     *
+     * @param name The file to access
+     * @return The file's extension String
+     */
+    public static String getFileExtension(final String name) {
         int lastIndexOf = name.lastIndexOf(".");
         if (lastIndexOf == -1) {
             return "";
