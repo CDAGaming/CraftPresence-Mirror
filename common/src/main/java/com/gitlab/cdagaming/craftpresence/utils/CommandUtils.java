@@ -351,7 +351,9 @@ public class CommandUtils {
             CraftPresence.CLIENT.ipcInstance.setDebugMode(isDebugMode());
             CraftPresence.CLIENT.ipcInstance.setVerboseLogging(isVerboseMode());
         }
-        CraftPresence.SCHEDULER.setRefreshRate(CraftPresence.CONFIG.advancedSettings.refreshRate);
+        if (CraftPresence.CONFIG != null) {
+            CraftPresence.SCHEDULER.setRefreshRate(CraftPresence.CONFIG.advancedSettings.refreshRate);
+        }
     }
 
     /**

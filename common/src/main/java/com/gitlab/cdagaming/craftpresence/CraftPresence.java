@@ -133,6 +133,7 @@ public class CraftPresence {
      */
     private void init() {
         // Initialize Dynamic Mappings and Critical Data
+        CommandUtils.updateModes();
         FileUtils.detectClasses();
         MappingUtils.getClassMap();
 
