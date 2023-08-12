@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.2.2 (09/??/2023)
+## v2.2.2 (09/01/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.1...release%2Fv2.2.2)_
@@ -13,6 +13,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * The Modrinth Launcher is now supported! (Read more about it [here](https://blog.modrinth.com/p/launcher))
     * The `pack.icon` placeholder will now fall back to the `pack.type` placeholder value if the originally requested
       icon does not exist
+* Backend Core API Improvements (`FileUtils` and `TranslationUtils`)
+    * Adjusted Mod Initialization to allow "Developer Mode" logging to properly display again
+    * New Functions have been added to provide more usability to some utilities, as well as to resolve issues
+      with `special/xxx` builds
 
 ### Fixes
 
@@ -27,6 +31,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Caused from a missing null check for the `ModUtils#RAW_TRANSLATOR` instance
 * Fixed an incorrect order with `syncArgument` calls in `DiscordUtils#setup`
     * This had a rare chance to lock-up and eventually crash the mod, for some reason
+* Fixed a possible `NullPointerException` in mod initialization
+    * Caused by a missing null check in `CommandUtils#updateModes`
 
 ___
 
