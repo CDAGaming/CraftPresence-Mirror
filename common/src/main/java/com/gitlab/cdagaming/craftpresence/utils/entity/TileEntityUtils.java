@@ -206,7 +206,7 @@ public class TileEntityUtils implements Module {
         String result = "";
         if (!isEmpty(itemStack)) {
             result = StringUtils.getOrDefault(
-                    itemStack.getItem().getStatName()
+                    itemStack.getItem().func_25009_k()
             );
         }
 
