@@ -560,7 +560,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     @Override
-    public void drawWorldBackground(int tint) {
+    public void func_567_a(int tint) {
         renderCriticalData();
     }
 
