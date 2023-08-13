@@ -33,6 +33,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This had a rare chance to lock-up and eventually crash the mod, for some reason
 * Fixed a possible `NullPointerException` in mod initialization
     * Caused by a missing null check in `CommandUtils#updateModes`
+* Fixed an Issue causing MC 1.16-1.16.1 Users to crash while using Fabric
+    * Caused by an incorrect version of Fabric API, older version supplied
+* Fixed an Issue in MC 1.1.0 and below causing Text Overflow
+    * A new Text Box Implementation is now used in these versions, please report any issues!
 
 ___
 
