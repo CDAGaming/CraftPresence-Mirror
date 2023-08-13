@@ -403,8 +403,9 @@ public class ServerUtils implements Module {
                     return true;
                 }
             }
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**

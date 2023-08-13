@@ -37,6 +37,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Caused by an incorrect version of Fabric API, older version supplied
 * Fixed an Issue in MC 1.1.0 and below causing Text Overflow
     * A new Text Box Implementation is now used in these versions, please report any issues!
+* Fixed a possible `NullPointerException` when Directly Connecting to Servers
+    * Caused by an incorrect `ServerUtils#isInvalidMotd` implementation
 
 ___
 
