@@ -35,6 +35,9 @@ dependencies {
     implementation "com.google.code.findbugs:jsr305:3.0.2"
     implementation "com.github.spotbugs:spotbugs-annotations:4.7.3"
 
+    // LeniReflect
+    shade("net.lenni0451:Reflect:${reflect_version}")
+
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${ipc_version}")
     // StarScript (Used for Placeholder Expressions)
@@ -121,6 +124,7 @@ shadowJar {
     exclude 'META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-arm*/**'
 
     // Package Relocations
+    relocate 'net.lenni0451', 'external.net.lenni0451'
     relocate 'com.jagrosh', 'external.com.jagrosh'
     relocate 'org.meteordev', 'external.org.meteordev'
     relocate 'io.github.classgraph', 'external.io.github.classgraph'

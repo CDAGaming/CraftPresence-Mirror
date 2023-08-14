@@ -13,7 +13,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * The Modrinth Launcher is now supported! (Read more about it [here](https://blog.modrinth.com/p/launcher))
     * The `pack.icon` placeholder will now fall back to the `pack.type` placeholder value if the originally requested
       icon does not exist
-* Backend Core API Improvements (`FileUtils` and `TranslationUtils`)
+* Backend Core API Improvements (`FileUtils`, `StringUtils` and `TranslationUtils`)
+    * The Backend Reflection engine has been rewritten to better support accessing fields/methods from JVM Internals
     * Adjusted Mod Initialization to allow "Developer Mode" logging to properly display again
     * New Functions have been added to provide more usability to some utilities, as well as to resolve issues
       with `special/xxx` builds

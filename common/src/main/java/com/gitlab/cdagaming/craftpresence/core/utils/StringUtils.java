@@ -27,7 +27,8 @@ package com.gitlab.cdagaming.craftpresence.core.utils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.core.integrations.FieldReflectionUtils;
+import net.lenni0451.reflect.stream.RStream;
+import net.lenni0451.reflect.stream.field.FieldWrapper;
 
 import java.awt.*;
 import java.io.PrintWriter;
@@ -48,7 +49,6 @@ import java.util.stream.Collectors;
  *
  * @author CDAGaming
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class StringUtils {
     /**
      * The unknown identifier for Base64 data
@@ -1510,12 +1510,7 @@ public class StringUtils {
      * @return The Found Field Data, if any
      */
     public static Object getField(final Class<?> classToAccess, final Object instance, final String... fieldNames) {
-        final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, fieldNames);
-        if (result.getFirst()) {
-            return result.getSecond().getValue(instance);
-        } else {
-            return null;
-        }
+        return getValidField(classToAccess, fieldNames).map(f -> f.get(instance)).orElse(null);
     }
 
     /**
@@ -1560,24 +1555,12 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      * @return whether the specified class contains the specified field name
      */
-    public static Pair<Boolean, FieldReflectionUtils.ClassFields.Field> getValidField(final Class<?> classToAccess, final String... fieldNames) {
-        final FieldReflectionUtils.ClassFields classFields = FieldReflectionUtils.ofClass(classToAccess);
-        final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = new Pair<>(false, null);
-        for (String fieldName : fieldNames) {
-            try {
-                final FieldReflectionUtils.ClassFields.Field lookupField = classFields.getUntypedField(
-                        FieldReflectionUtils.LookupType.DECLARED, fieldName
-                );
-                if (lookupField != null) {
-                    result.setFirst(true);
-                    result.setSecond(lookupField);
-                    break;
-                }
-            } catch (Throwable ex) {
-                Constants.LOG.debugError(ex);
-            }
-        }
-        return result;
+    public static Optional<FieldWrapper> getValidField(final Class<?> classToAccess, final String... fieldNames) {
+        return RStream.of(classToAccess)
+                .fields()
+                .filter(f -> Arrays.binarySearch(fieldNames, f.name()) >= 0)
+                .jstream()
+                .findFirst();
     }
 
     /**
@@ -1587,12 +1570,12 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      * @return whether the specified class contains the specified field name
      */
-    public static Pair<Boolean, FieldReflectionUtils.ClassFields.Field> getValidField(final String classToAccess, final String... fieldNames) {
+    public static Optional<FieldWrapper> getValidField(final String classToAccess, final String... fieldNames) {
         final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
         if (foundClass != null) {
             return getValidField(foundClass, fieldNames);
         }
-        return new Pair<>(false, null);
+        return Optional.empty();
     }
 
     /**
@@ -1604,10 +1587,7 @@ public class StringUtils {
      * @param fieldNames    A List of Field Names to search for
      */
     public static void updateField(final Class<?> classToAccess, final Object instance, final Object value, final String... fieldNames) {
-        final Pair<Boolean, FieldReflectionUtils.ClassFields.Field> result = getValidField(classToAccess, fieldNames);
-        if (result.getFirst()) {
-            result.getSecond().setValue(instance, value);
-        }
+        getValidField(classToAccess, fieldNames).ifPresent(fieldWrapper -> fieldWrapper.set(instance, value));
     }
 
     /**
