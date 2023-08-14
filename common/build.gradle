@@ -28,8 +28,8 @@ dependencies {
     }
 
     // Java-Specific Dependencies
-    shade("com.kohlschutter.junixsocket:junixsocket-common:${isLegacy ? "2.4.0" : "2.6.2"}")
-    shade("com.kohlschutter.junixsocket:junixsocket-native-common:${isLegacy ? "2.4.0" : "2.6.2"}")
+    shade("com.kohlschutter.junixsocket:junixsocket-common:2.7.0")
+    shade("com.kohlschutter.junixsocket:junixsocket-native-common:2.7.0")
 
     // Annotations
     implementation "com.google.code.findbugs:jsr305:3.0.2"
@@ -41,7 +41,7 @@ dependencies {
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${ipc_version}")
     // StarScript (Used for Placeholder Expressions)
-    shade("io.github.CDAGaming:starscript:${starscript_version + (isLegacy ? "-legacy" : "")}")
+    shade("io.github.CDAGaming:starscript:${starscript_version}")
     shade("io.github.classgraph:classgraph:${classgraph_version}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
