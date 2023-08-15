@@ -53,6 +53,15 @@ public class MappingUtils {
     private static String filePath = "/mappings.srg";
 
     /**
+     * Retrieve if the Mappings are currently present
+     *
+     * @return {@link Boolean#TRUE} if and only if the mappings are currently present
+     */
+    public static boolean areMappingsLoaded() {
+        return classMap != null;
+    }
+
+    /**
      * Set the specified file path to retrieve data from
      *
      * @param filePath The new path to pull data from
@@ -67,7 +76,7 @@ public class MappingUtils {
      * @return the resulting mappings
      */
     public static Map<String, String> getClassMap() {
-        if (classMap == null) {
+        if (!areMappingsLoaded()) {
             final Map<String, String> cm = StringUtils.newHashMap();
             // load from /mappings.srg
             try {
@@ -102,7 +111,7 @@ public class MappingUtils {
      * @return the resulting mapped class path
      */
     public static String getMappedPath(String input) {
-        if (classMap.containsKey(input)) {
+        if (areMappingsLoaded() && classMap.containsKey(input)) {
             return classMap.get(input).replace("/", ".");
         }
         return input;
@@ -117,14 +126,15 @@ public class MappingUtils {
      */
     public static Set<String> getUnmappedClassesMatching(String start, BiPredicate<String, String> matchCondition) {
         final Set<String> matches = new HashSet<>();
-        start = start.replace(".", "/");
+        if (areMappingsLoaded()) {
+            start = start.replace(".", "/");
 
-        for (Map.Entry<String, String> entry : classMap.entrySet()) {
-            if (matchCondition.test(entry.getValue(), start)) {
-                matches.add(entry.getKey().replace("/", "."));
+            for (Map.Entry<String, String> entry : classMap.entrySet()) {
+                if (matchCondition.test(entry.getValue(), start)) {
+                    matches.add(entry.getKey().replace("/", "."));
+                }
             }
         }
-
         return matches;
     }
 
@@ -180,9 +190,9 @@ public class MappingUtils {
      * @return the mapped class name
      */
     private static String getClassName(final boolean simpleName, final String primary, final String secondary) {
-        String result = classMap.get(
+        String result = areMappingsLoaded() ? classMap.get(
                 primary.replace(".", "/")
-        );
+        ) : null;
         if (result == null) {
             result = simpleName ? secondary : primary;
         } else {
