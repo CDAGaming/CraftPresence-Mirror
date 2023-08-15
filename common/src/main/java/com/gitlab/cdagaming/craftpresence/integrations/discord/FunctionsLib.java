@@ -38,6 +38,7 @@ import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -787,7 +788,7 @@ public class FunctionsLib {
 
         Class<?> classToAccess = null;
         Object instance = null;
-        String methodName = null;
+        List<String> methodNames = StringUtils.newArrayList();
 
         // Argument 1: classToAccess
         if (target.isObject()) {
@@ -816,7 +817,12 @@ public class FunctionsLib {
         if (!args.isEmpty()) {
             target = args.get(0); // Refresh arg table
             if (target.isString()) {
-                methodName = target.getString();
+                final String name = target.getString();
+                if (name.contains(",")) {
+                    Collections.addAll(methodNames, name.split(","));
+                } else {
+                    methodNames.add(name);
+                }
             } else {
                 ss.error("Incorrect argument type for executeMethod() param, methodName (needs to be a string).");
             }
@@ -825,7 +831,7 @@ public class FunctionsLib {
 
         // If the className or methodName is null, error as such
         // instanceName, and the parameterTypes and parameters tables can be null
-        if (classToAccess == null || methodName == null) {
+        if (classToAccess == null || methodNames.isEmpty()) {
             ss.error("Insufficient or null arguments provided for required executeMethod() params, please try again.");
         }
 
@@ -862,9 +868,10 @@ public class FunctionsLib {
             }
         }
 
-        Object result = StringUtils.executeMethod(classToAccess, instance, methodName,
+        Object result = StringUtils.executeMethod(classToAccess, instance,
                 parameterTypes != null ? parameterTypes.toArray(new Class<?>[0]) : null,
-                parameters != null ? parameters.toArray(new Object[0]) : null
+                parameters != null ? parameters.toArray(new Object[0]) : null,
+                methodNames.toArray(new String[0])
         );
 
         return result != null ? Value.object(result) : Value.null_();

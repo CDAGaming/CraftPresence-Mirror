@@ -115,8 +115,8 @@ public class ReplayModUtils implements Module {
         if (CraftPresence.GUIS.CURRENT_SCREEN == null) {
             clearClientData();
         } else {
-            final Object possibleScreen = StringUtils.executeMethod(screenClass, null, "from", new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN});
-            final Object possibleOverlay = StringUtils.executeMethod(overlayClass, null, "from", new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN});
+            final Object possibleScreen = StringUtils.executeMethod(screenClass, null, new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
+            final Object possibleOverlay = StringUtils.executeMethod(overlayClass, null, new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
             if (possibleScreen == null && possibleOverlay == null) {
                 clearClientData();
             } else {
@@ -218,9 +218,9 @@ public class ReplayModUtils implements Module {
             );
             if (rendererObj != null && rendererObj.getClass() == videoRendererInfo) {
                 CraftPresence.CLIENT.syncArgument("replaymod.frames.current",
-                        StringUtils.executeMethod(videoRendererInfo, rendererObj, "getFramesDone", null, null));
+                        StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"));
                 CraftPresence.CLIENT.syncArgument("replaymod.frames.total",
-                        StringUtils.executeMethod(videoRendererInfo, rendererObj, "getTotalFrames", null, null));
+                        StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"));
             }
         } else {
             CraftPresence.CLIENT.removeArguments("replaymod");

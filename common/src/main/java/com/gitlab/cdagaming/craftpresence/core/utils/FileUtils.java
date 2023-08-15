@@ -422,22 +422,22 @@ public class FileUtils {
         final Class<?> quiltLoader = FileUtils.findValidClass("org.quiltmc.loader.api.QuiltLoader");
         final Class<?> fabricLoader = FileUtils.findValidClass("net.fabricmc.loader.api.FabricLoader");
         if (fmlLoader != null) {
-            final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, "instance", null, null);
+            final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, null, null, "instance");
             if (loaderInstance != null) {
-                final Object mods = StringUtils.executeMethod(fmlLoader, loaderInstance, "getModList", null, null);
+                final Object mods = StringUtils.executeMethod(fmlLoader, loaderInstance, null, null, "getModList");
                 if (mods instanceof List<?>) {
                     modCount = ((List<?>) mods).size();
                 }
             }
         } else if (quiltLoader != null) {
-            final Object mods = StringUtils.executeMethod(quiltLoader, null, "getAllMods", null, null);
+            final Object mods = StringUtils.executeMethod(quiltLoader, null, null, null, "getAllMods");
             if (mods instanceof List<?>) {
                 modCount = ((List<?>) mods).size();
             }
         } else if (fabricLoader != null) {
-            final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, "getInstance", null, null);
+            final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, null, null, "getInstance");
             if (loaderInstance != null) {
-                final Object mods = StringUtils.executeMethod(fabricLoader, loaderInstance, "getAllMods", null, null);
+                final Object mods = StringUtils.executeMethod(fabricLoader, loaderInstance, null, null, "getAllMods");
                 if (mods instanceof List<?>) {
                     modCount = ((List<?>) mods).size();
                 }

@@ -533,7 +533,7 @@ public class DiscordUtils {
                     try {
                         if (showLogging) {
                             for (String line : splitEx) {
-                                line = line.replace("\t", "    ");
+                                line = line.replace("\t", StringUtils.TAB_SPACE);
                                 output.append(line).append('\n');
                             }
                         } else {

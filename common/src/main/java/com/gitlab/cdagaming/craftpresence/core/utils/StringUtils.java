@@ -24,18 +24,18 @@
 
 package com.gitlab.cdagaming.craftpresence.core.utils;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
 import net.lenni0451.reflect.stream.RStream;
+import net.lenni0451.reflect.stream.field.FieldStream;
 import net.lenni0451.reflect.stream.field.FieldWrapper;
+import net.lenni0451.reflect.stream.method.MethodStream;
+import net.lenni0451.reflect.stream.method.MethodWrapper;
 
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.*;
@@ -63,6 +63,10 @@ public class StringUtils {
      * The character set representing data that is too large to display
      */
     public static final String TOO_LARGE = "<...>";
+    /**
+     * The character set representing a Tab in the form of four spaces
+     */
+    public static final String TAB_SPACE = "    ";
     /**
      * A conditional statement for determining if a String is null or empty
      */
@@ -1446,6 +1450,26 @@ public class StringUtils {
     }
 
     /**
+     * Retrieve a Stream of all fields within the specified class
+     *
+     * @param classToAccess The class object to interpret
+     * @return the output stream
+     */
+    public static FieldStream getFields(final Class<?> classToAccess) {
+        return RStream.of(classToAccess).fields();
+    }
+
+    /**
+     * Retrieve a Stream of all methods within the specified class
+     *
+     * @param classToAccess The class object to interpret
+     * @return the output stream
+     */
+    public static MethodStream getMethods(final Class<?> classToAccess) {
+        return RStream.of(classToAccess).methods();
+    }
+
+    /**
      * Retrieve the list of fields present in the specified class
      *
      * @param classToAccess The class object to interpret
@@ -1454,18 +1478,14 @@ public class StringUtils {
     public static String getFieldList(final Class<?> classToAccess) {
         final StringBuilder sb = new StringBuilder();
         if (classToAccess != null) {
-            sb.append(classToAccess).append(": [");
-            final Field[] fields = classToAccess.getDeclaredFields();
-            for (int i = 0; i < fields.length; i++) {
-                final Field field = fields[i];
-                final String name = field.getType() + " " + field.getName();
-                sb.append(name);
-
-                // if not the last item
-                if (i < fields.length - 1) {
-                    sb.append(", ");
-                }
-            }
+            sb.append(classToAccess).append(": [\n");
+            getFields(classToAccess).forEach(e ->
+                    sb.append(TAB_SPACE)
+                            .append(e.type())
+                            .append(" ")
+                            .append(e.name())
+                            .append("\n")
+            );
             sb.append("]");
         }
         return sb.toString();
@@ -1480,25 +1500,56 @@ public class StringUtils {
     public static String getMethodList(final Class<?> classToAccess) {
         final StringBuilder sb = new StringBuilder();
         if (classToAccess != null) {
-            sb.append(classToAccess).append(": [");
-            final Method[] methods = classToAccess.getDeclaredMethods();
-            for (int i = 0; i < methods.length; i++) {
-                final Method method = methods[i];
-                final String name = method.getReturnType() + " " + method.getName();
-                final Class<?>[] paramTypes = method.getParameterTypes();
-                final String paramTypeNames = Arrays.stream(paramTypes)
-                        .map(Class::toString)
-                        .collect(Collectors.joining(", "));
-                sb.append(name).append("(").append(paramTypeNames).append(")");
-
-                // if not the last item
-                if (i < methods.length - 1) {
-                    sb.append(", ");
-                }
-            }
+            sb.append(classToAccess).append(": [\n");
+            getMethods(classToAccess).forEach(e ->
+                    sb.append(TAB_SPACE)
+                            .append(e.returnType())
+                            .append(" ")
+                            .append(e.name())
+                            .append("(")
+                            .append(Arrays.stream(e.parameterTypes())
+                                    .map(Class::toString)
+                                    .collect(Collectors.joining(", "))
+                            )
+                            .append(")\n")
+            );
             sb.append("]");
         }
         return sb.toString();
+    }
+
+    /**
+     * Retrieves whether the specified class contains the specified field
+     *
+     * @param classToAccess The class to access
+     * @param fieldNames    A List of Field Names to search for
+     * @return whether the specified class contains the specified field
+     */
+    public static Optional<FieldWrapper> getValidField(final Class<?> classToAccess, final String... fieldNames) {
+        if (fieldNames == null || fieldNames.length == 0) return Optional.empty();
+        final List<String> names = newArrayList(fieldNames);
+        return getFields(classToAccess)
+                .filter(f -> names.contains(f.name()))
+                .jstream()
+                .findFirst();
+    }
+
+    /**
+     * Retrieves whether the specified class contains the specified method
+     *
+     * @param classToAccess  The class to access
+     * @param parameterTypes An array of Class objects representing the types of the method's parameters.
+     * @param methodNames    A List of Method Names to search for
+     * @return whether the specified class contains the specified method
+     */
+    public static Optional<MethodWrapper> getValidMethod(final Class<?> classToAccess, final Class<?>[] parameterTypes, final String... methodNames) {
+        if (methodNames == null || methodNames.length == 0) return Optional.empty();
+        final Class<?>[] params = parameterTypes != null ? parameterTypes : new Class<?>[0];
+        final List<String> names = newArrayList(methodNames);
+        return getMethods(classToAccess)
+                .filter(f -> names.contains(f.name()) && Arrays.equals(params, f.parameterTypes()))
+                .jstream()
+                .findFirst();
     }
 
     /**
@@ -1514,72 +1565,6 @@ public class StringUtils {
     }
 
     /**
-     * Retrieves the Specified Field(s) via Reflection
-     *
-     * @param classToAccess The class to access with the field(s)
-     * @param instance      An Instance of the Class, if needed
-     * @param fieldNames    A List of Field Names to search for
-     * @return The Found Field Data, if any
-     */
-    public static Object getField(final String classToAccess, final Object instance, final String... fieldNames) {
-        final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
-        if (foundClass != null) {
-            return getField(foundClass, instance, fieldNames);
-        }
-        return null;
-    }
-
-    /**
-     * Retrieves the Specified Field(s) via Reflection
-     *
-     * @param classToAccess The class to access with the field(s)
-     * @param instance      An Instance of the Class, if needed
-     * @param fieldNames    A List of Field Names to search for
-     * @return The Found Field Data, if any
-     */
-    public static Object getField(final Object classToAccess, final Object instance, final String... fieldNames) {
-        if (classToAccess instanceof String) {
-            return getField((String) classToAccess, instance, fieldNames);
-        } else {
-            return getField(
-                    classToAccess instanceof Class<?> ? (Class<?>) classToAccess : classToAccess.getClass(),
-                    instance, fieldNames
-            );
-        }
-    }
-
-    /**
-     * Retrieves whether the specified class contains the specified field name
-     *
-     * @param classToAccess The class to access with the field(s)
-     * @param fieldNames    A List of Field Names to search for
-     * @return whether the specified class contains the specified field name
-     */
-    public static Optional<FieldWrapper> getValidField(final Class<?> classToAccess, final String... fieldNames) {
-        final List<String> items = newArrayList(fieldNames);
-        return RStream.of(classToAccess)
-                .fields()
-                .filter(f -> items.contains(f.name()))
-                .jstream()
-                .findFirst();
-    }
-
-    /**
-     * Retrieves whether the specified class contains the specified field name
-     *
-     * @param classToAccess The class to access with the field(s)
-     * @param fieldNames    A List of Field Names to search for
-     * @return whether the specified class contains the specified field name
-     */
-    public static Optional<FieldWrapper> getValidField(final String classToAccess, final String... fieldNames) {
-        final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
-        if (foundClass != null) {
-            return getValidField(foundClass, fieldNames);
-        }
-        return Optional.empty();
-    }
-
-    /**
      * Adjusts the Specified Field(s) in the Target Class via Reflection
      *
      * @param classToAccess The class to access with the field(s)
@@ -1592,82 +1577,19 @@ public class StringUtils {
     }
 
     /**
-     * Adjusts the Specified Field(s) in the Target Class via Reflection
-     *
-     * @param classToAccess The class to access with the field(s)
-     * @param instance      An Instance of the Class, if needed
-     * @param value         The value to set for the field
-     * @param fieldNames    A List of Field Names to search for
-     */
-    public static void updateField(final String classToAccess, final Object instance, final Object value, final String... fieldNames) {
-        final Class<?> foundClass = FileUtils.findValidClass(classToAccess);
-        if (foundClass != null) {
-            updateField(foundClass, instance, value, fieldNames);
-        }
-    }
-
-    /**
-     * Adjusts the Specified Field(s) in the Target Class via Reflection
-     *
-     * @param classToAccess The class to access with the field(s)
-     * @param instance      An Instance of the Class, if needed
-     * @param value         The value to set for the field
-     * @param fieldNames    A List of Field Names to search for
-     */
-    public static void updateField(final Object classToAccess, final Object instance, final Object value, final String... fieldNames) {
-        if (classToAccess instanceof String) {
-            updateField((String) classToAccess, instance, value, fieldNames);
-        } else {
-            updateField(
-                    classToAccess instanceof Class<?> ? (Class<?>) classToAccess : classToAccess.getClass(),
-                    instance, value, fieldNames
-            );
-        }
-    }
-
-    /**
      * Invokes the specified Method in the Target Class via Reflection
      *
      * @param classToAccess  The class to access with the method(s)
      * @param instance       An Instance of the Class, if needed
-     * @param methodName     The name of the method to be invoked.
      * @param parameterTypes An array of Class objects representing the types of the method's parameters.
      * @param parameters     An array of objects representing the method's actual parameters.
+     * @param methodNames    A List of Method Names to search for
      * @return the resulting method result
      */
-    public static Object executeMethod(final Class<?> classToAccess, final Object instance, final String methodName, final Class<?>[] parameterTypes, final Object[] parameters) {
-        Object result = null;
-        try {
-            final Method lookupMethod = classToAccess.getDeclaredMethod(methodName, parameterTypes);
-            lookupMethod.setAccessible(true);
-            result = lookupMethod.invoke(instance, parameters);
-        } catch (Throwable ex) {
-            Constants.LOG.debugError(ex);
-        }
-        return result;
-    }
-
-    /**
-     * Invokes the specified Method(s) in the Target Class via Reflection
-     *
-     * @param classToAccess The class to access with the method(s)
-     * @param instance      An Instance of the Class, if needed
-     * @param methodData    The Methods and Necessary Argument Data for execution, in the form of methodName:argsAndTypesForMethod
-     * @return the resulting data mapping with the format of methodName:methodResult
-     */
-    @SafeVarargs
-    public static Map<String, Object> executeMethod(final Class<?> classToAccess, final Object instance, final Pair<String, Pair<Object[], Class<?>[]>>... methodData) {
-        final Map<String, Object> results = newHashMap();
-        for (Pair<String, Pair<Object[], Class<?>[]>> methodInstance : methodData) {
-            results.put(methodInstance.getFirst(), executeMethod(
-                    classToAccess,
-                    instance,
-                    methodInstance.getFirst(),
-                    methodInstance.getSecond().getSecond(),
-                    methodInstance.getSecond().getFirst()
-            ));
-        }
-        return results;
+    public static Object executeMethod(final Class<?> classToAccess, final Object instance, final Class<?>[] parameterTypes, final Object[] parameters, final String... methodNames) {
+        return getValidMethod(classToAccess, parameterTypes, methodNames)
+                .map(methodWrapper -> methodWrapper.invokeInstance(instance, parameters))
+                .orElse(null);
     }
 
     /**
