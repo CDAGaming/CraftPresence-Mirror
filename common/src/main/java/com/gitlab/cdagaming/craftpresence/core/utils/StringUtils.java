@@ -1526,7 +1526,7 @@ public class StringUtils {
      * @return whether the specified class contains the specified field
      */
     public static Optional<FieldWrapper> getValidField(final Class<?> classToAccess, final String... fieldNames) {
-        if (fieldNames == null || fieldNames.length == 0) return Optional.empty();
+        if (classToAccess == null || fieldNames == null || fieldNames.length == 0) return Optional.empty();
         return getFields(classToAccess)
                 .filter(fieldNames)
                 .jstream()
@@ -1542,7 +1542,7 @@ public class StringUtils {
      * @return whether the specified class contains the specified method
      */
     public static Optional<MethodWrapper> getValidMethod(final Class<?> classToAccess, final Class<?>[] parameterTypes, final String... methodNames) {
-        if (methodNames == null || methodNames.length == 0) return Optional.empty();
+        if (classToAccess == null || methodNames == null || methodNames.length == 0) return Optional.empty();
         return getMethods(classToAccess)
                 .filter(methodNames).filter(parameterTypes)
                 .jstream()
