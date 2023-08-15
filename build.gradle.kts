@@ -1,7 +1,7 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import org.gradle.internal.jvm.Jvm
-import xyz.wagourtail.replacestr.ProcessClasses
 import xyz.wagyourtail.mini_jvmdg.MiniJVMDowngrade
+import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
 import xyz.wagyourtail.unimined.internal.mods.task.RemapJarTaskImpl
 import java.nio.file.Files
@@ -26,12 +26,12 @@ operator fun String.invoke(): String? {
 val extMcVersion = if ("display_version"()!!.isNotEmpty()) "display_version"() else "mc_version"()
 val extVersionLabel = "${if ("versionLabel"().equals("release", ignoreCase = true)) "" else "versionLabel"()}"
 
-val extVersionInfoLabel = if (extVersionLabel.isEmpty()) "" else "-${extVersionLabel}"
+val extVersionInfoLabel = if (extVersionLabel.isEmpty()) "" else "-$extVersionLabel"
 val extBaseVersionLabel = ("versionId"() + extVersionInfoLabel.replace(Regex("\\s"), ".")).lowercase()
 val extClassPath = "${rootProject.group}".replace(".", "/") + "/${"mod_name"()}".lowercase()
 
 val extVersionFormat = "$extBaseVersionLabel+$extMcVersion"
-val extFileFormat = "${"mod_name"()}-${extVersionFormat}"
+val extFileFormat = "${"mod_name"()}-$extVersionFormat"
 
 val extProtocol = "mc_protocol"()!!.toInt()
 val extIsLegacy = "isLegacy"()!!.toBoolean()

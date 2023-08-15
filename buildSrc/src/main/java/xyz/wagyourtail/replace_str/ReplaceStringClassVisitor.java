@@ -1,4 +1,4 @@
-package xyz.wagourtail.replacestr;
+package xyz.wagyourtail.replace_str;
 
 import org.objectweb.asm.*;
 
