@@ -1,6 +1,9 @@
 import xyz.wagyourtail.unimined.api.task.ExportMappingsTask
 import xyz.wagyourtail.unimined.api.task.RemapJarTask
 
+/**
+ * Retrieve a Project Property
+ */
 operator fun String.invoke(): String? {
     return project.properties[this] as String?
 }

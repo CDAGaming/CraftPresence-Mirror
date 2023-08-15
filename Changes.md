@@ -18,6 +18,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Adjusted Mod Initialization to allow "Developer Mode" logging to properly display again
     * New Functions have been added to provide more usability to some utilities, as well as to resolve issues
       with `special/xxx` builds
+    * Several dependency and buildscript improvements have been made to improve Legacy MC Support
 
 ### Fixes
 
@@ -40,6 +41,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * A new Text Box Implementation is now used in these versions, please report any issues!
 * Fixed a possible `NullPointerException` when Directly Connecting to Servers
     * Caused by an incorrect `ServerUtils#isInvalidMotd` implementation
+* Fixed an Incompatibility with JVM 11+ in MC 1.2.5 and below
+    * This resolves a crash in obtaining the Minecraft Instance
+* Fixed an Incompatibility with JVM 11+ related to the `autoRegister` config setting
+    * This resolves a previously stubbed `InaccessibleObjectException` experienced with this setting
 
 ___
 

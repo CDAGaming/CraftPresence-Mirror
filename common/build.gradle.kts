@@ -6,6 +6,9 @@ plugins {
     id("me.hypherionmc.modutils.modpublisher") version "1.0.17"
 }
 
+/**
+ * Retrieve a Project Property
+ */
 operator fun String.invoke(): String? {
     return project.properties[this] as String?
 }

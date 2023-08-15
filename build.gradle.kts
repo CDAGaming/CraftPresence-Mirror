@@ -16,6 +16,9 @@ plugins {
     id("io.github.pacifistmc.forgix") version "1.2.6"
 }
 
+/**
+ * Retrieve a Project Property
+ */
 operator fun String.invoke(): String? {
     return project.properties[this] as String?
 }

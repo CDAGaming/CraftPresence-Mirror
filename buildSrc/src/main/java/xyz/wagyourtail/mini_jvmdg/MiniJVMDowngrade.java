@@ -8,7 +8,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -23,7 +22,7 @@ public class MiniJVMDowngrade {
 
     public static FileSystem openZipFileSystem(Path path, Map<String, Object> options) throws IOException {
         if (options.containsKey("create")) {
-            if (options.get("create") == Boolean.TRUE) {
+            if (options.get("create").equals(Boolean.TRUE)) {
                 options.put("create", "true");
             }
         }
@@ -40,8 +39,8 @@ public class MiniJVMDowngrade {
         try (URLClassLoader dummy = new URLClassLoader(classpath.stream().map(e -> {
             try {
                 return e.toUri().toURL();
-            } catch (MalformedURLException ex) {
-                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new UncheckedIOException(ex);
             }
         }).toArray(URL[]::new))) {
             Map<String, ClassNode> toWrite = new HashMap<>();
@@ -102,8 +101,8 @@ public class MiniJVMDowngrade {
                                 }
                             }
                             return null;
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
                         }
                     });
                     fixedNode.accept(cw);
