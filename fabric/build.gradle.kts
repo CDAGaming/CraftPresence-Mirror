@@ -12,7 +12,7 @@ val isJarMod: Boolean by extra
 val accessWidenerFile: File by extra
 val isMCPJar: Boolean by extra
 val isModern: Boolean by extra
-val fmlName: Boolean by extra
+val fmlName: String by extra
 val versionFormat: String by extra
 val versionLabel: String by extra
 val mcVersionLabel: String by extra
