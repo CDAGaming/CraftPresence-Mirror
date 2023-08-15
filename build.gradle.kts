@@ -315,23 +315,25 @@ subprojects {
         }
     }
 
-    if ("isLegacyASM"()!!.toBoolean()) {
-        // TODO: Replace with JvmDowngrader, when ready
-        tasks.getByName<RemapJarTaskImpl>("remapJar") {
-            doLast {
-                var pn = prodNamespace
-                if (pn == null) pn = provider.mcPatcher.prodNamespace
-                val cp = provider.sourceSet.runtimeClasspath.files
-                    .map { it.toPath() }
-                    .filter { !provider.isMinecraftJar(it) }
-                    .filter { Files.exists(it) } + setOf(
-                    // just one unimined internal, to get a remapped mc jar
-                    provider.getMinecraft(
-                        pn,
-                        pn
+    afterEvaluate {
+        if ("isLegacyASM"()!!.toBoolean() && path != ":common") {
+            // TODO: Replace with JvmDowngrader, when ready
+            tasks.getByName<RemapJarTaskImpl>("remapJar") {
+                doLast {
+                    var pn = prodNamespace
+                    if (pn == null) pn = provider.mcPatcher.prodNamespace
+                    val cp = provider.sourceSet.runtimeClasspath.files
+                        .map { it.toPath() }
+                        .filter { !provider.isMinecraftJar(it) }
+                        .filter { Files.exists(it) } + setOf(
+                        // just one unimined internal, to get a remapped mc jar
+                        provider.getMinecraft(
+                            pn,
+                            pn
+                        )
                     )
-                )
-                MiniJVMDowngrade.downgradeZip(archiveFile.get().asFile.toPath(), cp.toSet())
+                    MiniJVMDowngrade.downgradeZip(archiveFile.get().asFile.toPath(), cp.toSet())
+                }
             }
         }
     }

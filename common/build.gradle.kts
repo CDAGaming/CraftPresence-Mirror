@@ -1,6 +1,5 @@
 import me.hypherionmc.modpublisher.plugin.ModPublisherGradleExtension.ApiKeys
 import xyz.wagyourtail.unimined.api.minecraft.patch.FabricLikePatcher
-import xyz.wagyourtail.unimined.api.task.RemapJarTask
 import java.util.regex.Pattern
 
 plugins {
@@ -23,6 +22,7 @@ val versionLabel: String by extra
 val mcVersionLabel: String by extra
 
 unimined.minecraft {
+    defaultRemapJar = false
     if (!isJarMod) {
         val fabricData: FabricLikePatcher.() -> Unit = {
             if (accessWidenerFile.exists()) {
@@ -36,14 +36,6 @@ unimined.minecraft {
         } else {
             legacyFabric(fabricData)
         }
-    }
-}
-
-tasks.named<RemapJarTask>("remapJar") {
-    if (isMCPJar && protocol <= 2) { // MC a1.1.2_01 and below
-        prodNamespace("searge")
-    } else {
-        prodNamespace(if (!isModern) "mcp" else "mojmap")
     }
 }
 
