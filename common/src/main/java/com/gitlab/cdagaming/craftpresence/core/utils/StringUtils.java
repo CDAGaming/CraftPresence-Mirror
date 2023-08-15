@@ -1556,9 +1556,10 @@ public class StringUtils {
      * @return whether the specified class contains the specified field name
      */
     public static Optional<FieldWrapper> getValidField(final Class<?> classToAccess, final String... fieldNames) {
+        final List<String> items = newArrayList(fieldNames);
         return RStream.of(classToAccess)
                 .fields()
-                .filter(f -> Arrays.binarySearch(fieldNames, f.name()) >= 0)
+                .filter(f -> items.contains(f.name()))
                 .jstream()
                 .findFirst();
     }
