@@ -208,6 +208,15 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Copies the Specified Text to the System's Clipboard
+     *
+     * @param input the text to interpret
+     */
+    public static void copyToClipboard(final String input) {
+        setClipboardString(StringUtils.normalize(input));
+    }
+
+    /**
      * Pre-Initializes this Screen
      * <p>
      * Responsible for Setting preliminary data
@@ -452,15 +461,6 @@ public class ExtendedScreen extends GuiScreen {
         for (DynamicWidget widget : getWidgets()) {
             widget.postDraw(this);
         }
-    }
-
-    /**
-     * Copies the Specified Text to the System's Clipboard
-     *
-     * @param input the text to interpret
-     */
-    public static void copyToClipboard(final String input) {
-        setClipboardString(StringUtils.normalize(input));
     }
 
     @Override
