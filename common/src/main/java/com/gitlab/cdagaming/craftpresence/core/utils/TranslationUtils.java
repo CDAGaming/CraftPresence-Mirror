@@ -387,6 +387,15 @@ public class TranslationUtils {
     }
 
     /**
+     * Gets the Mod ID to target when locating Language Files
+     *
+     * @return The Mod ID to target
+     */
+    public String getModId() {
+        return modId;
+    }
+
+    /**
      * Sets the Mod ID to target when locating Language Files
      *
      * @param modId The Mod ID to target
@@ -405,7 +414,7 @@ public class TranslationUtils {
      * @return the interpreted list of valid {@link InputStream}'s
      */
     private List<InputStream> getLocaleStreamsFrom(final String languageId, final String ext) {
-        final String assetsPath = usingAssetsPath ? String.format("/assets/%s/", modId) : "/";
+        final String assetsPath = usingAssetsPath ? String.format("/assets/%s/", getModId()) : "/";
         final String langPath = String.format("lang/%s.%s", languageId, ext);
         final List<InputStream> results = StringUtils.newArrayList();
 
@@ -413,7 +422,7 @@ public class TranslationUtils {
         if (local != null) {
             results.add(local);
         }
-        results.addAll(resourceSupplier.apply(modId, assetsPath, langPath));
+        results.addAll(resourceSupplier.apply(getModId(), assetsPath, langPath));
         return results;
     }
 
@@ -498,12 +507,12 @@ public class TranslationUtils {
         }
 
         if (hasError) {
-            Constants.LOG.error("Translations for " + modId + " do not exist for " + languageId);
+            Constants.LOG.error("Translations for " + getModId() + " do not exist for " + languageId);
             translationMap.clear();
             requestMap.put(languageId, translationMap);
             setLanguage(defaultLanguageId);
         } else {
-            Constants.LOG.debugInfo((hadBefore ? "Refreshed" : "Added") + " translations for " + modId + " for " + languageId);
+            Constants.LOG.debugInfo((hadBefore ? "Refreshed" : "Added") + " translations for " + getModId() + " for " + languageId);
             requestMap.put(languageId, translationMap);
         }
         return translationMap;
