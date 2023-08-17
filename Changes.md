@@ -45,6 +45,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This resolves a crash in obtaining the Minecraft Instance
 * Fixed an Incompatibility with JVM 11+ related to the `autoRegister` config setting
     * This resolves a previously stubbed `InaccessibleObjectException` experienced with this setting
+* Fixed an Incorrect Reflection call in MC a1.1.2_01, preventing the Server Module from working
+    * Effected retrieving the Server IP, Port, and the `NetClientHandler` instance needed for the module to function
 
 ___
 
