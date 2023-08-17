@@ -23,6 +23,7 @@ val fmlName: String by extra
 val versionFormat: String by extra
 val versionLabel: String by extra
 val mcVersionLabel: String by extra
+val fileFormat: String by extra
 
 unimined.minecraft {
     defaultRemapJar = false
@@ -45,7 +46,6 @@ unimined.minecraft {
 val shadeOnly: Configuration by configurations.creating
 val shade: Configuration by configurations.creating
 val runtime: Configuration by configurations.creating
-val fileFormat: Configuration by configurations.creating
 
 configurations.implementation.get().extendsFrom(shade)
 configurations.runtimeOnly.get().extendsFrom()
@@ -244,13 +244,17 @@ if (!targetFile.exists() && (isJarMod)) {
 // Setup Game Versions to upload for
 val uploadVersions = mutableListOf("mc_version"()!!)
 for (v in "additional_mc_versions"()!!.split(",")) {
-    uploadVersions.add(v)
+    if (v.isNotEmpty()) {
+        uploadVersions.add(v)
+    }
 }
 
 // Setup Game Loaders to upload for
 val uploadLoaders = "enabled_platforms"()!!.split(",").toMutableList()
 for (v in "additional_loaders"()!!.split(",")) {
-    uploadLoaders.add(v)
+    if (v.isNotEmpty()) {
+        uploadLoaders.add(v)
+    }
 }
 
 publisher {
