@@ -93,9 +93,11 @@ dependencies {
     }
 
     // Additional Integrations
-    // - Moon Config (Used for HypherConverter)
-    shade("me.hypherionmc.moon-config:core:${"moonconf_version"()!!}")
-    shade("me.hypherionmc.moon-config:toml:${"moonconf_version"()!!}")
+    if (!isLegacy) {
+        // Moon Config (Used for HypherConverter)
+        shade("me.hypherionmc.moon-config:core:${"moonconf_version"()!!}")
+        shade("me.hypherionmc.moon-config:toml:${"moonconf_version"()!!}")
+    }
 }
 
 // JSON to LANG Conversion Setup (Below 18w02a, 1.13)
@@ -163,7 +165,9 @@ tasks.shadowJar {
         relocate("org.apache.logging.slf4j", "external.org.apache.logging.slf4j")
     }
     // Integration Relocations
-    relocate("me.hypherionmc", "external.me.hypherionmc")
+    if (!isLegacy) {
+        relocate("me.hypherionmc", "external.me.hypherionmc")
+    }
 
     archiveClassifier.set("shadow-dev")
 }
