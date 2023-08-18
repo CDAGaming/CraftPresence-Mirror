@@ -8,7 +8,6 @@ operator fun String.invoke(): String? {
     return project.properties[this] as String?
 }
 
-val isLegacy: Boolean by extra
 val protocol: Int by extra
 val isJarMod: Boolean by extra
 val accessWidenerFile: File by extra
@@ -148,9 +147,7 @@ tasks.shadowJar {
         relocate("org.apache.logging.slf4j", "external.org.apache.logging.slf4j")
     }
     // Integration Relocations
-    if (!isLegacy) {
-        relocate("me.hypherionmc", "external.me.hypherionmc")
-    }
+    relocate("me.hypherionmc", "external.me.hypherionmc")
 }
 
 tasks.named<RemapJarTask>("remapJar") {
