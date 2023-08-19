@@ -75,7 +75,7 @@ dependencies {
     shade("io.github.CDAGaming:starscript:${"starscript_version"()!!}")
     shade("io.github.classgraph:classgraph:${"classgraph_version"()!!}")
     // SLF4J Dependencies (If below 1.17)
-    if (!isLegacy || protocol < 755) {
+    if (isLegacy || protocol < 755) {
         shade("org.slf4j:slf4j-api:1.7.36")
         if (isLegacy) {
             shade("org.slf4j:slf4j-jdk14:1.7.36")

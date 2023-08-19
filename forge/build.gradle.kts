@@ -79,7 +79,8 @@ tasks.processResources {
 
     filesMatching("mappings-$fmlName.srg") {
         filter { line ->
-            if (line.startsWith("CL:")) line else ""
+            @Suppress("NULL_FOR_NONNULL_TYPE")
+            if (line.startsWith("CL:")) line else null
         }
     }
 }

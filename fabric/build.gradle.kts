@@ -1,3 +1,4 @@
+import org.apache.tools.ant.filters.LineContains
 import xyz.wagyourtail.unimined.api.minecraft.patch.FabricLikePatcher
 import xyz.wagyourtail.unimined.api.task.ExportMappingsTask
 import xyz.wagyourtail.unimined.api.task.RemapJarTask
@@ -82,7 +83,8 @@ tasks.processResources {
 
     filesMatching("mappings-fabric.srg") {
         filter { line ->
-            if (line.startsWith("CL:")) line else ""
+            @Suppress("NULL_FOR_NONNULL_TYPE")
+            if (line.startsWith("CL:")) line else null
         }
     }
 }
