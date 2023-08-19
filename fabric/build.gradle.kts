@@ -1,4 +1,3 @@
-import org.apache.tools.ant.filters.LineContains
 import xyz.wagyourtail.unimined.api.minecraft.patch.FabricLikePatcher
 import xyz.wagyourtail.unimined.api.task.ExportMappingsTask
 import xyz.wagyourtail.unimined.api.task.RemapJarTask
