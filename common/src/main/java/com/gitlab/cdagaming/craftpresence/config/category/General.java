@@ -79,6 +79,7 @@ public class General extends Module implements Serializable {
             detectMultiMCManifest = data.detectMultiMCManifest;
             detectMCUpdaterInstance = data.detectMCUpdaterInstance;
             detectTechnicPack = data.detectTechnicPack;
+            detectModrinthPack = data.detectModrinthPack;
             detectBiomeData = data.detectBiomeData;
             detectDimensionData = data.detectDimensionData;
             detectWorldData = data.detectWorldData;
