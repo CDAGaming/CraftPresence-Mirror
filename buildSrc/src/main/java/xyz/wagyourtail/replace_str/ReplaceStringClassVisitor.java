@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplaceStringClassVisitor extends ClassVisitor {
-    public static Pattern replacePattern = Pattern.compile("@(.+?)@");
+    public static final Pattern replacePattern = Pattern.compile("@(.+?)@");
     Map<String, String> replaceTokens;
 
     public ReplaceStringClassVisitor(ClassVisitor delegate, Map<String, String> replaceTokens) {
@@ -31,8 +31,7 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
             @Override
             public void visitLdcInsn(Object value) {
                 if (value instanceof String) {
-                    String stringVal = (String) value;
-                    super.visitLdcInsn(replaceMatching(stringVal, replaceTokens));
+                    super.visitLdcInsn(replaceMatching((String) value, replaceTokens));
                     return;
                 }
                 super.visitLdcInsn(value);
@@ -68,8 +67,7 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
     @Override
     public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
         if (value instanceof String) {
-            String stringVal = (String) value;
-            return new FieldVisitor(api, super.visitField(access, name, descriptor, signature, replaceMatching(stringVal, replaceTokens))) {
+            return new FieldVisitor(api, super.visitField(access, name, descriptor, signature, replaceMatching((String) value, replaceTokens))) {
                 @Override
                 public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
                     return new ReplaceStringAnnotationVisitor(super.visitAnnotation(descriptor, visible), replaceTokens);
@@ -99,7 +97,6 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
         return new ReplaceStringAnnotationVisitor(super.visitAnnotation(descriptor, visible), replaceTokens);
     }
 
-
     public static class ReplaceStringAnnotationVisitor extends AnnotationVisitor {
         Map<String, String> replaceTokens;
 
@@ -111,8 +108,7 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
         @Override
         public void visit(String name, Object value) {
             if (value instanceof String) {
-                String stringVal = (String) value;
-                super.visit(name, replaceMatching(stringVal, replaceTokens));
+                super.visit(name, replaceMatching((String) value, replaceTokens));
                 return;
             }
             super.visit(name, value);

@@ -304,7 +304,7 @@ subprojects {
     tasks.getByName<JavaCompile>("compileJava").apply {
         doLast {
             ProcessClasses.process(
-                destinationDirectory.getAsFile().getOrNull()!!.toPath(), mapOf(
+                destinationDirectory.asFile.getOrNull()!!.toPath(), mapOf(
                     "MOD_NAME" to "mod_name"()!!,
                     "VERSION_ID" to baseVersionLabel,
                     "VERSION_TYPE" to "deploymentType"()!!,
