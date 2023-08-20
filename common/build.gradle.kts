@@ -102,7 +102,7 @@ dependencies {
 
 // JSON to LANG Conversion Setup (Below 18w02a, 1.13)
 val mainResources = "$projectDir/src/main/resources"
-val generatedResources = "$buildDir/generated-resources"
+val generatedResources = "${layout.buildDirectory.asFile.get()}/generated-resources"
 
 if (isLegacy || protocol < 353) {
     sourceSets {
