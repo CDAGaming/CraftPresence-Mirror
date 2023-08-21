@@ -37,6 +37,7 @@ import io.github.classgraph.ScanResult;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystem;
@@ -779,7 +780,7 @@ public class FileUtils {
                 it.next();
 
                 while (it.hasNext()) {
-                    paths.add(pathToSearch + it.next().getFileName().toString());
+                    paths.add(pathToSearch + it.next().getFileName());
                 }
             } catch (Throwable ex) {
                 if (walk != null) {
@@ -798,7 +799,7 @@ public class FileUtils {
             if (fileSystem != null) {
                 fileSystem.close();
             }
-        } catch (Exception ignored) {
+        } catch (IOException | URISyntaxException ignored) {
         }
 
         return paths;

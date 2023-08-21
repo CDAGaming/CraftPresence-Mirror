@@ -2,6 +2,7 @@ package xyz.wagyourtail.replace_str;
 
 import org.objectweb.asm.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +13,7 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
 
     public ReplaceStringClassVisitor(ClassVisitor delegate, Map<String, String> replaceTokens) {
         super(Opcodes.ASM9, delegate);
-        this.replaceTokens = replaceTokens;
+        this.replaceTokens = new HashMap<>(replaceTokens);
     }
 
     public static String replaceMatching(String value, Map<String, String> replaceTokens) {
@@ -102,7 +103,7 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
 
         public ReplaceStringAnnotationVisitor(AnnotationVisitor delegate, Map<String, String> replaceTokens) {
             super(Opcodes.ASM9, delegate);
-            this.replaceTokens = replaceTokens;
+            this.replaceTokens = new HashMap<>(replaceTokens);
         }
 
         @Override
