@@ -1,52 +1,17 @@
 # CraftPresence Changes
 
-## v2.2.2 (09/01/2023)
+## v2.2.3 (??/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.1...release%2Fv2.2.2)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.2...release%2Fv2.2.3)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
-### Changes
-
-* Pack Integration Changes:
-    * The Modrinth Launcher is now supported! (Read more about it [here](https://blog.modrinth.com/p/launcher))
-    * The `pack.icon` placeholder will now fall back to the `pack.type` placeholder value if the originally requested
-      icon does not exist
-* Backend Core API Improvements (`FileUtils`, `StringUtils` and `TranslationUtils`)
-    * The Backend Reflection engine has been rewritten to better support accessing fields/methods from JVM Internals
-    * Adjusted Mod Initialization to allow "Developer Mode" logging to properly display again
-    * New Functions have been added to provide more usability to some utilities, as well as to resolve issues
-      with `special/xxx` builds
-    * Several dependency and buildscript improvements have been made to improve Legacy MC Support
-
 ### Fixes
 
-* Fixed an issue with the Default KeyBinding in the MC Controls Gui being improperly set for keybinds registered
-  through `KeyUtils`
-    * For developers: Use `KeyUtils#createKey` for creating the MC KeyBinding or refer to the Detailed Changelog for
-      more info
-* Fixed an Issue with syncing `KeyUtils` keybindings from the Mod Config to Vanilla
-    * For developers: Use `KeyUtils#setKey` to resolve this issue, which now resets the Key Hash to properly match,
-      similar to how the MC Controls Gui operates for setting or resetting keybindings
-* Fixed a `NullPointerException` relating to adding `TranslationManager` modules
-    * Caused from a missing null check for the `ModUtils#RAW_TRANSLATOR` instance
-* Fixed an incorrect order with `syncArgument` calls in `DiscordUtils#setup`
-    * This had a rare chance to lock-up and eventually crash the mod, for some reason
-* Fixed a possible `NullPointerException` in mod initialization
-    * Caused by a missing null check in `CommandUtils#updateModes`
-* Fixed an Issue causing MC 1.16-1.16.1 Users to crash while using Fabric
-    * Caused by an incorrect version of Fabric API, older version supplied
-* Fixed an Issue in MC 1.1.0 and below causing Text Overflow
-    * A new Text Box Implementation is now used in these versions, please report any issues!
-* Fixed a possible `NullPointerException` when Directly Connecting to Servers
-    * Caused by an incorrect `ServerUtils#isInvalidMotd` implementation
-* Fixed an Incompatibility with JVM 11+ in MC 1.2.5 and below
-    * This resolves a crash in obtaining the Minecraft Instance
-* Fixed an Incompatibility with JVM 11+ related to the `autoRegister` config setting
-    * This resolves a previously stubbed `InaccessibleObjectException` experienced with this setting
-* Fixed an Incorrect Reflection call in MC a1.1.2_01, preventing the Server Module from working
-    * Effected retrieving the Server IP, Port, and the `NetClientHandler` instance needed for the module to function
+* Fixed exceptions in `FileUtils#filesInDir` that were not being ignored correctly
+    * This was previously resolved in v2.2.2 for BTA 1.7.7.0_02
+    * BTA's 1.7.7.0_01 build does not contain this fix
 
 ___
 
