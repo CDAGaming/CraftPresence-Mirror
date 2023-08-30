@@ -270,7 +270,7 @@ subprojects {
         // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
         // We"ll use that if it"s available, but otherwise we"ll use the older option.
         if (modernSourceSupport) {
-            options.release.set(Integer.parseInt(targetVersion.getMajorVersion()))
+            options.release.set(Integer.parseInt(targetVersion.majorVersion))
         }
     }
 

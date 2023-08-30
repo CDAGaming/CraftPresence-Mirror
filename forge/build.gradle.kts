@@ -53,11 +53,11 @@ dependencies {
         "jarMod"("risugami:modloader:${"forge_version"()}")
     }
 
-    "common"(project(path = ":common")) { isTransitive = false }
-    "common"(project(path = ":common", configuration = "shade"))
-    "common"(project(path = ":common", configuration = "runtime"))
-    "shadowCommon"(project(path = ":common", configuration = "shadeOnly"))
-    "shadowCommon"(project(path = ":common")) { isTransitive = false }
+    common(project(path = ":common")) { isTransitive = false }
+    common(project(path = ":common", configuration = "shade"))
+    common(project(path = ":common", configuration = "runtime"))
+    shadowCommon(project(path = ":common", configuration = "shadeOnly"))
+    shadowCommon(project(path = ":common")) { isTransitive = false }
 }
 
 val resourceTargets = listOf(
@@ -87,15 +87,15 @@ tasks.processResources {
 }
 
 tasks.named<ExportMappingsTask>("exportMappings") {
+    val target = if ("mc_mappings_type"() == "retroMCP") "mcp" else "searge"
     export {
-        setTargetNamespaces(listOf(if ("mc_mappings_type"() == "retroMCP") "mcp" else "searge"))
+        setTargetNamespaces(listOf(target))
         setSourceNamespace("official")
         location = file("$projectDir/src/main/resources/mappings-$fmlName.srg")
         setType("SRG")
     }
 }
-
-tasks.processResources.get().dependsOn(tasks.named<ExportMappingsTask>("exportMappings"))
+tasks.processResources.get().dependsOn(tasks.named("exportMappings"))
 
 tasks.shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)
@@ -126,7 +126,7 @@ tasks.shadowJar {
     exclude("lib/s390x*/**")
     exclude("lib/arm*/**")
     // metadata
-    // discord doesn"t support bsd or sun
+    // discord doesn't support bsd or sun
     exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*BSD*/**")
     exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*Sun*/**")
     // we don"t use junixsocket on windows
@@ -176,6 +176,6 @@ tasks.jar {
 tasks.sourcesJar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     val commonSources = project(":common").tasks.sourcesJar
-    dependsOn(commonSources.get())
+    dependsOn(commonSources)
     from(commonSources.get().archiveFile.map { zipTree(it) })
 }

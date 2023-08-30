@@ -104,7 +104,7 @@ tasks.shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)
     dependsOn(project(":common").tasks.shadowJar)
     from(zipTree(project(":common").tasks.shadowJar.get().archiveFile))
-    configurations = listOf(project.configurations.getByName("shadowCommon"))
+    configurations = listOf(shadowCommon)
     archiveClassifier.set("dev-shadow")
 
     // Meta Exclusions
@@ -116,7 +116,7 @@ tasks.shadowJar {
 
     // JUnixSocket exclusions:
     // libs
-    // discord doesn"t support bsd or sun
+    // discord doesn't support bsd or sun
     exclude("lib/*BSD*/**")
     exclude("lib/*Sun*/**")
     // we don"t use junixsocket on windows
