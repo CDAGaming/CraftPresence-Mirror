@@ -11,7 +11,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * Fixed exceptions in `FileUtils#filesInDir` that were not being ignored correctly
     * This was previously resolved in v2.2.2 for BTA 1.7.7.0_02
-    * BTA's 1.7.7.0_01 build does not contain this fix
+    * BTAs 1.7.7.0_01 build does not contain this fix
 
 ___
 
