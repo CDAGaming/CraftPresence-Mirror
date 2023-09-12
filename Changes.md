@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.2.3 (??/??/2023)
+## v2.2.3 (09/14/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.2...release%2Fv2.2.3)_
@@ -9,7 +9,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
-* Fixed exceptions in `FileUtils#filesInDir` that were not being ignored correctly
+* Backend: Fixed exceptions in `FileUtils#filesInDir` that were not being ignored correctly
     * This was previously resolved in v2.2.2 for BTA 1.7.7.0_02
     * BTAs 1.7.7.0_01 build does not contain this fix
 

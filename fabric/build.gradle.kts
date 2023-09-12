@@ -119,7 +119,7 @@ tasks.shadowJar {
     // discord doesn't support bsd or sun
     exclude("lib/*BSD*/**")
     exclude("lib/*Sun*/**")
-    // we don"t use junixsocket on windows
+    // we don't use junixsocket on windows
     exclude("lib/*Window*/**")
     // include only arm on mac
     exclude("lib/aarch64-Linux*/**")
@@ -132,7 +132,7 @@ tasks.shadowJar {
     // discord doesn't support bsd or sun
     exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*BSD*/**")
     exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*Sun*/**")
-    // we don"t use junixsocket on windows
+    // we don't use junixsocket on windows
     exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*Window*/**")
     // include only arm on mac
     exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-aarch64-Linux*/**")
