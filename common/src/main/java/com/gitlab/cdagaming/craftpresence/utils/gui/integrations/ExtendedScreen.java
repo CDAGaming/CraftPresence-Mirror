@@ -129,6 +129,7 @@ public class ExtendedScreen extends GuiScreen {
 
     private int prevEventButton = 0;
     private long prevMouseEvent = 0L;
+    private ExtendedButtonControl selectedButton = null;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -683,7 +684,9 @@ public class ExtendedScreen extends GuiScreen {
     protected void actionPerformed(@Nonnull GuiButton button) {
         if (isOverScreen()) {
             if (button instanceof ExtendedButtonControl) {
-                ((ExtendedButtonControl) button).onClick();
+                final ExtendedButtonControl extButton = ((ExtendedButtonControl) button);
+                extButton.onClick();
+                this.selectedButton = extButton;
             }
             super.actionPerformed(button);
         }
@@ -755,6 +758,11 @@ public class ExtendedScreen extends GuiScreen {
                 if (extendedControl instanceof ExtendedScreen) {
                     ((ExtendedScreen) extendedControl).mouseMovedOrUp(mouseX, mouseY, state);
                 }
+            }
+            // Fix: Re-Implement `mouseReleased` for older MC
+            if (this.selectedButton != null && state == 0) {
+                this.selectedButton.mouseReleased(mouseX, mouseY);
+                this.selectedButton = null;
             }
             super.mouseMovedOrUp(mouseX, mouseY, state);
         }
