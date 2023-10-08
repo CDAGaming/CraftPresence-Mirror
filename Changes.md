@@ -1,17 +1,21 @@
 # CraftPresence Changes
 
-## v2.2.3 (09/14/2023)
+## v2.2.4 (10/26/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.2...release%2Fv2.2.3)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.3...release%2Fv2.2.4)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
-### Fixes
+### Changes
 
-* Backend: Fixed exceptions in `FileUtils#filesInDir` that were not being ignored correctly
-    * This was previously resolved in v2.2.2 for BTA 1.7.7.0_02
-    * BTAs 1.7.7.0_01 build does not contain this fix
+* Backend: Updated Build Dependencies (Please see the appropriate repositories for changes)
+    * Gradle (`8.3` -> `8.4`)
+    * Fabric Loader (`0.14.22` -> `0.14.23`)
+    * Lenni Reflect (`1.2.4` -> `1.3.0`)
+    * Starscript (`0.2.5` -> `0.2.6`)
+    * Classgraph (`4.8.162` -> `4.8.163`)
+    * JUnixSocket (`2.7.0` -> `2.8.1`)
 
 ___
 
