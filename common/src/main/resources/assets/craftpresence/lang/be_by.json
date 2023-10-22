@@ -1,1 +1,12 @@
-{}
+{
+  "craftpresence.command.shutdown.pre": "§6§lВыключэнне CraftPresence...",
+  "craftpresence.defaults.state.main_menu": "У галоўным меню",
+  "craftpresence.defaults.state.single_player": "Адзіночная гульня",
+  "craftpresence.defaults.weather.clear": "Ясна",
+  "craftpresence.defaults.weather.rain": "Дождж",
+  "craftpresence.defaults.weather.thunder": "Грыміць",
+  "craftpresence.defaults.world_name": "Свет",
+  "craftpresence.logger.error.command": "Пры выкананні гэтай каманды адбылася памылка",
+  "craftpresence.logger.error.config.backup": "Каб прадухіліць страту даных, была зроблена рэзервовая копія вашага канфігурацыйнага файла...",
+  "craftpresence.logger.error.config.invalid.icon.empty": "Немагчыма выявіць прыдатныя значкі! Адпраўце праблему з модам, калі гэта памылка..."
+}

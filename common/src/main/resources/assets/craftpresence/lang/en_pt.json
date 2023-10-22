@@ -1,1 +1,10 @@
-{}
+{
+  "craftpresence.defaults.advanced.item_messages": "Holdin' {item.message.holding}",
+  "craftpresence.defaults.biome_messages.biome_messages": "Playin' in {biome.name}",
+  "craftpresence.defaults.dimension_messages.dimension_messages": "In th' {dimension.name}",
+  "craftpresence.defaults.integrations.replaymod.editor": "{player.name} be editin' a replay",
+  "craftpresence.defaults.integrations.replaymod.renderer": "{player.name} be exportin' a replay ({replaymod.frames.current}/{replaymod.frames.total} frames)",
+  "craftpresence.defaults.server_messages.server_messages": "Playin' on {server.motd.raw}",
+  "craftpresence.defaults.state.lan": "Playin' on a LAN Server",
+  "craftpresence.defaults.state.loading": "Loadin'..."
+}
