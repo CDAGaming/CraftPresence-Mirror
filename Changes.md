@@ -17,13 +17,15 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Classgraph (`4.8.162` -> `4.8.163`)
     * JUnixSocket (`2.7.0` -> `2.8.1`)
 * Adjusted Mod Initialization in Forge 1.13+ to better detect (and avoid) running the mod on server-side
-* Added the 1.14+ Forge `DISPLAYTEST` fix for 1.13.2 Forge Users
-    * This resolves an issue where an "Incompatible FML modded server" X indicator could appear in multiplayer
-    * This fix only applies to Forge Versions above `1.13.2-25.0.103`
+* Updated Translations for Belarusian, Pirate English, French, and Russian
+    * Please note these are community-created translations from Crowdin, and issues may be present!
 
 ### Fixes
 
 * Fixed a discrepancy between the author name between Forge and Fabric
+* Modified the 1.14+ Forge `DISPLAYTEST` fix to also support 1.13.2 Forge Users
+    * This resolves an issue where an "Incompatible FML modded server" X indicator could appear in multiplayer
+    * This fix only applies to Forge Versions above `1.13.2-25.0.103`
 
 ___
 
