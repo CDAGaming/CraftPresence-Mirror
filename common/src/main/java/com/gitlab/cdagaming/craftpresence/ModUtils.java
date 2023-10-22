@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TranslationUtils;
 import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
@@ -51,7 +52,7 @@ public class ModUtils {
     /**
      * The Detected Brand Information within Minecraft
      */
-    public static final String BRAND = ClientBrandRetriever.getClientModName();
+    public static final String BRAND = findGameBrand();
 
     /**
      * If this Application is in the Hard Floor of Legacy Mode
@@ -84,6 +85,17 @@ public class ModUtils {
      * Flag used for determining if Text Colors are blocked
      */
     public static final boolean IS_TEXT_COLORS_BLOCKED = Constants.IS_LEGACY_SOFT && MCProtocolID <= 23;
+
+    private static String findGameBrand() {
+        String result = null;
+        try {
+            result = System.getProperty("minecraft.launcher.brand");
+        } catch (Throwable ignored) {
+        }
+        return StringUtils.getOrDefault(
+                result, ClientBrandRetriever.getClientModName()
+        );
+    }
 
     private static TranslationUtils findGameTranslations() {
         final boolean hasVanillaTranslations = !Constants.IS_LEGACY_SOFT || MCProtocolID >= 7;
