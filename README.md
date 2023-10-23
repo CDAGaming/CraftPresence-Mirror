@@ -387,6 +387,8 @@ This project makes usage of the following dependencies internally:
   by [MeteorDevelopment](https://github.com/MeteorDevelopment) on v2.0 and above
 * [DiscordIPC API](https://github.com/jagrosh/DiscordIPC) by [jagrosh](https://github.com/jagrosh)
     * [JUnixSocket](https://github.com/kohlschutter/junixsocket) by [kohlschutter](https://github.com/kohlschutter)
+* [Classgraph](https://github.com/classgraph/classgraph) by [lukehutch](https://github.com/lukehutch) on v2.0 and above
+* [Lenni Reflect](https://github.com/Lenni0451/Reflect) by [Lenni0451](https://github.com/Lenni0451) on v2.2.3 and above
 * [Google's Guava Api](https://github.com/google/guava) by [Google](https://github.com/google/) on v1.9.x and below
 * [Java Native Access (JNA) API](https://github.com/java-native-access/jna) on v1.5.x and below
 
@@ -398,4 +400,4 @@ Case, Discord).
 The terms of service relating to Creating a Discord ID for icons can be
 found [here](https://discord.com/developers/docs/legal)
 
-The terms of service for using Discord as a service can additionally be located [here](https://discord.com/new/terms)
+The terms of service for using Discord as a service can additionally be located [here](https://discord.com/terms)

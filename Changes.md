@@ -24,7 +24,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
-* Fixed a discrepancy between the author name between Forge and Fabric
+* Fixed a typo where the author name in the Forge mod metadata did not match the Fabric edition
 * Modified the 1.14+ Forge `DISPLAYTEST` fix to also support 1.13.2 Forge Users
     * This resolves an issue where an "Incompatible FML modded server" X indicator could appear in multiplayer
     * This fix only applies to Forge Versions above `1.13.2-25.0.103`
@@ -41,10 +41,12 @@ added/iterated upon between releases.
 
 The following known issues are present in this build:
 
-* On certain MC versions, Scrolling while in a Scroll List drawing `ItemStack`'s may cause GUI distortions
 * Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) contains the following known issues:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
+
+Please refer to the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) to view more info relating
+to known issues.
 
 #### Snapshot Build Info
 
