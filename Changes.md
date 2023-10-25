@@ -11,7 +11,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * Backend: Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Gradle (`8.3` -> `8.4`)
-    * Fabric Loader (`0.14.22` -> `0.14.23`)
+    * Fabric Loader (`0.14.22` -> `0.14.24`)
     * Lenni Reflect (`1.2.4` -> `1.3.0`)
     * Starscript (`0.2.5` -> `0.2.6`)
     * Classgraph (`4.8.162` -> `4.8.163`)
