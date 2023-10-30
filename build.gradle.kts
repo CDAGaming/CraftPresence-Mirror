@@ -10,7 +10,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
-    id("xyz.wagyourtail.unimined") version "1.0.5" apply false
+    id("xyz.wagyourtail.unimined") version "1.1.0-SNAPSHOT" apply false
     id("com.diffplug.gradle.spotless") version "6.22.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("io.github.pacifistmc.forgix") version "1.2.6"
@@ -36,6 +36,7 @@ val extFileFormat = "${"mod_name"()}-$extVersionFormat"
 val extProtocol = "mc_protocol"()!!.toInt()
 val extIsLegacy = "isLegacy"()!!.toBoolean()
 val extIsJarMod = "isJarMod"()!!.toBoolean()
+val extIsNeoForge = "isNeoForge"()!!.toBoolean()
 val extIsModern = !extIsLegacy && extProtocol >= 498
 val extIsMCPJar = extIsJarMod && "mc_mappings_type"() == "mcp"
 
@@ -60,6 +61,7 @@ subprojects {
     val protocol by extra(extProtocol)
     val isLegacy by extra(extIsLegacy)
     val isJarMod by extra(extIsJarMod)
+    val isNeoForge by extra(extIsNeoForge)
     val isModern by extra(extIsModern)
     val isMCPJar by extra(extIsMCPJar)
     val fmlName by extra(extFmlName)
@@ -144,7 +146,7 @@ subprojects {
     extensions.getByType<UniminedExtension>().useGlobalCache = false
 
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
-        side(if (isJarMod) "client" else "combined")
+        side(if (isJarMod || isNeoForge) "client" else "combined")
         version(mcVersion)
 
         mappings {

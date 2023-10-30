@@ -16,6 +16,7 @@ operator fun String.invoke(): String? {
 val isLegacy: Boolean by extra
 val protocol: Int by extra
 val isJarMod: Boolean by extra
+val isNeoForge: Boolean by extra
 val accessWidenerFile: File by extra
 val isMCPJar: Boolean by extra
 val isModern: Boolean by extra
@@ -250,11 +251,16 @@ for (v in "additional_mc_versions"()!!.split(",")) {
 }
 
 // Setup Game Loaders to upload for
-val uploadLoaders = "enabled_platforms"()!!.split(",").toMutableList()
+var uploadLoaders = "enabled_platforms"()!!.split(",").toMutableList()
 for (v in "additional_loaders"()!!.split(",")) {
     if (v.isNotEmpty()) {
         uploadLoaders.add(v)
     }
+}
+
+// Ensure Forge // NeoForge Upload Compatibility, when specified
+if (isNeoForge) {
+    uploadLoaders = uploadLoaders.map { if (it == "forge") "neoforge" else it }.toMutableList()
 }
 
 publisher {
