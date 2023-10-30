@@ -23,9 +23,6 @@ by [jagrosh](https://github.com/jagrosh)!
 * Some versions of CraftPresence for Minecraft 1.14.x and above require
   the [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
   and the [Fabric mod loader](https://fabricmc.net/use/installer)
-* Some versions of CraftPresence for Minecraft 1.13.x require
-  the [Rift API](https://www.curseforge.com/minecraft/mc-mods/rift)
-  and the [Rift mod loader](https://github.com/DimensionalDevelopment/Rift/releases)
 * Versions of CraftPresence for Minecraft 1.1.0 and below
   require [Risugami's ModLoader](https://mcarchive.net/mods/modloader)
 

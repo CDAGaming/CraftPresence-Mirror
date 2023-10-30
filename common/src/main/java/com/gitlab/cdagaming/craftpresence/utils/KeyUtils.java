@@ -146,41 +146,6 @@ public class KeyUtils {
     }
 
     /**
-     * Converts a KeyCode using the Specified Conversion Mode, if possible
-     * <p>
-     * Note: If None is Used on a Valid Value, this function can be used as verification, if any
-     *
-     * @param originalKey The original Key to Convert
-     * @param protocol    The Protocol to Target for this conversion
-     * @param mode        The Conversion Mode to convert the keycode to
-     * @return The resulting converted KeyCode, or the mode's unknown key
-     */
-    public static int convertKey(final int originalKey, final int protocol, final KeyConverter.ConversionMode mode) {
-        final Pair<Integer, String> unknownKeyData = mode == KeyConverter.ConversionMode.Lwjgl2 ? KeyConverter.fromGlfw.get(-1) : KeyConverter.toGlfw.get(0);
-        int resultKey = (protocol <= 340 ? -1 : 0);
-
-        if (mode == KeyConverter.ConversionMode.Lwjgl2) {
-            resultKey = KeyConverter.fromGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
-        } else if (mode == KeyConverter.ConversionMode.Lwjgl3) {
-            resultKey = KeyConverter.toGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
-        } else if (mode == KeyConverter.ConversionMode.None) {
-            // If Input is a valid Integer and Valid KeyCode,
-            // Retain the Original Value
-            if (protocol <= 340 && KeyConverter.toGlfw.containsKey(originalKey)) {
-                resultKey = originalKey;
-            } else if (protocol > 340 && KeyConverter.fromGlfw.containsKey(originalKey)) {
-                resultKey = originalKey;
-            }
-        }
-
-        if (resultKey == originalKey && mode != KeyConverter.ConversionMode.None) {
-            Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", Integer.toString(resultKey), mode.name()));
-        }
-
-        return resultKey;
-    }
-
-    /**
      * Create a new KeyBinding with the specified info
      *
      * @param id         The keybinding internal identifier, used for the Key Sync Queue

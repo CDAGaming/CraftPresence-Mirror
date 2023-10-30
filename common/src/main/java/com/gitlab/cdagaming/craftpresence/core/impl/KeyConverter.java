@@ -24,6 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.core.impl;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
+
 import java.util.Map;
 
 /**
@@ -297,6 +299,41 @@ public class KeyConverter {
             .put(347, new Pair<>(220, "Right Meta"))
             .put(348, new Pair<>(0, "KEY_MENU"))
             .build();
+
+    /**
+     * Converts a KeyCode using the Specified Conversion Mode, if possible
+     * <p>
+     * Note: If None is Used on a Valid Value, this function can be used as verification, if any
+     *
+     * @param originalKey The original Key to Convert
+     * @param protocol    The Protocol to Target for this conversion
+     * @param mode        The Conversion Mode to convert the keycode to
+     * @return The resulting converted KeyCode, or the mode's unknown key
+     */
+    public static int convertKey(final int originalKey, final int protocol, final ConversionMode mode) {
+        final Pair<Integer, String> unknownKeyData = mode == ConversionMode.Lwjgl2 ? fromGlfw.get(-1) : toGlfw.get(0);
+        int resultKey = (protocol <= 340 ? -1 : 0);
+
+        if (mode == ConversionMode.Lwjgl2) {
+            resultKey = fromGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+        } else if (mode == ConversionMode.Lwjgl3) {
+            resultKey = toGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+        } else if (mode == ConversionMode.None) {
+            // If Input is a valid Integer and Valid KeyCode,
+            // Retain the Original Value
+            if (protocol <= 340 && toGlfw.containsKey(originalKey)) {
+                resultKey = originalKey;
+            } else if (protocol > 340 && fromGlfw.containsKey(originalKey)) {
+                resultKey = originalKey;
+            }
+        }
+
+        if (resultKey == originalKey && mode != ConversionMode.None) {
+            Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", Integer.toString(resultKey), mode.name()));
+        }
+
+        return resultKey;
+    }
 
     /**
      * A Mapping storing the possible Conversion Modes for this module

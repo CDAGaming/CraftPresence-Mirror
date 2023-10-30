@@ -447,7 +447,7 @@ public final class Config extends Module implements Serializable {
                                             if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
                                                 shouldReset = true;
                                             } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
-                                                final int migratedKeyCode = KeyUtils.convertKey(boolData.getSecond(), getGameVersion(), keyCodeMigrationId);
+                                                final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), getGameVersion(), keyCodeMigrationId);
                                                 if (migratedKeyCode != boolData.getSecond()) {
                                                     Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
                                                     setProperty(migratedKeyCode, pathData);
