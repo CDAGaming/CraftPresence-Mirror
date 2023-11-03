@@ -28,7 +28,7 @@ val forgeId = if (isNeoForge) "neoforge" else fmlName
 
 unimined.minecraft {
     if (!isJarMod) {
-        val forgeData: ForgeLikePatcher.() -> Unit = {
+        val forgeData: ForgeLikePatcher<*>.() -> Unit = {
             if (canUseATs) {
                 accessTransformer(aw2at(accessWidenerFile))
             }
