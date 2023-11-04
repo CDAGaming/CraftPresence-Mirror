@@ -35,7 +35,7 @@ jobs:
         run: ./gradlew --build-cache --info --stacktrace build
 
       - name: Merge Jars with Gradle
-        run: ./gradlew --build-cache --info --stacktrace mergeJars
+        run: ./gradlew --build-cache --info --stacktrace fusejars
 
       - uses: actions/upload-artifact@v3
         with:

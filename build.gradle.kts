@@ -1,4 +1,5 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
+import com.hypherionmc.modfusioner.plugin.FusionerExtension
 import org.gradle.internal.jvm.Jvm
 import xyz.wagyourtail.mini_jvmdg.MiniJVMDowngrade
 import xyz.wagyourtail.replace_str.ProcessClasses
@@ -13,7 +14,7 @@ plugins {
     id("xyz.wagyourtail.unimined") version "1.1.0-SNAPSHOT" apply false
     id("com.diffplug.gradle.spotless") version "6.22.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-    id("io.github.pacifistmc.forgix") version "1.2.6"
+    id("com.hypherionmc.modutils.modfusioner") version "1.0.7"
 }
 
 /**
@@ -344,20 +345,20 @@ subprojects {
     }
 }
 
-forgix {
-    group = rootProject.group as String
-    mergedJarName = "$extFileFormat.jar"
-    outputDir = "build/libs"
+fusioner {
+    packageGroup = rootProject.group as String
+    mergedJarName = extFileFormat
+    outputDirectory = "build/libs"
 
     // Forge / ModLoader
-    customContainers.add(CustomContainer().apply {
+    customConfigurations.add(FusionerExtension.CustomConfiguration().apply {
         projectName = extFmlName
-        jarLocation = "build/libs/$extFileFormat-$extFmlName.jar"
+        inputFile = "build/libs/$extFileFormat-$extFmlName.jar"
     })
 
-    fabricContainer = FabricContainer().apply {
-        jarLocation = "build/libs/$extFileFormat-fabric.jar"
+    fabricConfiguration = FusionerExtension.FabricConfiguration().apply {
+        inputFile = "build/libs/$extFileFormat-fabric.jar"
     }
 
-    removeDuplicate("com.gitlab.cdagaming.craftpresence.core")
+    relocateDuplicate("com.gitlab.cdagaming.craftpresence.core")
 }
