@@ -60,8 +60,8 @@ dependencies {
     }
 
     // Java-Specific Dependencies
-    shade("com.kohlschutter.junixsocket:junixsocket-common:2.8.1")
-    shade("com.kohlschutter.junixsocket:junixsocket-native-common:2.8.1")
+    shade("com.kohlschutter.junixsocket:junixsocket-common:2.8.2")
+    shade("com.kohlschutter.junixsocket:junixsocket-native-common:2.8.2")
 
     // Annotations
     implementation("com.google.code.findbugs:jsr305:3.0.2")
