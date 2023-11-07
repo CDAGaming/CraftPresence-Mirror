@@ -47,10 +47,6 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class DimensionUtils implements Module {
     /**
-     * A List of the detected Dimension Type's
-     */
-    private final List<DimensionType> DIMENSION_TYPES = StringUtils.newArrayList();
-    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
@@ -88,7 +84,6 @@ public class DimensionUtils implements Module {
         hasScanned = false;
         DEFAULT_NAMES.clear();
         DIMENSION_NAMES.clear();
-        DIMENSION_TYPES.clear();
         clearClientData();
     }
 
@@ -145,9 +140,6 @@ public class DimensionUtils implements Module {
             }
             if (!DIMENSION_NAMES.contains(newDimension_Identifier)) {
                 DIMENSION_NAMES.add(newDimension_Identifier);
-            }
-            if (!DIMENSION_TYPES.contains(newDimensionType)) {
-                DIMENSION_TYPES.add(newDimensionType);
             }
 
             updatePresence();
@@ -233,9 +225,6 @@ public class DimensionUtils implements Module {
                 }
                 if (!DIMENSION_NAMES.contains(name)) {
                     DIMENSION_NAMES.add(name);
-                }
-                if (!DIMENSION_TYPES.contains(TYPE)) {
-                    DIMENSION_TYPES.add(TYPE);
                 }
             }
         }

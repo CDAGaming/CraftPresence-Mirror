@@ -45,10 +45,6 @@ import java.util.List;
 @SuppressWarnings("DuplicatedCode")
 public class BiomeUtils implements Module {
     /**
-     * A List of the detected Biome Type's
-     */
-    private final List<Biome> BIOME_TYPES = StringUtils.newArrayList();
-    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
@@ -86,7 +82,6 @@ public class BiomeUtils implements Module {
         hasScanned = false;
         DEFAULT_NAMES.clear();
         BIOME_NAMES.clear();
-        BIOME_TYPES.clear();
         clearClientData();
     }
 
@@ -142,9 +137,6 @@ public class BiomeUtils implements Module {
             }
             if (!BIOME_NAMES.contains(newBiome_Identifier)) {
                 BIOME_NAMES.add(newBiome_Identifier);
-            }
-            if (!BIOME_TYPES.contains(newBiome)) {
-                BIOME_TYPES.add(newBiome);
             }
 
             updatePresence();
@@ -223,9 +215,6 @@ public class BiomeUtils implements Module {
                 }
                 if (!BIOME_NAMES.contains(name)) {
                     BIOME_NAMES.add(name);
-                }
-                if (!BIOME_TYPES.contains(biome)) {
-                    BIOME_TYPES.add(biome);
                 }
             }
         }
