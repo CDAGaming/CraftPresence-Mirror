@@ -1,33 +1,25 @@
 # CraftPresence Changes
 
-## v2.2.4 (10/26/2023)
+## v2.2.5 (12/??/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.3...release%2Fv2.2.4)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.4...release%2Fv2.2.5)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * Backend: Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Gradle (`8.3` -> `8.4`)
-    * Fabric Loader (`0.14.22` -> `0.14.24`)
-    * Lenni Reflect (`1.2.4` -> `1.3.0`)
-    * Starscript (`0.2.5` -> `0.2.6`)
-    * Classgraph (`4.8.162` -> `4.8.163`)
-    * JUnixSocket (`2.7.0` -> `2.8.1`)
-* Adjusted Mod Initialization in Forge 1.13+ to better detect (and avoid) running the mod on server-side
-* Adjusted the `general.brand` placeholder to support the `minecraft.launcher.brand` System Property
-    * The prior implementation of this placeholder will be used if this property is not present
-* Updated Translations for Belarusian, Pirate English, French, and Russian
-    * Please note these are community-created translations from Crowdin, and issues may be present!
+    * Unimined (`1.0.5` -> `1.1.0-SNAPSHOT` with NeoForge Support)
+    * Forgix (Plugin swapped with [ModFusioner](https://github.com/firstdarkdev/modfusioner))
+    * Classgraph (`4.8.163` -> `4.8.164`)
+    * JUnixSocket (`2.8.1` -> `2.8.2`)
+* Miscellaneous Refactors and optimizations, relating to API functions and locations
 
 ### Fixes
 
-* Fixed a typo where the author name in the Forge mod metadata did not match the Fabric edition
-* Modified the 1.14+ Forge `DISPLAYTEST` fix to also support 1.13.2 Forge Users
-    * This resolves an issue where an "Incompatible FML modded server" X indicator could appear in multiplayer
-    * This fix only applies to Forge Versions above `1.13.2-25.0.103`
+* Resolved a memory leak in the Dimension and Biome Modules, relating to `WorldProvider` storage
+  * Credits to the GTNH Team and these PRs: [#1](https://gitlab.com/CDAGaming/CraftPresence/-/merge_requests/115), [#2](https://github.com/GTNewHorizons/CraftPresence/pull/2)
 
 ___
 
