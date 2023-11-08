@@ -63,10 +63,6 @@ dependencies {
     shade("com.kohlschutter.junixsocket:junixsocket-common:2.8.2")
     shade("com.kohlschutter.junixsocket:junixsocket-native-common:2.8.2")
 
-    // Annotations
-    implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.github.spotbugs:spotbugs-annotations:4.7.3")
-
     // LeniReflect
     shade("net.lenni0451:Reflect:${"reflect_version"()!!}")
 

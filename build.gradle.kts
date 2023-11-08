@@ -264,6 +264,10 @@ subprojects {
             // work around JDK-8206937 by providing a shim for inaccessible classes.
             "compileOnly"("me.eigenraven.java8unsupported:java-8-unsupported-shim:1.0.0")
         }
+
+        // Annotations
+        "implementation"("com.google.code.findbugs:jsr305:3.0.2")
+        "implementation"("com.github.spotbugs:spotbugs-annotations:4.7.3")
     }
 
     tasks.withType<JavaCompile>().configureEach {
