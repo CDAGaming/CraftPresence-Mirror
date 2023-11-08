@@ -33,7 +33,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeGenBase;
 
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class BiomeUtils implements Module {
     /**
      * The Player's Current Biome, if any
      */
-    private Biome CURRENT_BIOME;
+    private BiomeGenBase CURRENT_BIOME;
 
     @Override
     public void emptyData() {
@@ -120,10 +120,10 @@ public class BiomeUtils implements Module {
 
     @Override
     public void updateData() {
-        final Biome newBiome = CraftPresence.player.worldObj.getBiome(CraftPresence.player.getPosition());
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final BiomeGenBase newBiome = CraftPresence.player.worldObj.getBiomeGenForCoords(CraftPresence.player.getPosition());
+        final String newBiomeName = StringUtils.formatIdentifier(newBiome.biomeName, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_Identifier = StringUtils.getOrDefault(newBiome_primaryIdentifier, newBiome_alternativeIdentifier);
 
@@ -171,11 +171,11 @@ public class BiomeUtils implements Module {
      *
      * @return The detected Biome Types found
      */
-    private List<Biome> getBiomeTypes() {
-        List<Biome> biomeTypes = StringUtils.newArrayList();
+    private List<BiomeGenBase> getBiomeTypes() {
+        List<BiomeGenBase> biomeTypes = StringUtils.newArrayList();
 
-        if (Biome.REGISTRY != null) {
-            for (Biome biome : Biome.REGISTRY) {
+        if (BiomeGenBase.getBiomeGenArray() != null) {
+            for (BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
                 if (biome != null && !biomeTypes.contains(biome)) {
                     biomeTypes.add(biome);
                 }
@@ -184,12 +184,12 @@ public class BiomeUtils implements Module {
 
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Biome.class).values()) {
+            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class).values()) {
                 if (classInfo != null) {
                     try {
                         Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
                         if (classObj != null) {
-                            Biome biomeObj = (Biome) classObj.getDeclaredConstructor().newInstance();
+                            BiomeGenBase biomeObj = (BiomeGenBase) classObj.getDeclaredConstructor().newInstance();
                             if (!biomeTypes.contains(biomeObj)) {
                                 biomeTypes.add(biomeObj);
                             }
@@ -206,9 +206,9 @@ public class BiomeUtils implements Module {
 
     @Override
     public void getAllData() {
-        for (Biome biome : getBiomeTypes()) {
+        for (BiomeGenBase biome : getBiomeTypes()) {
             if (biome != null) {
-                String biomeName = StringUtils.getOrDefault(biome.getBiomeName(), MappingUtils.getClassName(biome));
+                String biomeName = StringUtils.getOrDefault(biome.biomeName, MappingUtils.getClassName(biome));
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);

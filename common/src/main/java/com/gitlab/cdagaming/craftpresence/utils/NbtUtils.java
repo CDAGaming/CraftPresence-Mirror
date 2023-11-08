@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 
@@ -46,8 +47,7 @@ public class NbtUtils {
      * @return the resulting NBT Tag, or null if not found
      */
     public static NBTTagCompound getNbt(final Entity entity) {
-        NBTTagCompound result = new NBTTagCompound();
-        return entity != null ? entity.writeToNBT(result) : result;
+        return entity != null ? serializeNBT(entity) : new NBTTagCompound();
     }
 
     /**
@@ -185,5 +185,15 @@ public class NbtUtils {
             default:
                 return tag;
         }
+    }
+
+    public static NBTTagCompound serializeNBT(Entity entity) {
+        String name = EntityList.getEntityString(entity);
+        NBTTagCompound ret = new NBTTagCompound();
+        if (!StringUtils.isNullOrEmpty(name)) {
+            ret.setString("id", name);
+        }
+        entity.writeToNBT(ret);
+        return ret;
     }
 }

@@ -263,7 +263,7 @@ public class ServerUtils implements Module {
     @Override
     public void updateData() {
         final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
+        final NetHandlerPlayClient newConnection = CraftPresence.instance.getNetHandler();
 
         if (!joinInProgress) {
             final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
@@ -488,9 +488,9 @@ public class ServerUtils implements Module {
      */
     private void joinServer(final ServerData serverData) {
         try {
-            if (!serverData.pinged) {
+            if (!serverData.field_1691) {
                 // Stub Server Data if not pinged
-                serverData.pinged = true;
+                serverData.field_1691 = true;
                 serverData.pingToServer = -2L;
                 serverData.serverMOTD = "";
                 serverData.populationInfo = "";
