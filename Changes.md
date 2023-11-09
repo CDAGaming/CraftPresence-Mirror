@@ -19,7 +19,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Fixes
 
 * Resolved a memory leak in the Dimension and Biome Modules, relating to `WorldProvider` storage
-  * Credits to the GTNH Team and these PRs: [#1](https://gitlab.com/CDAGaming/CraftPresence/-/merge_requests/115), [#2](https://github.com/GTNewHorizons/CraftPresence/pull/2)
+    * Credits to the GTNH Team and these
+      PRs: [#1](https://gitlab.com/CDAGaming/CraftPresence/-/merge_requests/115), [#2](https://github.com/GTNewHorizons/CraftPresence/pull/2)
+* Resolved several UI Rendering Issues in MC 1.17+ caused by an incorrect Render Order
 
 ___
 
