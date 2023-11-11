@@ -122,7 +122,7 @@ public class EntityUtils implements Module {
      */
     public static String getWeather(final World worldObj) {
         String name = "clear";
-        if (worldObj != null) {
+        /*if (worldObj != null) {
             final WorldInfo info = worldObj.func_22144_v();
             if (info.func_27396_m()) {
                 name = "thunder";
@@ -131,7 +131,7 @@ public class EntityUtils implements Module {
             } else {
                 name = "clear";
             }
-        }
+        }*/
         return name;
     }
 

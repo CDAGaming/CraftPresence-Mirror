@@ -176,13 +176,17 @@ public class ScrollableListControl extends GuiSlot {
     public boolean isWithinBounds(final int mouseX, final int mouseY) {
         return RenderUtils.isMouseWithin(
                 mouseX, mouseY,
-                top,
-                bottom,
                 StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "left", "field_22258_g", "e")
+                        StringUtils.getField(GuiSlot.class, this, "top", "field_22261_d", "d")
                 ).getSecond(),
                 StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "right", "field_22259_f", "d")
+                        StringUtils.getField(GuiSlot.class, this, "bottom", "field_22260_e", "e")
+                ).getSecond(),
+                StringUtils.getValidInteger(
+                        StringUtils.getField(GuiSlot.class, this, "left", "field_22258_g", "g")
+                ).getSecond(),
+                StringUtils.getValidInteger(
+                        StringUtils.getField(GuiSlot.class, this, "right", "field_22259_f", "f")
                 ).getSecond()
         );
     }
@@ -195,6 +199,16 @@ public class ScrollableListControl extends GuiSlot {
     @Override
     protected int getSize() {
         return itemList.size();
+    }
+
+    /**
+     * Retrieves the Content Height of the List
+     *
+     * @return The Content Height of the List
+     */
+    @Override
+    protected int getContentHeight() {
+        return getSize() * (renderType.canRenderImage() ? 45 : 18);
     }
 
     /**
