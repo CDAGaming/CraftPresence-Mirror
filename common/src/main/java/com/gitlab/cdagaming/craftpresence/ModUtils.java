@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.ModUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.TranslationUtils;
-import com.gitlab.cdagaming.craftpresence.utils.updater.ModUpdaterUtils;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.realms.RealmsSharedConstants;
 

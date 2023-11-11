@@ -22,13 +22,10 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils.updater;
+package com.gitlab.cdagaming.craftpresence.core.utils;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.integrations.versioning.VersionComparator;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

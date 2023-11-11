@@ -30,8 +30,8 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.UpdateInfoGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.gitlab.cdagaming.craftpresence.utils.updater.UpdateInfoGui;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;

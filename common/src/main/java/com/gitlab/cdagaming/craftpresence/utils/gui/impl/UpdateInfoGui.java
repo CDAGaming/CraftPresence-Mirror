@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils.updater;
+package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.ModUpdaterUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
