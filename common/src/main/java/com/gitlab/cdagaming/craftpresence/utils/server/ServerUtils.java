@@ -67,6 +67,12 @@ public class ServerUtils implements Module {
             "multiplayer.status.pinging"
     );
     /**
+     * The List of invalid Server Name Translations
+     */
+    private static final List<String> invalidNames = StringUtils.newArrayList(
+            "selectServer.defaultName"
+    );
+    /**
      * Whether this module is allowed to start and enabled
      */
     public boolean enabled = false;
@@ -266,7 +272,7 @@ public class ServerUtils implements Module {
             final boolean newLANStatus = (CraftPresence.instance.isSingleplayer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
-            final String newServer_Name = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
+            final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
             final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isSingleplayer() &&
                     newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripColors(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
@@ -391,21 +397,42 @@ public class ServerUtils implements Module {
     }
 
     /**
-     * Whether the supplied server MOTD (Message of the Day) contains invalid characters
+     * Whether the supplied server element contains invalid characters
      *
-     * @param serverMotd the server MOTD (Message of the day) to interpret
+     * @param input        the server element to interpret
+     * @param invalidItems The list of items to iterate over for validity
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
-    private boolean isInvalidMotd(final String serverMotd) {
-        if (!StringUtils.isNullOrEmpty(serverMotd)) {
-            for (String item : invalidMotds) {
-                if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item) && serverMotd.equalsIgnoreCase(ModUtils.RAW_TRANSLATOR.translate(item))) {
+    private boolean isInvalidData(final String input, final List<String> invalidItems) {
+        if (!StringUtils.isNullOrEmpty(input)) {
+            for (String item : invalidItems) {
+                if (ModUtils.RAW_TRANSLATOR != null && ModUtils.RAW_TRANSLATOR.hasTranslation(item) && input.equalsIgnoreCase(ModUtils.RAW_TRANSLATOR.translate(item))) {
                     return true;
                 }
             }
             return false;
         }
         return true;
+    }
+
+    /**
+     * Whether the supplied server MOTD (Message of the Day) contains invalid characters
+     *
+     * @param serverMotd the server MOTD (Message of the day) to interpret
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    private boolean isInvalidMotd(final String serverMotd) {
+        return isInvalidData(serverMotd, invalidMotds);
+    }
+
+    /**
+     * Whether the supplied server name contains invalid characters
+     *
+     * @param serverName the server name to interpret
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    private boolean isInvalidName(final String serverName) {
+        return isInvalidData(serverName, invalidNames);
     }
 
     /**

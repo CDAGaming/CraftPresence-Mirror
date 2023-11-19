@@ -22,6 +22,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Credits to the GTNH Team and these
       PRs: [#1](https://gitlab.com/CDAGaming/CraftPresence/-/merge_requests/115), [#2](https://github.com/GTNewHorizons/CraftPresence/pull/2)
 * Resolved several UI Rendering Issues in MC 1.17+ caused by an incorrect Render Order
+* Resolved an Issue where the `fallbackServerName` setting was not respected if either using Direct Connection or
+  leaving the Server Name as `Minecraft Server`
+    * This now uses a similar API check to checking for Invalid Server MOTDs
 
 ___
 
