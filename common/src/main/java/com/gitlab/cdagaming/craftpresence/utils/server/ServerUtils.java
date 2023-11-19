@@ -399,7 +399,7 @@ public class ServerUtils implements Module {
     /**
      * Whether the supplied server element contains invalid characters
      *
-     * @param input        the server element to interpret
+     * @param input        The server element to interpret
      * @param invalidItems The list of items to iterate over for validity
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
