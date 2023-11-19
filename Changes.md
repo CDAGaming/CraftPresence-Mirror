@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.2.5 (12/??/2023)
+## v2.2.5 (11/23/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.4...release%2Fv2.2.5)_
@@ -12,8 +12,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Backend: Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Unimined (`1.0.5` -> `1.1.0-SNAPSHOT` with NeoForge Support)
     * Forgix (Plugin swapped with [ModFusioner](https://github.com/firstdarkdev/modfusioner))
-    * Classgraph (`4.8.163` -> `4.8.164`)
-    * JUnixSocket (`2.8.1` -> `2.8.2`)
+    * Classgraph (`4.8.163` -> `4.8.165`)
+    * JUnixSocket (`2.8.1` -> `2.8.3`)
 * Miscellaneous Refactors and optimizations, relating to API functions and locations
 
 ### Fixes
