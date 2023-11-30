@@ -53,12 +53,6 @@ public class MathUtils {
             if (max < min) {
                 max = min;
             }
-            if (min < 0) {
-                min = 0;
-            }
-            if (max < 0) {
-                max = 0;
-            }
         }
         // Checking value within range based on contains_min and contains_max
         if (contains_min && contains_max) {
