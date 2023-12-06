@@ -1,30 +1,29 @@
 # CraftPresence Changes
 
-## v2.2.5 (11/23/2023)
+## v2.2.6 (12/19/2023)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.4...release%2Fv2.2.5)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.5...release%2Fv2.2.6)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * Backend: Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Unimined (`1.0.5` -> `1.1.0-SNAPSHOT` with NeoForge Support)
-    * Forgix (Plugin swapped with [ModFusioner](https://github.com/firstdarkdev/modfusioner))
-    * Classgraph (`4.8.163` -> `4.8.165`)
-    * JUnixSocket (`2.8.1` -> `2.8.3`)
-* Miscellaneous Refactors and optimizations, relating to API functions and locations
+    * Unimined (`1.1.0-SNAPSHOT` -> `1.1.0`)
+    * Spotless Plugin (`6.22.0` -> `6.23.3`)
+    * Spotless Annotations (`4.7.3` -> `4.8.2`)
+    * Lenni Reflect (`1.3.0` -> `1.3.1`)
+    * Gradle (`8.4` -> `8.5`)
+* Added Initial MC 1.20.3 and 1.20.4 Support
+    * The MC 1.20.4 Build contains runtime support for MC 1.20.3
+    * The MC 1.20.2 Build has been updated to prevent running it on MC 1.20.3 and above
 
 ### Fixes
 
-* Resolved a memory leak in the Dimension and Biome Modules, relating to `WorldProvider` storage
-    * Credits to the GTNH Team and these
-      PRs: [#1](https://gitlab.com/CDAGaming/CraftPresence/-/merge_requests/115), [#2](https://github.com/GTNewHorizons/CraftPresence/pull/2)
-* Resolved several UI Rendering Issues in MC 1.17+ caused by an incorrect Render Order
-* Resolved an Issue where the `fallbackServerName` setting was not respected if either using Direct Connection or
-  leaving the Server Name as `Minecraft Server`
-    * This now uses a similar API check to checking for Invalid Server MOTDs
+* [Backend] Fixed an issue where negative numbers were not allowed in the `MathUtils#IsWithinValue` functions
+    * This fix was previously included in
+      the [World of Warcraft Addon](https://github.com/CDAGaming/CraftPresence-Wow-Edition)
 
 ___
 

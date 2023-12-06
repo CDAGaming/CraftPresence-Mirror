@@ -11,8 +11,8 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
-    id("xyz.wagyourtail.unimined") version "1.1.0-SNAPSHOT" apply false
-    id("com.diffplug.gradle.spotless") version "6.22.0" apply false
+    id("xyz.wagyourtail.unimined") version "1.1.0" apply false
+    id("com.diffplug.gradle.spotless") version "6.23.3" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.9"
 }
@@ -267,7 +267,7 @@ subprojects {
 
         // Annotations
         "implementation"("com.google.code.findbugs:jsr305:3.0.2")
-        "implementation"("com.github.spotbugs:spotbugs-annotations:4.7.3")
+        "implementation"("com.github.spotbugs:spotbugs-annotations:4.8.2")
     }
 
     tasks.withType<JavaCompile>().configureEach {
