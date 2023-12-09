@@ -42,21 +42,6 @@ public class NbtUtils {
     /**
      * Attempt to retrieve the NBT Tag with the specified path
      *
-     * @param data The data to interpret
-     * @return the resulting NBT Tag, or null if not found
-     */
-    public static NBTTagCompound getNbt(final Object data) {
-        if (data instanceof Entity) {
-            return getNbt((Entity) data);
-        } else if (data instanceof ItemStack) {
-            return getNbt((ItemStack) data);
-        }
-        return null;
-    }
-
-    /**
-     * Attempt to retrieve the NBT Tag with the specified path
-     *
      * @param entity The Entity data to interpret
      * @return the resulting NBT Tag, or null if not found
      */

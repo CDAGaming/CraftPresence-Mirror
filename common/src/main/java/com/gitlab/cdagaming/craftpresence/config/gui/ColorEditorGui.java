@@ -87,7 +87,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         // Start Color Section
         childFrame.addWidget(new TextDisplayWidget(
-                childFrame, false,
+                childFrame,
                 calc1, getButtonY(0),
                 getScreenWidth(),
                 startColorTitle
@@ -208,7 +208,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         // End Color Section
         childFrame.addWidget(new TextDisplayWidget(
-                childFrame, false,
+                childFrame,
                 calc1, getButtonY(6),
                 getScreenWidth(),
                 endColorTitle
@@ -329,7 +329,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         // Preview Section
         childFrame.addWidget(new TextDisplayWidget(
-                childFrame, false,
+                childFrame,
                 calc1, getButtonY(12),
                 getScreenWidth(),
                 previewTitle

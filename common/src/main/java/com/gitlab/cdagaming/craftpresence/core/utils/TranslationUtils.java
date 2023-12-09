@@ -549,7 +549,7 @@ public class TranslationUtils {
      *
      * @param languageId     The language ID to interpret
      * @param stripColors    Whether to Remove Color and Formatting Codes
-     * @param translationKey The unLocalized String to translate
+     * @param translationKey The raw String to translate
      * @param parameters     Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
@@ -583,7 +583,7 @@ public class TranslationUtils {
      * Translates an Unlocalized String, based on the translations retrieved for the specified language
      *
      * @param stripColors    Whether to Remove Color and Formatting Codes
-     * @param translationKey The unLocalized String to translate
+     * @param translationKey The raw String to translate
      * @param parameters     Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
@@ -595,7 +595,7 @@ public class TranslationUtils {
      * Translates an Unlocalized String, based on the translations retrieved for the current language
      *
      * @param stripColors    Whether to Remove Color and Formatting Codes
-     * @param translationKey The unLocalized String to translate
+     * @param translationKey The raw String to translate
      * @param parameters     Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
@@ -607,7 +607,7 @@ public class TranslationUtils {
      * Translates an Unlocalized String, based on the translations retrieved for the specified language
      *
      * @param languageId     The language ID to interpret
-     * @param translationKey The unLocalized String to translate
+     * @param translationKey The raw String to translate
      * @param parameters     Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
@@ -618,7 +618,7 @@ public class TranslationUtils {
     /**
      * Translates an Unlocalized String, based on the translations retrieved for the specified language
      *
-     * @param translationKey The unLocalized String to translate
+     * @param translationKey The raw String to translate
      * @param parameters     Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
@@ -629,7 +629,7 @@ public class TranslationUtils {
     /**
      * Translates an Unlocalized String, based on the translations retrieved for the current language
      *
-     * @param translationKey The unLocalized String to translate
+     * @param translationKey The raw String to translate
      * @param parameters     Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
@@ -651,7 +651,7 @@ public class TranslationUtils {
      * Determines whether the specified translation exists for the specified language
      *
      * @param languageId     The language ID to interpret
-     * @param translationKey The unLocalized String to interpret
+     * @param translationKey The raw String to interpret
      * @return whether the specified translation exists
      */
     public boolean hasTranslationFrom(final String languageId, final String translationKey) {
@@ -665,7 +665,7 @@ public class TranslationUtils {
     /**
      * Determines whether the specified translation exists for the current language
      *
-     * @param translationKey The unLocalized String to interpret
+     * @param translationKey The raw String to interpret
      * @return whether the specified translation exists
      */
     public boolean hasTranslation(final String translationKey) {
@@ -676,7 +676,7 @@ public class TranslationUtils {
      * Retrieves the specified translation, if it exists for the specified language
      *
      * @param languageId     The language ID to interpret
-     * @param translationKey The unLocalized String to interpret
+     * @param translationKey The raw String to interpret
      * @return whether the specified translation exists
      */
     public String getTranslationFrom(final String languageId, final String translationKey) {
@@ -689,7 +689,7 @@ public class TranslationUtils {
     /**
      * Retrieves the specified translation, if it exists for the current language
      *
-     * @param translationKey The unLocalized String to interpret
+     * @param translationKey The raw String to interpret
      * @return whether the specified translation exists
      */
     public String getTranslation(final String translationKey) {

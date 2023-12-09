@@ -22,7 +22,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
-* [Backend] Fixed an issue where negative numbers were not allowed in the `MathUtils#IsWithinValue` functions
+* (Backend) Fixed an issue where negative numbers were not allowed in the `MathUtils#IsWithinValue` functions
     * This fix was previously included in
       the [World of Warcraft Addon](https://github.com/CDAGaming/CraftPresence-Wow-Edition)
 

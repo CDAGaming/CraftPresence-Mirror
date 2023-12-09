@@ -138,17 +138,6 @@ public class RenderUtils {
     /**
      * Determines if the Mouse is over an element, following the defined Arguments
      *
-     * @param mouseY The Mouse's Current Y Position
-     * @param button The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public static boolean isMouseOver(final double mouseY, final ExtendedButtonControl button) {
-        return isMouseOver(0, mouseY, 0, button.getControlPosY(), 0, button.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
      * @param mouseX      The Mouse's Current X Position
      * @param mouseY      The Mouse's Current Y Position
      * @param textControl The Object to check bounds and position
@@ -161,17 +150,6 @@ public class RenderUtils {
     /**
      * Determines if the Mouse is over an element, following the defined Arguments
      *
-     * @param mouseY      The Mouse's Current Y Position
-     * @param textControl The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public static boolean isMouseOver(final double mouseY, final ExtendedTextControl textControl) {
-        return isMouseOver(0, mouseY, 0, textControl.getControlPosY(), 0, textControl.getControlHeight() - 1);
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
      * @param mouseX The Mouse's Current X Position
      * @param mouseY The Mouse's Current Y Position
      * @param screen The Object to check bounds and position
@@ -179,17 +157,6 @@ public class RenderUtils {
      */
     public static boolean isMouseOver(final double mouseX, final double mouseY, final ExtendedScreen screen) {
         return screen.isLoaded() && isMouseOver(mouseX, mouseY, screen.getScreenX(), screen.getScreenY(), screen.getScreenWidth(), screen.getScreenHeight());
-    }
-
-    /**
-     * Determines if the Mouse is over an element, following the defined Arguments
-     *
-     * @param mouseY The Mouse's Current Y Position
-     * @param screen The Object to check bounds and position
-     * @return {@link Boolean#TRUE} if the Mouse Position is within the bounds of the object, and thus is over it
-     */
-    public static boolean isMouseOver(final double mouseY, final ExtendedScreen screen) {
-        return screen.isLoaded() && isMouseOver(0, mouseY, 0, screen.getScreenY(), 0, screen.getScreenHeight());
     }
 
     /**

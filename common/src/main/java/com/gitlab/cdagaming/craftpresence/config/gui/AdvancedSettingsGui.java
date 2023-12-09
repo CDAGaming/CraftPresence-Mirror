@@ -641,7 +641,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
         // Endpoint Section
         childFrame.addWidget(new TextDisplayWidget(
-                childFrame, false,
+                childFrame,
                 calc1, getButtonY(7),
                 getScreenWidth(),
                 Constants.TRANSLATOR.translate("gui.config.message.endpoints")
