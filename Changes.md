@@ -15,7 +15,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Spotless Annotations (`4.7.3` -> `4.8.2`)
     * Lenni Reflect (`1.3.0` -> `1.3.1`)
     * Gradle (`8.4` -> `8.5`)
-    * Fabric Loader (`0.14.24` -> `0.15.1`)
+    * Fabric Loader (`0.14.24` -> `0.15.2`)
 * Added Initial MC 1.20.3 and 1.20.4 Support
     * The MC 1.20.4 Build contains runtime support for MC 1.20.3
     * The MC 1.20.2 Build has been updated to prevent running it on MC 1.20.3 and above
