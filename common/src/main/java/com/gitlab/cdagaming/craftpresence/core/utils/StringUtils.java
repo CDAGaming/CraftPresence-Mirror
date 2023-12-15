@@ -1163,6 +1163,26 @@ public class StringUtils {
     }
 
     /**
+     * Whether the character is a valid color character
+     *
+     * @param colorChar The character to interpret
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isFormatColor(char colorChar) {
+        return colorChar >= '0' && colorChar <= '9' || colorChar >= 'a' && colorChar <= 'f' || colorChar >= 'A' && colorChar <= 'F';
+    }
+
+    /**
+     * Whether the character is a valid special character
+     *
+     * @param formatChar The character to interpret
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isFormatSpecial(char formatChar) {
+        return formatChar >= 'k' && formatChar <= 'o' || formatChar >= 'K' && formatChar <= 'O' || formatChar == 'r' || formatChar == 'R';
+    }
+
+    /**
      * Returns the Color and Formatting Characters within a String<p>
      * Defined by {@link StringUtils#STRIP_COLOR_PATTERN}
      *
@@ -1174,12 +1194,13 @@ public class StringUtils {
         StringBuilder s = new StringBuilder();
         int index = -1;
 
-        while ((index = text.indexOf(167, index + 1)) != -1) {
+        while ((index = text.indexOf(COLOR_CHAR, index + 1)) != -1) {
             if (index < stringLength - 1) {
                 final char currentCharacter = text.charAt(index + 1);
-                final String charString = String.valueOf(currentCharacter);
-                if (STRIP_COLOR_PATTERN.matcher(charString).find()) {
-                    s = new StringBuilder(COLOR_CHAR + charString);
+                if (isFormatColor(currentCharacter)) {
+                    s = new StringBuilder("" + COLOR_CHAR + currentCharacter);
+                } else if (isFormatSpecial(currentCharacter)) {
+                    s.append(COLOR_CHAR).append(currentCharacter);
                 }
             }
         }

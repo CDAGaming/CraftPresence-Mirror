@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.2.6 (12/14/2023)
+## v2.2.6 (12/19/2023)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.5...release%2Fv2.2.6)_
@@ -25,6 +25,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Fixed an issue where negative numbers were not allowed in the `MathUtils#IsWithinValue` functions
     * This fix was previously included in
       the [World of Warcraft Addon](https://github.com/CDAGaming/CraftPresence-Wow-Edition)
+* (Backend) Fixed an issue where multi-line text was not preserving formatting codes
+    * Effects `drawMultiLineString`, `renderNotice`, and `TextDisplayWidget#draw`
+    * `RenderUtils#sizeStringToWidth` and `StringUtils#getFormatFromString` also adjusted
+    * `isFormatColor` and `isFormatSpecial` added to `StringUtils`
 
 ___
 
@@ -38,7 +42,6 @@ added/iterated upon between releases.
 
 The following known issues are present in this build:
 
-* Text with colors do not retain those colors if that text moves to a newline in the CraftPresence UIs
 * The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) contains the following known issues:
     * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
 

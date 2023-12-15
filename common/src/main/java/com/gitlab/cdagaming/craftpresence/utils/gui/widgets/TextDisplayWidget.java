@@ -235,7 +235,11 @@ public class TextDisplayWidget implements DynamicWidget {
         }
         int xPos = getControlPosX() + padding;
         int currentY = getControlPosY() + padding;
-        for (String line : getRenderLines()) {
+        String activeFormatting = "";
+        for (String data : getRenderLines()) {
+            final String line = activeFormatting + data;
+            activeFormatting = StringUtils.getFormatFromString(line);
+
             if (isCentered()) {
                 screen.renderCenteredString(line, getControlWidth() / 2f, currentY, 0xFFFFFF);
             } else {

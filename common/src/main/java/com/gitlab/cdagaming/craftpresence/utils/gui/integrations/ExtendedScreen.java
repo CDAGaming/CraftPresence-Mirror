@@ -818,9 +818,11 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void renderNotice(final List<String> notice, final float widthScale, final float heightScale, final boolean useXAsActual, final boolean useYAsActual) {
         if (notice != null && !notice.isEmpty()) {
+            String activeFormatting = "";
             for (int i = 0; i < notice.size(); i++) {
-                final String string = notice.get(i);
-                renderString(string, (useXAsActual ? widthScale : (getScreenWidth() / widthScale)) - (getStringWidth(string) / widthScale), (useYAsActual ? heightScale : (getScreenHeight() / heightScale)) + (i * 10), 0xFFFFFF);
+                final String line = activeFormatting + notice.get(i);
+                activeFormatting = StringUtils.getFormatFromString(line);
+                renderString(line, (useXAsActual ? widthScale : (getScreenWidth() / widthScale)) - (getStringWidth(line) / widthScale), (useYAsActual ? heightScale : (getScreenHeight() / heightScale)) + (i * 10), 0xFFFFFF);
             }
         }
     }

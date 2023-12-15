@@ -957,27 +957,32 @@ public class RenderUtils {
         for (boolean flag = false; currentLine < stringLength; ++currentLine) {
             char currentCharacter = stringEntry.charAt(currentLine);
             String stringOfCharacter = String.valueOf(currentCharacter);
-
-            if (currentCharacter == ' ' || currentCharacter == '\n') {
-                currentIndex = currentLine;
-
-                if (currentCharacter == '\n') {
+            switch (currentCharacter) {
+                case '\n':
+                    --currentLine;
                     break;
-                }
+                case ' ':
+                    currentIndex = currentLine;
+                default:
+                    charWidth += fontRenderer.getStringWidth(stringOfCharacter);
+                    if (flag) {
+                        ++charWidth;
+                    }
+                    break;
+                case StringUtils.COLOR_CHAR:
+                    if (currentLine < stringLength - 1) {
+                        char code = stringEntry.charAt(++currentLine);
+                        if (code == 'l' || code == 'L') {
+                            flag = true;
+                        } else if (code == 'r' || code == 'R' || StringUtils.isFormatColor(code)) {
+                            flag = false;
+                        }
+                    }
             }
 
-            if (currentCharacter == StringUtils.COLOR_CHAR && currentLine < stringLength - 1) {
-                ++currentLine;
-                currentCharacter = stringEntry.charAt(currentLine);
-                stringOfCharacter = String.valueOf(currentCharacter);
-
-                flag = stringOfCharacter.equalsIgnoreCase("l") && !(stringOfCharacter.equalsIgnoreCase("r") ||
-                        StringUtils.STRIP_COLOR_PATTERN.matcher(stringOfCharacter).find());
-            }
-
-            charWidth += fontRenderer.getStringWidth(stringOfCharacter);
-            if (flag) {
-                ++charWidth;
+            if (currentCharacter == '\n') {
+                currentIndex = ++currentLine;
+                break;
             }
 
             if (charWidth > wrapWidth) {
