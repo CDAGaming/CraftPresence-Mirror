@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -87,6 +88,10 @@ public class TranslationUtils {
      * Function: [fallbackLanguage] => currentLanguage
      */
     private Function<String, String> languageSupplier = (fallback) -> fallback;
+    /**
+     * The event to trigger upon language sync, useful for external integrations
+     */
+    private Consumer<Map<String, String>> onLanguageSync = null;
     /**
      * If this module needs a full sync
      */
@@ -237,7 +242,10 @@ public class TranslationUtils {
         if (setLanguage) {
             setLanguage(languageId);
         }
-        getTranslationMapFrom(languageId, encoding);
+        final Map<String, String> results = getTranslationMapFrom(languageId, encoding);
+        if (onLanguageSync != null) {
+            onLanguageSync.accept(results);
+        }
     }
 
     /**
@@ -349,6 +357,17 @@ public class TranslationUtils {
      */
     public TranslationUtils setLanguageSupplier(final String languageSupplier) {
         this.languageSupplier = (fallback) -> languageSupplier;
+        return this;
+    }
+
+    /**
+     * Sets the event to trigger upon language sync
+     *
+     * @param onLanguageSync the event to trigger
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setOnLanguageSync(final Consumer<Map<String, String>> onLanguageSync) {
+        this.onLanguageSync = onLanguageSync;
         return this;
     }
 
