@@ -233,20 +233,12 @@ public class TextDisplayWidget implements DynamicWidget {
         if (screen instanceof ScrollPane) {
             padding = ((ScrollPane) screen).getPadding();
         }
-        int xPos = getControlPosX() + padding;
-        int currentY = getControlPosY() + padding;
-        String activeFormatting = "";
-        for (String data : getRenderLines()) {
-            final String line = activeFormatting + data;
-            activeFormatting = StringUtils.getFormatFromString(line);
-
-            if (isCentered()) {
-                screen.renderCenteredString(line, getControlWidth() / 2f, currentY, 0xFFFFFF);
-            } else {
-                screen.renderString(line, xPos, currentY, 0xFFFFFF);
-            }
-            currentY += screen.getFontHeight() + 1;
-        }
+        screen.drawMultiLineString(
+                getRenderLines(),
+                getControlPosX() + padding, getControlPosY() + padding,
+                -1, -1, -1,
+                screen.createDefaultTooltip().putSecond(null).putThird(null)
+        );
     }
 
     @Override

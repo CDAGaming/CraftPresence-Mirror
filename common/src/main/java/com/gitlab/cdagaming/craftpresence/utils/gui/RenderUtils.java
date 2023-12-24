@@ -643,18 +643,20 @@ public class RenderUtils {
      * @param textToInput  The Specified Multi-Line String, split by lines into a list
      * @param posX         The starting X position to render the String
      * @param posY         The starting Y position to render the String
-     * @param screenWidth  The maximum width to allow rendering to (Text will wrap if output is greater)
-     * @param screenHeight The maximum height to allow rendering to (Text will wrap if output is greater)
+     * @param maxWidth     The maximum width to allow rendering to (Text will wrap if output is greater)
+     * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
      * @param maxTextWidth The maximum width the output can be before wrapping
      * @param fontRenderer The Font Renderer Instance
+     * @param fontHeight   The current Font Render Height (Normally retrieved from the fontRenderer)
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
     public static void drawMultiLineString(@Nonnull final Minecraft mc,
                                            final List<String> textToInput,
                                            final int posX, final int posY,
-                                           final int screenWidth, final int screenHeight,
+                                           final int maxWidth, final int maxHeight,
                                            final int maxTextWidth,
                                            final FontRenderer fontRenderer,
+                                           final int fontHeight,
                                            final Tuple<Boolean, ColorData, ColorData> colorInfo) {
         if (colorInfo.getFirst() && !textToInput.isEmpty() && fontRenderer != null) {
             List<String> textLines = textToInput;
@@ -669,17 +671,19 @@ public class RenderUtils {
             }
 
             boolean needsWrap = false;
+            boolean allowXAdjustments = maxWidth > 0;
+            boolean allowYAdjustments = maxHeight > 0;
 
             int titleLinesCount = 1;
-            int tooltipX = posX + 12;
-            if (tooltipX + tooltipTextWidth + 4 > screenWidth) {
+            int tooltipX = posX + (allowXAdjustments ? 12 : 0);
+            if (allowXAdjustments && tooltipX + tooltipTextWidth + 4 > maxWidth) {
                 tooltipX = posX - 16 - tooltipTextWidth;
                 if (tooltipX < 4) // if the tooltip doesn't fit on the screen
                 {
-                    if (posX > screenWidth / 2) {
+                    if (posX > maxWidth / 2) {
                         tooltipTextWidth = posX - 12 - 8;
                     } else {
-                        tooltipTextWidth = screenWidth - 16 - posX;
+                        tooltipTextWidth = maxWidth - 16 - posX;
                     }
                     needsWrap = true;
                 }
@@ -710,14 +714,16 @@ public class RenderUtils {
                 tooltipTextWidth = wrappedTooltipWidth;
                 textLines = wrappedTextLines;
 
-                if (posX > screenWidth / 2) {
-                    tooltipX = posX - 16 - tooltipTextWidth;
-                } else {
-                    tooltipX = posX + 12;
+                if (allowXAdjustments) {
+                    if (posX > maxWidth / 2) {
+                        tooltipX = posX - 16 - tooltipTextWidth;
+                    } else {
+                        tooltipX = posX + 12;
+                    }
                 }
             }
 
-            int tooltipY = posY - 12;
+            int tooltipY = posY - (allowYAdjustments ? 12 : 0);
             int tooltipHeight = 8;
 
             if (textLines.size() > 1) {
@@ -727,124 +733,130 @@ public class RenderUtils {
                 }
             }
 
-            if (tooltipY < 4) {
-                tooltipY = 4;
-            } else if (tooltipY + tooltipHeight + 4 > screenHeight) {
-                tooltipY = screenHeight - tooltipHeight - 4;
+            if (allowYAdjustments) {
+                if (tooltipY < 4) {
+                    tooltipY = 4;
+                } else if (tooltipY + tooltipHeight + 4 > maxHeight) {
+                    tooltipY = maxHeight - tooltipHeight - 4;
+                }
             }
 
             final ColorData backgroundColorInfo = colorInfo.getSecond();
             final ColorData borderColorInfo = colorInfo.getThird();
             final int zLevel = 300;
 
-            final Color backgroundStart = backgroundColorInfo.getStartColor();
-            final Color backgroundEnd = backgroundColorInfo.getEndColor();
-
-            final Color borderStart = borderColorInfo.getStartColor();
-            final Color borderEnd = borderColorInfo.getEndColor();
-
             // Render Background
-            if (StringUtils.isNullOrEmpty(backgroundColorInfo.getTexLocation())) {
-                // Draw with Colors
-                drawGradientBox(
-                        tooltipX - 4, tooltipY - 4,
-                        tooltipTextWidth + 8, tooltipHeight + 8,
-                        zLevel,
-                        backgroundStart, backgroundEnd,
-                        1, -1,
-                        backgroundStart, backgroundEnd
-                );
-            } else {
-                final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundColorInfo.getTexLocation());
-                final boolean usingExternalTexture = textureData.getFirst();
-                final ResourceLocation backGroundTexture = textureData.getThird();
+            if (backgroundColorInfo != null) {
+                final Color backgroundStart = backgroundColorInfo.getStartColor();
+                final Color backgroundEnd = backgroundColorInfo.getEndColor();
 
-                final double width = tooltipTextWidth + 4;
-                final double height = tooltipHeight + 4;
+                if (StringUtils.isNullOrEmpty(backgroundColorInfo.getTexLocation())) {
+                    // Draw with Colors
+                    drawGradientBox(
+                            tooltipX - 4, tooltipY - 4,
+                            tooltipTextWidth + 8, tooltipHeight + 8,
+                            zLevel,
+                            backgroundStart, backgroundEnd,
+                            1, -1,
+                            backgroundStart, backgroundEnd
+                    );
+                } else {
+                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundColorInfo.getTexLocation());
+                    final boolean usingExternalTexture = textureData.getFirst();
+                    final ResourceLocation backGroundTexture = textureData.getThird();
 
-                final double left = tooltipX - 4;
-                final double right = tooltipX + width;
-                final double top = tooltipY - 4;
-                final double bottom = tooltipY + height;
+                    final double width = tooltipTextWidth + 4;
+                    final double height = tooltipHeight + 4;
 
-                drawTexture(mc,
-                        left, right, top, bottom,
-                        0.0D,
-                        usingExternalTexture ? 0.0D : (left / 32.0D),
-                        usingExternalTexture ? 1.0D : (right / 32.0D),
-                        usingExternalTexture ? 0.0D : (top / 32.0D),
-                        usingExternalTexture ? 1.0D : (bottom / 32.0D),
-                        backgroundStart, backgroundEnd,
-                        backGroundTexture
-                );
+                    final double left = tooltipX - 4;
+                    final double right = tooltipX + width;
+                    final double top = tooltipY - 4;
+                    final double bottom = tooltipY + height;
+
+                    drawTexture(mc,
+                            left, right, top, bottom,
+                            0.0D,
+                            usingExternalTexture ? 0.0D : (left / 32.0D),
+                            usingExternalTexture ? 1.0D : (right / 32.0D),
+                            usingExternalTexture ? 0.0D : (top / 32.0D),
+                            usingExternalTexture ? 1.0D : (bottom / 32.0D),
+                            backgroundStart, backgroundEnd,
+                            backGroundTexture
+                    );
+                }
             }
 
             // Render Border
-            if (StringUtils.isNullOrEmpty(borderColorInfo.getTexLocation())) {
-                // Draw with Colors
-                drawGradientBox(
-                        tooltipX - 3, tooltipY - 3,
-                        tooltipTextWidth + 6, tooltipHeight + 6,
-                        zLevel, borderStart, borderEnd,
-                        1,
-                        null, null
-                );
-            } else {
-                final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(borderColorInfo.getTexLocation());
-                final boolean usingExternalTexture = textureData.getFirst();
-                final ResourceLocation borderTexture = textureData.getThird();
+            if (borderColorInfo != null) {
+                final Color borderStart = borderColorInfo.getStartColor();
+                final Color borderEnd = borderColorInfo.getEndColor();
 
-                final double border = 1;
-                final double renderX = tooltipX - 3;
-                final double renderY = tooltipY - 3;
-                final double canvasRight = tooltipX + tooltipTextWidth + 2;
-                final double canvasBottom = tooltipY + tooltipHeight + 2;
+                if (StringUtils.isNullOrEmpty(borderColorInfo.getTexLocation())) {
+                    // Draw with Colors
+                    drawGradientBox(
+                            tooltipX - 3, tooltipY - 3,
+                            tooltipTextWidth + 6, tooltipHeight + 6,
+                            zLevel, borderStart, borderEnd,
+                            1,
+                            null, null
+                    );
+                } else {
+                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(borderColorInfo.getTexLocation());
+                    final boolean usingExternalTexture = textureData.getFirst();
+                    final ResourceLocation borderTexture = textureData.getThird();
 
-                // Draw Borders
-                // Top Left
-                drawTexture(mc,
-                        renderX, renderX + border, renderY, canvasBottom + border,
-                        zLevel,
-                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                        usingExternalTexture ? 1.0D : ((renderX + border) / 32.0D),
-                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
-                        borderStart, borderEnd,
-                        borderTexture
-                );
-                // Top Right
-                drawTexture(mc,
-                        canvasRight, canvasRight + border, renderY, canvasBottom + border,
-                        zLevel,
-                        usingExternalTexture ? 0.0D : (canvasRight / 32.0D),
-                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
-                        borderStart, borderEnd,
-                        borderTexture
-                );
-                // Bottom Left
-                drawTexture(mc,
-                        renderX, canvasRight + border, canvasBottom, canvasBottom + border,
-                        zLevel,
-                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                        usingExternalTexture ? 0.0D : (canvasBottom / 32.0D),
-                        usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
-                        borderStart, borderEnd,
-                        borderTexture
-                );
-                // Right Border
-                drawTexture(mc,
-                        renderX, canvasRight + border, renderY, renderY + border,
-                        zLevel,
-                        usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                        usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                        usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                        usingExternalTexture ? 1.0D : ((renderY + border) / 32.0D),
-                        borderStart, borderEnd,
-                        borderTexture
-                );
+                    final double border = 1;
+                    final double renderX = tooltipX - 3;
+                    final double renderY = tooltipY - 3;
+                    final double canvasRight = tooltipX + tooltipTextWidth + 2;
+                    final double canvasBottom = tooltipY + tooltipHeight + 2;
+
+                    // Draw Borders
+                    // Top Left
+                    drawTexture(mc,
+                            renderX, renderX + border, renderY, canvasBottom + border,
+                            zLevel,
+                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                            usingExternalTexture ? 1.0D : ((renderX + border) / 32.0D),
+                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                            borderStart, borderEnd,
+                            borderTexture
+                    );
+                    // Top Right
+                    drawTexture(mc,
+                            canvasRight, canvasRight + border, renderY, canvasBottom + border,
+                            zLevel,
+                            usingExternalTexture ? 0.0D : (canvasRight / 32.0D),
+                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                            borderStart, borderEnd,
+                            borderTexture
+                    );
+                    // Bottom Left
+                    drawTexture(mc,
+                            renderX, canvasRight + border, canvasBottom, canvasBottom + border,
+                            zLevel,
+                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                            usingExternalTexture ? 0.0D : (canvasBottom / 32.0D),
+                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                            borderStart, borderEnd,
+                            borderTexture
+                    );
+                    // Right Border
+                    drawTexture(mc,
+                            renderX, canvasRight + border, renderY, renderY + border,
+                            zLevel,
+                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
+                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
+                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
+                            usingExternalTexture ? 1.0D : ((renderY + border) / 32.0D),
+                            borderStart, borderEnd,
+                            borderTexture
+                    );
+                }
             }
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
@@ -855,7 +867,7 @@ public class RenderUtils {
                     tooltipY += 2;
                 }
 
-                tooltipY += 10;
+                tooltipY += fontHeight + 1;
             }
         }
     }

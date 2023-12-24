@@ -80,6 +80,17 @@ public class Pair<U, V> {
     }
 
     /**
+     * Sets the first element of this {@link Pair} to the given value.
+     *
+     * @param first the first element to be applied
+     * @return the current instance
+     */
+    public Pair<U, V> putFirst(final U first) {
+        setFirst(first);
+        return this;
+    }
+
+    /**
      * Retrieves the second element of this {@link Pair}.
      *
      * @return the second element of this {@link Pair}
@@ -100,6 +111,17 @@ public class Pair<U, V> {
     }
 
     /**
+     * Sets the second element of this {@link Pair} to the given value.
+     *
+     * @param second the second element to be applied
+     * @return the current instance
+     */
+    public Pair<U, V> putSecond(final V second) {
+        setSecond(second);
+        return this;
+    }
+
+    /**
      * Sets the elements of this {@link Pair} to the given values.
      *
      * @param first  the first element to be applied
@@ -107,8 +129,8 @@ public class Pair<U, V> {
      * @return the current instance
      */
     public Pair<U, V> put(final U first, final V second) {
-        this.first = first;
-        this.second = second;
+        setFirst(first);
+        setSecond(second);
         return this;
     }
 

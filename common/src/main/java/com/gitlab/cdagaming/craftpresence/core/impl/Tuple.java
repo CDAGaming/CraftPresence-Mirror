@@ -87,6 +87,17 @@ public class Tuple<T, U, V> {
     }
 
     /**
+     * Sets the first element of this {@link Tuple} to the given value.
+     *
+     * @param first the first element to be applied
+     * @return the current instance
+     */
+    public Tuple<T, U, V> putFirst(final T first) {
+        setFirst(first);
+        return this;
+    }
+
+    /**
      * Retrieves the second element of this {@link Tuple}.
      *
      * @return the second element of this {@link Tuple}
@@ -104,6 +115,17 @@ public class Tuple<T, U, V> {
     public U setSecond(final U second) {
         this.second = second;
         return second;
+    }
+
+    /**
+     * Sets the second element of this {@link Tuple} to the given value.
+     *
+     * @param second the second element to be applied
+     * @return the current instance
+     */
+    public Tuple<T, U, V> putSecond(final U second) {
+        setSecond(second);
+        return this;
     }
 
     /**
@@ -127,7 +149,18 @@ public class Tuple<T, U, V> {
     }
 
     /**
-     * Sets the elements of this {@link Pair} to the given values.
+     * Sets the third element of this {@link Tuple} to the given value.
+     *
+     * @param third the third element to be applied
+     * @return the current instance
+     */
+    public Tuple<T, U, V> putThird(final V third) {
+        setThird(third);
+        return this;
+    }
+
+    /**
+     * Sets the elements of this {@link Tuple} to the given values.
      *
      * @param first  the first element to be applied
      * @param second the second element to be applied
@@ -135,9 +168,9 @@ public class Tuple<T, U, V> {
      * @return the current instance
      */
     public Tuple<T, U, V> put(final T first, final U second, final V third) {
-        this.first = first;
-        this.second = second;
-        this.third = third;
+        setFirst(first);
+        setSecond(second);
+        setThird(third);
         return this;
     }
 

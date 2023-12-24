@@ -756,6 +756,62 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Creates a copy of the Default Tooltip Rendering Info
+     *
+     * @return the default Tooltip Rendering Info
+     */
+    public Tuple<Boolean, ColorData, ColorData> createDefaultTooltip() {
+        return new Tuple<>(
+                CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
+                CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
+                CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
+        );
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput  The Specified Multi-Line String, split by lines into a list
+     * @param posX         The starting X position to render the String
+     * @param posY         The starting Y position to render the String
+     * @param maxWidth     The maximum width to allow rendering to (Text will wrap if output is greater)
+     * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
+     * @param maxTextWidth The maximum width the output can be before wrapping
+     * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
+     */
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final Tuple<Boolean, ColorData, ColorData> colorInfo) {
+        RenderUtils.drawMultiLineString(
+                getGameInstance(),
+                textToInput,
+                posX, posY,
+                maxWidth, maxHeight,
+                maxTextWidth,
+                getFontRenderer(), getFontHeight(),
+                colorInfo
+        );
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput  The Specified Multi-Line String, split by lines into a list
+     * @param posX         The starting X position to render the String
+     * @param posY         The starting Y position to render the String
+     * @param maxWidth     The maximum width to allow rendering to (Text will wrap if output is greater)
+     * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
+     * @param maxTextWidth The maximum width the output can be before wrapping
+     */
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth) {
+        drawMultiLineString(
+                textToInput,
+                posX, posY,
+                maxWidth, maxHeight,
+                maxTextWidth,
+                createDefaultTooltip()
+        );
+    }
+
+    /**
      * Renders a Specified Multi-Line String, constrained by position and dimension arguments
      *
      * @param textToInput The Specified Multi-Line String, split by lines into a list
@@ -763,19 +819,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param posY        The starting Y position to render the String
      */
     public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY) {
-        RenderUtils.drawMultiLineString(
-                getGameInstance(),
-                textToInput,
-                posX, posY,
-                getScreenWidth(), getScreenHeight(),
-                getWrapWidth(),
-                getFontRenderer(),
-                new Tuple<>(
-                        CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
-                        CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
-                        CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
-                )
-        );
+        drawMultiLineString(textToInput, posX, posY, getScreenWidth(), getScreenHeight(), getWrapWidth());
     }
 
     /**
@@ -822,7 +866,7 @@ public class ExtendedScreen extends GuiScreen {
             for (int i = 0; i < notice.size(); i++) {
                 final String line = activeFormatting + notice.get(i);
                 activeFormatting = StringUtils.getFormatFromString(line);
-                renderString(line, (useXAsActual ? widthScale : (getScreenWidth() / widthScale)) - (getStringWidth(line) / widthScale), (useYAsActual ? heightScale : (getScreenHeight() / heightScale)) + (i * 10), 0xFFFFFF);
+                renderString(line, (useXAsActual ? widthScale : (getScreenWidth() / widthScale)) - (getStringWidth(line) / widthScale), (useYAsActual ? heightScale : (getScreenHeight() / heightScale)) + (i * (getFontHeight() + 1)), 0xFFFFFF);
             }
         }
     }
