@@ -777,9 +777,11 @@ public class ExtendedScreen extends GuiScreen {
      * @param maxWidth     The maximum width to allow rendering to (Text will wrap if output is greater)
      * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
      * @param maxTextWidth The maximum width the output can be before wrapping
+     * @param isCentered   Whether to render the text in a center-styled layout (Disabled if maxWidth is not specified)
+     * @param allowTitleLines Whether to allow Title Lines to be rendered and/or modify the layout
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
-    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final Tuple<Boolean, ColorData, ColorData> colorInfo) {
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final boolean isCentered, final boolean allowTitleLines, final Tuple<Boolean, ColorData, ColorData> colorInfo) {
         RenderUtils.drawMultiLineString(
                 getGameInstance(),
                 textToInput,
@@ -787,7 +789,7 @@ public class ExtendedScreen extends GuiScreen {
                 maxWidth, maxHeight,
                 maxTextWidth,
                 getFontRenderer(), getFontHeight(),
-                colorInfo
+                isCentered, allowTitleLines, colorInfo
         );
     }
 
@@ -807,6 +809,7 @@ public class ExtendedScreen extends GuiScreen {
                 posX, posY,
                 maxWidth, maxHeight,
                 maxTextWidth,
+                false, true,
                 createDefaultTooltip()
         );
     }
@@ -829,46 +832,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void drawMultiLineString(final List<String> textToInput) {
         drawMultiLineString(textToInput, getMouseX(), getMouseY());
-    }
-
-    /**
-     * Renders a String in the Screen, in the style of a notice
-     *
-     * @param notice The List of Strings to render
-     */
-    public void renderNotice(final List<String> notice) {
-        renderNotice(notice, 2, 3);
-    }
-
-    /**
-     * Renders a String in the Screen, in the style of a notice
-     *
-     * @param notice      The List of Strings to render
-     * @param widthScale  The Scale/Value away from the center X to render at
-     * @param heightScale The Scale/Value away from the center Y to render at
-     */
-    public void renderNotice(final List<String> notice, final float widthScale, final float heightScale) {
-        renderNotice(notice, widthScale, heightScale, false, false);
-    }
-
-    /**
-     * Renders a String in the Screen, in the style of a notice
-     *
-     * @param notice       The List of Strings to render
-     * @param widthScale   The Scale/Value away from the center X to render at
-     * @param heightScale  The Scale/Value away from the center Y to render at
-     * @param useXAsActual Whether to use the widthScale as the actual X value
-     * @param useYAsActual Whether to use the heightScale as the actual Y value
-     */
-    public void renderNotice(final List<String> notice, final float widthScale, final float heightScale, final boolean useXAsActual, final boolean useYAsActual) {
-        if (notice != null && !notice.isEmpty()) {
-            String activeFormatting = "";
-            for (int i = 0; i < notice.size(); i++) {
-                final String line = activeFormatting + notice.get(i);
-                activeFormatting = StringUtils.getFormatFromString(line);
-                renderString(line, (useXAsActual ? widthScale : (getScreenWidth() / widthScale)) - (getStringWidth(line) / widthScale), (useYAsActual ? heightScale : (getScreenHeight() / heightScale)) + (i * (getFontHeight() + 1)), 0xFFFFFF);
-            }
-        }
     }
 
     /**

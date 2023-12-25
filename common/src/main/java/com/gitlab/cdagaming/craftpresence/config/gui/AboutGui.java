@@ -92,7 +92,13 @@ public class AboutGui extends ExtendedScreen {
         final List<String> notice = StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.credits"));
 
         renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
-        renderNotice(notice);
+        drawMultiLineString(
+                notice,
+                0, getScreenHeight() / 3,
+                getScreenWidth(), -1, -1,
+                true, false,
+                createDefaultTooltip().putSecond(null).putThird(null)
+        );
 
         super.renderExtra();
     }

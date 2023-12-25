@@ -639,16 +639,18 @@ public class RenderUtils {
     /**
      * Renders a Specified Multi-Line String, constrained by position and dimension arguments
      *
-     * @param mc           The current game instance
-     * @param textToInput  The Specified Multi-Line String, split by lines into a list
-     * @param posX         The starting X position to render the String
-     * @param posY         The starting Y position to render the String
-     * @param maxWidth     The maximum width to allow rendering to (Text will wrap if output is greater)
-     * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
-     * @param maxTextWidth The maximum width the output can be before wrapping
-     * @param fontRenderer The Font Renderer Instance
-     * @param fontHeight   The current Font Render Height (Normally retrieved from the fontRenderer)
-     * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
+     * @param mc              The current game instance
+     * @param textToInput     The Specified Multi-Line String, split by lines into a list
+     * @param posX            The starting X position to render the String
+     * @param posY            The starting Y position to render the String
+     * @param maxWidth        The maximum width to allow rendering to (Text will wrap if output is greater)
+     * @param maxHeight       The maximum height to allow rendering to (Text will wrap if output is greater)
+     * @param maxTextWidth    The maximum width the output can be before wrapping
+     * @param fontRenderer    The Font Renderer Instance
+     * @param fontHeight      The current Font Render Height (Normally retrieved from the fontRenderer)
+     * @param isCentered      Whether to render the text in a center-styled layout (Disabled if maxWidth is not specified)
+     * @param allowTitleLines Whether to allow Title Lines to be rendered and/or modify the layout
+     * @param colorInfo       Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
     public static void drawMultiLineString(@Nonnull final Minecraft mc,
                                            final List<String> textToInput,
@@ -657,6 +659,8 @@ public class RenderUtils {
                                            final int maxTextWidth,
                                            final FontRenderer fontRenderer,
                                            final int fontHeight,
+                                           final boolean isCentered,
+                                           final boolean allowTitleLines,
                                            final Tuple<Boolean, ColorData, ColorData> colorInfo) {
         if (colorInfo.getFirst() && !textToInput.isEmpty() && fontRenderer != null) {
             List<String> textLines = textToInput;
@@ -673,9 +677,15 @@ public class RenderUtils {
             boolean needsWrap = false;
             boolean allowXAdjustments = maxWidth > 0;
             boolean allowYAdjustments = maxHeight > 0;
+            boolean allowCenterAdjustments = isCentered && allowXAdjustments;
 
             int titleLinesCount = 1;
             int tooltipX = posX + (allowXAdjustments ? 12 : 0);
+            if (allowCenterAdjustments) {
+                tooltipX = posX + 4;
+                tooltipTextWidth = maxWidth - tooltipX - 4;
+            }
+
             if (allowXAdjustments && tooltipX + tooltipTextWidth + 4 > maxWidth) {
                 tooltipX = posX - 16 - tooltipTextWidth;
                 if (tooltipX < 4) // if the tooltip doesn't fit on the screen
@@ -714,7 +724,7 @@ public class RenderUtils {
                 tooltipTextWidth = wrappedTooltipWidth;
                 textLines = wrappedTextLines;
 
-                if (allowXAdjustments) {
+                if (allowXAdjustments && !isCentered) {
                     if (posX > maxWidth / 2) {
                         tooltipX = posX - 16 - tooltipTextWidth;
                     } else {
@@ -728,7 +738,7 @@ public class RenderUtils {
 
             if (textLines.size() > 1) {
                 tooltipHeight += (textLines.size() - 1) * 10;
-                if (textLines.size() > titleLinesCount) {
+                if (allowTitleLines && textLines.size() > titleLinesCount) {
                     tooltipHeight += 2; // gap between title lines and next lines
                 }
             }
@@ -861,9 +871,12 @@ public class RenderUtils {
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 final String line = textLines.get(lineNumber);
-                fontRenderer.drawStringWithShadow(line, tooltipX, tooltipY, -1);
+                final int lineWidth = fontRenderer.getStringWidth(line);
+                final int renderX = isCentered ? (tooltipX + (tooltipTextWidth - lineWidth) / 2) : tooltipX;
 
-                if (lineNumber + 1 == titleLinesCount) {
+                fontRenderer.drawStringWithShadow(line, renderX, tooltipY, -1);
+
+                if (allowTitleLines && lineNumber + 1 == titleLinesCount) {
                     tooltipY += 2;
                 }
 
