@@ -778,10 +778,10 @@ public class ExtendedScreen extends GuiScreen {
      * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
      * @param maxTextWidth The maximum width the output can be before wrapping
      * @param isCentered   Whether to render the text in a center-styled layout (Disabled if maxWidth is not specified)
-     * @param allowTitleLines Whether to allow Title Lines to be rendered and/or modify the layout
+     * @param isTooltip    Whether to render this layout in a tooltip-style (Issues may occur if combined with isCentered)
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
-    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final boolean isCentered, final boolean allowTitleLines, final Tuple<Boolean, ColorData, ColorData> colorInfo) {
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final boolean isCentered, final boolean isTooltip, final Tuple<Boolean, ColorData, ColorData> colorInfo) {
         RenderUtils.drawMultiLineString(
                 getGameInstance(),
                 textToInput,
@@ -789,7 +789,7 @@ public class ExtendedScreen extends GuiScreen {
                 maxWidth, maxHeight,
                 maxTextWidth,
                 getFontRenderer(), getFontHeight(),
-                isCentered, allowTitleLines, colorInfo
+                isCentered, isTooltip, colorInfo
         );
     }
 
