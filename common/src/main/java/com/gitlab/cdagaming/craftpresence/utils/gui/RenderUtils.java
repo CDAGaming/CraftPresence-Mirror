@@ -788,10 +788,10 @@ public class RenderUtils {
                     drawTexture(mc,
                             left, right, top, bottom,
                             0.0D,
-                            usingExternalTexture ? 0.0D : (left / 32.0D),
-                            usingExternalTexture ? 1.0D : (right / 32.0D),
-                            usingExternalTexture ? 0.0D : (top / 32.0D),
-                            usingExternalTexture ? 1.0D : (bottom / 32.0D),
+                            getUVCoord(left, 0.0D, usingExternalTexture),
+                            getUVCoord(right, 1.0D, usingExternalTexture),
+                            getUVCoord(top, 0.0D, usingExternalTexture),
+                            getUVCoord(bottom, 1.0D, usingExternalTexture),
                             backgroundStart, backgroundEnd,
                             backGroundTexture
                     );
@@ -828,10 +828,10 @@ public class RenderUtils {
                     drawTexture(mc,
                             renderX, renderX + border, renderY, canvasBottom + border,
                             zLevel,
-                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                            usingExternalTexture ? 1.0D : ((renderX + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                            getUVCoord(renderX, 0.0D, usingExternalTexture),
+                            getUVCoord(renderX + border, 1.0D, usingExternalTexture),
+                            getUVCoord(renderY, 0.0D, usingExternalTexture),
+                            getUVCoord(canvasBottom + border, 1.0D, usingExternalTexture),
                             borderStart, borderEnd,
                             borderTexture
                     );
@@ -839,10 +839,10 @@ public class RenderUtils {
                     drawTexture(mc,
                             canvasRight, canvasRight + border, renderY, canvasBottom + border,
                             zLevel,
-                            usingExternalTexture ? 0.0D : (canvasRight / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                            getUVCoord(canvasRight, 0.0D, usingExternalTexture),
+                            getUVCoord(canvasRight + border, 1.0D, usingExternalTexture),
+                            getUVCoord(renderY, 0.0D, usingExternalTexture),
+                            getUVCoord(canvasBottom + border, 1.0D, usingExternalTexture),
                             borderStart, borderEnd,
                             borderTexture
                     );
@@ -850,10 +850,10 @@ public class RenderUtils {
                     drawTexture(mc,
                             renderX, canvasRight + border, canvasBottom, canvasBottom + border,
                             zLevel,
-                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (canvasBottom / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasBottom + border) / 32.0D),
+                            getUVCoord(renderX, 0.0D, usingExternalTexture),
+                            getUVCoord(canvasRight + border, 1.0D, usingExternalTexture),
+                            getUVCoord(canvasBottom, 0.0D, usingExternalTexture),
+                            getUVCoord(canvasBottom + border, 1.0D, usingExternalTexture),
                             borderStart, borderEnd,
                             borderTexture
                     );
@@ -861,10 +861,10 @@ public class RenderUtils {
                     drawTexture(mc,
                             renderX, canvasRight + border, renderY, renderY + border,
                             zLevel,
-                            usingExternalTexture ? 0.0D : (renderX / 32.0D),
-                            usingExternalTexture ? 1.0D : ((canvasRight + border) / 32.0D),
-                            usingExternalTexture ? 0.0D : (renderY / 32.0D),
-                            usingExternalTexture ? 1.0D : ((renderY + border) / 32.0D),
+                            getUVCoord(renderX, 0.0D, usingExternalTexture),
+                            getUVCoord(canvasRight + border, 1.0D, usingExternalTexture),
+                            getUVCoord(renderY, 0.0D, usingExternalTexture),
+                            getUVCoord(renderY + border, 1.0D, usingExternalTexture),
                             borderStart, borderEnd,
                             borderTexture
                     );
@@ -885,6 +885,18 @@ public class RenderUtils {
                 tooltipY += fontHeight + 1;
             }
         }
+    }
+
+    /**
+     * Calculate the Axis coordinate with the specified info
+     *
+     * @param primary              The Primary Result, divided by 32
+     * @param secondary            The Secondary Result, occurring when usingExternalTexture is {@link Boolean#TRUE}
+     * @param usingExternalTexture Whether we are using a non-local/external texture
+     * @return the calculated position
+     */
+    public static double getUVCoord(final double primary, final double secondary, final boolean usingExternalTexture) {
+        return usingExternalTexture ? secondary : (primary / 32.0D);
     }
 
     /**
@@ -922,10 +934,10 @@ public class RenderUtils {
             drawTexture(mc,
                     left, right, top, bottom,
                     0.0D,
-                    usingExternalTexture ? 0.0D : (left / 32.0D),
-                    usingExternalTexture ? 1.0D : (right / 32.0D),
-                    usingExternalTexture ? 0.0D : ((top + offset) / 32.0D),
-                    usingExternalTexture ? 1.0D : ((bottom + offset) / 32.0D),
+                    getUVCoord(left, 0.0D, usingExternalTexture),
+                    getUVCoord(right, 1.0D, usingExternalTexture),
+                    getUVCoord(top + offset, 0.0D, usingExternalTexture),
+                    getUVCoord(bottom + offset, 1.0D, usingExternalTexture),
                     startColor, endColor,
                     texLocation
             );

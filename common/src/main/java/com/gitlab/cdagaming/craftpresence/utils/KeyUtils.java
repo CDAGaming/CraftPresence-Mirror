@@ -153,12 +153,51 @@ public class KeyUtils {
      * @param category   The category for the keybinding
      * @param defaultKey The default key for this binding
      * @param currentKey The current key for this binding
-     * @return the created KeyBind
+     * @return the created KeyBind instance
      */
     KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
         final KeyBinding result = new KeyBinding(name, defaultKey, category);
         keySyncQueue.put(id, currentKey);
         return result;
+    }
+
+    /**
+     * Registers a new Keybinding with the specified info
+     *
+     * @param id         The keybinding internal identifier, used for the Key Sync Queue
+     * @param name       The name or description of the keybinding
+     * @param category   The category for the keybinding
+     * @param defaultKey The default key for this binding
+     * @param currentKey The current key for this binding
+     * @param onPress    The event to execute when the KeyBind is being pressed
+     * @param onBind     The event to execute when the KeyBind is being rebound to another key
+     * @param onOutdated The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
+     * @param callback   The event to execute upon an exception occurring during KeyBind events
+     * @return the created and registered KeyBind instance
+     */
+    KeyBinding registerKey(final String id, final String name,
+                           final String category,
+                           final int defaultKey, final int currentKey,
+                           final Runnable onPress,
+                           final BiConsumer<Integer, Boolean> onBind,
+                           final Predicate<Integer> onOutdated,
+                           final Consumer<Throwable> callback) {
+        if (areKeysRegistered()) {
+            throw new UnsupportedOperationException("KeyBindings already registered!");
+        }
+
+        final KeyBinding keyBind = createKey(id, name, category, defaultKey, currentKey);
+        KEY_MAPPINGS.put(
+                id,
+                new Tuple<>(
+                        keyBind,
+                        new Tuple<>(
+                                onPress, onBind, onOutdated
+                        ),
+                        callback
+                )
+        );
+        return keyBind;
     }
 
     /**
@@ -177,31 +216,25 @@ public class KeyUtils {
      * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
      */
     void register() {
-        KEY_MAPPINGS.put(
+        registerKey(
                 "configKeyCode",
-                new Tuple<>(
-                        createKey(
-                                "configKeyCode",
-                                "key.craftpresence.config_keycode.name",
-                                "key.craftpresence.category",
-                                CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
-                                CraftPresence.CONFIG.accessibilitySettings.configKeyCode
-                        ),
-                        new Tuple<>(
-                                () -> {
-                                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
-                                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(CraftPresence.instance.currentScreen));
-                                    }
-                                },
-                                (keyCode, shouldSave) -> {
-                                    CraftPresence.CONFIG.accessibilitySettings.configKeyCode = keyCode;
-                                    if (shouldSave) {
-                                        CraftPresence.CONFIG.save();
-                                    }
-                                },
-                                vanillaBind -> vanillaBind != CraftPresence.CONFIG.accessibilitySettings.configKeyCode
-                        ), null
-                )
+                "key.craftpresence.config_keycode.name",
+                "key.craftpresence.category",
+                CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
+                CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
+                () -> {
+                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
+                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(CraftPresence.instance.currentScreen));
+                    }
+                },
+                (keyCode, shouldSave) -> {
+                    CraftPresence.CONFIG.accessibilitySettings.configKeyCode = keyCode;
+                    if (shouldSave) {
+                        CraftPresence.CONFIG.save();
+                    }
+                },
+                vanillaBind -> vanillaBind != CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
+                null
         );
     }
 
@@ -254,7 +287,7 @@ public class KeyUtils {
      * Implemented @ {@link CommandUtils#reloadData}
      */
     void onTick() {
-        if (!keysRegistered) {
+        if (!areKeysRegistered()) {
             if (CraftPresence.instance.gameSettings != null) {
                 for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
                     final KeyBinding mapping = entry.getValue().getFirst();
