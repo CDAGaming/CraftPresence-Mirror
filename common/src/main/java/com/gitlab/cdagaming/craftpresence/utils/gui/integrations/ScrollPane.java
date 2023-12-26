@@ -116,7 +116,7 @@ public class ScrollPane extends ExtendedScreen {
 
     @Override
     public double getOffset() {
-        return getAmountScrolled();
+        return needsScrollbar() ? getAmountScrolled() : super.getOffset();
     }
 
     @Override
