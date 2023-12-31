@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -45,7 +44,7 @@ public class SelectorGui extends ExtendedScreen {
     private final List<String> originalList;
     private final boolean allowContinuing, allowDynamicEditing;
     private final BiConsumer<String, String> onUpdatedCallback;
-    private final RenderType renderType;
+    private final ScrollableListControl.RenderType renderType;
     private final BiConsumer<String, GuiScreen> onAdjustDynamicEntry;
     private ExtendedButtonControl proceedButton;
     private ScrollableListControl scrollList;
@@ -64,11 +63,11 @@ public class SelectorGui extends ExtendedScreen {
      * @param attributeName        The attribute name to interpret following selection
      * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
+     * @param renderType           The {@link ScrollableListControl.RenderType} for the list, adjusting its look and feel
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         super(parentScreen);
         itemList = originalList = StringUtils.newArrayList(list);
         originalValue = currentValue;
@@ -91,11 +90,11 @@ public class SelectorGui extends ExtendedScreen {
      * @param attributeName        The attribute name to interpret following selection
      * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
+     * @param renderType           The {@link ScrollableListControl.RenderType} for the list, adjusting its look and feel
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, StringUtils.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
     }
 
@@ -109,10 +108,10 @@ public class SelectorGui extends ExtendedScreen {
      * @param attributeName        The attribute name to interpret following selection
      * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
+     * @param renderType           The {@link ScrollableListControl.RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
@@ -126,10 +125,10 @@ public class SelectorGui extends ExtendedScreen {
      * @param attributeName        The attribute name to interpret following selection
      * @param allowContinuing      Whether to allow the "continue" button functionality
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
-     * @param renderType           The {@link RenderType} for the list, adjusting its look and feel
+     * @param renderType           The {@link ScrollableListControl.RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
         this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
@@ -146,7 +145,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
+        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, ScrollableListControl.RenderType.None, onAdjustDynamicEntry);
     }
 
     /**
@@ -162,7 +161,7 @@ public class SelectorGui extends ExtendedScreen {
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
     public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, RenderType.None, onAdjustDynamicEntry);
+        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, ScrollableListControl.RenderType.None, onAdjustDynamicEntry);
     }
 
     @Override
