@@ -91,11 +91,11 @@ public class EntityUtils implements Module {
     /**
      * Retrieves the entities display name, derived from the original supplied name
      *
-     * @param entity      The entity to interpret
-     * @param stripColors Whether the resulting name should have its formatting stripped
+     * @param entity          The entity to interpret
+     * @param stripFormatting Whether the resulting name should have its formatting stripped
      * @return The formatted entity display name to use
      */
-    public static String getName(final Entity entity, final boolean stripColors) {
+    public static String getName(final Entity entity, final boolean stripFormatting) {
         String result = "";
         if (entity != null) {
             result = StringUtils.getOrDefault(
@@ -104,8 +104,8 @@ public class EntityUtils implements Module {
             );
         }
 
-        if (stripColors) {
-            result = StringUtils.stripColors(result);
+        if (stripFormatting) {
+            result = StringUtils.stripAllFormatting(result);
         }
         return result;
     }

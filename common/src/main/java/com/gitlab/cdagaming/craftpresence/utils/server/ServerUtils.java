@@ -274,7 +274,7 @@ public class ServerUtils implements Module {
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
             final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
             final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isSingleplayer() &&
-                    newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripColors(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+                    newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripAllFormatting(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
             if (newLANStatus != isOnLAN || ((newServerData != null && !newServerData.equals(currentServerData)) ||
                     (newServerData == null && currentServerData != null)) ||

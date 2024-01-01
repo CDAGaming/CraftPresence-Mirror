@@ -260,6 +260,9 @@ public final class Config extends Module implements Serializable {
         if (accessibilitySettings.stripTranslationColors != old.accessibilitySettings.stripTranslationColors) {
             Constants.TRANSLATOR.setStripColors(accessibilitySettings.stripTranslationColors); // Strip Translation Colors changed
         }
+        if (accessibilitySettings.stripTranslationFormatting != old.accessibilitySettings.stripTranslationFormatting) {
+            Constants.TRANSLATOR.setStripFormatting(accessibilitySettings.stripTranslationFormatting); // Strip Translation Formatting changed
+        }
 
         if (needsReboot) {
             CommandUtils.setupRPC();
@@ -521,8 +524,8 @@ public final class Config extends Module implements Serializable {
         }
 
         // Sync Flag Data
-        if (ModUtils.IS_TEXT_COLORS_BLOCKED) {
-            accessibilitySettings.stripTranslationColors = true;
+        if (ModUtils.IS_TEXT_FORMATTING_BLOCKED) {
+            accessibilitySettings.stripTranslationFormatting = true;
         }
 
         // Sync Migration Data for later usage

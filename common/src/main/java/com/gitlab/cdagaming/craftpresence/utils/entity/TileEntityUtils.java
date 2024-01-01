@@ -206,11 +206,11 @@ public class TileEntityUtils implements Module {
     /**
      * Retrieves the entities display name, derived from the original supplied name
      *
-     * @param data        The {@link ItemStack} to interpret
-     * @param stripColors Whether the resulting name should have its formatting stripped
+     * @param data            The {@link ItemStack} to interpret
+     * @param stripFormatting Whether the resulting name should have its formatting stripped
      * @return The formatted entity display name to use
      */
-    public static String getName(final Object data, final boolean stripColors) {
+    public static String getName(final Object data, final boolean stripFormatting) {
         final ItemStack itemStack = getStackFrom(data);
         String result = "";
         if (!isEmpty(itemStack)) {
@@ -219,8 +219,8 @@ public class TileEntityUtils implements Module {
             );
         }
 
-        if (stripColors) {
-            result = StringUtils.stripColors(result);
+        if (stripFormatting) {
+            result = StringUtils.stripAllFormatting(result);
         }
         return result;
     }

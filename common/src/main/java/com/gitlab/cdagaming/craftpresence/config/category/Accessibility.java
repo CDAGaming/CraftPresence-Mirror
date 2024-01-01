@@ -53,7 +53,8 @@ public class Accessibility extends Module implements Serializable {
             new ColorSection(16, 16, 16, 208)
     );
     public String languageId = Constants.TRANSLATOR.getDefaultLanguage();
-    public boolean stripTranslationColors = ModUtils.IS_TEXT_COLORS_BLOCKED;
+    public boolean stripTranslationColors = false;
+    public boolean stripTranslationFormatting = ModUtils.IS_TEXT_FORMATTING_BLOCKED;
     public boolean stripExtraGuiElements = false;
     public boolean renderTooltips = true;
     public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
@@ -87,6 +88,7 @@ public class Accessibility extends Module implements Serializable {
             worldGuiBackground = new ColorData(data.worldGuiBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
+            stripTranslationFormatting = data.stripTranslationFormatting;
             stripExtraGuiElements = data.stripExtraGuiElements;
             renderTooltips = data.renderTooltips;
             configKeyCode = data.configKeyCode;

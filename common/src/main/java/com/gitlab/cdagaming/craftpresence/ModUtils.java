@@ -82,9 +82,9 @@ public class ModUtils {
     public static final TranslationUtils RAW_TRANSLATOR = findGameTranslations();
 
     /**
-     * Flag used for determining if Text Colors are blocked
+     * Flag used for determining if Text Formatting Codes are blocked
      */
-    public static final boolean IS_TEXT_COLORS_BLOCKED = Constants.IS_LEGACY_SOFT && MCProtocolID <= 23;
+    public static final boolean IS_TEXT_FORMATTING_BLOCKED = Constants.IS_LEGACY_SOFT && MCProtocolID <= 23;
 
     private static String findGameBrand() {
         String result = null;

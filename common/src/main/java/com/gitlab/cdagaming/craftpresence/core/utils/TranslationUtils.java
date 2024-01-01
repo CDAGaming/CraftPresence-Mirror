@@ -73,9 +73,13 @@ public class TranslationUtils {
      */
     private boolean usingAssetsPath = true;
     /**
-     * Whether to Remove Color and Formatting Codes from Translated Strings
+     * Whether to Remove Color Codes from Translated Strings
      */
     private boolean stripColors = false;
+    /**
+     * Whether to Remove Formatting Codes from Translated Strings
+     */
+    private boolean stripFormatting = false;
     /**
      * The function to use when retrieving additional {@link InputStream} data for resources
      * <p>
@@ -306,13 +310,24 @@ public class TranslationUtils {
     }
 
     /**
-     * Toggles whether to remove Color and Formatting Codes from Translated Strings
+     * Toggles whether to remove Color Codes from Translated Strings
      *
      * @param stripColors the new "Strip Colors" status
      * @return the current instance, used for chain-building
      */
     public TranslationUtils setStripColors(final boolean stripColors) {
         this.stripColors = stripColors;
+        return this;
+    }
+
+    /**
+     * Toggles whether to remove Formatting Codes from Translated Strings
+     *
+     * @param stripFormatting the new "Strip Formatting" status
+     * @return the current instance, used for chain-building
+     */
+    public TranslationUtils setStripFormatting(final boolean stripFormatting) {
+        this.stripFormatting = stripFormatting;
         return this;
     }
 
@@ -566,13 +581,14 @@ public class TranslationUtils {
     /**
      * Translates an Unlocalized String, based on the translations retrieved for the specified language
      *
-     * @param languageId     The language ID to interpret
-     * @param stripColors    Whether to Remove Color and Formatting Codes
-     * @param translationKey The raw String to translate
-     * @param parameters     Extra Formatting Arguments, if needed
+     * @param languageId      The language ID to interpret
+     * @param stripColors     Whether to Remove Color Codes
+     * @param stripFormatting Whether to Remove Formatting Codes
+     * @param translationKey  The raw String to translate
+     * @param parameters      Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
-    public String translateFrom(final String languageId, final boolean stripColors, final String translationKey, final Object... parameters) {
+    public String translateFrom(final String languageId, final boolean stripColors, final boolean stripFormatting, final String translationKey, final Object... parameters) {
         boolean hasError = false;
         String translatedString = translationKey;
         try {
@@ -592,34 +608,47 @@ public class TranslationUtils {
             Constants.LOG.debugError("Unable to retrieve a translation for " + translationKey + " from " + languageId);
             if (!languageId.equals(getDefaultLanguage())) {
                 Constants.LOG.debugError("Attempting to retrieve default translation for " + translationKey);
-                return translateFrom(getDefaultLanguage(), stripColors, translationKey, parameters);
+                return translateFrom(getDefaultLanguage(), stripColors, stripFormatting, translationKey, parameters);
             }
         }
-        return stripColors ? StringUtils.stripColors(translatedString) : translatedString;
+        String result = translatedString;
+        if (stripFormatting && stripColors) {
+            result = StringUtils.stripAllFormatting(result);
+        } else {
+            if (stripColors) {
+                result = StringUtils.stripColors(result);
+            }
+            if (stripFormatting) {
+                result = StringUtils.stripFormatting(result);
+            }
+        }
+        return result;
     }
 
     /**
      * Translates an Unlocalized String, based on the translations retrieved for the specified language
      *
-     * @param stripColors    Whether to Remove Color and Formatting Codes
-     * @param translationKey The raw String to translate
-     * @param parameters     Extra Formatting Arguments, if needed
+     * @param stripColors     Whether to Remove Color Codes
+     * @param stripFormatting Whether to Remove Formatting Codes
+     * @param translationKey  The raw String to translate
+     * @param parameters      Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
-    public String translateFrom(final boolean stripColors, final String translationKey, final Object... parameters) {
-        return translateFrom(getDefaultLanguage(), stripColors, translationKey, parameters);
+    public String translateFrom(final boolean stripColors, final boolean stripFormatting, final String translationKey, final Object... parameters) {
+        return translateFrom(getDefaultLanguage(), stripColors, stripFormatting, translationKey, parameters);
     }
 
     /**
      * Translates an Unlocalized String, based on the translations retrieved for the current language
      *
-     * @param stripColors    Whether to Remove Color and Formatting Codes
-     * @param translationKey The raw String to translate
-     * @param parameters     Extra Formatting Arguments, if needed
+     * @param stripColors     Whether to Remove Color Codes
+     * @param stripFormatting Whether to Remove Formatting Codes
+     * @param translationKey  The raw String to translate
+     * @param parameters      Extra Formatting Arguments, if needed
      * @return The Localized Translated String
      */
-    public String translate(final boolean stripColors, final String translationKey, final Object... parameters) {
-        return translateFrom(languageId, stripColors, translationKey, parameters);
+    public String translate(final boolean stripColors, final boolean stripFormatting, final String translationKey, final Object... parameters) {
+        return translateFrom(languageId, stripColors, stripFormatting, translationKey, parameters);
     }
 
     /**
@@ -631,7 +660,7 @@ public class TranslationUtils {
      * @return The Localized Translated String
      */
     public String translateFrom(final String languageId, final String translationKey, final Object... parameters) {
-        return translateFrom(languageId, stripColors, translationKey, parameters);
+        return translateFrom(languageId, stripColors, stripFormatting, translationKey, parameters);
     }
 
     /**

@@ -290,7 +290,9 @@ The following functions are available for use anywhere in CraftPresence:
 * `replace(input, matchCase ?: false, matchWholeWord ?: false, useRegex ?: true, data=[from, to]...)` - Replaces Data in
   a String
 * `split(input, regex, limit ?: 0)` - Splits this string around matches of the given regular expression
-* `stripColors(input)` - Strips Color and Formatting Codes from the inputted String
+* `stripColors(input)` - Strips Color Codes from the inputted String
+* `stripAllFormatting(input)` - Strips Color and Formatting Codes from the inputted String
+* `stripFormatting(input)` - Strips Formatting Codes from the inputted String
 * `timeFromEpoch(epochTime)` - Retrieve a Time Instant from the specified epoch time
 * `timeFromString(dateString, fromFormat, fromTimeZone ?: null)` - Format a Date String from one timezone and format
   into a valid Instant instance
@@ -336,8 +338,8 @@ Additionally, in select Minecraft Versions, the following config settings are ef
     * MC 1.6 and above: `minecraft:textures/gui/options_background.png`
     * MC 1.5.2 until a1.1.2_01: `/gui/background.png`
     * MC a1.1.2_01 and below: `/dirt.png`
-* `stripTranslationColors` (`ModUtils#IS_TEXT_COLORS_BLOCKED`)
-    * This option is forcefully disabled on MC 1.1.0 and below due to various issues regarding TextColor usage,
+* `stripTranslationFormatting` (`ModUtils#IS_TEXT_FORMATTING_BLOCKED`)
+    * This option is forcefully disabled on MC 1.1.0 and below due to various issues regarding combined TextColor usage,
       including possible crashes
     * This change is also auto-applied to existing configs trying to bypass this, unlike the background colors, since
       resource packs can re-implement those textures

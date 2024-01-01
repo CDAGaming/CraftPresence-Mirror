@@ -104,6 +104,8 @@ public class FunctionsLib {
         ss.set("hasField", FunctionsLib::hasField);
         ss.set("executeMethod", FunctionsLib::executeMethod);
         ss.set("stripColors", FunctionsLib::stripColors);
+        ss.set("stripFormatting", FunctionsLib::stripFormatting);
+        ss.set("stripAllFormatting", FunctionsLib::stripAllFormatting);
 
         // TimeUtils
         ss.set("getCurrentTime", FunctionsLib::getCurrentTime);
@@ -881,6 +883,18 @@ public class FunctionsLib {
         if (argCount != 1) ss.error("stripColors() requires 1 argument, got %d.", argCount);
         String a = ss.popString("Argument to stripColors() needs to be a string.");
         return Value.string(StringUtils.stripColors(a));
+    }
+
+    public static Value stripFormatting(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("stripFormatting() requires 1 argument, got %d.", argCount);
+        String a = ss.popString("Argument to stripFormatting() needs to be a string.");
+        return Value.string(StringUtils.stripFormatting(a));
+    }
+
+    public static Value stripAllFormatting(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("stripAllFormatting() requires 1 argument, got %d.", argCount);
+        String a = ss.popString("Argument to stripAllFormatting() needs to be a string.");
+        return Value.string(StringUtils.stripAllFormatting(a));
     }
 
     public static Value getCurrentTime(Starscript ss, int argCount) {

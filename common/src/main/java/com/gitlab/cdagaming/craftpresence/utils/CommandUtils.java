@@ -331,9 +331,15 @@ public class CommandUtils {
         if (!Constants.HAS_GAME_LOADED) {
             Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
             if (Constants.HAS_GAME_LOADED) {
-                addModule(Constants.MOD_ID, new TranslationManager(Constants.TRANSLATOR.setStripColors(
-                        CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
-                )));
+                addModule(Constants.MOD_ID, new TranslationManager(
+                        Constants.TRANSLATOR
+                                .setStripColors(
+                                        CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
+                                )
+                                .setStripFormatting(
+                                        CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting
+                                )
+                ));
                 if (ModUtils.RAW_TRANSLATOR != null) {
                     addModule("minecraft", new TranslationManager(ModUtils.RAW_TRANSLATOR));
                 }

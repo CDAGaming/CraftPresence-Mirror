@@ -45,7 +45,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     private final Accessibility INSTANCE, DEFAULTS;
     private ExtendedTextControl languageIdText;
-    private CheckBoxControl stripTranslationColorsButton,
+    private CheckBoxControl stripTranslationColorsButton, stripTranslationFormattingButton,
             stripExtraGuiElementsButton, renderTooltipsButton;
     private ExtendedButtonControl controlsButton;
 
@@ -168,14 +168,27 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.name.accessibility.strip_translation_colors",
                         getCurrentData().stripTranslationColors,
                         null,
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
+                                )
+                        )
+                )
+        );
+        stripTranslationFormattingButton = childFrame.addControl(
+                new CheckBoxControl(
+                        calc1, getButtonY(4, -10),
+                        "gui.config.name.accessibility.strip_translation_formatting",
+                        getCurrentData().stripTranslationFormatting,
+                        null,
                         () -> {
-                            if (stripTranslationColorsButton.isControlEnabled()) {
+                            if (stripTranslationFormattingButton.isControlEnabled()) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
-                                                Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
+                                                Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_formatting")
                                         )
                                 );
-                            } else if (ModUtils.IS_TEXT_COLORS_BLOCKED) {
+                            } else if (ModUtils.IS_TEXT_FORMATTING_BLOCKED) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 Constants.TRANSLATOR.translate("craftpresence.message.unsupported")
@@ -187,7 +200,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         stripExtraGuiElementsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(4, -10),
+                        calc1, getButtonY(5, -20),
                         "gui.config.name.accessibility.strip_extra_gui_elements",
                         getCurrentData().stripExtraGuiElements,
                         null,
@@ -200,7 +213,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         renderTooltipsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(5, -20),
+                        calc1, getButtonY(6, -30),
                         "gui.config.name.accessibility.render_tooltips",
                         getCurrentData().renderTooltips,
                         null,
@@ -273,7 +286,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         super.syncRenderStates();
 
         //noinspection ConstantConditions
-        stripTranslationColorsButton.setControlEnabled(!ModUtils.IS_TEXT_COLORS_BLOCKED);
+        stripTranslationFormattingButton.setControlEnabled(!ModUtils.IS_TEXT_FORMATTING_BLOCKED);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
     }
@@ -287,6 +300,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         if (stripTranslationColorsButton.isChecked() != getCurrentData().stripTranslationColors) {
             CraftPresence.CONFIG.hasChanged = true;
             getCurrentData().stripTranslationColors = stripTranslationColorsButton.isChecked();
+        }
+        if (stripTranslationFormattingButton.isChecked() != getCurrentData().stripTranslationFormatting) {
+            CraftPresence.CONFIG.hasChanged = true;
+            getCurrentData().stripTranslationFormatting = stripTranslationFormattingButton.isChecked();
         }
         if (stripExtraGuiElementsButton.isChecked() != getCurrentData().stripExtraGuiElements) {
             CraftPresence.CONFIG.hasChanged = true;

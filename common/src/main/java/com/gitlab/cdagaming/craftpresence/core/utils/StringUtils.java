@@ -78,7 +78,15 @@ public class StringUtils {
     /**
      * Regex Pattern for Color and Formatting Codes
      */
-    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
+    public static final Pattern STRIP_ALL_FORMATTING_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
+    /**
+     * Regex Pattern for Color Codes
+     */
+    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-F]");
+    /**
+     * Regex Pattern for Formatting Codes
+     */
+    public static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[K-O]");
     /**
      * The Default Charset to use for String Operations
      */
@@ -1059,8 +1067,8 @@ public class StringUtils {
                 if (BRACKET_PATTERN.matcher(formattedKey).find()) {
                     formattedKey = BRACKET_PATTERN.matcher(formattedKey).replaceAll("");
                 }
-                if (STRIP_COLOR_PATTERN.matcher(formattedKey).find()) {
-                    formattedKey = STRIP_COLOR_PATTERN.matcher(formattedKey).replaceAll("");
+                if (STRIP_ALL_FORMATTING_PATTERN.matcher(formattedKey).find()) {
+                    formattedKey = STRIP_ALL_FORMATTING_PATTERN.matcher(formattedKey).replaceAll("");
                 }
             }
 
@@ -1183,8 +1191,7 @@ public class StringUtils {
     }
 
     /**
-     * Returns the Color and Formatting Characters within a String<p>
-     * Defined by {@link StringUtils#STRIP_COLOR_PATTERN}
+     * Returns the Color and Formatting Characters within a String
      *
      * @param text The original String to evaluate
      * @return The formatting and color codes found within the input
@@ -1611,13 +1618,33 @@ public class StringUtils {
     }
 
     /**
-     * Strips Color and Formatting Codes from the inputted String
+     * Strips Color Codes from the inputted String
      *
      * @param input The original String to evaluate
      * @return The Stripped and evaluated String
      */
     public static String stripColors(final String input) {
         return isNullOrEmpty(input) ? input : STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
+    }
+
+    /**
+     * Strips Formatting Codes from the inputted String
+     *
+     * @param input The original String to evaluate
+     * @return The Stripped and evaluated String
+     */
+    public static String stripFormatting(final String input) {
+        return isNullOrEmpty(input) ? input : STRIP_FORMATTING_PATTERN.matcher(input).replaceAll("");
+    }
+
+    /**
+     * Strips Color and Formatting Codes from the inputted String
+     *
+     * @param input The original String to evaluate
+     * @return The Stripped and evaluated String
+     */
+    public static String stripAllFormatting(final String input) {
+        return isNullOrEmpty(input) ? input : STRIP_ALL_FORMATTING_PATTERN.matcher(input).replaceAll("");
     }
 
     /**
@@ -1637,6 +1664,6 @@ public class StringUtils {
      * @return The Normalized and evaluated String
      */
     public static String normalize(final String input) {
-        return stripColors(normalizeLines(input));
+        return stripAllFormatting(normalizeLines(input));
     }
 }
