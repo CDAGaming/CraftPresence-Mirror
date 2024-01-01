@@ -133,7 +133,6 @@
   "gui.config.comment.accessibility.gui_background_color": "Цвет или текстура, которые будут использоваться для фонов графического интерфейса CraftPresence",
   "gui.config.comment.accessibility.language_id": "Идентификатор языка, который будет использоваться для перевода строк этого мода",
   "gui.config.comment.accessibility.strip_extra_gui_elements": "Позволяет CraftPresence удалять визуальные улучшения из графического интерфейса\\n (Может улучшить производительность графического интерфейса в некоторых областях)",
-  "gui.config.comment.accessibility.strip_translation_colors": "Позволяет CraftPresence удалять коды форматирования цветов из переводов",
   "gui.config.comment.accessibility.tooltip_background_color": "Цвет или текстура, которые будут использоваться для фонов всплывающих подсказок CraftPresence",
   "gui.config.comment.accessibility.tooltip_border_color": "Цвет или текстура, которые будут использоваться для обводки всплывающих подсказок CraftPresence",
   "gui.config.comment.advanced.allow_placeholder_previews": "Отображает предварительный просмотр заполнителей в соответствующих всплывающих подсказках графического интерфейса",
