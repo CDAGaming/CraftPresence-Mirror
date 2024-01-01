@@ -739,7 +739,7 @@ public class RenderUtils {
             int tooltipHeight = 8;
 
             if (textLines.size() > 1) {
-                tooltipHeight += (textLines.size() - 1) * 10;
+                tooltipHeight += (textLines.size() - 1) * (fontHeight + 1);
                 if (isTooltip && textLines.size() > titleLinesCount) {
                     tooltipHeight += 2; // gap between title lines and next lines
                 }
