@@ -293,7 +293,12 @@ public class TextDisplayWidget implements DynamicWidget {
                 getMessage(),
                 width
         );
-        setControlHeight(content.size() * (parent.getFontHeight() + 1));
+        final int height = content.size() * (parent.getFontHeight() + 1);
+        int padding = 0;
+        if (parent instanceof ScrollPane) {
+            padding = ((ScrollPane) parent).getPadding();
+        }
+        setControlHeight(height + padding);
         return content;
     }
 }
