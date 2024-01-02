@@ -15,7 +15,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * View the Full Changelog for more details regarding these changes
 * Modified the `stripTranslationColors` config setting into two: one for colors, and one for special
   formatting (`stripTranslationFormatting`)
-    * This adjusts the limiter placed on MC 1.1.0 and below so that text *colors* are now allowed, but special
+    * This adjusts the limiter placed on MC 1.1.0 and below so that text colors are now allowed, but special
       formatting is not
     * This also adjusts various APIs, in addition to two new script functions: `stripFormatting(input)`
       and `stripAllFormatting(input)`
