@@ -1,6 +1,6 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.ForgeLikePatcher
-import xyz.wagyourtail.unimined.api.task.ExportMappingsTask
-import xyz.wagyourtail.unimined.api.task.RemapJarTask
+import xyz.wagyourtail.unimined.api.mapping.task.ExportMappingsTask
+import xyz.wagyourtail.unimined.api.minecraft.patch.forge.ForgeLikePatcher
+import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 
 /**
  * Retrieve a Project Property

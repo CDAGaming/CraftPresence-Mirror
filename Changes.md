@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.3.0 (??/??/2024)
+## v2.3.0 (01/23/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.6...release%2Fv2.3.0)_
@@ -10,7 +10,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Unimined (`1.1.0` -> `1.1.1`)
+    * Unimined (`1.1.0` -> `1.2.0-SNAPSHOT`)
 * (Backend) Major API Refactors involving `StringUtils`, `RenderUtils`, and various other areas
     * View the Full Changelog for more details regarding these changes
 * Modified the `stripTranslationColors` config setting into two: one for colors, and one for special

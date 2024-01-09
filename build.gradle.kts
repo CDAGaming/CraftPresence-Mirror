@@ -4,14 +4,14 @@ import org.gradle.internal.jvm.Jvm
 import xyz.wagyourtail.mini_jvmdg.MiniJVMDowngrade
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
-import xyz.wagyourtail.unimined.internal.mods.task.RemapJarTaskImpl
+import xyz.wagyourtail.unimined.internal.minecraft.task.RemapJarTaskImpl
 import java.nio.file.Files
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
-    id("xyz.wagyourtail.unimined") version "1.1.1" apply false
+    id("xyz.wagyourtail.unimined") version "1.2.0-SNAPSHOT" apply false
     id("com.diffplug.gradle.spotless") version "6.23.3" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.9"

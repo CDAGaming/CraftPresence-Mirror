@@ -1,5 +1,5 @@
 import me.hypherionmc.modpublisher.plugin.ModPublisherGradleExtension.ApiKeys
-import xyz.wagyourtail.unimined.api.minecraft.patch.FabricLikePatcher
+import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {

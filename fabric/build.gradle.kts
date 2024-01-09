@@ -1,6 +1,6 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.FabricLikePatcher
-import xyz.wagyourtail.unimined.api.task.ExportMappingsTask
-import xyz.wagyourtail.unimined.api.task.RemapJarTask
+import xyz.wagyourtail.unimined.api.mapping.task.ExportMappingsTask
+import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
+import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 
 /**
  * Retrieve a Project Property
