@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.core.integrations.logging;
 
 import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 
+import java.util.List;
+
 /**
  * Set of Utilities used to Parse Logging Information
  *
@@ -289,5 +291,64 @@ public abstract class LoggingImpl {
         return prefix + StringUtils.normalize(
                 String.format(message, args)
         );
+    }
+
+    /**
+     * Prints a detailed exception message, based on specified arguments
+     *
+     * @param ex            The exception to print alongside the message
+     * @param showLogging   Whether to display additional logging for this function
+     * @param prefix        The logging prefix to use before the message
+     * @param verbosePrefix The logging prefix to use, if showLogging is false
+     * @param outputs       If specified, attach the logging to these {@link Appendable} objects
+     */
+    public void printStackTrace(final Throwable ex, final boolean showLogging, final String prefix, final String verbosePrefix, final Appendable... outputs) {
+        final List<String> splitEx = StringUtils.splitTextByNewLine(
+                StringUtils.getStackTrace(ex)
+        );
+
+        // Dispatch to Appendable WriteStream(s) if possible
+        if (outputs != null) {
+            for (Appendable output : outputs) {
+                if (output != null) {
+                    try {
+                        if (showLogging) {
+                            for (String line : splitEx) {
+                                line = line.replace("\t", StringUtils.TAB_SPACE);
+                                output.append(line).append('\n');
+                            }
+                        } else {
+                            output.append(splitEx.get(0)).append('\n');
+                            if (splitEx.size() > 1) {
+                                output.append('\n').append(verbosePrefix).append('\n');
+                            }
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+        }
+
+        if (showLogging) {
+            error(prefix);
+            error(ex);
+        } else {
+            error("%1$s \"%2$s\"", prefix, splitEx.get(0));
+            if (splitEx.size() > 1) {
+                error(verbosePrefix);
+            }
+        }
+    }
+
+    /**
+     * Prints a detailed exception message, based on specified arguments
+     *
+     * @param ex            The exception to print alongside the message
+     * @param prefix        The logging prefix to use before the message
+     * @param verbosePrefix The logging prefix to use, if showLogging is false
+     * @param outputs       If specified, attach the logging to these {@link Appendable} objects
+     */
+    public void printStackTrace(final Throwable ex, final String prefix, final String verbosePrefix, final Appendable... outputs) {
+        printStackTrace(ex, isDebugMode(), prefix, verbosePrefix, outputs);
     }
 }

@@ -527,34 +527,8 @@ public class DiscordUtils {
             } catch (Throwable ex) {
                 Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.compiler"));
                 Constants.LOG.error("%1$s \"%2$s\"", originalPrefix, data);
-                final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
-                // Dispatch to Appendable WriteStream if possible
-                if (output != null) {
-                    try {
-                        if (showLogging) {
-                            for (String line : splitEx) {
-                                line = line.replace("\t", StringUtils.TAB_SPACE);
-                                output.append(line).append('\n');
-                            }
-                        } else {
-                            output.append(splitEx.get(0)).append('\n');
-                            if (splitEx.size() > 1) {
-                                output.append('\n').append(verbosePrefix).append('\n');
-                            }
-                        }
-                    } catch (Exception ignored) {
-                    }
-                }
-                // Perform the same to Logging, so the same information is available on both ends
-                if (showLogging) {
-                    Constants.LOG.error(messagePrefix);
-                    Constants.LOG.error(ex);
-                } else {
-                    Constants.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
-                    if (splitEx.size() > 1) {
-                        Constants.LOG.error(verbosePrefix);
-                    }
-                }
+
+                Constants.LOG.printStackTrace(ex, showLogging, messagePrefix, verbosePrefix, output);
                 return Value.null_();
             }
             return !StringUtils.isNullOrEmpty(sect.toString()) ? Value.string(sect.toString()) : Value.null_();

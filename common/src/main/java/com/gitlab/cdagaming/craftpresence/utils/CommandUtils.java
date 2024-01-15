@@ -44,7 +44,6 @@ import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -259,19 +258,11 @@ public class CommandUtils {
             }
             CraftPresence.CLIENT.onTick();
         } catch (Throwable ex) {
-            final List<String> splitEx = StringUtils.splitTextByNewLine(StringUtils.getStackTrace(ex));
             final String messagePrefix = Constants.TRANSLATOR.translate("gui.config.message.editor.message");
+            final String verbosePrefix = Constants.TRANSLATOR.translate("craftpresence.logger.error.verbose");
 
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.module"));
-            if (Constants.LOG.isDebugMode()) {
-                Constants.LOG.error(messagePrefix);
-                Constants.LOG.error(ex);
-            } else {
-                Constants.LOG.error("%1$s \"%2$s\"", messagePrefix, splitEx.get(0));
-                if (splitEx.size() > 1) {
-                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.verbose"));
-                }
-            }
+            Constants.LOG.printStackTrace(ex, messagePrefix, verbosePrefix);
             CraftPresence.CLIENT.shutDown();
         } finally {
             CraftPresence.SCHEDULER.TICK_LOCK.unlock();
