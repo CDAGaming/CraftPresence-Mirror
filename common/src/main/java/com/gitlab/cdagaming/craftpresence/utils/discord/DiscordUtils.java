@@ -1564,7 +1564,7 @@ public class DiscordUtils {
 
         // Menu Tick Event
         final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
-        final boolean isFullyLoaded = Constants.HAS_GAME_LOADED && CraftPresence.CLIENT.isAvailable();
+        final boolean isFullyLoaded = Constants.HAS_GAME_LOADED && isAvailable();
         if (!isFullyLoaded) {
             // Ensure Loading Presence has already passed, before any other type of presence displays
             CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
