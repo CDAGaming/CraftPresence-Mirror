@@ -13,7 +13,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Unimined (`1.1.0` -> `1.2.0-SNAPSHOT`)
     * Spotless Plugin (`6.23.3` -> `6.24.0`)
     * Spotless Annotations (`4.8.2` -> `4.8.3`)
-    * Fabric Loader (`0.15.3` -> `0.15.4`)
+    * Fabric Loader (`0.15.3` -> `0.15.5`)
 * (Backend) Major API Refactors involving `StringUtils`, `RenderUtils`, and various other areas
     * View the Full Changelog for more details regarding these changes
 * Modified the `stripTranslationColors` config setting into two: one for colors, and one for special
