@@ -229,14 +229,16 @@ public class TextDisplayWidget implements DynamicWidget {
 
     @Override
     public void draw(ExtendedScreen screen) {
-        int padding = 0;
+        int padding = 0, barWidth = 0;
         if (screen instanceof ScrollPane) {
-            padding = ((ScrollPane) screen).getPadding();
+            final ScrollPane pane = ((ScrollPane) screen);
+            padding = pane.getPadding();
+            barWidth = pane.getScrollBarWidth();
         }
         screen.drawMultiLineString(
                 getRenderLines(),
                 getControlPosX() + padding, getControlPosY() + padding,
-                getControlWidth(), -1, -1,
+                getControlWidth() - padding - barWidth, -1, -1,
                 isCentered(), false,
                 screen.createDefaultTooltip().putSecond(null).putThird(null)
         );
@@ -264,7 +266,7 @@ public class TextDisplayWidget implements DynamicWidget {
 
     @Override
     public int getControlWidth() {
-        return width - startX;
+        return this.width;
     }
 
     @Override
@@ -274,12 +276,12 @@ public class TextDisplayWidget implements DynamicWidget {
 
     @Override
     public int getControlHeight() {
-        return contentHeight;
+        return this.contentHeight;
     }
 
     @Override
     public void setControlHeight(int height) {
-        contentHeight = height;
+        this.contentHeight = height;
     }
 
     /**
@@ -288,17 +290,20 @@ public class TextDisplayWidget implements DynamicWidget {
      * @return the modified render lines for the widget
      */
     private List<String> refreshContent() {
-        final int width = MathUtils.clamp(getControlWidth(), 0, parent.getMaxWidth());
+        int padding = 0, barWidth = 0;
+        if (parent instanceof ScrollPane) {
+            final ScrollPane pane = ((ScrollPane) parent);
+            padding = pane.getPadding();
+            barWidth = pane.getScrollBarWidth();
+        }
+
+        final int width = MathUtils.clamp((getControlWidth() - getControlPosX()) - (padding * 2) - barWidth, 0, parent.getMaxWidth());
         final List<String> content = parent.createRenderLines(
                 getMessage(),
                 width
         );
         final int height = content.size() * (parent.getFontHeight() + 1);
-        int padding = 0;
-        if (parent instanceof ScrollPane) {
-            padding = ((ScrollPane) parent).getPadding();
-        }
-        setControlHeight(height + padding);
+        setControlHeight(height + 2);
         return content;
     }
 }
