@@ -308,10 +308,10 @@ public class RenderUtils {
      * @param texLocation The game texture to render the button as
      */
     public static void renderButton(@Nonnull final Minecraft mc,
-                                    final int x, final int y,
-                                    final int startU, final int startV,
-                                    final int endU, final int endV,
-                                    final int width, final int height,
+                                    final double x, final double y,
+                                    final double startU, final double startV,
+                                    final double endU, final double endV,
+                                    final double width, final double height,
                                     final double zLevel,
                                     final ResourceLocation texLocation) {
         try {

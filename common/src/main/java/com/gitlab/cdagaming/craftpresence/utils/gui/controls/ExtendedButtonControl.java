@@ -234,7 +234,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         if (isControlVisible()) {
             final int hoverState = getHoverState(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
-            final int xOffset = getControlWidth() / 2;
+            final double xOffset = getControlWidth() / 2D;
 
             RenderUtils.renderButton(mc,
                     getControlPosX(), getControlPosY(),
