@@ -188,10 +188,10 @@ public class UrlUtils {
      * @param url         The URL to access (To be converted into a URL)
      * @param targetClass The target class to base parsing on
      * @param <T>         The data type for the resulting Json
-     * @return The URL's Output, as Formatted Json
+     * @return The URLs Output, as Formatted Json
      * @throws Exception If a connection is unable to be established or parsing fails
      */
-    public static <T> T getJSONFromURL(String url, Class<T> targetClass) throws Exception {
+    public static <T> T getJSONFromURL(final String url, final Class<T> targetClass) throws Exception {
         return getJSONFromURL(new URL(url), targetClass);
     }
 
@@ -201,10 +201,10 @@ public class UrlUtils {
      * @param url         The URL to access
      * @param targetClass The target class to base parsing on
      * @param <T>         The data type for the resulting Json
-     * @return The URL's Output, as Formatted Json
+     * @return The URLs Output, as Formatted Json
      * @throws Exception If a connection is unable to be established or parsing fails
      */
-    public static <T> T getJSONFromURL(URL url, Class<T> targetClass) throws Exception {
+    public static <T> T getJSONFromURL(final URL url, final Class<T> targetClass) throws Exception {
         return GSON.fromJson(getURLStreamReader(url, "UTF-8"), targetClass);
     }
 
