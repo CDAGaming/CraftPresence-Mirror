@@ -873,6 +873,17 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Renders a String in the Screen, in the style of centered text
+     *
+     * @param text  The text to render to the screen
+     * @param yPos  The Y position to render the text at
+     * @param color The color to render the text in
+     */
+    public void renderCenteredString(final String text, final float yPos, final int color) {
+        renderCenteredString(text, getScreenWidth() / 2f, yPos, color);
+    }
+
+    /**
      * Renders a String in the Screen, in the style of normal text
      *
      * @param text  The text to render to the screen

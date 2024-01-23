@@ -292,7 +292,7 @@ public class SelectorGui extends ExtendedScreen {
         final String displayText = mainTitle + " " + extraText;
 
         renderCenteredString(searchText, 30, renderY, 0xFFFFFF);
-        renderCenteredString(displayText, getScreenWidth() / 2f, 15, 0xFFFFFF);
+        renderCenteredString(displayText, 15, 0xFFFFFF);
 
         super.renderExtra();
     }

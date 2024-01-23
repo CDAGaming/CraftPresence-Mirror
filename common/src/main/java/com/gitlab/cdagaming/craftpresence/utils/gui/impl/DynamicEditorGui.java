@@ -243,7 +243,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void renderExtra() {
-        renderCenteredString(mainTitle, getScreenWidth() / 2f, 15, 0xFFFFFF);
+        renderCenteredString(mainTitle, 15, 0xFFFFFF);
 
         super.renderExtra();
     }
