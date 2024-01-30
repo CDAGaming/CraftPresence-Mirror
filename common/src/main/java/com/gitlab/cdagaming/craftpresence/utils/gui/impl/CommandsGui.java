@@ -27,8 +27,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
@@ -39,6 +37,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import com.jagrosh.discordipc.IPCClient;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.meteordev.starscript.value.Value;
@@ -574,7 +574,7 @@ public class CommandsGui extends ExtendedScreen {
      * @param urlMeta    The additional data to append to the URL
      */
     private void exportAssets(final String clientId, final boolean doFullCopy, final String urlMeta) {
-        Constants.getThreadFactory().newThread(() -> {
+        FileUtils.getThreadFactory().newThread(() -> {
             blockInteractions = true;
             final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
             boolean hasError = false;

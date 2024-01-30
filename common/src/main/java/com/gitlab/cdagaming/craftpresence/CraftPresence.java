@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.utils.*;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
@@ -37,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.github.cdagaming.unicore.utils.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -161,7 +161,7 @@ public class CraftPresence {
      */
     private void scheduleTick() {
         if (!Constants.IS_GAME_CLOSING) {
-            Constants.getThreadPool().scheduleAtFixedRate(
+            FileUtils.getThreadPool().scheduleAtFixedRate(
                     this::clientTick,
                     0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
             );

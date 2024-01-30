@@ -31,13 +31,8 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.ScheduleUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.TimeUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
@@ -50,6 +45,11 @@ import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
+import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.ScheduleUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.TimeUtils;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -251,16 +251,16 @@ public class DiscordUtils {
      */
     public void setup() {
         Runtime.getRuntime().addShutdownHook(
-                Constants.getThreadFactory().newThread(() -> {
+                FileUtils.getThreadFactory().newThread(() -> {
                     Constants.IS_GAME_CLOSING = true;
-                    Constants.getThreadPool().shutdown();
+                    FileUtils.getThreadPool().shutdown();
                     shutDown();
                 })
         );
 
         // Setup Default / Static Placeholders
         FunctionsLib.init(scriptEngine);
-        syncArgument("general.mods", FileUtils.getModCount());
+        syncArgument("general.mods", Constants.getModCount());
         syncArgument("general.title", Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
         syncArgument("general.version", ModUtils.MCVersion);
         syncArgument("general.protocol", ModUtils.MCProtocolID);
@@ -1194,7 +1194,7 @@ public class DiscordUtils {
      */
     public void updatePresence(final RichPresence presence) {
         if (!isConnected() && !isClosed() && !connectThreadActive) {
-            Constants.getThreadFactory().newThread(
+            FileUtils.getThreadFactory().newThread(
                     () -> {
                         attemptsRemaining = MAX_CONNECTION_ATTEMPTS;
                         while (!isConnected() && attemptsRemaining > 0) {

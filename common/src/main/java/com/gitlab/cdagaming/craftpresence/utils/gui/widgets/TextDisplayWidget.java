@@ -24,11 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.github.cdagaming.unicore.utils.MathUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.List;
 import java.util.Objects;

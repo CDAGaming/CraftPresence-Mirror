@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.integrations.pack;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.nio.file.NoSuchFileException;

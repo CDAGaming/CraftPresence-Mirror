@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
-import com.gitlab.cdagaming.craftpresence.core.impl.TreeMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.atlauncher.ATLauncherUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.curse.CurseUtils;
@@ -38,11 +37,12 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater.MCUpd
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.modrinth.ModrinthUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
+import io.github.cdagaming.unicore.impl.TreeMapBuilder;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.Map;
 

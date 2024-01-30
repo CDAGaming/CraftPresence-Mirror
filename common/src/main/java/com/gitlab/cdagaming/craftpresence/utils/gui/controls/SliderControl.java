@@ -24,11 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.impl.Tuple;
+import io.github.cdagaming.unicore.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;

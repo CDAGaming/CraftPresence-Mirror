@@ -59,6 +59,11 @@ dependencies {
         }
     }
 
+    // CORE APIs
+    shade("io.github.CDAGaming:unicore:1.0.0-SNAPSHOT") {
+        isTransitive = false
+    }
+
     // Java-Specific Dependencies
     shade("com.kohlschutter.junixsocket:junixsocket-common:2.8.3")
     shade("com.kohlschutter.junixsocket:junixsocket-native-common:2.8.3")

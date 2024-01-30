@@ -29,9 +29,9 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.MappingUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
@@ -196,7 +196,7 @@ public class DimensionUtils implements Module {
                 for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
                     if (classInfo != null) {
                         try {
-                            Class<?> classObj = FileUtils.findValidClass(MappingUtils.CLASS_LOADER, true, classInfo.getName());
+                            Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
                             if (classObj != null) {
                                 WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
                                 if (!dimensionTypes.contains(providerObj.getDimensionType())) {

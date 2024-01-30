@@ -25,7 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.core.utils.MappingUtils;
+import io.github.cdagaming.unicore.utils.MappingUtils;
+import io.github.cdagaming.unicore.utils.OSUtils;
 import net.minecraftforge.fml.common.Mod;
 
 /**
@@ -39,7 +40,7 @@ public class CraftPresenceForge {
      * Begins Scheduling Ticks on Class Initialization
      */
     public CraftPresenceForge() {
-        if (MappingUtils.JAVA_SPEC < 1.8f) {
+        if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-forge.srg");

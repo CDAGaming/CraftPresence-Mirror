@@ -25,17 +25,16 @@
 package com.gitlab.cdagaming.craftpresence.core;
 
 import com.gitlab.cdagaming.craftpresence.core.integrations.logging.ApacheLogger;
-import com.gitlab.cdagaming.craftpresence.core.integrations.logging.JavaLogger;
-import com.gitlab.cdagaming.craftpresence.core.integrations.logging.LoggingImpl;
-import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.TranslationUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.github.cdagaming.unicore.integrations.logging.JavaLogger;
+import io.github.cdagaming.unicore.integrations.logging.LoggingImpl;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.TranslationUtils;
 
 import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
+import java.util.List;
 
 /**
  * Constant Variables and Methods used throughout the Application
@@ -116,20 +115,6 @@ public class Constants {
     public static final TranslationUtils TRANSLATOR = new TranslationUtils(MOD_ID, true).build();
 
     /**
-     * Thread Factory Instance for this Class, used for Scheduling Events
-     */
-    private static final ThreadFactory threadFactory = r -> {
-        final Thread t = new Thread(r, NAME);
-        t.setDaemon(true);
-        return t;
-    };
-
-    /**
-     * Timer Instance for this Class, used for Scheduling Events
-     */
-    private static final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor(threadFactory);
-
-    /**
      * If Loading of game data has been completed<p>
      * Becomes true after callbacks synchronize if previously false but game is loaded
      */
@@ -141,20 +126,58 @@ public class Constants {
     public static boolean IS_GAME_CLOSING = false;
 
     /**
-     * Retrieve the Timer Instance for this Class, used for Scheduling Events
+     * Retrieve the Amount of Active Mods in the instance
      *
-     * @return the Timer Instance for this Class
+     * @return The Mods that are active in the instance
      */
-    public static ScheduledExecutorService getThreadPool() {
-        return exec;
+    public static int getModCount() {
+        int modCount = -1;
+        final Class<?> fmlLoader = FileUtils.findValidClass("net.minecraftforge.fml.common.Loader");
+        final Class<?> quiltLoader = FileUtils.findValidClass("org.quiltmc.loader.api.QuiltLoader");
+        final Class<?> fabricLoader = FileUtils.findValidClass("net.fabricmc.loader.api.FabricLoader");
+        if (fmlLoader != null) {
+            final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, null, null, "instance");
+            if (loaderInstance != null) {
+                final Object mods = StringUtils.executeMethod(fmlLoader, loaderInstance, null, null, "getModList");
+                if (mods instanceof List<?>) {
+                    modCount = ((List<?>) mods).size();
+                }
+            }
+        } else if (quiltLoader != null) {
+            final Object mods = StringUtils.executeMethod(quiltLoader, null, null, null, "getAllMods");
+            if (mods instanceof List<?>) {
+                modCount = ((List<?>) mods).size();
+            }
+        } else if (fabricLoader != null) {
+            final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, null, null, "getInstance");
+            if (loaderInstance != null) {
+                final Object mods = StringUtils.executeMethod(fabricLoader, loaderInstance, null, null, "getAllMods");
+                if (mods instanceof List<?>) {
+                    modCount = ((List<?>) mods).size();
+                }
+            }
+        }
+        return modCount > 0 ? modCount : getRawModCount();
     }
 
     /**
-     * Retrieve the Thread Factory Instance for this Class, used for Scheduling Events
+     * Retrieve the Amount of Active Mods in the {@link Constants#modsDir}
      *
-     * @return the Thread Factory Instance for this class
+     * @return The Mods that are active in the directory
      */
-    public static ThreadFactory getThreadFactory() {
-        return threadFactory;
+    public static int getRawModCount() {
+        // Mod is within ClassLoader if in a Dev Environment
+        // and is thus automatically counted if this is the case
+        int modCount = 0;
+        final File[] mods = new File(Constants.modsDir).listFiles();
+
+        if (mods != null) {
+            for (File modFile : mods) {
+                if (FileUtils.getFileExtension(modFile).equals(".jar")) {
+                    modCount++;
+                }
+            }
+        }
+        return Math.max(1, modCount);
     }
 }

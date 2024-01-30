@@ -25,7 +25,10 @@
 package com.gitlab.cdagaming.craftpresence.core.utils;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.integrations.versioning.VersionComparator;
+import io.github.cdagaming.unicore.integrations.versioning.VersionComparator;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.UrlUtils;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -119,7 +122,7 @@ public class ModUpdaterUtils {
      * @param callback The callback to run after Update Events
      */
     public void checkForUpdates(final Runnable callback) {
-        Constants.getThreadFactory().newThread(() -> process(callback)).start();
+        FileUtils.getThreadFactory().newThread(() -> process(callback)).start();
     }
 
     private void process(final Runnable callback) {

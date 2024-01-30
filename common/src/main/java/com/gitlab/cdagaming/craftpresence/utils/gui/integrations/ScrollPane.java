@@ -24,10 +24,10 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
-import com.gitlab.cdagaming.craftpresence.core.utils.MathUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
+import io.github.cdagaming.unicore.utils.MathUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.awt.*;
 

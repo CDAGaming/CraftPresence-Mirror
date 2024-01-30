@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.core.integrations.logging;
 
+import io.github.cdagaming.unicore.integrations.logging.LoggingImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,11 +39,22 @@ public class ApacheLogger extends LoggingImpl {
      */
     private final Logger logInstance;
 
+    /**
+     * Initializes a new Logger
+     *
+     * @param loggerName The name of the Logger
+     * @param debug      Whether to initialize the logger in debug mode
+     */
     public ApacheLogger(final String loggerName, final boolean debug) {
         super(loggerName, debug);
         this.logInstance = LogManager.getLogger(loggerName);
     }
 
+    /**
+     * Initializes a new Logger
+     *
+     * @param loggerName The name of the Logger
+     */
     public ApacheLogger(final String loggerName) {
         this(loggerName, false);
     }

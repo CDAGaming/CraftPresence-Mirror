@@ -32,15 +32,19 @@ import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.*;
-import com.gitlab.cdagaming.craftpresence.core.impl.HashMapBuilder;
 import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
-import com.gitlab.cdagaming.craftpresence.core.impl.Pair;
-import com.gitlab.cdagaming.craftpresence.core.impl.Tuple;
-import com.gitlab.cdagaming.craftpresence.core.utils.*;
+import com.gitlab.cdagaming.craftpresence.core.impl.TranslationConverter;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.github.cdagaming.unicore.impl.HashMapBuilder;
+import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.impl.Tuple;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.MathUtils;
+import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -398,7 +402,7 @@ public final class Config extends Module implements Serializable {
         return rawJson;
     }
 
-    public JsonElement handleVerification(final JsonElement rawJson, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationUtils.ConversionMode languageMigrationId, final String... path) {
+    public JsonElement handleVerification(final JsonElement rawJson, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationConverter.ConversionMode languageMigrationId, final String... path) {
         // Verify Type Safety, reset value if anything is null or invalid for it's type
         String pathPrefix = StringUtils.join(".", Arrays.asList(path));
         if (!StringUtils.isNullOrEmpty(pathPrefix)) {
@@ -486,8 +490,8 @@ public final class Config extends Module implements Serializable {
                                 // If the Property Name contains these values, move onwards
                                 for (String langTrigger : languageTriggers) {
                                     if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
-                                        if (languageMigrationId != TranslationUtils.ConversionMode.Unknown) {
-                                            final String migratedLanguageId = TranslationUtils.convertId(rawStringValue, getGameVersion(), languageMigrationId);
+                                        if (languageMigrationId != TranslationConverter.ConversionMode.Unknown) {
+                                            final String migratedLanguageId = TranslationConverter.convertId(rawStringValue, getGameVersion(), languageMigrationId);
                                             if (!migratedLanguageId.equals(rawStringValue)) {
                                                 Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
                                                 setProperty((Object) migratedLanguageId, pathData);
@@ -530,7 +534,7 @@ public final class Config extends Module implements Serializable {
 
         // Sync Migration Data for later usage
         final KeyConverter.ConversionMode keyCodeMigrationId;
-        final TranslationUtils.ConversionMode languageMigrationId;
+        final TranslationConverter.ConversionMode languageMigrationId;
 
         // Case 1 Notes (KeyCode):
         // In this situation, if the currently parsed protocol version differs and
@@ -557,17 +561,17 @@ public final class Config extends Module implements Serializable {
         // we need to ensure any Language Locale's are complying with Pack Format 2 and below.
         // If neither is true, then we mark the migration data as None, and it will be verified
         if (oldMCVer < 301 && newMCVer >= 301) {
-            languageMigrationId = TranslationUtils.ConversionMode.PackFormat3;
+            languageMigrationId = TranslationConverter.ConversionMode.PackFormat3;
         } else if (oldMCVer >= 301 && newMCVer < 301) {
-            languageMigrationId = TranslationUtils.ConversionMode.PackFormat2;
+            languageMigrationId = TranslationConverter.ConversionMode.PackFormat2;
         } else if (oldMCVer >= 0 && newMCVer >= 0) {
-            languageMigrationId = TranslationUtils.ConversionMode.None;
+            languageMigrationId = TranslationConverter.ConversionMode.None;
         } else {
-            languageMigrationId = TranslationUtils.ConversionMode.Unknown;
+            languageMigrationId = TranslationConverter.ConversionMode.Unknown;
         }
 
         Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.add", keyCodeTriggers.toString(), keyCodeMigrationId, keyCodeMigrationId.equals(KeyConverter.ConversionMode.None) ? "Verification" : "Setting Change"));
-        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.add", languageTriggers.toString(), languageMigrationId, languageMigrationId.equals(TranslationUtils.ConversionMode.None) ? "Verification" : "Setting Change"));
+        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.add", languageTriggers.toString(), languageMigrationId, languageMigrationId.equals(TranslationConverter.ConversionMode.None) ? "Verification" : "Setting Change"));
         return !isNewFile ? handleVerification(rawJson, keyCodeMigrationId, languageMigrationId) : rawJson;
     }
 

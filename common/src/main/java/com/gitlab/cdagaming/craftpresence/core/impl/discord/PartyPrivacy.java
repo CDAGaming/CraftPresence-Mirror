@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.core.impl.discord;
 
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 /**
  * Constants representing various Discord client party privacy levels,

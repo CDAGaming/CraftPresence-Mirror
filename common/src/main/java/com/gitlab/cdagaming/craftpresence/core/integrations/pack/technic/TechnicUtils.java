@@ -25,8 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic;
 
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
+import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.OSUtils;
 
 import java.io.File;
 import java.util.function.Supplier;

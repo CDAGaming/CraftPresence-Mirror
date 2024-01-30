@@ -26,9 +26,9 @@ package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.utils.OSUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.StringUtils;
-import com.gitlab.cdagaming.craftpresence.core.utils.UrlUtils;
+import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.UrlUtils;
 
 import java.util.Map;
 

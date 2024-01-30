@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater;
 
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
-import com.gitlab.cdagaming.craftpresence.core.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.FileUtils;
 
 import java.io.File;
 import java.util.function.Supplier;
