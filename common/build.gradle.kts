@@ -60,7 +60,7 @@ dependencies {
     }
 
     // CORE APIs
-    shade("io.github.CDAGaming:unicore:1.0.0-SNAPSHOT") {
+    shade("io.github.CDAGaming:unicore:${"core_version"()!!}") {
         isTransitive = false
     }
 
