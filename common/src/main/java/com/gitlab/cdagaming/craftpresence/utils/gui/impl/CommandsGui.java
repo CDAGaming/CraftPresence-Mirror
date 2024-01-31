@@ -574,7 +574,7 @@ public class CommandsGui extends ExtendedScreen {
      * @param urlMeta    The additional data to append to the URL
      */
     private void exportAssets(final String clientId, final boolean doFullCopy, final String urlMeta) {
-        FileUtils.getThreadFactory().newThread(() -> {
+        Constants.getThreadFactory().newThread(() -> {
             blockInteractions = true;
             final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
             boolean hasError = false;

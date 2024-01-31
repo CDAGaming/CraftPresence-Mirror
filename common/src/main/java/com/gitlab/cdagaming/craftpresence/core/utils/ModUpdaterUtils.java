@@ -122,7 +122,7 @@ public class ModUpdaterUtils {
      * @param callback The callback to run after Update Events
      */
     public void checkForUpdates(final Runnable callback) {
-        FileUtils.getThreadFactory().newThread(() -> process(callback)).start();
+        Constants.getThreadFactory().newThread(() -> process(callback)).start();
     }
 
     private void process(final Runnable callback) {

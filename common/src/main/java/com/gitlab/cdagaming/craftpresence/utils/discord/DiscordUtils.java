@@ -251,9 +251,9 @@ public class DiscordUtils {
      */
     public void setup() {
         Runtime.getRuntime().addShutdownHook(
-                FileUtils.getThreadFactory().newThread(() -> {
+                Constants.getThreadFactory().newThread(() -> {
                     Constants.IS_GAME_CLOSING = true;
-                    FileUtils.getThreadPool().shutdown();
+                    FileUtils.shutdownSchedulers();
                     shutDown();
                 })
         );
@@ -1194,7 +1194,7 @@ public class DiscordUtils {
      */
     public void updatePresence(final RichPresence presence) {
         if (!isConnected() && !isClosed() && !connectThreadActive) {
-            FileUtils.getThreadFactory().newThread(
+            Constants.getThreadFactory().newThread(
                     () -> {
                         attemptsRemaining = MAX_CONNECTION_ATTEMPTS;
                         while (!isConnected() && attemptsRemaining > 0) {

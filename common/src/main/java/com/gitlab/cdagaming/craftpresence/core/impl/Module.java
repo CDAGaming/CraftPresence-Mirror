@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import io.github.cdagaming.unicore.utils.FileUtils;
 
 /**
  * Module Section defining properties to be used for Rich Presence Displays
@@ -67,7 +66,7 @@ public interface Module {
      * Scans for applicable data related to this Module, within a new Thread.
      */
     default void scanForData() {
-        FileUtils.getThreadFactory().newThread(this::getAllData).start();
+        Constants.getThreadFactory().newThread(this::getAllData).start();
     }
 
     /**

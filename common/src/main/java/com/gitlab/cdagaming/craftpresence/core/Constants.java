@@ -35,6 +35,8 @@ import io.github.cdagaming.unicore.utils.TranslationUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Constant Variables and Methods used throughout the Application
@@ -124,6 +126,24 @@ public class Constants {
      * If the Mod is Currently Closing and Clearing Data
      */
     public static boolean IS_GAME_CLOSING = false;
+
+    /**
+     * Retrieve the Timer Instance for this Class, used for Scheduling Events
+     *
+     * @return the Timer Instance for this Class
+     */
+    public static ScheduledExecutorService getThreadPool() {
+        return FileUtils.getThreadPool(NAME);
+    }
+
+    /**
+     * Retrieve the Thread Factory Instance for this Class, used for Scheduling Events
+     *
+     * @return the Thread Factory Instance for this class
+     */
+    public static ThreadFactory getThreadFactory() {
+        return FileUtils.getThreadFactory(NAME);
+    }
 
     /**
      * Retrieve the Amount of Active Mods in the instance
