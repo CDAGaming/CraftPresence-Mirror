@@ -26,6 +26,11 @@ package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 
+/**
+ * Translation Conversion Layer used to translate between other Pack Format Types
+ *
+ * @author CDAGaming
+ */
 public class TranslationConverter {
     /**
      * Converts a Language Identifier using the Specified Conversion Mode, if possible
