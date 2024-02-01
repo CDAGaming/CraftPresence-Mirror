@@ -318,7 +318,7 @@ public class DiscordAssetUtils {
 
         try {
             final String url = applicationEndpoint + clientId + "/assets";
-            final DiscordAsset[] assets = UrlUtils.getJSONFromURL(url, DiscordAsset[].class);
+            final DiscordAsset[] assets = UrlUtils.getJsonFromURL(url, DiscordAsset[].class);
 
             if (filterToMain) {
                 // Setup Data
