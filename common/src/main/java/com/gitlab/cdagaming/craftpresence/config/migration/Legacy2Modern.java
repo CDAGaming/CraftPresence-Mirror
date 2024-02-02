@@ -63,6 +63,16 @@ public class Legacy2Modern implements DataMigrator {
     private final Predicate<String> IS_ENTITY_TARGET_MODULE = (e) -> e.equals("entityTargetMessages");
     private final Predicate<String> IS_ENTITY_RIDING_MODULE = (e) -> e.equals("entityRidingMessages");
 
+    private final Predicate<String> IS_PLAYER_OUTER_INFO_PLACEHOLDER = (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder");
+    private final Predicate<String> IS_MODS_PLACEHOLDER = (e) -> e.equalsIgnoreCase("modsPlaceholder");
+    private final Predicate<String> IS_MODPACK_PLACEHOLDER = (e) -> e.equalsIgnoreCase("modpackMessage");
+    private final Predicate<String> IS_PLAYER_INNER_INFO_PLACEHOLDER = (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder");
+    private final Predicate<String> IS_PLAYER_COORDINATE_PLACEHOLDER = (e) -> e.equalsIgnoreCase("playerCoordinatePlaceholder");
+    private final Predicate<String> IS_PLAYER_HEALTH_PLACEHOLDER = (e) -> e.equalsIgnoreCase("playerHealthPlaceholder");
+    private final Predicate<String> IS_PLAYER_LIST_PLACEHOLDER = (e) -> e.equalsIgnoreCase("playerListPlaceholder");
+    private final Predicate<String> IS_WORLD_DATA_PLACEHOLDER = (e) -> e.equalsIgnoreCase("worldDataPlaceholder");
+    private final Predicate<String> IS_PLAYER_ITEMS_PLACEHOLDER = (e) -> e.equalsIgnoreCase("playerItemsPlaceholder");
+
     // oldName -> newName:replaceCondition
     private final List<Tuple<Pair<String, String>, Predicate<String>, Predicate<String>>> placeholderMappings = Arrays.asList(
             generatePair("&DEFAULT&", "{general.icon}", IS_ICON),
@@ -74,20 +84,20 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&IGN&", "{custom.player_info_out}", IS_TEXT),
             generatePair("&IGN&", "{player.icon}", IS_ICON),
             generatePair("&IGN:NAME&", "{player.name}", IS_TEXT),
-            generatePair("&NAME&", "{player.name}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
+            generatePair("&NAME&", "{player.name}", IS_TEXT, IS_PLAYER_OUTER_INFO_PLACEHOLDER),
             generatePair("&IGN:UUID&", "{player.uuid.short}", IS_TEXT),
-            generatePair("&UUID&", "{player.uuid.short}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
+            generatePair("&UUID&", "{player.uuid.short}", IS_TEXT, IS_PLAYER_OUTER_INFO_PLACEHOLDER),
             generatePair("&IGN:UUID_FULL&", "{player.uuid.full}", IS_TEXT),
-            generatePair("&UUID_FULL&", "{player.uuid.full}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerOuterInfoPlaceholder")),
+            generatePair("&UUID_FULL&", "{player.uuid.full}", IS_TEXT, IS_PLAYER_OUTER_INFO_PLACEHOLDER),
             //
             generatePair("&MODS&", "{custom.mods}", IS_TEXT),
             generatePair("&MODS:MODCOUNT&", "{general.mods}", IS_TEXT),
-            generatePair("&MODCOUNT&", "{general.mods}", IS_TEXT, (e) -> e.equalsIgnoreCase("modsPlaceholder")),
+            generatePair("&MODCOUNT&", "{general.mods}", IS_TEXT, IS_MODS_PLACEHOLDER),
             //
             generatePair("&PACK&", "{custom.pack}", IS_TEXT),
             generatePair("&PACK&", "{pack.icon}", IS_ICON),
             generatePair("&PACK:NAME&", "{pack.name}", IS_TEXT),
-            generatePair("&NAME&", "{pack.name}", IS_TEXT, (e) -> e.equalsIgnoreCase("modpackMessage")),
+            generatePair("&NAME&", "{pack.name}", IS_TEXT, IS_MODPACK_PLACEHOLDER),
             //
             generatePair("&DIMENSION:DIMENSION&", "{dimension.name}", IS_TEXT),
             generatePair("&DIMENSION&", "{dimension.name}", IS_TEXT, IS_DIM_MODULE),
@@ -125,64 +135,64 @@ public class Legacy2Modern implements DataMigrator {
             //
             generatePair("&SERVER:PLAYERINFO:COORDS&", "{custom.player_info_coordinate}", IS_TEXT),
             generatePair("&PLAYERINFO:COORDS&", "{custom.player_info_coordinate}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&COORDS&", "{custom.player_info_coordinate}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
+            generatePair("&COORDS&", "{custom.player_info_coordinate}", IS_TEXT, IS_PLAYER_INNER_INFO_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERINFO:HEALTH&", "{custom.player_info_health}", IS_TEXT),
             generatePair("&PLAYERINFO:HEALTH&", "{custom.player_info_health}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&HEALTH&", "{custom.player_info_health}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
+            generatePair("&HEALTH&", "{custom.player_info_health}", IS_TEXT, IS_PLAYER_INNER_INFO_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERINFO:COORDS:xPosition&", "{player.position.x}", IS_TEXT),
             generatePair("&PLAYERINFO:COORDS:xPosition&", "{player.position.x}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&COORDS:xPosition&", "{player.position.x}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
-            generatePair("&xPosition&", "{player.position.x}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerCoordinatePlaceholder")),
+            generatePair("&COORDS:xPosition&", "{player.position.x}", IS_TEXT, IS_PLAYER_INNER_INFO_PLACEHOLDER),
+            generatePair("&xPosition&", "{player.position.x}", IS_TEXT, IS_PLAYER_COORDINATE_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERINFO:COORDS:yPosition&", "{player.position.y}", IS_TEXT),
             generatePair("&PLAYERINFO:COORDS:yPosition&", "{player.position.y}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&COORDS:yPosition&", "{player.position.y}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
-            generatePair("&yPosition&", "{player.position.y}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerCoordinatePlaceholder")),
+            generatePair("&COORDS:yPosition&", "{player.position.y}", IS_TEXT, IS_PLAYER_INNER_INFO_PLACEHOLDER),
+            generatePair("&yPosition&", "{player.position.y}", IS_TEXT, IS_PLAYER_COORDINATE_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERINFO:COORDS:zPosition&", "{player.position.z}", IS_TEXT),
             generatePair("&PLAYERINFO:COORDS:zPosition&", "{player.position.z}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&COORDS:zPosition&", "{player.position.z}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
-            generatePair("&zPosition&", "{player.position.z}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerCoordinatePlaceholder")),
+            generatePair("&COORDS:zPosition&", "{player.position.z}", IS_TEXT, IS_PLAYER_INNER_INFO_PLACEHOLDER),
+            generatePair("&zPosition&", "{player.position.z}", IS_TEXT, IS_PLAYER_COORDINATE_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERINFO:HEALTH:CURRENT&", "{player.health.current}", IS_TEXT),
             generatePair("&PLAYERINFO:HEALTH:CURRENT&", "{player.health.current}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&HEALTH:CURRENT&", "{player.health.current}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
-            generatePair("&CURRENT&", "{player.health.current}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerHealthPlaceholder")),
+            generatePair("&HEALTH:CURRENT&", "{player.health.current}", IS_TEXT, IS_PLAYER_INNER_INFO_PLACEHOLDER),
+            generatePair("&CURRENT&", "{player.health.current}", IS_TEXT, IS_PLAYER_HEALTH_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERINFO:HEALTH:MAX&", "{player.health.max}", IS_TEXT),
             generatePair("&PLAYERINFO:HEALTH:MAX&", "{player.health.max}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&HEALTH:MAX&", "{player.health.max}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerInnerInfoPlaceholder")),
-            generatePair("&MAX&", "{player.health.max}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerHealthPlaceholder")),
+            generatePair("&HEALTH:MAX&", "{player.health.max}", IS_TEXT, IS_PLAYER_INNER_INFO_PLACEHOLDER),
+            generatePair("&MAX&", "{player.health.max}", IS_TEXT, IS_PLAYER_HEALTH_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERS:CURRENT&", "{server.players.current}", IS_TEXT),
             generatePair("&PLAYERS:CURRENT&", "{server.players.current}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&CURRENT&", "{server.players.current}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerListPlaceholder")),
+            generatePair("&CURRENT&", "{server.players.current}", IS_TEXT, IS_PLAYER_LIST_PLACEHOLDER),
             //
             generatePair("&SERVER:PLAYERS:MAX&", "{server.players.max}", IS_TEXT),
             generatePair("&PLAYERS:MAX&", "{server.players.max}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&MAX&", "{server.players.max}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerListPlaceholder")),
+            generatePair("&MAX&", "{server.players.max}", IS_TEXT, IS_PLAYER_LIST_PLACEHOLDER),
             //
             generatePair("&SERVER:WORLDINFO:DIFFICULTY&", "{world.difficulty}", IS_TEXT),
             generatePair("&WORLDINFO:DIFFICULTY&", "{world.difficulty}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&DIFFICULTY&", "{world.difficulty}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&DIFFICULTY&", "{world.difficulty}", IS_TEXT, IS_WORLD_DATA_PLACEHOLDER),
             //
             generatePair("&SERVER:WORLDINFO:WORLDNAME&", "{world.name}", IS_TEXT),
             generatePair("&WORLDINFO:WORLDNAME&", "{world.name}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&WORLDNAME&", "{world.name}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&WORLDNAME&", "{world.name}", IS_TEXT, IS_WORLD_DATA_PLACEHOLDER),
             //
             generatePair("&SERVER:WORLDINFO:WORLDTIME&", "{world.time.format_24}", IS_TEXT),
             generatePair("&WORLDINFO:WORLDTIME&", "{world.time.format_24}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&WORLDTIME&", "{world.time.format_24}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&WORLDTIME&", "{world.time.format_24}", IS_TEXT, IS_WORLD_DATA_PLACEHOLDER),
             //
             generatePair("&SERVER:WORLDINFO:WORLDTIME12&", "{world.time.format_12}", IS_TEXT),
             generatePair("&WORLDINFO:WORLDTIME12&", "{world.time.format_12}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&WORLDTIME12&", "{world.time.format_12}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&WORLDTIME12&", "{world.time.format_12}", IS_TEXT, IS_WORLD_DATA_PLACEHOLDER),
             //
             generatePair("&SERVER:WORLDINFO:WORLDDAY&", "{world.time.day}", IS_TEXT),
             generatePair("&WORLDINFO:WORLDDAY&", "{world.time.day}", IS_TEXT, IS_SERVER_MODULE),
-            generatePair("&WORLDDAY&", "{world.time.day}", IS_TEXT, (e) -> e.equalsIgnoreCase("worldDataPlaceholder")),
+            generatePair("&WORLDDAY&", "{world.time.day}", IS_TEXT, IS_WORLD_DATA_PLACEHOLDER),
             //
             generatePair("&SCREEN:SCREEN&", "{screen.name}", IS_TEXT),
             generatePair("&SCREEN&", "{screen.name}", IS_TEXT, IS_SCREEN_MODULE),
@@ -208,19 +218,19 @@ public class Legacy2Modern implements DataMigrator {
             generatePair("&RIDINGENTITY&", "{entity.riding.icon}", IS_ICON),
             //
             generatePair("&TILEENTITY:MAIN&", "{item.main_hand.message}", IS_TEXT),
-            generatePair("&MAIN&", "{item.main_hand.message}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerItemsPlaceholder")),
+            generatePair("&MAIN&", "{item.main_hand.message}", IS_TEXT, IS_PLAYER_ITEMS_PLACEHOLDER),
             generatePair("&TILEENTITY:OFFHAND&", "{item.off_hand.message}", IS_TEXT),
-            generatePair("&OFFHAND&", "{item.off_hand.message}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerItemsPlaceholder")),
+            generatePair("&OFFHAND&", "{item.off_hand.message}", IS_TEXT, IS_PLAYER_ITEMS_PLACEHOLDER),
             generatePair("&TILEENTITY:HELMET&", "{item.helmet.message}", IS_TEXT),
-            generatePair("&HELMET&", "{item.helmet.message}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerItemsPlaceholder")),
+            generatePair("&HELMET&", "{item.helmet.message}", IS_TEXT, IS_PLAYER_ITEMS_PLACEHOLDER),
             generatePair("&TILEENTITY:CHEST&", "{item.chestplate.message}", IS_TEXT),
-            generatePair("&CHEST&", "{item.chestplate.message}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerItemsPlaceholder")),
+            generatePair("&CHEST&", "{item.chestplate.message}", IS_TEXT, IS_PLAYER_ITEMS_PLACEHOLDER),
             generatePair("&TILEENTITY:CHEST&", "{item.chestplate.message}", IS_TEXT),
-            generatePair("&CHEST&", "{item.chestplate.message}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerItemsPlaceholder")),
+            generatePair("&CHEST&", "{item.chestplate.message}", IS_TEXT, IS_PLAYER_ITEMS_PLACEHOLDER),
             generatePair("&TILEENTITY:LEGS&", "{item.leggings.message}", IS_TEXT),
-            generatePair("&LEGS&", "{item.leggings.message}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerItemsPlaceholder")),
+            generatePair("&LEGS&", "{item.leggings.message}", IS_TEXT, IS_PLAYER_ITEMS_PLACEHOLDER),
             generatePair("&TILEENTITY:BOOTS&", "{item.boots.message}", IS_TEXT),
-            generatePair("&BOOTS&", "{item.boots.message}", IS_TEXT, (e) -> e.equalsIgnoreCase("playerItemsPlaceholder")),
+            generatePair("&BOOTS&", "{item.boots.message}", IS_TEXT, IS_PLAYER_ITEMS_PLACEHOLDER),
             //
             generatePair("&TILEENTITY&", "{item.message.default}", IS_TEXT),
             generatePair("&ITEM&", "{item.message.holding}", IS_TEXT, IS_ITEM_MODULE)
@@ -456,7 +466,7 @@ public class Legacy2Modern implements DataMigrator {
         return result;
     }
 
-    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, final Predicate<String> typeCheck, Predicate<String> optionCheck) {
+    private Tuple<Pair<String, String>, Predicate<String>, Predicate<String>> generatePair(final String original, final String name, final Predicate<String> typeCheck, final Predicate<String> optionCheck) {
         return new Tuple<>(new Pair<>(original, name), typeCheck, optionCheck);
     }
 
