@@ -335,7 +335,7 @@ public class ScrollableListControl extends GuiSlot {
             final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
             if (data != null && !StringUtils.isNullOrEmpty(data.getBase64EncodedIconData())) {
-                assetUrl = StringUtils.UNKNOWN_BASE64_ID + "," + data.getBase64EncodedIconData();
+                assetUrl = "data:image/png;base64," + data.getBase64EncodedIconData();
                 texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
             } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
@@ -423,7 +423,7 @@ public class ScrollableListControl extends GuiSlot {
                     if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
                         hoverText.add(String.format("%s \"%s\"",
                                 Constants.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
+                                (tagValue.length() >= 128) ? "<...>" : tagValue
                         ));
                     }
                 }

@@ -1043,7 +1043,7 @@ public class DiscordUtils {
                         if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
                             placeholderString.append(String.format("\\n ==> %s \"%s\"",
                                     Constants.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                    (tagValue.length() >= 128) ? StringUtils.TOO_LARGE : tagValue
+                                    (tagValue.length() >= 128) ? "<...>" : tagValue
                             ));
                         }
                     }
