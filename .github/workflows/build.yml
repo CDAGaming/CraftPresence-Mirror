@@ -40,7 +40,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: artifacts
-          path: build/libs/*.jar
+          path: flint/build/libs/*.jar
 
       - name: stop daemon
         run: ./gradlew --stop

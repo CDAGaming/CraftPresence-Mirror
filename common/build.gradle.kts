@@ -1,4 +1,3 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {
@@ -27,20 +26,6 @@ val fileFormat: String by extra
 
 unimined.minecraft {
     defaultRemapJar = false
-    if (!isJarMod) {
-        val fabricData: FabricLikePatcher.() -> Unit = {
-            if (accessWidenerFile.exists()) {
-                accessWidener(accessWidenerFile)
-            }
-            loader("fabric_loader_version"()!!)
-            customIntermediaries = true
-        }
-        if (isModern) {
-            fabric(fabricData)
-        } else {
-            legacyFabric(fabricData)
-        }
-    }
 }
 
 val shadeOnly: Configuration by configurations.creating
@@ -238,7 +223,7 @@ tasks.register("generateMyResources") {
 
 // Setup Name Schema for Uploading
 val archiveName = "mod_name"()!!
-var targetFile = file("$rootDir/build/libs/$fileFormat.jar")
+var targetFile = file("$rootDir/flint/build/libs/$fileFormat-flint.jar")
 if (!targetFile.exists() && (isJarMod)) {
     // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
     targetFile = file("$rootDir/$fmlName/build/libs/$fileFormat-$fmlName.jar")
@@ -264,6 +249,9 @@ for (v in "additional_loaders"()!!.split(",")) {
 if (isNeoForge) {
     uploadLoaders = uploadLoaders.map { if (it == "forge") "neoforge" else it }.toMutableList()
 }
+
+// Hotfix: CurseForge API Correction (`flint` -> `flint loader`)
+uploadLoaders = uploadLoaders.map { if (it == "flint") "flint loader" else it }.toMutableList()
 
 publisher {
     apiKeys {
