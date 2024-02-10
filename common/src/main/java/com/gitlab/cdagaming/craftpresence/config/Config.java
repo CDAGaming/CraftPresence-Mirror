@@ -404,7 +404,7 @@ public final class Config extends Module implements Serializable {
 
     public JsonElement handleVerification(final JsonElement rawJson, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationConverter.ConversionMode languageMigrationId, final String... path) {
         // Verify Type Safety, reset value if anything is null or invalid for it's type
-        String pathPrefix = StringUtils.join(".", Arrays.asList(path));
+        String pathPrefix = String.join(".", path);
         if (!StringUtils.isNullOrEmpty(pathPrefix)) {
             pathPrefix += ".";
         }

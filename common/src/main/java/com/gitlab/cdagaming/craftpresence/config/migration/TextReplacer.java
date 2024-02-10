@@ -74,7 +74,7 @@ public class TextReplacer implements DataMigrator {
     // Cloned from Config#handleVerification
     private JsonElement processElement(final Config instance, final JsonElement rawJson, final String... path) {
         // Verify Type Safety, reset value if anything is null or invalid for it's type
-        String pathPrefix = StringUtils.join(".", Arrays.asList(path));
+        String pathPrefix = String.join(".", path);
         if (!StringUtils.isNullOrEmpty(pathPrefix)) {
             pathPrefix += ".";
         }
