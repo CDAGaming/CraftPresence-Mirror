@@ -57,9 +57,9 @@ public class TextReplacer implements DataMigrator {
     private String processReplacement(final String original) {
         String result = original;
         if (placeholderMode) {
-            final Pair<String, List<String>> expressions = StringUtils.getMatches("\\{[^{}]*\\}", original);
-            if (!expressions.getSecond().isEmpty()) {
-                for (String match : expressions.getSecond()) {
+            final List<String> expressions = StringUtils.getMatches("\\{[^{}]*\\}", original);
+            if (!expressions.isEmpty()) {
+                for (String match : expressions) {
                     result = result.replace(match,
                             StringUtils.sequentialReplace(match, matchCase, matchWholeWorld, useRegex, replacers)
                     );

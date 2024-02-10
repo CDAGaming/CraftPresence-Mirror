@@ -359,7 +359,7 @@ public class Legacy2Modern implements DataMigrator {
                                 newValue = boolData.getSecond();
                             }
                         } else if (currentValue instanceof Map<?, ?>) {
-                            final String convertedString = StringUtils.removeMatches(StringUtils.getMatches("\\[([^\\s]+?)\\]", originalValue), null, 1);
+                            final String convertedString = StringUtils.removeMatches("\\[([^\\s]+?)\\]", originalValue.toString(), 0, 1);
                             final String[] oldArray;
 
                             final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
@@ -452,9 +452,9 @@ public class Legacy2Modern implements DataMigrator {
             }
         }
 
-        final Pair<String, List<String>> operatorMatches = StringUtils.getMatches("\\{[^{}]*}[|]\\{[^{}]*}", result);
-        if (!operatorMatches.getSecond().isEmpty()) {
-            for (String match : operatorMatches.getSecond()) {
+        final List<String> operatorMatches = StringUtils.getMatches("\\{[^{}]*}[|]\\{[^{}]*}", result);
+        if (!operatorMatches.isEmpty()) {
+            for (String match : operatorMatches) {
                 final String[] split = match.split("\\|");
                 split[0] = split[0].replaceAll("[{}]", "");
                 split[1] = split[1].replaceAll("[{}]", "");
