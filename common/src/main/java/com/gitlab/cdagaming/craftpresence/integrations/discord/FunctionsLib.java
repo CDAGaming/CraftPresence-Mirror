@@ -334,7 +334,7 @@ public class FunctionsLib {
         final Object result = NbtUtils.parseTag(
                 NbtUtils.getNbt(data, path.toArray(new String[0]))
         );
-        return result != null ? Value.object(result) : Value.null_();
+        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
     }
 
     public static Value getNamespace(Starscript ss, int argCount) {
@@ -797,7 +797,7 @@ public class FunctionsLib {
             result = StringUtils.getField(classToAccess, instance, fields.toArray(new String[0]));
         }
 
-        return result != null ? Value.object(result) : Value.null_();
+        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
     }
 
     public static Value getClass(Starscript ss, int argCount) {
@@ -925,7 +925,7 @@ public class FunctionsLib {
                 methodNames.toArray(new String[0])
         );
 
-        return result != null ? Value.object(result) : Value.null_();
+        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
     }
 
     public static Value stripColors(Starscript ss, int argCount) {
