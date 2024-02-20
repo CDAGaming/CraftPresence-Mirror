@@ -88,6 +88,7 @@ public class FunctionsLib {
         ss.set("getArrayElement", FunctionsLib::getArrayElement);
         ss.set("minify", FunctionsLib::minify);
         ss.set("nullOrEmpty", FunctionsLib::nullOrEmpty);
+        ss.set("cast", FunctionsLib::cast);
         ss.set("formatAddress", FunctionsLib::formatAddress);
         ss.set("hasWhitespace", FunctionsLib::hasWhitespace);
         ss.set("hasAlphaNumeric", FunctionsLib::hasAlphaNumeric);
@@ -109,10 +110,14 @@ public class FunctionsLib {
 
         // TimeUtils
         ss.set("getCurrentTime", FunctionsLib::getCurrentTime);
-        ss.set("timeToEpoch", FunctionsLib::timeToEpoch); // toEpoch
-        ss.set("timeFromEpoch", FunctionsLib::timeFromEpoch); // fromEpoch
-        ss.set("dateToEpoch", FunctionsLib::dateToEpoch); // stringToEpoch
-        ss.set("epochToDate", FunctionsLib::epochToDate); // epochToString
+        ss.set("timeToEpochSecond", FunctionsLib::timeToEpochSecond); // toEpochSecond
+        ss.set("timeToEpochMilli", FunctionsLib::timeToEpochMilli); // toEpochMilli
+        ss.set("timeFromEpochSecond", FunctionsLib::timeFromEpochSecond); // fromEpochSecond
+        ss.set("timeFromEpochMilli", FunctionsLib::timeFromEpochMilli); // fromEpochMilli
+        ss.set("dateToEpochSecond", FunctionsLib::dateToEpochSecond); // stringToEpochSecond
+        ss.set("dateToEpochMilli", FunctionsLib::dateToEpochMilli); // stringToEpochMilli
+        ss.set("epochSecondToDate", FunctionsLib::epochSecondToDate); // epochSecondToString
+        ss.set("epochMilliToDate", FunctionsLib::epochMilliToDate); // epochMilliToString
         ss.set("convertTimeZone", FunctionsLib::convertTimeZone); // convertZone
         ss.set("convertTimeFormat", FunctionsLib::convertTimeFormat); // convertFormat
         ss.set("convertTime", FunctionsLib::convertTime);
@@ -194,7 +199,7 @@ public class FunctionsLib {
                 path.add(ss.pop().toString());
             }
         }
-        result = contents = FileUtils.getJsonData(json).getAsJsonObject();
+        result = contents = FileUtils.getJsonData(json, JsonElement.class).getAsJsonObject();
         StringUtils.revlist(path);
 
         boolean needsIndex = false;
@@ -564,6 +569,50 @@ public class FunctionsLib {
         return Value.bool(StringUtils.isNullOrEmpty(target, allowWhitespace));
     }
 
+    public static Value cast(Starscript ss, int argCount) {
+        final List<Value> args = StringUtils.newArrayList();
+        if (argCount != 2)
+            ss.error("cast() can only be used with two arguments, got %d.", argCount);
+        for (int i = 0; i < argCount; i++) {
+            args.add(ss.pop());
+        }
+        StringUtils.revlist(args);
+        Value target = args.get(0);
+
+        // Argument 1: castObject
+        Object instance = CraftPresence.CLIENT.fromValue(target);
+        args.remove(0);
+        target = args.get(0);
+        Class<?> classToAccess = null;
+
+        // Argument 2: classToAccess
+        if (target.isObject()) {
+            Object temp = target.getObject();
+            if (temp instanceof Class<?>) {
+                classToAccess = (Class<?>) temp;
+            } else {
+                classToAccess = temp.getClass();
+                instance = temp;
+            }
+        } else if (target.isString()) {
+            classToAccess = FileUtils.findValidClass(target.getString());
+        } else {
+            ss.error("Second argument to cast(), classToAccess, needs to be either a string, object, or class.");
+        }
+        args.remove(0); // Remove the classToAccess from parsing
+
+        Object result = null;
+
+        // If the className or field list is null, error as such
+        if (classToAccess == null || instance == null) {
+            ss.error("Insufficient or null arguments provided for required cast() params, please try again.");
+        } else {
+            result = FileUtils.castOrConvert(instance, classToAccess);
+        }
+
+        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
+    }
+
     public static Value formatAddress(Starscript ss, int argCount) {
         if (argCount < 1 || argCount > 2)
             ss.error("formatAddress() can only be used with 1-2 arguments, got %d.", argCount);
@@ -901,45 +950,86 @@ public class FunctionsLib {
         return Value.object(TimeUtils.getCurrentTime());
     }
 
-    public static Value timeToEpoch(Starscript ss, int argCount) {
-        if (argCount != 1) ss.error("timeToEpoch() requires 1 argument, got %d.", argCount);
-        Object a = ss.popObject("Argument to timeToEpoch() needs to be an object.");
+    public static Value timeToEpochSecond(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("timeToEpochSecond() requires 1 argument, got %d.", argCount);
+        Object a = ss.popObject("Argument to timeToEpochSecond() needs to be an object.");
         if (a instanceof Instant) {
-            return Value.number(TimeUtils.toEpoch((Instant) a));
+            return Value.number(TimeUtils.toEpochSecond((Instant) a));
         } else {
-            ss.error("Argument to timeToEpoch() needs to be a valid Instant Object.");
+            ss.error("Argument to timeToEpochSecond() needs to be a valid Instant Object.");
         }
         return Value.null_();
     }
 
-    public static Value timeFromEpoch(Starscript ss, int argCount) {
-        if (argCount != 1) ss.error("timeFromEpoch() requires 1 argument, got %d.", argCount);
-        double a = ss.popNumber("Argument to timeFromEpoch() needs to be a number.");
-        return Value.object(TimeUtils.fromEpoch((long) a));
+    public static Value timeToEpochMilli(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("timeToEpochMilli() requires 1 argument, got %d.", argCount);
+        Object a = ss.popObject("Argument to timeToEpochMilli() needs to be an object.");
+        if (a instanceof Instant) {
+            return Value.number(TimeUtils.toEpochMilli((Instant) a));
+        } else {
+            ss.error("Argument to timeToEpochMilli() needs to be a valid Instant Object.");
+        }
+        return Value.null_();
     }
 
-    public static Value dateToEpoch(Starscript ss, int argCount) {
-        if (argCount < 2 || argCount > 3)
-            ss.error("dateToEpoch() can only be used with 2-3 arguments, got %d.", argCount);
-        String timeZone = null;
-        if (argCount == 3) {
-            timeZone = ss.popString("Third argument to dateToEpoch() needs to be a string.");
-        }
-        String format = ss.popString("Second argument to dateToEpoch() needs to be a string.");
-        String dateString = ss.popString("First argument to dateToEpoch() needs to be a string.");
-        return Value.number(TimeUtils.stringToEpoch(dateString, format, timeZone));
+    public static Value timeFromEpochSecond(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("timeFromEpochSecond() requires 1 argument, got %d.", argCount);
+        double a = ss.popNumber("Argument to timeFromEpochSecond() needs to be a number.");
+        return Value.object(TimeUtils.fromEpochSecond((long) a));
     }
 
-    public static Value epochToDate(Starscript ss, int argCount) {
+    public static Value timeFromEpochMilli(Starscript ss, int argCount) {
+        if (argCount != 1) ss.error("timeFromEpochMilli() requires 1 argument, got %d.", argCount);
+        double a = ss.popNumber("Argument to timeFromEpochMilli() needs to be a number.");
+        return Value.object(TimeUtils.fromEpochMilli((long) a));
+    }
+
+    public static Value dateToEpochSecond(Starscript ss, int argCount) {
         if (argCount < 2 || argCount > 3)
-            ss.error("epochToDate() can only be used with 2-3 arguments, got %d.", argCount);
-        String timeZone = null;
+            ss.error("dateToEpochSecond() can only be used with 2-3 arguments, got %d.", argCount);
+        String timeZone = TimeUtils.DEFAULT_ZONE;
         if (argCount == 3) {
-            timeZone = ss.popString("Third argument to epochToDate() needs to be a string.");
+            timeZone = ss.popString("Third argument to dateToEpochSecond() needs to be a string.");
         }
-        String format = ss.popString("Second argument to epochToDate() needs to be a string.");
-        double dateString = ss.popNumber("First argument to epochToDate() needs to be a number.");
-        return Value.string(TimeUtils.epochToString((long) dateString, format, timeZone));
+        String format = ss.popString("Second argument to dateToEpochSecond() needs to be a string.");
+        String dateString = ss.popString("First argument to dateToEpochSecond() needs to be a string.");
+        return Value.number(TimeUtils.stringToEpochSecond(dateString, format, timeZone));
+    }
+
+    public static Value dateToEpochMilli(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3)
+            ss.error("dateToEpochMilli() can only be used with 2-3 arguments, got %d.", argCount);
+        String timeZone = TimeUtils.DEFAULT_ZONE;
+        if (argCount == 3) {
+            timeZone = ss.popString("Third argument to dateToEpochMilli() needs to be a string.");
+        }
+        String format = ss.popString("Second argument to dateToEpochMilli() needs to be a string.");
+        String dateString = ss.popString("First argument to dateToEpochMilli() needs to be a string.");
+        return Value.number(TimeUtils.stringToEpochMilli(dateString, format, timeZone));
+    }
+
+    public static Value epochSecondToDate(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3)
+            ss.error("epochSecondToDate() can only be used with 2-3 arguments, got %d.", argCount);
+        String timeZone = TimeUtils.DEFAULT_ZONE;
+        if (argCount == 3) {
+            timeZone = ss.popString("Third argument to epochSecondToDate() needs to be a string.");
+        }
+        String format = ss.popString("Second argument to epochSecondToDate() needs to be a string.");
+        double dateString = ss.popNumber("First argument to epochSecondToDate() needs to be a number.");
+        return Value.string(TimeUtils.epochSecondToString((long) dateString, format, timeZone));
+    }
+
+    public static Value epochMilliToDate(Starscript ss, int argCount) {
+        if (argCount < 2 || argCount > 3)
+            ss.error("epochMilliToDate() can only be used with 2-3 arguments, got %d.", argCount);
+        String timeZone = TimeUtils.DEFAULT_ZONE;
+        if (argCount == 3) {
+            timeZone = ss.popString("Third argument to epochMilliToDate() needs to be a string.");
+        }
+        String format = ss.popString("Second argument to epochMilliToDate() needs to be a string.");
+        double dateString = ss.popNumber("First argument to epochMilliToDate() needs to be a number.");
+        return Value.string(TimeUtils.epochMilliToString((long) dateString, format, timeZone));
     }
 
     public static Value convertTimeZone(Starscript ss, int argCount) {
@@ -972,19 +1062,19 @@ public class FunctionsLib {
     public static Value timeFromString(Starscript ss, int argCount) {
         if (argCount < 2 || argCount > 3)
             ss.error("timeFromString() can only be used with 2-3 arguments, got %d.", argCount);
-        String fromTimeZone = null;
+        String fromTimeZone = TimeUtils.DEFAULT_ZONE;
         if (argCount == 3) {
             fromTimeZone = ss.popString("Third argument to timeFromString() needs to be a string.");
         }
         String fromFormat = ss.popString("Second argument to timeFromString() needs to be a string.");
         String dateString = ss.popString("First argument to timeFromString() needs to be a string.");
-        return Value.object(TimeUtils.toInstance(dateString, fromFormat, fromTimeZone));
+        return Value.object(TimeUtils.toInstant(dateString, fromFormat, fromTimeZone));
     }
 
     public static Value timeToString(Starscript ss, int argCount) {
         if (argCount < 2 || argCount > 3)
             ss.error("timeToString() can only be used with 2-3 arguments, got %d.", argCount);
-        String toTimeZone = null;
+        String toTimeZone = TimeUtils.DEFAULT_ZONE;
         if (argCount == 3) {
             toTimeZone = ss.popString("Third argument to timeToString() needs to be a string.");
         }

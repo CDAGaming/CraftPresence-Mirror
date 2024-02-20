@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic;
 
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
+import com.google.gson.JsonElement;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 
@@ -55,7 +56,7 @@ public class TechnicUtils extends Pack {
 
         if (packLocation.exists()) {
             try {
-                final String selected = FileUtils.getJsonData(packLocation)
+                final String selected = FileUtils.getJsonData(packLocation, JsonElement.class)
                         .getAsJsonObject()
                         .getAsJsonPrimitive("selected")
                         .getAsString();

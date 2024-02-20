@@ -26,9 +26,9 @@ package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unicore.utils.UrlUtils;
 
 import java.util.Map;
 
@@ -318,7 +318,7 @@ public class DiscordAssetUtils {
 
         try {
             final String url = applicationEndpoint + clientId + "/assets";
-            final DiscordAsset[] assets = UrlUtils.getJsonFromURL(url, DiscordAsset[].class);
+            final DiscordAsset[] assets = FileUtils.getJsonFromURL(url, DiscordAsset[].class);
 
             if (filterToMain) {
                 // Setup Data

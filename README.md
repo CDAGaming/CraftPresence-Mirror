@@ -237,13 +237,20 @@ The following functions are available for use anywhere in CraftPresence:
 * `asProperWord(input, avoid ?: false, skipSymbolReplacement ?: false, caseCheckTimes ?: -1)` - Converts input into a
   Properly Readable String
 * `capitalizeWords(input, timesToCheck ?: -1)` - Capitalizes the words within a specified string
+* `cast(castObject, classToAccess=Object|String|Class)` - Attempts to cast or convert an object to the specified target
+  class.
 * `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
   able
 * `convertTimeFormat(dateString, fromFormat, toFormat)` - Convert a Date String from one format to another format
 * `convertTimeZone(dateString, fromFormat, fromTimeZone, toTimeZone)` - Convert a Date String from one timezone to
   another timezone
-* `dateToEpoch(dateString, format, timeZone ?: null)` - Convert Date String to Epoch Timestamp in seconds
-* `epochToDate(dateString, format, timeZone ?: null)` - Convert Epoch Timestamp to Date String in the given format and
+* `dateToEpochMilli(dateString, format, timeZone ?: null)` - Convert Date String to Epoch Timestamp in milliseconds
+* `dateToEpochSecond(dateString, format, timeZone ?: null)` - Convert Date String to Epoch Timestamp in seconds
+* `epochMilliToDate(epochMilli, format, timeZone ?: null)` - Convert Epoch Timestamp to Date String in the given format
+  and
+  timezone
+* `epochSecondToDate(epochSecond, format, timeZone ?: null)` - Convert Epoch Timestamp to Date String in the given
+  format and
   timezone
 * `executeMethod(classToAccess=Object|String|Class, instance=Object, methodName=String, <parameterType, parameter>...)` -
   Invokes the specified Method in the Target Class via Reflection
@@ -293,13 +300,15 @@ The following functions are available for use anywhere in CraftPresence:
 * `replace(input, matchCase ?: false, matchWholeWord ?: false, useRegex ?: true, data=[from, to]...)` - Replaces Data in
   a String
 * `split(input, regex, limit ?: 0)` - Splits this string around matches of the given regular expression
-* `stripColors(input)` - Strips Color Codes from the inputted String
 * `stripAllFormatting(input)` - Strips Color and Formatting Codes from the inputted String
+* `stripColors(input)` - Strips Color Codes from the inputted String
 * `stripFormatting(input)` - Strips Formatting Codes from the inputted String
-* `timeFromEpoch(epochTime)` - Retrieve a Time Instant from the specified epoch time
+* `timeFromEpochMilli(epochMilli)` - Retrieve a Time Instant from the specified epoch time
+* `timeFromEpochSecond(epochSecond)` - Retrieve a Time Instant from the specified epoch time
 * `timeFromString(dateString, fromFormat, fromTimeZone ?: null)` - Format a Date String from one timezone and format
   into a valid Instant instance
-* `timeToEpoch(data)` - Gets the number of seconds from the Java Epoch, derived from specified args
+* `timeToEpochMilli(data)` - Gets the number of milliseconds from the Java Epoch, derived from specified args
+* `timeToEpochSecond(data)` - Gets the number of seconds from the Java Epoch, derived from specified args
 * `timeToString(date, toFormat, toTimeZone ?: null)` - Format a Date String using the specified timezone and format.
 * `toCamelCase(input)` - Converts a String into a Valid and Acceptable Camel-Case Format
 * `translate(input=String, args=Object...)` - Translates an Unlocalized String, based on the mod translations retrieved

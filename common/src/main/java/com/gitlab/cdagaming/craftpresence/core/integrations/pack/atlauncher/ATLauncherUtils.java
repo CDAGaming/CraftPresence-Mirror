@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.integrations.pack.atlauncher;
 
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
+import com.google.gson.JsonElement;
 import io.github.cdagaming.unicore.utils.FileUtils;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class ATLauncherUtils extends Pack {
         if (packLocation.exists()) {
             try {
                 setPackData(
-                        FileUtils.getJsonData(packLocation)
+                        FileUtils.getJsonData(packLocation, JsonElement.class)
                                 .getAsJsonObject()
                                 .getAsJsonObject("launcher")
                                 .getAsJsonPrimitive("name")

@@ -353,11 +353,18 @@ public class ImageFrame {
     }
 
     /**
+     * Sets the time, in milliseconds, for the frame to render until from current
+     */
+    public void setRenderTime() {
+        setRenderTime(TimeUtils.toEpochMilli());
+    }
+
+    /**
      * Determine whether this frame has rendered up to or past the delay
      *
      * @return Whether this frame has rendered up to or past the delay
      */
     public boolean shouldRenderNext() {
-        return TimeUtils.toEpoch() - getRenderTime() > getDelay() * 10L;
+        return TimeUtils.toEpochMilli() - getRenderTime() > getDelay() * 10L;
     }
 }

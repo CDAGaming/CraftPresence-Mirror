@@ -241,13 +241,9 @@ public class ImageUtils {
                     final ResourceLocation texLocation = resources.get(bufferData.getFirst());
                     if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
                         if (doesContinue) {
-                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(
-                                    TimeUtils.toEpoch()
-                            );
+                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime();
                         } else if (shouldRepeat) {
-                            bufferData.getSecond().get(bufferData.setFirst(0)).setRenderTime(
-                                    TimeUtils.toEpoch()
-                            );
+                            bufferData.getSecond().get(bufferData.setFirst(0)).setRenderTime();
                         }
                     }
                     return texLocation;
@@ -257,9 +253,7 @@ public class ImageUtils {
                     final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName.toLowerCase() + (shouldRepeat ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
                     if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
                         if (doesContinue) {
-                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime(
-                                    TimeUtils.toEpoch()
-                            );
+                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime();
                         } else if (shouldRepeat) {
                             bufferData.setFirst(0);
                         }
