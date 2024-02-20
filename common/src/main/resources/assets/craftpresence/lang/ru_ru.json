@@ -107,7 +107,6 @@
   "craftpresence.placeholders.convertTime.description": "Конвертировать указанную строку в указанный формат даты, если возможно",
   "craftpresence.placeholders.convertTimeFormat.description": "Преобразовать строку даты из одного формата в другой формат",
   "craftpresence.placeholders.convertTimeZone.description": "Преобразовать строку даты от одного часового пояса в другой",
-  "craftpresence.placeholders.dateToEpoch.description": "Преобразовать строку даты в метку времени эпохи в секунд",
   "craftpresence.placeholders.dimension.default.icon.description": "Значок измерения по умолчанию",
   "craftpresence.placeholders.dimension.message.description": "Данные отображения текущего измерения в игре",
   "craftpresence.placeholders.dimension.name.description": "Название текущего измерения",
