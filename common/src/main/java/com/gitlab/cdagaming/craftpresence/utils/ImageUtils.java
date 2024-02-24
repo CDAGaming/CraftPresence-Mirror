@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unicore.utils.TimeUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;

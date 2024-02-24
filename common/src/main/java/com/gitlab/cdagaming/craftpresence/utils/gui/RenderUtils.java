@@ -681,7 +681,6 @@ public class RenderUtils {
      * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
      * @param maxTextWidth The maximum width the output can be before wrapping
      * @param fontRenderer The Font Renderer Instance
-     * @param fontHeight   The current Font Render Height (Normally retrieved from the fontRenderer)
      * @param isCentered   Whether to render the text in a center-styled layout (Disabled if maxWidth is not specified)
      * @param isTooltip    Whether to render this layout in a tooltip-style (Issues may occur if combined with isCentered)
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
@@ -692,7 +691,6 @@ public class RenderUtils {
                                            final int maxWidth, final int maxHeight,
                                            final int maxTextWidth,
                                            final FontRenderer fontRenderer,
-                                           final int fontHeight,
                                            final boolean isCentered,
                                            final boolean isTooltip,
                                            final Tuple<Boolean, ColorData, ColorData> colorInfo) {
@@ -701,7 +699,7 @@ public class RenderUtils {
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
-                final int textLineWidth = fontRenderer.getStringWidth(textLine);
+                final int textLineWidth = getStringWidth(fontRenderer, textLine);
 
                 if (textLineWidth > tooltipTextWidth) {
                     tooltipTextWidth = textLineWidth;
@@ -750,7 +748,7 @@ public class RenderUtils {
                     }
 
                     for (String line : wrappedLine) {
-                        int lineWidth = fontRenderer.getStringWidth(line);
+                        int lineWidth = getStringWidth(fontRenderer, line);
                         if (lineWidth > wrappedTooltipWidth) {
                             wrappedTooltipWidth = lineWidth;
                         }
@@ -771,6 +769,7 @@ public class RenderUtils {
 
             int tooltipY = posY - (isTooltip && allowYAdjustments ? 12 : 0);
             int tooltipHeight = 8;
+            int fontHeight = getFontHeight(fontRenderer);
 
             if (textLines.size() > 1) {
                 tooltipHeight += (textLines.size() - 1) * (fontHeight + 1);
@@ -907,10 +906,10 @@ public class RenderUtils {
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 final String line = textLines.get(lineNumber);
-                final int lineWidth = fontRenderer.getStringWidth(line);
+                final int lineWidth = getStringWidth(fontRenderer, line);
                 final int renderX = isCentered ? (tooltipX + (tooltipTextWidth - lineWidth) / 2) : tooltipX;
 
-                fontRenderer.drawStringWithShadow(line, renderX, tooltipY, -1);
+                renderString(fontRenderer, line, renderX, tooltipY, -1);
 
                 if (isTooltip && lineNumber + 1 == titleLinesCount) {
                     tooltipY += 2;
@@ -919,6 +918,53 @@ public class RenderUtils {
                 tooltipY += fontHeight + 1;
             }
         }
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of centered text
+     *
+     * @param fontRenderer The Font Renderer Instance
+     * @param text         The text to render to the screen
+     * @param xPos         The X position to render the text at
+     * @param yPos         The Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderCenteredString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+        renderString(fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2f), yPos, color);
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of normal text
+     *
+     * @param fontRenderer The Font Renderer Instance
+     * @param text         The text to render to the screen
+     * @param xPos         The X position to render the text at
+     * @param yPos         The Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+        fontRenderer.drawStringWithShadow(text, xPos, yPos, color);
+    }
+
+    /**
+     * Get the Width of a String from the FontRenderer
+     *
+     * @param fontRenderer The Font Renderer Instance
+     * @param string       The string to interpret
+     * @return the string's width from the font renderer
+     */
+    public static int getStringWidth(final FontRenderer fontRenderer, final String string) {
+        return fontRenderer.getStringWidth(string);
+    }
+
+    /**
+     * Get the Current Font Height for this Screen
+     *
+     * @param fontRenderer The Font Renderer Instance
+     * @return The Current Font Height for this Screen
+     */
+    public static int getFontHeight(final FontRenderer fontRenderer) {
+        return fontRenderer.FONT_HEIGHT;
     }
 
     /**
@@ -1037,7 +1083,7 @@ public class RenderUtils {
                 case ' ':
                     currentIndex = currentLine;
                 default:
-                    charWidth += fontRenderer.getStringWidth(stringOfCharacter);
+                    charWidth += getStringWidth(fontRenderer, stringOfCharacter);
                     if (flag) {
                         ++charWidth;
                     }

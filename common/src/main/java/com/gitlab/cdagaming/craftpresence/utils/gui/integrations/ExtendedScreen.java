@@ -814,7 +814,7 @@ public class ExtendedScreen extends GuiScreen {
                 posX, posY,
                 maxWidth, maxHeight,
                 maxTextWidth,
-                getFontRenderer(), getFontHeight(),
+                getFontRenderer(),
                 isCentered, isTooltip, colorInfo
         );
     }
@@ -869,7 +869,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param color The color to render the text in
      */
     public void renderCenteredString(final String text, final float xPos, final float yPos, final int color) {
-        renderString(text, xPos - (getStringWidth(text) / 2f), yPos, color);
+        RenderUtils.renderCenteredString(getFontRenderer(), text, xPos, yPos, color);
     }
 
     /**
@@ -892,7 +892,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param color The color to render the text in
      */
     public void renderString(final String text, final float xPos, final float yPos, final int color) {
-        getFontRenderer().drawStringWithShadow(text, xPos, yPos, color);
+        RenderUtils.renderString(getFontRenderer(), text, xPos, yPos, color);
     }
 
     /**
@@ -902,7 +902,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the string's width from the font renderer
      */
     public int getStringWidth(final String string) {
-        return getFontRenderer().getStringWidth(string);
+        return RenderUtils.getStringWidth(getFontRenderer(), string);
     }
 
     /**
@@ -1125,7 +1125,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Height for this Screen
      */
     public int getFontHeight() {
-        return getFontRenderer().FONT_HEIGHT;
+        return RenderUtils.getFontHeight(getFontRenderer());
     }
 
     /**
