@@ -548,12 +548,25 @@ public class RenderUtils {
     /**
      * Define viewable rendering boundaries, utilizing glScissor
      *
+     * @param mc     The Minecraft Instance
+     * @param left   The Starting X Position of the Object
+     * @param top    The Starting Y Position of the Object
+     * @param right  The Right side length of the Object
+     * @param bottom The bottom length of the Object
+     */
+    public static void setupScissor(@Nonnull final Minecraft mc, final int left, final int top, final int right, final int bottom) {
+        applyScissor(mc, left, bottom, right - left, bottom - top);
+    }
+
+    /**
+     * Define viewable rendering boundaries, utilizing glScissor
+     *
      * @param xPos   The Starting X Position of the Object
      * @param yPos   The Starting Y Position of the Object
      * @param width  The width to render the data to
      * @param height The height to render the data to
      */
-    public static void drawWithin(final int xPos, final int yPos, final int width, final int height) {
+    public static void enableScissor(final int xPos, final int yPos, final int width, final int height) {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(xPos, yPos, width, height);
     }
@@ -561,8 +574,29 @@ public class RenderUtils {
     /**
      * Disables current rendering boundary flags, mainly glScissor
      */
-    public static void drawAnywhere() {
+    public static void disableScissor() {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    /**
+     * Define viewable rendering boundaries, utilizing glScissor
+     *
+     * @param mc     The Minecraft Instance
+     * @param left   The Left Position of the Object
+     * @param bottom The Bottom Position of the Object
+     * @param width  The width to render the data to
+     * @param height The height to render the data to
+     */
+    public static void applyScissor(@Nonnull final Minecraft mc, final int left, final int bottom, final int width, final int height) {
+        final int scale = computeGuiScale(mc);
+        final int displayHeight = mc.displayHeight;
+        final int renderWidth = Math.max(0, width * scale);
+        final int renderHeight = Math.max(0, height * scale);
+        enableScissor(
+                left * scale,
+                displayHeight - bottom * scale,
+                renderWidth, renderHeight
+        );
     }
 
     /**

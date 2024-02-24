@@ -507,12 +507,12 @@ public class ExtendedScreen extends GuiScreen {
 
             updateBackground = canBackgroundMove() ? updateBackground + partialTicks : 0.0D;
 
-            final int scale = computeGuiScale();
-            RenderUtils.drawWithin(
-                    getLeft() * scale,
-                    getGameInstance().displayHeight - getBottom() * scale,
-                    getScreenWidth() * scale,
-                    getScreenHeight() * scale
+            RenderUtils.setupScissor(
+                    getGameInstance(),
+                    getLeft(),
+                    getTop(),
+                    getRight(),
+                    getBottom()
             );
 
             drawDefaultBackground();
@@ -534,7 +534,7 @@ public class ExtendedScreen extends GuiScreen {
 
             renderExtra();
 
-            RenderUtils.drawAnywhere();
+            RenderUtils.disableScissor();
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
