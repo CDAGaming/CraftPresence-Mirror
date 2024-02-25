@@ -876,11 +876,34 @@ public class ExtendedScreen extends GuiScreen {
      * Renders a String in the Screen, in the style of centered text
      *
      * @param text  The text to render to the screen
+     * @param xPos  The X position to render the text at
+     * @param yPos  The Y position to render the text at
+     * @param color The color to render the text in
+     */
+    public void renderCenteredString(final String text, final int xPos, final int yPos, final int color) {
+        RenderUtils.renderCenteredString(getFontRenderer(), text, xPos, yPos, color);
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of centered text
+     *
+     * @param text  The text to render to the screen
      * @param yPos  The Y position to render the text at
      * @param color The color to render the text in
      */
     public void renderCenteredString(final String text, final float yPos, final int color) {
         renderCenteredString(text, getScreenWidth() / 2f, yPos, color);
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of centered text
+     *
+     * @param text  The text to render to the screen
+     * @param yPos  The Y position to render the text at
+     * @param color The color to render the text in
+     */
+    public void renderCenteredString(final String text, final int yPos, final int color) {
+        renderCenteredString(text, getScreenWidth() / 2, yPos, color);
     }
 
     /**
@@ -893,6 +916,18 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void renderString(final String text, final float xPos, final float yPos, final int color) {
         RenderUtils.renderString(getFontRenderer(), text, xPos, yPos, color);
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of normal text
+     *
+     * @param text  The text to render to the screen
+     * @param xPos  The X position to render the text at
+     * @param yPos  The Y position to render the text at
+     * @param color The color to render the text in
+     */
+    public void renderString(final String text, final int xPos, final int yPos, final int color) {
+        renderString(text, (float) xPos, (float) yPos, color);
     }
 
     /**

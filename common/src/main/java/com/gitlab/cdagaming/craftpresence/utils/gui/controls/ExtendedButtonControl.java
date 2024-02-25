@@ -218,8 +218,8 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             RenderUtils.renderCenteredString(
                     getFontRenderer(),
                     getDisplayMessage(),
-                    getRight() - (getControlWidth() / 2f),
-                    getBottom() - (getControlHeight() / 2f) - (getFontHeight() / 2f),
+                    getRight() - (getControlWidth() / 2),
+                    getBottom() - (getControlHeight() / 2) - (getFontHeight() / 2),
                     color
             );
         }

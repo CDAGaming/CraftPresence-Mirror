@@ -934,6 +934,19 @@ public class RenderUtils {
     }
 
     /**
+     * Renders a String in the Screen, in the style of centered text
+     *
+     * @param fontRenderer The Font Renderer Instance
+     * @param text         The text to render to the screen
+     * @param xPos         The X position to render the text at
+     * @param yPos         The Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderCenteredString(final FontRenderer fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+        renderString(fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2), yPos, color);
+    }
+
+    /**
      * Renders a String in the Screen, in the style of normal text
      *
      * @param fontRenderer The Font Renderer Instance
@@ -944,6 +957,19 @@ public class RenderUtils {
      */
     public static void renderString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
         fontRenderer.drawStringWithShadow(text, xPos, yPos, color);
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of normal text
+     *
+     * @param fontRenderer The Font Renderer Instance
+     * @param text         The text to render to the screen
+     * @param xPos         The X position to render the text at
+     * @param yPos         The Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderString(final FontRenderer fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+        renderString(fontRenderer, text, (float) xPos, (float) yPos, color);
     }
 
     /**
