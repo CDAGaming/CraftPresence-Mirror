@@ -36,6 +36,7 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -991,6 +992,124 @@ public class RenderUtils {
      */
     public static int getFontHeight(final FontRenderer fontRenderer) {
         return fontRenderer.FONT_HEIGHT;
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param mc           The current game instance
+     * @param fontRenderer The Font Renderer Instance
+     * @param message      The text to render to the screen
+     * @param centerX      The center X position, used when not scrolling
+     * @param minX         The minimum X position to render the text at
+     * @param minY         The minimum Y position to render the text at
+     * @param maxX         The maximum X position to render the text at
+     * @param maxY         The maximum Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderScrollingString(@Nonnull final Minecraft mc,
+                                             final FontRenderer fontRenderer,
+                                             final String message,
+                                             final float centerX,
+                                             final float minX, final float minY,
+                                             final float maxX, final float maxY,
+                                             final int color) {
+        final int lineWidth = getStringWidth(fontRenderer, message);
+        final float renderY = (minY + maxY - getFontHeight(fontRenderer)) / 2f + 1f;
+        final float elementWidth = maxX - minX;
+        if (lineWidth > elementWidth) {
+            final float renderWidth = lineWidth - elementWidth;
+            final double renderTime = TimeUtils.getElapsedMillis() / 1000D;
+            final double renderDistance = Math.max(renderWidth * 0.5D, 3D);
+            final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
+            final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
+            setupScissor(mc, (int) minX, (int) minY, (int) maxX, (int) maxY);
+            renderString(fontRenderer, message, minX - (float) offset, renderY, color);
+            disableScissor();
+        } else {
+            final float renderX = MathUtils.clamp(centerX, minX + lineWidth / 2f, maxX - lineWidth / 2f);
+            renderCenteredString(fontRenderer, message, renderX, renderY, color);
+        }
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param mc           The current game instance
+     * @param fontRenderer The Font Renderer Instance
+     * @param message      The text to render to the screen
+     * @param centerX      The center X position, used when not scrolling
+     * @param minX         The minimum X position to render the text at
+     * @param minY         The minimum Y position to render the text at
+     * @param maxX         The maximum X position to render the text at
+     * @param maxY         The maximum Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderScrollingString(@Nonnull final Minecraft mc,
+                                             final FontRenderer fontRenderer,
+                                             final String message,
+                                             final int centerX,
+                                             final int minX, final int minY,
+                                             final int maxX, final int maxY,
+                                             final int color) {
+        final int lineWidth = getStringWidth(fontRenderer, message);
+        final int renderY = (minY + maxY - getFontHeight(fontRenderer)) / 2 + 1;
+        final int elementWidth = maxX - minX;
+        if (lineWidth > elementWidth) {
+            final int renderWidth = lineWidth - elementWidth;
+            final double renderTime = TimeUtils.getElapsedMillis() / 1000D;
+            final double renderDistance = Math.max(renderWidth * 0.5D, 3D);
+            final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
+            final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
+            setupScissor(mc, minX, minY, maxX, maxY);
+            renderString(fontRenderer, message, minX - (int) offset, renderY, color);
+            disableScissor();
+        } else {
+            final int renderX = MathUtils.clamp(centerX, minX + lineWidth / 2, maxX - lineWidth / 2);
+            renderCenteredString(fontRenderer, message, renderX, renderY, color);
+        }
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param mc           The current game instance
+     * @param fontRenderer The Font Renderer Instance
+     * @param message      The text to render to the screen
+     * @param minX         The minimum X position to render the text at
+     * @param minY         The minimum Y position to render the text at
+     * @param maxX         The maximum X position to render the text at
+     * @param maxY         The maximum Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderScrollingString(@Nonnull final Minecraft mc,
+                                             final FontRenderer fontRenderer,
+                                             final String message,
+                                             final float minX, final float minY,
+                                             final float maxX, final float maxY,
+                                             final int color) {
+        renderScrollingString(mc, fontRenderer, message, maxX - ((maxX - minX) / 2f), minX, minY, maxX, maxY, color);
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param mc           The current game instance
+     * @param fontRenderer The Font Renderer Instance
+     * @param message      The text to render to the screen
+     * @param minX         The minimum X position to render the text at
+     * @param minY         The minimum Y position to render the text at
+     * @param maxX         The maximum X position to render the text at
+     * @param maxY         The maximum Y position to render the text at
+     * @param color        The color to render the text in
+     */
+    public static void renderScrollingString(@Nonnull final Minecraft mc,
+                                             final FontRenderer fontRenderer,
+                                             final String message,
+                                             final int minX, final int minY,
+                                             final int maxX, final int maxY,
+                                             final int color) {
+        renderScrollingString(mc, fontRenderer, message, maxX - ((maxX - minX) / 2), minX, minY, maxX, maxY, color);
     }
 
     /**

@@ -861,6 +861,100 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param message The text to render to the screen
+     * @param centerX The center X position, used when not scrolling
+     * @param minX    The minimum X position to render the text at
+     * @param minY    The minimum Y position to render the text at
+     * @param maxX    The maximum X position to render the text at
+     * @param maxY    The maximum Y position to render the text at
+     * @param color   The color to render the text in
+     */
+    public void renderScrollingString(final String message,
+                                      final float centerX,
+                                      final float minX, final float minY,
+                                      final float maxX, final float maxY,
+                                      final int color) {
+        RenderUtils.renderScrollingString(
+                getGameInstance(), getFontRenderer(),
+                message, centerX,
+                minX, minY,
+                maxX, maxY,
+                color
+        );
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param message The text to render to the screen
+     * @param centerX The center X position, used when not scrolling
+     * @param minX    The minimum X position to render the text at
+     * @param minY    The minimum Y position to render the text at
+     * @param maxX    The maximum X position to render the text at
+     * @param maxY    The maximum Y position to render the text at
+     * @param color   The color to render the text in
+     */
+    public void renderScrollingString(final String message,
+                                      final int centerX,
+                                      final int minX, final int minY,
+                                      final int maxX, final int maxY,
+                                      final int color) {
+        RenderUtils.renderScrollingString(
+                getGameInstance(), getFontRenderer(),
+                message, centerX,
+                minX, minY,
+                maxX, maxY,
+                color
+        );
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param message The text to render to the screen
+     * @param minX    The minimum X position to render the text at
+     * @param minY    The minimum Y position to render the text at
+     * @param maxX    The maximum X position to render the text at
+     * @param maxY    The maximum Y position to render the text at
+     * @param color   The color to render the text in
+     */
+    public void renderScrollingString(final String message,
+                                      final float minX, final float minY,
+                                      final float maxX, final float maxY,
+                                      final int color) {
+        renderScrollingString(
+                message, maxX - ((maxX - minX) / 2f),
+                minX, minY,
+                maxX, maxY,
+                color
+        );
+    }
+
+    /**
+     * Renders a String in the Screen, in the style of scrolling text
+     *
+     * @param message The text to render to the screen
+     * @param minX    The minimum X position to render the text at
+     * @param minY    The minimum Y position to render the text at
+     * @param maxX    The maximum X position to render the text at
+     * @param maxY    The maximum Y position to render the text at
+     * @param color   The color to render the text in
+     */
+    public void renderScrollingString(final String message,
+                                      final int minX, final int minY,
+                                      final int maxX, final int maxY,
+                                      final int color) {
+        renderScrollingString(
+                message, maxX - ((maxX - minX) / 2),
+                minX, minY,
+                maxX, maxY,
+                color
+        );
+    }
+
+    /**
      * Renders a String in the Screen, in the style of centered text
      *
      * @param text  The text to render to the screen

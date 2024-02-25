@@ -215,11 +215,10 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
                 color = 14737632;
             }
 
-            RenderUtils.renderCenteredString(
-                    getFontRenderer(),
-                    getDisplayMessage(),
-                    getRight() - (getControlWidth() / 2),
-                    getBottom() - (getControlHeight() / 2) - (getFontHeight() / 2),
+            RenderUtils.renderScrollingString(mc,
+                    getFontRenderer(), getDisplayMessage(),
+                    getLeft() + 2, getTop(),
+                    getRight() - 2, getBottom(),
                     color
             );
         }
