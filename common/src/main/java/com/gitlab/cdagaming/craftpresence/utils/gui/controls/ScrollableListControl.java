@@ -452,7 +452,15 @@ public class ScrollableListControl extends GuiSlot {
         if (!identifierName.equals(displayName) && isHovering) {
             hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
-        RenderUtils.renderString(getFontRenderer(), displayName, xOffset, yPos + ((heightIn / 2f) - (getFontHeight() / 2f)), 0xFFFFFF);
+
+        RenderUtils.renderScrollingString(mc,
+                getFontRenderer(),
+                displayName, xOffset,
+                xOffset, yPos,
+                xPos + widthIn - 4,
+                yPos + heightIn,
+                0xFFFFFF
+        );
 
         if (isHovering) {
             currentHoverText = hoverText;
