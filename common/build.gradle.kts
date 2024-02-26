@@ -65,8 +65,8 @@ dependencies {
     }
 
     // Java-Specific Dependencies
-    shade("com.kohlschutter.junixsocket:junixsocket-common:2.8.3")
-    shade("com.kohlschutter.junixsocket:junixsocket-native-common:2.8.3")
+    shade("com.kohlschutter.junixsocket:junixsocket-common:2.9.0")
+    shade("com.kohlschutter.junixsocket:junixsocket-native-common:2.9.0")
 
     // LeniReflect
     shade("net.lenni0451:Reflect:${"reflect_version"()!!}")
