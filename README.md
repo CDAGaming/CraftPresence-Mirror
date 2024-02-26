@@ -239,6 +239,10 @@ The following functions are available for use anywhere in CraftPresence:
 * `capitalizeWords(input, timesToCheck ?: -1)` - Capitalizes the words within a specified string
 * `cast(castObject, classToAccess=Object|String|Class)` - Attempts to cast or convert an object to the specified target
   class.
+* `clampDouble(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
+* `clampFloat(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
+* `clampInt(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
+* `clampLong(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
 * `convertTime(input, originalPattern, newPattern)` - Convert the specified string into the specified date format, if
   able
 * `convertTimeFormat(dateString, fromFormat, toFormat)` - Convert a Date String from one format to another format
@@ -264,6 +268,9 @@ The following functions are available for use anywhere in CraftPresence:
 * `getAssetUrl(input)` - Retrieves the Parsed Image Url from the specified key, if present
 * `getClass(reference=Object|String)` - Attempt to retrieve a class object, via the string path or object reference
 * `getCurrentTime()` - Retrieve the current time, as an Instant
+* `getElapsedMillis()` - Retrieve the elapsed time, in milliseconds
+* `getElapsedNanos()` - Retrieve the elapsed time, in nanoseconds
+* `getElapsedSeconds()` - Retrieve the elapsed time, in seconds
 * `getField(classToAccess=Object|String|Class, instance=Object, fieldName=String...)` - Retrieves the
   Specified Field(s) via Reflection
 * `getFields(classObj=Object|String|Class)` - Retrieve the available field names for a class object
@@ -289,6 +296,8 @@ The following functions are available for use anywhere in CraftPresence:
 * `isWithinValue(value, min, max, contains_min ?: false, contains_max ?: false, check_sanity ?: true)` - Determines
   whether the specified value is within the specified range
 * `length(input)` - Returns the length of the specified string
+* `lerpDouble(num, min, max)` - Linearly Interpolate between the specified values
+* `lerpFloat(num, min, max)` - Linearly Interpolate between the specified values
 * `mcTranslate(input=String, args=Object...)` - Translates an Unlocalized String, based on the game translations
   retrieved for
   the current language
@@ -299,6 +308,8 @@ The following functions are available for use anywhere in CraftPresence:
 * `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
 * `replace(input, matchCase ?: false, matchWholeWord ?: false, useRegex ?: true, data=[from, to]...)` - Replaces Data in
   a String
+* `roundDouble(num, places ?: 0)` - Rounds a Double to the defined decimal place, if possible
+* `snapToStep(num, valueStep)` - Rounds the Specified Value to the nearest value, using the Step Rate Value
 * `split(input, regex, limit ?: 0)` - Splits this string around matches of the given regular expression
 * `stripAllFormatting(input)` - Strips Color and Formatting Codes from the inputted String
 * `stripColors(input)` - Strips Color Codes from the inputted String

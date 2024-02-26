@@ -67,6 +67,14 @@ public class FunctionsLib {
 
         // MathUtils
         ss.set("isWithinValue", FunctionsLib::isWithinValue);
+        ss.set("roundDouble", FunctionsLib::roundDouble);
+        ss.set("clampInt", FunctionsLib::clampInt);
+        ss.set("clampLong", FunctionsLib::clampLong);
+        ss.set("clampFloat", FunctionsLib::clampFloat);
+        ss.set("clampDouble", FunctionsLib::clampDouble);
+        ss.set("lerpFloat", FunctionsLib::lerpFloat);
+        ss.set("lerpDouble", FunctionsLib::lerpDouble);
+        ss.set("snapToStep", FunctionsLib::snapToStep);
 
         // DiscordUtils
         ss.set("getResult", FunctionsLib::getResult);
@@ -110,6 +118,9 @@ public class FunctionsLib {
 
         // TimeUtils
         ss.set("getCurrentTime", FunctionsLib::getCurrentTime);
+        ss.set("getElapsedNanos", FunctionsLib::getElapsedNanos);
+        ss.set("getElapsedMillis", FunctionsLib::getElapsedMillis);
+        ss.set("getElapsedSeconds", FunctionsLib::getElapsedSeconds);
         ss.set("timeToEpochSecond", FunctionsLib::timeToEpochSecond); // toEpochSecond
         ss.set("timeToEpochMilli", FunctionsLib::timeToEpochMilli); // toEpochMilli
         ss.set("timeFromEpochSecond", FunctionsLib::timeFromEpochSecond); // fromEpochSecond
@@ -426,6 +437,72 @@ public class FunctionsLib {
             }
         }
         return Value.bool(MathUtils.isWithinValue(value, min, max, contains_min, contains_max, check_sanity));
+    }
+
+    public static Value roundDouble(Starscript ss, int argCount) {
+        if (argCount < 1 || argCount > 2)
+            ss.error("roundDouble() can only be used with 1-2 arguments, got %d.", argCount);
+        int places = 0;
+        if (argCount == 2) {
+            places = (int) ss.popNumber("Second argument to roundDouble() needs to be a number.");
+        }
+        double target = ss.popNumber("First argument to roundDouble() needs to be a number.");
+        return Value.number(MathUtils.roundDouble(target, places));
+    }
+
+    public static Value clampInt(Starscript ss, int argCount) {
+        if (argCount != 3) ss.error("clampInt() requires 3 arguments, got %d.", argCount);
+        int max = (int) ss.popNumber("Third argument to clampInt() needs to be a number.");
+        int min = (int) ss.popNumber("Second argument to clampInt() needs to be a number.");
+        int num = (int) ss.popNumber("First argument to clampInt() needs to be a number.");
+        return Value.number(MathUtils.clamp(num, min, max));
+    }
+
+    public static Value clampLong(Starscript ss, int argCount) {
+        if (argCount != 3) ss.error("clampLong() requires 3 arguments, got %d.", argCount);
+        long max = (long) ss.popNumber("Third argument to clampLong() needs to be a number.");
+        long min = (long) ss.popNumber("Second argument to clampLong() needs to be a number.");
+        long num = (long) ss.popNumber("First argument to clampLong() needs to be a number.");
+        return Value.number(MathUtils.clamp(num, min, max));
+    }
+
+    public static Value clampFloat(Starscript ss, int argCount) {
+        if (argCount != 3) ss.error("clampFloat() requires 3 arguments, got %d.", argCount);
+        float max = (float) ss.popNumber("Third argument to clampFloat() needs to be a number.");
+        float min = (float) ss.popNumber("Second argument to clampFloat() needs to be a number.");
+        float num = (float) ss.popNumber("First argument to clampFloat() needs to be a number.");
+        return Value.number(MathUtils.clamp(num, min, max));
+    }
+
+    public static Value clampDouble(Starscript ss, int argCount) {
+        if (argCount != 3) ss.error("clampDouble() requires 3 arguments, got %d.", argCount);
+        double max = ss.popNumber("Third argument to clampDouble() needs to be a number.");
+        double min = ss.popNumber("Second argument to clampDouble() needs to be a number.");
+        double num = ss.popNumber("First argument to clampDouble() needs to be a number.");
+        return Value.number(MathUtils.clamp(num, min, max));
+    }
+
+    public static Value lerpFloat(Starscript ss, int argCount) {
+        if (argCount != 3) ss.error("lerpFloat() requires 3 arguments, got %d.", argCount);
+        float max = (float) ss.popNumber("Third argument to lerpFloat() needs to be a number.");
+        float min = (float) ss.popNumber("Second argument to lerpFloat() needs to be a number.");
+        float num = (float) ss.popNumber("First argument to lerpFloat() needs to be a number.");
+        return Value.number(MathUtils.lerp(num, min, max));
+    }
+
+    public static Value lerpDouble(Starscript ss, int argCount) {
+        if (argCount != 3) ss.error("lerpDouble() requires 3 arguments, got %d.", argCount);
+        double max = ss.popNumber("Third argument to lerpDouble() needs to be a number.");
+        double min = ss.popNumber("Second argument to lerpDouble() needs to be a number.");
+        double num = ss.popNumber("First argument to lerpDouble() needs to be a number.");
+        return Value.number(MathUtils.lerp(num, min, max));
+    }
+
+    public static Value snapToStep(Starscript ss, int argCount) {
+        if (argCount != 2) ss.error("snapToStep() requires 2 arguments, got %d.", argCount);
+        float valueStep = (float) ss.popNumber("Second argument to snapToStep() needs to be a number.");
+        float num = (float) ss.popNumber("First argument to snapToStep() needs to be a number.");
+        return Value.number(MathUtils.snapToStep(num, valueStep));
     }
 
     public static Value randomAsset(Starscript ss, int argCount) {
@@ -948,6 +1025,18 @@ public class FunctionsLib {
 
     public static Value getCurrentTime(Starscript ss, int argCount) {
         return Value.object(TimeUtils.getCurrentTime());
+    }
+
+    public static Value getElapsedNanos(Starscript ss, int argCount) {
+        return Value.number(TimeUtils.getElapsedNanos());
+    }
+
+    public static Value getElapsedMillis(Starscript ss, int argCount) {
+        return Value.number(TimeUtils.getElapsedMillis());
+    }
+
+    public static Value getElapsedSeconds(Starscript ss, int argCount) {
+        return Value.number(TimeUtils.getElapsedSeconds());
     }
 
     public static Value timeToEpochSecond(Starscript ss, int argCount) {
