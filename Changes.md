@@ -1,47 +1,57 @@
 # CraftPresence Changes
 
-## v2.3.0 (01/23/2024)
+## v2.3.5 (03/07/2024)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.2.6...release%2Fv2.3.0)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.0...release%2Fv2.3.5)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Unimined (`1.1.0` -> `1.2.0-SNAPSHOT`)
-    * Spotless Plugin (`6.23.3` -> `6.24.0`)
-    * Spotless Annotations (`4.8.2` -> `4.8.3`)
-    * Fabric Loader (`0.15.3` -> `0.15.6`)
-* (Backend) Major API Refactors involving `StringUtils`, `RenderUtils`, and various other areas
-    * View the Full Changelog for more details regarding these changes
-* Modified the `stripTranslationColors` config setting into two: one for colors, and one for special
-  formatting (`stripTranslationFormatting`)
-    * This adjusts the limiter placed on MC 1.1.0 and below so that text colors are now allowed, but special
-      formatting is not
-    * This also adjusts various APIs, in addition to two new script functions: `stripFormatting(input)`
-      and `stripAllFormatting(input)`
+    * Spotless Plugin (`6.24.0` -> `6.25.0`)
+    * UniCore (`1.0.6`, Separates the `core` package into its own project)
+    * JUnixSocket (`2.8.3` -> `2.9.0`)
+    * Fabric Loader (`0.15.6` -> `0.15.7`)
+    * DiscordIPC (`0.8.1` -> `0.8.4`)
+    * Starscript (`0.2.6` -> `0.3.0`)
+    * Gradle (`8.5` -> `8.6`)
+* Added new functions for placeholders:
+    * `cast(castObject, classToAccess=Object|String|Class)` - Attempts to cast or convert an object to the specified
+      target
+      class.
+    * `clampDouble(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
+    * `clampFloat(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
+    * `clampInt(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
+    * `clampLong(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
+    * `getElapsedMillis()` - Retrieve the elapsed time, in milliseconds
+    * `getElapsedNanos()` - Retrieve the elapsed time, in nanoseconds
+    * `getElapsedSeconds()` - Retrieve the elapsed time, in seconds
+    * `lerpDouble(num, min, max)` - Linearly Interpolate between the specified values
+    * `lerpFloat(num, min, max)` - Linearly Interpolate between the specified values
+    * `roundDouble(num, places ?: 0)` - Rounds a Double to the defined decimal place, if possible
+    * `snapToStep(num, valueStep)` - Rounds the Specified Value to the nearest value, using the Step Rate Value
+* Adjusted existing functions for placeholders:
+    * `dateToEpoch`, `epochToDate`, `timeFromEpoch`, `timeToEpoch` - Split into separate functions for milliseconds and
+      seconds
+* Implemented various QOL UI Rendering changes:
+    * Scrolling String Support has been implemented for various UI controls, allowing for text to scroll horizontally if
+      too large (Especially useful for localizations having text out of bounds)
+    * (Backend) GLScissor behavior has been improved, supporting `left,top,right,bottom` alignments as well as
+      auto-scale support
+    * (Backend) Refactored String Rendering methods for `float` and `int` positioning (Also fixes some inconsistencies
+      across the board)
+    * The Search Box in the `SelectorGui` now resizes based on available space, rather than being a static size
+    * `TextWidget` controls are now left-aligned instead of having centered text (Rendering performance has also been
+      improved)
+* Misc. Code Optimizations and Bug Fixes
 
 ### Fixes
 
-* (Backend) Fixed an issue where `TextDisplayWidget`, `MessageGui`, and `AboutGui` String Rendering could result in
-  incorrect results
-    * The `ExtendedScreen#renderNotice` methods have been deprecated, with the features now covered by
-      the `RenderUtils#drawMultilineString` method
-    * `TextDisplayWidget` objects now have an additional fix where `padding` is accounted for in the final height
-      calculation
-* (Backend) Fixed an issue where `ScrollPane#getOffset` would have an incorrect result if there was no scrollbar
-    * This method now returns the parent screen offset in this case
-* (Backend) Fixed a visual issue in `RenderUtils#drawMultilineString` where the `fontHeight` was not properly considered
-    * This uses an actual `fontHeight + 1` calculation, rather than a magic number (`10`)
-    * This will cause tooltips in various MC versions to look different, but more correctly positioned
-* (Backend) Fixed several issues related to Text Boxes in MC 1.1.0 and below
-    * Fixed an issue where using `ExtendedTextControl#setControlMessage` was not setting the cursor position
-    * Fixed the `CTRL+A` event not matching Vanilla MC (Cursor and Selection Position now properly set)
-    * Fixed a visual bug where clicking the text box was not clearing the `isTextSelected` flag
-    * Fixed the selection background not matching Vanilla MC, due to missing GL flags
-    * Fixed the `_` and `|` cursor rendering not matching Vanilla MC
+* Fixed inconsistent Checkbox control alignment in `General Settings` and `Presence Settings` UI
+* Fixed the beginning Base64 identifier for `ServerData` scroll lists (`png` instead of `unknown`)
+* Fixed an inconsistent y-coord positioning on the "Search" text in the `SelectorGui`
 
 ___
 
