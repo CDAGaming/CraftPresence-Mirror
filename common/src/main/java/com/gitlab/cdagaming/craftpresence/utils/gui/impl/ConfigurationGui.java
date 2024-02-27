@@ -139,10 +139,25 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
             if (hasSubTitle) {
                 final String otherTitle = Constants.TRANSLATOR.getLocalizedMessage(subTitle);
 
-                renderCenteredString(mainTitle, 10, 0xFFFFFF);
-                renderCenteredString(otherTitle, 20, 0xFFFFFF);
+                renderScrollingString(
+                        mainTitle,
+                        30, 10,
+                        getScreenWidth() - 30, 10 + getFontHeight(),
+                        0xFFFFFF
+                );
+                renderScrollingString(
+                        otherTitle,
+                        30, 20,
+                        getScreenWidth() - 30, 20 + getFontHeight(),
+                        0xFFFFFF
+                );
             } else {
-                renderCenteredString(mainTitle, 15, 0xFFFFFF);
+                renderScrollingString(
+                        mainTitle,
+                        30, 15,
+                        getScreenWidth() - 30, 15 + getFontHeight(),
+                        0xFFFFFF
+                );
             }
         }
 

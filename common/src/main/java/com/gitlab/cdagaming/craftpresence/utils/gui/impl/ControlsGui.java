@@ -95,8 +95,18 @@ public class ControlsGui extends PaginatedScreen {
     public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
         final String subTitle = Constants.TRANSLATOR.translate("gui.config.message.button.controls");
-        renderCenteredString(mainTitle, 10, 0xFFFFFF);
-        renderCenteredString(subTitle, 20, 0xFFFFFF);
+        renderScrollingString(
+                mainTitle,
+                30, 10,
+                getScreenWidth() - 30, 10 + getFontHeight(),
+                0xFFFFFF
+        );
+        renderScrollingString(
+                subTitle,
+                30, 20,
+                getScreenWidth() - 30, 20 + getFontHeight(),
+                0xFFFFFF
+        );
 
         super.renderExtra();
 

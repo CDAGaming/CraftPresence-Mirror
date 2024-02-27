@@ -91,7 +91,12 @@ public class AboutGui extends ExtendedScreen {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.about.config");
         final List<String> notice = StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.credits"));
 
-        renderCenteredString(mainTitle, 15, 0xFFFFFF);
+        renderScrollingString(
+                mainTitle,
+                30, 15,
+                getScreenWidth() - 30, 15 + getFontHeight(),
+                0xFFFFFF
+        );
         drawMultiLineString(
                 notice,
                 0, getScreenHeight() / 3,

@@ -176,13 +176,6 @@ public class SelectorGui extends ExtendedScreen {
                             renderType
                     ).setIdentifierType(identifierType)
             );
-            searchBox = addControl(
-                    new ExtendedTextControl(
-                            getFontRenderer(),
-                            60, (getScreenHeight() - 26),
-                            120, 20
-                    )
-            );
             proceedButton = addControl(
                     new ExtendedButtonControl(
                             (getScreenWidth() - 101), (getScreenHeight() - 26),
@@ -214,6 +207,7 @@ public class SelectorGui extends ExtendedScreen {
                             }
                     )
             );
+            int searchBoxRight = proceedButton.getLeft() - 6;
 
             if (allowDynamicEditing && onAdjustDynamicEntry != null) {
                 // Adding Add New Button
@@ -225,7 +219,16 @@ public class SelectorGui extends ExtendedScreen {
                                 () -> onAdjustDynamicEntry.accept(null, parentScreen)
                         )
                 );
+                searchBoxRight -= 100;
             }
+
+            searchBox = addControl(
+                    new ExtendedTextControl(
+                            getFontRenderer(),
+                            60, (getScreenHeight() - 26),
+                            searchBoxRight - 60, 20
+                    )
+            );
 
             super.initializeUi();
         } else {
@@ -286,13 +289,23 @@ public class SelectorGui extends ExtendedScreen {
     @Override
     public void renderExtra() {
         final String searchText = Constants.TRANSLATOR.translate("gui.config.message.editor.search");
-        final float renderY = searchBox.getBottom() - (searchBox.getControlHeight() / 2f) - (getFontHeight() / 2f);
+        final int renderY = searchBox.getBottom() - (searchBox.getControlHeight() / 2) - (getFontHeight() / 2);
 
         final String extraText = isVerboseMode() ? Constants.TRANSLATOR.translate("gui.config.title.selector.extra", itemList.size(), originalList.size()) : "";
         final String displayText = mainTitle + " " + extraText;
 
-        renderCenteredString(searchText, 30, renderY, 0xFFFFFF);
-        renderCenteredString(displayText, 15, 0xFFFFFF);
+        renderScrollingString(
+                searchText,
+                2, renderY,
+                58, renderY + getFontHeight(),
+                0xFFFFFF
+        );
+        renderScrollingString(
+                displayText,
+                30, 15,
+                getScreenWidth() - 30, 15 + getFontHeight(),
+                0xFFFFFF
+        );
 
         super.renderExtra();
     }

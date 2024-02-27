@@ -174,7 +174,12 @@ public class CommandsGui extends ExtendedScreen {
     public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.commands");
 
-        renderCenteredString(mainTitle, 15, 0xFFFFFF);
+        renderScrollingString(
+                mainTitle,
+                30, 15,
+                getScreenWidth() - 30, 15 + getFontHeight(),
+                0xFFFFFF
+        );
 
         super.renderExtra();
     }

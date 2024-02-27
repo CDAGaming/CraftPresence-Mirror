@@ -68,7 +68,12 @@ public class MessageGui extends ExtendedScreen {
     public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.message");
 
-        renderCenteredString(mainTitle, 15, 0xFFFFFF);
+        renderScrollingString(
+                mainTitle,
+                30, 15,
+                getScreenWidth() - 30, 15 + getFontHeight(),
+                0xFFFFFF
+        );
         drawMultiLineString(
                 messageData,
                 0, getScreenHeight() / 3,
