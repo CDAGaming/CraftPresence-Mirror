@@ -44,6 +44,10 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * The default inner box width for this control
      */
     private static final int DEFAULT_BOX_WIDTH = 11;
+    /**
+     * The default maximum text width for this control
+     */
+    private static final int DEFAULT_MAX_TEXT_WIDTH = 167;
 
     /**
      * The width of the inner box of this control
@@ -53,6 +57,10 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * The current border width for this control
      */
     private int borderWidth;
+    /**
+     * The current maximum text width for this control
+     */
+    private int maxTextWidth;
     /**
      * The Check state of this control
      */
@@ -155,12 +163,24 @@ public class CheckBoxControl extends ExtendedButtonControl {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
 
             mouseDragged(mc, mouseX, mouseY);
-            int color = !isControlEnabled() ? 10526880 : 14737632;
+            final int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (isChecked())
-                RenderUtils.renderCenteredString(getFontRenderer(), "x", getControlPosX() + getBoxWidth() / 2 + 1, getControlPosY() + 1, color);
+                RenderUtils.renderCenteredString(
+                        getFontRenderer(),
+                        "x",
+                        getControlPosX() + (getBoxWidth() / 2) + 1,
+                        getControlPosY() + 1,
+                        color
+                );
 
-            RenderUtils.renderString(getFontRenderer(), getDisplayMessage(), getControlPosX() + getBoxWidth() + 2, getControlPosY() + 2, color);
+            final int left = getControlPosX() + getBoxWidth() + 2;
+            RenderUtils.renderScrollingString(mc,
+                    getFontRenderer(), getDisplayMessage(),
+                    left + (RenderUtils.getStringWidth(getFontRenderer(), getDisplayMessage()) / 2),
+                    left, getTop(), getRight(), getBottom(),
+                    color
+            );
         }
     }
 
@@ -254,13 +274,33 @@ public class CheckBoxControl extends ExtendedButtonControl {
         syncRenderStates();
     }
 
+    /**
+     * Retrieve the maximum width for this control
+     *
+     * @return the current maximum width
+     */
+    public int getMaxTextWidth() {
+        return maxTextWidth;
+    }
+
+    /**
+     * Sets the maximum width for this control
+     *
+     * @param maxTextWidth the new maximum width
+     */
+    public void setMaxTextWidth(final int maxTextWidth) {
+        this.maxTextWidth = maxTextWidth;
+        syncRenderStates();
+    }
+
     private void syncRenderStates() {
         setControlHeight(getBoxWidth());
-        setControlWidth(getBoxWidth() + (getBorderWidth() * 2) + RenderUtils.getStringWidth(getFontRenderer(), getDisplayMessage()));
+        setControlWidth(getBoxWidth() + (getBorderWidth() * 2) + getMaxTextWidth());
     }
 
     private void resetRenderStates() {
         setBoxWidth(DEFAULT_BOX_WIDTH);
         setBorderWidth(DEFAULT_BORDER);
+        setMaxTextWidth(DEFAULT_MAX_TEXT_WIDTH);
     }
 }
