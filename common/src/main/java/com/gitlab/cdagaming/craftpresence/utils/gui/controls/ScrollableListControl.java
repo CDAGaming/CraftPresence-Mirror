@@ -456,7 +456,7 @@ public class ScrollableListControl extends GuiSlot {
         RenderUtils.renderScrollingString(mc,
                 getFontRenderer(),
                 displayName,
-                xOffset + (getFontRenderer().getStringWidth(displayName) / 2),
+                xOffset + (RenderUtils.getStringWidth(getFontRenderer(), displayName) / 2),
                 xOffset, yPos,
                 xPos + widthIn - 4,
                 yPos + heightIn,
