@@ -197,7 +197,7 @@ public class TextWidget extends ExtendedTextControl {
             final int middle = (screen.getScreenWidth() / 2);
             setControlPosX(middle + 3); // Left; Textbox
             titleLeft = middle - 180; // Left; Title Text (Offset: +3)
-            titleRight = middle; // Left; Textbox (Offset: -3)
+            titleRight = middle - 6; // Left; Textbox (Offset: -6)
             setDimensions = true;
         }
     }
@@ -209,6 +209,7 @@ public class TextWidget extends ExtendedTextControl {
 
             screen.renderScrollingString(
                     mainTitle,
+                    titleLeft + (screen.getStringWidth(mainTitle) / 2),
                     titleLeft, getTop(),
                     titleRight, getBottom(),
                     0xFFFFFF
