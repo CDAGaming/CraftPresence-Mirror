@@ -185,7 +185,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
-                ).setTitleXOffset(-16)
+                )
         );
         addIconSelector(childFrame, () -> smallImageKeyFormat,
                 (attributeName, currentValue) -> PRESENCE.smallImageKey = currentValue
@@ -202,7 +202,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                 CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
                                 )
                         )
-                ).setTitleXOffset(-16)
+                )
         );
         addIconSelector(childFrame, () -> largeImageKeyFormat,
                 (attributeName, currentValue) -> PRESENCE.largeImageKey = currentValue

@@ -118,7 +118,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_icon")
                                 )
                         )
-                ).setTitleXOffset(-16)
+                )
         );
         addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue

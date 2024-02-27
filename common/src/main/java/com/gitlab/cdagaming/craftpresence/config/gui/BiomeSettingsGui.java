@@ -90,7 +90,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                         Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
                                 )
                         )
-                ).setTitleXOffset(-16)
+                )
         );
         addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue

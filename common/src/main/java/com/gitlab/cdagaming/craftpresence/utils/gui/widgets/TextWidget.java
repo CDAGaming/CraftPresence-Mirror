@@ -42,21 +42,17 @@ public class TextWidget extends ExtendedTextControl {
      */
     private String title;
     /**
-     * The X coordinate for the additional message
+     * The left-most X position for the additional message
      */
-    private float titleX;
+    private int titleLeft;
     /**
-     * The X coordinate offset for the additional message
+     * The right-most X position for the additional message
      */
-    private float titleXOffset = 0;
+    private int titleRight;
     /**
-     * The Y coordinate for the additional message
+     * Whether positional data has been set up
      */
-    private float titleY;
-    /**
-     * The Y coordinate offset for the additional message
-     */
-    private float titleYOffset = 0;
+    private boolean setDimensions;
     /**
      * Event to Deploy when this Control is Hovered Over, if any
      */
@@ -76,6 +72,7 @@ public class TextWidget extends ExtendedTextControl {
     public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
         super(componentId, fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
+        this.setDimensions = false;
         setOnHover(onHoverEvent);
     }
 
@@ -106,6 +103,7 @@ public class TextWidget extends ExtendedTextControl {
     public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
+        this.setDimensions = false;
         setOnHover(onHoverEvent);
     }
 
@@ -136,6 +134,7 @@ public class TextWidget extends ExtendedTextControl {
     public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable onHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn, keyEvent);
         this.title = title;
+        this.setDimensions = false;
         setOnHover(onHoverEvent);
     }
 
@@ -174,86 +173,6 @@ public class TextWidget extends ExtendedTextControl {
     }
 
     /**
-     * Retrieve the X coordinate for the additional message
-     *
-     * @return The attached message's X coordinate
-     */
-    public float getTitleX() {
-        return titleX + getTitleXOffset();
-    }
-
-    /**
-     * Set the X coordinate for the additional message
-     *
-     * @param titleX The new X coordinate for the attached message
-     * @return the modified instance
-     */
-    public TextWidget setTitleX(float titleX) {
-        this.titleX = titleX;
-        return this;
-    }
-
-    /**
-     * Retrieve the X coordinate offset for the additional message
-     *
-     * @return The attached message's X coordinate offset
-     */
-    public float getTitleXOffset() {
-        return titleXOffset;
-    }
-
-    /**
-     * Set the X coordinate offset for the additional message
-     *
-     * @param offset The new X coordinate offset for the attached message
-     * @return the modified instance
-     */
-    public TextWidget setTitleXOffset(float offset) {
-        this.titleXOffset = offset;
-        return this;
-    }
-
-    /**
-     * Retrieve the Y coordinate for the additional message
-     *
-     * @return The attached message's Y coordinate
-     */
-    public float getTitleY() {
-        return titleY + getTitleYOffset();
-    }
-
-    /**
-     * Set the Y coordinate for the additional message
-     *
-     * @param titleY The new Y coordinate for the attached message
-     * @return the modified instance
-     */
-    public TextWidget setTitleY(float titleY) {
-        this.titleY = titleY;
-        return this;
-    }
-
-    /**
-     * Retrieve the Y coordinate offset for the additional message
-     *
-     * @return The attached message's Y coordinate offset
-     */
-    public float getTitleYOffset() {
-        return titleYOffset;
-    }
-
-    /**
-     * Set the Y coordinate offset for the additional message
-     *
-     * @param offset The new Y coordinate offset for the attached message
-     * @return the modified instance
-     */
-    public TextWidget setTitleYOffset(float offset) {
-        this.titleYOffset = offset;
-        return this;
-    }
-
-    /**
      * Sets the Event to occur upon Mouse Over
      *
      * @param event The event to occur
@@ -274,33 +193,36 @@ public class TextWidget extends ExtendedTextControl {
     @Override
     public void preDraw(ExtendedScreen screen) {
         // Ensure correct positioning
-        final int calc1 = (screen.getScreenWidth() / 2) - (getControlWidth() - 3); // Left; Title Text
-        final int calc2 = (screen.getScreenWidth() / 2) + 3; // Left; Textbox
-        setControlPosX(calc2);
-
-        if (!StringUtils.isNullOrEmpty(title)) {
-            setTitleX((calc1 + getControlWidth()) - (getControlWidth() / 2f));
-            setTitleY(getBottom() - (getControlHeight() / 2f) - (screen.getFontHeight() / 2f));
+        if (!setDimensions) {
+            final int middle = (screen.getScreenWidth() / 2);
+            setControlPosX(middle + 3); // Left; Textbox
+            titleLeft = middle - 180; // Left; Title Text (Offset: +3)
+            titleRight = middle; // Left; Textbox (Offset: -3)
+            setDimensions = true;
         }
     }
 
     @Override
     public void draw(ExtendedScreen screen) {
-        if (!StringUtils.isNullOrEmpty(title)) {
+        if (!StringUtils.isNullOrEmpty(title) && setDimensions) {
             final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
-            screen.renderCenteredString(mainTitle, getTitleX(), getTitleY(), 0xFFFFFF);
+
+            screen.renderScrollingString(
+                    mainTitle,
+                    titleLeft, getTop(),
+                    titleRight, getBottom(),
+                    0xFFFFFF
+            );
         }
     }
 
     @Override
     public void postDraw(ExtendedScreen screen) {
-        if (!StringUtils.isNullOrEmpty(title)) {
-            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
-            final int titleWidth = screen.getStringWidth(mainTitle);
+        if (!StringUtils.isNullOrEmpty(title) && setDimensions) {
             if (screen.isOverScreen() && RenderUtils.isMouseOver(
                     screen.getMouseX(), screen.getMouseY(),
-                    getTitleX() - (titleWidth / 2f), getTitleY(),
-                    titleWidth, screen.getFontHeight()
+                    titleLeft, getTop(),
+                    titleRight - titleLeft, getControlHeight()
             )) {
                 onHover();
             }

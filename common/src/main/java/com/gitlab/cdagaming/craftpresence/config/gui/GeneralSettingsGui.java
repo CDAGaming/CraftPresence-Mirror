@@ -97,7 +97,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.default_icon")
                                 )
                         )
-                ).setTitleXOffset(-16)
+                )
         );
         addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue

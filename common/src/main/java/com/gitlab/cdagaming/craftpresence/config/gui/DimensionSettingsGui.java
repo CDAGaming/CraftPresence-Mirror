@@ -90,7 +90,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                         Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
                                 )
                         )
-                ).setTitleXOffset(-16)
+                )
         );
         addIconSelector(childFrame, () -> defaultIcon,
                 (attributeName, currentValue) -> currentIcon = currentValue
