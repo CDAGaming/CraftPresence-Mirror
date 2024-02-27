@@ -79,11 +79,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         clientId.setControlMessage(getCurrentData().clientId);
         clientId.setControlMaxLength(32);
 
-        final int buttonCalc1 = (getScreenWidth() / 2) - 183;
-        final int buttonCalc2 = (getScreenWidth() / 2) + 3;
-
-        final int checkboxCalc1 = (getScreenWidth() / 2) - 168;
-        final int checkboxCalc2 = (getScreenWidth() / 2) + 18;
+        final int calc1 = (getScreenWidth() / 2) - 183;
+        final int calc2 = (getScreenWidth() / 2) + 3;
 
         // Adding Default Icon Data
         defaultIcon = childFrame.addControl(
@@ -107,7 +104,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         currentPartyPrivacy = getCurrentData().partyPrivacyLevel;
         partyPrivacyLevelButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        buttonCalc1, getButtonY(2),
+                        calc1, getButtonY(2),
                         180, 20,
                         "gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name(),
                         () -> {
@@ -124,7 +121,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         currentPreferredClient = getCurrentData().preferredClientLevel;
         preferredClientLevelButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        buttonCalc2, getButtonY(2),
+                        calc2, getButtonY(2),
                         180, 20,
                         "gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name(),
                         () -> {
@@ -140,7 +137,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectCurseManifestButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, getButtonY(3),
+                        calc1, getButtonY(3),
                         "gui.config.name.general.detect_curse_manifest",
                         getCurrentData().detectCurseManifest,
                         null,
@@ -153,7 +150,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectMultiMCManifestButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, getButtonY(3),
+                        calc2, getButtonY(3),
                         "gui.config.name.general.detect_multimc_manifest",
                         getCurrentData().detectMultiMCManifest,
                         null,
@@ -166,7 +163,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectMCUpdaterInstanceButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, getButtonY(4, -10),
+                        calc1, getButtonY(4, -10),
                         "gui.config.name.general.detect_mcupdater_instance",
                         getCurrentData().detectMCUpdaterInstance,
                         null,
@@ -179,7 +176,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectTechnicPackButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, getButtonY(4, -10),
+                        calc2, getButtonY(4, -10),
                         "gui.config.name.general.detect_technic_pack",
                         getCurrentData().detectTechnicPack,
                         null,
@@ -192,7 +189,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectATLauncherButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, getButtonY(5, -20),
+                        calc1, getButtonY(5, -20),
                         "gui.config.name.general.detect_atlauncher_instance",
                         getCurrentData().detectATLauncherInstance,
                         null,
@@ -205,7 +202,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectModrinthPackButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, getButtonY(5, -20),
+                        calc2, getButtonY(5, -20),
                         "gui.config.name.general.detect_modrinth_pack",
                         getCurrentData().detectModrinthPack,
                         null,
@@ -218,7 +215,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         enableJoinRequestButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, getButtonY(6, -30),
+                        calc1, getButtonY(6, -30),
                         "gui.config.name.general.enable_join_request",
                         getCurrentData().enableJoinRequests,
                         null,
@@ -231,7 +228,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectDimensionDataButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, getButtonY(6, -30),
+                        calc2, getButtonY(6, -30),
                         "gui.config.name.general.detect_dimension_data",
                         getCurrentData().detectDimensionData,
                         null,
@@ -244,7 +241,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         autoRegisterButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, getButtonY(7, -40),
+                        calc1, getButtonY(7, -40),
                         "gui.config.name.general.auto_register",
                         getCurrentData().autoRegister,
                         null,
@@ -257,7 +254,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectBiomeDataButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, getButtonY(7, -40),
+                        calc2, getButtonY(7, -40),
                         "gui.config.name.general.detect_biome_data",
                         getCurrentData().detectBiomeData,
                         null,
@@ -270,7 +267,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         resetTimeOnInitButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc1, getButtonY(8, -50),
+                        calc1, getButtonY(8, -50),
                         "gui.config.name.general.reset_time_on_init",
                         getCurrentData().resetTimeOnInit,
                         null,
@@ -283,7 +280,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         detectWorldDataButton = childFrame.addControl(
                 new CheckBoxControl(
-                        checkboxCalc2, getButtonY(8, -50),
+                        calc2, getButtonY(8, -50),
                         "gui.config.name.general.detect_world_data",
                         getCurrentData().detectWorldData,
                         null,

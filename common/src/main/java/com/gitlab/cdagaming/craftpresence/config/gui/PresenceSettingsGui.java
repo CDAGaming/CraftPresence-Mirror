@@ -78,8 +78,6 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
-        final int checkboxCalc1 = (getScreenWidth() / 2) - 160;
-
         // Page 1 Items
         detailsFormat = childFrame.addControl(
                 new TextWidget(
@@ -146,7 +144,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         if (!isDefaultModule) {
             enabledCheckbox = childFrame.addControl(
                     new CheckBoxControl(
-                            checkboxCalc1, getButtonY(4),
+                            calc1, getButtonY(4),
                             "gui.config.name.display.enabled",
                             PRESENCE.enabled,
                             null,

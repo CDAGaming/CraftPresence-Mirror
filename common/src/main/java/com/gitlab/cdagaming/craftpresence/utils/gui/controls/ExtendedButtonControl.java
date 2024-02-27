@@ -94,7 +94,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      */
     public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final String... optionalArgs) {
         this(buttonId, x, y, widthIn, heightIn, buttonText, optionalArgs);
-        this.onPushEvent = onPushEvent;
+        setOnClick(onPushEvent);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      */
     public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final Runnable onHoverEvent, final String... optionalArgs) {
         this(buttonId, x, y, widthIn, heightIn, buttonText, onPushEvent, optionalArgs);
-        this.onHoverEvent = onHoverEvent;
+        setOnHover(onHoverEvent);
     }
 
     /**
