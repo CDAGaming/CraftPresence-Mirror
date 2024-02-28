@@ -39,7 +39,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.GuiTextField;
 import org.lwjgl.input.Keyboard;
 import org.meteordev.starscript.value.Value;
 
@@ -162,7 +163,10 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         proceedButton.setControlEnabled(!blockInteractions);
         copyButton.setControlEnabled(!blockInteractions);
-        commandInput.method_4243(!blockInteractions);
+        StringUtils.updateField(GuiTextField.class, commandInput,
+                !blockInteractions,
+                "isEnabled", "field_73819_m", "field_1127", "m"
+        );
 
         if (!blockInteractions) {
             checkCommands();

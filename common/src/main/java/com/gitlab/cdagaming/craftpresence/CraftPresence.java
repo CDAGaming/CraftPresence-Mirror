@@ -38,8 +38,8 @@ import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Session;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.Session;
 
 /**
  * The Primary Application Class and Utilities

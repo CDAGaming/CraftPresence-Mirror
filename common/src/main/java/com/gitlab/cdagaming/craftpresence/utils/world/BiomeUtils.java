@@ -33,7 +33,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.src.BiomeGenBase;
 
 import java.util.List;
 

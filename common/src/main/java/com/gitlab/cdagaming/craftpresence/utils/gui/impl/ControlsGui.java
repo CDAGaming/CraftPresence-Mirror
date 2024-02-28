@@ -34,8 +34,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ButtonWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;

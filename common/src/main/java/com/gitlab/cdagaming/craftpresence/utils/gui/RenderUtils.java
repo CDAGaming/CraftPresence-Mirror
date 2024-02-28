@@ -40,12 +40,12 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.RenderHelper;
+import net.minecraft.src.Tessellator;
+import net.minecraft.src.RenderItem;
+import net.minecraft.src.ItemStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -218,7 +218,7 @@ public class RenderUtils {
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            itemRender.renderItemAndEffectIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos);
+            itemRender.renderItemIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos);
             itemRender.renderItemOverlayIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos);
 
             RenderHelper.disableStandardItemLighting();

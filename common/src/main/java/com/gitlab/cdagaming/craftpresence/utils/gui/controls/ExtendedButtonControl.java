@@ -30,8 +30,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.GuiButton;
 
 import javax.annotation.Nonnull;
 
@@ -62,6 +62,8 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * Whether the mouse is currently within screen bounds
      */
     private boolean isOverScreen = false;
+
+    protected boolean hovered = false;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -451,7 +453,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return the current hover state
      */
     public boolean isHoveringOver() {
-        return this.field_5056;
+        return this.hovered;
     }
 
     /**
@@ -460,7 +462,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param isHovered the new hover state
      */
     public void setHoveringOver(final boolean isHovered) {
-        this.field_5056 = isHovered;
+        this.hovered = isHovered;
     }
 
     /**
