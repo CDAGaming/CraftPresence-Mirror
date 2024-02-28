@@ -177,7 +177,7 @@ public class DimensionUtils implements Module {
      */
     private List<ResourceLocation> getDimensionTypes() {
         List<ResourceLocation> dimensionTypes = StringUtils.newArrayList();
-        Optional<? extends Registry<DimensionType>> dimensionRegistry = RegistryAccess.builtin().registry(Registry.DIMENSION_TYPE_REGISTRY);
+        Optional<? extends Registry<DimensionType>> dimensionRegistry = RegistryAccess.builtinCopy().registry(Registry.DIMENSION_TYPE_REGISTRY);
 
         if (dimensionRegistry.isPresent()) {
             List<ResourceLocation> defaultDimensionTypes = StringUtils.newArrayList(dimensionRegistry.get().keySet());

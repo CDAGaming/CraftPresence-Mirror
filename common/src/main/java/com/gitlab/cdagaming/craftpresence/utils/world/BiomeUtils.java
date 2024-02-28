@@ -121,7 +121,7 @@ public class BiomeUtils implements Module {
 
     @Override
     public void updateData() {
-        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition());
+        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition()).value();
         final ResourceLocation newIdentifier = CraftPresence.player.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(newBiome);
         final String newBiomeName = newIdentifier != null ? StringUtils.formatIdentifier(newIdentifier.toString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords) : "Plains";
 
@@ -175,7 +175,7 @@ public class BiomeUtils implements Module {
      */
     private List<ResourceLocation> getBiomeTypes() {
         List<ResourceLocation> biomeTypes = StringUtils.newArrayList();
-        Optional<? extends Registry<Biome>> biomeRegistry = RegistryAccess.builtin().registry(Registry.BIOME_REGISTRY);
+        Optional<? extends Registry<Biome>> biomeRegistry = RegistryAccess.builtinCopy().registry(Registry.BIOME_REGISTRY);
 
         if (biomeRegistry.isPresent()) {
             List<ResourceLocation> defaultBiomeTypes = StringUtils.newArrayList(biomeRegistry.get().keySet());
