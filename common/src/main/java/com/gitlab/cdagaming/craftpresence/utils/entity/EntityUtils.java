@@ -287,7 +287,7 @@ public class EntityUtils implements Module {
 
     @Override
     public void getAllData() {
-        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_1610_b", "c");
+        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_1610_b", "b");
         if (!mappings.values().isEmpty()) {
             for (Object entityLocationObj : mappings.values()) {
                 final String entityLocation = (String) entityLocationObj;

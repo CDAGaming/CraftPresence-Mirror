@@ -110,7 +110,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlHeight() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "height", "field_22076_g", "h"
+                "height", "field_22076_g", "g"
         )).getSecond();
     }
 
@@ -119,7 +119,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 height,
-                "height", "field_22076_g", "h"
+                "height", "field_22076_g", "g"
         );
     }
 

@@ -52,9 +52,7 @@ public class TranslationManager {
 
         getInstance().setLanguageSupplier((fallback) -> {
             final String result;
-            if (CraftPresence.instance.gameSettings != null) {
-                result = CraftPresence.instance.gameSettings.field_44018_Q;
-            } else if (CraftPresence.CONFIG != null) {
+            if (CraftPresence.CONFIG != null) {
                 result = CraftPresence.CONFIG.accessibilitySettings.languageId;
             } else {
                 result = fallback;
