@@ -26,17 +26,17 @@ package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.classgraph.ClassInfo;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Biome Utilities used to Parse Biome Data and handle related RPC Events
@@ -122,9 +122,10 @@ public class BiomeUtils implements Module {
     @Override
     public void updateData() {
         final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition());
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getName().getString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final ResourceLocation newIdentifier = CraftPresence.player.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(newBiome);
+        final String newBiomeName = newIdentifier != null ? StringUtils.formatIdentifier(newIdentifier.toString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords) : "Plains";
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getName().getString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiome_primaryIdentifier = newIdentifier != null ? StringUtils.formatIdentifier(newIdentifier.toString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords) : "plains";
         final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_Identifier = StringUtils.getOrDefault(newBiome_primaryIdentifier, newBiome_alternativeIdentifier);
 
@@ -172,32 +173,17 @@ public class BiomeUtils implements Module {
      *
      * @return The detected Biome Types found
      */
-    private List<Biome> getBiomeTypes() {
-        List<Biome> biomeTypes = StringUtils.newArrayList();
-        List<Biome> defaultBiomeTypes = StringUtils.newArrayList(Registry.BIOME.iterator());
+    private List<ResourceLocation> getBiomeTypes() {
+        List<ResourceLocation> biomeTypes = StringUtils.newArrayList();
+        Optional<? extends Registry<Biome>> biomeRegistry = RegistryAccess.builtin().registry(Registry.BIOME_REGISTRY);
 
-        if (!defaultBiomeTypes.isEmpty()) {
-            for (Biome biome : defaultBiomeTypes) {
-                if (biome != null && !biomeTypes.contains(biome)) {
-                    biomeTypes.add(biome);
-                }
-            }
-        }
+        if (biomeRegistry.isPresent()) {
+            List<ResourceLocation> defaultBiomeTypes = StringUtils.newArrayList(biomeRegistry.get().keySet());
 
-        if (biomeTypes.isEmpty()) {
-            // Fallback: Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Biome.class).values()) {
-                if (classInfo != null) {
-                    try {
-                        Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
-                        if (classObj != null) {
-                            Biome biomeObj = (Biome) classObj.getDeclaredConstructor().newInstance();
-                            if (!biomeTypes.contains(biomeObj)) {
-                                biomeTypes.add(biomeObj);
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        Constants.LOG.debugError(ex);
+            if (!defaultBiomeTypes.isEmpty()) {
+                for (ResourceLocation type : defaultBiomeTypes) {
+                    if (type != null) {
+                        biomeTypes.add(type);
                     }
                 }
             }
@@ -208,10 +194,9 @@ public class BiomeUtils implements Module {
 
     @Override
     public void getAllData() {
-        for (Biome biome : getBiomeTypes()) {
-            if (biome != null) {
-                String biomeName = StringUtils.getOrDefault(biome.getName().getString(), MappingUtils.getClassName(biome));
-                String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        for (ResourceLocation TYPE : getBiomeTypes()) {
+            if (TYPE != null) {
+                String name = StringUtils.formatIdentifier(TYPE.toString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);
                 }
@@ -229,11 +214,6 @@ public class BiomeUtils implements Module {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean canFetchData() {
-        return FileUtils.canScanClasses();
     }
 
     @Override
