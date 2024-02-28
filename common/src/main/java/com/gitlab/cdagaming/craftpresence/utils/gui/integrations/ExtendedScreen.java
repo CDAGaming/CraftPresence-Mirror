@@ -507,7 +507,7 @@ public class ExtendedScreen extends GuiScreen {
 
             updateBackground = canBackgroundMove() ? updateBackground + partialTicks : 0.0D;
 
-            RenderUtils.setupScissor(
+            RenderUtils.enableScissor(
                     getGameInstance(),
                     getLeft(),
                     getTop(),

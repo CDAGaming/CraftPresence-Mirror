@@ -547,32 +547,6 @@ public class RenderUtils {
     }
 
     /**
-     * Define viewable rendering boundaries, utilizing glScissor
-     *
-     * @param mc     The Minecraft Instance
-     * @param left   The Starting X Position of the Object
-     * @param top    The Starting Y Position of the Object
-     * @param right  The Right side length of the Object
-     * @param bottom The bottom length of the Object
-     */
-    public static void setupScissor(@Nonnull final Minecraft mc, final int left, final int top, final int right, final int bottom) {
-        applyScissor(mc, left, bottom, right - left, bottom - top);
-    }
-
-    /**
-     * Define viewable rendering boundaries, utilizing glScissor
-     *
-     * @param xPos   The Starting X Position of the Object
-     * @param yPos   The Starting Y Position of the Object
-     * @param width  The width to render the data to
-     * @param height The height to render the data to
-     */
-    public static void enableScissor(final int xPos, final int yPos, final int width, final int height) {
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(xPos, yPos, width, height);
-    }
-
-    /**
      * Disables current rendering boundary flags, mainly glScissor
      */
     public static void disableScissor() {
@@ -583,17 +557,18 @@ public class RenderUtils {
      * Define viewable rendering boundaries, utilizing glScissor
      *
      * @param mc     The Minecraft Instance
-     * @param left   The Left Position of the Object
-     * @param bottom The Bottom Position of the Object
-     * @param width  The width to render the data to
-     * @param height The height to render the data to
+     * @param left   The Starting X Position of the Object
+     * @param top    The Starting Y Position of the Object
+     * @param right  The Right side length of the Object
+     * @param bottom The bottom length of the Object
      */
-    public static void applyScissor(@Nonnull final Minecraft mc, final int left, final int bottom, final int width, final int height) {
+    public static void enableScissor(@Nonnull final Minecraft mc, final int left, final int top, final int right, final int bottom) {
         final int scale = computeGuiScale(mc);
         final int displayHeight = mc.displayHeight;
-        final int renderWidth = Math.max(0, width * scale);
-        final int renderHeight = Math.max(0, height * scale);
-        enableScissor(
+        final int renderWidth = Math.max(0, (right - left) * scale);
+        final int renderHeight = Math.max(0, (bottom - top) * scale);
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor(
                 left * scale,
                 displayHeight - bottom * scale,
                 renderWidth, renderHeight
@@ -1023,7 +998,7 @@ public class RenderUtils {
             final double renderDistance = Math.max(renderWidth * 0.5D, 3D);
             final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
-            setupScissor(mc, (int) minX, (int) minY, (int) maxX, (int) maxY);
+            enableScissor(mc, (int) minX, (int) minY, (int) maxX, (int) maxY);
             renderString(fontRenderer, message, minX - (float) offset, renderY, color);
             disableScissor();
         } else {
@@ -1061,7 +1036,7 @@ public class RenderUtils {
             final double renderDistance = Math.max(renderWidth * 0.5D, 3D);
             final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
-            setupScissor(mc, minX, minY, maxX, maxY);
+            enableScissor(mc, minX, minY, maxX, maxY);
             renderString(fontRenderer, message, minX - (int) offset, renderY, color);
             disableScissor();
         } else {
