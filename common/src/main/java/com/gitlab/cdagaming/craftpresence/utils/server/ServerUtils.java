@@ -263,8 +263,8 @@ public class ServerUtils implements Module {
         final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
-            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "af");
-            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ag");
+            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "ac");
+            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ad");
             newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerData(retrievedIP, retrievedPort) : null;
         } catch (Exception ex) {
             newServerData = null;
@@ -330,8 +330,8 @@ public class ServerUtils implements Module {
 
             // 'player.health' Argument = Current and Maximum Health of Player
             final Pair<Double, Double> newHealth = new Pair<>(
-                    MathUtils.roundDouble(CraftPresence.player.getEntityHealth(), 0),
-                    MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
+                    MathUtils.roundDouble(CraftPresence.player.health, 0),
+                    MathUtils.roundDouble(20.0D, 0)
             );
             if (!Objects.equals(newHealth, currentHealth)) {
                 currentHealth = newHealth;
@@ -341,7 +341,7 @@ public class ServerUtils implements Module {
             // 'world' Sub-Arguments
 
             // 'world.difficulty' Argument = Current Difficulty of the World
-            final String newDifficulty = CraftPresence.player.worldObj.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = false ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
                     Integer.toString(CraftPresence.player.worldObj.difficultySetting);
             if (!newDifficulty.equals(currentDifficulty)) {

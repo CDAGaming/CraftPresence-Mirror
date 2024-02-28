@@ -214,7 +214,7 @@ public class RenderUtils {
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
-            RenderHelper.func_41089_c();
+            func_41089_c();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
@@ -232,6 +232,14 @@ public class RenderUtils {
                 BLOCKED_RENDER_ITEMS.add(stack);
             }
         }
+    }
+
+    public static void func_41089_c() {
+        GL11.glPushMatrix();
+        GL11.glRotatef(-30.0F, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(165.0F, 1.0F, 0.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GL11.glPopMatrix();
     }
 
     /**
@@ -1051,7 +1059,7 @@ public class RenderUtils {
      * @return The Current Font Height for this Screen
      */
     public static int getFontHeight(final FontRenderer fontRenderer) {
-        return fontRenderer.field_41063_b;
+        return 8;
     }
 
     /**

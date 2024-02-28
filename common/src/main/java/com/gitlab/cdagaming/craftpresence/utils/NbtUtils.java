@@ -114,7 +114,14 @@ public class NbtUtils {
             NBTBase currentTag = root;
             for (int i = 0; i < path.length; i++) {
                 if (currentTag instanceof NBTTagCompound) {
-                    currentTag = ((NBTTagCompound) currentTag).func_40196_b(path[i]);
+                    NBTTagCompound temp = ((NBTTagCompound) currentTag);
+                    for (Object item : temp.func_28110_c()) {
+                        NBTBase nbt = (NBTBase) item;
+                        if (nbt.getKey().equals(path[i])) {
+                            currentTag = nbt;
+                            break;
+                        }
+                    }
                 } else if (currentTag instanceof NBTTagList) {
                     int index = Integer.parseInt(path[i]);
                     currentTag = ((NBTTagList) currentTag).tagAt(index);
