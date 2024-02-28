@@ -278,7 +278,7 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon Window Reload
      */
     public void reloadUi() {
-        onResize(getGameInstance(), getScreenWidth(), getScreenHeight());
+        setWorldAndResolution(getGameInstance(), getScreenWidth(), getScreenHeight());
     }
 
     /**
@@ -289,15 +289,15 @@ public class ExtendedScreen extends GuiScreen {
      * @param h    The New Screen Height
      */
     @Override
-    public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
+    public void setWorldAndResolution(@Nonnull Minecraft mcIn, int w, int h) {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
+                    ((ExtendedScreen) extendedControl).setWorldAndResolution(mcIn, w, h);
                 }
             }
         }
-        super.onResize(mcIn, w, h);
+        super.setWorldAndResolution(mcIn, w, h);
     }
 
     /**
@@ -618,9 +618,6 @@ public class ExtendedScreen extends GuiScreen {
     public void handleMouseInput() {
         if (isLoaded()) {
             setMouseScroll(Mouse.getEventDWheel());
-            for (ScrollableListControl listControl : getLists()) {
-                listControl.handleMouseInput();
-            }
 
             final int dw = getMouseScroll();
             if (dw != 0) {
@@ -1070,7 +1067,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param color The color to render the text in
      */
     public void renderString(final String text, final float xPos, final float yPos, final int color) {
-        RenderUtils.renderString(getFontRenderer(), text, xPos, yPos, color);
+        renderString(text, Math.round(xPos), Math.round(yPos), color);
     }
 
     /**
@@ -1082,7 +1079,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param color The color to render the text in
      */
     public void renderString(final String text, final int xPos, final int yPos, final int color) {
-        renderString(text, (float) xPos, (float) yPos, color);
+        RenderUtils.renderString(getFontRenderer(), text, xPos, yPos, color);
     }
 
     /**

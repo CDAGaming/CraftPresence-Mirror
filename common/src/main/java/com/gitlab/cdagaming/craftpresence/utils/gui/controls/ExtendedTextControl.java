@@ -56,7 +56,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(final int componentId, final FontRenderer fontRendererObj, final int x, final int y, final int widthIn, final int heightIn) {
-        super(componentId, fontRendererObj, x, y, widthIn, heightIn);
+        super(fontRendererObj, x, y, widthIn, heightIn);
         setControlMaxLength(DEFAULT_TEXT_LIMIT);
     }
 

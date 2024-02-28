@@ -42,14 +42,13 @@ import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -79,6 +78,8 @@ public class RenderUtils {
      * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, FontRenderer, int, int, ItemStack, float)}
      */
     private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
+
+    public static RenderItem itemRender = new RenderItem();
 
     /**
      * Retrieve the default Screen Textures as Texture Data
@@ -199,23 +200,23 @@ public class RenderUtils {
     public static void drawItemStack(@Nonnull final Minecraft client, final FontRenderer fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
         if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(scale, scale, 1.0f);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.enableColorMaterial();
-            GlStateManager.enableDepth();
+            GL11.glPushMatrix();
+            GL11.glScalef(scale, scale, 1.0f);
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
             RenderHelper.enableGUIStandardItemLighting();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            client.getRenderItem().renderItemAndEffectIntoGUI(stack, xPos, yPos);
-            client.getRenderItem().renderItemOverlays(fontRenderer, stack, xPos, yPos);
+            itemRender.renderItemAndEffectIntoGUI(fontRenderer, client.getTextureManager(), stack, xPos, yPos);
+            itemRender.renderItemOverlayIntoGUI(fontRenderer, client.getTextureManager(), stack, xPos, yPos);
 
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.disableDepth();
-            GlStateManager.disableColorMaterial();
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.popMatrix();
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            GL11.glPopMatrix();
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
             if (!BLOCKED_RENDER_ITEMS.contains(stack)) {
@@ -325,7 +326,7 @@ public class RenderUtils {
             if (texLocation != null) {
                 final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
                 if (data.getFirst()) {
-                    GlStateManager.bindTexture(data.getSecond());
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
                 } else {
                     mc.getTextureManager().bindTexture(texLocation);
                 }
@@ -333,16 +334,16 @@ public class RenderUtils {
         } catch (Exception ignored) {
             return;
         }
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.enableDepth();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
         blit(x, y, zLevel, startU, startV, width, height);
         blit(x + width, y, zLevel, endU, endV, width, height);
 
-        GlStateManager.disableDepth();
-        GlStateManager.disableBlend();
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     /**
@@ -372,7 +373,7 @@ public class RenderUtils {
             if (texLocation != null) {
                 final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
                 if (data.getFirst()) {
-                    GlStateManager.bindTexture(data.getSecond());
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
                 } else {
                     mc.getTextureManager().bindTexture(texLocation);
                 }
@@ -388,27 +389,28 @@ public class RenderUtils {
             return;
         }
 
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
 
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_FOG);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        final Tessellator tessellator = Tessellator.getInstance();
-        final WorldRenderer buffer = tessellator.getWorldRenderer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        buffer.pos(left, bottom, zLevel).tex(minU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, bottom, zLevel).tex(maxU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, top, zLevel).tex(maxU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.pos(left, top, zLevel).tex(minU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        final Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.setColorRGBA(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha());
+        tessellator.addVertexWithUV(left, bottom, zLevel, minU, maxV);
+        tessellator.addVertexWithUV(right, bottom, zLevel, maxU, maxV);
+        tessellator.setColorRGBA(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha());
+        tessellator.addVertexWithUV(right, top, zLevel, maxU, minV);
+        tessellator.addVertexWithUV(left, top, zLevel, minU, minV);
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
     }
 
     /**
@@ -502,27 +504,28 @@ public class RenderUtils {
             return;
         }
 
-        GlStateManager.disableDepth();
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
 
-        final Tessellator tessellator = Tessellator.getInstance();
-        final WorldRenderer buffer = tessellator.getWorldRenderer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(left, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.pos(left, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        final Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.setColorRGBA(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha());
+        tessellator.addVertex(left, bottom, zLevel);
+        tessellator.addVertex(right, bottom, zLevel);
+        tessellator.setColorRGBA(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha());
+        tessellator.addVertex(right, top, zLevel);
+        tessellator.addVertex(left, top, zLevel);
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
-        GlStateManager.enableDepth();
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
     /**
@@ -614,13 +617,12 @@ public class RenderUtils {
     public static void innerBlit(final double left, final double right, final double top, final double bottom,
                                  final double zLevel,
                                  final double minU, final double maxU, final double minV, final double maxV) {
-        final Tessellator tessellator = Tessellator.getInstance();
-        final WorldRenderer buffer = tessellator.getWorldRenderer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos(left, bottom, zLevel).tex(minU, maxV).endVertex();
-        buffer.pos(right, bottom, zLevel).tex(maxU, maxV).endVertex();
-        buffer.pos(right, top, zLevel).tex(maxU, minV).endVertex();
-        buffer.pos(left, top, zLevel).tex(minU, minV).endVertex();
+        final Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(left, bottom, zLevel, minU, maxV);
+        tessellator.addVertexWithUV(right, bottom, zLevel, maxU, maxV);
+        tessellator.addVertexWithUV(right, top, zLevel, maxU, minV);
+        tessellator.addVertexWithUV(left, top, zLevel, minU, minV);
         tessellator.draw();
     }
 
@@ -1006,7 +1008,7 @@ public class RenderUtils {
      * @param color        The color to render the text in
      */
     public static void renderString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
-        fontRenderer.drawStringWithShadow(text, xPos, yPos, color);
+        renderString(fontRenderer, text, Math.round(xPos), Math.round(yPos), color);
     }
 
     /**
@@ -1019,7 +1021,7 @@ public class RenderUtils {
      * @param color        The color to render the text in
      */
     public static void renderString(final FontRenderer fontRenderer, final String text, final int xPos, final int yPos, final int color) {
-        renderString(fontRenderer, text, (float) xPos, (float) yPos, color);
+        fontRenderer.drawStringWithShadow(text, xPos, yPos, color);
     }
 
     /**

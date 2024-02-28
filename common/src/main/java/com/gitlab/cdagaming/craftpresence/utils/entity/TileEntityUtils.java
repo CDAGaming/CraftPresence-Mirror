@@ -167,7 +167,7 @@ public class TileEntityUtils implements Module {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
+                return itemStack.getMetadata() < -32768 || itemStack.getMetadata() > 65535;
             }
         } else {
             return true;
@@ -436,7 +436,8 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getAllData() {
-        for (Block block : Block.blockRegistry) {
+        for (Object blockObj : Block.blockRegistry) {
+            final Block block = Block.getBlockById(Block.blockRegistry.getIDForObject(blockObj));
             if (!isEmpty(block)) {
                 final ItemStack stack = getStackFrom(block);
                 final String blockName = getName(stack);
@@ -452,7 +453,8 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        for (Item item : Item.itemRegistry) {
+        for (Object itemObj : Item.itemRegistry) {
+            final Item item = Item.getItemById(Item.itemRegistry.getIDForObject(itemObj));
             if (!isEmpty(item)) {
                 final ItemStack stack = getStackFrom(item);
                 final String itemName = getName(stack);

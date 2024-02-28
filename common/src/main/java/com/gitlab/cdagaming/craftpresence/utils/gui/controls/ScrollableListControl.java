@@ -42,6 +42,7 @@ import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.Tessellator;
 import org.meteordev.starscript.value.Value;
 
 import javax.annotation.Nonnull;
@@ -223,15 +224,16 @@ public class ScrollableListControl extends GuiSlot {
     /**
      * Renders the Slots for this Control
      *
-     * @param slotIndex    The Slot Identification Number
-     * @param xPos         The Starting X Position to render the Object at
-     * @param yPos         The Starting Y Position to render the Object at
-     * @param heightIn     The Height for the Object to render to
-     * @param mouseXIn     The Mouse's Current X Position
-     * @param mouseYIn     The Mouse's Current Y Position
+     * @param slotIndex     The Slot Identification Number
+     * @param xPos          The Starting X Position to render the Object at
+     * @param yPos          The Starting Y Position to render the Object at
+     * @param heightIn      The Height for the Object to render to
+     * @param tessellatorIn The tesselator for the Object to render with
+     * @param mouseXIn      The Mouse's Current X Position
+     * @param mouseYIn      The Mouse's Current Y Position
      */
     @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn) {
+    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn, int mouseXIn, int mouseYIn) {
         renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, getListWidth(), heightIn, mouseXIn, mouseYIn);
     }
 
@@ -255,7 +257,7 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Current Font Renderer for this Control
      */
     public FontRenderer getFontRenderer() {
-        return mc.fontRendererObj != null ? mc.fontRendererObj : GuiUtils.getDefaultFontRenderer();
+        return GuiUtils.getDefaultFontRenderer();
     }
 
     /**
@@ -384,7 +386,7 @@ public class ScrollableListControl extends GuiSlot {
                 final ItemStack stack = data.get(originalName);
                 if (!TileEntityUtils.isEmpty(stack)) {
                     RenderUtils.drawItemStack(
-                            mc, getFontRenderer(), xOffset, yPos + 4, stack,
+                            CraftPresence.instance, getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
                     );
                     xOffset += 35;
@@ -432,7 +434,7 @@ public class ScrollableListControl extends GuiSlot {
         if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
             final double yOffset = yPos + 4.5;
             final double size = 32;
-            RenderUtils.drawTexture(mc,
+            RenderUtils.drawTexture(CraftPresence.instance,
                     xOffset, xOffset + size, yOffset, yOffset + size,
                     0.0D,
                     0.0D, 1.0D,
@@ -452,7 +454,7 @@ public class ScrollableListControl extends GuiSlot {
             hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
 
-        RenderUtils.renderScrollingString(mc,
+        RenderUtils.renderScrollingString(CraftPresence.instance,
                 getFontRenderer(),
                 displayName,
                 xOffset + (RenderUtils.getStringWidth(getFontRenderer(), displayName) / 2),

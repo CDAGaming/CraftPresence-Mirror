@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.world.World;
@@ -98,8 +98,8 @@ public class EntityUtils implements Module {
         String result = "";
         if (entity != null) {
             result = StringUtils.getOrDefault(
-                    entity.getDisplayName().getFormattedText(),
-                    entity.getName()
+                    entity.getFormattedCommandSenderName().getFormattedText(),
+                    entity.getCommandSenderName()
             );
         }
 
@@ -292,8 +292,9 @@ public class EntityUtils implements Module {
 
     @Override
     public void getAllData() {
-        if (!EntityList.getEntityNameList().isEmpty()) {
-            for (String entityLocation : EntityList.getEntityNameList()) {
+        if (!EntityList.method_8367().isEmpty()) {
+            for (Object entityLocationObj : EntityList.method_8367()) {
+                final String entityLocation = (String) entityLocationObj;
                 if (entityLocation != null) {
                     final String entityName = StringUtils.getOrDefault(entityLocation, "generic");
                     if (!DEFAULT_NAMES.contains(entityName)) {
@@ -308,15 +309,15 @@ public class EntityUtils implements Module {
 
         // If Server Data is enabled, allow Uuid's to count as entities
         if (CraftPresence.SERVER.enabled) {
-            for (NetworkPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
+            for (GuiPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
                 if (playerInfo != null) {
-                    final String uuidString = playerInfo.getGameProfile().getId().toString();
+                    final String uuidString = playerInfo.name;
                     if (!StringUtils.isNullOrEmpty(uuidString)) {
                         if (!ENTITY_NAMES.contains(uuidString)) {
                             ENTITY_NAMES.add(uuidString);
                         }
                         if (!PLAYER_BINDINGS.containsKey(uuidString)) {
-                            PLAYER_BINDINGS.put(uuidString, playerInfo.getGameProfile().getName());
+                            PLAYER_BINDINGS.put(uuidString, uuidString);
                         }
                     }
                 }
