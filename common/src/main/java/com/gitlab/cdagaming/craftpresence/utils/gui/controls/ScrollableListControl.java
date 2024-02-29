@@ -281,9 +281,9 @@ public class ScrollableListControl extends GuiSlot {
             this.itemList = itemList;
             // Reset the scrollbar to prevent OOB issues
             scrollBy(Integer.MIN_VALUE);
-        }
 
-        setupAliasData();
+            setupAliasData();
+        }
     }
 
     /**
