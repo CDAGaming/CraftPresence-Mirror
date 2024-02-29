@@ -118,10 +118,10 @@ public class ScrollableListControl extends GuiSlot {
      */
     public ScrollableListControl(@Nonnull final Minecraft mc, final ExtendedScreen currentScreen, final int width, final int height, final int topIn, final int bottomIn, final int slotHeightIn, final List<String> itemList, final String currentValue, final RenderType renderType) {
         super(mc, width, height, topIn, bottomIn, slotHeightIn);
-        setList(itemList);
         this.currentScreen = currentScreen;
         this.currentValue = currentValue;
         this.renderType = renderType;
+        setList(itemList);
     }
 
     /**
