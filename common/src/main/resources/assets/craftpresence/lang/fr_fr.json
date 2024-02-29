@@ -7,7 +7,6 @@
   "craftpresence.defaults.state.main_menu": "Dans le menu principal",
   "craftpresence.logger.info.shutdown": "Arrêt de CraftPresence...",
   "craftpresence.placeholders.player.name.description": "Votre nom d'utilisateur",
-  "gui.config.comment.accessibility.gui_background_color": "La couleur ou la texture à utiliser lors de l'affichage des arrière-plans des menus CraftPresence",
   "gui.config.comment.accessibility.language_id": "L'identifiant de langue à utiliser pour traduire les strings de ce mod",
   "gui.config.comment.accessibility.tooltip_background_color": "La couleur ou la texture à utiliser lors du rendu des arrière-plans de tooltip CraftPresence",
   "gui.config.comment.accessibility.tooltip_border_color": "La couleur ou la texture à utiliser lors du rendu des bordures des tooltips CraftPresence",
