@@ -33,7 +33,7 @@ unimined.minecraft {
                 accessTransformer(aw2at(accessWidenerFile))
             }
             loader("forge_version"()!!)
-            customSearge = (mcMappingsType != "mojmap")
+            customSearge = (mcMappingsType != "mojmap" && mcMappingsType != "parchment")
         }
         if (isNeoForge) {
             neoForged(forgeData)

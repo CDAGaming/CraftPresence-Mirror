@@ -204,6 +204,9 @@ subprojects {
                 }
 
                 "parchment" -> {
+                    mojmap {
+                        skipIfNotIn("intermediary")
+                    }
                     parchment(mcVersion, mcMappings)
                 }
 
