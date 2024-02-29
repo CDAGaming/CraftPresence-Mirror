@@ -408,6 +408,70 @@ public class RenderUtils {
     }
 
     /**
+     * Draws a Textured Rectangle, following the defined arguments
+     *
+     * @param mc                   The current game instance
+     * @param left                 The Left Position of the Object
+     * @param right                The Right Position of the Object
+     * @param top                  The Top Position of the Object
+     * @param bottom               The Bottom Position of the Object
+     * @param zLevel               The Z Level Position of the Object
+     * @param usingExternalTexture Whether we are using a non-local/external texture
+     * @param offset               The vertical offset to render the object to
+     * @param textureWidth         The Width of the Texture
+     * @param textureHeight        The Height of the Texture
+     * @param startColorObj        The starting texture RGB data to interpret
+     * @param endColorObj          The starting texture RGB data to interpret
+     * @param texLocation          The game texture to render the object as
+     */
+    public static void drawTexture(@Nonnull final Minecraft mc,
+                                   final double left, final double right, final double top, final double bottom,
+                                   final double zLevel, final boolean usingExternalTexture, final double offset,
+                                   final double textureWidth, final double textureHeight,
+                                   Object startColorObj, Object endColorObj,
+                                   final ResourceLocation texLocation) {
+        drawTexture(mc,
+                left, right, top, bottom,
+                zLevel,
+                getUVCoord(left, 0.0D, usingExternalTexture, textureWidth),
+                getUVCoord(right, 1.0D, usingExternalTexture, textureWidth),
+                getUVCoord(top + offset, 0.0D, usingExternalTexture, textureHeight),
+                getUVCoord(bottom + offset, 1.0D, usingExternalTexture, textureHeight),
+                startColorObj, endColorObj,
+                texLocation
+        );
+    }
+
+    /**
+     * Draws a Textured Rectangle, following the defined arguments
+     *
+     * @param mc                   The current game instance
+     * @param left                 The Left Position of the Object
+     * @param right                The Right Position of the Object
+     * @param top                  The Top Position of the Object
+     * @param bottom               The Bottom Position of the Object
+     * @param zLevel               The Z Level Position of the Object
+     * @param usingExternalTexture Whether we are using a non-local/external texture
+     * @param offset               The vertical offset to render the object to
+     * @param startColorObj        The starting texture RGB data to interpret
+     * @param endColorObj          The starting texture RGB data to interpret
+     * @param texLocation          The game texture to render the object as
+     */
+    public static void drawTexture(@Nonnull final Minecraft mc,
+                                   final double left, final double right, final double top, final double bottom,
+                                   final double zLevel, final boolean usingExternalTexture, final double offset,
+                                   Object startColorObj, Object endColorObj,
+                                   final ResourceLocation texLocation) {
+        drawTexture(mc,
+                left, right, top, bottom,
+                zLevel, usingExternalTexture,
+                offset, 32.0D, 32.0D,
+                startColorObj, endColorObj,
+                texLocation
+        );
+    }
+
+    /**
      * Draws a Gradient Rectangle, following the defined arguments
      *
      * @param left          The Left side length of the Object
@@ -487,7 +551,7 @@ public class RenderUtils {
                             final double u, final double v,
                             final double regionWidth, final double regionHeight,
                             final double textureWidth, final double textureHeight) {
-        innerBlit(xPos, xPos + regionWidth, yPos, yPos + regionHeight,
+        blit(xPos, xPos + regionWidth, yPos, yPos + regionHeight,
                 zLevel,
                 regionWidth, regionHeight,
                 u, v,
@@ -510,15 +574,17 @@ public class RenderUtils {
      * @param textureWidth  The Width of the Texture
      * @param textureHeight The Height of the Texture
      */
-    public static void innerBlit(final double left, final double right, final double top, final double bottom,
-                                 final double zLevel,
-                                 final double regionWidth, final double regionHeight,
-                                 final double u, final double v,
-                                 final double textureWidth, final double textureHeight) {
+    public static void blit(final double left, final double right, final double top, final double bottom,
+                            final double zLevel,
+                            final double regionWidth, final double regionHeight,
+                            final double u, final double v,
+                            final double textureWidth, final double textureHeight) {
         innerBlit(left, right, top, bottom,
                 zLevel,
-                (u + 0.0D) / textureWidth, (u + regionWidth) / textureWidth,
-                (v + 0.0D) / textureHeight, (v + regionHeight) / textureHeight
+                getUVCoord(u + 0.0D, 0.0D, false, textureWidth),
+                getUVCoord(u + regionWidth, 1.0D, false, textureWidth),
+                getUVCoord(v + 0.0D, 0.0D, false, textureHeight),
+                getUVCoord(v + regionHeight, 1.0D, false, textureHeight)
         );
     }
 
@@ -798,11 +864,7 @@ public class RenderUtils {
 
                     drawTexture(mc,
                             left, right, top, bottom,
-                            0.0D,
-                            getUVCoord(left, 0.0D, usingExternalTexture),
-                            getUVCoord(right, 1.0D, usingExternalTexture),
-                            getUVCoord(top, 0.0D, usingExternalTexture),
-                            getUVCoord(bottom, 1.0D, usingExternalTexture),
+                            0.0D, usingExternalTexture, 0.0D,
                             backgroundStart, backgroundEnd,
                             backGroundTexture
                     );
@@ -838,44 +900,28 @@ public class RenderUtils {
                     // Top Left
                     drawTexture(mc,
                             renderX, renderX + border, renderY, canvasBottom + border,
-                            zLevel,
-                            getUVCoord(renderX, 0.0D, usingExternalTexture),
-                            getUVCoord(renderX + border, 1.0D, usingExternalTexture),
-                            getUVCoord(renderY, 0.0D, usingExternalTexture),
-                            getUVCoord(canvasBottom + border, 1.0D, usingExternalTexture),
+                            zLevel, usingExternalTexture, 0.0D,
                             borderStart, borderEnd,
                             borderTexture
                     );
                     // Top Right
                     drawTexture(mc,
                             canvasRight, canvasRight + border, renderY, canvasBottom + border,
-                            zLevel,
-                            getUVCoord(canvasRight, 0.0D, usingExternalTexture),
-                            getUVCoord(canvasRight + border, 1.0D, usingExternalTexture),
-                            getUVCoord(renderY, 0.0D, usingExternalTexture),
-                            getUVCoord(canvasBottom + border, 1.0D, usingExternalTexture),
+                            zLevel, usingExternalTexture, 0.0D,
                             borderStart, borderEnd,
                             borderTexture
                     );
                     // Bottom Left
                     drawTexture(mc,
                             renderX, canvasRight + border, canvasBottom, canvasBottom + border,
-                            zLevel,
-                            getUVCoord(renderX, 0.0D, usingExternalTexture),
-                            getUVCoord(canvasRight + border, 1.0D, usingExternalTexture),
-                            getUVCoord(canvasBottom, 0.0D, usingExternalTexture),
-                            getUVCoord(canvasBottom + border, 1.0D, usingExternalTexture),
+                            zLevel, usingExternalTexture, 0.0D,
                             borderStart, borderEnd,
                             borderTexture
                     );
                     // Right Border
                     drawTexture(mc,
                             renderX, canvasRight + border, renderY, renderY + border,
-                            zLevel,
-                            getUVCoord(renderX, 0.0D, usingExternalTexture),
-                            getUVCoord(canvasRight + border, 1.0D, usingExternalTexture),
-                            getUVCoord(renderY, 0.0D, usingExternalTexture),
-                            getUVCoord(renderY + border, 1.0D, usingExternalTexture),
+                            zLevel, usingExternalTexture, 0.0D,
                             borderStart, borderEnd,
                             borderTexture
                     );
@@ -1092,13 +1138,14 @@ public class RenderUtils {
     /**
      * Calculate the Axis coordinate with the specified info
      *
-     * @param primary              The Primary Result, divided by 32
+     * @param primary              The Primary Result, divided by the texture size
      * @param secondary            The Secondary Result, occurring when usingExternalTexture is {@link Boolean#TRUE}
      * @param usingExternalTexture Whether we are using a non-local/external texture
+     * @param textureSize          The Texture Size to divide the result by, when usingExternalTexture is {@link Boolean#FALSE}
      * @return the calculated position
      */
-    public static double getUVCoord(final double primary, final double secondary, final boolean usingExternalTexture) {
-        return usingExternalTexture ? secondary : (primary / 32.0D);
+    public static double getUVCoord(final double primary, final double secondary, final boolean usingExternalTexture, final double textureSize) {
+        return usingExternalTexture ? secondary : (primary / textureSize);
     }
 
     /**
@@ -1135,11 +1182,7 @@ public class RenderUtils {
 
             drawTexture(mc,
                     left, right, top, bottom,
-                    0.0D,
-                    getUVCoord(left, 0.0D, usingExternalTexture),
-                    getUVCoord(right, 1.0D, usingExternalTexture),
-                    getUVCoord(top + offset, 0.0D, usingExternalTexture),
-                    getUVCoord(bottom + offset, 1.0D, usingExternalTexture),
+                    0.0D, usingExternalTexture, offset,
                     startColor, endColor,
                     texLocation
             );
