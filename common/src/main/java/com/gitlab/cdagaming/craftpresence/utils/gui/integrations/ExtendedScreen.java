@@ -397,8 +397,8 @@ public class ExtendedScreen extends GuiScreen {
      */
     public ColorData getRawBackground() {
         return hasWorld() ?
-                RenderUtils.DEFAULT_WORLD_BACKGROUND :
-                RenderUtils.DEFAULT_GUI_BACKGROUND;
+                RenderUtils.SCREEN_BACKGROUND_ALT :
+                RenderUtils.SCREEN_BACKGROUND;
     }
 
     /**

@@ -245,8 +245,8 @@ public class DynamicEditorGui extends ExtendedScreen {
     public void renderExtra() {
         renderScrollingString(
                 mainTitle,
-                30, 15,
-                getScreenWidth() - 30, 15 + getFontHeight(),
+                30, 0,
+                getScreenWidth() - 30, 32,
                 0xFFFFFF
         );
 

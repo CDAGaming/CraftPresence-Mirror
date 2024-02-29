@@ -65,14 +65,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     protected void appendControls() {
         super.appendControls();
 
-        final int calc1 = (getScreenWidth() / 2) - 160;
+        final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
         refreshRate = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(0),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.refresh_rate",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -87,7 +87,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(1),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.max_connection_attempts",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -101,7 +101,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         guiMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
                         calc1, getButtonY(2),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.gui_messages",
                         () -> openScreen(
                                 new SelectorGui(
@@ -209,7 +209,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         itemMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(2),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.item_messages",
                         () -> openScreen(
                                 new SelectorGui(
@@ -292,7 +292,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         entityTargetMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
                         calc1, getButtonY(3),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.entity_target_messages",
                         () -> openScreen(
                                 new SelectorGui(
@@ -403,7 +403,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         entityRidingMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(3),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.entity_riding_messages",
                         () -> openScreen(
                                 new SelectorGui(
@@ -651,7 +651,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(8),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.player_skin_endpoint",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -666,7 +666,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(9),
-                        160, 20,
+                        180, 20,
                         "gui.config.name.advanced.server_icon_endpoint",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(

@@ -141,21 +141,21 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
 
                 renderScrollingString(
                         mainTitle,
-                        30, 10,
-                        getScreenWidth() - 30, 10 + getFontHeight(),
+                        30, 2,
+                        getScreenWidth() - 30, 16,
                         0xFFFFFF
                 );
                 renderScrollingString(
                         otherTitle,
-                        30, 20,
-                        getScreenWidth() - 30, 20 + getFontHeight(),
+                        30, 16,
+                        getScreenWidth() - 30, 30,
                         0xFFFFFF
                 );
             } else {
                 renderScrollingString(
                         mainTitle,
-                        30, 15,
-                        getScreenWidth() - 30, 15 + getFontHeight(),
+                        30, 0,
+                        getScreenWidth() - 30, 32,
                         0xFFFFFF
                 );
             }

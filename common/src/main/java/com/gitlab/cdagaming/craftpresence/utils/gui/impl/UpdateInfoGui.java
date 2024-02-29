@@ -125,14 +125,14 @@ public class UpdateInfoGui extends ExtendedScreen {
 
         renderScrollingString(
                 mainTitle,
-                30, 10,
-                getScreenWidth() - 30, 10 + getFontHeight(),
+                30, 2,
+                getScreenWidth() - 30, 16,
                 0xFFFFFF
         );
         renderScrollingString(
                 subTitle,
-                30, 20,
-                getScreenWidth() - 30, 20 + getFontHeight(),
+                30, 16,
+                getScreenWidth() - 30, 30,
                 0xFFFFFF
         );
 

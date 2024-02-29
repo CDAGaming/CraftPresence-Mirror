@@ -67,16 +67,16 @@ public class RenderUtils {
      */
     public static final String DEFAULT_BUTTON_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? "/gui/gui.png" : "textures/gui/widgets.png");
     /**
-     * The Default Screen Background Resource, while not in a world
+     * The Default Screen Background Resource
      */
-    public static final ColorData DEFAULT_GUI_BACKGROUND = new ColorData(
+    public static final ColorData SCREEN_BACKGROUND = new ColorData(
             new ColorSection(64, 64, 64, 255),
             "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png")
     );
     /**
-     * The Default Screen Background Resource, while in a world
+     * The alternative Screen Background Resource
      */
-    public static final ColorData DEFAULT_WORLD_BACKGROUND = new ColorData(
+    public static final ColorData SCREEN_BACKGROUND_ALT = new ColorData(
             new ColorSection(16, 16, 16, 192),
             new ColorSection(16, 16, 16, 208)
     );
