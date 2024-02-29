@@ -355,7 +355,7 @@ public class RenderUtils {
      * @param minV          The minimum vertical axis to render this Object by
      * @param maxV          The minimum vertical axis to render this Object by
      * @param startColorObj The starting texture RGB data to interpret
-     * @param endColorObj   The starting texture RGB data to interpret
+     * @param endColorObj   The ending texture RGB data to interpret
      * @param texLocation   The game texture to render the object as
      */
     public static void drawTexture(@Nonnull final Minecraft mc,
@@ -421,7 +421,7 @@ public class RenderUtils {
      * @param textureWidth         The Width of the Texture
      * @param textureHeight        The Height of the Texture
      * @param startColorObj        The starting texture RGB data to interpret
-     * @param endColorObj          The starting texture RGB data to interpret
+     * @param endColorObj          The ending texture RGB data to interpret
      * @param texLocation          The game texture to render the object as
      */
     public static void drawTexture(@Nonnull final Minecraft mc,
@@ -454,7 +454,7 @@ public class RenderUtils {
      * @param usingExternalTexture Whether we are using a non-local/external texture
      * @param offset               The vertical offset to render the object to
      * @param startColorObj        The starting texture RGB data to interpret
-     * @param endColorObj          The starting texture RGB data to interpret
+     * @param endColorObj          The ending texture RGB data to interpret
      * @param texLocation          The game texture to render the object as
      */
     public static void drawTexture(@Nonnull final Minecraft mc,
