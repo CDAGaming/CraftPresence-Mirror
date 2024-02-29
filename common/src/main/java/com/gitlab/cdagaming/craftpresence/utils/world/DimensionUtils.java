@@ -26,14 +26,9 @@ package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
-import io.github.cdagaming.unicore.utils.FileUtils;
-import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.classgraph.ClassInfo;
-import net.minecraft.src.WorldProvider;
 
 import java.util.List;
 
@@ -72,10 +67,6 @@ public class DimensionUtils implements Module {
      * The alternative name for the Current Dimension the Player is in, if any
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
-    /**
-     * The Player's Current Dimension, if any
-     */
-    private WorldProvider CURRENT_DIMENSION;
 
     @Override
     public void emptyData() {
@@ -87,7 +78,6 @@ public class DimensionUtils implements Module {
 
     @Override
     public void clearClientData() {
-        CURRENT_DIMENSION = null;
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
 
@@ -120,15 +110,14 @@ public class DimensionUtils implements Module {
 
     @Override
     public void updateData() {
-        final WorldProvider newProvider = CraftPresence.player.worldObj.worldProvider;
-        final String newDimensionName = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newProvider = "WorldProvider"; // Stub
+        final String newDimensionName = StringUtils.formatIdentifier(newProvider, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
-        final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-        final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(newProvider, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(newProvider, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newDimension_Identifier = StringUtils.getOrDefault(newDimension_primaryIdentifier, newDimension_alternativeIdentifier);
 
         if (!newDimensionName.equals(CURRENT_DIMENSION_NAME) || !newDimension_Identifier.equals(CURRENT_DIMENSION_IDENTIFIER)) {
-            CURRENT_DIMENSION = newProvider;
             CURRENT_DIMENSION_NAME = StringUtils.getOrDefault(newDimensionName, newDimension_Identifier);
             CURRENT_DIMENSION_IDENTIFIER = newDimension_Identifier;
 
@@ -157,8 +146,6 @@ public class DimensionUtils implements Module {
 
         CraftPresence.CLIENT.syncArgument("dimension.default.icon", CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
-        CraftPresence.CLIENT.syncArgument("data.dimension.instance", CURRENT_DIMENSION);
-        CraftPresence.CLIENT.syncArgument("data.dimension.class", CURRENT_DIMENSION.getClass());
         CraftPresence.CLIENT.syncArgument("dimension.name", CURRENT_DIMENSION_NAME);
 
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "dimension.message", "dimension.icon");
@@ -167,51 +154,8 @@ public class DimensionUtils implements Module {
         CraftPresence.CLIENT.syncTimestamp("data.dimension.time");
     }
 
-    /**
-     * Retrieves a List of detected Dimension Types
-     *
-     * @return The detected Dimension Types found
-     */
-    private List<WorldProvider> getDimensionTypes() {
-        List<WorldProvider> dimensionTypes = StringUtils.newArrayList();
-
-        if (dimensionTypes.isEmpty()) {
-            // Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
-                if (classInfo != null) {
-                    try {
-                        Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
-                        if (classObj != null) {
-                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj)) {
-                                dimensionTypes.add(providerObj);
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        Constants.LOG.debugError(ex);
-                    }
-                }
-            }
-        }
-
-        return dimensionTypes;
-    }
-
     @Override
     public void getAllData() {
-        for (WorldProvider TYPE : getDimensionTypes()) {
-            if (TYPE != null) {
-                String dimensionName = MappingUtils.getClassName(TYPE);
-                String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-                if (!DEFAULT_NAMES.contains(name)) {
-                    DEFAULT_NAMES.add(name);
-                }
-                if (!DIMENSION_NAMES.contains(name)) {
-                    DIMENSION_NAMES.add(name);
-                }
-            }
-        }
-
         for (String dimensionEntry : CraftPresence.CONFIG.dimensionSettings.dimensionData.keySet()) {
             if (!StringUtils.isNullOrEmpty(dimensionEntry)) {
                 String name = StringUtils.formatIdentifier(dimensionEntry, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
@@ -220,11 +164,6 @@ public class DimensionUtils implements Module {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean canFetchData() {
-        return FileUtils.canScanClasses();
     }
 
     @Override

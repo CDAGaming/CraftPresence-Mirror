@@ -142,7 +142,7 @@ public class EntityUtils implements Module {
      * @return the current weather data
      */
     public static String getWeather(final Entity entity) {
-        return getWeather(entity != null ? entity.worldObj : null);
+        return getWeather((World) null);
     }
 
     @Override

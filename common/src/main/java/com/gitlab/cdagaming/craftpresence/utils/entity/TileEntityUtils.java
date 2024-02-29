@@ -168,7 +168,7 @@ public class TileEntityUtils implements Module {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.itemDamage < -32768 || itemStack.itemDamage > 65535;
+                return itemStack.itemDmg < -32768 || itemStack.itemDmg > 65535;
             }
         } else {
             return true;

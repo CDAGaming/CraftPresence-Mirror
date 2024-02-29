@@ -286,10 +286,10 @@ public class KeyUtils {
      */
     void onTick() {
         if (!areKeysRegistered()) {
-            if (CraftPresence.instance.gameSettings != null) {
+            if (CraftPresence.instance.options != null) {
                 for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
                     final KeyBinding mapping = entry.getValue().getFirst();
-                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, mapping);
+                    CraftPresence.instance.options.keyBindings = StringUtils.addToArray(CraftPresence.instance.options.keyBindings, mapping);
                 }
                 keysRegistered = true;
             } else {

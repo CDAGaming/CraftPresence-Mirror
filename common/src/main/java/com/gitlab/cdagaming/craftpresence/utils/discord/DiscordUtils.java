@@ -1103,7 +1103,7 @@ public class DiscordUtils {
     public void syncPlaceholders() {
         syncArgument("_general.instance", CraftPresence.instance);
         syncArgument("_general.player", CraftPresence.player);
-        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.worldObj : null);
+        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.instance.theWorld : null);
         syncArgument("_config.instance", CraftPresence.CONFIG);
         // Sync Custom Variables
         removeArguments("custom.");
@@ -1113,7 +1113,7 @@ public class DiscordUtils {
             }
         }
         // Add Any Generalized Argument Data needed
-        final String playerName = CraftPresence.session.inventory;
+        final String playerName = CraftPresence.session.username;
         syncArgument("player.name", playerName);
 
         // UUID Data
