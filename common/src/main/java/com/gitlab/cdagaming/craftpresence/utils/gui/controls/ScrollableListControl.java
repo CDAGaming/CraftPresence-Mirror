@@ -125,7 +125,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
      * @param renderType    The Rendering type for this Scroll List
      */
     public ScrollableListControl(@Nonnull final Minecraft mc, final ExtendedScreen currentScreen, final int width, final int height, final int topIn, final int bottomIn, final int slotHeightIn, final List<String> itemList, final String currentValue, final RenderType renderType) {
-        super(mc, width, height, topIn, bottomIn, slotHeightIn);
+        super(mc, width, bottomIn - topIn, topIn, slotHeightIn);
         this.currentScreen = currentScreen;
         this.currentValue = currentValue;
         this.renderType = renderType;
@@ -187,10 +187,10 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
     public boolean isWithinBounds(final int mouseX, final int mouseY) {
         return RenderUtils.isMouseWithin(
                 mouseX, mouseY,
-                y0,
-                y1,
-                x0,
-                x1
+                getY(),
+                getBottom(),
+                getX(),
+                getRight()
         );
     }
 
