@@ -165,7 +165,7 @@ public class CommandsGui extends ExtendedScreen {
         copyButton.setControlEnabled(!blockInteractions);
         StringUtils.updateField(GuiTextField.class, commandInput,
                 !blockInteractions,
-                "isEnabled", "field_73819_m", "field_1127", "m"
+                "isEnabled", "field_50043_m", "m"
         );
 
         if (!blockInteractions) {

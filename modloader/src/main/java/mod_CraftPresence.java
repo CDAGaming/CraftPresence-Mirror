@@ -22,35 +22,29 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.forge;
-
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import io.github.cdagaming.unicore.utils.MappingUtils;
-import io.github.cdagaming.unicore.utils.OSUtils;
-import cpw.mods.fml.common.Mod;
+import com.gitlab.cdagaming.craftpresence.modloader.CraftPresenceML;
+import net.minecraft.src.BaseMod;
 
 /**
- * The Primary Application Class and Utilities
+ * The Base Mod Class to begin Triggering Events
  *
  * @author CDAGaming
  */
-@Mod(modid = "craftpresence", name = "@MOD_NAME@", version = "@VERSION_ID@", acceptedMinecraftVersions = "*")
-public class CraftPresenceForge {
-    /**
-     * Begins Scheduling Ticks on Class Initialization
-     */
-    public CraftPresenceForge() {
-        if (OSUtils.JAVA_SPEC < 1.8f) {
-            throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
-        }
-        MappingUtils.setFilePath("/mappings-forge.srg");
-        new CraftPresence(this::setupIntegrations);
+public class mod_CraftPresence extends BaseMod {
+
+    @Override
+    public String getName() {
+        return "@MOD_NAME@";
     }
 
-    /**
-     * Setup external integrations and attachments to the primary application
-     */
-    public void setupIntegrations() {
-        // N/A
+    @Override
+    public String getVersion() {
+        return "v@VERSION_ID@";
+    }
+
+    @Override
+    public void load() {
+        // Initialize a New Instance of the Mod, triggering Ticking
+        new CraftPresenceML();
     }
 }

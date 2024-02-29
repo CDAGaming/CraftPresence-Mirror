@@ -41,6 +41,7 @@ import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Gui;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
+import net.minecraft.src.GuiTextField;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -219,7 +220,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param input the text to interpret
      */
     public static void copyToClipboard(final String input) {
-        setClipboardString(StringUtils.normalize(input));
+        func_50050_a(StringUtils.normalize(input));
     }
 
     /**
@@ -592,7 +593,10 @@ public class ExtendedScreen extends GuiScreen {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.drawTextBox();
+                    final Object reflectedInfo = StringUtils.getField(GuiTextField.class, textField, "isEnabled", "field_50043_m", "m");
+                    if (reflectedInfo != null && reflectedInfo.toString().equalsIgnoreCase("true")) {
+                        textField.drawTextBox();
+                    }
                 }
             }
 
@@ -698,7 +702,7 @@ public class ExtendedScreen extends GuiScreen {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.textboxKeyTyped(typedChar, keyCode);
+                    textField.func_50037_a(typedChar, keyCode);
                 }
                 if (extendedControl instanceof ExtendedScreen) {
                     ((ExtendedScreen) extendedControl).keyTyped(typedChar, keyCode);

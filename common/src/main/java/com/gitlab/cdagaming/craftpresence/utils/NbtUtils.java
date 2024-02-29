@@ -175,7 +175,7 @@ public class NbtUtils {
                     return tag.toString();
                 }
             case 11:
-                return ((NBTTagIntArray) tag).intArray;
+                return ((NBTTagIntArray) tag).field_48181_a;
             case 0:
             case 12:
             case 99:

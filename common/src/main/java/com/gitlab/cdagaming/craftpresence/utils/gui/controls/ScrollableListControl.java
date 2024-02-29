@@ -45,6 +45,7 @@ import org.meteordev.starscript.value.Value;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -178,10 +179,10 @@ public class ScrollableListControl extends GuiSlot {
                 top,
                 bottom,
                 StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "left", "field_77238_j", "field_1250", "j")
+                        StringUtils.getField(GuiSlot.class, this, "left", "field_22258_g", "e")
                 ).getSecond(),
                 StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "right", "field_77241_i", "field_1249", "i")
+                        StringUtils.getField(GuiSlot.class, this, "right", "field_22259_f", "d")
                 ).getSecond()
         );
     }
@@ -284,7 +285,13 @@ public class ScrollableListControl extends GuiSlot {
         if (!itemList.equals(this.itemList)) {
             this.itemList = itemList;
             // Reset the scrollbar to prevent OOB issues
-            method_1063(Integer.MIN_VALUE);
+            //method_1063(Integer.MIN_VALUE);
+            try {
+                Field field = GuiSlot.class.getDeclaredFields()[14];
+                field.setAccessible(true);
+                field.set(this, 0.0f);
+            } catch (Throwable ignored) {
+            }
 
             setupAliasData();
         }

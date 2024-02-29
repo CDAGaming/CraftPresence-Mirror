@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.ModUpdaterUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.client.ClientBrandRetriever;
 
 /**
  * Constant Variables and Methods used throughout the Application
@@ -92,7 +91,7 @@ public class ModUtils {
         } catch (Throwable ignored) {
         }
         return StringUtils.getOrDefault(
-                result, ClientBrandRetriever.getClientModName()
+                result, "vanilla"
         );
     }
 
