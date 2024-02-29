@@ -397,8 +397,8 @@ public class ExtendedScreen extends GuiScreen {
      */
     public ColorData getRawBackground() {
         return hasWorld() ?
-                CraftPresence.CONFIG.accessibilitySettings.worldGuiBackground :
-                CraftPresence.CONFIG.accessibilitySettings.guiBackground;
+                RenderUtils.DEFAULT_WORLD_BACKGROUND :
+                RenderUtils.DEFAULT_GUI_BACKGROUND;
     }
 
     /**

@@ -45,6 +45,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * The Search Box in the `SelectorGui` now resizes based on available space, rather than being a static size
     * `TextWidget` controls are now left-aligned instead of having centered text (Rendering performance has also been
       improved)
+    * Removed the ability to customize the GUI Background, primarily due to upcoming MC 1.20.5 changes
 * Misc. Code Optimizations and Bug Fixes
 
 ### Fixes
@@ -52,6 +53,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed inconsistent Checkbox control alignment in `General Settings` and `Presence Settings` UI
 * Fixed the beginning Base64 identifier for `ServerData` scroll lists (`png` instead of `unknown`)
 * Fixed an inconsistent y-coord positioning on the "Search" text in the `SelectorGui`
+* Fixed cases of incorrect GUI background rendering in some Scroll Lists
 
 ___
 

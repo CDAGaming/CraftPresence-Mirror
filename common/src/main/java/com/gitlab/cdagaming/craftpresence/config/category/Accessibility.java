@@ -44,14 +44,6 @@ public class Accessibility extends Module implements Serializable {
             new ColorSection(80, 0, 255, 80),
             new ColorSection(40, 0, 127, 80)
     );
-    public ColorData guiBackground = new ColorData(
-            new ColorSection(64, 64, 64, 255),
-            RenderUtils.DEFAULT_GUI_BACKGROUND
-    );
-    public ColorData worldGuiBackground = new ColorData(
-            new ColorSection(16, 16, 16, 192),
-            new ColorSection(16, 16, 16, 208)
-    );
     public String languageId = Constants.TRANSLATOR.getDefaultLanguage();
     public boolean stripTranslationColors = false;
     public boolean stripTranslationFormatting = ModUtils.IS_TEXT_FORMATTING_BLOCKED;
@@ -84,8 +76,6 @@ public class Accessibility extends Module implements Serializable {
 
             tooltipBackground = new ColorData(data.tooltipBackground);
             tooltipBorder = new ColorData(data.tooltipBorder);
-            guiBackground = new ColorData(data.guiBackground);
-            worldGuiBackground = new ColorData(data.worldGuiBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
             stripTranslationFormatting = data.stripTranslationFormatting;
