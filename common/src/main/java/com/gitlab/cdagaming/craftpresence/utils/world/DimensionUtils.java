@@ -36,7 +36,6 @@ import io.github.classgraph.ClassInfo;
 import net.minecraft.src.WorldProvider;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Dimension Utilities used to Parse Dimension Data and handle related RPC Events
@@ -177,35 +176,19 @@ public class DimensionUtils implements Module {
         List<WorldProvider> dimensionTypes = StringUtils.newArrayList();
 
         if (dimensionTypes.isEmpty()) {
-            // Fallback 1: Use Reflected Dimension Types
-            Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(FileUtils.findValidClass("forge.DimensionManager"), null, "providers");
-            if (reflectedDimensionTypes != null) {
-                for (Object objectType : reflectedDimensionTypes.values()) {
+            // Use Manual Class Lookup
+            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
+                if (classInfo != null) {
                     try {
-                        WorldProvider type = (objectType instanceof WorldProvider) ? (WorldProvider) objectType : null;
-
-                        if (type != null && !dimensionTypes.contains(type)) {
-                            dimensionTypes.add(type);
+                        Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
+                        if (classObj != null) {
+                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
+                            if (!dimensionTypes.contains(providerObj)) {
+                                dimensionTypes.add(providerObj);
+                            }
                         }
                     } catch (Throwable ex) {
                         Constants.LOG.debugError(ex);
-                    }
-                }
-            } else {
-                // Fallback 2: Use Manual Class Lookup
-                for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
-                    if (classInfo != null) {
-                        try {
-                            Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
-                            if (classObj != null) {
-                                WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                                if (!dimensionTypes.contains(providerObj)) {
-                                    dimensionTypes.add(providerObj);
-                                }
-                            }
-                        } catch (Throwable ex) {
-                            Constants.LOG.debugError(ex);
-                        }
                     }
                 }
             }

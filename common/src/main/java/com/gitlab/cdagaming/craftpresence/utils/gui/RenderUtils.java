@@ -214,7 +214,7 @@ public class RenderUtils {
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
-            RenderHelper.enableGUIStandardItemLighting();
+            RenderHelper.func_41089_c();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
@@ -1282,5 +1282,50 @@ public class RenderUtils {
         }
 
         return currentLine != stringLength && currentIndex != -1 && currentIndex < currentLine ? currentIndex : currentLine;
+    }
+
+    public static String trimStringToWidth(final FontRenderer fontRenderer, final String text, final int width) {
+        return trimStringToWidth(fontRenderer, text, width, false);
+    }
+
+    public static String trimStringToWidth(final FontRenderer fontRenderer, final String text, final int width, final boolean reverse) {
+        StringBuilder stringbuilder = new StringBuilder();
+        int i = 0;
+        int j = reverse ? text.length() - 1 : 0;
+        int k = reverse ? -1 : 1;
+        boolean flag = false;
+        boolean flag1 = false;
+
+        for(int l = j; l >= 0 && l < text.length() && i < width; l += k) {
+            char c0 = text.charAt(l);
+            int i1 = fontRenderer.getStringWidth(String.valueOf(c0));
+            if (flag) {
+                flag = false;
+                if (c0 == 'l' || c0 == 'L') {
+                    flag1 = true;
+                } else if (c0 == 'r' || c0 == 'R') {
+                    flag1 = false;
+                }
+            } else if (i1 < 0) {
+                flag = true;
+            } else {
+                i += i1;
+                if (flag1) {
+                    ++i;
+                }
+            }
+
+            if (i > width) {
+                break;
+            }
+
+            if (reverse) {
+                stringbuilder.insert(0, c0);
+            } else {
+                stringbuilder.append(c0);
+            }
+        }
+
+        return stringbuilder.toString();
     }
 }

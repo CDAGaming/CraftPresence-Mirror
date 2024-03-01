@@ -39,7 +39,6 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiPlayerInfo;
 import net.minecraft.src.GuiConnecting;
 import net.minecraft.src.NetClientHandler;
 
@@ -77,7 +76,7 @@ public class ServerUtils implements Module {
     /**
      * The Current Player Map, if available
      */
-    public List<GuiPlayerInfo> currentPlayerList = StringUtils.newArrayList();
+    public List<String> currentPlayerList = StringUtils.newArrayList();
     /**
      * A List of the detected Server Addresses
      */
@@ -272,7 +271,7 @@ public class ServerUtils implements Module {
         }
 
         if (!joinInProgress) {
-            final List<GuiPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerNames) : StringUtils.newArrayList();
+            final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerNames) : StringUtils.newArrayList();
             final int newCurrentPlayers = newConnection != null ? newConnection.playerNames.size() : 1;
             final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
             final boolean newLANStatus = false;
@@ -331,7 +330,7 @@ public class ServerUtils implements Module {
 
             // 'player.health' Argument = Current and Maximum Health of Player
             final Pair<Double, Double> newHealth = new Pair<>(
-                    MathUtils.roundDouble(CraftPresence.player.getHealth(), 0),
+                    MathUtils.roundDouble(CraftPresence.player.getEntityHealth(), 0),
                     MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
             );
             if (!Objects.equals(newHealth, currentHealth)) {

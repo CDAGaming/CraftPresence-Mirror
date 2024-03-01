@@ -25,10 +25,11 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.GuiTextField;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
+import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiTextField;
 
 /**
  * Extended Gui Widget for a Text Field
@@ -56,7 +57,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(final int componentId, final FontRenderer fontRendererObj, final int x, final int y, final int widthIn, final int heightIn) {
-        super(fontRendererObj, x, y, widthIn, heightIn);
+        super(fontRendererObj, x, y, widthIn, heightIn, "");
         setControlMaxLength(DEFAULT_TEXT_LIMIT);
     }
 
@@ -92,7 +93,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlWidth() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "width", "field_22077_f", "d"
+                "width", "field_22077_f", "f"
         )).getSecond();
     }
 
@@ -101,7 +102,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 width,
-                "width", "field_22077_f", "d"
+                "width", "field_22077_f", "f"
         );
     }
 
@@ -109,7 +110,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlHeight() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "height", "field_22076_g", "e"
+                "height", "field_22076_g", "h"
         )).getSecond();
     }
 
@@ -118,7 +119,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 height,
-                "height", "field_22076_g", "e"
+                "height", "field_22076_g", "h"
         );
     }
 
@@ -141,7 +142,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlPosX() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "xPos", "field_22079_d", "b"
+                "xPos", "field_22079_d", "d"
         )).getSecond();
     }
 
@@ -150,7 +151,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 posX,
-                "xPos", "field_22079_d", "b"
+                "xPos", "field_22079_d", "d"
         );
     }
 
@@ -158,7 +159,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlPosY() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "yPos", "field_22078_e", "c"
+                "yPos", "field_22078_e", "e"
         )).getSecond();
     }
 
@@ -167,7 +168,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 posY,
-                "yPos", "field_22078_e", "c"
+                "yPos", "field_22078_e", "e"
         );
     }
 
@@ -186,7 +187,8 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        this.setText(StringUtils.getOrDefault(newMessage));
+        this.setText("");
+        this.writeText(StringUtils.getOrDefault(newMessage));
     }
 
     /**
@@ -195,7 +197,12 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @return The control's maximum text contents
      */
     public int getControlMaxLength() {
-        return this.func_50040_g();
+        final Object reflectedInfo = StringUtils.getField(GuiTextField.class, this, "maxStringLength", "field_22074_i", "j");
+        if (reflectedInfo != null) {
+            final Pair<Boolean, Integer> integerData = StringUtils.getValidInteger(reflectedInfo);
+            return integerData.getFirst() ? integerData.getSecond() : 0;
+        }
+        return 0;
     }
 
     /**
@@ -213,7 +220,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @return The control's focus status
      */
     public boolean isControlFocused() {
-        return this.func_50025_j();
+        return this.isFocused;
     }
 
     /**
@@ -222,7 +229,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      * @param focused the new focus state for the control
      */
     public void setControlFocused(final boolean focused) {
-        this.func_50033_b(focused);
+        this.setFocused(focused);
     }
 
     /**
@@ -248,15 +255,10 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
      *
      * @param typedChar The typed character, if any
      * @param keyCode   The keycode, if any
-     * @return Whether the event completed successfully
      */
     @Override
-    public boolean func_50037_a(char typedChar, int keyCode) {
-        final boolean returnValue = super.func_50037_a(typedChar, keyCode);
-        if (returnValue) {
-            onKeyTyped();
-        }
-
-        return returnValue;
+    public void textboxKeyTyped(char typedChar, int keyCode) {
+        super.textboxKeyTyped(typedChar, keyCode);
+        onKeyTyped();
     }
 }

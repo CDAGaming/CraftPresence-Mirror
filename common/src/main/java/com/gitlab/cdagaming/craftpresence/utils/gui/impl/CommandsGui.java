@@ -40,7 +40,6 @@ import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiTextField;
 import org.lwjgl.input.Keyboard;
 import org.meteordev.starscript.value.Value;
 
@@ -163,10 +162,7 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         proceedButton.setControlEnabled(!blockInteractions);
         copyButton.setControlEnabled(!blockInteractions);
-        StringUtils.updateField(GuiTextField.class, commandInput,
-                !blockInteractions,
-                "isEnabled", "field_50043_m", "m"
-        );
+        commandInput.isEnabled = !blockInteractions;
 
         if (!blockInteractions) {
             checkCommands();
