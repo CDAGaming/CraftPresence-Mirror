@@ -417,7 +417,10 @@ public class RenderUtils {
      * @param bottom               The Bottom Position of the Object
      * @param zLevel               The Z Level Position of the Object
      * @param usingExternalTexture Whether we are using a non-local/external texture
-     * @param offset               The vertical offset to render the object to
+     * @param regionWidth          The Width of the Texture Region
+     * @param regionHeight         The Height of the Texture Region
+     * @param u                    The U Mapping Value
+     * @param v                    The V Mapping Value
      * @param textureWidth         The Width of the Texture
      * @param textureHeight        The Height of the Texture
      * @param startColorObj        The starting texture RGB data to interpret
@@ -426,17 +429,19 @@ public class RenderUtils {
      */
     public static void drawTexture(@Nonnull final Minecraft mc,
                                    final double left, final double right, final double top, final double bottom,
-                                   final double zLevel, final boolean usingExternalTexture, final double offset,
+                                   final double zLevel, final boolean usingExternalTexture,
+                                   final double regionWidth, final double regionHeight,
+                                   final double u, final double v,
                                    final double textureWidth, final double textureHeight,
                                    Object startColorObj, Object endColorObj,
                                    final ResourceLocation texLocation) {
         drawTexture(mc,
                 left, right, top, bottom,
                 zLevel,
-                getUVCoord(left, 0.0D, usingExternalTexture, textureWidth),
-                getUVCoord(right, 1.0D, usingExternalTexture, textureWidth),
-                getUVCoord(top + offset, 0.0D, usingExternalTexture, textureHeight),
-                getUVCoord(bottom + offset, 1.0D, usingExternalTexture, textureHeight),
+                getUVCoord(u + 0.0D, 0.0D, usingExternalTexture, textureWidth),
+                getUVCoord(u + regionWidth, 1.0D, usingExternalTexture, textureWidth),
+                getUVCoord(v + 0.0D, 0.0D, usingExternalTexture, textureHeight),
+                getUVCoord(v + regionHeight, 1.0D, usingExternalTexture, textureHeight),
                 startColorObj, endColorObj,
                 texLocation
         );
@@ -452,20 +457,21 @@ public class RenderUtils {
      * @param bottom               The Bottom Position of the Object
      * @param zLevel               The Z Level Position of the Object
      * @param usingExternalTexture Whether we are using a non-local/external texture
-     * @param offset               The vertical offset to render the object to
      * @param startColorObj        The starting texture RGB data to interpret
      * @param endColorObj          The ending texture RGB data to interpret
      * @param texLocation          The game texture to render the object as
      */
     public static void drawTexture(@Nonnull final Minecraft mc,
                                    final double left, final double right, final double top, final double bottom,
-                                   final double zLevel, final boolean usingExternalTexture, final double offset,
+                                   final double zLevel, final boolean usingExternalTexture,
                                    Object startColorObj, Object endColorObj,
                                    final ResourceLocation texLocation) {
         drawTexture(mc,
                 left, right, top, bottom,
                 zLevel, usingExternalTexture,
-                offset, 32.0D, 32.0D,
+                right - left, bottom - top,
+                left, top,
+                32.0D, 32.0D,
                 startColorObj, endColorObj,
                 texLocation
         );
@@ -864,7 +870,7 @@ public class RenderUtils {
 
                     drawTexture(mc,
                             left, right, top, bottom,
-                            0.0D, usingExternalTexture, 0.0D,
+                            0.0D, usingExternalTexture,
                             backgroundStart, backgroundEnd,
                             backGroundTexture
                     );
@@ -900,28 +906,28 @@ public class RenderUtils {
                     // Top Left
                     drawTexture(mc,
                             renderX, renderX + border, renderY, canvasBottom + border,
-                            zLevel, usingExternalTexture, 0.0D,
+                            zLevel, usingExternalTexture,
                             borderStart, borderEnd,
                             borderTexture
                     );
                     // Top Right
                     drawTexture(mc,
                             canvasRight, canvasRight + border, renderY, canvasBottom + border,
-                            zLevel, usingExternalTexture, 0.0D,
+                            zLevel, usingExternalTexture,
                             borderStart, borderEnd,
                             borderTexture
                     );
                     // Bottom Left
                     drawTexture(mc,
                             renderX, canvasRight + border, canvasBottom, canvasBottom + border,
-                            zLevel, usingExternalTexture, 0.0D,
+                            zLevel, usingExternalTexture,
                             borderStart, borderEnd,
                             borderTexture
                     );
                     // Right Border
                     drawTexture(mc,
                             renderX, canvasRight + border, renderY, renderY + border,
-                            zLevel, usingExternalTexture, 0.0D,
+                            zLevel, usingExternalTexture,
                             borderStart, borderEnd,
                             borderTexture
                     );
@@ -1146,47 +1152,6 @@ public class RenderUtils {
      */
     public static double getUVCoord(final double primary, final double secondary, final boolean usingExternalTexture, final double textureSize) {
         return usingExternalTexture ? secondary : (primary / textureSize);
-    }
-
-    /**
-     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
-     *
-     * @param mc         The current game instance
-     * @param left       The Left Position of the Object
-     * @param right      The Right Position of the Object
-     * @param top        The Top Position of the Object
-     * @param bottom     The Bottom Position of the Object
-     * @param offset     The vertical offset to render the background to
-     * @param tintFactor The factor at which to tint the background to
-     * @param data       The {@link ColorData} to be used to render the background
-     */
-    public static void drawBackground(@Nonnull final Minecraft mc,
-                                      final double left, final double right,
-                                      final double top, final double bottom,
-                                      final double offset, float tintFactor,
-                                      final ColorData data) {
-        // Setup Colors + Tint Data
-        tintFactor = MathUtils.clamp(tintFactor, 0.0f, 1.0f);
-        final Color startColor = StringUtils.offsetColor(data.getStartColor(), tintFactor);
-        final Color endColor = StringUtils.offsetColor(data.getEndColor(), tintFactor);
-
-        if (StringUtils.isNullOrEmpty(data.getTexLocation())) {
-            drawGradient(left, right, top, bottom,
-                    300.0F,
-                    startColor, endColor
-            );
-        } else {
-            final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(data.getTexLocation());
-            final boolean usingExternalTexture = textureData.getFirst();
-            final ResourceLocation texLocation = textureData.getThird();
-
-            drawTexture(mc,
-                    left, right, top, bottom,
-                    0.0D, usingExternalTexture, offset,
-                    startColor, endColor,
-                    texLocation
-            );
-        }
     }
 
     /**

@@ -34,16 +34,19 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import io.github.cdagaming.unicore.impl.Tuple;
+import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -372,12 +375,82 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering critical elements before other elements
      */
     public void renderCriticalData() {
-        RenderUtils.drawBackground(
-                getGameInstance(),
+        drawBackground(
                 getLeft(), getRight(),
                 getTop(), getBottom(),
                 getOffset(), getTintFactor(),
                 getScreenBackground()
+        );
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param left       The Left Position of the Object
+     * @param right      The Right Position of the Object
+     * @param top        The Top Position of the Object
+     * @param bottom     The Bottom Position of the Object
+     * @param offset     The vertical offset to render the background to
+     * @param tintFactor The factor at which to tint the background to
+     * @param data       The {@link ColorData} to be used to render the background
+     */
+    public void drawBackground(final double left, final double right,
+                               final double top, final double bottom,
+                               final double offset, float tintFactor,
+                               final ColorData data) {
+        // Setup Colors + Tint Data
+        tintFactor = MathUtils.clamp(tintFactor, 0.0f, 1.0f);
+        final Color startColor = StringUtils.offsetColor(data.getStartColor(), tintFactor);
+        final Color endColor = StringUtils.offsetColor(data.getEndColor(), tintFactor);
+
+        if (StringUtils.isNullOrEmpty(data.getTexLocation())) {
+            RenderUtils.drawGradient(left, right, top, bottom,
+                    300.0F,
+                    startColor, endColor
+            );
+        } else {
+            final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(data.getTexLocation());
+            final boolean usingExternalTexture = textureData.getFirst();
+            final ResourceLocation texLocation = textureData.getThird();
+
+            drawTexture(
+                    left, right, top, bottom,
+                    usingExternalTexture,
+                    offset,
+                    left, top,
+                    startColor, endColor,
+                    texLocation
+            );
+        }
+    }
+
+    /**
+     * Draws a Textured Rectangle, following the defined arguments
+     *
+     * @param left                 The Left Position of the Object
+     * @param right                The Right Position of the Object
+     * @param top                  The Top Position of the Object
+     * @param bottom               The Bottom Position of the Object
+     * @param usingExternalTexture Whether we are using a non-local/external texture
+     * @param offset               The vertical offset to render the background to
+     * @param u                    The U Mapping Value
+     * @param v                    The V Mapping Value
+     * @param startColorObj        The starting texture RGB data to interpret
+     * @param endColorObj          The ending texture RGB data to interpret
+     */
+    public void drawTexture(final double left, final double right,
+                            final double top, final double bottom,
+                            final boolean usingExternalTexture, final double offset,
+                            final double u, final double v,
+                            final Object startColorObj, final Object endColorObj,
+                            final ResourceLocation texLocation) {
+        RenderUtils.drawTexture(getGameInstance(),
+                left, right, top, bottom,
+                0.0D, usingExternalTexture,
+                right - left, bottom - top,
+                u, v + offset, 32.0D, 32.0D,
+                startColorObj, endColorObj,
+                texLocation
         );
     }
 

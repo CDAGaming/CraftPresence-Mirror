@@ -118,8 +118,7 @@ public class TexturedWidget implements DynamicWidget {
                     null, null
             );
         }
-        RenderUtils.drawBackground(
-                parent.getGameInstance(),
+        parent.drawBackground(
                 getLeft(), getRight(),
                 getTop(), getBottom(),
                 getOffset(), getTintFactor(), getInfo()
