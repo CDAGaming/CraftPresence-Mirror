@@ -118,10 +118,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     private int contentHeight;
     /**
-     * The current background scrolling position
-     */
-    private double updateBackground;
-    /**
      * Whether this Screen can be closed by normal means, true by default
      */
     private boolean canClose;
@@ -499,32 +495,12 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Retrieve whether the background should automatically scroll
-     * <p>See {@link ExtendedScreen#getBackgroundSpeed()} and {@link ExtendedScreen#getOffset()}
-     *
-     * @return whether the background should automatically scroll
-     */
-    public boolean canBackgroundMove() {
-        return false;
-    }
-
-    /**
-     * Retrieve the speed that the background should scroll
-     * <p>See {@link ExtendedScreen#canBackgroundMove()} and {@link ExtendedScreen#getOffset()}
-     *
-     * @return the background scrolling speed
-     */
-    public double getBackgroundSpeed() {
-        return 0.33D;
-    }
-
-    /**
      * Retrieve the amount to offset the background data by
      *
      * @return the offset for the background
      */
     public double getOffset() {
-        return canBackgroundMove() && updateBackground > 0.0D ? updateBackground * getBackgroundSpeed() : 0.0D;
+        return 0.0D;
     }
 
     /**
@@ -577,8 +553,6 @@ public class ExtendedScreen extends GuiScreen {
         // Ensures initialization events have run first, preventing an NPE
         if (isLoaded()) {
             preRender();
-
-            updateBackground = canBackgroundMove() ? updateBackground + partialTicks : 0.0D;
 
             RenderUtils.enableScissor(
                     getGameInstance(),
