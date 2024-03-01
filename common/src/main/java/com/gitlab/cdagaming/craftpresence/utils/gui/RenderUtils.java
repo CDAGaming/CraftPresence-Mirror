@@ -587,10 +587,10 @@ public class RenderUtils {
                             final double textureWidth, final double textureHeight) {
         innerBlit(left, right, top, bottom,
                 zLevel,
-                getUVCoord(u + 0.0D, 0.0D, false, textureWidth),
-                getUVCoord(u + regionWidth, 1.0D, false, textureWidth),
-                getUVCoord(v + 0.0D, 0.0D, false, textureHeight),
-                getUVCoord(v + regionHeight, 1.0D, false, textureHeight)
+                getUVCoord(u + 0.0D, textureWidth),
+                getUVCoord(u + regionWidth, textureWidth),
+                getUVCoord(v + 0.0D, textureHeight),
+                getUVCoord(v + regionHeight, textureHeight)
         );
     }
 
@@ -1151,7 +1151,18 @@ public class RenderUtils {
      * @return the calculated position
      */
     public static double getUVCoord(final double primary, final double secondary, final boolean usingExternalTexture, final double textureSize) {
-        return usingExternalTexture ? secondary : (primary / textureSize);
+        return usingExternalTexture ? secondary : getUVCoord(primary, textureSize);
+    }
+
+    /**
+     * Calculate the Axis coordinate with the specified info
+     *
+     * @param primary     The Primary Result, divided by the texture size
+     * @param textureSize The Texture Size to divide the result by
+     * @return the calculated position
+     */
+    public static double getUVCoord(final double primary, final double textureSize) {
+        return primary / textureSize;
     }
 
     /**
