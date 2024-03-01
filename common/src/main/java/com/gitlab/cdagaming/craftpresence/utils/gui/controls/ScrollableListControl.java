@@ -40,7 +40,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.renderer.Tessellator;
 import org.meteordev.starscript.value.Value;
 
@@ -333,7 +332,7 @@ public class ScrollableListControl extends GuiSlot {
         final boolean isInBounds = isWithinBounds(mouseXIn, mouseYIn);
         final boolean isHovering = isInBounds && isOverEntry;
 
-        ResourceLocation texture = new ResourceLocation("");
+        String texture = "";
         String assetUrl;
 
         if (renderType == RenderType.ServerData) {
