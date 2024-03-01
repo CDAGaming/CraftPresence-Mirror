@@ -444,7 +444,8 @@ public class ExtendedScreen extends GuiScreen {
                 left, right, top, bottom,
                 0.0D, usingExternalTexture,
                 right - left, bottom - top,
-                u, v + offset, 32.0D, 32.0D,
+                u, v + offset,
+                32.0D, 32.0D,
                 startColorObj, endColorObj,
                 texLocation
         );
