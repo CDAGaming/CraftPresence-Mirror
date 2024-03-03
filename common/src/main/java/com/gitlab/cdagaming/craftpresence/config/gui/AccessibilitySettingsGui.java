@@ -104,11 +104,53 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         )
                 )
         );
+        // Adding Gui Background Color Button
+        childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc1, getButtonY(1),
+                        180, 20,
+                        "gui.config.name.accessibility.gui_background_color",
+                        () -> openScreen(
+                                new ColorEditorGui(
+                                        currentScreen,
+                                        getCurrentData().guiBackground,
+                                        DEFAULTS.guiBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.guiBackground
+                                )
+                        ),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
+                                )
+                        )
+                )
+        );
+        // Adding World-Specific Gui Background Color Button
+        childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc2, getButtonY(1),
+                        180, 20,
+                        "gui.config.name.accessibility.world_gui_background_color",
+                        () -> openScreen(
+                                new ColorEditorGui(
+                                        currentScreen,
+                                        getCurrentData().worldGuiBackground,
+                                        DEFAULTS.worldGuiBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.worldGuiBackground
+                                )
+                        ),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.world_gui_background_color")
+                                )
+                        )
+                )
+        );
 
         languageIdText = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(1),
+                        getButtonY(2),
                         180, 20,
                         "gui.config.name.accessibility.language_id",
                         () -> drawMultiLineString(
@@ -122,7 +164,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
         stripTranslationColorsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(2),
+                        calc1, getButtonY(3),
                         "gui.config.name.accessibility.strip_translation_colors",
                         getCurrentData().stripTranslationColors,
                         null,
@@ -135,7 +177,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         stripTranslationFormattingButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(3, -10),
+                        calc1, getButtonY(4, -10),
                         "gui.config.name.accessibility.strip_translation_formatting",
                         getCurrentData().stripTranslationFormatting,
                         null,
@@ -158,7 +200,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         stripExtraGuiElementsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(4, -20),
+                        calc1, getButtonY(5, -20),
                         "gui.config.name.accessibility.strip_extra_gui_elements",
                         getCurrentData().stripExtraGuiElements,
                         null,
@@ -171,7 +213,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         renderTooltipsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(5, -30),
+                        calc1, getButtonY(6, -30),
                         "gui.config.name.accessibility.render_tooltips",
                         getCurrentData().renderTooltips,
                         null,
@@ -196,7 +238,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         final KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, getButtonY(2, 4),
+                        calc2, getButtonY(3, 4),
                         180, 20,
                         "gui.config.message.button.controls",
                         () -> openScreen(

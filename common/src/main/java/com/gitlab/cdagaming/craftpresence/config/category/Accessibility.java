@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
@@ -42,6 +43,14 @@ public class Accessibility extends Module implements Serializable {
     public ColorData tooltipBorder = new ColorData(
             new ColorSection(80, 0, 255, 80),
             new ColorSection(40, 0, 127, 80)
+    );
+    public ColorData guiBackground = new ColorData(
+            new ColorSection(64, 64, 64, 255),
+            RenderUtils.DEFAULT_GUI_BACKGROUND
+    );
+    public ColorData worldGuiBackground = new ColorData(
+            new ColorSection(16, 16, 16, 192),
+            new ColorSection(16, 16, 16, 208)
     );
     public String languageId = Constants.TRANSLATOR.getDefaultLanguage();
     public boolean stripTranslationColors = false;
@@ -75,6 +84,8 @@ public class Accessibility extends Module implements Serializable {
 
             tooltipBackground = new ColorData(data.tooltipBackground);
             tooltipBorder = new ColorData(data.tooltipBorder);
+            guiBackground = new ColorData(data.guiBackground);
+            worldGuiBackground = new ColorData(data.worldGuiBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
             stripTranslationFormatting = data.stripTranslationFormatting;

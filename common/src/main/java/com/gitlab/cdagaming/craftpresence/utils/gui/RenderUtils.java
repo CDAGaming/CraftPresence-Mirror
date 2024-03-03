@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -67,23 +66,22 @@ public class RenderUtils {
      */
     public static final String DEFAULT_BUTTON_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? "/gui/gui.png" : "textures/gui/widgets.png");
     /**
-     * The Default Screen Background Resource
+     * The Default Screen Background Resources
      */
-    public static final ColorData SCREEN_BACKGROUND = new ColorData(
-            new ColorSection(64, 64, 64, 255),
-            "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png")
-    );
-    /**
-     * The alternative Screen Background Resource
-     */
-    public static final ColorData SCREEN_BACKGROUND_ALT = new ColorData(
-            new ColorSection(16, 16, 16, 192),
-            new ColorSection(16, 16, 16, 208)
-    );
+    public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
     /**
      * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, FontRenderer, int, int, ItemStack, float)}
      */
     private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
+
+    /**
+     * Retrieve the default Screen Textures as Texture Data
+     *
+     * @return the default Screen Textures
+     */
+    public static ResourceLocation getScreenTextures() {
+        return getTextureData(DEFAULT_GUI_BACKGROUND).getThird();
+    }
 
     /**
      * Retrieve the default Widget Textures as Texture Data

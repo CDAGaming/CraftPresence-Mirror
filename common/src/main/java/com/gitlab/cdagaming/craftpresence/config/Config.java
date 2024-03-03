@@ -331,9 +331,12 @@ public final class Config extends Module implements Serializable {
                     //  - Migrate Color-Related Settings to new System
                     final JsonObject oldData = rawJson.getAsJsonObject()
                             .getAsJsonObject("accessibilitySettings");
+                    final boolean showBackgroundAsDark = oldData
+                            .getAsJsonPrimitive("showBackgroundAsDark").getAsBoolean();
                     final Map<String, String> propsToChange = new HashMapBuilder<String, String>()
                             .put("tooltipBackgroundColor", "tooltipBackground")
                             .put("tooltipBorderColor", "tooltipBorder")
+                            .put("guiBackgroundColor", "guiBackground")
                             .build();
 
                     for (Map.Entry<String, String> entry : propsToChange.entrySet()) {
@@ -354,6 +357,14 @@ public final class Config extends Module implements Serializable {
                                             StringUtils.findColor(borderColorEnd)
                                     ));
                                 }
+                            } else {
+                                final boolean applyTint = showBackgroundAsDark && entry.getKey().equalsIgnoreCase("guiBackgroundColor");
+                                if (applyTint) {
+                                    newValue.setStartColor(
+                                            new ColorSection(64, 64, 64, 255)
+                                    );
+                                }
+                                newValue.setTexLocation(oldValue);
                             }
                         }
 
