@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -56,9 +57,9 @@ public class NbtUtils {
      * @param stack The ItemStack data to interpret
      * @return the resulting NBT Tag, or null if not found
      */
-    public static CompoundTag getNbt(final ItemStack stack) {
+    public static Tag getNbt(final ItemStack stack) {
         CompoundTag result = new CompoundTag();
-        return stack != null ? stack.save(result) : result;
+        return stack != null ? stack.save(CraftPresence.player.registryAccess(), result) : result;
     }
 
     /**

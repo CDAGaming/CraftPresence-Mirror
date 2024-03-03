@@ -45,12 +45,16 @@ public class Accessibility extends Module implements Serializable {
             new ColorSection(40, 0, 127, 80)
     );
     public ColorData guiBackground = new ColorData(
-            new ColorSection(64, 64, 64, 255),
             RenderUtils.DEFAULT_GUI_BACKGROUND
     );
     public ColorData altGuiBackground = new ColorData(
-            new ColorSection(16, 16, 16, 192),
-            new ColorSection(16, 16, 16, 208)
+            RenderUtils.DEFAULT_GUI_BACKGROUND_ALT
+    );
+    public ColorData worldGuiBackground = new ColorData(
+            RenderUtils.DEFAULT_WORLD_GUI_BACKGROUND
+    );
+    public ColorData altWorldGuiBackground = new ColorData(
+            RenderUtils.DEFAULT_WORLD_GUI_BACKGROUND_ALT
     );
     public String languageId = Constants.TRANSLATOR.getDefaultLanguage();
     public boolean stripTranslationColors = false;

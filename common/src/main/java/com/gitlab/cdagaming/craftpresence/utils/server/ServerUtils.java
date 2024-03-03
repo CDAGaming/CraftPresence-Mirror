@@ -508,15 +508,14 @@ public class ServerUtils implements Module {
      */
     private void joinServer(final ServerData serverData) {
         try {
-            if (!serverData.pinged) {
+            if (serverData.state() == ServerData.State.INITIAL) {
                 // Stub Server Data if not pinged
-                serverData.pinged = true;
-                serverData.ping = -2L;
+                serverData.setState(ServerData.State.PINGING);
                 serverData.motd = CommonComponents.EMPTY;
                 serverData.status = CommonComponents.EMPTY;
             }
 
-            ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData, false);
+            ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData, false, null);
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }

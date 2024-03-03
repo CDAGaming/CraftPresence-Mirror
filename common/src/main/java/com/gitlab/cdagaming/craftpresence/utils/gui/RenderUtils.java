@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
@@ -71,7 +70,19 @@ public class RenderUtils {
     /**
      * The Default Screen Background Resources
      */
-    public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    public static final String DEFAULT_GUI_BACKGROUND = "minecraft:textures/gui/menu_background.png";
+    /**
+     * The alternative Screen Background Resources
+     */
+    public static final String DEFAULT_GUI_BACKGROUND_ALT = "minecraft:textures/gui/menu_list_background.png";
+    /**
+     * The Default Screen Background Resources, while in a world
+     */
+    public static final String DEFAULT_WORLD_GUI_BACKGROUND = "minecraft:textures/gui/inworld_menu_background.png";
+    /**
+     * The alternative Screen Background Resources, while in a world
+     */
+    public static final String DEFAULT_WORLD_GUI_BACKGROUND_ALT = "minecraft:textures/gui/inworld_menu_list_background.png";
     /**
      * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(GuiGraphics, Font, int, int, ItemStack, float)}
      */
@@ -84,6 +95,15 @@ public class RenderUtils {
      */
     public static ResourceLocation getScreenTextures() {
         return getTextureData(DEFAULT_GUI_BACKGROUND).getThird();
+    }
+
+    /**
+     * Retrieve the alternative Screen Textures as Texture Data
+     *
+     * @return the alternative Screen Textures
+     */
+    public static ResourceLocation getAltScreenTextures() {
+        return getTextureData(DEFAULT_GUI_BACKGROUND_ALT).getThird();
     }
 
     /**
