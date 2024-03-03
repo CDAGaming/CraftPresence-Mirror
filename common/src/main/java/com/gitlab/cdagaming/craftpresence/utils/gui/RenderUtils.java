@@ -64,10 +64,6 @@ import java.util.List;
 @SuppressWarnings("DuplicatedCode")
 public class RenderUtils {
     /**
-     * The stack of {@link ScreenRectangle} objects to manage the scissor areas for rendering.
-     */
-    private static final ScissorStack scissorStack = new ScissorStack();
-    /**
      * The Default Widget Background Resources
      */
     public static final String DEFAULT_BUTTON_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? "/gui/gui.png" : "textures/gui/widgets.png");
@@ -75,6 +71,10 @@ public class RenderUtils {
      * The Default Screen Background Resources
      */
     public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    /**
+     * The stack of {@link ScreenRectangle} objects to manage the scissor areas for rendering.
+     */
+    private static final ScissorStack scissorStack = new ScissorStack();
     /**
      * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, FontRenderer, int, int, ItemStack, float)}
      */

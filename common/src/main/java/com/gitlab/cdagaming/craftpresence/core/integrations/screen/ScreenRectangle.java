@@ -72,6 +72,15 @@ public class ScreenRectangle {
     }
 
     /**
+     * Returns a {@link ScreenRectangle} that represents an empty area.
+     *
+     * @return A {@link ScreenRectangle} with zero width and height.
+     */
+    public static ScreenRectangle empty() {
+        return EMPTY;
+    }
+
+    /**
      * Computes the intersection of this rectangle with another {@link ScreenRectangle}.
      * If the rectangles do not overlap, this method returns {@code null}.
      *
@@ -86,15 +95,6 @@ public class ScreenRectangle {
         final int k = Math.min(getRight(), rectangle.getRight());
         final int l = Math.min(getBottom(), rectangle.getBottom());
         return i < k && j < l ? new ScreenRectangle(i, j, k - i, l - j) : null;
-    }
-
-    /**
-     * Returns a {@link ScreenRectangle} that represents an empty area.
-     *
-     * @return A {@link ScreenRectangle} with zero width and height.
-     */
-    public static ScreenRectangle empty() {
-        return EMPTY;
     }
 
     /**
