@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 
@@ -121,17 +122,33 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     @Override
+    public void drawTexture(final double left, final double right,
+                            final double top, final double bottom,
+                            final boolean usingExternalTexture, final double offset,
+                            final double u, final double v,
+                            final Object startColorObj, final Object endColorObj,
+                            final ResourceLocation texLocation) {
+        super.drawTexture(
+                left, right, top, bottom,
+                usingExternalTexture, offset,
+                right, bottom,
+                startColorObj, endColorObj,
+                texLocation
+        );
+    }
+
+    @Override
     public void postRender() {
         // Render Depth Decorations
         RenderUtils.drawGradient(
                 getLeft(), getRight(), getTop(), getTop() + getPadding(),
-                -100.0D,
+                0.0D,
                 Color.black,
                 NONE
         );
         RenderUtils.drawGradient(
                 getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
-                -100.0D,
+                0.0D,
                 NONE,
                 Color.black
         );

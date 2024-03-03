@@ -27,8 +27,6 @@ package com.gitlab.cdagaming.craftpresence.utils.gui;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScissorStack;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenRectangle;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -43,6 +41,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -70,11 +69,7 @@ public class RenderUtils {
      */
     public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
     /**
-     * The stack of {@link ScreenRectangle} objects to manage the scissor areas for rendering.
-     */
-    private static final ScissorStack scissorStack = new ScissorStack();
-    /**
-     * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, Font, int, int, ItemStack, float)}
+     * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, PoseStack, Font, int, int, ItemStack, float)}
      */
     private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
 
@@ -194,22 +189,20 @@ public class RenderUtils {
      * @param stack        The {@link ItemStack} instance to interpret
      * @param scale        The Scale to render the Object at
      */
-    public static void drawItemStack(@Nonnull final Minecraft client, final Font fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
+    public static void drawItemStack(@Nonnull final Minecraft client, @Nonnull final PoseStack lv, final Font fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
         if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
-            final PoseStack lv = RenderSystem.getModelViewStack();
             lv.pushPose();
             lv.scale(scale, scale, 1.0f);
             RenderSystem.enableDepthTest();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            client.getItemRenderer().renderAndDecorateItem(stack, xPos, yPos);
-            client.getItemRenderer().renderGuiItemDecorations(fontRenderer, stack, xPos, yPos);
+            client.getItemRenderer().renderAndDecorateItem(lv, stack, xPos, yPos);
+            client.getItemRenderer().renderGuiItemDecorations(lv, fontRenderer, stack, xPos, yPos);
 
             RenderSystem.disableDepthTest();
             lv.popPose();
-            RenderSystem.applyModelViewMatrix();
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
             if (!BLOCKED_RENDER_ITEMS.contains(stack)) {
@@ -493,7 +486,6 @@ public class RenderUtils {
         }
 
         RenderSystem.disableDepthTest();
-        RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -508,7 +500,6 @@ public class RenderUtils {
         tessellator.end();
 
         RenderSystem.disableBlend();
-        RenderSystem.enableTexture();
         RenderSystem.enableDepthTest();
     }
 
@@ -621,7 +612,7 @@ public class RenderUtils {
      * @param bottom The bottom length of the Object
      */
     public static void enableScissor(@Nonnull final Minecraft mc, final int left, final int top, final int right, final int bottom) {
-        applyScissor(mc, scissorStack.push(new ScreenRectangle(left, top, right - left, bottom - top)));
+        GuiComponent.enableScissor(left, top, right, bottom);
     }
 
     /**
@@ -630,29 +621,7 @@ public class RenderUtils {
      * @param mc The Minecraft Instance
      */
     public static void disableScissor(@Nonnull final Minecraft mc) {
-        applyScissor(mc, scissorStack.pop());
-    }
-
-    /**
-     * Define viewable rendering boundaries, utilizing glScissor
-     *
-     * @param mc        The Minecraft Instance
-     * @param rectangle The Screen Area to process
-     */
-    private static void applyScissor(@Nonnull final Minecraft mc, final ScreenRectangle rectangle) {
-        if (rectangle != null) {
-            final int scale = computeGuiScale(mc);
-            final int displayHeight = mc.getWindow().getHeight();
-            final int renderWidth = Math.max(0, rectangle.getWidth() * scale);
-            final int renderHeight = Math.max(0, rectangle.getHeight() * scale);
-            RenderSystem.enableScissor(
-                    rectangle.getLeft() * scale,
-                    displayHeight - rectangle.getBottom() * scale,
-                    renderWidth, renderHeight
-            );
-        } else {
-            RenderSystem.disableScissor();
-        }
+        GuiComponent.disableScissor();
     }
 
     /**
