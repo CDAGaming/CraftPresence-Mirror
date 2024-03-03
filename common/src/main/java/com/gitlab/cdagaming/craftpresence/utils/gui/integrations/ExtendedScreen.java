@@ -582,7 +582,7 @@ public class ExtendedScreen extends GuiScreen {
 
             renderExtra();
 
-            RenderUtils.disableScissor();
+            RenderUtils.disableScissor(getGameInstance());
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;

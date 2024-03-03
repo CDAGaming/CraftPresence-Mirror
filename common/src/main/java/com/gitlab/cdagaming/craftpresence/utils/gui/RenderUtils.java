@@ -27,6 +27,8 @@ package com.gitlab.cdagaming.craftpresence.utils.gui;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
+import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScissorStack;
+import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenRectangle;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -61,6 +63,10 @@ import java.util.List;
  */
 @SuppressWarnings("DuplicatedCode")
 public class RenderUtils {
+    /**
+     * The stack of {@link ScreenRectangle} objects to manage the scissor areas for rendering.
+     */
+    private static final ScissorStack scissorStack = new ScissorStack();
     /**
      * The Default Widget Background Resources
      */
@@ -618,33 +624,40 @@ public class RenderUtils {
         tessellator.draw();
     }
 
+    public static void enableScissor(@Nonnull final Minecraft mc, final int minX, final int minY, final int maxX, final int maxY) {
+        applyScissor(mc, scissorStack.push(new ScreenRectangle(minX, minY, maxX - minX, maxY - minY)));
+    }
+
     /**
      * Disables current rendering boundary flags, mainly glScissor
+     *
+     * @param mc The Minecraft Instance
      */
-    public static void disableScissor() {
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    public static void disableScissor(@Nonnull final Minecraft mc) {
+        applyScissor(mc, scissorStack.pop());
     }
 
     /**
      * Define viewable rendering boundaries, utilizing glScissor
      *
-     * @param mc     The Minecraft Instance
-     * @param left   The Starting X Position of the Object
-     * @param top    The Starting Y Position of the Object
-     * @param right  The Right side length of the Object
-     * @param bottom The bottom length of the Object
+     * @param mc        The Minecraft Instance
+     * @param rectangle The Screen Area to process
      */
-    public static void enableScissor(@Nonnull final Minecraft mc, final int left, final int top, final int right, final int bottom) {
-        final int scale = computeGuiScale(mc);
-        final int displayHeight = mc.displayHeight;
-        final int renderWidth = Math.max(0, (right - left) * scale);
-        final int renderHeight = Math.max(0, (bottom - top) * scale);
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(
-                left * scale,
-                displayHeight - bottom * scale,
-                renderWidth, renderHeight
-        );
+    private static void applyScissor(@Nonnull final Minecraft mc, final ScreenRectangle rectangle) {
+        if (rectangle != null) {
+            final int scale = computeGuiScale(mc);
+            final int displayHeight = mc.displayHeight;
+            final int renderWidth = Math.max(0, rectangle.getWidth() * scale);
+            final int renderHeight = Math.max(0, rectangle.getHeight() * scale);
+            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+            GL11.glScissor(
+                    rectangle.getLeft() * scale,
+                    displayHeight - rectangle.getBottom() * scale,
+                    renderWidth, renderHeight
+            );
+        } else {
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        }
     }
 
     /**
@@ -1052,7 +1065,7 @@ public class RenderUtils {
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
             enableScissor(mc, (int) minX, (int) minY, (int) maxX, (int) maxY);
             renderString(fontRenderer, message, minX - (float) offset, renderY, color);
-            disableScissor();
+            disableScissor(mc);
         } else {
             final float renderX = MathUtils.clamp(centerX, minX + lineWidth / 2f, maxX - lineWidth / 2f);
             renderCenteredString(fontRenderer, message, renderX, renderY, color);
@@ -1090,7 +1103,7 @@ public class RenderUtils {
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
             enableScissor(mc, minX, minY, maxX, maxY);
             renderString(fontRenderer, message, minX - (int) offset, renderY, color);
-            disableScissor();
+            disableScissor(mc);
         } else {
             final int renderX = MathUtils.clamp(centerX, minX + lineWidth / 2, maxX - lineWidth / 2);
             renderCenteredString(fontRenderer, message, renderX, renderY, color);
