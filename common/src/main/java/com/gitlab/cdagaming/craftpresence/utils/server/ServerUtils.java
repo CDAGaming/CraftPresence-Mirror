@@ -357,9 +357,9 @@ public class ServerUtils implements Module {
             // 'world' Sub-Arguments
 
             // 'world.difficulty' Argument = Current Difficulty of the World
-            final String newDifficulty = CraftPresence.player.level.getLevelData().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = CraftPresence.player.level().getLevelData().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.player.level.getDifficulty().name().toLowerCase());
+                    StringUtils.formatWord(CraftPresence.player.level().getDifficulty().name().toLowerCase());
             if (!newDifficulty.equals(currentDifficulty)) {
                 currentDifficulty = newDifficulty;
                 queuedForUpdate = true;
@@ -376,7 +376,7 @@ public class ServerUtils implements Module {
             // 'world.name' Argument = Current Name of the World
             final String defaultWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getWorldData().getLevelName() : "";
-            final String secondaryWorldName = CraftPresence.player.level.getServer() != null ? StringUtils.getOrDefault(CraftPresence.player.level.getServer().getWorldData().getLevelName(), defaultWorldName) : defaultWorldName;
+            final String secondaryWorldName = CraftPresence.player.level().getServer() != null ? StringUtils.getOrDefault(CraftPresence.player.level().getServer().getWorldData().getLevelName(), defaultWorldName) : defaultWorldName;
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             if (!newWorldName.equals(currentWorldName)) {
                 currentWorldName = newWorldName;
@@ -384,7 +384,7 @@ public class ServerUtils implements Module {
             }
 
             // 'world.time' Arguments = Current Time Data of the World
-            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime());
+            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.level().getDayTime());
             if (!Objects.equals(newTimeData, worldTimeData)) {
                 dayCount = newTimeData.getFirst();
                 timeString24 = TimeUtils.toString(newTimeData.getSecond(), "HH:mm");
@@ -516,7 +516,7 @@ public class ServerUtils implements Module {
                 serverData.status = CommonComponents.EMPTY;
             }
 
-            ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData);
+            ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData, false);
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }

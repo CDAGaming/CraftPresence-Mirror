@@ -1099,7 +1099,7 @@ public class DiscordUtils {
     public void syncPlaceholders() {
         syncArgument("_general.instance", CraftPresence.instance);
         syncArgument("_general.player", CraftPresence.player);
-        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.level : null);
+        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.level() : null);
         syncArgument("_config.instance", CraftPresence.CONFIG);
         // Sync Custom Variables
         removeArguments("custom.");

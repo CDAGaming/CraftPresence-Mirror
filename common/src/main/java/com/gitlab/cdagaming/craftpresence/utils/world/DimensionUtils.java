@@ -124,7 +124,7 @@ public class DimensionUtils implements Module {
 
     @Override
     public void updateData() {
-        final Level newProvider = CraftPresence.player.level;
+        final Level newProvider = CraftPresence.player.level();
         final ResourceLocation newDimensionType = newProvider.dimension().location();
         final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.toString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 

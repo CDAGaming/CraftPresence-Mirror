@@ -5,3 +5,4 @@ accessible    field    net/minecraft/client/KeyMapping    key    Lcom/mojang/bla
 mutable    field    net/minecraft/client/Options    keyMappings    [Lnet/minecraft/client/KeyMapping;
 accessible    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;
 mutable    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;
+accessible method net/minecraft/client/gui/GuiGraphics flushIfUnmanaged ()V

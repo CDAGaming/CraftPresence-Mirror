@@ -32,12 +32,12 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -84,7 +84,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
     /**
      * Current Stored MatrixStack for this Instance
      */
-    protected PoseStack currentMatrix;
+    protected GuiGraphics currentMatrix;
     /**
      * The Current Screen Phase, used to define where in the initialization it is at
      */
@@ -572,7 +572,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
     }
 
     @Override
-    public void renderBackground(@Nonnull PoseStack matrixStack) {
+    public void renderBackground(@Nonnull GuiGraphics matrixStack) {
         renderCriticalData();
     }
 
@@ -585,7 +585,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
      * @param partialTicks The Rendering Tick Rate
      */
     @Override
-    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
         currentMatrix = matrixStack;
 
         // Ensures initialization events have run first, preventing an NPE
@@ -593,7 +593,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
             preRender();
 
             RenderUtils.enableScissor(
-                    getGameInstance(),
+                    matrixStack,
                     getLeft(),
                     getTop(),
                     getRight(),
@@ -606,7 +606,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
 
             renderExtra();
 
-            RenderUtils.disableScissor(getGameInstance());
+            RenderUtils.disableScissor(matrixStack);
 
             lastMouseX = mouseX;
             lastMouseY = mouseY;
