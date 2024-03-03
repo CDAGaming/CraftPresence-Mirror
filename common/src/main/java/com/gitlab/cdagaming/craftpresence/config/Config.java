@@ -525,6 +525,11 @@ public final class Config extends Module implements Serializable {
         final int newMCVer = getGameVersion();
         if (oldMCVer != newMCVer) {
             _lastMCVersionId = newMCVer;
+
+            // Reset some config settings when game version changes
+            final Accessibility accessibilityDefaults = accessibilitySettings.getDefaults();
+            accessibilitySettings.guiBackground = accessibilityDefaults.guiBackground;
+            accessibilitySettings.altGuiBackground = accessibilityDefaults.altGuiBackground;
         }
 
         // Sync Flag Data

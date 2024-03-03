@@ -125,23 +125,23 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         )
                 )
         );
-        // Adding World-Specific Gui Background Color Button
+        // Adding Alternative Gui Background Color Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(1),
                         180, 20,
-                        "gui.config.name.accessibility.world_gui_background_color",
+                        "gui.config.name.accessibility.alt_gui_background_color",
                         () -> openScreen(
                                 new ColorEditorGui(
                                         currentScreen,
-                                        getCurrentData().worldGuiBackground,
-                                        DEFAULTS.worldGuiBackground,
-                                        () -> Config.loadOrCreate().accessibilitySettings.worldGuiBackground
+                                        getCurrentData().altGuiBackground,
+                                        DEFAULTS.altGuiBackground,
+                                        () -> Config.loadOrCreate().accessibilitySettings.altGuiBackground
                                 )
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.world_gui_background_color")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.alt_gui_background_color")
                                 )
                         )
                 )

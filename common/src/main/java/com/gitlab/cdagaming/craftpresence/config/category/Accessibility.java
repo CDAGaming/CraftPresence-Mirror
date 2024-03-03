@@ -48,7 +48,7 @@ public class Accessibility extends Module implements Serializable {
             new ColorSection(64, 64, 64, 255),
             RenderUtils.DEFAULT_GUI_BACKGROUND
     );
-    public ColorData worldGuiBackground = new ColorData(
+    public ColorData altGuiBackground = new ColorData(
             new ColorSection(16, 16, 16, 192),
             new ColorSection(16, 16, 16, 208)
     );
@@ -85,7 +85,7 @@ public class Accessibility extends Module implements Serializable {
             tooltipBackground = new ColorData(data.tooltipBackground);
             tooltipBorder = new ColorData(data.tooltipBorder);
             guiBackground = new ColorData(data.guiBackground);
-            worldGuiBackground = new ColorData(data.worldGuiBackground);
+            altGuiBackground = new ColorData(data.altGuiBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
             stripTranslationFormatting = data.stripTranslationFormatting;

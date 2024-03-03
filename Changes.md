@@ -45,6 +45,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * The Search Box in the `SelectorGui` now resizes based on available space, rather than being a static size
     * `TextWidget` controls are now left-aligned instead of having centered text (Rendering performance has also been
       improved)
+* Adjusted GUI Background Rendering Logic for MC 1.20.5 Changes
+    * The `worldGuiBackground` config setting has been renamed to `altGuiBackground` (Existing value is reset, since MC
+      1.20.5 changes the rules this screen appears for)
+    * Both Gui Background settings are now reset when changing MC versions, to ensure setting validity
 * Misc. Code Optimizations and Bug Fixes
 
 ### Fixes
