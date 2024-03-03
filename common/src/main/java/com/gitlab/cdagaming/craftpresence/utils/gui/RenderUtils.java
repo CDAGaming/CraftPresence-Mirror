@@ -624,8 +624,17 @@ public class RenderUtils {
         tessellator.draw();
     }
 
-    public static void enableScissor(@Nonnull final Minecraft mc, final int minX, final int minY, final int maxX, final int maxY) {
-        applyScissor(mc, scissorStack.push(new ScreenRectangle(minX, minY, maxX - minX, maxY - minY)));
+    /**
+     * Define viewable rendering boundaries, utilizing glScissor
+     *
+     * @param mc     The Minecraft Instance
+     * @param left   The Starting X Position of the Object
+     * @param top    The Starting Y Position of the Object
+     * @param right  The Right side length of the Object
+     * @param bottom The bottom length of the Object
+     */
+    public static void enableScissor(@Nonnull final Minecraft mc, final int left, final int top, final int right, final int bottom) {
+        applyScissor(mc, scissorStack.push(new ScreenRectangle(left, top, right - left, bottom - top)));
     }
 
     /**
