@@ -525,7 +525,7 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
      * @return the current Z Level
      */
     public double getZLevel() {
-        return this.blitOffset;
+        return getBlitOffset();
     }
 
     /**
@@ -534,6 +534,6 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
      * @param zLevel the new Z Level
      */
     public void setZLevel(final double zLevel) {
-        this.blitOffset = (int) zLevel;
+        setBlitOffset((int) zLevel);
     }
 }
