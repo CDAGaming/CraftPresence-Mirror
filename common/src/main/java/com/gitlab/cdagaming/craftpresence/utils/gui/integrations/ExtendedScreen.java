@@ -388,11 +388,14 @@ public class ExtendedScreen extends GuiScreen {
      * @param bottom     The Bottom Position of the Object
      * @param offset     The vertical offset to render the background to
      * @param tintFactor The factor at which to tint the background to
+     * @param u          The U Mapping Value
+     * @param v          The V Mapping Value
      * @param data       The {@link ColorData} to be used to render the background
      */
     public void drawBackground(final double left, final double right,
                                final double top, final double bottom,
                                final double offset, float tintFactor,
+                               final double u, final double v,
                                final ColorData data) {
         // Setup Colors + Tint Data
         tintFactor = MathUtils.clamp(tintFactor, 0.0f, 1.0f);
@@ -413,11 +416,34 @@ public class ExtendedScreen extends GuiScreen {
                     left, right, top, bottom,
                     usingExternalTexture,
                     offset,
-                    left, top,
+                    u, v,
                     startColor, endColor,
                     texLocation
             );
         }
+    }
+
+    /**
+     * Draws a Background onto a Gui, supporting RGBA Codes, Game Textures and Hexadecimal Colors
+     *
+     * @param left       The Left Position of the Object
+     * @param right      The Right Position of the Object
+     * @param top        The Top Position of the Object
+     * @param bottom     The Bottom Position of the Object
+     * @param offset     The vertical offset to render the background to
+     * @param tintFactor The factor at which to tint the background to
+     * @param data       The {@link ColorData} to be used to render the background
+     */
+    public void drawBackground(final double left, final double right,
+                               final double top, final double bottom,
+                               final double offset, float tintFactor,
+                               final ColorData data) {
+        drawBackground(
+                left, right, top, bottom,
+                offset, tintFactor,
+                left, top,
+                data
+        );
     }
 
     /**

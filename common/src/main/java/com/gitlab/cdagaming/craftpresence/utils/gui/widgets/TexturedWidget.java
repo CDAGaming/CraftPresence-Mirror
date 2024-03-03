@@ -121,7 +121,9 @@ public class TexturedWidget implements DynamicWidget {
         parent.drawBackground(
                 getLeft(), getRight(),
                 getTop(), getBottom(),
-                getOffset(), getTintFactor(), getInfo()
+                getOffset(), getTintFactor(),
+                0.0D, 0.0D,
+                getInfo()
         );
     }
 

@@ -57,6 +57,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed the beginning Base64 identifier for `ServerData` scroll lists (`png` instead of `unknown`)
 * Fixed an inconsistent y-coord positioning on the "Search" text in the `SelectorGui`
 * Fixed cases of incorrect GUI background rendering in some Scroll Lists
+* Fixed `TexturedWidget` elements incorrectly scrolling in some cases
+    * Its UV values are now locked to `0,0` instead of `left,top`
+    * This bug was most commonly seen in the `Color Editor` GUIs
 
 ___
 
