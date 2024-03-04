@@ -357,10 +357,14 @@ With this in mind, please note the following:
 
 Additionally, in select Minecraft Versions, the following config settings are effected:
 
-* `guiBackgroundColor` (`RenderUtils#DEFAULT_GUI_BACKGROUND`)
-    * MC 1.6 and above: `minecraft:textures/gui/options_background.png`
+* `guiBackground` (`RenderUtils#DEFAULT_GUI_BACKGROUND`)
+    * MC 1.20.5 and above: `minecraft:textures/gui/menu_background.png`
+    * MC 1.6 until 1.20.5: `minecraft:textures/gui/options_background.png`
     * MC 1.5.2 until a1.1.2_01: `/gui/background.png`
     * MC a1.1.2_01 and below: `/dirt.png`
+* `altGuiBackground` (`RenderUtils#DEFAULT_GUI_BACKGROUND_ALT`)
+    * MC 1.20.5 and above: `minecraft:textures/gui/menu_list_background.png`
+    * MC 1.20.4 and below: `ColorData(start=[16,16,16,192],end=[16,16,16,208])`
 * `stripTranslationFormatting` (`ModUtils#IS_TEXT_FORMATTING_BLOCKED`)
     * This option is forcefully disabled on MC 1.1.0 and below due to various issues regarding combined TextColor usage,
       including possible crashes
