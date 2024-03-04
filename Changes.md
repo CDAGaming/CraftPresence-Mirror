@@ -17,6 +17,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * DiscordIPC (`0.8.1` -> `0.8.4`)
     * Starscript (`0.2.6` -> `0.3.0`)
     * Gradle (`8.5` -> `8.6`)
+    * ModFusioner (`1.0.9` -> `1.0.10`)
+    * ModPublisher (`1.0.20` -> `2.0.5`)
 * Added new functions for placeholders:
     * `cast(castObject, classToAccess=Object|String|Class)` - Attempts to cast or convert an object to the specified
       target

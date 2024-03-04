@@ -1,9 +1,8 @@
-import me.hypherionmc.modpublisher.plugin.ModPublisherGradleExtension.ApiKeys
 import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {
-    id("me.hypherionmc.modutils.modpublisher") version "1.0.20"
+    id("com.hypherionmc.modutils.modpublisher") version "2.0.5"
 }
 
 /**
@@ -267,9 +266,10 @@ if (isNeoForge) {
 }
 
 publisher {
-    apiKeys = ApiKeys()
-    apiKeys.curseforge = System.getenv("CF_APIKEY")
-    apiKeys.modrinth = System.getenv("MODRINTH_TOKEN")
+    apiKeys {
+        curseforge(System.getenv("CF_APIKEY"))
+        modrinth(System.getenv("MODRINTH_TOKEN"))
+    }
 
     debug = false
     curseID = "297038"
