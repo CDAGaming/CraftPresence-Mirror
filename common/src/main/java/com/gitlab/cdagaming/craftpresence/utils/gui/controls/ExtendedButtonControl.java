@@ -263,18 +263,11 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
      */
     protected void renderBg(@Nonnull GuiGraphics matrixStack, @Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            final int hoverState = getYImage(isHoveringOrFocusingOver());
-            final int hoverValue = 46 + hoverState * 20;
-            final double xOffset = getControlWidth() / 2D;
-
-            RenderUtils.renderButton(mc,
+            RenderUtils.renderSprite(matrixStack, graphics -> graphics.blitSprite(
+                    RenderUtils.getButtonTexture(isControlEnabled(), isHoveringOrFocusingOver()),
                     getControlPosX(), getControlPosY(),
-                    0, hoverValue,
-                    200 - xOffset, hoverValue,
-                    xOffset, getControlHeight(),
-                    getZLevel(),
-                    RenderUtils.getButtonTextures()
-            );
+                    getControlWidth(), getControlHeight()
+            ));
         }
     }
 

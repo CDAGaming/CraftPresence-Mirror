@@ -31,6 +31,7 @@ import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -41,6 +42,10 @@ import javax.annotation.Nonnull;
  * @author CDAGaming
  */
 public class SliderControl extends ExtendedButtonControl {
+    private static final ResourceLocation SLIDER_SPRITE = new ResourceLocation("widget/slider");
+    private static final ResourceLocation SLIDER_HANDLE_SPRITE = new ResourceLocation("widget/slider_handle");
+    private static final ResourceLocation SLIDER_HANDLE_HIGHLIGHTED_SPRITE = new ResourceLocation("widget/slider_handle_highlighted");
+
     /**
      * The Minimum Value the Slider can reach
      */
@@ -196,6 +201,14 @@ public class SliderControl extends ExtendedButtonControl {
         setOnSlide(events.getThird());
     }
 
+    private ResourceLocation getSprite() {
+        return SLIDER_SPRITE;
+    }
+
+    private ResourceLocation getHandleSprite() {
+        return !isHoveringOrFocusingOver() ? SLIDER_HANDLE_SPRITE : SLIDER_HANDLE_HIGHLIGHTED_SPRITE;
+    }
+
     /**
      * Returns the current Hover state of this control
      * <p>
@@ -215,18 +228,10 @@ public class SliderControl extends ExtendedButtonControl {
     @Override
     protected void renderBg(@Nonnull GuiGraphics matrixStack, @Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            super.renderBg(matrixStack, mc, mouseX, mouseY);
-
-            final int hoverState = super.getYImage(isHoveringOrFocusingOver());
-            final int hoverValue = 46 + hoverState * 20;
-            RenderUtils.renderButton(mc,
-                    getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(),
-                    0, hoverValue,
-                    196, hoverValue,
-                    4, 20,
-                    getZLevel(),
-                    RenderUtils.getButtonTextures()
-            );
+            RenderUtils.renderSprite(matrixStack, graphics -> {
+                graphics.blitSprite(getSprite(), getControlPosX(), getControlPosY(), getControlWidth(), getControlHeight());
+                graphics.blitSprite(getHandleSprite(), getControlPosX() + (int) (sliderValue * (double) (getControlWidth() - 8)), getControlPosY(), 8, 20);
+            });
         }
     }
 
