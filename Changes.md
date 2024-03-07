@@ -20,9 +20,6 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ModFusioner (`1.0.9` -> `1.0.10`)
     * ModPublisher (`1.0.20` -> `2.0.5`)
 * Added new functions for placeholders:
-    * `cast(castObject, classToAccess=Object|String|Class)` - Attempts to cast or convert an object to the specified
-      target
-      class.
     * `clampDouble(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
     * `clampFloat(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
     * `clampInt(num, min, max)` - Clamps the Specified Number between a minimum and maximum limit
