@@ -189,7 +189,7 @@ public class SelectorGui extends ExtendedScreen {
                                                 onUpdatedCallback.accept(attributeName, scrollList.currentValue);
                                                 openScreen(parentScreen);
                                             } else {
-                                                openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.null"))));
+                                                openScreen(new MessageGui(parentScreen, "gui.config.message.null"));
                                             }
                                         } else {
                                             openScreen(parentScreen);
@@ -198,7 +198,7 @@ public class SelectorGui extends ExtendedScreen {
                                         if (allowDynamicEditing && onAdjustDynamicEntry != null) {
                                             onAdjustDynamicEntry.accept(scrollList.currentValue, parentScreen);
                                         } else {
-                                            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.null"))));
+                                            openScreen(new MessageGui(parentScreen, "gui.config.message.null"));
                                         }
                                     }
                                 } else {
@@ -232,7 +232,7 @@ public class SelectorGui extends ExtendedScreen {
 
             super.initializeUi();
         } else {
-            openScreen(new MessageGui(parentScreen, StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.empty.list"))));
+            openScreen(new MessageGui(parentScreen, "gui.config.message.empty.list"));
         }
     }
 

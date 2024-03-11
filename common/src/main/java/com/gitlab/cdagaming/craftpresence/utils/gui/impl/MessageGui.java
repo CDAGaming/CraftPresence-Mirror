@@ -49,6 +49,18 @@ public class MessageGui extends ExtendedScreen {
         this.messageData = StringUtils.newArrayList(messageData);
     }
 
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     * @param messageData  The message to display for this Instance
+     */
+    public MessageGui(GuiScreen parentScreen, String messageData) {
+        this(parentScreen, StringUtils.splitTextByNewLine(
+                Constants.TRANSLATOR.getLocalizedMessage(messageData)
+        ));
+    }
+
     @Override
     public void initializeUi() {
         // Adding Back Button
