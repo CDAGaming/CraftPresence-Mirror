@@ -26,18 +26,17 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.widgets;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.FontRenderer;
 
 /**
- * Implementation for a Row-Style {@link ExtendedTextControl} Widget
+ * Implementation for a Row-Style {@link ExtendedButtonControl} Widget
  *
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class TextWidget extends ExtendedTextControl {
+public class ButtonWidget extends ExtendedButtonControl {
     /**
      * The message to display alongside the control
      */
@@ -62,16 +61,17 @@ public class TextWidget extends ExtendedTextControl {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param componentId     The ID for the control to Identify as
-     * @param fontRendererObj The Font Renderer Instance
+     * @param buttonId        The ID for the control to Identify as
      * @param y               The Starting Y Position for this Control
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
+     * @param buttonText      The display text, to display within this control
      * @param title           The text to be rendered with this widget
      * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
+     * @param optionalArgs    The optional Arguments, if any, to associate with this control
      */
-    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
-        super(componentId, fontRendererObj, 0, y, widthIn, heightIn);
+    public ButtonWidget(final int buttonId, final int y, final int widthIn, final int heightIn, final String buttonText, final String title, final Runnable titleHoverEvent, final String... optionalArgs) {
+        super(buttonId, 0, y, widthIn, heightIn, buttonText, optionalArgs);
         this.title = title;
         this.setDimensions = false;
         setOnTitleHover(titleHoverEvent);
@@ -80,77 +80,88 @@ public class TextWidget extends ExtendedTextControl {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param componentId     The ID for the control to Identify as
-     * @param fontRendererObj The Font Renderer Instance
+     * @param buttonId        The ID for the control to Identify as
      * @param y               The Starting Y Position for this Control
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
-     * @param title           The text to be rendered with this widget
-     */
-    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
-        this(componentId, fontRendererObj, y, widthIn, heightIn, title, null);
-    }
-
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param fontRendererObj The Font Renderer Instance
-     * @param y               The Starting Y Position for this Control
-     * @param widthIn         The Width for this Control
-     * @param heightIn        The Height for this Control
+     * @param buttonText      The display text, to display within this control
+     * @param onPushEvent     The Click Event to Occur when this control is clicked
      * @param title           The text to be rendered with this widget
      * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
+     * @param optionalArgs    The optional Arguments, if any, to associate with this control
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
-        super(fontRendererObj, 0, y, widthIn, heightIn);
-        this.title = title;
-        this.setDimensions = false;
-        setOnTitleHover(titleHoverEvent);
+    public ButtonWidget(final int buttonId, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final String title, final Runnable titleHoverEvent, final String... optionalArgs) {
+        this(buttonId, y, widthIn, heightIn, buttonText, title, titleHoverEvent, optionalArgs);
+        setOnClick(onPushEvent);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param fontRendererObj The Font Renderer Instance
+     * @param buttonId        The ID for the control to Identify as
      * @param y               The Starting Y Position for this Control
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
-     * @param title           The text to be rendered with this widget
-     */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
-        this(fontRendererObj, y, widthIn, heightIn, title, null);
-    }
-
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param fontRendererObj The Font Renderer Instance
-     * @param y               The Starting Y Position for this Control
-     * @param widthIn         The Width for this Control
-     * @param heightIn        The Height for this Control
-     * @param keyEvent        The event to run when characters are typed in this control
+     * @param buttonText      The display text, to display within this control
+     * @param onPushEvent     The Click Event to Occur when this control is clicked
+     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
      * @param title           The text to be rendered with this widget
      * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
+     * @param optionalArgs    The optional Arguments, if any, to associate with this control
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable titleHoverEvent) {
-        super(fontRendererObj, 0, y, widthIn, heightIn, keyEvent);
-        this.title = title;
-        this.setDimensions = false;
-        setOnTitleHover(titleHoverEvent);
+    public ButtonWidget(final int buttonId, final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final Runnable onHoverEvent, final String title, final Runnable titleHoverEvent, final String... optionalArgs) {
+        this(buttonId, y, widthIn, heightIn, buttonText, onPushEvent, title, titleHoverEvent, optionalArgs);
+        setOnHover(onHoverEvent);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param fontRendererObj The Font Renderer Instance
      * @param y               The Starting Y Position for this Control
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
-     * @param keyEvent        The event to run when characters are typed in this control
+     * @param buttonText      The display text, to display within this control
      * @param title           The text to be rendered with this widget
+     * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
+     * @param optionalArgs    The optional Arguments, if any, to associate with this control
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title) {
-        this(fontRendererObj, y, widthIn, heightIn, keyEvent, title, null);
+    public ButtonWidget(final int y, final int widthIn, final int heightIn, final String buttonText, final String title, final Runnable titleHoverEvent, final String... optionalArgs) {
+        this(ExtendedScreen.getNextIndex(), y, widthIn, heightIn, buttonText, title, titleHoverEvent, optionalArgs);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param buttonText      The display text, to display within this control
+     * @param onPushEvent     The Click Event to Occur when this control is clicked
+     * @param title           The text to be rendered with this widget
+     * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
+     * @param optionalArgs    The optional Arguments, if any, to associate with this control
+     */
+    public ButtonWidget(final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final String title, final Runnable titleHoverEvent, final String... optionalArgs) {
+        this(y, widthIn, heightIn, buttonText, title, titleHoverEvent, optionalArgs);
+        setOnClick(onPushEvent);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param y               The Starting Y Position for this Control
+     * @param widthIn         The Width for this Control
+     * @param heightIn        The Height for this Control
+     * @param buttonText      The display text, to display within this control
+     * @param onPushEvent     The Click Event to Occur when this control is clicked
+     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
+     * @param title           The text to be rendered with this widget
+     * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
+     * @param optionalArgs    The optional Arguments, if any, to associate with this control
+     */
+    public ButtonWidget(final int y, final int widthIn, final int heightIn, final String buttonText, final Runnable onPushEvent, final Runnable onHoverEvent, final String title, final Runnable titleHoverEvent, final String... optionalArgs) {
+        this(y, widthIn, heightIn, buttonText, onPushEvent, title, titleHoverEvent, optionalArgs);
+        setOnHover(onHoverEvent);
     }
 
     /**
@@ -168,7 +179,7 @@ public class TextWidget extends ExtendedTextControl {
      * @param title The new attached message
      * @return the modified instance
      */
-    public TextWidget setTitle(String title) {
+    public ButtonWidget setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -196,9 +207,9 @@ public class TextWidget extends ExtendedTextControl {
         // Ensure correct positioning
         if (!setDimensions) {
             final int middle = (screen.getScreenWidth() / 2);
-            setControlPosX(middle + 3); // Left; Textbox
+            setControlPosX(middle + 3); // Left; Button
             titleLeft = middle - 180; // Left; Title Text (Offset: +3)
-            titleRight = middle - 6; // Left; Textbox (Offset: -6)
+            titleRight = middle - 6; // Left; Button (Offset: -6)
             setDimensions = true;
         }
         super.preDraw(screen);

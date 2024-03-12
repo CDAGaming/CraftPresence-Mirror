@@ -27,10 +27,11 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.PaginatedScreen;
-import io.github.cdagaming.unicore.impl.Pair;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ButtonWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
@@ -43,20 +44,16 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class ControlsGui extends PaginatedScreen {
-
-    private static final int maxElementsPerPage = 7, startRow = 1;
+public class ControlsGui extends ExtendedScreen {
     // Format: See KeyUtils#KEY_MAPPINGS
     private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = StringUtils.newHashMap();
-    // Format: pageNumber:[elementText:[xPos:yPos]:color]
-    private final Map<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> preRenderQueue = StringUtils.newHashMap(), postRenderQueue = StringUtils.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
     private Tuple<ExtendedButtonControl, String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
-    private int currentAllocatedRow = startRow, currentAllocatedPage = startPage;
+    private ExtendedScreen childFrame;
 
     public ControlsGui(GuiScreen parentScreen) {
         super(parentScreen);
@@ -78,17 +75,29 @@ public class ControlsGui extends PaginatedScreen {
 
     @Override
     public void initializeUi() {
+        // Adding Back Button
+        addControl(
+                new ExtendedButtonControl(
+                        (getScreenWidth() / 2) - 90,
+                        (getScreenHeight() - 26),
+                        180, 20,
+                        "gui.config.message.button.back",
+                        () -> {
+                            if (entryData == null) {
+                                openScreen(parentScreen);
+                            }
+                        }
+                )
+        );
+        childFrame = addControl(
+                new ScrollPane(
+                        0, 32,
+                        getScreenWidth(), getScreenHeight() - 32
+                )
+        );
         setupScreenData();
 
         super.initializeUi();
-
-        backButton.setOnClick(
-                () -> {
-                    if (entryData == null) {
-                        openScreen(parentScreen);
-                    }
-                }
-        );
     }
 
     @Override
@@ -109,33 +118,6 @@ public class ControlsGui extends PaginatedScreen {
         );
 
         super.renderExtra();
-
-        for (Map.Entry<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> entry : preRenderQueue.entrySet()) {
-            final Integer pageNumber = entry.getKey();
-            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
-            for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
-                renderString(Constants.TRANSLATOR.translate(elementData.getFirst()), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), elementData.getThird(), pageNumber);
-            }
-        }
-    }
-
-    @Override
-    public void postRender() {
-        for (Map.Entry<Integer, List<Tuple<String, Pair<Float, Float>, Integer>>> entry : postRenderQueue.entrySet()) {
-            final Integer pageNumber = entry.getKey();
-            final List<Tuple<String, Pair<Float, Float>, Integer>> elementList = entry.getValue();
-            for (Tuple<String, Pair<Float, Float>, Integer> elementData : elementList) {
-                if (currentPage == pageNumber && RenderUtils.isMouseOver(getMouseX(), getMouseY(), elementData.getSecond().getFirst(), elementData.getSecond().getSecond(), getStringWidth(Constants.TRANSLATOR.translate(elementData.getFirst())), getFontHeight())) {
-                    drawMultiLineString(
-                            StringUtils.splitTextByNewLine(
-                                    Constants.TRANSLATOR.translate(elementData.getFirst().replace(".name", ".description"))
-                            )
-                    );
-                }
-            }
-        }
-
-        super.postRender();
     }
 
     @Override
@@ -167,61 +149,40 @@ public class ControlsGui extends PaginatedScreen {
      */
     private void setupScreenData() {
         // Clear any Prior Data beforehand
-        preRenderQueue.clear();
-        postRenderQueue.clear();
+        int currentAllocatedRow = 0;
 
-        final int renderPosition = (getScreenWidth() / 2) + 3;
         for (Map.Entry<String, List<String>> entry : categorizedNames.entrySet()) {
-            syncPageData();
-            final String categoryName = entry.getKey();
-            final Tuple<String, Pair<Float, Float>, Integer> categoryData = new Tuple<>(categoryName, new Pair<>((getScreenWidth() / 2f) - (getStringWidth(categoryName) / 2f), (float) getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
-            if (!preRenderQueue.containsKey(currentAllocatedPage)) {
-                preRenderQueue.put(currentAllocatedPage, StringUtils.newArrayList());
-            }
             if (!Constants.IS_LEGACY_SOFT) {
-                preRenderQueue.get(currentAllocatedPage).add(categoryData);
+                childFrame.addWidget(new ScrollableTextWidget(
+                        childFrame,
+                        0, getButtonY(currentAllocatedRow),
+                        childFrame.getScreenWidth(),
+                        Constants.TRANSLATOR.translate(entry.getKey())
+                ));
             }
 
-            final List<String> keyNames = entry.getValue();
             currentAllocatedRow++;
 
-            for (String keyName : keyNames) {
+            for (String keyName : entry.getValue()) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
-                final Tuple<String, Pair<Float, Float>, Integer> positionData = new Tuple<>(keyData.getFirst().getKeyDescription(), new Pair<>((getScreenWidth() / 2f) - 130, (float) getButtonY(currentAllocatedRow, 5)), 0xFFFFFF);
-                if (!preRenderQueue.containsKey(currentAllocatedPage)) {
-                    preRenderQueue.put(currentAllocatedPage, StringUtils.newArrayList(positionData));
-                } else {
-                    preRenderQueue.get(currentAllocatedPage).add(positionData);
-                }
 
-                if (!postRenderQueue.containsKey(currentAllocatedPage)) {
-                    postRenderQueue.put(currentAllocatedPage, StringUtils.newArrayList(positionData));
-                } else {
-                    postRenderQueue.get(currentAllocatedPage).add(positionData);
-                }
-
-                final ExtendedButtonControl keyCodeButton = new ExtendedButtonControl(
-                        renderPosition + 20, getButtonY(currentAllocatedRow),
-                        120, 20,
+                final String keyTitle = keyData.getFirst().getKeyDescription();
+                final ButtonWidget keyCodeWidget = new ButtonWidget(
+                        getButtonY(currentAllocatedRow),
+                        180, 20,
                         KeyUtils.getKeyName(keyData.getFirst().getKeyCode()),
+                        keyTitle,
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate(keyTitle.replace(".name", ".description"))
+                                )
+                        ),
                         keyName
                 );
-                keyCodeButton.setOnClick(() -> setupEntryData(keyCodeButton, keyData));
-
-                addControl(keyCodeButton, currentAllocatedPage);
+                keyCodeWidget.setOnClick(() -> setupEntryData(keyCodeWidget, keyData));
+                childFrame.addControl(keyCodeWidget);
                 currentAllocatedRow++;
-                syncPageData();
             }
-        }
-    }
-
-    /**
-     * Synchronize Page Data based on placed elements
-     */
-    private void syncPageData() {
-        if (currentAllocatedRow >= maxElementsPerPage) {
-            currentAllocatedPage++;
-            currentAllocatedRow = startRow;
         }
     }
 

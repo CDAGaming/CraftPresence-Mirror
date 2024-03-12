@@ -35,6 +35,7 @@ import java.util.Objects;
 
 /**
  * Implementation for a Scrollable Text-Only Widget
+ * <p>This is designed for multi-line text, use {@link ScrollableTextWidget} for single-line
  *
  * @author CDAGaming
  */
