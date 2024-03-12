@@ -54,9 +54,9 @@ public class TextWidget extends ExtendedTextControl {
      */
     private boolean setDimensions;
     /**
-     * Event to Deploy when this Control is Hovered Over, if any
+     * Event to Deploy when the title is Hovered Over, if any
      */
-    private Runnable onHoverEvent = null;
+    private Runnable titleHoverEvent = null;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -67,13 +67,13 @@ public class TextWidget extends ExtendedTextControl {
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
      * @param title           The text to be rendered with this widget
-     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
+     * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
      */
-    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
+    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
         super(componentId, fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
         this.setDimensions = false;
-        setOnHover(onHoverEvent);
+        setOnTitleHover(titleHoverEvent);
     }
 
     /**
@@ -98,13 +98,13 @@ public class TextWidget extends ExtendedTextControl {
      * @param widthIn         The Width for this Control
      * @param heightIn        The Height for this Control
      * @param title           The text to be rendered with this widget
-     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
+     * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable onHoverEvent) {
+    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
         this.setDimensions = false;
-        setOnHover(onHoverEvent);
+        setOnTitleHover(titleHoverEvent);
     }
 
     /**
@@ -129,13 +129,13 @@ public class TextWidget extends ExtendedTextControl {
      * @param heightIn        The Height for this Control
      * @param keyEvent        The event to run when characters are typed in this control
      * @param title           The text to be rendered with this widget
-     * @param onHoverEvent    The Hover Event to Occur when this control is hovered over
+     * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable onHoverEvent) {
+    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable titleHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn, keyEvent);
         this.title = title;
         this.setDimensions = false;
-        setOnHover(onHoverEvent);
+        setOnTitleHover(titleHoverEvent);
     }
 
     /**
@@ -173,20 +173,20 @@ public class TextWidget extends ExtendedTextControl {
     }
 
     /**
-     * Sets the Event to occur upon Mouse Over
+     * Sets the Event to occur upon Title Mouse Over
      *
      * @param event The event to occur
      */
-    public void setOnHover(final Runnable event) {
-        onHoverEvent = event;
+    public void setOnTitleHover(final Runnable event) {
+        titleHoverEvent = event;
     }
 
     /**
-     * Triggers the onHover event to occur
+     * Triggers the titleHoverEvent event to occur
      */
-    public void onHover() {
-        if (onHoverEvent != null) {
-            onHoverEvent.run();
+    public void onTitleHover() {
+        if (titleHoverEvent != null) {
+            titleHoverEvent.run();
         }
     }
 
@@ -200,6 +200,7 @@ public class TextWidget extends ExtendedTextControl {
             titleRight = middle - 6; // Left; Textbox (Offset: -6)
             setDimensions = true;
         }
+        super.preDraw(screen);
     }
 
     @Override
@@ -215,6 +216,7 @@ public class TextWidget extends ExtendedTextControl {
                     0xFFFFFF
             );
         }
+        super.draw(screen);
     }
 
     @Override
@@ -225,8 +227,9 @@ public class TextWidget extends ExtendedTextControl {
                     titleLeft, getTop(),
                     titleRight - titleLeft, getControlHeight()
             )) {
-                onHover();
+                onTitleHover();
             }
         }
+        super.postDraw(screen);
     }
 }

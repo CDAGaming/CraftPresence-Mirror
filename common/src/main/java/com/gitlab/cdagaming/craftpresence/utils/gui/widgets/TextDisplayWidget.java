@@ -193,7 +193,7 @@ public class TextDisplayWidget implements DynamicWidget {
         if (!Objects.equals(newMessage, message)) {
             message = newMessage;
             renderLines = refreshContent();
-            parent.refreshContentHeight();
+            getParent().refreshContentHeight();
         }
         return this;
     }
@@ -225,6 +225,15 @@ public class TextDisplayWidget implements DynamicWidget {
      */
     public List<String> getRenderLines() {
         return StringUtils.newArrayList(renderLines);
+    }
+
+    /**
+     * Retrieve the parent or source screen to refer to
+     *
+     * @return the parent screen
+     */
+    public ExtendedScreen getParent() {
+        return parent;
     }
 
     @Override
@@ -289,20 +298,20 @@ public class TextDisplayWidget implements DynamicWidget {
      *
      * @return the modified render lines for the widget
      */
-    private List<String> refreshContent() {
+    public List<String> refreshContent() {
         int padding = 0, barWidth = 0;
-        if (parent instanceof ScrollPane) {
-            final ScrollPane pane = ((ScrollPane) parent);
+        if (getParent() instanceof ScrollPane) {
+            final ScrollPane pane = ((ScrollPane) getParent());
             padding = pane.getPadding();
             barWidth = pane.getScrollBarWidth();
         }
 
-        final int width = MathUtils.clamp((getControlWidth() - getControlPosX()) - (padding * 2) - barWidth, 0, parent.getMaxWidth());
-        final List<String> content = parent.createRenderLines(
+        final int width = MathUtils.clamp((getControlWidth() - getControlPosX()) - (padding * 2) - barWidth, 0, getParent().getMaxWidth());
+        final List<String> content = getParent().createRenderLines(
                 getMessage(),
                 width
         );
-        final int height = content.size() * (parent.getFontHeight() + 1);
+        final int height = content.size() * (getParent().getFontHeight() + 1);
         setControlHeight(height + 2);
         return content;
     }

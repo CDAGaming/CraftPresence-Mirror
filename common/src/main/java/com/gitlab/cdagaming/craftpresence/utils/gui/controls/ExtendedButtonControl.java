@@ -126,8 +126,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final String... optionalArgs) {
-        super(ExtendedScreen.getNextIndex(), x, y, widthIn, heightIn, buttonText);
-        this.optionalArgs = optionalArgs;
+        this(ExtendedScreen.getNextIndex(), x, y, widthIn, heightIn, buttonText, optionalArgs);
     }
 
     /**
