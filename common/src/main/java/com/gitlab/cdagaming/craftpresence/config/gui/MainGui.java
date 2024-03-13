@@ -66,13 +66,11 @@ public class MainGui extends ConfigurationGui<Config> {
         }
         if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;
-            childFrame.addWidget(
-                    new TextDisplayWidget(
-                            childFrame, true,
-                            0, getButtonY(currentY) - (getFontHeight() / 2) + 3,
-                            childFrame.getScreenWidth(), releaseNotice
-                    )
-            );
+            childFrame.addWidget(new TextDisplayWidget(
+                    childFrame, true,
+                    0, getButtonY(currentY) - (getFontHeight() / 2) + 3,
+                    childFrame.getScreenWidth(), releaseNotice
+            ));
         }
 
         currentY++;

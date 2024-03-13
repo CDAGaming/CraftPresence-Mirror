@@ -96,12 +96,10 @@ public class UpdateInfoGui extends ExtendedScreen {
                         getScreenWidth(), getScreenHeight() - 32
                 )
         );
-        infoPane = childFrame.addWidget(
-                new TextDisplayWidget(
-                        childFrame, 0, 0,
-                        getScreenWidth()
-                )
-        );
+        infoPane = childFrame.addWidget(new TextDisplayWidget(
+                childFrame, 0, 0,
+                getScreenWidth()
+        ));
 
         updateNotes();
 
