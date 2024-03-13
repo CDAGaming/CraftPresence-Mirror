@@ -167,10 +167,11 @@ public class ControlsGui extends ExtendedScreen {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
 
                 final String keyTitle = keyData.getFirst().getKeyDescription();
+                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().getKeyCode());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         180, 20,
-                        KeyUtils.getKeyName(keyData.getFirst().getKeyCode()),
+                        KeyUtils.getKeyName(keyCode),
                         keyTitle,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
