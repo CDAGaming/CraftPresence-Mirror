@@ -154,7 +154,7 @@ public class ControlsGui extends ExtendedScreen {
         for (Map.Entry<String, List<String>> entry : categorizedNames.entrySet()) {
             if (!Constants.IS_LEGACY_SOFT) {
                 childFrame.addWidget(new ScrollableTextWidget(
-                        childFrame,
+                        childFrame, true,
                         0, getButtonY(currentAllocatedRow),
                         childFrame.getScreenWidth(),
                         Constants.TRANSLATOR.translate(entry.getKey())

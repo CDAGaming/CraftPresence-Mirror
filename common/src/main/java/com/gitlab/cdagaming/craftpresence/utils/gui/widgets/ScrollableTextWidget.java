@@ -36,6 +36,21 @@ import java.util.List;
  * @author CDAGaming
  */
 public class ScrollableTextWidget extends TextDisplayWidget {
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param startX   The starting X position of the widget
+     * @param startY   The starting Y position of the widget
+     * @param width    The width of the widget
+     * @param message  The text to be rendered with this widget
+     */
+    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width, final String message) {
+        super(parent, centered, startX, startY, width, message);
+    }
+
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
@@ -47,6 +62,19 @@ public class ScrollableTextWidget extends TextDisplayWidget {
      */
     public ScrollableTextWidget(final ExtendedScreen parent, final int startX, final int startY, final int width, final String message) {
         super(parent, startX, startY, width, message);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param startX   The starting X position of the widget
+     * @param startY   The starting Y position of the widget
+     * @param width    The width of the widget
+     */
+    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width) {
+        super(parent, centered, startX, startY, width);
     }
 
     /**
@@ -64,12 +92,35 @@ public class ScrollableTextWidget extends TextDisplayWidget {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param width    The width of the widget
+     * @param message  The text to be rendered with this widget
+     */
+    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int width, final String message) {
+        super(parent, centered, width, message);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
      * @param parent  The parent or source screen to refer to
      * @param width   The width of the widget
      * @param message The text to be rendered with this widget
      */
     public ScrollableTextWidget(final ExtendedScreen parent, final int width, final String message) {
         super(parent, width, message);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parent   The parent or source screen to refer to
+     * @param centered Whether the text should be center-aligned
+     * @param width    The width of the widget
+     */
+    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int width) {
+        super(parent, centered, width);
     }
 
     /**
@@ -91,19 +142,23 @@ public class ScrollableTextWidget extends TextDisplayWidget {
             barWidth = pane.getScrollBarWidth();
         }
 
+        final int minX = getControlPosX() + padding;
+        final int maxX = getRight() - padding - barWidth;
+        int centerX;
+        if (isCentered()) {
+            centerX = maxX - ((maxX - minX) / 2);
+        } else {
+            centerX = minX + (screen.getStringWidth(getMessage()) / 2);
+        }
         screen.renderScrollingString(
                 getMessage(),
-                getControlPosX() + padding,
+                centerX,
+                minX,
                 getControlPosY() + padding,
-                getRight() - padding - barWidth,
+                maxX,
                 getBottom() - padding,
                 0xFFFFFF
         );
-    }
-
-    @Override
-    public boolean isCentered() {
-        return true;
     }
 
     @Override

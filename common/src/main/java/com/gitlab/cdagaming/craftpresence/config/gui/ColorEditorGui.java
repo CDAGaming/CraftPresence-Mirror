@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TexturedWidget;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -86,10 +86,10 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         final String tintFactorTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.tint_factor");
 
         // Start Color Section
-        childFrame.addWidget(new TextDisplayWidget(
+        childFrame.addWidget(new ScrollableTextWidget(
                 childFrame,
                 calc1, getButtonY(0),
-                getScreenWidth(),
+                childFrame.getScreenWidth(),
                 startColorTitle
         ));
         startColorText = childFrame.addControl(
@@ -207,10 +207,10 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         ));
 
         // End Color Section
-        childFrame.addWidget(new TextDisplayWidget(
+        childFrame.addWidget(new ScrollableTextWidget(
                 childFrame,
                 calc1, getButtonY(6),
-                getScreenWidth(),
+                childFrame.getScreenWidth(),
                 endColorTitle
         ));
         endColorText = childFrame.addControl(
@@ -328,10 +328,10 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         ));
 
         // Preview Section
-        childFrame.addWidget(new TextDisplayWidget(
+        childFrame.addWidget(new ScrollableTextWidget(
                 childFrame,
                 calc1, getButtonY(12),
-                getScreenWidth(),
+                childFrame.getScreenWidth(),
                 previewTitle
         ));
         textureLocationText = childFrame.addControl(

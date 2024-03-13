@@ -38,7 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
@@ -640,10 +640,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         });
 
         // Endpoint Section
-        childFrame.addWidget(new TextDisplayWidget(
+        childFrame.addWidget(new ScrollableTextWidget(
                 childFrame,
                 calc1, getButtonY(7),
-                getScreenWidth(),
+                childFrame.getScreenWidth(),
                 Constants.TRANSLATOR.translate("gui.config.message.endpoints")
         ));
 
