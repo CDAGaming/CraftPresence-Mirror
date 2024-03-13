@@ -115,7 +115,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 // Event to occur when initializing new data
                                                 screenInstance.defaultData = (ModuleData) getCurrentData().getDefaults().getProperty(attributeName);
                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
-                                                screenInstance.resetText = "gui.config.message.button.reset";
+                                                screenInstance.resetText = "gui.config.message.button.reset_to_default";
                                             },
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing existing data
@@ -125,7 +125,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
-                                                screenInstance.resetText = "gui.config.message.button.reset";
+                                                screenInstance.resetText = "gui.config.message.button.reset_to_default";
                                             },
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when adjusting set data

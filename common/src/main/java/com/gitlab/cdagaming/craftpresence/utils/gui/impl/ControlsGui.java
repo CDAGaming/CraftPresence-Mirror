@@ -186,7 +186,7 @@ public class ControlsGui extends ExtendedScreen {
                         middle + keyCodeWidget.getControlWidth() + 15,
                         getButtonY(currentAllocatedRow),
                         70, 20,
-                        "Reset"
+                        "gui.config.message.button.reset"
                 );
 
                 keyResetButton.setOnClick(() -> resetEntryData(keyCodeWidget, keyResetButton, keyData));

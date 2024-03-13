@@ -72,7 +72,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.reset",
+                        "gui.config.message.button.reset_to_default",
                         () -> {
                             if (resetData()) {
                                 reloadUi();
