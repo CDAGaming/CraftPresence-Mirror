@@ -52,7 +52,7 @@ public class ControlsGui extends ExtendedScreen {
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
-    private Tuple<ExtendedButtonControl, String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
+    private Tuple<ExtendedButtonControl, ExtendedButtonControl, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
     private ExtendedScreen childFrame;
 
     public ControlsGui(GuiScreen parentScreen) {
@@ -163,6 +163,7 @@ public class ControlsGui extends ExtendedScreen {
 
             currentAllocatedRow++;
 
+            final int middle = (childFrame.getScreenWidth() / 2) + 3;
             for (String keyName : entry.getValue()) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
 
@@ -170,7 +171,7 @@ public class ControlsGui extends ExtendedScreen {
                 final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().getKeyCode());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
-                        180, 20,
+                        95, 20,
                         KeyUtils.getKeyName(keyCode),
                         keyTitle,
                         () -> drawMultiLineString(
@@ -180,8 +181,22 @@ public class ControlsGui extends ExtendedScreen {
                         ),
                         keyName
                 );
-                keyCodeWidget.setOnClick(() -> setupEntryData(keyCodeWidget, keyData));
+
+                final ExtendedButtonControl keyResetButton = new ExtendedButtonControl(
+                        middle + keyCodeWidget.getControlWidth() + 15,
+                        getButtonY(currentAllocatedRow),
+                        70, 20,
+                        "Reset"
+                );
+
+                keyResetButton.setOnClick(() -> resetEntryData(keyCodeWidget, keyResetButton, keyData));
+                keyCodeWidget.setOnClick(() -> setupEntryData(keyCodeWidget, keyResetButton, keyData));
+
+                keyResetButton.setControlEnabled(keyCode != keyData.getFirst().getKeyCodeDefault());
+
                 childFrame.addControl(keyCodeWidget);
+                childFrame.addControl(keyResetButton);
+
                 currentAllocatedRow++;
             }
         }
@@ -190,15 +205,30 @@ public class ControlsGui extends ExtendedScreen {
     /**
      * Setup for Key Entry and Save Backup of Prior Setting, if a valid Key Button
      *
-     * @param button  The Pressed upon KeyCode Button
-     * @param keyData The key data attached to the entry
+     * @param button      The Pressed upon KeyCode Button
+     * @param resetButton The Reset Button related to the KeyCode Button
+     * @param keyData     The key data attached to the entry
      */
-    private void setupEntryData(final ExtendedButtonControl button, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
+    private void setupEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
-            entryData = new Tuple<>(button, button.getOptionalArgs()[0], keyData);
+            entryData = new Tuple<>(button, resetButton, keyData);
 
             backupKeyString = button.getControlMessage();
             button.setControlMessage("gui.config.message.editor.enter_key");
+        }
+    }
+
+    /**
+     * Setup for Key Entry and Save Backup of Prior Setting, if a valid Key Button
+     *
+     * @param button      The Pressed upon KeyCode Button
+     * @param resetButton The Reset Button related to the KeyCode Button
+     * @param keyData     The key data attached to the entry
+     */
+    private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
+        if (entryData == null && button.getOptionalArgs() != null) {
+            entryData = new Tuple<>(button, resetButton, keyData);
+            setKeyData(keyData.getFirst().getKeyCodeDefault());
         }
     }
 
@@ -217,11 +247,12 @@ public class ControlsGui extends ExtendedScreen {
         }
 
         final String formattedKey = KeyUtils.getKeyName(keyToSubmit);
+        final String internalName = entryData.getFirst().getOptionalArgs()[0];
 
         // If KeyCode Field to modify is not null or empty, attempt to queue change
         try {
             entryData.getThird().getSecond().getSecond().accept(keyToSubmit, false);
-            CraftPresence.KEYBINDINGS.keySyncQueue.put(entryData.getSecond(), keyToSubmit);
+            CraftPresence.KEYBINDINGS.keySyncQueue.put(internalName, keyToSubmit);
             CraftPresence.CONFIG.hasChanged = true;
 
             entryData.getFirst().setControlMessage(formattedKey);
@@ -229,6 +260,10 @@ public class ControlsGui extends ExtendedScreen {
             entryData.getFirst().setControlMessage(backupKeyString);
             Constants.LOG.debugError(ex);
         }
+
+        entryData.getSecond().setControlEnabled(
+                keyToSubmit != entryData.getThird().getFirst().getKeyCodeDefault()
+        );
 
         // Clear Data
         backupKeyString = null;
