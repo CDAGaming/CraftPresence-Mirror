@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -66,9 +66,9 @@ public class MainGui extends ConfigurationGui<Config> {
         }
         if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;
-            childFrame.addWidget(new TextDisplayWidget(
-                    childFrame, true,
-                    0, getButtonY(currentY) - (getFontHeight() / 2) + 3,
+            childFrame.addWidget(new ScrollableTextWidget(
+                    childFrame,
+                    0, getButtonY(currentY),
                     childFrame.getScreenWidth(), releaseNotice
             ));
         }
