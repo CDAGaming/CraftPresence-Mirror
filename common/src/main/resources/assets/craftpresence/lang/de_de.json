@@ -30,7 +30,6 @@
   "gui.config.message.button.controls": "Steuerung",
   "gui.config.message.button.download": "Herunterladen",
   "gui.config.message.button.icon.change": "Icon ändern",
-  "gui.config.message.button.reset": "Auf den Standard zurücksetzen",
   "gui.config.message.button.save": "Speichern",
   "gui.config.message.button.sync.config": "Synchronisier Konfiguration",
   "gui.config.message.button.view_source": "Quelle anzeigen",

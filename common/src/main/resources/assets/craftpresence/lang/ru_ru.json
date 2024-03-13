@@ -179,7 +179,6 @@
   "gui.config.message.button.controls": "Управление",
   "gui.config.message.button.download": "Скачать",
   "gui.config.message.button.icon.change": "Изменить значок",
-  "gui.config.message.button.reset": "Сброс настроек",
   "gui.config.message.button.save": "Сохранить",
   "gui.config.message.button.sync.config": "Синхронизация",
   "gui.config.message.button.view_source": "Исходный код",
