@@ -253,7 +253,7 @@ public class ScrollPane extends ExtendedScreen {
      * @return the scroll bar width
      */
     public int getScrollBarWidth() {
-        return DEFAULT_BAR_WIDTH;
+        return needsScrollbar() ? DEFAULT_BAR_WIDTH : 0;
     }
 
     /**
@@ -300,7 +300,7 @@ public class ScrollPane extends ExtendedScreen {
      * @param button The Event Mouse Button Clicked
      */
     public void checkScrollbarClick(double mouseX, double mouseY, int button) {
-        clickedScrollbar = button == 0 && MathUtils.isWithinValue(mouseX, getScrollBarX(), getScrollBarX() + getScrollBarWidth(), true, false);
+        clickedScrollbar = needsScrollbar() && button == 0 && MathUtils.isWithinValue(mouseX, getScrollBarX(), getScrollBarX() + getScrollBarWidth(), true, false);
     }
 
     /**
