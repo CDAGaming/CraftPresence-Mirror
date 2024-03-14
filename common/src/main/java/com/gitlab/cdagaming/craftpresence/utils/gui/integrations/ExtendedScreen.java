@@ -278,7 +278,7 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon Window Reload
      */
     public void reloadUi() {
-        onResize(getGameInstance(), getScreenWidth(), getScreenHeight());
+        setWorldAndResolution(getGameInstance(), getScreenWidth(), getScreenHeight());
     }
 
     /**
@@ -289,15 +289,15 @@ public class ExtendedScreen extends GuiScreen {
      * @param h    The New Screen Height
      */
     @Override
-    public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
+    public void setWorldAndResolution(@Nonnull Minecraft mcIn, int w, int h) {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).onResize(mcIn, w, h);
+                    ((ExtendedScreen) extendedControl).setWorldAndResolution(mcIn, w, h);
                 }
             }
         }
-        super.onResize(mcIn, w, h);
+        super.setWorldAndResolution(mcIn, w, h);
     }
 
     /**
