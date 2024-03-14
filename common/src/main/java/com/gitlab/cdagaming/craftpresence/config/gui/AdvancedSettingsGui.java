@@ -73,6 +73,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         getFontRenderer(),
                         getButtonY(0),
                         180, 20,
+                        () -> getInstanceData().refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond(),
                         "gui.config.name.advanced.refresh_rate",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -81,13 +82,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        refreshRate.setControlMessage(Integer.toString(getCurrentData().refreshRate));
+        refreshRate.setControlMessage(Integer.toString(getInstanceData().refreshRate));
 
         maxConnectionAttempts = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(1),
                         180, 20,
+                        () -> getInstanceData().maxConnectionAttempts = StringUtils.getValidInteger(maxConnectionAttempts.getControlMessage()).getSecond(),
                         "gui.config.name.advanced.max_connection_attempts",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -96,7 +98,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        maxConnectionAttempts.setControlMessage(Integer.toString(getCurrentData().maxConnectionAttempts));
+        maxConnectionAttempts.setControlMessage(Integer.toString(getInstanceData().maxConnectionAttempts));
 
         guiMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
@@ -516,8 +518,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc1, getButtonY(4),
                         "gui.config.name.advanced.enable_per_gui",
-                        getCurrentData().enablePerGui,
-                        null,
+                        getInstanceData().enablePerGui,
+                        () -> getInstanceData().enablePerGui = enablePerGuiButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_gui")
@@ -529,8 +531,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc2, getButtonY(4),
                         "gui.config.name.advanced.enable_per_item",
-                        getCurrentData().enablePerItem,
-                        null,
+                        getInstanceData().enablePerItem,
+                        () -> getInstanceData().enablePerItem = enablePerItemButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_item")
@@ -542,8 +544,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc1, getButtonY(5, -10),
                         "gui.config.name.advanced.enable_per_entity",
-                        getCurrentData().enablePerEntity,
-                        null,
+                        getInstanceData().enablePerEntity,
+                        () -> getInstanceData().enablePerEntity = enablePerEntityButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_per_entity")
@@ -555,8 +557,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc2, getButtonY(5, -10),
                         "gui.config.name.advanced.debug_mode",
-                        getCurrentData().debugMode,
-                        null,
+                        getInstanceData().debugMode,
+                        () -> getInstanceData().debugMode = debugModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", Constants.IS_DEV_FLAG)
@@ -568,8 +570,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc1, getButtonY(6, -20),
                         "gui.config.name.advanced.format_words",
-                        getCurrentData().formatWords,
-                        null,
+                        getInstanceData().formatWords,
+                        () -> getInstanceData().formatWords = formatWordsButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.format_words")
@@ -581,8 +583,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc2, getButtonY(6, -20),
                         "gui.config.name.advanced.verbose_mode",
-                        getCurrentData().verboseMode,
-                        null,
+                        getInstanceData().verboseMode,
+                        () -> getInstanceData().verboseMode = verboseModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", Constants.IS_VERBOSE_FLAG)
@@ -594,8 +596,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc1, getButtonY(7, -30),
                         "gui.config.name.advanced.allow_placeholder_previews",
-                        getCurrentData().allowPlaceholderPreviews,
-                        null,
+                        getInstanceData().allowPlaceholderPreviews,
+                        () -> getInstanceData().allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.allow_placeholder_previews")
@@ -607,8 +609,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc2, getButtonY(7, -30),
                         "gui.config.name.advanced.allow_endpoint_icons",
-                        getCurrentData().allowEndpointIcons,
-                        null,
+                        getInstanceData().allowEndpointIcons,
+                        () -> getInstanceData().allowEndpointIcons = allowEndpointIconsButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.allow_endpoint_icons")
@@ -620,8 +622,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new CheckBoxControl(
                         calc1, getButtonY(8, -40),
                         "gui.config.name.advanced.allow_duplicate_packets",
-                        getCurrentData().allowDuplicatePackets,
-                        null,
+                        getInstanceData().allowDuplicatePackets,
+                        () -> getInstanceData().allowDuplicatePackets = allowDuplicatePacketsButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.allow_duplicate_packets")
@@ -652,6 +654,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         getFontRenderer(),
                         getButtonY(8),
                         180, 20,
+                        () -> getInstanceData().playerSkinEndpoint = playerSkinEndpoint.getControlMessage(),
                         "gui.config.name.advanced.player_skin_endpoint",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -660,13 +663,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        playerSkinEndpoint.setControlMessage(getCurrentData().playerSkinEndpoint);
+        playerSkinEndpoint.setControlMessage(getInstanceData().playerSkinEndpoint);
 
         serverIconEndpoint = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(9),
                         180, 20,
+                        () -> getInstanceData().serverIconEndpoint = serverIconEndpoint.getControlMessage(),
                         "gui.config.name.advanced.server_icon_endpoint",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -675,7 +679,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        serverIconEndpoint.setControlMessage(getCurrentData().serverIconEndpoint);
+        serverIconEndpoint.setControlMessage(getInstanceData().serverIconEndpoint);
     }
 
     @Override
@@ -725,64 +729,11 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
     @Override
     protected void applySettings() {
-        if (allowEndpointIconsButton.isChecked() != getCurrentData().allowEndpointIcons) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().allowEndpointIcons = allowEndpointIconsButton.isChecked();
-        }
-        if (!refreshRate.getControlMessage().equals(Integer.toString(getCurrentData().refreshRate))) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond();
-        }
-        if (!maxConnectionAttempts.getControlMessage().equals(Integer.toString(getCurrentData().maxConnectionAttempts))) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().maxConnectionAttempts = StringUtils.getValidInteger(maxConnectionAttempts.getControlMessage()).getSecond();
-        }
-        if (enablePerGuiButton.isChecked() != getCurrentData().enablePerGui) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().enablePerGui = enablePerGuiButton.isChecked();
-        }
-        if (enablePerItemButton.isChecked() != getCurrentData().enablePerItem) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().enablePerItem = enablePerItemButton.isChecked();
-        }
-        if (enablePerEntityButton.isChecked() != getCurrentData().enablePerEntity) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().enablePerEntity = enablePerEntityButton.isChecked();
-        }
-        if (formatWordsButton.isChecked() != getCurrentData().formatWords) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().formatWords = formatWordsButton.isChecked();
-        }
-        if (debugModeButton.isChecked() != getCurrentData().debugMode) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().debugMode = debugModeButton.isChecked();
-        }
-        if (verboseModeButton.isChecked() != getCurrentData().verboseMode) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().verboseMode = verboseModeButton.isChecked();
-        }
-        if (allowPlaceholderPreviewsButton.isChecked() != getCurrentData().allowPlaceholderPreviews) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked();
-        }
-        if (allowDuplicatePacketsButton.isChecked() != getCurrentData().allowDuplicatePackets) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().allowDuplicatePackets = allowDuplicatePacketsButton.isChecked();
-        }
-
-        // Endpoint Section
-        if (!playerSkinEndpoint.getControlMessage().equals(getCurrentData().playerSkinEndpoint)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().playerSkinEndpoint = playerSkinEndpoint.getControlMessage();
-        }
-        if (!serverIconEndpoint.getControlMessage().equals(getCurrentData().serverIconEndpoint)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().serverIconEndpoint = serverIconEndpoint.getControlMessage();
-        }
+        setCurrentData(getInstanceData());
     }
 
     @Override
-    protected Advanced getOriginalData() {
+    protected Advanced getInstanceData() {
         return INSTANCE;
     }
 

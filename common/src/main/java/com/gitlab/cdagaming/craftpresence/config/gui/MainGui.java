@@ -236,7 +236,7 @@ public class MainGui extends ConfigurationGui<Config> {
     protected void syncRenderStates() {
         // Ensure Critical Data is correct before continuing
         super.syncRenderStates();
-        getCurrentData().hasChanged = !getCurrentData().equals(getOriginalData());
+        getCurrentData().hasChanged = !getCurrentData().equals(getInstanceData());
 
         biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
@@ -286,12 +286,12 @@ public class MainGui extends ConfigurationGui<Config> {
         if (getCurrentData().hasChanged) {
             getCurrentData().save();
             Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.config.save"));
-            getCurrentData().applyFrom(getOriginalData());
+            getCurrentData().applyFrom(getInstanceData());
         }
     }
 
     @Override
-    protected Config getOriginalData() {
+    protected Config getInstanceData() {
         return INSTANCE;
     }
 

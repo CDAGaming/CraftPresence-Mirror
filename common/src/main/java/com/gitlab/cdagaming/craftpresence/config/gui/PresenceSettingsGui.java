@@ -537,7 +537,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
     }
 
     @Override
-    protected Display getOriginalData() {
+    protected Display getInstanceData() {
         return INSTANCE;
     }
 

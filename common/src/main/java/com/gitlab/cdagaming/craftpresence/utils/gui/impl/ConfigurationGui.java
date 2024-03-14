@@ -260,7 +260,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         // N/A
     }
 
-    protected abstract T getOriginalData();
+    protected abstract T getInstanceData();
 
     protected abstract T getCurrentData();
 

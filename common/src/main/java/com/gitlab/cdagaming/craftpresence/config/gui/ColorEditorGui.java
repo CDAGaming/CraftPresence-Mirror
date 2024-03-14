@@ -44,9 +44,8 @@ import java.util.function.Supplier;
 @SuppressWarnings("DuplicatedCode")
 public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private final ColorData DEFAULTS, INSTANCE, CURRENT;
-    private final ColorData storedStart, storedEnd;
     private final Supplier<ColorData> syncSupplier;
-
+    private ColorData storedStart, storedEnd;
     // Start Color Data
     private SliderControl startRed, startGreen, startBlue, startAlpha;
     // End Color Data
@@ -61,14 +60,14 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;
         syncSupplier = syncData;
-
-        storedStart = new ColorData(getInstance().getStart());
-        storedEnd = new ColorData(getInstance().getEnd());
     }
 
     @Override
     protected void appendControls() {
         super.appendControls();
+
+        storedStart = new ColorData(getInstanceData().getStart());
+        storedEnd = new ColorData(getInstanceData().getEnd());
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
@@ -114,18 +113,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(2)),
                         new Pair<>(180, 20),
-                        getInstance().getStart().red,
+                        getInstanceData().getStart().red,
                         0.0f, 255.0f, 1.0f,
                         redTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.red = (int) startRed.getSliderValue();
                                     setStartColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.red = (int) startRed.getSliderValue();
                                     setStartColor(sect);
                                 }
@@ -136,18 +135,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(3)),
                         new Pair<>(180, 20),
-                        getInstance().getStart().green,
+                        getInstanceData().getStart().green,
                         0.0f, 255.0f, 1.0f,
                         greenTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.green = (int) startGreen.getSliderValue();
                                     setStartColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.green = (int) startGreen.getSliderValue();
                                     setStartColor(sect);
                                 }
@@ -158,18 +157,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(4)),
                         new Pair<>(180, 20),
-                        getInstance().getStart().blue,
+                        getInstanceData().getStart().blue,
                         0.0f, 255.0f, 1.0f,
                         blueTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.blue = (int) startBlue.getSliderValue();
                                     setStartColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.blue = (int) startBlue.getSliderValue();
                                     setStartColor(sect);
                                 }
@@ -180,18 +179,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(5)),
                         new Pair<>(180, 20),
-                        getInstance().getStart().alpha,
+                        getInstanceData().getStart().alpha,
                         0.0f, 255.0f, 1.0f,
                         alphaTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.alpha = (int) startAlpha.getSliderValue();
                                     setStartColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getStart();
+                                    final ColorSection sect = getInstanceData().getStart();
                                     sect.alpha = (int) startAlpha.getSliderValue();
                                     setStartColor(sect);
                                 }
@@ -235,18 +234,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(8)),
                         new Pair<>(180, 20),
-                        getInstance().getEnd().red,
+                        getInstanceData().getEnd().red,
                         0.0f, 255.0f, 1.0f,
                         redTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.red = (int) endRed.getSliderValue();
                                     setEndColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.red = (int) endRed.getSliderValue();
                                     setEndColor(sect);
                                 }
@@ -257,18 +256,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(9)),
                         new Pair<>(180, 20),
-                        getInstance().getEnd().green,
+                        getInstanceData().getEnd().green,
                         0.0f, 255.0f, 1.0f,
                         greenTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.green = (int) endGreen.getSliderValue();
                                     setEndColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.green = (int) endGreen.getSliderValue();
                                     setEndColor(sect);
                                 }
@@ -279,18 +278,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(10)),
                         new Pair<>(180, 20),
-                        getInstance().getEnd().blue,
+                        getInstanceData().getEnd().blue,
                         0.0f, 255.0f, 1.0f,
                         blueTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.blue = (int) endBlue.getSliderValue();
                                     setEndColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.blue = (int) endBlue.getSliderValue();
                                     setEndColor(sect);
                                 }
@@ -301,18 +300,18 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(11)),
                         new Pair<>(180, 20),
-                        getInstance().getEnd().alpha,
+                        getInstanceData().getEnd().alpha,
                         0.0f, 255.0f, 1.0f,
                         alphaTitle,
                         new Tuple<>(
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.alpha = (int) endAlpha.getSliderValue();
                                     setEndColor(sect);
                                 },
                                 null,
                                 () -> {
-                                    final ColorSection sect = getInstance().getEnd();
+                                    final ColorSection sect = getInstanceData().getEnd();
                                     sect.alpha = (int) endAlpha.getSliderValue();
                                     setEndColor(sect);
                                 }
@@ -339,11 +338,11 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         getFontRenderer(),
                         getButtonY(13),
                         180, 20,
-                        () -> getInstance().setTexLocation(textureLocationText.getControlMessage()),
+                        () -> getInstanceData().setTexLocation(textureLocationText.getControlMessage()),
                         "gui.config.message.editor.texture_path"
                 )
         );
-        textureLocationText.setControlMessage(getInstance().getTexLocation());
+        textureLocationText.setControlMessage(getInstanceData().getTexLocation());
         tintFactor = childFrame.addControl(
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(14)),
@@ -358,7 +357,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 calc2, getButtonY(14, 1),
                 calcAlt, 93,
                 0.0D, () -> tintFactor.getSliderValue(true),
-                this::getInstance, true
+                this::getInstanceData, true
         ));
     }
 
@@ -394,12 +393,12 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
     @Override
     protected void applySettings() {
-        setCurrentData(getInstance());
+        setCurrentData(getInstanceData());
     }
 
     @Override
-    protected ColorData getOriginalData() {
-        return DEFAULTS;
+    protected ColorData getInstanceData() {
+        return INSTANCE;
     }
 
     @Override
@@ -409,7 +408,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
     @Override
     protected boolean setCurrentData(ColorData data) {
-        // Hotfix: Ensure Optional Data Persistance
+        // Hotfix: Ensure Optional Data Persistence
         if (data.getStart() != null && data.getStart().equals(data.getEnd())) {
             data.setEndColor(null);
         }
@@ -425,17 +424,13 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         return false;
     }
 
-    protected ColorData getInstance() {
-        return INSTANCE;
-    }
-
     private void setStartColor(final ColorSection sect) {
-        getInstance().setStartColor(sect);
+        getInstanceData().setStartColor(sect);
         storedStart.setStartColor(sect);
     }
 
     private void setEndColor(final ColorSection sect) {
-        getInstance().setEndColor(sect);
+        getInstanceData().setEndColor(sect);
         storedEnd.setStartColor(sect);
     }
 }

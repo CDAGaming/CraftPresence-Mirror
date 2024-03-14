@@ -50,13 +50,11 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     private TextWidget clientId, defaultIcon;
     private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
     private int currentPreferredClient = DiscordBuild.ANY.ordinal();
-    private String currentIcon;
 
     GeneralSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.general");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
-        currentIcon = getCurrentData().defaultIcon;
     }
 
     @Override
@@ -68,6 +66,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         getFontRenderer(),
                         getButtonY(0),
                         180, 20,
+                        () -> getInstanceData().clientId = clientId.getControlMessage(),
                         "gui.config.name.general.client_id",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -76,7 +75,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 )
         );
-        clientId.setControlMessage(getCurrentData().clientId);
+        clientId.setControlMessage(getInstanceData().clientId);
         clientId.setControlMaxLength(32);
 
         final int calc1 = (getScreenWidth() / 2) - 183;
@@ -88,6 +87,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         getFontRenderer(),
                         getButtonY(1),
                         147, 20,
+                        () -> getInstanceData().defaultIcon = defaultIcon.getControlMessage(),
                         "gui.config.name.general.default_icon",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -97,11 +97,11 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 )
         );
         addIconSelector(childFrame, () -> defaultIcon,
-                (attributeName, currentValue) -> currentIcon = currentValue
+                (attributeName, currentValue) -> getInstanceData().defaultIcon = currentValue
         );
-        defaultIcon.setControlMessage(currentIcon);
+        defaultIcon.setControlMessage(getInstanceData().defaultIcon);
 
-        currentPartyPrivacy = getCurrentData().partyPrivacyLevel;
+        currentPartyPrivacy = getInstanceData().partyPrivacyLevel;
         partyPrivacyLevelButton = childFrame.addControl(
                 new ExtendedButtonControl(
                         calc1, getButtonY(2),
@@ -110,6 +110,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         () -> {
                             currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length;
                             partyPrivacyLevelButton.setControlMessage("gui.config.name.general.party_privacy => " + PartyPrivacy.from(currentPartyPrivacy).name());
+                            getInstanceData().partyPrivacyLevel = currentPartyPrivacy;
                         },
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -118,7 +119,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 )
         );
-        currentPreferredClient = getCurrentData().preferredClientLevel;
+        currentPreferredClient = getInstanceData().preferredClientLevel;
         preferredClientLevelButton = childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(2),
@@ -127,6 +128,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         () -> {
                             currentPreferredClient = (currentPreferredClient + 1) % DiscordBuild.values().length;
                             preferredClientLevelButton.setControlMessage("gui.config.name.general.preferred_client => " + DiscordBuild.from(currentPreferredClient).name());
+                            getInstanceData().preferredClientLevel = currentPreferredClient;
                         },
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -139,8 +141,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc1, getButtonY(3),
                         "gui.config.name.general.detect_curse_manifest",
-                        getCurrentData().detectCurseManifest,
-                        null,
+                        getInstanceData().detectCurseManifest,
+                        () -> getInstanceData().detectCurseManifest = detectCurseManifestButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_curse_manifest")
@@ -152,8 +154,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc2, getButtonY(3),
                         "gui.config.name.general.detect_multimc_manifest",
-                        getCurrentData().detectMultiMCManifest,
-                        null,
+                        getInstanceData().detectMultiMCManifest,
+                        () -> getInstanceData().detectMultiMCManifest = detectMultiMCManifestButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_multimc_manifest")
@@ -165,8 +167,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc1, getButtonY(4, -10),
                         "gui.config.name.general.detect_mcupdater_instance",
-                        getCurrentData().detectMCUpdaterInstance,
-                        null,
+                        getInstanceData().detectMCUpdaterInstance,
+                        () -> getInstanceData().detectMCUpdaterInstance = detectMCUpdaterInstanceButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_mcupdater_instance")
@@ -178,8 +180,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc2, getButtonY(4, -10),
                         "gui.config.name.general.detect_technic_pack",
-                        getCurrentData().detectTechnicPack,
-                        null,
+                        getInstanceData().detectTechnicPack,
+                        () -> getInstanceData().detectTechnicPack = detectTechnicPackButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_technic_pack")
@@ -191,8 +193,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc1, getButtonY(5, -20),
                         "gui.config.name.general.detect_atlauncher_instance",
-                        getCurrentData().detectATLauncherInstance,
-                        null,
+                        getInstanceData().detectATLauncherInstance,
+                        () -> getInstanceData().detectATLauncherInstance = detectATLauncherButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_atlauncher_instance")
@@ -204,8 +206,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc2, getButtonY(5, -20),
                         "gui.config.name.general.detect_modrinth_pack",
-                        getCurrentData().detectModrinthPack,
-                        null,
+                        getInstanceData().detectModrinthPack,
+                        () -> getInstanceData().detectModrinthPack = detectModrinthPackButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_modrinth_pack")
@@ -217,8 +219,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc1, getButtonY(6, -30),
                         "gui.config.name.general.enable_join_request",
-                        getCurrentData().enableJoinRequests,
-                        null,
+                        getInstanceData().enableJoinRequests,
+                        () -> getInstanceData().enableJoinRequests = enableJoinRequestButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.enable_join_request")
@@ -230,8 +232,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc2, getButtonY(6, -30),
                         "gui.config.name.general.detect_dimension_data",
-                        getCurrentData().detectDimensionData,
-                        null,
+                        getInstanceData().detectDimensionData,
+                        () -> getInstanceData().detectDimensionData = detectDimensionDataButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_dimension_data")
@@ -243,8 +245,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc1, getButtonY(7, -40),
                         "gui.config.name.general.auto_register",
-                        getCurrentData().autoRegister,
-                        null,
+                        getInstanceData().autoRegister,
+                        () -> getInstanceData().autoRegister = autoRegisterButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.auto_register")
@@ -256,8 +258,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc2, getButtonY(7, -40),
                         "gui.config.name.general.detect_biome_data",
-                        getCurrentData().detectBiomeData,
-                        null,
+                        getInstanceData().detectBiomeData,
+                        () -> getInstanceData().detectBiomeData = detectBiomeDataButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_biome_data")
@@ -269,8 +271,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc1, getButtonY(8, -50),
                         "gui.config.name.general.reset_time_on_init",
-                        getCurrentData().resetTimeOnInit,
-                        null,
+                        getInstanceData().resetTimeOnInit,
+                        () -> getInstanceData().resetTimeOnInit = resetTimeOnInitButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.reset_time_on_init")
@@ -282,8 +284,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                 new CheckBoxControl(
                         calc2, getButtonY(8, -50),
                         "gui.config.name.general.detect_world_data",
-                        getCurrentData().detectWorldData,
-                        null,
+                        getInstanceData().detectWorldData,
+                        () -> getInstanceData().detectWorldData = detectWorldDataButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.general.detect_world_data")
@@ -305,70 +307,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
 
     @Override
     protected void applySettings() {
-        if (!clientId.getControlMessage().equals(getCurrentData().clientId)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().clientId = clientId.getControlMessage();
-        }
-        if (!defaultIcon.getControlMessage().equals(getCurrentData().defaultIcon)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().defaultIcon = defaultIcon.getControlMessage();
-        }
-        if (currentPartyPrivacy != getCurrentData().partyPrivacyLevel) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().partyPrivacyLevel = currentPartyPrivacy;
-        }
-        if (currentPreferredClient != getCurrentData().preferredClientLevel) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().preferredClientLevel = currentPreferredClient;
-        }
-        if (detectATLauncherButton.isChecked() != getCurrentData().detectATLauncherInstance) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectATLauncherInstance = detectATLauncherButton.isChecked();
-        }
-        if (detectCurseManifestButton.isChecked() != getCurrentData().detectCurseManifest) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectCurseManifest = detectCurseManifestButton.isChecked();
-        }
-        if (detectMultiMCManifestButton.isChecked() != getCurrentData().detectMultiMCManifest) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectMultiMCManifest = detectMultiMCManifestButton.isChecked();
-        }
-        if (detectMCUpdaterInstanceButton.isChecked() != getCurrentData().detectMCUpdaterInstance) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectMCUpdaterInstance = detectMCUpdaterInstanceButton.isChecked();
-        }
-        if (detectTechnicPackButton.isChecked() != getCurrentData().detectTechnicPack) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectTechnicPack = detectTechnicPackButton.isChecked();
-        }
-        if (detectModrinthPackButton.isChecked() != getCurrentData().detectModrinthPack) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectModrinthPack = detectModrinthPackButton.isChecked();
-        }
-        if (detectBiomeDataButton.isChecked() != getCurrentData().detectBiomeData) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectBiomeData = detectBiomeDataButton.isChecked();
-        }
-        if (detectDimensionDataButton.isChecked() != getCurrentData().detectDimensionData) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectDimensionData = detectDimensionDataButton.isChecked();
-        }
-        if (detectWorldDataButton.isChecked() != getCurrentData().detectWorldData) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().detectWorldData = detectWorldDataButton.isChecked();
-        }
-        if (enableJoinRequestButton.isChecked() != getCurrentData().enableJoinRequests) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().enableJoinRequests = enableJoinRequestButton.isChecked();
-        }
-        if (resetTimeOnInitButton.isChecked() != getCurrentData().resetTimeOnInit) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().resetTimeOnInit = resetTimeOnInitButton.isChecked();
-        }
-        if (autoRegisterButton.isChecked() != getCurrentData().autoRegister) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().autoRegister = autoRegisterButton.isChecked();
-        }
+        setCurrentData(getInstanceData());
     }
 
     @Override
@@ -411,7 +350,7 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     }
 
     @Override
-    protected General getOriginalData() {
+    protected General getInstanceData() {
         return INSTANCE;
     }
 

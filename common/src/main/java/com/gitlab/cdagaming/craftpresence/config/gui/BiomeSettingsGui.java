@@ -43,23 +43,20 @@ import net.minecraft.client.gui.GuiScreen;
 @SuppressWarnings("DuplicatedCode")
 public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     private final Biome INSTANCE, DEFAULTS;
-    private final ModuleData defaultData;
     private ExtendedButtonControl biomeMessagesButton;
     private TextWidget defaultMessage, defaultIcon;
-    private String currentIcon;
 
     BiomeSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.biome_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
-        defaultData = getCurrentData().biomeData.get("default");
-        currentIcon = getCurrentData().fallbackBiomeIcon;
     }
 
     @Override
     protected void appendControls() {
         super.appendControls();
 
+        final ModuleData defaultData = getInstanceData().biomeData.get("default");
         final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultMessage = childFrame.addControl(
@@ -67,6 +64,11 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         getFontRenderer(),
                         getButtonY(0),
                         180, 20,
+                        () -> {
+                            final ModuleData defaultBiomeData = getInstanceData().biomeData.getOrDefault("default", new ModuleData());
+                            defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
+                            getInstanceData().biomeData.put("default", defaultBiomeData);
+                        },
                         "gui.config.message.default.biome",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -84,6 +86,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         getFontRenderer(),
                         getButtonY(1),
                         147, 20,
+                        () -> getInstanceData().fallbackBiomeIcon = defaultIcon.getControlMessage(),
                         "gui.config.name.biome_messages.biome_icon",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -93,9 +96,9 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                 )
         );
         addIconSelector(childFrame, () -> defaultIcon,
-                (attributeName, currentValue) -> currentIcon = currentValue
+                (attributeName, currentValue) -> getInstanceData().fallbackBiomeIcon = currentValue
         );
-        defaultIcon.setControlMessage(currentIcon);
+        defaultIcon.setControlMessage(getInstanceData().fallbackBiomeIcon);
 
         biomeMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
@@ -271,21 +274,11 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
 
     @Override
     protected void applySettings() {
-        final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
-        if (!defaultMessage.getControlMessage().equals(defaultBiomeMessage)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            final ModuleData defaultBiomeData = getCurrentData().biomeData.getOrDefault("default", new ModuleData());
-            defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
-            getCurrentData().biomeData.put("default", defaultBiomeData);
-        }
-        if (!defaultIcon.getControlMessage().equals(getCurrentData().fallbackBiomeIcon)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().fallbackBiomeIcon = defaultIcon.getControlMessage();
-        }
+        setCurrentData(getInstanceData());
     }
 
     @Override
-    protected Biome getOriginalData() {
+    protected Biome getInstanceData() {
         return INSTANCE;
     }
 

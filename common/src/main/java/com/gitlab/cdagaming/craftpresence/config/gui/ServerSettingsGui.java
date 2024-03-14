@@ -43,23 +43,20 @@ import net.minecraft.client.gui.GuiScreen;
 @SuppressWarnings("DuplicatedCode")
 public class ServerSettingsGui extends ConfigurationGui<Server> {
     private final Server INSTANCE, DEFAULTS;
-    private final ModuleData defaultData;
     private ExtendedButtonControl serverMessagesButton;
     private TextWidget defaultMOTD, defaultName, defaultMessage, defaultIcon;
-    private String currentIcon;
 
     ServerSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.server_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
-        defaultData = getCurrentData().serverData.get("default");
-        currentIcon = getCurrentData().fallbackServerIcon;
     }
 
     @Override
     protected void appendControls() {
         super.appendControls();
 
+        final ModuleData defaultData = getInstanceData().serverData.get("default");
         final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultName = childFrame.addControl(
@@ -67,6 +64,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getFontRenderer(),
                         getButtonY(0),
                         180, 20,
+                        () -> getInstanceData().fallbackServerName = defaultName.getControlMessage(),
                         "gui.config.name.server_messages.server_name",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -75,12 +73,13 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         )
                 )
         );
-        defaultName.setControlMessage(getCurrentData().fallbackServerName);
+        defaultName.setControlMessage(getInstanceData().fallbackServerName);
         defaultMOTD = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(1),
                         180, 20,
+                        () -> getInstanceData().fallbackServerMotd = defaultMOTD.getControlMessage(),
                         "gui.config.name.server_messages.server_motd",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -89,12 +88,17 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         )
                 )
         );
-        defaultMOTD.setControlMessage(getCurrentData().fallbackServerMotd);
+        defaultMOTD.setControlMessage(getInstanceData().fallbackServerMotd);
         defaultMessage = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(2),
                         180, 20,
+                        () -> {
+                            final ModuleData defaultServerData = getInstanceData().serverData.getOrDefault("default", new ModuleData());
+                            defaultServerData.setTextOverride(defaultMessage.getControlMessage());
+                            getInstanceData().serverData.put("default", defaultServerData);
+                        },
                         "gui.config.message.default.server",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -112,6 +116,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getFontRenderer(),
                         getButtonY(3),
                         147, 20,
+                        () -> getInstanceData().fallbackServerIcon = defaultIcon.getControlMessage(),
                         "gui.config.name.server_messages.server_icon",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -121,9 +126,9 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                 )
         );
         addIconSelector(childFrame, () -> defaultIcon,
-                (attributeName, currentValue) -> currentIcon = currentValue
+                (attributeName, currentValue) -> getInstanceData().fallbackServerIcon = currentValue
         );
-        defaultIcon.setControlMessage(currentIcon);
+        defaultIcon.setControlMessage(getInstanceData().fallbackServerIcon);
 
         serverMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
@@ -299,29 +304,11 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
 
     @Override
     protected void applySettings() {
-        final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
-        if (!defaultName.getControlMessage().equals(getCurrentData().fallbackServerName)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().fallbackServerName = defaultName.getControlMessage();
-        }
-        if (!defaultMOTD.getControlMessage().equals(getCurrentData().fallbackServerMotd)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().fallbackServerMotd = defaultMOTD.getControlMessage();
-        }
-        if (!defaultMessage.getControlMessage().equals(defaultServerMessage)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            final ModuleData defaultServerData = getCurrentData().serverData.getOrDefault("default", new ModuleData());
-            defaultServerData.setTextOverride(defaultMessage.getControlMessage());
-            getCurrentData().serverData.put("default", defaultServerData);
-        }
-        if (!defaultIcon.getControlMessage().equals(getCurrentData().fallbackServerIcon)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().fallbackServerIcon = defaultIcon.getControlMessage();
-        }
+        setCurrentData(getInstanceData());
     }
 
     @Override
-    protected Server getOriginalData() {
+    protected Server getInstanceData() {
         return INSTANCE;
     }
 

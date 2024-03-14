@@ -43,23 +43,20 @@ import net.minecraft.client.gui.GuiScreen;
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     private final Dimension INSTANCE, DEFAULTS;
-    private final ModuleData defaultData;
     private ExtendedButtonControl dimensionMessagesButton;
     private TextWidget defaultMessage, defaultIcon;
-    private String currentIcon;
 
     DimensionSettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.dimension_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
-        defaultData = getCurrentData().dimensionData.get("default");
-        currentIcon = getCurrentData().fallbackDimensionIcon;
     }
 
     @Override
     protected void appendControls() {
         super.appendControls();
 
+        final ModuleData defaultData = getInstanceData().dimensionData.get("default");
         final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
 
         defaultMessage = childFrame.addControl(
@@ -67,6 +64,11 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         getFontRenderer(),
                         getButtonY(0),
                         180, 20,
+                        () -> {
+                            final ModuleData defaultDimensionData = getInstanceData().dimensionData.getOrDefault("default", new ModuleData());
+                            defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
+                            getInstanceData().dimensionData.put("default", defaultDimensionData);
+                        },
                         "gui.config.message.default.dimension",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -84,6 +86,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         getFontRenderer(),
                         getButtonY(1),
                         147, 20,
+                        () -> getInstanceData().fallbackDimensionIcon = defaultIcon.getControlMessage(),
                         "gui.config.name.dimension_messages.dimension_icon",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -93,9 +96,9 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                 )
         );
         addIconSelector(childFrame, () -> defaultIcon,
-                (attributeName, currentValue) -> currentIcon = currentValue
+                (attributeName, currentValue) -> getInstanceData().fallbackDimensionIcon = currentValue
         );
-        defaultIcon.setControlMessage(currentIcon);
+        defaultIcon.setControlMessage(getInstanceData().fallbackDimensionIcon);
 
         dimensionMessagesButton = childFrame.addControl(
                 new ExtendedButtonControl(
@@ -271,21 +274,11 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
 
     @Override
     protected void applySettings() {
-        final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
-        if (!defaultMessage.getControlMessage().equals(defaultDimensionMessage)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            final ModuleData defaultDimensionData = getCurrentData().dimensionData.getOrDefault("default", new ModuleData());
-            defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
-            getCurrentData().dimensionData.put("default", defaultDimensionData);
-        }
-        if (!defaultIcon.getControlMessage().equals(getCurrentData().fallbackDimensionIcon)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().fallbackDimensionIcon = defaultIcon.getControlMessage();
-        }
+        setCurrentData(getInstanceData());
     }
 
     @Override
-    protected Dimension getOriginalData() {
+    protected Dimension getInstanceData() {
         return INSTANCE;
     }
 

@@ -152,6 +152,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         getFontRenderer(),
                         getButtonY(2),
                         180, 20,
+                        () -> getInstanceData().languageId = languageIdText.getControlMessage(),
                         "gui.config.name.accessibility.language_id",
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -160,14 +161,14 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         )
                 )
         );
-        languageIdText.setControlMessage(getCurrentData().languageId);
+        languageIdText.setControlMessage(getInstanceData().languageId);
 
         stripTranslationColorsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(3),
                         "gui.config.name.accessibility.strip_translation_colors",
-                        getCurrentData().stripTranslationColors,
-                        null,
+                        getInstanceData().stripTranslationColors,
+                        () -> getInstanceData().stripTranslationColors = stripTranslationColorsButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_colors")
@@ -179,8 +180,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                 new CheckBoxControl(
                         calc1, getButtonY(4, -10),
                         "gui.config.name.accessibility.strip_translation_formatting",
-                        getCurrentData().stripTranslationFormatting,
-                        null,
+                        getInstanceData().stripTranslationFormatting,
+                        () -> getInstanceData().stripTranslationFormatting = stripTranslationFormattingButton.isChecked(),
                         () -> {
                             if (stripTranslationFormattingButton.isControlEnabled()) {
                                 drawMultiLineString(
@@ -202,8 +203,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                 new CheckBoxControl(
                         calc1, getButtonY(5, -20),
                         "gui.config.name.accessibility.strip_extra_gui_elements",
-                        getCurrentData().stripExtraGuiElements,
-                        null,
+                        getInstanceData().stripExtraGuiElements,
+                        () -> getInstanceData().stripExtraGuiElements = stripExtraGuiElementsButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_extra_gui_elements")
@@ -215,8 +216,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                 new CheckBoxControl(
                         calc1, getButtonY(6, -30),
                         "gui.config.name.accessibility.render_tooltips",
-                        getCurrentData().renderTooltips,
-                        null,
+                        getInstanceData().renderTooltips,
+                        () -> getInstanceData().renderTooltips = renderTooltipsButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.accessibility.render_tooltips")
@@ -293,30 +294,11 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     @Override
     protected void applySettings() {
-        if (!languageIdText.getControlMessage().equals(getCurrentData().languageId)) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().languageId = languageIdText.getControlMessage();
-        }
-        if (stripTranslationColorsButton.isChecked() != getCurrentData().stripTranslationColors) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().stripTranslationColors = stripTranslationColorsButton.isChecked();
-        }
-        if (stripTranslationFormattingButton.isChecked() != getCurrentData().stripTranslationFormatting) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().stripTranslationFormatting = stripTranslationFormattingButton.isChecked();
-        }
-        if (stripExtraGuiElementsButton.isChecked() != getCurrentData().stripExtraGuiElements) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().stripExtraGuiElements = stripExtraGuiElementsButton.isChecked();
-        }
-        if (renderTooltipsButton.isChecked() != getCurrentData().renderTooltips) {
-            CraftPresence.CONFIG.hasChanged = true;
-            getCurrentData().renderTooltips = renderTooltipsButton.isChecked();
-        }
+        setCurrentData(getInstanceData());
     }
 
     @Override
-    protected Accessibility getOriginalData() {
+    protected Accessibility getInstanceData() {
         return INSTANCE;
     }
 

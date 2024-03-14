@@ -183,7 +183,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     }
 
     @Override
-    protected Status getOriginalData() {
+    protected Status getInstanceData() {
         return INSTANCE;
     }
 
