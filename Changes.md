@@ -11,10 +11,25 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * ClassGraph (`4.8.165` -> `4.8.168`)
+* (Backend) Added two new UI Widget Types: `ButtonWidget` and `ScrollableTextWidget`
+    * `ButtonWidget`: A Row-Style button widget, based on the `TextWidget` implementation
+    * `ScrollableTextWidget`: A single-line implementation of `TextDisplayWidget`, also using the new scrolling string
+      functions rather then `drawMultilineString`
+* Implemented Several frontend UI Improvements:
+    * The Controls Screen has been improved to use a `ScrollPane` as well as adding `Reset Key` support
+    * Most String UI elements have been migrated from `TextDisplayWidget` to `ScrollableTextWidget` controls
 
 ### Fixes
 
-* TBD
+* Fixed incorrect KeyCode widget creation when re-entering Controls Screen
+    * Occurs when making a change, then leaving and re-entering the Controls Screen
+* (Backend) Fixed missing `super` calls with `TextWidget` controls
+* (Backend) Fixed `ScrollPane#checkScrollbarClick()` not checking `needsScrollbar()`
+    * This would have a chance to return a false-positive when clicking on the right-side of the pane
+* (Backend) Fixed `ScrollPane#getScrollBarWidth()` not checking `needsScrollbar()`
+    * Now returns 0 if false; also adjusts several previously mis-aligned UI elements
+* (Backend) Fixed an incorrect resize event call on some Minecraft versions
+    * Additionally, several UIs have been adjusted to restore widget settings (text, checked status, etc.) upon resizing
 
 ___
 
