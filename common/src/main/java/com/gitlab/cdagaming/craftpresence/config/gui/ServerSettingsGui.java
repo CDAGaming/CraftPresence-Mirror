@@ -147,7 +147,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                             final String defaultMessage = Config.getProperty(defaultServerData, "textOverride") != null ? defaultServerData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentServerData, "textOverride") != null ? currentServerData.getTextOverride() : "";
 
-                                            CraftPresence.CONFIG.hasChanged = true;
+                                            markAsChanged();
                                             final ModuleData newData = new ModuleData();
                                             if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
                                                 newData.setTextOverride(defaultMessage);
@@ -177,7 +177,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().serverData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.SERVER.knownAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.add(attributeName);
@@ -185,7 +185,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().serverData.remove(attributeName);
                                                                 if (!CraftPresence.SERVER.defaultAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.remove(attributeName);
@@ -265,22 +265,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
@@ -290,21 +275,11 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     }
 
     @Override
-    protected boolean syncData() {
-        return setCurrentData(Config.loadOrCreate().serverSettings);
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultName.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultMOTD.getControlMessage()));
         serverMessagesButton.setControlEnabled(CraftPresence.SERVER.enabled);
-    }
-
-    @Override
-    protected void applySettings() {
-        setCurrentData(getInstanceData());
     }
 
     @Override
@@ -318,12 +293,12 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     }
 
     @Override
-    protected boolean setCurrentData(Server data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
+    protected Server getDefaultData() {
+        return DEFAULTS;
+    }
+
+    @Override
+    protected Server getSyncData() {
+        return Config.loadOrCreate().serverSettings;
     }
 }

@@ -246,39 +246,13 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    protected boolean canReset() {
-        // Hotfix: Preserve `dynamicIcons` as a cache setting
-        DEFAULTS.displaySettings.dynamicIcons = getCurrentData().displaySettings.dynamicIcons;
-
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        // Hotfix: Preserve `dynamicIcons` as a cache setting
-        DEFAULTS.displaySettings.dynamicIcons = getCurrentData().displaySettings.dynamicIcons;
-
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
     @Override
     protected boolean allowedToSync() {
         return true;
-    }
-
-    @Override
-    protected boolean syncData() {
-        return setCurrentData(Config.loadOrCreate());
     }
 
     @Override
@@ -301,12 +275,15 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    protected boolean setCurrentData(Config data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            getCurrentData().hasChanged = true;
-            return true;
-        }
-        return false;
+    protected Config getDefaultData() {
+        // Hotfix: Preserve `dynamicIcons` as a cache setting
+        DEFAULTS.displaySettings.dynamicIcons = getCurrentData().displaySettings.dynamicIcons;
+
+        return DEFAULTS;
+    }
+
+    @Override
+    protected Config getSyncData() {
+        return Config.loadOrCreate();
     }
 }

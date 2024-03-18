@@ -72,8 +72,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().tooltipBackground,
-                                        DEFAULTS.tooltipBackground,
-                                        () -> Config.loadOrCreate().accessibilitySettings.tooltipBackground
+                                        getDefaultData().tooltipBackground,
+                                        () -> getSyncData().tooltipBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -93,8 +93,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().tooltipBorder,
-                                        DEFAULTS.tooltipBorder,
-                                        () -> Config.loadOrCreate().accessibilitySettings.tooltipBorder
+                                        getDefaultData().tooltipBorder,
+                                        () -> getSyncData().tooltipBorder
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -114,8 +114,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().guiBackground,
-                                        DEFAULTS.guiBackground,
-                                        () -> Config.loadOrCreate().accessibilitySettings.guiBackground
+                                        getDefaultData().guiBackground,
+                                        () -> getSyncData().guiBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -135,8 +135,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().altGuiBackground,
-                                        DEFAULTS.altGuiBackground,
-                                        () -> Config.loadOrCreate().accessibilitySettings.altGuiBackground
+                                        getDefaultData().altGuiBackground,
+                                        () -> getSyncData().altGuiBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -253,33 +253,13 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
     @Override
     protected boolean allowedToSync() {
         return true;
-    }
-
-    @Override
-    protected boolean syncData() {
-        return setCurrentData(Config.loadOrCreate().accessibilitySettings);
     }
 
     @Override
@@ -293,11 +273,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     }
 
     @Override
-    protected void applySettings() {
-        setCurrentData(getInstanceData());
-    }
-
-    @Override
     protected Accessibility getInstanceData() {
         return INSTANCE;
     }
@@ -308,12 +283,12 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     }
 
     @Override
-    protected boolean setCurrentData(Accessibility data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
+    protected Accessibility getDefaultData() {
+        return DEFAULTS;
+    }
+
+    @Override
+    protected Accessibility getSyncData() {
+        return Config.loadOrCreate().accessibilitySettings;
     }
 }

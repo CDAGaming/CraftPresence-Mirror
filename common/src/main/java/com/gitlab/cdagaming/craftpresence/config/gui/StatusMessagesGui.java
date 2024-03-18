@@ -130,7 +130,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when adjusting set data
                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                CraftPresence.CONFIG.hasChanged = true;
+                                                markAsChanged();
                                                 getCurrentData().setProperty(attributeName, screenInstance.currentData);
                                                 if (!CraftPresence.GUIS.GUI_NAMES.contains(attributeName)) {
                                                     CraftPresence.GUIS.GUI_NAMES.add(attributeName);
@@ -138,7 +138,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                             },
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when removing set data
-                                                CraftPresence.CONFIG.hasChanged = true;
+                                                markAsChanged();
                                                 getCurrentData().resetProperty(attributeName);
                                             },
                                             (attributeName, screenInstance, isPresenceButton) -> {
@@ -190,15 +190,5 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     @Override
     protected Status getCurrentData() {
         return CraftPresence.CONFIG.statusMessages;
-    }
-
-    @Override
-    protected boolean setCurrentData(Status data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
     }
 }

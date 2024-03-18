@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
@@ -362,38 +361,13 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
     @Override
     protected boolean allowedToSync() {
         return true;
-    }
-
-    @Override
-    protected boolean syncData() {
-        return setCurrentData(syncSupplier.get());
-    }
-
-    @Override
-    protected void applySettings() {
-        setCurrentData(getInstanceData());
     }
 
     @Override
@@ -407,6 +381,16 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     }
 
     @Override
+    protected ColorData getDefaultData() {
+        return DEFAULTS;
+    }
+
+    @Override
+    protected ColorData getSyncData() {
+        return syncSupplier.get();
+    }
+
+    @Override
     protected boolean setCurrentData(ColorData data) {
         // Hotfix: Ensure Optional Data Persistence
         if (data.getStart() != null && data.getStart().equals(data.getEnd())) {
@@ -416,12 +400,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
             data.setTexLocation(null);
         }
 
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
+        return super.setCurrentData(data);
     }
 
     private void setStartColor(final ColorSection sect) {

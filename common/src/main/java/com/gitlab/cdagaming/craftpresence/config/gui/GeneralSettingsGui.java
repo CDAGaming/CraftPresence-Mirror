@@ -306,38 +306,13 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     }
 
     @Override
-    protected void applySettings() {
-        setCurrentData(getInstanceData());
-    }
-
-    @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
     @Override
     protected boolean allowedToSync() {
         return true;
-    }
-
-    @Override
-    protected boolean syncData() {
-        return setCurrentData(Config.loadOrCreate().generalSettings);
     }
 
     @Override
@@ -360,12 +335,12 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     }
 
     @Override
-    protected boolean setCurrentData(General data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
+    protected General getDefaultData() {
+        return DEFAULTS;
+    }
+
+    @Override
+    protected General getSyncData() {
+        return Config.loadOrCreate().generalSettings;
     }
 }

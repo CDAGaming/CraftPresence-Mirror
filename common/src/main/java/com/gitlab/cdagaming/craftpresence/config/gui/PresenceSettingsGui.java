@@ -285,12 +285,12 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 PRESENCE.buttons.put(screenInstance.attributeName, new Button(inputText, secondaryText));
                                                             },
                                                             (screenInstance, secondaryText, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 PRESENCE.buttons.remove(screenInstance.attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -360,7 +360,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().dynamicIcons.put(attributeName, inputText);
                                                                 final DiscordAsset asset = new DiscordAsset()
                                                                         .setName(attributeName)
@@ -377,7 +377,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().dynamicIcons.remove(attributeName);
                                                                 if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
                                                                     DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
@@ -449,12 +449,12 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().dynamicVariables.put(attributeName, inputText);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().dynamicVariables.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -490,45 +490,45 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
     @Override
     protected void applySettings() {
         if (!detailsFormat.getControlMessage().equals(PRESENCE.details)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.details = detailsFormat.getControlMessage();
         }
         if (!gameStateFormat.getControlMessage().equals(PRESENCE.gameState)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.gameState = gameStateFormat.getControlMessage();
         }
         if (!largeImageFormat.getControlMessage().equals(PRESENCE.largeImageText)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.largeImageText = largeImageFormat.getControlMessage();
         }
         if (!smallImageFormat.getControlMessage().equals(PRESENCE.smallImageText)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.smallImageText = smallImageFormat.getControlMessage();
         }
         if (!isDefaultModule) {
             if (enabledCheckbox.isChecked() != PRESENCE.enabled) {
-                CraftPresence.CONFIG.hasChanged = true;
+                markAsChanged();
                 PRESENCE.enabled = enabledCheckbox.isChecked();
             }
             if (useAsMainCheckbox.isChecked() != PRESENCE.useAsMain) {
-                CraftPresence.CONFIG.hasChanged = true;
+                markAsChanged();
                 PRESENCE.useAsMain = useAsMainCheckbox.isChecked();
             }
         }
         if (!largeImageKeyFormat.getControlMessage().equals(PRESENCE.largeImageKey)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.largeImageKey = largeImageKeyFormat.getControlMessage();
         }
         if (!smallImageKeyFormat.getControlMessage().equals(PRESENCE.smallImageKey)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.smallImageKey = smallImageKeyFormat.getControlMessage();
         }
         if (!startTimeFormat.getControlMessage().equals(PRESENCE.startTimestamp)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.startTimestamp = startTimeFormat.getControlMessage();
         }
         if (!endTimeFormat.getControlMessage().equals(PRESENCE.endTimestamp)) {
-            CraftPresence.CONFIG.hasChanged = true;
+            markAsChanged();
             PRESENCE.endTimestamp = endTimeFormat.getControlMessage();
         }
         if (onChangedCallback != null) {
@@ -544,15 +544,5 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
     @Override
     protected Display getCurrentData() {
         return CraftPresence.CONFIG.displaySettings;
-    }
-
-    @Override
-    protected boolean setCurrentData(Display data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
     }
 }

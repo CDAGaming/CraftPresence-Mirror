@@ -117,7 +117,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                             final String defaultMessage = Config.getProperty(defaultDimensionData, "textOverride") != null ? defaultDimensionData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentDimensionData, "textOverride") != null ? currentDimensionData.getTextOverride() : "";
 
-                                            CraftPresence.CONFIG.hasChanged = true;
+                                            markAsChanged();
                                             final ModuleData newData = new ModuleData();
                                             if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
                                                 newData.setTextOverride(defaultMessage);
@@ -147,7 +147,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().dimensionData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.DIMENSIONS.DIMENSION_NAMES.contains(attributeName)) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.add(attributeName);
@@ -155,7 +155,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().dimensionData.remove(attributeName);
                                                                 if (!CraftPresence.DIMENSIONS.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
@@ -235,22 +235,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
@@ -260,21 +245,11 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     }
 
     @Override
-    protected boolean syncData() {
-        return setCurrentData(Config.loadOrCreate().dimensionSettings);
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
-    }
-
-    @Override
-    protected void applySettings() {
-        setCurrentData(getInstanceData());
     }
 
     @Override
@@ -288,12 +263,12 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     }
 
     @Override
-    protected boolean setCurrentData(Dimension data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
+    protected Dimension getDefaultData() {
+        return DEFAULTS;
+    }
+
+    @Override
+    protected Dimension getSyncData() {
+        return Config.loadOrCreate().dimensionSettings;
     }
 }

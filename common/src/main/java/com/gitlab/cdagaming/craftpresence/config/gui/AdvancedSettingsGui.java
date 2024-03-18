@@ -134,7 +134,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().guiSettings.guiData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.GUIS.GUI_NAMES.contains(attributeName)) {
                                                                     CraftPresence.GUIS.GUI_NAMES.add(attributeName);
@@ -142,7 +142,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().guiSettings.guiData.remove(attributeName);
                                                                 if (!CraftPresence.GUIS.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.GUIS.GUI_NAMES.remove(attributeName);
@@ -237,7 +237,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().itemMessages.put(attributeName, inputText);
                                                                 if (!CraftPresence.TILE_ENTITIES.ITEM_NAMES.contains(attributeName)) {
                                                                     CraftPresence.TILE_ENTITIES.ITEM_NAMES.add(attributeName);
@@ -250,7 +250,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().itemMessages.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.ITEM_NAMES.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.BLOCK_NAMES.remove(attributeName);
@@ -325,7 +325,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().entitySettings.targetData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
@@ -333,7 +333,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().entitySettings.targetData.remove(attributeName);
                                                                 if (!CraftPresence.ENTITIES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
@@ -436,7 +436,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().entitySettings.ridingData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
@@ -444,7 +444,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().entitySettings.ridingData.remove(attributeName);
                                                                 if (!CraftPresence.ENTITIES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
@@ -683,33 +683,13 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
     @Override
     protected boolean allowedToSync() {
         return true;
-    }
-
-    @Override
-    protected boolean syncData() {
-        return setCurrentData(Config.loadOrCreate().advancedSettings);
     }
 
     @Override
@@ -728,11 +708,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     }
 
     @Override
-    protected void applySettings() {
-        setCurrentData(getInstanceData());
-    }
-
-    @Override
     protected Advanced getInstanceData() {
         return INSTANCE;
     }
@@ -743,12 +718,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     }
 
     @Override
-    protected boolean setCurrentData(Advanced data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
+    protected Advanced getDefaultData() {
+        return DEFAULTS;
+    }
+
+    @Override
+    protected Advanced getSyncData() {
+        return Config.loadOrCreate().advancedSettings;
     }
 }

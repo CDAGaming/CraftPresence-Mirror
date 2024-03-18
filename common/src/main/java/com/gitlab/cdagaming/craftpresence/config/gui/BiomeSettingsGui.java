@@ -117,7 +117,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                             final String defaultMessage = Config.getProperty(defaultBiomeData, "textOverride") != null ? defaultBiomeData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentBiomeData, "textOverride") != null ? currentBiomeData.getTextOverride() : "";
 
-                                            CraftPresence.CONFIG.hasChanged = true;
+                                            markAsChanged();
                                             final ModuleData newData = new ModuleData();
                                             if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
                                                 newData.setTextOverride(defaultMessage);
@@ -147,7 +147,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().biomeData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.BIOMES.BIOME_NAMES.contains(attributeName)) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.add(attributeName);
@@ -155,7 +155,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                CraftPresence.CONFIG.hasChanged = true;
+                                                                markAsChanged();
                                                                 getCurrentData().biomeData.remove(attributeName);
                                                                 if (!CraftPresence.BIOMES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
@@ -235,22 +235,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     }
 
     @Override
-    protected boolean canReset() {
-        return !getCurrentData().equals(DEFAULTS);
-    }
-
-    @Override
     protected boolean allowedToReset() {
-        return true;
-    }
-
-    @Override
-    protected boolean resetData() {
-        return setCurrentData(DEFAULTS);
-    }
-
-    @Override
-    protected boolean canSync() {
         return true;
     }
 
@@ -260,21 +245,11 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     }
 
     @Override
-    protected boolean syncData() {
-        return setCurrentData(Config.loadOrCreate().biomeSettings);
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
         biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.enabled);
-    }
-
-    @Override
-    protected void applySettings() {
-        setCurrentData(getInstanceData());
     }
 
     @Override
@@ -288,12 +263,12 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     }
 
     @Override
-    protected boolean setCurrentData(Biome data) {
-        if (!getCurrentData().equals(data)) {
-            getCurrentData().transferFrom(data);
-            CraftPresence.CONFIG.hasChanged = true;
-            return true;
-        }
-        return false;
+    protected Biome getDefaultData() {
+        return DEFAULTS;
+    }
+
+    @Override
+    protected Biome getSyncData() {
+        return Config.loadOrCreate().biomeSettings;
     }
 }

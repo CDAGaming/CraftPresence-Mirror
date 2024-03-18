@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.gui.AboutGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
@@ -193,7 +194,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected boolean canReset() {
-        return false;
+        return allowedToReset() && getDefaultData() != null && !getCurrentData().equals(getDefaultData());
     }
 
     protected boolean allowedToReset() {
@@ -201,7 +202,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected boolean canSync() {
-        return false;
+        return allowedToSync();
     }
 
     protected boolean allowedToSync() {
@@ -212,9 +213,9 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         proceedButton.setControlEnabled(canProceed());
 
         resetConfigButton.setControlVisible(allowedToReset());
-        resetConfigButton.setControlEnabled(allowedToReset() && canReset());
+        resetConfigButton.setControlEnabled(canReset());
         syncConfigButton.setControlVisible(allowedToSync());
-        syncConfigButton.setControlEnabled(allowedToSync() && canSync());
+        syncConfigButton.setControlEnabled(canSync());
     }
 
     protected void appendControls() {
@@ -249,20 +250,39 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected boolean resetData() {
-        return false;
+        return setCurrentData(getDefaultData());
     }
 
     protected boolean syncData() {
-        return false;
+        return setCurrentData(getSyncData());
     }
 
     protected void applySettings() {
-        // N/A
+        setCurrentData(getInstanceData());
     }
 
     protected abstract T getInstanceData();
 
     protected abstract T getCurrentData();
 
-    protected abstract boolean setCurrentData(T data);
+    protected T getDefaultData() {
+        return null;
+    }
+
+    protected T getSyncData() {
+        return null;
+    }
+
+    protected boolean setCurrentData(T data) {
+        if (data != null && !getCurrentData().equals(data)) {
+            getCurrentData().transferFrom(data);
+            markAsChanged();
+            return true;
+        }
+        return false;
+    }
+
+    protected void markAsChanged() {
+        CraftPresence.CONFIG.hasChanged = true;
+    }
 }
