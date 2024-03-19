@@ -30,6 +30,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Now returns 0 if false; also adjusts several previously mis-aligned UI elements
 * (Backend) Fixed an incorrect resize event call on some Minecraft versions
     * Additionally, several UIs have been adjusted to restore widget settings (text, checked status, etc.) upon resizing
+* Fixed a broken translation for the `/craftpresence view` command (Related to `placeholders` command)
 
 ___
 
