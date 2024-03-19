@@ -59,7 +59,7 @@ public class CommandsGui extends ExtendedScreen {
     private ExtendedTextControl commandInput;
     private ExtendedScreen childFrame;
     private TextDisplayWidget previewArea;
-    private String executionString;
+    private String executionString, commandString = "";
     private boolean blockInteractions = false;
     private String[] commandArgs, filteredCommandArgs;
     private List<String> tabCompletions = StringUtils.newArrayList();
@@ -138,9 +138,11 @@ public class CommandsGui extends ExtendedScreen {
                 new ExtendedTextControl(
                         getFontRenderer(),
                         proceedButton.getRight() + 4, (getScreenHeight() - 26),
-                        (getScreenWidth() - 112), 20
+                        (getScreenWidth() - 112), 20,
+                        () -> commandString = commandInput.getControlMessage()
                 )
         );
+        commandInput.setControlMessage(commandString);
 
         childFrame = addControl(
                 new ScrollPane(
@@ -188,11 +190,11 @@ public class CommandsGui extends ExtendedScreen {
      * Executes Tab-Completion and Primary Command Logic
      */
     private void checkCommands() {
-        if (!StringUtils.isNullOrEmpty(commandInput.getControlMessage()) && commandInput.getControlMessage().startsWith("/")) {
-            commandArgs = commandInput.getControlMessage()
+        if (!StringUtils.isNullOrEmpty(commandString) && commandString.startsWith("/")) {
+            commandArgs = commandString
                     .replace("/", "")
                     .split(" ");
-            filteredCommandArgs = commandInput.getControlMessage()
+            filteredCommandArgs = commandString
                     .replace("/", "")
                     .replace("cp", "")
                     .replace(Constants.MOD_ID, "")
@@ -257,7 +259,7 @@ public class CommandsGui extends ExtendedScreen {
                                     } else if (DiscordAssetUtils.isValidId(executionCommandArgs[i])) {
                                         clientId = executionCommandArgs[i];
                                     } else {
-                                        final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandInput.getControlMessage());
+                                        final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandString);
                                         if (matcher.find()) {
                                             urlMeta = matcher.group(1);
                                         }
@@ -276,7 +278,7 @@ public class CommandsGui extends ExtendedScreen {
                     if (executionCommandArgs.length == 1) {
                         executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.compile");
                     } else {
-                        final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandInput.getControlMessage());
+                        final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandString);
                         if (matcher.find()) {
                             final String contents = matcher.group(1);
                             final StringBuilder out = new StringBuilder();
@@ -498,14 +500,14 @@ public class CommandsGui extends ExtendedScreen {
                 if (keyCode == Keyboard.KEY_ESCAPE) {
                     commandInput.setControlFocused(false);
                 } else {
-                    if (commandInput.getControlMessage().startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
+                    if (commandString.startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                             (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(Constants.MOD_ID))) {
                         if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
                                 commandInput.setControlMessage(
-                                        commandInput.getControlMessage().replace(
+                                        commandString.replace(
                                                 filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)
                                         )
                                 );
