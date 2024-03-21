@@ -57,7 +57,7 @@ public class TranslationManager implements IResourceManagerReloadListener {
         this.instance = instance;
         ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
 
-        getInstance().setDefaultLanguage(ModUtils.MCProtocolID >= 315 ? "en_us" : "en_US");
+        getInstance().setDefaultLanguage(ModUtils.DEFAULT_LANGUAGE);
 
         getInstance().setLanguageSupplier((fallback) -> {
             final String result;

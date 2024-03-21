@@ -31,6 +31,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Fixed an incorrect resize event call on some Minecraft versions
     * Additionally, several UIs have been adjusted to restore widget settings (text, checked status, etc.) upon resizing
 * Fixed a broken translation for the `/craftpresence view` command (Related to `placeholders` command)
+* Fixed false-positive error related to `minecraft` translations
+    * Caused from the language being incorrectly set for the `RAW_TRANSLATOR`
+    * This issue only effected users on MC 1.10.2 or below
 
 ___
 

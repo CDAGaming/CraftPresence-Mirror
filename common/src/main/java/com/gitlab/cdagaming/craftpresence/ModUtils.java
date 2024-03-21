@@ -67,6 +67,16 @@ public class ModUtils {
     public static final boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCProtocolID <= 2;
 
     /**
+     * The Default Language, commonly used for {@link TranslationUtils} creation
+     */
+    public static final String DEFAULT_LANGUAGE = MCProtocolID >= 315 ? "en_us" : "en_US";
+
+    /**
+     * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
+     */
+    public static final TranslationUtils RAW_TRANSLATOR = findGameTranslations();
+
+    /**
      * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
      */
     public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(
@@ -75,11 +85,6 @@ public class ModUtils {
             Constants.VERSION_ID,
             MCVersion
     );
-
-    /**
-     * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
-     */
-    public static final TranslationUtils RAW_TRANSLATOR = findGameTranslations();
 
     /**
      * Flag used for determining if Text Formatting Codes are blocked
@@ -101,6 +106,10 @@ public class ModUtils {
         final boolean hasVanillaTranslations = !Constants.IS_LEGACY_SOFT || MCProtocolID >= 7;
         return hasVanillaTranslations ? new TranslationUtils(
                 "minecraft", !Constants.IS_LEGACY_SOFT && MCProtocolID >= 353
-        ).setUsingAssetsPath(!Constants.IS_LEGACY_SOFT || MCProtocolID >= 72).build() : null;
+        )
+                .setUsingAssetsPath(!Constants.IS_LEGACY_SOFT || MCProtocolID >= 72)
+                .setDefaultLanguage(DEFAULT_LANGUAGE)
+                .setLanguage(DEFAULT_LANGUAGE)
+                .build() : null;
     }
 }
