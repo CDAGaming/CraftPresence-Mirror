@@ -12,6 +12,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * ClassGraph (`4.8.165` -> `4.8.168`)
     * Gradle (`8.6` -> `8.7`)
+    * UniCore (`1.0.6` -> `1.0.7`)
 * (Backend) Added two new UI Widget Types: `ButtonWidget` and `ScrollableTextWidget`
     * `ButtonWidget`: A Row-Style button widget, based on the `TextWidget` implementation
     * `ScrollableTextWidget`: A single-line implementation of `TextDisplayWidget`, also using the new scrolling string
