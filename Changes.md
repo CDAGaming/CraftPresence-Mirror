@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.4.0 (05/??/2024)
+## v2.3.7 (04/02/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.5...release%2Fv2.4.0)_
@@ -36,6 +36,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed false-positive error related to `minecraft` translations
     * Caused from the language being incorrectly set for the `RAW_TRANSLATOR`
     * This issue only effected users on MC 1.10.2 or below
+* Fixed several `KeyUtils` and `ControlsGui` errors found in BTA 7.1
+    * These issues caused several discrepancies between it and the normal MC b1.7.3 port
+    * It is recommended to reset your config, if previously used on BTA 7.1, to prevent lingering issues
 
 ___
 
