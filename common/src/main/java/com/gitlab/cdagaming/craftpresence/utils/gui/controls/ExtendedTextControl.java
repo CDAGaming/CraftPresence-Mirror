@@ -109,6 +109,21 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     }
 
     @Override
+    public void preDraw(ExtendedScreen screen) {
+        // N/A
+    }
+
+    @Override
+    public void draw(ExtendedScreen screen) {
+        // N/A
+    }
+
+    @Override
+    public void postDraw(ExtendedScreen screen) {
+        // N/A
+    }
+
+    @Override
     public int getControlPosX() {
         return this.x;
     }

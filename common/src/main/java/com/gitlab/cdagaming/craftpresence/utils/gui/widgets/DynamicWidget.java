@@ -39,27 +39,21 @@ public interface DynamicWidget {
      *
      * @param screen The Screen instance we're rendering to
      */
-    default void preDraw(final ExtendedScreen screen) {
-        // N/A
-    }
+    void preDraw(final ExtendedScreen screen);
 
     /**
      * Render Event for this Control, including any extra data
      *
      * @param screen The Screen instance we're rendering to
      */
-    default void draw(final ExtendedScreen screen) {
-        // N/A
-    }
+    void draw(final ExtendedScreen screen);
 
     /**
      * Post-Render Event for this Control, including any extra data
      *
      * @param screen The Screen instance we're rendering to
      */
-    default void postDraw(final ExtendedScreen screen) {
-        // N/A
-    }
+    void postDraw(final ExtendedScreen screen);
 
     /**
      * Get the left-most coordinate for this Control

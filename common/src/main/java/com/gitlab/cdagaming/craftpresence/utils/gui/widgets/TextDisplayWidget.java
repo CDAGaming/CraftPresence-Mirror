@@ -238,6 +238,11 @@ public class TextDisplayWidget implements DynamicWidget {
     }
 
     @Override
+    public void preDraw(ExtendedScreen screen) {
+        // N/A
+    }
+
+    @Override
     public void draw(ExtendedScreen screen) {
         int padding = 0, barWidth = 0;
         if (screen instanceof ScrollPane) {
@@ -252,6 +257,11 @@ public class TextDisplayWidget implements DynamicWidget {
                 isCentered(), false,
                 screen.createDefaultTooltip().putSecond(null).putThird(null)
         );
+    }
+
+    @Override
+    public void postDraw(ExtendedScreen screen) {
+        // N/A
     }
 
     @Override

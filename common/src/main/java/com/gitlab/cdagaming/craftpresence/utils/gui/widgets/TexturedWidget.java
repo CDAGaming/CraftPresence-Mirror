@@ -107,6 +107,11 @@ public class TexturedWidget implements DynamicWidget {
     }
 
     @Override
+    public void preDraw(ExtendedScreen screen) {
+        // N/A
+    }
+
+    @Override
     public void draw(ExtendedScreen screen) {
         if (hasBorder()) {
             RenderUtils.drawGradientBox(
@@ -125,6 +130,11 @@ public class TexturedWidget implements DynamicWidget {
                 0.0D, 0.0D,
                 getInfo()
         );
+    }
+
+    @Override
+    public void postDraw(ExtendedScreen screen) {
+        // N/A
     }
 
     /**
