@@ -27,9 +27,9 @@ package com.gitlab.cdagaming.craftpresence.impl;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.client.resources.Resource;
+import net.minecraft.client.resources.ResourceManager;
+import net.minecraft.client.resources.ResourceManagerReloadListener;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author CDAGaming
  */
-public class TranslationManager implements IResourceManagerReloadListener {
+public class TranslationManager implements ResourceManagerReloadListener {
     /**
      * The currently linked {@link TranslationUtils} instance
      */
@@ -71,8 +71,8 @@ public class TranslationManager implements IResourceManagerReloadListener {
         getInstance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                final List<IResource> resources = CraftPresence.instance.getResourceManager().getAllResources(new ResourceLocation(modId, langPath));
-                for (IResource resource : resources) {
+                final List<Resource> resources = CraftPresence.instance.getResourceManager().getAllResources(new ResourceLocation(modId, langPath));
+                for (Resource resource : resources) {
                     results.add(resource.getInputStream());
                 }
             } catch (Exception ignored) {
@@ -100,7 +100,7 @@ public class TranslationManager implements IResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(ResourceManager resourceManager) {
         getInstance().syncTranslations();
     }
 }

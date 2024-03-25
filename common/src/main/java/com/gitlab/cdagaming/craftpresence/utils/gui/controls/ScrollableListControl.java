@@ -39,7 +39,6 @@ import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.renderer.Tessellator;
@@ -85,6 +84,11 @@ public class ScrollableListControl extends GuiSlot {
      * The current screen instance
      */
     public ExtendedScreen currentScreen;
+
+    /**
+     * The visibility for this control
+     */
+    public boolean visible = true;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -174,8 +178,12 @@ public class ScrollableListControl extends GuiSlot {
                 mouseX, mouseY,
                 top,
                 bottom,
-                left,
-                right
+                StringUtils.getValidInteger(
+                        StringUtils.getField(GuiSlot.class, this, "left", "field_77238_j", "field_1250", "j")
+                ).getSecond(),
+                StringUtils.getValidInteger(
+                        StringUtils.getField(GuiSlot.class, this, "right", "field_77241_i", "field_1249", "i")
+                ).getSecond()
         );
     }
 
@@ -194,11 +202,9 @@ public class ScrollableListControl extends GuiSlot {
      *
      * @param slotIndex     The Slot Number that was Clicked
      * @param isDoubleClick Whether the Click was a Double or Single Click
-     * @param mouseX        The Mouse's Current X Position
-     * @param mouseY        The Mouse's Current Y Position
      */
     @Override
-    public void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY) {
+    public void elementClicked(int slotIndex, boolean isDoubleClick) {
         currentValue = getSelectedItem(slotIndex);
     }
 
@@ -229,12 +235,10 @@ public class ScrollableListControl extends GuiSlot {
      * @param yPos          The Starting Y Position to render the Object at
      * @param heightIn      The Height for the Object to render to
      * @param tessellatorIn The tesselator for the Object to render with
-     * @param mouseXIn      The Mouse's Current X Position
-     * @param mouseYIn      The Mouse's Current Y Position
      */
     @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn, int mouseXIn, int mouseYIn) {
-        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, getListWidth(), heightIn, mouseXIn, mouseYIn);
+    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn) {
+        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, 220, heightIn, mouseX, mouseY);
     }
 
     /**
@@ -281,7 +285,7 @@ public class ScrollableListControl extends GuiSlot {
         if (!itemList.equals(this.itemList)) {
             this.itemList = itemList;
             // Reset the scrollbar to prevent OOB issues
-            scrollBy(Integer.MIN_VALUE);
+            method_1063(Integer.MIN_VALUE);
 
             setupAliasData();
         }
@@ -333,12 +337,13 @@ public class ScrollableListControl extends GuiSlot {
         String assetUrl;
 
         if (renderType == RenderType.ServerData) {
-            final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
+            // Note: ServerData Base64 unavailable in MC 1.6.4 and below
+            /*final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
             if (data != null && !StringUtils.isNullOrEmpty(data.getBase64EncodedIconData())) {
                 assetUrl = "data:image/png;base64," + data.getBase64EncodedIconData();
                 texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
-            } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+            } else */if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
                 final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
                 final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
@@ -557,5 +562,21 @@ public class ScrollableListControl extends GuiSlot {
             }
             return identifierName;
         }
+    }
+
+    /**
+     * Getter for Visibility for this control
+     */
+    public boolean isVisible() {
+        return this.visible;
+    }
+
+    /**
+     * Setter for Visibility for this control
+     *
+     * @param value The new visibility value for this control
+     */
+    public void setVisible(boolean value) {
+        this.visible = value;
     }
 }

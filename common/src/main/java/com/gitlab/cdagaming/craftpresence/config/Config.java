@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.*;
-import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
@@ -278,20 +277,6 @@ public final class Config extends Module implements Serializable {
             final File legacyFile = new File(Constants.configDir + File.separator + Constants.MOD_ID + ".properties");
             if (legacyFile.exists()) {
                 new Legacy2Modern(legacyFile, "UTF-8").apply(this, rawJson);
-            } else {
-                // fileVersion, configDirectories[main,server-entries]
-                final Map<Integer, String> hypherionFiles = new HashMapBuilder<Integer, String>()
-                        .put(0, Constants.configDir + File.separator)
-                        .put(31, OSUtils.USER_DIR + File.separator + "simple-rpc" + File.separator)
-                        .put(32, Constants.configDir + File.separator + "simple-rpc" + File.separator)
-                        .build();
-                for (Map.Entry<Integer, String> entry : hypherionFiles.entrySet()) {
-                    final File hypherionFile = new File(entry.getValue() + "simple-rpc.toml");
-                    if (hypherionFile.exists()) {
-                        new HypherConverter(entry).apply(this, rawJson);
-                        break;
-                    }
-                }
             }
         }
 

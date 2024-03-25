@@ -61,6 +61,7 @@ import org.meteordev.starscript.utils.SFunction;
 import org.meteordev.starscript.utils.VariableReplacementTransformer;
 import org.meteordev.starscript.value.Value;
 import org.meteordev.starscript.value.ValueMap;
+import org.slf4j.impl.JDK14LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -278,6 +279,9 @@ public class DiscordUtils {
     public void init(final boolean debugMode, final boolean verboseMode) {
         // Create IPC Instance
         ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
+        ipcInstance.setForcedLogger(new JDK14LoggerFactory().getLogger(
+                Constants.LOG.getLogInstance().getName()
+        ));
         ipcInstance.setListener(new ModIPCListener());
         // Initialize Discord Assets
         DiscordAssetUtils.loadAssets(CLIENT_ID, true);
@@ -1113,7 +1117,7 @@ public class DiscordUtils {
         syncArgument("player.name", playerName);
 
         // UUID Data
-        final String uniqueId = CraftPresence.session.getPlayerID();
+        final String uniqueId = null;
         if (StringUtils.isValidUuid(uniqueId)) {
             syncArgument("player.uuid.short", StringUtils.getFromUuid(uniqueId, true));
             syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));

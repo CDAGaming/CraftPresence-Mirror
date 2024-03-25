@@ -136,10 +136,10 @@ public class ControlsGui extends ExtendedScreen {
         for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
             final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
-            if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
-                categorizedNames.put(keyData.getFirst().getKeyCategory(), StringUtils.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
-                categorizedNames.get(keyData.getFirst().getKeyCategory()).add(keyName);
+            if (!categorizedNames.containsKey(keyData.getFirst().keyDescription)) {
+                categorizedNames.put(keyData.getFirst().keyDescription, StringUtils.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.getFirst().keyDescription).contains(keyName)) {
+                categorizedNames.get(keyData.getFirst().keyDescription).add(keyName);
             }
         }
     }
@@ -169,8 +169,8 @@ public class ControlsGui extends ExtendedScreen {
             for (String keyName : entry.getValue()) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
 
-                final String keyTitle = keyData.getFirst().getKeyDescription();
-                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().getKeyCode());
+                final String keyTitle = keyData.getFirst().keyDescription;
+                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().keyCode);
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         95, 20,
@@ -191,10 +191,9 @@ public class ControlsGui extends ExtendedScreen {
                         "gui.config.message.button.reset"
                 );
 
-                keyResetButton.setOnClick(() -> resetEntryData(keyCodeWidget, keyResetButton, keyData));
                 keyCodeWidget.setOnClick(() -> setupEntryData(keyCodeWidget, keyResetButton, keyData));
 
-                keyResetButton.setControlEnabled(keyCode != keyData.getFirst().getKeyCodeDefault());
+                keyResetButton.setControlEnabled(false);
 
                 childFrame.addControl(keyCodeWidget);
                 childFrame.addControl(keyResetButton);
@@ -217,20 +216,6 @@ public class ControlsGui extends ExtendedScreen {
 
             backupKeyString = button.getControlMessage();
             button.setControlMessage("gui.config.message.editor.enter_key");
-        }
-    }
-
-    /**
-     * Setup for Key Entry and Save Backup of Prior Setting, if a valid Key Button
-     *
-     * @param button      The Pressed upon KeyCode Button
-     * @param resetButton The Reset Button related to the KeyCode Button
-     * @param keyData     The key data attached to the entry
-     */
-    private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
-        if (entryData == null && button.getOptionalArgs() != null) {
-            entryData = new Tuple<>(button, resetButton, keyData);
-            setKeyData(keyData.getFirst().getKeyCodeDefault());
         }
     }
 
@@ -262,10 +247,6 @@ public class ControlsGui extends ExtendedScreen {
             entryData.getFirst().setControlMessage(backupKeyString);
             Constants.LOG.debugError(ex);
         }
-
-        entryData.getSecond().setControlEnabled(
-                keyToSubmit != entryData.getThird().getFirst().getKeyCodeDefault()
-        );
 
         clearEntryData();
     }

@@ -204,7 +204,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
 
     @Override
     public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        setCurrentFontRender(mc.fontRendererObj);
+        setCurrentFontRender(mc.fontRenderer);
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
 
@@ -433,7 +433,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return Whether the control is currently visible
      */
     public boolean isControlVisible() {
-        return this.visible;
+        return this.drawButton;
     }
 
     /**
@@ -442,7 +442,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param isVisible The new visibility state for this control
      */
     public void setControlVisible(final boolean isVisible) {
-        this.visible = isVisible;
+        this.drawButton = isVisible;
     }
 
     /**
@@ -451,7 +451,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return the current hover state
      */
     public boolean isHoveringOver() {
-        return this.hovered;
+        return this.field_5056;
     }
 
     /**
@@ -460,7 +460,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param isHovered the new hover state
      */
     public void setHoveringOver(final boolean isHovered) {
-        this.hovered = isHovered;
+        this.field_5056 = isHovered;
     }
 
     /**

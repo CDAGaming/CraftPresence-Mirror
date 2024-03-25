@@ -155,7 +155,7 @@ public class KeyUtils {
      * @return the created KeyBind instance
      */
     KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
-        final KeyBinding result = new KeyBinding(name, defaultKey, category);
+        final KeyBinding result = new KeyBinding(name, defaultKey);
         keySyncQueue.put(id, currentKey);
         return result;
     }
@@ -206,7 +206,7 @@ public class KeyUtils {
      * @param newKey   the new key for the specified KeyBinding
      */
     void setKey(final KeyBinding instance, final int newKey) {
-        instance.setKeyCode(newKey);
+        instance.keyCode = newKey;
         KeyBinding.resetKeyBindingArrayAndHash();
     }
 
@@ -307,7 +307,7 @@ public class KeyUtils {
                     final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                     final KeyBinding keyBind = keyData.getFirst();
                     final Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
-                    final int currentBind = keyBind.getKeyCode();
+                    final int currentBind = keyBind.keyCode;
                     boolean hasBeenRun = false;
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
@@ -319,8 +319,8 @@ public class KeyUtils {
                                 if (keyData.getThird() != null) {
                                     keyData.getThird().accept(ex);
                                 } else {
-                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
-                                    syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
+                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.keyDescription));
+                                    syncKeyData(keyName, ImportMode.Specific, keyBind.keyCode);
                                 }
                             } finally {
                                 hasBeenRun = true;
@@ -358,7 +358,7 @@ public class KeyUtils {
         } else if (mode == ImportMode.Vanilla) {
             keyData.getSecond().getSecond().accept(keyCode, true);
         } else if (mode == ImportMode.Specific) {
-            syncKeyData(keyData.getFirst().getKeyDescription(), ImportMode.Config, keyCode);
+            syncKeyData(keyData.getFirst().keyDescription, ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
             Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
@@ -384,8 +384,8 @@ public class KeyUtils {
             ) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                 if (mode == FilterMode.None ||
-                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().getKeyCategory())) ||
-                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().getKeyDescription())) ||
+                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().keyDescription)) ||
+                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().keyDescription)) ||
                         mode == FilterMode.Name
                 ) {
                     filteredMappings.put(keyName, keyData);

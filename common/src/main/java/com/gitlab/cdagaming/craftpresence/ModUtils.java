@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.core.utils.ModUpdaterUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 import net.minecraft.client.ClientBrandRetriever;
-import net.minecraft.realms.RealmsSharedConstants;
 
 /**
  * Constant Variables and Methods used throughout the Application
@@ -42,12 +41,12 @@ public class ModUtils {
     /**
      * The Detected Minecraft Version
      */
-    public static final String MCVersion = RealmsSharedConstants.VERSION_STRING;
+    public static final String MCVersion = Constants.MCBuildVersion;
 
     /**
      * The Detected Minecraft Protocol Version
      */
-    public static final int MCProtocolID = RealmsSharedConstants.NETWORK_PROTOCOL_VERSION;
+    public static final int MCProtocolID = Constants.MCBuildProtocol;
 
     /**
      * The Detected Brand Information within Minecraft

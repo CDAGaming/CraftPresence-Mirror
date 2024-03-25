@@ -184,7 +184,17 @@ public class RenderUtils {
      * @param targetScreen The target Gui Screen to display
      */
     public static void openScreen(@Nonnull final Minecraft client, final GuiScreen targetScreen) {
-        client.addScheduledTask(() -> client.displayGuiScreen(targetScreen));
+        client.displayGuiScreen(new GuiScreen() {
+            @Override
+            public void initGui() {
+                // N/A
+            }
+
+            @Override
+            public void drawScreen(int i, int j, float par3) {
+                client.displayGuiScreen(targetScreen);
+            }
+        });
     }
 
     /**

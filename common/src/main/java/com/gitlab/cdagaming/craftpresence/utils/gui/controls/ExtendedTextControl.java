@@ -90,22 +90,36 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
 
     @Override
     public int getControlWidth() {
-        return width;
+        return StringUtils.getValidInteger(StringUtils.getField(
+                GuiTextField.class, this,
+                "width", "field_73811_d", "field_1119", "d"
+        )).getSecond();
     }
 
     @Override
     public void setControlWidth(final int width) {
-        this.width = width;
+        StringUtils.updateField(
+                GuiTextField.class, this,
+                width,
+                "width", "field_73811_d", "field_1119", "d"
+        );
     }
 
     @Override
     public int getControlHeight() {
-        return height;
+        return StringUtils.getValidInteger(StringUtils.getField(
+                GuiTextField.class, this,
+                "height", "field_73812_e", "field_1120", "e"
+        )).getSecond();
     }
 
     @Override
     public void setControlHeight(final int height) {
-        this.height = height;
+        StringUtils.updateField(
+                GuiTextField.class, this,
+                height,
+                "height", "field_73812_e", "field_1120", "e"
+        );
     }
 
     @Override
@@ -125,22 +139,36 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
 
     @Override
     public int getControlPosX() {
-        return this.xPosition;
+        return StringUtils.getValidInteger(StringUtils.getField(
+                GuiTextField.class, this,
+                "xPos", "field_73813_b", "field_1117", "b"
+        )).getSecond();
     }
 
     @Override
     public void setControlPosX(final int posX) {
-        this.xPosition = posX;
+        StringUtils.updateField(
+                GuiTextField.class, this,
+                posX,
+                "xPos", "field_73813_b", "field_1117", "b"
+        );
     }
 
     @Override
     public int getControlPosY() {
-        return this.yPosition;
+        return StringUtils.getValidInteger(StringUtils.getField(
+                GuiTextField.class, this,
+                "yPos", "field_73814_c", "field_1118", "c"
+        )).getSecond();
     }
 
     @Override
     public void setControlPosY(final int posY) {
-        this.yPosition = posY;
+        StringUtils.updateField(
+                GuiTextField.class, this,
+                posY,
+                "yPos", "field_73814_c", "field_1118", "c"
+        );
     }
 
     /**
