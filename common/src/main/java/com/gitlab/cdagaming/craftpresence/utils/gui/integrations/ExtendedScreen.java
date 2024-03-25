@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
@@ -37,13 +36,9 @@ import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.*;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -213,10 +208,20 @@ public class ExtendedScreen extends GuiScreen {
     /**
      * Copies the Specified Text to the System's Clipboard
      *
+     * @param instance the game instance
+     * @param input    the text to interpret
+     */
+    public static void copyToClipboard(final Minecraft instance, final String input) {
+        instance.keyboardListener.setClipboardString(StringUtils.normalize(input));
+    }
+
+    /**
+     * Copies the Specified Text to the System's Clipboard
+     *
      * @param input the text to interpret
      */
-    public static void copyToClipboard(final String input) {
-        setClipboardString(StringUtils.normalize(input));
+    public void copyToClipboard(final String input) {
+        copyToClipboard(getGameInstance(), input);
     }
 
     /**
@@ -229,7 +234,7 @@ public class ExtendedScreen extends GuiScreen {
         // Clear Data before Initialization
         super.initGui();
         clearData();
-        Keyboard.enableRepeatEvents(true);
+        getGameInstance().keyboardListener.enableRepeatEvents(true);
 
         currentPhase = Phase.INIT;
         initializeUi();
@@ -244,7 +249,8 @@ public class ExtendedScreen extends GuiScreen {
             currentPhase = Phase.PREINIT;
             setContentHeight(0);
 
-            buttonList.clear();
+            buttons.clear();
+            children.clear();
             extendedControls.clear();
             extendedWidgets.clear();
             extendedLists.clear();
@@ -325,8 +331,11 @@ public class ExtendedScreen extends GuiScreen {
         if (buttonIn instanceof DynamicWidget && !extendedWidgets.contains(buttonIn)) {
             addWidget((DynamicWidget) buttonIn);
         }
-        if (buttonIn instanceof GuiButton && !buttonList.contains(buttonIn)) {
-            buttonList.add((GuiButton) buttonIn);
+        if (buttonIn instanceof GuiButton && !buttons.contains(buttonIn)) {
+            buttons.add((GuiButton) buttonIn);
+        }
+        if (buttonIn instanceof IGuiEventListener && !children.contains(buttonIn)) {
+            children.add((IGuiEventListener) buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
@@ -343,6 +352,9 @@ public class ExtendedScreen extends GuiScreen {
      */
     @Nonnull
     public <T extends ScrollableListControl> T addList(@Nonnull T buttonIn) {
+        if (buttonIn instanceof IGuiEventListener && !children.contains(buttonIn)) {
+            children.add((IGuiEventListener) buttonIn);
+        }
         if (!extendedLists.contains(buttonIn)) {
             extendedLists.add(buttonIn);
         }
@@ -576,7 +588,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param partialTicks The Rendering Tick Rate
      */
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         // Ensures initialization events have run first, preventing an NPE
         if (isLoaded()) {
             preRender();
@@ -592,17 +604,17 @@ public class ExtendedScreen extends GuiScreen {
             drawDefaultBackground();
 
             for (ScrollableListControl listControl : getLists()) {
-                if (listControl.getEnabled()) {
+                if (listControl.isVisible()) {
                     listControl.drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
 
-            super.drawScreen(mouseX, mouseY, partialTicks);
+            super.render(mouseX, mouseY, partialTicks);
 
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.drawTextBox();
+                    textField.drawTextField(mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -616,7 +628,7 @@ public class ExtendedScreen extends GuiScreen {
 
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).drawScreen(mouseX, mouseY, partialTicks);
+                    ((ExtendedScreen) extendedControl).render(mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -628,143 +640,101 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon Mouse Input
      */
     @Override
-    public void handleMouseInput() {
+    public boolean mouseDragged(double mX, double mY, int mouseButton, double dragX, double dragY) {
         if (isLoaded()) {
-            setMouseScroll(Mouse.getEventDWheel());
             for (ScrollableListControl listControl : getLists()) {
-                listControl.handleMouseInput();
+                if (listControl.mouseDragged(mX, mY, mouseButton, dragX, dragY)) {
+                    return true;
+                }
             }
-
-            final int dw = getMouseScroll();
-            if (dw != 0) {
-                mouseScrolled(getMouseX(), getMouseY(), (int) (dw / 60D));
+            for (Gui extendedControl : getControls()) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    if (((ExtendedScreen) extendedControl).mouseDragged(mX, mY, mouseButton, dragX, dragY)) {
+                        return true;
+                    }
+                }
             }
-            super.handleMouseInput();
+            return super.mouseDragged(mX, mY, mouseButton, dragX, dragY);
         }
+        return false;
     }
 
     /**
      * Event to trigger upon Mouse Input
-     *
-     * @param mouseX The Event Mouse X Coordinate
-     * @param mouseY The Event Mouse Y Coordinate
-     * @param wheelY The Event Mouse Wheel Delta
      */
-    public void mouseScrolled(int mouseX, int mouseY, int wheelY) {
+    @Override
+    public boolean mouseScrolled(double delta) {
         if (isLoaded()) {
-            for (Gui extendedControl : getControls()) {
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).mouseScrolled(mouseX, mouseY, wheelY);
+            setMouseScroll((int) delta);
+            for (ScrollableListControl listControl : getLists()) {
+                if (listControl.mouseScrolled(delta)) {
+                    return true;
                 }
             }
-        }
-    }
 
-    /**
-     * Event to trigger upon Button Action, including onClick Events
-     *
-     * @param button The Button to trigger upon
-     */
-    @Override
-    protected void actionPerformed(@Nonnull GuiButton button) {
-        if (isOverScreen()) {
-            if (button instanceof ExtendedButtonControl) {
-                ((ExtendedButtonControl) button).onClick();
+            for (Gui extendedControl : getControls()) {
+                if (extendedControl instanceof ExtendedScreen) {
+                    if (((ExtendedScreen) extendedControl).mouseScrolled(delta)) {
+                        return true;
+                    }
+                }
             }
-            super.actionPerformed(button);
+            return super.mouseScrolled(delta);
         }
+        return false;
     }
 
     /**
-     * Event to trigger upon Typing a Key
+     * Event to trigger upon Pressing a Key
      *
-     * @param typedChar The typed Character, if any
-     * @param keyCode   The KeyCode entered, if any
+     * @param keyCode The KeyCode entered, if any
+     * @param mouseX  The Event Mouse X Coordinate
+     * @param mouseY  The Event Mouse Y Coordinate
+     * @return The Event Result
      */
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
         if (isLoaded()) {
-            if (keyCode == Keyboard.KEY_ESCAPE && canClose) {
+            if (keyCode == GLFW.GLFW_KEY_ESCAPE && canClose) {
                 openScreen(parentScreen);
-                return;
+                return true;
             }
-
-            for (Gui extendedControl : getControls()) {
-                if (extendedControl instanceof ExtendedTextControl) {
-                    final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.textboxKeyTyped(typedChar, keyCode);
-                }
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).keyTyped(typedChar, keyCode);
-                }
+            if (getGameInstance() != null && getGameInstance().currentScreen == this) {
+                return super.keyPressed(keyCode, mouseX, mouseY);
+            } else if (getFocused() != null) {
+                return getFocused().keyPressed(keyCode, mouseX, mouseY);
             }
         }
-    }
-
-    /**
-     * Event to trigger upon the mouse being clicked
-     *
-     * @param mouseX      The Event Mouse X Coordinate
-     * @param mouseY      The Event Mouse Y Coordinate
-     * @param mouseButton The Event Mouse Button Clicked
-     */
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (isLoaded()) {
-            for (Gui extendedControl : getControls()) {
-                if (extendedControl instanceof ExtendedTextControl) {
-                    final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.mouseClicked(mouseX, mouseY, mouseButton);
-                }
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).mouseClicked(mouseX, mouseY, mouseButton);
-                }
-            }
-            super.mouseClicked(mouseX, mouseY, mouseButton);
-        }
-    }
-
-    @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
-        if (isLoaded()) {
-            for (Gui extendedControl : getControls()) {
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
-                }
-            }
-            super.mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
-        }
-    }
-
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        if (isLoaded()) {
-            for (Gui extendedControl : getControls()) {
-                if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).mouseReleased(mouseX, mouseY, state);
-                }
-            }
-            super.mouseReleased(mouseX, mouseY, state);
-        }
+        return false;
     }
 
     /**
      * Event to trigger on each tick
      */
     @Override
-    public void updateScreen() {
+    public void tick() {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
                     final ExtendedTextControl textField = (ExtendedTextControl) extendedControl;
-                    textField.updateCursorCounter();
+                    textField.tick();
                 }
                 if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).updateScreen();
+                    ((ExtendedScreen) extendedControl).tick();
                 }
             }
-            super.updateScreen();
+            super.tick();
         }
+    }
+
+    /**
+     * Decide whether the Screen can close with Vanilla Methods
+     *
+     * @return whether the Screen can close with Vanilla Methods
+     */
+    @Override
+    public boolean allowCloseWithEscape() {
+        return false;
     }
 
     /**
@@ -780,7 +750,7 @@ public class ExtendedScreen extends GuiScreen {
             }
             clearData();
             resetIndex();
-            Keyboard.enableRepeatEvents(false);
+            getGameInstance().keyboardListener.enableRepeatEvents(false);
         }
     }
 

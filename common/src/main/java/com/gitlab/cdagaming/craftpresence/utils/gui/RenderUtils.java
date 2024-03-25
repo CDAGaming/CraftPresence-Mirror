@@ -200,19 +200,19 @@ public class RenderUtils {
         if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
             GlStateManager.pushMatrix();
-            GlStateManager.scale(scale, scale, 1.0f);
+            GlStateManager.scalef(scale, scale, 1.0f);
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableColorMaterial();
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             RenderHelper.enableGUIStandardItemLighting();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            client.getRenderItem().renderItemAndEffectIntoGUI(stack, xPos, yPos);
-            client.getRenderItem().renderItemOverlays(fontRenderer, stack, xPos, yPos);
+            client.getItemRenderer().renderItemAndEffectIntoGUI(stack, xPos, yPos);
+            client.getItemRenderer().renderItemOverlays(fontRenderer, stack, xPos, yPos);
 
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
             GlStateManager.disableColorMaterial();
             GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
@@ -333,15 +333,15 @@ public class RenderUtils {
         } catch (Exception ignored) {
             return;
         }
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
 
         blit(x, y, zLevel, startU, startV, width, height);
         blit(x + width, y, zLevel, endU, endV, width, height);
 
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         GlStateManager.disableBlend();
     }
 
@@ -389,13 +389,13 @@ public class RenderUtils {
         }
 
         GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
         GlStateManager.disableLighting();
         GlStateManager.disableFog();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         final Tessellator tessellator = Tessellator.getInstance();
         final BufferBuilder buffer = tessellator.getBuffer();
@@ -408,7 +408,7 @@ public class RenderUtils {
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
     }
 
     /**
@@ -502,10 +502,10 @@ public class RenderUtils {
             return;
         }
 
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
@@ -520,9 +520,9 @@ public class RenderUtils {
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.enableTexture2D();
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
     }
 
     /**
@@ -655,7 +655,7 @@ public class RenderUtils {
     private static void applyScissor(@Nonnull final Minecraft mc, final ScreenRectangle rectangle) {
         if (rectangle != null) {
             final int scale = computeGuiScale(mc);
-            final int displayHeight = mc.displayHeight;
+            final int displayHeight = mc.mainWindow.getHeight();
             final int renderWidth = Math.max(0, rectangle.getWidth() * scale);
             final int renderHeight = Math.max(0, rectangle.getHeight() * scale);
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -685,7 +685,7 @@ public class RenderUtils {
             k = 1000;
         }
 
-        while (scaleFactor < k && mc.displayWidth / (scaleFactor + 1) >= 320 && mc.displayHeight / (scaleFactor + 1) >= 240) {
+        while (scaleFactor < k && mc.mainWindow.getWidth() / (scaleFactor + 1) >= 320 && mc.mainWindow.getHeight() / (scaleFactor + 1) >= 240) {
             ++scaleFactor;
         }
         return scaleFactor;

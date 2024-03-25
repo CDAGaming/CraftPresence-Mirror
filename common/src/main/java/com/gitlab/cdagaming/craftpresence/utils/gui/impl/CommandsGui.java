@@ -40,7 +40,7 @@ import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import org.meteordev.starscript.value.Value;
 
 import java.io.BufferedWriter;
@@ -494,15 +494,15 @@ public class CommandsGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
         if (!blockInteractions) {
             if (commandInput.isControlFocused()) {
-                if (keyCode == Keyboard.KEY_ESCAPE) {
+                if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
                     commandInput.setControlFocused(false);
                 } else {
                     if (commandString.startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                             (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(Constants.MOD_ID))) {
-                        if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
+                        if (keyCode == GLFW.GLFW_KEY_TAB && !tabCompletions.isEmpty()) {
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
@@ -512,16 +512,18 @@ public class CommandsGui extends ExtendedScreen {
                                         )
                                 );
                             }
-                        } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
+                        } else if (keyCode == GLFW.GLFW_KEY_KP_ENTER || keyCode == GLFW.GLFW_KEY_ENTER) {
                             executeCommand(filteredCommandArgs);
                             childFrame.resetMouseScroll();
                             childFrame.setMouseScroll(0);
                         }
                     }
+                    return commandInput.keyPressed(keyCode, mouseX, mouseY);
                 }
             }
-            super.keyTyped(typedChar, keyCode);
+            return super.keyPressed(keyCode, mouseX, mouseY);
         }
+        return false;
     }
 
     /**

@@ -32,6 +32,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.IRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -176,7 +177,7 @@ public class TileEntityUtils implements Module {
             if (itemStack.getCount() <= 0) {
                 return true;
             } else {
-                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
+                return itemStack.getDamage() < -32768 || itemStack.getDamage() > 65535;
             }
         } else {
             return true;
@@ -215,7 +216,7 @@ public class TileEntityUtils implements Module {
         String result = "";
         if (!isEmpty(itemStack)) {
             result = StringUtils.getOrDefault(
-                    itemStack.getDisplayName()
+                    itemStack.getDisplayName().getFormattedText()
             );
         }
 
@@ -468,7 +469,10 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getAllData() {
-        for (Block block : Block.REGISTRY) {
+        final List<Block> defaultBlocks = StringUtils.newArrayList(IRegistry.BLOCK.iterator());
+        final List<Item> defaultItems = StringUtils.newArrayList(IRegistry.ITEM.iterator());
+
+        for (Block block : defaultBlocks) {
             if (!isEmpty(block)) {
                 final ItemStack stack = getStackFrom(block);
                 final String blockName = getName(stack);
@@ -484,7 +488,7 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        for (Item item : Item.REGISTRY) {
+        for (Item item : defaultItems) {
             if (!isEmpty(item)) {
                 final ItemStack stack = getStackFrom(item);
                 final String itemName = getName(stack);

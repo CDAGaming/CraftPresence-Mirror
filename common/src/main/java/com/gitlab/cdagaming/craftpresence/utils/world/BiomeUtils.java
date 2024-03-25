@@ -33,6 +33,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
+import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
@@ -121,9 +122,9 @@ public class BiomeUtils implements Module {
     @Override
     public void updateData() {
         final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getDisplayName().getFormattedText(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getDisplayName().getFormattedText(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_Identifier = StringUtils.getOrDefault(newBiome_primaryIdentifier, newBiome_alternativeIdentifier);
 
@@ -173,9 +174,10 @@ public class BiomeUtils implements Module {
      */
     private List<Biome> getBiomeTypes() {
         List<Biome> biomeTypes = StringUtils.newArrayList();
+        List<Biome> defaultBiomeTypes = StringUtils.newArrayList(IRegistry.BIOME.iterator());
 
-        if (Biome.REGISTRY != null) {
-            for (Biome biome : Biome.REGISTRY) {
+        if (!defaultBiomeTypes.isEmpty()) {
+            for (Biome biome : defaultBiomeTypes) {
                 if (biome != null && !biomeTypes.contains(biome)) {
                     biomeTypes.add(biome);
                 }
@@ -208,7 +210,7 @@ public class BiomeUtils implements Module {
     public void getAllData() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
-                String biomeName = StringUtils.getOrDefault(biome.getBiomeName(), MappingUtils.getClassName(biome));
+                String biomeName = StringUtils.getOrDefault(biome.getDisplayName().getFormattedText(), MappingUtils.getClassName(biome));
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);

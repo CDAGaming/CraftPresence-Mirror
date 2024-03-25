@@ -36,7 +36,7 @@ import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Map;
@@ -121,11 +121,12 @@ public class ControlsGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
         if (entryData != null) {
             setKeyData(keyCode);
+            return true;
         } else {
-            super.keyTyped(typedChar, keyCode);
+            return super.keyPressed(keyCode, mouseX, mouseY);
         }
     }
 
@@ -170,7 +171,7 @@ public class ControlsGui extends ExtendedScreen {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
 
                 final String keyTitle = keyData.getFirst().getKeyDescription();
-                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().getKeyCode());
+                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().keyCode.getKeyCode());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         95, 20,
@@ -194,7 +195,7 @@ public class ControlsGui extends ExtendedScreen {
                 keyResetButton.setOnClick(() -> resetEntryData(keyCodeWidget, keyResetButton, keyData));
                 keyCodeWidget.setOnClick(() -> setupEntryData(keyCodeWidget, keyResetButton, keyData));
 
-                keyResetButton.setControlEnabled(keyCode != keyData.getFirst().getKeyCodeDefault());
+                keyResetButton.setControlEnabled(keyCode != keyData.getFirst().getDefault().getKeyCode());
 
                 childFrame.addControl(keyCodeWidget);
                 childFrame.addControl(keyResetButton);
@@ -230,7 +231,7 @@ public class ControlsGui extends ExtendedScreen {
     private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
             entryData = new Tuple<>(button, resetButton, keyData);
-            setKeyData(keyData.getFirst().getKeyCodeDefault());
+            setKeyData(keyData.getFirst().getDefault().getKeyCode());
         }
     }
 
@@ -245,7 +246,7 @@ public class ControlsGui extends ExtendedScreen {
 
         // Ensure a Valid KeyCode is entered
         if (!KeyUtils.isValidKeyCode(keyToSubmit) || KeyUtils.isValidClearCode(keyToSubmit)) {
-            keyToSubmit = Keyboard.KEY_NONE;
+            keyToSubmit = GLFW.GLFW_KEY_UNKNOWN;
         }
 
         final String formattedKey = KeyUtils.getKeyName(keyToSubmit);
@@ -264,7 +265,7 @@ public class ControlsGui extends ExtendedScreen {
         }
 
         entryData.getSecond().setControlEnabled(
-                keyToSubmit != entryData.getThird().getFirst().getKeyCodeDefault()
+                keyToSubmit != entryData.getThird().getFirst().getDefault().getKeyCode()
         );
 
         clearEntryData();

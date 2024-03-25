@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 @SuppressWarnings("DuplicatedCode")
 public class MainGui extends ConfigurationGui<Config> {
@@ -225,11 +225,11 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == Keyboard.KEY_ESCAPE && getCurrentData().hasChanged) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE && getCurrentData().hasChanged) {
             syncData();
         }
-        super.keyTyped(typedChar, keyCode);
+        return super.keyPressed(keyCode, mouseX, mouseY);
     }
 
     @Override

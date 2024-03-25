@@ -44,10 +44,6 @@ public class ScrollPane extends ExtendedScreen {
     private boolean clickedScrollbar;
     private int padding;
     private float amountScrolled;
-    // remove in 1.13+
-    private int mousePrevX = 0;
-    // remove in 1.13+
-    private int mousePrevY = 0;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -176,48 +172,42 @@ public class ScrollPane extends ExtendedScreen {
         super.postRender();
     }
 
-    // remove in 1.13+
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         if (isLoaded()) {
             checkScrollbarClick(mouseX, mouseY, mouseButton);
-            mousePrevX = mouseX;
-            mousePrevY = mouseY;
 
-            super.mouseClicked(mouseX, mouseY, mouseButton);
+            return super.mouseClicked(mouseX, mouseY, mouseButton);
         }
+        return false;
     }
 
-    // remove in 1.13+
     @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (isLoaded()) {
-            mouseDragged(mouseX, mouseY, mouseButton, mouseX - mousePrevX, mouseY - mousePrevY);
-            mousePrevX = mouseX;
-            mousePrevY = mouseY;
-
-            super.mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
-        }
-    }
-
-    public void mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
-        if (button == 0 && needsScrollbar() && clickedScrollbar) {
-            if (mouseY < getTop()) {
-                setScroll(0.0F);
-            } else if (mouseY > getBottom()) {
-                setScroll(getMaxScroll());
-            } else {
-                final int height = getBarHeight();
-                final int scrollLimit = Math.max(1, getMaxScroll());
-                final int heightPerScroll = Math.max(1, scrollLimit / (getScreenHeight() - height));
-                scrollBy(deltaY * heightPerScroll);
+            if (button == 0 && needsScrollbar() && clickedScrollbar) {
+                if (mouseY < getTop()) {
+                    setScroll(0.0F);
+                } else if (mouseY > getBottom()) {
+                    setScroll(getMaxScroll());
+                } else {
+                    final int deltaYInt = (int) (deltaY > 0 ? deltaY + 0.5 : deltaY - 0.5);
+                    final int height = getBarHeight();
+                    final int scrollLimit = Math.max(1, getMaxScroll());
+                    final int heightPerScroll = Math.max(1, scrollLimit / (getScreenHeight() - height));
+                    scrollBy(deltaYInt * heightPerScroll);
+                }
+                return true;
             }
+            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
+        return false;
     }
 
     @Override
-    public void mouseScrolled(int mouseX, int mouseY, int wheelY) {
-        scrollBy(-wheelY * getHeightPerScroll());
+    public boolean mouseScrolled(double wheelY) {
+        scrollBy((float) (-wheelY * getHeightPerScroll()));
+        return true;
     }
 
     /**

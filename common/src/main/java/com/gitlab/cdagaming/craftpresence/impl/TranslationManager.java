@@ -27,10 +27,10 @@ package com.gitlab.cdagaming.craftpresence.impl;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
+import net.minecraft.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.InputStream;
@@ -54,7 +54,7 @@ public class TranslationManager implements IResourceManagerReloadListener {
      */
     public TranslationManager(final TranslationUtils instance) {
         this.instance = instance;
-        ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
+        ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).addReloadListener(this);
 
         getInstance().setLanguageSupplier((fallback) -> {
             final String result;

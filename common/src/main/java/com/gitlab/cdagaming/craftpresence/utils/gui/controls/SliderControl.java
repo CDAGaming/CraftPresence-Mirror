@@ -66,10 +66,6 @@ public class SliderControl extends ExtendedButtonControl {
      */
     private float denormalizedSlideValue;
     /**
-     * Whether the Slider is currently being dragged
-     */
-    private boolean dragging;
-    /**
      * The event to occur when sliding occurs
      */
     private Runnable onSlideEvent;
@@ -215,13 +211,9 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            super.mouseDragged(mc, mouseX, mouseY);
-
-            if (dragging) {
-                setValueFromMouse(mouseX);
-            }
+            super.renderBg(mc, mouseX, mouseY);
 
             final int hoverState = super.getHoverState(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
@@ -241,13 +233,9 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (super.mousePressed(mc, mouseX, mouseY)) {
+    public void onClick(double mouseX, double mouseY) {
+        if (super.isPressable(mouseX, mouseY)) {
             setValueFromMouse(mouseX);
-            dragging = true;
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -310,13 +298,10 @@ public class SliderControl extends ExtendedButtonControl {
         setSliderValue(newValue, false);
     }
 
-    /**
-     * Fired when the mouse button is released.<p>
-     * Equivalent of MouseListener.mouseReleased(MouseEvent e).
-     */
     @Override
-    public void mouseReleased(int mouseX, int mouseY) {
-        dragging = false;
+    protected void onDrag(double mX, double mY, double dragX, double dragY) {
+        setValueFromMouse(mX);
+        super.onDrag(mX, mY, dragX, dragY);
     }
 
     /**
