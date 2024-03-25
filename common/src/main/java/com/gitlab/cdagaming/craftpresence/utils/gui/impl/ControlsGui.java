@@ -136,10 +136,10 @@ public class ControlsGui extends ExtendedScreen {
         for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
             final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
-            if (!categorizedNames.containsKey(keyData.getFirst().name)) {
-                categorizedNames.put(keyData.getFirst().name, StringUtils.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.getFirst().name).contains(keyName)) {
-                categorizedNames.get(keyData.getFirst().name).add(keyName);
+            if (!categorizedNames.containsKey(keyData.getFirst().getId())) {
+                categorizedNames.put(keyData.getFirst().getId(), StringUtils.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.getFirst().getId()).contains(keyName)) {
+                categorizedNames.get(keyData.getFirst().getId()).add(keyName);
             }
         }
     }
@@ -169,8 +169,8 @@ public class ControlsGui extends ExtendedScreen {
             for (String keyName : entry.getValue()) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
 
-                final String keyTitle = keyData.getFirst().name;
-                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().key);
+                final String keyTitle = keyData.getFirst().getId();
+                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().getKeyCode());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         95, 20,

@@ -249,9 +249,9 @@ public class ExtendedScreen extends GuiScreen {
      * Responsible for Setting preliminary data
      */
     @Override
-    public void initGui() {
+    public void init() {
         // Clear Data before Initialization
-        super.initGui();
+        super.init();
         clearData();
         Keyboard.enableRepeatEvents(true);
 
@@ -282,7 +282,7 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void initializeUi() {
         if (currentPhase == Phase.PREINIT) {
-            initGui();
+            init();
             return;
         }
         if (currentPhase == Phase.INIT) {
@@ -575,7 +575,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     @Override
-    public void drawWorldBackground(int tint) {
+    public void drawWorldBackground() {
         renderCriticalData();
     }
 
@@ -604,7 +604,7 @@ public class ExtendedScreen extends GuiScreen {
 
             for (ScrollableListControl listControl : getLists()) {
                 if (listControl.isVisible()) {
-                    listControl.drawScreen(mouseX, mouseY, partialTicks);
+                    listControl.render(mouseX, mouseY, partialTicks);
                 }
             }
 
@@ -675,7 +675,7 @@ public class ExtendedScreen extends GuiScreen {
                 mouseClicked(mouseX, mouseY, prevEventButton);
             } else if (eventButton != -1) {
                 prevEventButton = -1;
-                mouseMovedOrUp(mouseX, mouseY, eventButton);
+                mouseMovedOrButtonReleased(mouseX, mouseY, eventButton);
             } else if (prevEventButton != -1 && prevMouseEvent > 0L) {
                 final long timeSinceLastClick = getSystemTime() - prevMouseEvent;
                 method_4259(mouseX, mouseY, prevEventButton, timeSinceLastClick);
@@ -797,14 +797,14 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     @Override
-    public void mouseMovedOrUp(int mouseX, int mouseY, int state) {
+    public void mouseMovedOrButtonReleased(int mouseX, int mouseY, int state) {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).mouseMovedOrUp(mouseX, mouseY, state);
+                    ((ExtendedScreen) extendedControl).mouseMovedOrButtonReleased(mouseX, mouseY, state);
                 }
             }
-            super.mouseMovedOrUp(mouseX, mouseY, state);
+            super.mouseMovedOrButtonReleased(mouseX, mouseY, state);
         }
     }
 
@@ -812,7 +812,7 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger on each tick
      */
     @Override
-    public void updateScreen() {
+    public void tick() {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl) {
@@ -820,10 +820,10 @@ public class ExtendedScreen extends GuiScreen {
                     textField.updateCursorCounter();
                 }
                 if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).updateScreen();
+                    ((ExtendedScreen) extendedControl).tick();
                 }
             }
-            super.updateScreen();
+            super.tick();
         }
     }
 
@@ -831,11 +831,11 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon exiting the Gui
      */
     @Override
-    public void onGuiClosed() {
+    public void onClosed() {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen) {
-                    ((ExtendedScreen) extendedControl).onGuiClosed();
+                    ((ExtendedScreen) extendedControl).onClosed();
                 }
             }
             clearData();

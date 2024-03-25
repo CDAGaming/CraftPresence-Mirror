@@ -185,7 +185,7 @@ public class RenderUtils {
     public static void openScreen(@Nonnull final Minecraft client, final GuiScreen targetScreen) {
         client.displayGuiScreen(new GuiScreen() {
             @Override
-            public void initGui() {
+            public void init() {
                 // N/A
             }
 

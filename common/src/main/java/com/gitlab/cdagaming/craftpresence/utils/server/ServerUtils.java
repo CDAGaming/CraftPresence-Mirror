@@ -330,8 +330,8 @@ public class ServerUtils implements Module {
 
             // 'player.health' Argument = Current and Maximum Health of Player
             final Pair<Double, Double> newHealth = new Pair<>(
-                    MathUtils.roundDouble(CraftPresence.player.health, 0),
-                    MathUtils.roundDouble(20.0D, 0)
+                    MathUtils.roundDouble(CraftPresence.player.getHealth(), 0),
+                    MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
             );
             if (!Objects.equals(newHealth, currentHealth)) {
                 currentHealth = newHealth;
@@ -493,7 +493,7 @@ public class ServerUtils implements Module {
         try {
             if (CraftPresence.player != null) {
                 CraftPresence.player.world.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.changeWorld1(null);
+                CraftPresence.instance.changeWorld(null);
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.getServerIP(), serverData.getServerPort()));
         } catch (Exception ex) {

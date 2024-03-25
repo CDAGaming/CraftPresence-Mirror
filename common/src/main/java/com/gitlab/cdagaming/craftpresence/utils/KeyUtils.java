@@ -34,7 +34,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.options.GuiOptionsPageControls;
+import net.minecraft.client.gui.options.GuiOptions;
+import net.minecraft.client.gui.options.components.KeyBindingComponent;
+import net.minecraft.client.gui.options.components.OptionsCategory;
+import net.minecraft.client.gui.options.data.OptionsPages;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
@@ -74,6 +77,10 @@ public class KeyUtils {
      * List of Keys that are in queue for later syncing operations
      */
     public Map<String, Integer> keySyncQueue = StringUtils.newHashMap();
+    /**
+     * List of Categories that are in queue for later syncing operations
+     */
+    public Map<String, OptionsCategory> categorySyncQueue = StringUtils.newHashMap();
     /**
      * Determines whether KeyBindings have been fully registered and attached to needed systems.
      */
@@ -155,8 +162,12 @@ public class KeyUtils {
      * @return the created KeyBind instance
      */
     KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
-        final KeyBinding result = new KeyBinding(name, defaultKey);
+        final KeyBinding result = new KeyBinding(name).bindKeyboard(defaultKey);
         keySyncQueue.put(id, currentKey);
+        if (!categorySyncQueue.containsKey(category)) {
+            categorySyncQueue.put(category, new OptionsCategory(category));
+        }
+        categorySyncQueue.get(category).withComponent(new KeyBindingComponent(result));
         return result;
     }
 
@@ -206,7 +217,7 @@ public class KeyUtils {
      * @param newKey   the new key for the specified KeyBinding
      */
     void setKey(final KeyBinding instance, final int newKey) {
-        instance.key = newKey;
+        instance.bindKeyboard(newKey);
     }
 
     /**
@@ -291,6 +302,9 @@ public class KeyUtils {
                     final KeyBinding mapping = entry.getValue().getFirst();
                     CraftPresence.instance.gameSettings.keys = StringUtils.addToArray(CraftPresence.instance.gameSettings.keys, mapping);
                 }
+                for (Map.Entry<String, OptionsCategory> category : categorySyncQueue.entrySet()) {
+                    OptionsPages.CONTROLS.withComponent(category.getValue());
+                }
                 keysRegistered = true;
             } else {
                 return;
@@ -306,20 +320,20 @@ public class KeyUtils {
                     final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                     final KeyBinding keyBind = keyData.getFirst();
                     final Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
-                    final int currentBind = keyBind.key;
+                    final int currentBind = keyBind.getKeyCode();
                     boolean hasBeenRun = false;
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiOptionsPageControls)) {
+                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiOptions)) {
                             try {
                                 callbackData.getFirst().run();
                             } catch (Throwable ex) {
                                 if (keyData.getThird() != null) {
                                     keyData.getThird().accept(ex);
                                 } else {
-                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.name));
-                                    syncKeyData(keyName, ImportMode.Specific, keyBind.key);
+                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getId()));
+                                    syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCode());
                                 }
                             } finally {
                                 hasBeenRun = true;
@@ -357,7 +371,7 @@ public class KeyUtils {
         } else if (mode == ImportMode.Vanilla) {
             keyData.getSecond().getSecond().accept(keyCode, true);
         } else if (mode == ImportMode.Specific) {
-            syncKeyData(keyData.getFirst().name, ImportMode.Config, keyCode);
+            syncKeyData(keyData.getFirst().getId(), ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
             Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
@@ -383,8 +397,8 @@ public class KeyUtils {
             ) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                 if (mode == FilterMode.None ||
-                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().name)) ||
-                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().name)) ||
+                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().getId())) ||
+                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().getId())) ||
                         mode == FilterMode.Name
                 ) {
                     filteredMappings.put(keyName, keyData);
