@@ -238,7 +238,7 @@ tasks.register("generateMyResources") {
 
 // Setup Name Schema for Uploading
 val archiveName = "mod_name"()!!
-var targetFile = file("$rootDir/build/libs/$fileFormat.jar")
+var targetFile = file("$rootDir/fabric/build/libs/$fileFormat-fabric.jar")
 if (!targetFile.exists() && (isJarMod)) {
     // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
     targetFile = file("$rootDir/$fmlName/build/libs/$fileFormat-$fmlName.jar")
