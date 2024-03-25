@@ -30,8 +30,10 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 
@@ -122,7 +124,7 @@ public class BiomeUtils implements Module {
     @Override
     public void updateData() {
         final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition()).value();
-        final ResourceLocation newIdentifier = CraftPresence.player.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(newBiome);
+        final ResourceLocation newIdentifier = CraftPresence.player.level.registryAccess().registryOrThrow(Registries.BIOME).getKey(newBiome);
         final String newBiomeName = newIdentifier != null ? StringUtils.formatIdentifier(newIdentifier.toString(), false, !CraftPresence.CONFIG.advancedSettings.formatWords) : "Plains";
 
         final String newBiome_primaryIdentifier = newIdentifier != null ? StringUtils.formatIdentifier(newIdentifier.toString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords) : "plains";
@@ -175,15 +177,15 @@ public class BiomeUtils implements Module {
      */
     private List<ResourceLocation> getBiomeTypes() {
         List<ResourceLocation> biomeTypes = StringUtils.newArrayList();
-        Optional<? extends Registry<Biome>> biomeRegistry = RegistryAccess.builtinCopy().registry(Registry.BIOME_REGISTRY);
+        Optional<HolderLookup.RegistryLookup<Biome>> biomeRegistry = VanillaRegistries.createLookup().lookup(Registries.BIOME);
 
         if (biomeRegistry.isPresent()) {
-            List<ResourceLocation> defaultBiomeTypes = StringUtils.newArrayList(biomeRegistry.get().keySet());
+            List<Holder.Reference<Biome>> defaultBiomeTypes = StringUtils.newArrayList(biomeRegistry.get().listElements().toList());
 
             if (!defaultBiomeTypes.isEmpty()) {
-                for (ResourceLocation type : defaultBiomeTypes) {
+                for (Holder.Reference<Biome> type : defaultBiomeTypes) {
                     if (type != null) {
-                        biomeTypes.add(type);
+                        biomeTypes.add(type.key().location());
                     }
                 }
             }
