@@ -38,7 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
@@ -46,7 +46,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     private ExtendedButtonControl dimensionMessagesButton;
     private TextWidget defaultMessage, defaultIcon;
 
-    DimensionSettingsGui(GuiScreen parentScreen) {
+    DimensionSettingsGui(Screen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.dimension_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();

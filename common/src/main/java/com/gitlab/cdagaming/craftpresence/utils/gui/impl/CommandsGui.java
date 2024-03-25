@@ -39,7 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 import org.meteordev.starscript.value.Value;
 
@@ -64,7 +64,7 @@ public class CommandsGui extends ExtendedScreen {
     private String[] commandArgs, filteredCommandArgs;
     private List<String> tabCompletions = StringUtils.newArrayList();
 
-    public CommandsGui(GuiScreen parentScreen, String... commandArgs) {
+    public CommandsGui(Screen parentScreen, String... commandArgs) {
         super(parentScreen);
         executionCommandArgs = commandArgs;
         executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.main");
@@ -162,7 +162,7 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         proceedButton.setControlEnabled(!blockInteractions);
         copyButton.setControlEnabled(!blockInteractions);
-        commandInput.setEnabled(!blockInteractions);
+        commandInput.setEditable(!blockInteractions);
 
         if (!blockInteractions) {
             checkCommands();

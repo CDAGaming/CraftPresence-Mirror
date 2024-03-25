@@ -32,7 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.TupleConsumer;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.function.BiConsumer;
 
@@ -48,7 +48,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
+    public DynamicEditorGui(Screen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super(parentScreen);
         this.attributeName = attributeName;
         this.isNewValue = StringUtils.isNullOrEmpty(attributeName);
@@ -63,7 +63,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         this.onHoverSecondaryCallback = onHoverSecondaryCallback;
     }
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
+    public DynamicEditorGui(Screen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
@@ -72,7 +72,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 ));
     }
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback) {
+    public DynamicEditorGui(Screen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback) {
         this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(

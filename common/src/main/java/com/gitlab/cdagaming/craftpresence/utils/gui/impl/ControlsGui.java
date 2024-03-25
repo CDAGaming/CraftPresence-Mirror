@@ -34,8 +34,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ButtonWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -46,30 +46,30 @@ import java.util.function.Predicate;
 
 public class ControlsGui extends ExtendedScreen {
     // Format: See KeyUtils#KEY_MAPPINGS
-    private final Map<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> keyMappings;
+    private final Map<String, Tuple<KeyMapping, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = StringUtils.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
-    private Tuple<ExtendedButtonControl, ExtendedButtonControl, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
+    private Tuple<ExtendedButtonControl, ExtendedButtonControl, Tuple<KeyMapping, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
     private ExtendedScreen childFrame;
 
-    public ControlsGui(GuiScreen parentScreen) {
+    public ControlsGui(Screen parentScreen) {
         super(parentScreen);
         this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings();
 
         sortMappings();
     }
 
-    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, List<String> filterData) {
+    public ControlsGui(Screen parentScreen, KeyUtils.FilterMode filterMode, List<String> filterData) {
         super(parentScreen);
         this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings(filterMode, filterData);
 
         sortMappings();
     }
 
-    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
+    public ControlsGui(Screen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
         this(parentScreen, filterMode, StringUtils.newArrayList(filterData));
     }
 
@@ -134,13 +134,13 @@ public class ControlsGui extends ExtendedScreen {
      * Sort Key Mappings via their categories, used for placement into gui
      */
     private void sortMappings() {
-        for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
+        for (Map.Entry<String, Tuple<KeyMapping, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
-            final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
-            if (!categorizedNames.containsKey(keyData.getFirst().getKeyCategory())) {
-                categorizedNames.put(keyData.getFirst().getKeyCategory(), StringUtils.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.getFirst().getKeyCategory()).contains(keyName)) {
-                categorizedNames.get(keyData.getFirst().getKeyCategory()).add(keyName);
+            final Tuple<KeyMapping, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
+            if (!categorizedNames.containsKey(keyData.getFirst().getCategory())) {
+                categorizedNames.put(keyData.getFirst().getCategory(), StringUtils.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.getFirst().getCategory()).contains(keyName)) {
+                categorizedNames.get(keyData.getFirst().getCategory()).add(keyName);
             }
         }
     }
@@ -168,10 +168,10 @@ public class ControlsGui extends ExtendedScreen {
 
             final int middle = (childFrame.getScreenWidth() / 2) + 3;
             for (String keyName : entry.getValue()) {
-                final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
+                final Tuple<KeyMapping, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
 
-                final String keyTitle = keyData.getFirst().getKeyDescription();
-                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().keyCode.getKeyCode());
+                final String keyTitle = keyData.getFirst().getName();
+                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().key.getValue());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         95, 20,
@@ -195,7 +195,7 @@ public class ControlsGui extends ExtendedScreen {
                 keyResetButton.setOnClick(() -> resetEntryData(keyCodeWidget, keyResetButton, keyData));
                 keyCodeWidget.setOnClick(() -> setupEntryData(keyCodeWidget, keyResetButton, keyData));
 
-                keyResetButton.setControlEnabled(keyCode != keyData.getFirst().getDefault().getKeyCode());
+                keyResetButton.setControlEnabled(keyCode != keyData.getFirst().getDefaultKey().getValue());
 
                 childFrame.addControl(keyCodeWidget);
                 childFrame.addControl(keyResetButton);
@@ -212,7 +212,7 @@ public class ControlsGui extends ExtendedScreen {
      * @param resetButton The Reset Button related to the KeyCode Button
      * @param keyData     The key data attached to the entry
      */
-    private void setupEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
+    private void setupEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyMapping, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
             entryData = new Tuple<>(button, resetButton, keyData);
 
@@ -228,10 +228,10 @@ public class ControlsGui extends ExtendedScreen {
      * @param resetButton The Reset Button related to the KeyCode Button
      * @param keyData     The key data attached to the entry
      */
-    private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
+    private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final Tuple<KeyMapping, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
             entryData = new Tuple<>(button, resetButton, keyData);
-            setKeyData(keyData.getFirst().getDefault().getKeyCode());
+            setKeyData(keyData.getFirst().getDefaultKey().getValue());
         }
     }
 
@@ -265,7 +265,7 @@ public class ControlsGui extends ExtendedScreen {
         }
 
         entryData.getSecond().setControlEnabled(
-                keyToSubmit != entryData.getThird().getFirst().getDefault().getKeyCode()
+                keyToSubmit != entryData.getThird().getFirst().getDefaultKey().getValue()
         );
 
         clearEntryData();

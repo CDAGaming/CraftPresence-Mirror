@@ -37,7 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
             stripExtraGuiElementsButton, renderTooltipsButton;
     private ExtendedButtonControl controlsButton;
 
-    AccessibilitySettingsGui(GuiScreen parentScreen) {
+    AccessibilitySettingsGui(Screen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.accessibility");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();

@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Font;
 
 /**
  * Implementation for a Row-Style {@link ExtendedTextControl} Widget
@@ -70,7 +70,7 @@ public class TextWidget extends ExtendedTextControl {
      * @param title           The text to be rendered with this widget
      * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
      */
-    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
+    public TextWidget(int componentId, Font fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
         super(componentId, fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
         this.setDimensions = false;
@@ -87,7 +87,7 @@ public class TextWidget extends ExtendedTextControl {
      * @param heightIn        The Height for this Control
      * @param title           The text to be rendered with this widget
      */
-    public TextWidget(int componentId, FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
+    public TextWidget(int componentId, Font fontRendererObj, int y, int widthIn, int heightIn, String title) {
         this(componentId, fontRendererObj, y, widthIn, heightIn, title, null);
     }
 
@@ -101,7 +101,7 @@ public class TextWidget extends ExtendedTextControl {
      * @param title           The text to be rendered with this widget
      * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
+    public TextWidget(Font fontRendererObj, int y, int widthIn, int heightIn, String title, Runnable titleHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn);
         this.title = title;
         this.setDimensions = false;
@@ -117,7 +117,7 @@ public class TextWidget extends ExtendedTextControl {
      * @param heightIn        The Height for this Control
      * @param title           The text to be rendered with this widget
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, String title) {
+    public TextWidget(Font fontRendererObj, int y, int widthIn, int heightIn, String title) {
         this(fontRendererObj, y, widthIn, heightIn, title, null);
     }
 
@@ -132,7 +132,7 @@ public class TextWidget extends ExtendedTextControl {
      * @param title           The text to be rendered with this widget
      * @param titleHoverEvent The Hover Event to Occur when the title is hovered over
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable titleHoverEvent) {
+    public TextWidget(Font fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title, Runnable titleHoverEvent) {
         super(fontRendererObj, 0, y, widthIn, heightIn, keyEvent);
         this.title = title;
         this.setDimensions = false;
@@ -149,7 +149,7 @@ public class TextWidget extends ExtendedTextControl {
      * @param keyEvent        The event to run when characters are typed in this control
      * @param title           The text to be rendered with this widget
      */
-    public TextWidget(FontRenderer fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title) {
+    public TextWidget(Font fontRendererObj, int y, int widthIn, int heightIn, Runnable keyEvent, String title) {
         this(fontRendererObj, y, widthIn, heightIn, keyEvent, title, null);
     }
 

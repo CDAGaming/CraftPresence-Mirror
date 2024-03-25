@@ -27,13 +27,13 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
+import com.mojang.blaze3d.platform.NativeImage;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -249,7 +249,7 @@ public class ImageUtils {
                 }
                 try {
                     final DynamicTexture dynTexture = new DynamicTexture(bufferData.getSecond().get(bufferData.getFirst()).getNativeImage());
-                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName.toLowerCase() + (shouldRepeat ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
+                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().register(textureName.toLowerCase() + (shouldRepeat ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
                     if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
                         if (doesContinue) {
                             bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime();

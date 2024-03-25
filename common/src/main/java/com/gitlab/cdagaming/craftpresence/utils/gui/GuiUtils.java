@@ -32,9 +32,9 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
 import java.util.List;
 import java.util.Map;
@@ -70,7 +70,7 @@ public class GuiUtils implements Module {
     /**
      * The Current Instance of the Gui the player is in
      */
-    public GuiScreen CURRENT_SCREEN;
+    public Screen CURRENT_SCREEN;
     /**
      * Whether this module is active and currently in use
      */
@@ -89,8 +89,8 @@ public class GuiUtils implements Module {
      *
      * @return The Default/Global Font Renderer
      */
-    public static FontRenderer getDefaultFontRenderer() {
-        return CraftPresence.instance.fontRenderer;
+    public static Font getDefaultFontRenderer() {
+        return CraftPresence.instance.font;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class GuiUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
-        isFocused = CraftPresence.instance.currentScreen != null && ((CraftPresence.instance.currentScreen.getFocused() != null && CraftPresence.instance.currentScreen.getFocused().canFocus()) || CraftPresence.player != null);
+        isFocused = CraftPresence.instance.screen != null && (CraftPresence.instance.screen.getFocused() != null || CraftPresence.player != null);
         final boolean needsUpdate = enabled && !hasScanned && canFetchData();
 
         if (needsUpdate) {
@@ -124,7 +124,7 @@ public class GuiUtils implements Module {
         }
 
         if (enabled) {
-            if (CraftPresence.instance.currentScreen != null) {
+            if (CraftPresence.instance.screen != null) {
                 setInUse(true);
                 updateData();
             } else if (isInUse()) {
@@ -137,10 +137,10 @@ public class GuiUtils implements Module {
 
     @Override
     public void updateData() {
-        if (CraftPresence.instance.currentScreen == null) {
+        if (CraftPresence.instance.screen == null) {
             clearClientData();
         } else {
-            final GuiScreen newScreen = CraftPresence.instance.currentScreen;
+            final Screen newScreen = CraftPresence.instance.screen;
             final String newScreenName = MappingUtils.getClassName(newScreen);
 
             if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
@@ -161,7 +161,7 @@ public class GuiUtils implements Module {
 
     @Override
     public void getAllData() {
-        final List<Class<?>> searchClasses = StringUtils.newArrayList(GuiScreen.class, GuiContainer.class);
+        final List<Class<?>> searchClasses = StringUtils.newArrayList(Screen.class, AbstractContainerScreen.class);
 
         for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);

@@ -27,11 +27,11 @@ package com.gitlab.cdagaming.craftpresence.impl;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.resources.IResource;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.resources.IResourceManagerReloadListener;
-import net.minecraft.resources.SimpleReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
 
 import java.io.InputStream;
 import java.util.List;
@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author CDAGaming
  */
-public class TranslationManager implements IResourceManagerReloadListener {
+public class TranslationManager implements ResourceManagerReloadListener {
     /**
      * The currently linked {@link TranslationUtils} instance
      */
@@ -54,12 +54,12 @@ public class TranslationManager implements IResourceManagerReloadListener {
      */
     public TranslationManager(final TranslationUtils instance) {
         this.instance = instance;
-        ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).addReloadListener(this);
+        ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
 
         getInstance().setLanguageSupplier((fallback) -> {
             final String result;
-            if (CraftPresence.instance.gameSettings != null) {
-                result = CraftPresence.instance.gameSettings.language;
+            if (CraftPresence.instance.options != null) {
+                result = CraftPresence.instance.options.languageCode;
             } else if (CraftPresence.CONFIG != null) {
                 result = CraftPresence.CONFIG.accessibilitySettings.languageId;
             } else {
@@ -71,8 +71,8 @@ public class TranslationManager implements IResourceManagerReloadListener {
         getInstance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                final List<IResource> resources = CraftPresence.instance.getResourceManager().getAllResources(new ResourceLocation(modId, langPath));
-                for (IResource resource : resources) {
+                final List<Resource> resources = CraftPresence.instance.getResourceManager().getResources(new ResourceLocation(modId, langPath));
+                for (Resource resource : resources) {
                     results.add(resource.getInputStream());
                 }
             } catch (Exception ignored) {
@@ -100,7 +100,7 @@ public class TranslationManager implements IResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(ResourceManager resourceManager) {
         getInstance().syncTranslations();
     }
 }

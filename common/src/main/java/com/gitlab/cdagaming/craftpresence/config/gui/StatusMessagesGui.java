@@ -39,7 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.Map;
 
@@ -82,7 +82,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
             ))
             .build();
 
-    StatusMessagesGui(GuiScreen parentScreen) {
+    StatusMessagesGui(Screen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.status_messages");
         INSTANCE = getCurrentData().copy();
     }

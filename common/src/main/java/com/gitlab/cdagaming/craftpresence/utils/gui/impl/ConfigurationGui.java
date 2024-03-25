@@ -35,7 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -45,14 +45,14 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     protected ScrollPane childFrame;
     protected ExtendedButtonControl resetConfigButton, syncConfigButton, proceedButton;
 
-    public ConfigurationGui(GuiScreen parentScreen, String title, String subTitle) {
+    public ConfigurationGui(Screen parentScreen, String title, String subTitle) {
         super(parentScreen);
 
         this.title = title;
         this.subTitle = subTitle;
     }
 
-    public ConfigurationGui(GuiScreen parentScreen, String title) {
+    public ConfigurationGui(Screen parentScreen, String title) {
         this(parentScreen, title, null);
     }
 

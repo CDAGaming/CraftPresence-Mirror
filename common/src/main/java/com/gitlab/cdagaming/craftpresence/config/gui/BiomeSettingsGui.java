@@ -38,7 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class BiomeSettingsGui extends ConfigurationGui<Biome> {
@@ -46,7 +46,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     private ExtendedButtonControl biomeMessagesButton;
     private TextWidget defaultMessage, defaultIcon;
 
-    BiomeSettingsGui(GuiScreen parentScreen) {
+    BiomeSettingsGui(Screen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.biome_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();

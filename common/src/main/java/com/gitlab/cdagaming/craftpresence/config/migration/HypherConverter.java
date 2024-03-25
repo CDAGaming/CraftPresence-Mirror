@@ -36,10 +36,10 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
 import me.hypherionmc.moonconfig.core.UnmodifiableConfig;
 import me.hypherionmc.moonconfig.core.file.FileConfig;
-import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.GuiMultiplayer;
-import net.minecraft.client.gui.GuiScreenRealmsProxy;
-import net.minecraft.client.gui.GuiScreenWorking;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
+import net.minecraft.client.gui.screens.ReceivingLevelScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
+import net.minecraft.realms.RealmsScreen;
 
 import java.io.File;
 import java.util.List;
@@ -168,13 +168,13 @@ public class HypherConverter implements DataMigrator {
 
             // Per-GUI Events
             instance.advancedSettings.enablePerGui = true;
-            instance.advancedSettings.guiSettings.guiData.put(GuiScreenRealmsProxy.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put(RealmsScreen.class.getSimpleName(), new ModuleData()
                     .setData(convertPresenceData(conf.get("realms_list"))));
-            instance.advancedSettings.guiSettings.guiData.put(GuiMultiplayer.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put(JoinMultiplayerScreen.class.getSimpleName(), new ModuleData()
                     .setData(convertPresenceData(conf.get("server_list"))));
-            instance.advancedSettings.guiSettings.guiData.put(GuiScreenWorking.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put(LevelLoadingScreen.class.getSimpleName(), new ModuleData()
                     .setData(convertPresenceData(conf.get("join_game"))));
-            instance.advancedSettings.guiSettings.guiData.put(GuiDownloadTerrain.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put(ReceivingLevelScreen.class.getSimpleName(), new ModuleData()
                     .setData(convertPresenceData(conf.get("join_game"))));
 
             instance.statusMessages.loadingData.setData(convertPresenceData(conf.get("init")));

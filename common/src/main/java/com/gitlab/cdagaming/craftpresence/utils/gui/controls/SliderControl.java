@@ -30,6 +30,7 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 
@@ -202,7 +203,7 @@ public class SliderControl extends ExtendedButtonControl {
      * 2 if it IS hovering over this button.
      */
     @Override
-    protected int getHoverState(boolean mouseOver) {
+    protected int getYImage(boolean mouseOver) {
         return 0;
     }
 
@@ -215,7 +216,7 @@ public class SliderControl extends ExtendedButtonControl {
         if (isControlVisible()) {
             super.renderBg(mc, mouseX, mouseY);
 
-            final int hoverState = super.getHoverState(isHoveringOrFocusingOver());
+            final int hoverState = super.getYImage(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
             RenderUtils.renderButton(mc,
                     getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(),
@@ -234,9 +235,23 @@ public class SliderControl extends ExtendedButtonControl {
      */
     @Override
     public void onClick(double mouseX, double mouseY) {
-        if (super.isPressable(mouseX, mouseY)) {
+        if (super.clicked(mouseX, mouseY)) {
             setValueFromMouse(mouseX);
         }
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
+        boolean bl = keyCode == GLFW.GLFW_KEY_LEFT;
+        if (bl || keyCode == GLFW.GLFW_KEY_RIGHT) {
+            float f = bl ? -valueStep : valueStep;
+            setSliderValue(getSliderValue() + f);
+            onPress();
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

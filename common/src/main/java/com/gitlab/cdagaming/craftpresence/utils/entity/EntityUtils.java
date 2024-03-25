@@ -29,12 +29,13 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.registry.IRegistry;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.core.Registry;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelData;
+import net.minecraft.world.phys.EntityHitResult;
 
 import java.util.List;
 import java.util.Map;
@@ -99,8 +100,8 @@ public class EntityUtils implements Module {
         String result = "";
         if (entity != null) {
             result = StringUtils.getOrDefault(
-                    entity.getDisplayName().getFormattedText(),
-                    entity.getName().getFormattedText()
+                    entity.getDisplayName().getString(),
+                    entity.getName().getString()
             );
         }
 
@@ -126,10 +127,10 @@ public class EntityUtils implements Module {
      * @param worldObj The world object to interpret
      * @return the current weather data
      */
-    public static String getWeather(final World worldObj) {
+    public static String getWeather(final Level worldObj) {
         String name = "clear";
         if (worldObj != null) {
-            final WorldInfo info = worldObj.getWorldInfo();
+            final LevelData info = worldObj.getLevelData();
             if (info.isThundering()) {
                 name = "thunder";
             } else if (info.isRaining()) {
@@ -148,7 +149,7 @@ public class EntityUtils implements Module {
      * @return the current weather data
      */
     public static String getWeather(final Entity entity) {
-        return getWeather(entity != null ? entity.world : null);
+        return getWeather(entity != null ? entity.level : null);
     }
 
     @Override
@@ -199,8 +200,8 @@ public class EntityUtils implements Module {
 
     @Override
     public void updateData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entity != null ? CraftPresence.instance.objectMouseOver.entity : null;
-        final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.hitResult != null && CraftPresence.instance.hitResult instanceof EntityHitResult ? ((EntityHitResult) CraftPresence.instance.hitResult).getEntity() : null;
+        final Entity NEW_CURRENT_RIDING = CraftPresence.player.getVehicle();
 
         final boolean hasTargetChanged = !Objects.equals(NEW_CURRENT_TARGET, CURRENT_TARGET);
         final boolean hasRidingChanged = !Objects.equals(NEW_CURRENT_RIDING, CURRENT_RIDING);
@@ -293,12 +294,12 @@ public class EntityUtils implements Module {
 
     @Override
     public void getAllData() {
-        final List<EntityType<?>> defaultEntityTypes = StringUtils.newArrayList(IRegistry.ENTITY_TYPE.iterator());
+        final List<EntityType<?>> defaultEntityTypes = StringUtils.newArrayList(Registry.ENTITY_TYPE.iterator());
 
         if (!defaultEntityTypes.isEmpty()) {
             for (EntityType<?> entityLocation : defaultEntityTypes) {
                 if (entityLocation != null) {
-                    final String entityName = entityLocation.getName().getFormattedText();
+                    final String entityName = entityLocation.getDescription().getString();
                     if (!DEFAULT_NAMES.contains(entityName)) {
                         DEFAULT_NAMES.add(entityName);
                     }
@@ -311,15 +312,15 @@ public class EntityUtils implements Module {
 
         // If Server Data is enabled, allow Uuid's to count as entities
         if (CraftPresence.SERVER.enabled) {
-            for (NetworkPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
+            for (PlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
                 if (playerInfo != null) {
-                    final String uuidString = playerInfo.getGameProfile().getId().toString();
+                    final String uuidString = playerInfo.getProfile().getId().toString();
                     if (!StringUtils.isNullOrEmpty(uuidString)) {
                         if (!ENTITY_NAMES.contains(uuidString)) {
                             ENTITY_NAMES.add(uuidString);
                         }
                         if (!PLAYER_BINDINGS.containsKey(uuidString)) {
-                            PLAYER_BINDINGS.put(uuidString, playerInfo.getGameProfile().getName());
+                            PLAYER_BINDINGS.put(uuidString, playerInfo.getProfile().getName());
                         }
                     }
                 }

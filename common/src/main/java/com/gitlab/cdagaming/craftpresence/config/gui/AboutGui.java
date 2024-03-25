@@ -32,12 +32,12 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.UpdateInfoGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.List;
 
 public class AboutGui extends ExtendedScreen {
-    public AboutGui(GuiScreen parentScreen) {
+    public AboutGui(Screen parentScreen) {
         super(parentScreen);
     }
 

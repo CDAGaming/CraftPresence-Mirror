@@ -38,8 +38,8 @@ import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Session;
+import net.minecraft.client.User;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * The Primary Application Class and Utilities
@@ -87,11 +87,11 @@ public class CraftPresence {
     /**
      * The Minecraft Instance Session attached to this Mod
      */
-    public static Session session;
+    public static User session;
     /**
      * The Current Player detected from the Minecraft Instance
      */
-    public static EntityPlayer player;
+    public static Player player;
     /**
      * The {@link Config} Instance for this Mod
      */
@@ -177,12 +177,12 @@ public class CraftPresence {
         if (!Constants.IS_GAME_CLOSING) {
             instance = Minecraft.getInstance();
             if (initialized) {
-                session = instance.getSession();
+                session = instance.getUser();
                 player = instance.player;
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {
-                session = instance.getSession();
+                session = instance.getUser();
                 if (session != null) {
                     init();
                 }

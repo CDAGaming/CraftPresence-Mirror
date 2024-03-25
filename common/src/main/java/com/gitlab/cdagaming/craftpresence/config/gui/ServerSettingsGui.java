@@ -38,7 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class ServerSettingsGui extends ConfigurationGui<Server> {
@@ -46,7 +46,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     private ExtendedButtonControl serverMessagesButton;
     private TextWidget defaultMOTD, defaultName, defaultMessage, defaultIcon;
 
-    ServerSettingsGui(GuiScreen parentScreen) {
+    ServerSettingsGui(Screen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.server_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();

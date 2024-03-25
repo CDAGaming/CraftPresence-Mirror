@@ -40,7 +40,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.function.Consumer;
 
@@ -54,7 +54,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
 
-    PresenceSettingsGui(GuiScreen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
+    PresenceSettingsGui(Screen parentScreen, PresenceData moduleData, Consumer<PresenceData> changedCallback) {
         super(parentScreen, "gui.config.title", "gui.config.title.presence_settings");
         INSTANCE = getCurrentData().copy();
         PRESENCE = moduleData != null ? moduleData : getCurrentData().presenceData;
@@ -65,7 +65,7 @@ public class PresenceSettingsGui extends ConfigurationGui<Display> {
         onChangedCallback = changedCallback;
     }
 
-    PresenceSettingsGui(GuiScreen parentScreen) {
+    PresenceSettingsGui(Screen parentScreen) {
         this(parentScreen, CraftPresence.CONFIG.displaySettings.presenceData, (output) ->
                 CraftPresence.CONFIG.displaySettings.presenceData = output
         );

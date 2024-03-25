@@ -1099,7 +1099,7 @@ public class DiscordUtils {
     public void syncPlaceholders() {
         syncArgument("_general.instance", CraftPresence.instance);
         syncArgument("_general.player", CraftPresence.player);
-        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.world : null);
+        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.level : null);
         syncArgument("_config.instance", CraftPresence.CONFIG);
         // Sync Custom Variables
         removeArguments("custom.");
@@ -1109,11 +1109,11 @@ public class DiscordUtils {
             }
         }
         // Add Any Generalized Argument Data needed
-        final String playerName = CraftPresence.session.getUsername();
+        final String playerName = CraftPresence.session.getName();
         syncArgument("player.name", playerName);
 
         // UUID Data
-        final String uniqueId = CraftPresence.session.getPlayerID();
+        final String uniqueId = CraftPresence.session.getUuid();
         if (StringUtils.isValidUuid(uniqueId)) {
             syncArgument("player.uuid.short", StringUtils.getFromUuid(uniqueId, true));
             syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));

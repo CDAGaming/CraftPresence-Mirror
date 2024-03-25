@@ -43,7 +43,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
@@ -55,7 +55,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     private ExtendedTextControl refreshRate, maxConnectionAttempts,
             playerSkinEndpoint, serverIconEndpoint;
 
-    AdvancedSettingsGui(GuiScreen parentScreen) {
+    AdvancedSettingsGui(Screen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.advanced");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();

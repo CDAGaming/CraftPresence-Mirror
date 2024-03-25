@@ -38,12 +38,12 @@ import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.client.gui.GuiConnecting;
-import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.screens.ConnectScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.network.NetworkPlayerInfo;
 
 import java.time.Instant;
 import java.util.List;
@@ -79,7 +79,7 @@ public class ServerUtils implements Module {
     /**
      * The Current Player Map, if available
      */
-    public List<NetworkPlayerInfo> currentPlayerList = StringUtils.newArrayList();
+    public List<PlayerInfo> currentPlayerList = StringUtils.newArrayList();
     /**
      * A List of the detected Server Addresses
      */
@@ -180,7 +180,7 @@ public class ServerUtils implements Module {
     /**
      * The Player's Current Connection Data
      */
-    private NetHandlerPlayClient currentConnection;
+    private ClientPacketListener currentConnection;
     /**
      * If the RPC needs to be Updated or Re-Synchronized<p>
      * Needed here for Multiple-Condition RPC Triggers
@@ -262,18 +262,18 @@ public class ServerUtils implements Module {
 
     @Override
     public void updateData() {
-        final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
+        final ServerData newServerData = CraftPresence.instance.getCurrentServer();
+        final ClientPacketListener newConnection = CraftPresence.instance.getConnection();
 
         if (!joinInProgress) {
-            final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
-            final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
+            final List<PlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getOnlinePlayers()) : StringUtils.newArrayList();
+            final int newCurrentPlayers = newConnection != null ? newConnection.getOnlinePlayers().size() : 1;
 
             // 1.13+ Check for New Maximum Players
             int newMaxPlayers;
             if (newServerData != null) {
                 try {
-                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.populationInfo).split("/")[1]).getSecond();
+                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status).split("/")[1]).getSecond();
 
                     if (newMaxPlayers < newCurrentPlayers) {
                         newMaxPlayers = newCurrentPlayers + 1;
@@ -285,12 +285,13 @@ public class ServerUtils implements Module {
                 newMaxPlayers = newCurrentPlayers + 1;
             }
 
-            final boolean newLANStatus = (CraftPresence.instance.isSingleplayer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());
+            final boolean newLANStatus = (CraftPresence.instance.isLocalServer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isLan());
+            final boolean isMotdValid = newServerData != null && newServerData.motd != null;
 
-            final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
-            final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-            final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isSingleplayer() &&
-                    newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripAllFormatting(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+            final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.ip) ? newServerData.ip : "127.0.0.1";
+            final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
+            final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isLocalServer() &&
+                    isMotdValid && !isInvalidMotd(newServerData.motd) ? StringUtils.stripAllFormatting(newServerData.motd) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
             if (newLANStatus != isOnLAN || ((newServerData != null && !newServerData.equals(currentServerData)) ||
                     (newServerData == null && currentServerData != null)) ||
@@ -320,8 +321,8 @@ public class ServerUtils implements Module {
                 }
 
                 final ServerList serverList = new ServerList(CraftPresence.instance);
-                serverList.loadServerList();
-                if (serverList.countServers() != serverIndex || CraftPresence.CONFIG.serverSettings.serverData.size() != serverIndex) {
+                serverList.load();
+                if (serverList.size() != serverIndex || CraftPresence.CONFIG.serverSettings.serverData.size() != serverIndex) {
                     scanForData();
                 }
             }
@@ -332,9 +333,9 @@ public class ServerUtils implements Module {
 
             // `player.position` Argument = Current Coordinates of Player
             final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(
-                    MathUtils.roundDouble(CraftPresence.player.posX, 3),
-                    MathUtils.roundDouble(CraftPresence.player.posY, 3),
-                    MathUtils.roundDouble(CraftPresence.player.posZ, 3)
+                    MathUtils.roundDouble(CraftPresence.player.x, 3),
+                    MathUtils.roundDouble(CraftPresence.player.y, 3),
+                    MathUtils.roundDouble(CraftPresence.player.z, 3)
             );
             if (!Objects.equals(newCoordinates, currentCoordinates)) {
                 currentCoordinates = newCoordinates;
@@ -354,9 +355,9 @@ public class ServerUtils implements Module {
             // 'world' Sub-Arguments
 
             // 'world.difficulty' Argument = Current Difficulty of the World
-            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = CraftPresence.player.level.getLevelData().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
+                    StringUtils.formatWord(CraftPresence.player.level.getDifficulty().name().toLowerCase());
             if (!newDifficulty.equals(currentDifficulty)) {
                 currentDifficulty = newDifficulty;
                 queuedForUpdate = true;
@@ -371,8 +372,8 @@ public class ServerUtils implements Module {
             }
 
             // 'world.name' Argument = Current Name of the World
-            final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getLevelName() : "";
+            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.level.getLevelData().getLevelName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             if (!newWorldName.equals(currentWorldName)) {
                 currentWorldName = newWorldName;
@@ -380,7 +381,7 @@ public class ServerUtils implements Module {
             }
 
             // 'world.time' Arguments = Current Time Data of the World
-            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.world.getDayTime());
+            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime());
             if (!Objects.equals(newTimeData, worldTimeData)) {
                 dayCount = newTimeData.getFirst();
                 timeString24 = TimeUtils.toString(newTimeData.getSecond(), "HH:mm");
@@ -490,7 +491,7 @@ public class ServerUtils implements Module {
         final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            CraftPresence.instance.addScheduledTask(() -> joinServer(new ServerData(serverName, serverIP, false)));
+            CraftPresence.instance.execute(() -> joinServer(new ServerData(serverName, serverIP, false)));
         } else {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }
@@ -507,16 +508,16 @@ public class ServerUtils implements Module {
             if (!serverData.pinged) {
                 // Stub Server Data if not pinged
                 serverData.pinged = true;
-                serverData.pingToServer = -2L;
-                serverData.serverMOTD = "";
-                serverData.populationInfo = "";
+                serverData.ping = -2L;
+                serverData.motd = "";
+                serverData.status = "";
             }
 
             if (CraftPresence.player != null) {
-                CraftPresence.player.world.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.loadWorld(null);
+                CraftPresence.player.level.disconnect();
+                CraftPresence.instance.clearLevel(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
+            CraftPresence.instance.setScreen(new ConnectScreen(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, serverData));
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }
@@ -549,7 +550,7 @@ public class ServerUtils implements Module {
 
         ModuleData resultData = new ModuleData();
         String formattedIcon;
-        if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
+        if (!CraftPresence.instance.isLocalServer() && currentServerData != null) {
             // Player Amount Arguments
             CraftPresence.CLIENT.syncArgument("server.players.current", currentPlayers);
             CraftPresence.CLIENT.syncArgument("server.players.max", maxPlayers);
@@ -620,7 +621,7 @@ public class ServerUtils implements Module {
                     CraftPresence.CLIENT.PARTY_PRIVACY = PartyPrivacy.from(CraftPresence.CONFIG.generalSettings.partyPrivacyLevel % 2);
                 }
             }
-        } else if (CraftPresence.instance.isSingleplayer()) {
+        } else if (CraftPresence.instance.isLocalServer()) {
             // NOTE: SinglePlayer-Only Presence Updates
             resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
             currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
@@ -638,21 +639,21 @@ public class ServerUtils implements Module {
     public void getAllData() {
         try {
             final ServerList serverList = new ServerList(CraftPresence.instance);
-            serverList.loadServerList();
-            serverIndex = serverList.countServers();
+            serverList.load();
+            serverIndex = serverList.size();
 
             for (int currentIndex = 0; currentIndex < serverIndex; currentIndex++) {
-                final ServerData data = serverList.getServerData(currentIndex);
-                if (!StringUtils.isNullOrEmpty(data.serverIP)) {
-                    final String formattedIP = data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP;
+                final ServerData data = serverList.get(currentIndex);
+                if (!StringUtils.isNullOrEmpty(data.ip)) {
+                    final String formattedIP = data.ip.contains(":") ? StringUtils.formatAddress(data.ip, false) : data.ip;
                     if (!defaultAddresses.contains(formattedIP)) {
                         defaultAddresses.add(formattedIP);
                     }
                     if (!knownAddresses.contains(formattedIP)) {
                         knownAddresses.add(formattedIP);
                     }
-                    if (!knownServerData.containsKey(data.serverIP)) {
-                        knownServerData.put(data.serverIP, data);
+                    if (!knownServerData.containsKey(data.ip)) {
+                        knownServerData.put(data.ip, data);
                     }
                 }
             }
