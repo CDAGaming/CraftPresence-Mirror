@@ -149,6 +149,8 @@ public class ControlsGui extends ExtendedScreen {
      */
     private void setupScreenData() {
         // Clear any Prior Data beforehand
+        clearEntryData();
+
         int currentAllocatedRow = 0;
 
         for (Map.Entry<String, List<String>> entry : categorizedNames.entrySet()) {
@@ -265,7 +267,13 @@ public class ControlsGui extends ExtendedScreen {
                 keyToSubmit != entryData.getThird().getFirst().getKeyCodeDefault()
         );
 
-        // Clear Data
+        clearEntryData();
+    }
+
+    /**
+     * Reset Entry Data to their defaults
+     */
+    private void clearEntryData() {
         backupKeyString = null;
         entryData = null;
     }
