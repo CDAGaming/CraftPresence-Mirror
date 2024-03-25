@@ -40,6 +40,7 @@ import io.github.cdagaming.unicore.utils.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Session;
+import net.minecraft.src.ThreadSleepForever;
 import net.minecraft.src.UnexpectedThrowable;
 
 /**
@@ -178,12 +179,12 @@ public class CraftPresence {
         if (!Constants.IS_GAME_CLOSING) {
             instance = getMinecraftInstance();
             if (initialized) {
-                session = instance.session;
+                session = instance.field_6320_i;
                 player = instance.thePlayer;
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {
-                session = instance.session;
+                session = instance.field_6320_i;
                 if (session != null) {
                     init();
                 }
@@ -198,7 +199,7 @@ public class CraftPresence {
     public static void ThrowException(String message, Throwable e) {
         Minecraft game = getMinecraftInstance();
         if (game != null) {
-            game.displayUnexpectedThrowable(new UnexpectedThrowable(message, e));
+            game.handleEntityTeleport(new UnexpectedThrowable(message, e));
         } else {
             throw new RuntimeException(e);
         }
@@ -213,8 +214,8 @@ public class CraftPresence {
                 group.enumerate(threads);
 
                 for(int i = 0; i < threads.length; ++i) {
-                    if (threads[i].getName().equals("Minecraft main thread")) {
-                        instance = (Minecraft) StringUtils.getField(Thread.class, threads[i], "target");
+                    if (threads[i].getName().equals("Timer hack thread")) {
+                        instance = (Minecraft) StringUtils.getField(ThreadSleepForever.class, threads[i], "mc", "field_1588_a", "a");
                         break;
                     }
                 }

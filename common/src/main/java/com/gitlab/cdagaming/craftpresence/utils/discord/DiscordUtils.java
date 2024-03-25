@@ -1113,7 +1113,7 @@ public class DiscordUtils {
             }
         }
         // Add Any Generalized Argument Data needed
-        final String playerName = CraftPresence.session.playerName;
+        final String playerName = CraftPresence.session.inventory;
         syncArgument("player.name", playerName);
 
         // UUID Data

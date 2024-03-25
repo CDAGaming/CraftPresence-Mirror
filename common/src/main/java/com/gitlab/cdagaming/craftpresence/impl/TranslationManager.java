@@ -25,11 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.src.StringTranslate;
-
-import java.util.Properties;
 
 /**
  * Utilities for Hooking a {@link TranslationUtils} instance to the Game Resource Manager
@@ -58,20 +54,6 @@ public class TranslationManager {
                 result = fallback;
             }
             return result;
-        });
-
-        getInstance().setOnLanguageSync((entries) -> {
-            StringTranslate stInstance = StringTranslate.func_20162_a();
-            Properties data = (Properties) StringUtils.getField(
-                    StringTranslate.class, stInstance,
-                    "translateTable", "field_20164_b", "b"
-            );
-            data.putAll(entries);
-            StringUtils.updateField(
-                    StringTranslate.class, stInstance,
-                    data,
-                    "translateTable", "field_20164_b", "b"
-            );
         });
     }
 

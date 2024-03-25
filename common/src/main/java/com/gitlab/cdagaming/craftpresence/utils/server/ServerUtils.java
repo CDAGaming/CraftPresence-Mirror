@@ -41,6 +41,7 @@ import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiConnecting;
 import net.minecraft.src.NetClientHandler;
+import net.minecraft.src.WorldClient;
 
 import java.time.Instant;
 import java.util.List;
@@ -259,8 +260,15 @@ public class ServerUtils implements Module {
 
     @Override
     public void updateData() {
+        NetClientHandler newConnection = null;
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
+        try {
+            if (CraftPresence.instance.theWorld instanceof WorldClient) {
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, ((WorldClient)CraftPresence.instance.theWorld), "sendQueue", "field_1052_A", "B");
+            }
+        } catch (Exception ex) {
+            newConnection = null;
+        }
 
         try {
             String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "V");

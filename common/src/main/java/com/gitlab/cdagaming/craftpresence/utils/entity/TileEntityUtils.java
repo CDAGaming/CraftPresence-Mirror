@@ -27,11 +27,11 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.StringTranslate;
 
 import java.util.List;
 import java.util.Map;
@@ -206,8 +206,8 @@ public class TileEntityUtils implements Module {
         final ItemStack itemStack = getStackFrom(data);
         String result = "";
         if (!isEmpty(itemStack)) {
-            result = StringUtils.getOrDefault(
-                    StringTranslate.func_20162_a().func_20161_b(itemStack.getItem().func_20009_a())
+            result = MappingUtils.getClassName(
+                    itemStack.getItem()
             );
         }
 

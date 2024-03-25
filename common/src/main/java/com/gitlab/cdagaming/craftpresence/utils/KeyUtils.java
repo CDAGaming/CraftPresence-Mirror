@@ -155,7 +155,7 @@ public class KeyUtils {
      * @return the created KeyBind instance
      */
     KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
-        final KeyBinding result = new KeyBinding(name, defaultKey);
+        final KeyBinding result = new KeyBinding(Constants.TRANSLATOR.getLocalizedMessage(name), defaultKey);
         keySyncQueue.put(id, currentKey);
         return result;
     }
