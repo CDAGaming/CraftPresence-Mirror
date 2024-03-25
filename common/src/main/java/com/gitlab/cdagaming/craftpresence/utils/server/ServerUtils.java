@@ -45,7 +45,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.CommonComponents;
 
 import java.time.Instant;
 import java.util.List;
@@ -512,8 +512,8 @@ public class ServerUtils implements Module {
                 // Stub Server Data if not pinged
                 serverData.pinged = true;
                 serverData.ping = -2L;
-                serverData.motd = TextComponent.EMPTY;
-                serverData.status = TextComponent.EMPTY;
+                serverData.motd = CommonComponents.EMPTY;
+                serverData.status = CommonComponents.EMPTY;
             }
 
             ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData);

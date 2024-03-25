@@ -71,9 +71,9 @@ public class TranslationManager implements ResourceManagerReloadListener {
         getInstance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                final List<Resource> resources = CraftPresence.instance.getResourceManager().getResources(new ResourceLocation(modId, langPath));
+                final List<Resource> resources = CraftPresence.instance.getResourceManager().getResourceStack(new ResourceLocation(modId, langPath));
                 for (Resource resource : resources) {
-                    results.add(resource.getInputStream());
+                    results.add(resource.open());
                 }
             } catch (Exception ignored) {
             }

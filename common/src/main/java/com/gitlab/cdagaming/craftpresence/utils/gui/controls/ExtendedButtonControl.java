@@ -35,7 +35,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -79,7 +78,7 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
      * @param optionalArgs The optional Arguments, if any, to associate with this control
      */
     public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final String... optionalArgs) {
-        super(x, y, widthIn, heightIn, new TextComponent(buttonText), (button) -> {
+        super(x, y, widthIn, heightIn, Component.literal(buttonText), (button) -> {
         });
 
         this.optionalArgs = optionalArgs;
@@ -437,7 +436,7 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
      * @param newMessage The new display message for this control
      */
     public void setControlMessage(final String newMessage) {
-        setControlRawMessage(new TextComponent(newMessage));
+        setControlRawMessage(Component.literal(newMessage));
     }
 
     /**
