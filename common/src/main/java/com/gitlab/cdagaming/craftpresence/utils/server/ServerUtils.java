@@ -39,8 +39,8 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiConnecting;
-import net.minecraft.src.NetClientHandler;
+import net.minecraft.src.client.gui.GuiConnecting;
+import net.minecraft.src.client.packets.NetClientHandler;
 
 import java.time.Instant;
 import java.util.List;
@@ -495,7 +495,7 @@ public class ServerUtils implements Module {
                 CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.changeWorld1(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.getServerIP(), serverData.getServerPort()));
+            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.getServerIP() + ":" + serverData.getServerPort()));
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }

@@ -38,9 +38,8 @@ import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Session;
-import net.minecraft.src.UnexpectedThrowable;
+import net.minecraft.src.client.Session;
+import net.minecraft.src.game.entity.player.EntityPlayer;
 
 /**
  * The Primary Application Class and Utilities
@@ -176,7 +175,7 @@ public class CraftPresence {
      */
     private void clientTick() {
         if (!Constants.IS_GAME_CLOSING) {
-            instance = getMinecraftInstance();
+            instance = Minecraft.getInstance();
             if (initialized) {
                 session = instance.session;
                 player = instance.thePlayer;
@@ -189,40 +188,5 @@ public class CraftPresence {
                 }
             }
         }
-    }
-
-    private static void ThrowException(Throwable e) {
-        ThrowException("Exception occured in ModLoader", e);
-    }
-
-    public static void ThrowException(String message, Throwable e) {
-        Minecraft game = getMinecraftInstance();
-        if (game != null) {
-            game.displayUnexpectedThrowable(new UnexpectedThrowable(message, e));
-        } else {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Minecraft getMinecraftInstance() {
-        if (instance == null) {
-            try {
-                ThreadGroup group = Thread.currentThread().getThreadGroup();
-                int count = group.activeCount();
-                Thread[] threads = new Thread[count];
-                group.enumerate(threads);
-
-                for(int i = 0; i < threads.length; ++i) {
-                    if (threads[i].getName().equals("Minecraft main thread")) {
-                        instance = (Minecraft) StringUtils.getField(Thread.class, threads[i], "target");
-                        break;
-                    }
-                }
-            } catch (Exception var4) {
-                ThrowException(var4);
-            }
-        }
-
-        return instance;
     }
 }

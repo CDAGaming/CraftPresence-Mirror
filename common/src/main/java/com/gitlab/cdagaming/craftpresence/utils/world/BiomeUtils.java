@@ -33,7 +33,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.src.BiomeGenBase;
+import net.minecraft.src.game.level.biomes.BiomeGenBase;
 
 import java.util.List;
 
@@ -120,7 +120,7 @@ public class BiomeUtils implements Module {
 
     @Override
     public void updateData() {
-        final BiomeGenBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().getBiomeGenAt((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
+        final BiomeGenBase newBiome = BiomeGenBase.biomeList[CraftPresence.player.worldObj.getBiomeAtBlock((int) CraftPresence.player.posX, (int) CraftPresence.player.posY, (int) CraftPresence.player.posZ)];
         final String newBiomeName = StringUtils.formatIdentifier(newBiome.biomeName, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
         final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
@@ -173,6 +173,14 @@ public class BiomeUtils implements Module {
      */
     private List<BiomeGenBase> getBiomeTypes() {
         List<BiomeGenBase> biomeTypes = StringUtils.newArrayList();
+
+        if (BiomeGenBase.biomeList != null) {
+            for (BiomeGenBase biome : BiomeGenBase.biomeList) {
+                if (biome != null && !biomeTypes.contains(biome)) {
+                    biomeTypes.add(biome);
+                }
+            }
+        }
 
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup

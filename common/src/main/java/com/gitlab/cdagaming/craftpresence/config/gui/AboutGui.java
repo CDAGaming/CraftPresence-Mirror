@@ -32,7 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.UpdateInfoGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.src.client.gui.GuiScreen;
 
 import java.util.List;
 

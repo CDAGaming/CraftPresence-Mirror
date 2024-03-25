@@ -4,6 +4,7 @@ import org.gradle.internal.jvm.Jvm
 import xyz.wagyourtail.mini_jvmdg.MiniJVMDowngrade
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
+import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import xyz.wagyourtail.unimined.internal.minecraft.task.RemapJarTaskImpl
 import java.nio.file.Files
 import java.time.LocalDateTime
@@ -104,6 +105,9 @@ subprojects {
     }
 
     repositories {
+        flatDir {
+            dirs("$rootDir/libs")
+        }
         mavenCentral()
         // ModLoader Mavens
         maven("https://maven.neoforged.net/releases") {
@@ -148,109 +152,37 @@ subprojects {
 
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
         side(if (isJarMod || isNeoForge) "client" else "combined")
-        version(mcVersion)
+        version("empty-$mcVersion")
+
+        defaultRemapJar = false
+        val fabricData: FabricLikePatcher.() -> Unit = {
+            if (accessWidenerFile.exists()) {
+                accessWidener(accessWidenerFile)
+            }
+            loader("fabric_loader_version"()!!)
+            if (isJarMod) {
+                prodNamespace("official")
+                devMappings = null
+            }
+            customIntermediaries = true
+        }
+        if (isModern) {
+            fabric(fabricData)
+        } else if (!path.equals(":modloader")) {
+            merged {
+                legacyFabric(fabricData)
+                jarMod {}
+            }
+        } else {
+            jarMod {}
+            runs.config("client") {
+                mainClass = "com.fox2code.foxloader.launcher.ClientMain"
+            }
+        }
 
         mappings {
-            val mcMappings = "mc_mappings"()!!
-            when (mcMappingsType) {
-                "mcp" -> {
-                    if (!isJarMod) {
-                        searge()
-                    }
-                    mcp(if (isJarMod) "legacy" else "stable", mcMappings) {
-                        if (!isJarMod) {
-                            clearOutputs()
-                            outputs("mcp", true) { listOf("intermediary") }
-                        }
-                    }
-                }
-
-                "forgeMCP" -> {
-                    forgeBuiltinMCP("forge_version"()!!) {
-                        clearContains()
-                        clearOutputs()
-                        contains({ _, t ->
-                            !t.contains("MCP")
-                        }) {
-                            onlyExistingSrc()
-                            outputs("searge", false) { listOf("official") }
-                        }
-                        contains({ _, t ->
-                            t.contains("MCP")
-                        }) {
-                            outputs("mcp", true) { listOf("intermediary") }
-                            sourceNamespace("searge")
-                        }
-                    }
-                    officialMappingsFromJar {
-                        clearContains()
-                        clearOutputs()
-                        outputs("official", false) { listOf() }
-                    }
-                }
-
-                "retroMCP" -> {
-                    retroMCP(mcMappings)
-                }
-
-                "yarn" -> {
-                    yarn(mcMappings)
-                }
-
-                "mojmap" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                }
-
-                "parchment" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                    parchment(mcVersion, mcMappings)
-                }
-
-                else -> throw GradleException("Unknown or Unsupported Mappings version")
-            }
-
-            // Only use Intermediaries on Versions that support it
-            val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
-            if (usingIntermediary) {
-                if (extIsModern) {
-                    intermediary()
-                } else {
-                    legacyIntermediary()
-                }
-            }
-
-            // ability to add custom mappings
-            val target = if (!extIsModern) "mcp" else "mojmap"
-            stub.withMappings("searge", target) {
-                c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-                c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-                // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
-                if (!isLegacy && (protocol == 735 || protocol == 736)) {
-                    c(
-                        "dng",
-                        listOf(
-                            "net/minecraft/client/gui/widget/Widget",
-                            "net/minecraft/client/gui/components/AbstractWidget"
-                        )
-                    ) {
-                        m("e", "()I", "func_238483_d_", "getHeightRealms")
-                    }
-                }
-            }
-
-            if (isMCPJar) {
-                if (protocol <= 2) { // MC a1.1.2_01 and below
-                    devNamespace("searge")
-                } else {
-                    devFallbackNamespace("searge")
-                }
-            } else if (usingIntermediary) {
-                devFallbackNamespace("intermediary")
-            }
+            devNamespace("official")
+            devFallbackNamespace("official")
         }
 
         minecraftRemapper.config {
@@ -360,11 +292,11 @@ fusioner {
     // Forge / ModLoader
     customConfigurations.add(FusionerExtension.CustomConfiguration().apply {
         projectName = extFmlName
-        inputFile = "build/libs/$extFileFormat-$extFmlName.jar"
+        inputFile = "build/libs/$extFileFormat-dev-shadow.jar"
     })
 
     fabricConfiguration = FusionerExtension.FabricConfiguration().apply {
-        inputFile = "build/libs/$extFileFormat-fabric.jar"
+        inputFile = "build/libs/$extFileFormat-dev-shadow.jar"
     }
 
     relocateDuplicate("com.gitlab.cdagaming.craftpresence.core")

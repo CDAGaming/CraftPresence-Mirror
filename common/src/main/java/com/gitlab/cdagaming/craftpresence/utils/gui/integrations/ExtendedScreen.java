@@ -37,10 +37,10 @@ import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.src.client.gui.FontRenderer;
+import net.minecraft.src.client.gui.Gui;
+import net.minecraft.src.client.gui.GuiButton;
+import net.minecraft.src.client.gui.GuiScreen;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -560,7 +560,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     @Override
-    public void drawWorldBackground(int tint) {
+    public void drawWorldBackground(double update) {
         renderCriticalData();
     }
 

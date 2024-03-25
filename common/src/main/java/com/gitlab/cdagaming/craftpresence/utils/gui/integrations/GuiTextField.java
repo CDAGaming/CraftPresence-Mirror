@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.src.client.gui.FontRenderer;
+import net.minecraft.src.client.gui.Gui;
+import net.minecraft.src.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 

@@ -35,7 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TexturedWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.src.client.gui.GuiScreen;
 
 import java.awt.*;
 import java.util.function.Supplier;
