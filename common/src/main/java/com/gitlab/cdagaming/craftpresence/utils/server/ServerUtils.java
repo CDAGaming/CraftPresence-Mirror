@@ -44,6 +44,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
+import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.TextComponent;
 
 import java.time.Instant;
@@ -515,11 +516,7 @@ public class ServerUtils implements Module {
                 serverData.status = TextComponent.EMPTY;
             }
 
-            if (CraftPresence.player != null) {
-                CraftPresence.player.level.disconnect();
-                CraftPresence.instance.clearLevel(null);
-            }
-            CraftPresence.instance.setScreen(new ConnectScreen(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, serverData));
+            ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData);
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }
