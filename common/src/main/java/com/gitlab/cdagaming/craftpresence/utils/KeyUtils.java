@@ -146,6 +146,13 @@ public class KeyUtils {
         }
     }
 
+    public static InputMappings.Input getKeyCode(final KeyBinding binding) {
+        return (InputMappings.Input) StringUtils.getField(
+                KeyBinding.class, binding,
+                "keyCode", "field_74512_d", "h"
+        );
+    }
+
     /**
      * Create a new KeyBinding with the specified info
      *
@@ -301,7 +308,7 @@ public class KeyUtils {
             if (CraftPresence.instance.gameSettings != null) {
                 for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
                     final KeyBinding mapping = entry.getValue().getFirst();
-                    final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
+                    final Map<String, Integer> categoryMap = (Map<String, Integer>) StringUtils.getField(KeyBinding.class, null, "CATEGORY_ORDER", "field_193627_d", "d");
                     if (!categoryMap.containsKey(mapping.getKeyCategory())) {
                         final Optional<Integer> largest = categoryMap.values().stream().max(Integer::compareTo);
                         final int largestInt = largest.orElse(0);
@@ -324,7 +331,7 @@ public class KeyUtils {
                     final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                     final KeyBinding keyBind = keyData.getFirst();
                     final Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
-                    final int currentBind = keyBind.keyCode.getKeyCode();
+                    final int currentBind = getKeyCode(keyBind).getKeyCode();
                     boolean hasBeenRun = false;
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
