@@ -27,9 +27,9 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.GuiTextField;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
+import com.mojang.minecraft.render.FontRenderer;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.FontRenderer;
 
 /**
  * Extended Gui Widget for a Text Field

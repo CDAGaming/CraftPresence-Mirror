@@ -25,9 +25,12 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.mojang.minecraft.entity.Entity;
+import com.mojang.minecraft.entity.EntityList;
+import com.mojang.minecraft.entity.item.ItemStack;
+import com.mojang.minecraft.nbt.*;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.*;
 
 import java.util.List;
 import java.util.Map;

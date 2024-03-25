@@ -32,10 +32,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TexturedWidget;
+import com.mojang.minecraft.gui.GuiScreen;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
 
 import java.awt.*;
 import java.util.function.Supplier;

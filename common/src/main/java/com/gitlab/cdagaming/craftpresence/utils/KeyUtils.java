@@ -31,11 +31,11 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.mojang.minecraft.gui.GuiControls;
+import com.mojang.minecraft.player.controller.KeyBinding;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiControls;
-import net.minecraft.src.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;

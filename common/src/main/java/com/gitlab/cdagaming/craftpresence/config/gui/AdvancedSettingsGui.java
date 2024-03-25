@@ -40,10 +40,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.mojang.minecraft.gui.GuiScreen;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {

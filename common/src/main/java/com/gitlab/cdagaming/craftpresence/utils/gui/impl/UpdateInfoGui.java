@@ -33,9 +33,9 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
+import com.mojang.minecraft.gui.GuiScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
-import net.minecraft.src.GuiScreen;
 
 import java.util.Map;
 

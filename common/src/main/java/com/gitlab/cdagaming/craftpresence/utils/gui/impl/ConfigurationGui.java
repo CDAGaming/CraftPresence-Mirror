@@ -34,8 +34,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.mojang.minecraft.gui.GuiScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

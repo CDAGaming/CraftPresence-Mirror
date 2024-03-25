@@ -33,14 +33,14 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.GuiSlot;
+import com.mojang.minecraft.Minecraft;
+import com.mojang.minecraft.entity.item.ItemStack;
+import com.mojang.minecraft.render.FontRenderer;
+import com.mojang.minecraft.render.Tessellator;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Tessellator;
 import org.meteordev.starscript.value.Value;
 
 import javax.annotation.Nonnull;

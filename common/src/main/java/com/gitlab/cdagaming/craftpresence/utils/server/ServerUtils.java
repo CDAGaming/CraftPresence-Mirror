@@ -33,15 +33,15 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
+import com.mojang.minecraft.Minecraft;
+import com.mojang.minecraft.gui.GuiConnecting;
+import com.mojang.minecraft.level.WorldClient;
+import com.mojang.minecraft.networknew.NetClientHandler;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiConnecting;
-import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.WorldClient;
 
 import java.time.Instant;
 import java.util.List;
@@ -263,8 +263,8 @@ public class ServerUtils implements Module {
         NetClientHandler newConnection = null;
         ServerData newServerData;
         try {
-            if (CraftPresence.instance.theWorld instanceof WorldClient) {
-                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, ((WorldClient)CraftPresence.instance.theWorld), "sendQueue", "field_1052_A", "A");
+            if (CraftPresence.instance.mcWorld instanceof WorldClient) {
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, ((WorldClient)CraftPresence.instance.mcWorld), "sendQueue", "field_1052_A", "A");
             }
         } catch (Exception ex) {
             newConnection = null;
@@ -286,7 +286,7 @@ public class ServerUtils implements Module {
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.getServerIP()) ? newServerData.getServerIP() : "127.0.0.1";
             final String newServer_Name = newServerData != null && !isInvalidName(newServerData.getServerIP()) ? newServerData.getServerIP() : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-            final String newServer_MOTD = !isOnLAN && CraftPresence.instance.isMultiplayerWorld() &&
+            final String newServer_MOTD = !isOnLAN && CraftPresence.instance.isServer() &&
                     newServerData != null && !isInvalidMotd(newServerData.getServerIP()) ? StringUtils.stripAllFormatting(newServerData.getServerIP()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
             if (newLANStatus != isOnLAN || ((newServerData != null && !newServerData.equals(currentServerData)) ||
@@ -351,7 +351,7 @@ public class ServerUtils implements Module {
             // 'world.difficulty' Argument = Current Difficulty of the World
             final String newDifficulty = false ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    Integer.toString(CraftPresence.instance.theWorld.difficultySetting);
+                    Integer.toString(CraftPresence.player.worldObj.difficulty);
             if (!newDifficulty.equals(currentDifficulty)) {
                 currentDifficulty = newDifficulty;
                 queuedForUpdate = true;
@@ -373,7 +373,7 @@ public class ServerUtils implements Module {
             }
 
             // 'world.time' Arguments = Current Time Data of the World
-            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.instance.theWorld.worldTime);
+            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.worldObj.worldTime);
             if (!Objects.equals(newTimeData, worldTimeData)) {
                 dayCount = newTimeData.getFirst();
                 timeString24 = TimeUtils.toString(newTimeData.getSecond(), "HH:mm");
@@ -498,10 +498,10 @@ public class ServerUtils implements Module {
     private void joinServer(final ServerData serverData) {
         try {
             if (CraftPresence.player != null) {
-                CraftPresence.instance.theWorld.sendQuittingDisconnectingPacket();
+                CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.changeWorld1(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.getServerIP(), serverData.getServerPort()));
+            CraftPresence.instance.setCurrentScreen(new GuiConnecting(CraftPresence.instance, serverData.getServerIP(), serverData.getServerPort()));
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }
@@ -534,7 +534,7 @@ public class ServerUtils implements Module {
 
         ModuleData resultData = new ModuleData();
         String formattedIcon;
-        if (CraftPresence.instance.isMultiplayerWorld() && currentServerData != null) {
+        if (CraftPresence.instance.isServer() && currentServerData != null) {
             // Player Amount Arguments
             CraftPresence.CLIENT.syncArgument("server.players.current", currentPlayers);
             CraftPresence.CLIENT.syncArgument("server.players.max", maxPlayers);
@@ -605,7 +605,7 @@ public class ServerUtils implements Module {
                     CraftPresence.CLIENT.PARTY_PRIVACY = PartyPrivacy.from(CraftPresence.CONFIG.generalSettings.partyPrivacyLevel % 2);
                 }
             }
-        } else if (!CraftPresence.instance.isMultiplayerWorld()) {
+        } else if (!CraftPresence.instance.isServer()) {
             // NOTE: SinglePlayer-Only Presence Updates
             resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
             currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";

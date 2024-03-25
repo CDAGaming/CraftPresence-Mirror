@@ -28,8 +28,10 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.mojang.minecraft.entity.Entity;
+import com.mojang.minecraft.entity.EntityList;
+import com.mojang.minecraft.level.World;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.*;
 
 import java.util.List;
 import java.util.Map;
@@ -142,7 +144,7 @@ public class EntityUtils implements Module {
      * @return the current weather data
      */
     public static String getWeather(final Entity entity) {
-        return getWeather((World) null);
+        return getWeather(entity != null ? entity.worldObj : null);
     }
 
     @Override

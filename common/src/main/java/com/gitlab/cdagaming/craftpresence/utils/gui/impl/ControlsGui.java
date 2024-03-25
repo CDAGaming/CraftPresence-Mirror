@@ -32,10 +32,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ButtonWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
+import com.mojang.minecraft.gui.GuiScreen;
+import com.mojang.minecraft.player.controller.KeyBinding;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
