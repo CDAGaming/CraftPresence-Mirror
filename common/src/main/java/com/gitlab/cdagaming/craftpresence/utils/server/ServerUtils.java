@@ -44,6 +44,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
+import net.minecraft.network.chat.TextComponent;
 
 import java.time.Instant;
 import java.util.List;
@@ -273,7 +274,7 @@ public class ServerUtils implements Module {
             int newMaxPlayers;
             if (newServerData != null) {
                 try {
-                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status).split("/")[1]).getSecond();
+                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status.getString()).split("/")[1]).getSecond();
 
                     if (newMaxPlayers < newCurrentPlayers) {
                         newMaxPlayers = newCurrentPlayers + 1;
@@ -291,7 +292,7 @@ public class ServerUtils implements Module {
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.ip) ? newServerData.ip : "127.0.0.1";
             final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
             final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isLocalServer() &&
-                    isMotdValid && !isInvalidMotd(newServerData.motd) ? StringUtils.stripAllFormatting(newServerData.motd) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+                    isMotdValid && !isInvalidMotd(newServerData.motd.getString()) ? StringUtils.stripAllFormatting(newServerData.motd.getString()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
             if (newLANStatus != isOnLAN || ((newServerData != null && !newServerData.equals(currentServerData)) ||
                     (newServerData == null && currentServerData != null)) ||
@@ -372,8 +373,9 @@ public class ServerUtils implements Module {
             }
 
             // 'world.name' Argument = Current Name of the World
-            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getLevelName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.level.getLevelData().getLevelName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String defaultWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
+            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getWorldData().getLevelName() : "";
+            final String secondaryWorldName = CraftPresence.player.level.getServer() != null ? StringUtils.getOrDefault(CraftPresence.player.level.getServer().getWorldData().getLevelName(), defaultWorldName) : defaultWorldName;
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             if (!newWorldName.equals(currentWorldName)) {
                 currentWorldName = newWorldName;
@@ -509,8 +511,8 @@ public class ServerUtils implements Module {
                 // Stub Server Data if not pinged
                 serverData.pinged = true;
                 serverData.ping = -2L;
-                serverData.motd = "";
-                serverData.status = "";
+                serverData.motd = TextComponent.EMPTY;
+                serverData.status = TextComponent.EMPTY;
             }
 
             if (CraftPresence.player != null) {

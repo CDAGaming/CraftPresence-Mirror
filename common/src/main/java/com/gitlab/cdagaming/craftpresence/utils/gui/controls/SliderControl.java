@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
@@ -212,9 +213,9 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void renderBg(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull PoseStack matrixStack, @Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            super.renderBg(mc, mouseX, mouseY);
+            super.renderBg(matrixStack, mc, mouseX, mouseY);
 
             final int hoverState = super.getYImage(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
