@@ -35,7 +35,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Map;
 

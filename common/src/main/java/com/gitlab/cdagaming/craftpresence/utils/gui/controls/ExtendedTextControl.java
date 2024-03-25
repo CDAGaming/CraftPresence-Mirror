@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.GuiTextField;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.FontRenderer;
+import net.minecraft.client.render.FontRenderer;
 
 /**
  * Extended Gui Widget for a Text Field

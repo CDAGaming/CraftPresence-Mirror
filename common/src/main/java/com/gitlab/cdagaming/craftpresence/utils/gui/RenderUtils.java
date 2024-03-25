@@ -40,12 +40,12 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.RenderHelper;
-import net.minecraft.src.Tessellator;
-import net.minecraft.src.RenderItem;
-import net.minecraft.src.ItemStack;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.render.FontRenderer;
+import net.minecraft.client.render.Lighting;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.entity.ItemEntityRenderer;
+import net.minecraft.core.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -78,7 +78,7 @@ public class RenderUtils {
      */
     private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
 
-    public static RenderItem itemRender = new RenderItem();
+    public static ItemEntityRenderer itemRender = new ItemEntityRenderer();
 
     /**
      * Retrieve the default Screen Textures as Texture Data
@@ -214,14 +214,14 @@ public class RenderUtils {
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
-            func_41089_c();
+            Lighting.enableInventoryLight();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            itemRender.renderItemIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos);
-            itemRender.renderItemOverlayIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos);
+            itemRender.renderItemIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos, 1.0f);
+            itemRender.renderItemOverlayIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos, 1.0f);
 
-            RenderHelper.disableStandardItemLighting();
+            Lighting.disable();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glDisable(GL11.GL_COLOR_MATERIAL);
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -232,14 +232,6 @@ public class RenderUtils {
                 BLOCKED_RENDER_ITEMS.add(stack);
             }
         }
-    }
-
-    public static void func_41089_c() {
-        GL11.glPushMatrix();
-        GL11.glRotatef(-30.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(165.0F, 1.0F, 0.0F, 0.0F);
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
     }
 
     /**
@@ -674,7 +666,7 @@ public class RenderUtils {
     private static void applyScissor(@Nonnull final Minecraft mc, final ScreenRectangle rectangle) {
         if (rectangle != null) {
             final int scale = computeGuiScale(mc);
-            final int displayHeight = mc.displayHeight;
+            final int displayHeight = mc.resolution.height;
             final int renderWidth = Math.max(0, rectangle.getWidth() * scale);
             final int renderHeight = Math.max(0, rectangle.getHeight() * scale);
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -699,12 +691,12 @@ public class RenderUtils {
     public static int computeGuiScale(@Nonnull final Minecraft mc) {
         int scaleFactor = 1;
 
-        int k = mc.gameSettings.guiScale;
+        int k = mc.gameSettings.guiScale.value;
         if (k == 0) {
             k = 1000;
         }
 
-        while (scaleFactor < k && mc.displayWidth / (scaleFactor + 1) >= 320 && mc.displayHeight / (scaleFactor + 1) >= 240) {
+        while (scaleFactor < k && mc.resolution.width / (scaleFactor + 1) >= 320 && mc.resolution.height / (scaleFactor + 1) >= 240) {
             ++scaleFactor;
         }
         return scaleFactor;

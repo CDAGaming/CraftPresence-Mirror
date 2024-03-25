@@ -25,15 +25,14 @@
 package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.classgraph.ClassInfo;
-import net.minecraft.src.WorldProvider;
+import net.minecraft.core.data.registry.Registries;
+import net.minecraft.core.world.type.WorldType;
 
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class DimensionUtils implements Module {
     /**
      * The Player's Current Dimension, if any
      */
-    private WorldProvider CURRENT_DIMENSION;
+    private WorldType CURRENT_DIMENSION;
 
     @Override
     public void emptyData() {
@@ -120,8 +119,8 @@ public class DimensionUtils implements Module {
 
     @Override
     public void updateData() {
-        final WorldProvider newProvider = CraftPresence.player.worldObj.worldProvider;
-        final String newDimensionName = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final WorldType newProvider = CraftPresence.player.world.getWorldType();
+        final String newDimensionName = StringUtils.formatIdentifier(Registries.WORLD_TYPES.getKey(newProvider), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
         final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
@@ -172,36 +171,15 @@ public class DimensionUtils implements Module {
      *
      * @return The detected Dimension Types found
      */
-    private List<WorldProvider> getDimensionTypes() {
-        List<WorldProvider> dimensionTypes = StringUtils.newArrayList();
-
-        if (dimensionTypes.isEmpty()) {
-            // Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
-                if (classInfo != null) {
-                    try {
-                        Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
-                        if (classObj != null) {
-                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj)) {
-                                dimensionTypes.add(providerObj);
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        Constants.LOG.debugError(ex);
-                    }
-                }
-            }
-        }
-
-        return dimensionTypes;
+    private List<WorldType> getDimensionTypes() {
+        return StringUtils.newArrayList(Registries.WORLD_TYPES.iterator());
     }
 
     @Override
     public void getAllData() {
-        for (WorldProvider TYPE : getDimensionTypes()) {
-            if (TYPE != null) {
-                String dimensionName = MappingUtils.getClassName(TYPE);
+        for (WorldType data : getDimensionTypes()) {
+            if (data != null) {
+                String dimensionName = Registries.WORLD_TYPES.getKey(data);
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);
@@ -220,11 +198,6 @@ public class DimensionUtils implements Module {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean canFetchData() {
-        return FileUtils.canScanClasses();
     }
 
     @Override

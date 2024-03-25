@@ -34,8 +34,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiControls;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.client.gui.options.GuiOptionsPageControls;
+import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -206,7 +206,7 @@ public class KeyUtils {
      * @param newKey   the new key for the specified KeyBinding
      */
     void setKey(final KeyBinding instance, final int newKey) {
-        instance.keyCode = newKey;
+        instance.key = newKey;
     }
 
     /**
@@ -289,7 +289,7 @@ public class KeyUtils {
             if (CraftPresence.instance.gameSettings != null) {
                 for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : KEY_MAPPINGS.entrySet()) {
                     final KeyBinding mapping = entry.getValue().getFirst();
-                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, mapping);
+                    CraftPresence.instance.gameSettings.keys = StringUtils.addToArray(CraftPresence.instance.gameSettings.keys, mapping);
                 }
                 keysRegistered = true;
             } else {
@@ -306,20 +306,20 @@ public class KeyUtils {
                     final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                     final KeyBinding keyBind = keyData.getFirst();
                     final Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>> callbackData = keyData.getSecond();
-                    final int currentBind = keyBind.keyCode;
+                    final int currentBind = keyBind.key;
                     boolean hasBeenRun = false;
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiOptionsPageControls)) {
                             try {
                                 callbackData.getFirst().run();
                             } catch (Throwable ex) {
                                 if (keyData.getThird() != null) {
                                     keyData.getThird().accept(ex);
                                 } else {
-                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.keyDescription));
-                                    syncKeyData(keyName, ImportMode.Specific, keyBind.keyCode);
+                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.name));
+                                    syncKeyData(keyName, ImportMode.Specific, keyBind.key);
                                 }
                             } finally {
                                 hasBeenRun = true;
@@ -357,7 +357,7 @@ public class KeyUtils {
         } else if (mode == ImportMode.Vanilla) {
             keyData.getSecond().getSecond().accept(keyCode, true);
         } else if (mode == ImportMode.Specific) {
-            syncKeyData(keyData.getFirst().keyDescription, ImportMode.Config, keyCode);
+            syncKeyData(keyData.getFirst().name, ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
             Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
@@ -383,8 +383,8 @@ public class KeyUtils {
             ) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
                 if (mode == FilterMode.None ||
-                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().keyDescription)) ||
-                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().keyDescription)) ||
+                        (mode == FilterMode.Category && filterData.contains(keyData.getFirst().name)) ||
+                        (mode == FilterMode.Id && filterData.contains(keyData.getFirst().name)) ||
                         mode == FilterMode.Name
                 ) {
                     filteredMappings.put(keyName, keyData);

@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.render.FontRenderer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -190,7 +190,7 @@ public class GuiTextField extends Gui {
             if (eventChar == 3) {
                 ExtendedScreen.copyToClipboard(this.text);
             } else if (eventChar == 22) {
-                this.writeText(GuiScreen.getClipboardString());
+                this.writeText(ExtendedScreen.getClipboardString());
             } else if (eventChar == 24) {
                 ExtendedScreen.copyToClipboard(this.text);
                 this.writeText("");
@@ -236,7 +236,7 @@ public class GuiTextField extends Gui {
                     }
 
                     if (eventChar == 22) {
-                        String str = GuiScreen.getClipboardString();
+                        String str = ExtendedScreen.getClipboardString();
                         if (str == null) {
                             str = "";
                         }

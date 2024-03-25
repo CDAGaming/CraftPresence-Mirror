@@ -39,7 +39,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.meteordev.starscript.value.Value;
 
@@ -494,7 +494,7 @@ public class CommandsGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public void keyTyped(char typedChar, int keyCode, int mouseX, int mouseY) {
         if (!blockInteractions) {
             if (commandInput.isControlFocused()) {
                 if (keyCode == Keyboard.KEY_ESCAPE) {
@@ -520,7 +520,7 @@ public class CommandsGui extends ExtendedScreen {
                     }
                 }
             }
-            super.keyTyped(typedChar, keyCode);
+            super.keyTyped(typedChar, keyCode, mouseX, mouseY);
         }
     }
 

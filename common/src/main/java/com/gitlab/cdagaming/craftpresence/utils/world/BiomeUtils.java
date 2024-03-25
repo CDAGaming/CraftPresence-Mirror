@@ -26,14 +26,12 @@ package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.classgraph.ClassInfo;
-import net.minecraft.src.BiomeGenBase;
+import net.minecraft.core.data.registry.Registries;
+import net.minecraft.core.world.biome.Biome;
 
 import java.util.List;
 
@@ -75,7 +73,7 @@ public class BiomeUtils implements Module {
     /**
      * The Player's Current Biome, if any
      */
-    private BiomeGenBase CURRENT_BIOME;
+    private Biome CURRENT_BIOME;
 
     @Override
     public void emptyData() {
@@ -120,10 +118,10 @@ public class BiomeUtils implements Module {
 
     @Override
     public void updateData() {
-        final BiomeGenBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().getBiomeGenAt((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.biomeName, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final Biome newBiome = CraftPresence.player.world.getBlockBiome((int) CraftPresence.player.x, (int) CraftPresence.player.y, (int) CraftPresence.player.z);
+        final String newBiomeName = StringUtils.formatIdentifier(Registries.BIOMES.getKey(newBiome), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(Registries.BIOMES.getKey(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
         final String newBiome_Identifier = StringUtils.getOrDefault(newBiome_primaryIdentifier, newBiome_alternativeIdentifier);
 
@@ -171,36 +169,15 @@ public class BiomeUtils implements Module {
      *
      * @return The detected Biome Types found
      */
-    private List<BiomeGenBase> getBiomeTypes() {
-        List<BiomeGenBase> biomeTypes = StringUtils.newArrayList();
-
-        if (biomeTypes.isEmpty()) {
-            // Fallback: Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class).values()) {
-                if (classInfo != null) {
-                    try {
-                        Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
-                        if (classObj != null) {
-                            BiomeGenBase biomeObj = (BiomeGenBase) classObj.getDeclaredConstructor().newInstance();
-                            if (!biomeTypes.contains(biomeObj)) {
-                                biomeTypes.add(biomeObj);
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        Constants.LOG.debugError(ex);
-                    }
-                }
-            }
-        }
-
-        return biomeTypes;
+    private List<Biome> getBiomeTypes() {
+        return StringUtils.newArrayList(Registries.BIOMES.iterator());
     }
 
     @Override
     public void getAllData() {
-        for (BiomeGenBase biome : getBiomeTypes()) {
+        for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
-                String biomeName = StringUtils.getOrDefault(biome.biomeName, MappingUtils.getClassName(biome));
+                String biomeName = StringUtils.getOrDefault(Registries.BIOMES.getKey(biome), MappingUtils.getClassName(biome));
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);
@@ -219,11 +196,6 @@ public class BiomeUtils implements Module {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean canFetchData() {
-        return FileUtils.canScanClasses();
     }
 
     @Override

@@ -37,7 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 

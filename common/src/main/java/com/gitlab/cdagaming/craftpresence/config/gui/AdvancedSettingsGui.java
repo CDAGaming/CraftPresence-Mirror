@@ -43,7 +43,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {

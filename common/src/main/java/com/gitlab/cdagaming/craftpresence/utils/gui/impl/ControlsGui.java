@@ -34,8 +34,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ButtonWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -121,11 +121,11 @@ public class ControlsGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public void keyTyped(char typedChar, int keyCode, int mouseX, int mouseY) {
         if (entryData != null) {
             setKeyData(keyCode);
         } else {
-            super.keyTyped(typedChar, keyCode);
+            super.keyTyped(typedChar, keyCode, mouseX, mouseY);
         }
     }
 
@@ -136,10 +136,10 @@ public class ControlsGui extends ExtendedScreen {
         for (Map.Entry<String, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
             final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = entry.getValue();
-            if (!categorizedNames.containsKey(keyData.getFirst().keyDescription)) {
-                categorizedNames.put(keyData.getFirst().keyDescription, StringUtils.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.getFirst().keyDescription).contains(keyName)) {
-                categorizedNames.get(keyData.getFirst().keyDescription).add(keyName);
+            if (!categorizedNames.containsKey(keyData.getFirst().name)) {
+                categorizedNames.put(keyData.getFirst().name, StringUtils.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.getFirst().name).contains(keyName)) {
+                categorizedNames.get(keyData.getFirst().name).add(keyName);
             }
         }
     }
@@ -169,8 +169,8 @@ public class ControlsGui extends ExtendedScreen {
             for (String keyName : entry.getValue()) {
                 final Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>> keyData = keyMappings.get(keyName);
 
-                final String keyTitle = keyData.getFirst().keyDescription;
-                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().keyCode);
+                final String keyTitle = keyData.getFirst().name;
+                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.getFirst().key);
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         95, 20,

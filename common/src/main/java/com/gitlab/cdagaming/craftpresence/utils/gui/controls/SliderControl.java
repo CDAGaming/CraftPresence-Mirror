@@ -206,7 +206,7 @@ public class SliderControl extends ExtendedButtonControl {
      * 2 if it IS hovering over this button.
      */
     @Override
-    public int getHoverState(boolean mouseOver) {
+    public int getButtonState(boolean mouseOver) {
         return 0;
     }
 
@@ -223,7 +223,7 @@ public class SliderControl extends ExtendedButtonControl {
                 setValueFromMouse(mouseX);
             }
 
-            final int hoverState = super.getHoverState(isHoveringOrFocusingOver());
+            final int hoverState = super.getButtonState(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
             RenderUtils.renderButton(mc,
                     getControlPosX() + (int) (sliderValue * (float) (getControlWidth() - 8)), getControlPosY(),

@@ -39,8 +39,8 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiConnecting;
-import net.minecraft.src.NetClientHandler;
+import net.minecraft.client.gui.GuiConnecting;
+import net.minecraft.client.net.handler.NetClientHandler;
 
 import java.time.Instant;
 import java.util.List;
@@ -319,9 +319,9 @@ public class ServerUtils implements Module {
 
             // `player.position` Argument = Current Coordinates of Player
             final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(
-                    MathUtils.roundDouble(CraftPresence.player.posX, 3),
-                    MathUtils.roundDouble(CraftPresence.player.posY, 3),
-                    MathUtils.roundDouble(CraftPresence.player.posZ, 3)
+                    MathUtils.roundDouble(CraftPresence.player.x, 3),
+                    MathUtils.roundDouble(CraftPresence.player.y, 3),
+                    MathUtils.roundDouble(CraftPresence.player.z, 3)
             );
             if (!Objects.equals(newCoordinates, currentCoordinates)) {
                 currentCoordinates = newCoordinates;
@@ -343,7 +343,7 @@ public class ServerUtils implements Module {
             // 'world.difficulty' Argument = Current Difficulty of the World
             final String newDifficulty = false ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    Integer.toString(CraftPresence.player.worldObj.difficultySetting);
+                    Integer.toString(CraftPresence.player.world.difficultySetting);
             if (!newDifficulty.equals(currentDifficulty)) {
                 currentDifficulty = newDifficulty;
                 queuedForUpdate = true;
@@ -358,7 +358,7 @@ public class ServerUtils implements Module {
             }
 
             // 'world.name' Argument = Current Name of the World
-            final String primaryWorldName = CraftPresence.player.worldObj.getWorldInfo().getWorldName();
+            final String primaryWorldName = CraftPresence.player.world.getLevelData().getWorldName();
             final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             if (!newWorldName.equals(currentWorldName)) {
@@ -367,7 +367,7 @@ public class ServerUtils implements Module {
             }
 
             // 'world.time' Arguments = Current Time Data of the World
-            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.worldObj.getWorldTime());
+            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime());
             if (!Objects.equals(newTimeData, worldTimeData)) {
                 dayCount = newTimeData.getFirst();
                 timeString24 = TimeUtils.toString(newTimeData.getSecond(), "HH:mm");
@@ -492,7 +492,7 @@ public class ServerUtils implements Module {
     private void joinServer(final ServerData serverData) {
         try {
             if (CraftPresence.player != null) {
-                CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
+                CraftPresence.player.world.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.changeWorld1(null);
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.getServerIP(), serverData.getServerPort()));

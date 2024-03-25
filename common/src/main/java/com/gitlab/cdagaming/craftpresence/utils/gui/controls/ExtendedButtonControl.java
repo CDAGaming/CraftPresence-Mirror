@@ -30,8 +30,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiButton;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.render.FontRenderer;
 
 import javax.annotation.Nonnull;
 
@@ -237,7 +237,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            final int hoverState = getHoverState(isHoveringOrFocusingOver());
+            final int hoverState = getButtonState(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
             final double xOffset = getControlWidth() / 2D;
 
@@ -435,7 +435,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return Whether the control is currently visible
      */
     public boolean isControlVisible() {
-        return this.enabled2;
+        return this.visible;
     }
 
     /**
@@ -444,7 +444,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param isVisible The new visibility state for this control
      */
     public void setControlVisible(final boolean isVisible) {
-        this.enabled2 = isVisible;
+        this.visible = isVisible;
     }
 
     /**

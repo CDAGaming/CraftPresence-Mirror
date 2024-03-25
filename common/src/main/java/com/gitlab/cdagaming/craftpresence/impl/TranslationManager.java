@@ -25,11 +25,22 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.src.StringTranslate;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import net.minecraft.core.lang.I18n;
+import net.minecraft.core.lang.Language;
+import net.minecraft.core.lang.LanguageSeeker;
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Utilities for Hooking a {@link TranslationUtils} instance to the Game Resource Manager
@@ -61,17 +72,93 @@ public class TranslationManager {
         });
 
         getInstance().setOnLanguageSync((entries) -> {
-            StringTranslate stInstance = StringTranslate.getInstance();
-            Properties data = (Properties) StringUtils.getField(
-                    StringTranslate.class, stInstance,
-                    "translateTable", "field_20164_b", "b"
-            );
+            final Language language = I18n.getInstance().getCurrentLanguage();
+            Properties data = (Properties) StringUtils.getField(Language.class, language, "entries");
             data.putAll(entries);
-            StringUtils.updateField(
-                    StringTranslate.class, stInstance,
-                    data,
-                    "translateTable", "field_20164_b", "b"
+            StringUtils.updateField(Language.class, language, data, "entries");
+        });
+
+        // Fix: Add support for BTAs Translation style
+        getInstance().setResourceSupplier((modId, assetsPath, langPath) -> {
+            final List<InputStream> results = StringUtils.newArrayList();
+            final String fullPath = assetsPath + langPath;
+            final String fileExt = FileUtils.getFileExtension(fullPath);
+            final String id = FileUtils.getFileNameWithoutExtension(
+                    fullPath.substring(fullPath.lastIndexOf("/") + 1)
             );
+
+            String filePath = FileUtils.getFileNameWithoutExtension(fullPath);
+            // Halplibe Support - Replace "/lang" with "/lang/[modId]"
+            // if not raw translations and !usingAssetsPath
+            if (!modId.equals("minecraft") && assetsPath.equals("/")) {
+                filePath = filePath.replace("/lang", "/lang/" + modId);
+            }
+
+            // Case 1: Internal Folders (Ex: /lang/en_US/xx_XX.[lang|json])
+            // CODE COPY: Language#Default<init>
+            for (String path : FileUtils.filesInDir(TranslationUtils.class, filePath)) {
+                if (path.endsWith(fileExt)) {
+                    try {
+                        final InputStream stream = FileUtils.getResourceAsStream(
+                                TranslationUtils.class, path
+                        );
+                        if (stream != null) {
+                            results.add(stream);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+
+            // Case 2: LanguageSeeker#LANGUAGE_DIR (zip archives, only supports .lang)
+            if (fileExt.equals(".lang")) {
+                final File LANGUAGE_DIR = LanguageSeeker.LANGUAGE_DIR;
+                if (LANGUAGE_DIR.exists() && LANGUAGE_DIR.isDirectory()) {
+                    final File[] files = LANGUAGE_DIR.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            try {
+                                if (file.getName().endsWith(".zip")) {
+                                    final ZipFile zip = new ZipFile(file);
+                                    final InputStream stream = zip.getInputStream(zip.getEntry("lang_info.json"));
+
+                                    final String content = FileUtils.fileToString(stream, "UTF-8");
+                                    final JsonObject json = FileUtils.parseJson(content).getAsJsonObject();
+                                    final String langId = json.getAsJsonPrimitive("id").getAsString();
+                                    final String langName = json.getAsJsonPrimitive("name").getAsString();
+                                    final List<String> langCredits = StringUtils.newArrayList();
+
+                                    for (JsonElement element : json.getAsJsonArray("credits")) {
+                                        String string = element.getAsString();
+                                        if (string != null) {
+                                            langCredits.add(string);
+                                        }
+                                    }
+
+                                    if (langId != null && langName != null && !langCredits.isEmpty() && langId.equals(id)) {
+                                        final Enumeration<? extends ZipEntry> zipEntries = zip.entries();
+                                        while (zipEntries.hasMoreElements()) {
+                                            ZipEntry entry = zipEntries.nextElement();
+                                            if (entry.getName().endsWith(fileExt)) {
+                                                InputStream langStream = zip.getInputStream(entry);
+                                                if (langStream != null) {
+                                                    // Attempt to workaround ZipStream being lost after closure
+                                                    final String langContent = FileUtils.fileToString(langStream, "UTF-8");
+                                                    langStream = FileUtils.stringToStream(langContent, "UTF-8");
+                                                    results.add(langStream);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    zip.close();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+            return results;
         });
     }
 

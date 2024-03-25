@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.FontRenderer;
+import net.minecraft.client.render.FontRenderer;
 
 /**
  * Implementation for a Row-Style {@link ExtendedTextControl} Widget

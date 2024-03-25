@@ -37,10 +37,10 @@ import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiSlot;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Tessellator;
+import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.render.FontRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.core.item.ItemStack;
 import org.meteordev.starscript.value.Value;
 
 import javax.annotation.Nonnull;
