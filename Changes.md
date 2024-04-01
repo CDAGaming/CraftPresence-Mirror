@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.3.7 (04/02/2024)
+## v2.3.7 (04/04/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.5...release%2Fv2.3.7)_
@@ -13,6 +13,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ClassGraph (`4.8.165` -> `4.8.168`)
     * Gradle (`8.6` -> `8.7`)
     * UniCore (`1.0.6` -> `1.0.7`)
+    * Fabric Loader (`0.15.7` -> `0.15.9`)
 * (Backend) Added two new UI Widget Types: `ButtonWidget` and `ScrollableTextWidget`
     * `ButtonWidget`: A Row-Style button widget, based on the `TextWidget` implementation
     * `ScrollableTextWidget`: A single-line implementation of `TextDisplayWidget`, also using the new scrolling string

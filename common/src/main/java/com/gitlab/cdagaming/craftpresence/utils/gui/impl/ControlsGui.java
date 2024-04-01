@@ -278,4 +278,3 @@ public class ControlsGui extends ExtendedScreen {
         entryData = null;
     }
 }
-
