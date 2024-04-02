@@ -506,11 +506,10 @@ public class CommandsGui extends ExtendedScreen {
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
-                                commandInput.setControlMessage(
-                                        commandString.replace(
-                                                filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)
-                                        )
+                                commandString = commandString.replace(
+                                        filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)
                                 );
+                                commandInput.setControlMessage(commandString);
                             }
                         } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
                             executeCommand(filteredCommandArgs);
