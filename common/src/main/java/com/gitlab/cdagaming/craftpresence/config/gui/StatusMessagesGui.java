@@ -52,7 +52,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                     "mainMenuData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             Constants.TRANSLATOR.translate("gui.config.comment.status_messages.main_menu_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
+                                    CraftPresence.CLIENT.generateArgumentMessage("general."))
                     )
             )
             ))
@@ -60,7 +60,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                     "loadingData", () -> drawMultiLineString(
                     StringUtils.splitTextByNewLine(
                             Constants.TRANSLATOR.translate("gui.config.comment.status_messages.loading_message",
-                                    CraftPresence.CLIENT.generateArgumentMessage("general.", "custom."))
+                                    CraftPresence.CLIENT.generateArgumentMessage("general."))
                     )
             )
             ))

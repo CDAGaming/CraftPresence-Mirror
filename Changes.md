@@ -21,6 +21,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Implemented Several frontend UI Improvements:
     * The Controls Screen has been improved to use a `ScrollPane` as well as adding `Reset Key` support
     * Most String UI elements have been migrated from `TextDisplayWidget` to `ScrollableTextWidget` controls
+    * Removed `custom.` Placeholder Previews from `Status Messages` and `Presence Settings` to conserve spacing
 
 ### Fixes
 
