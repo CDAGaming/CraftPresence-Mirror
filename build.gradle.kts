@@ -86,19 +86,14 @@ subprojects {
         archivesName = "mod_name"()
     }
 
-    val currentJvm = Jvm.current()
-    val sourceVersion = currentJvm.javaVersion!!
     val targetVersion = "java_version"()?.let { JavaVersion.toVersion(it) }!!
-
-    val modernSourceSupport = sourceVersion.isJava9Compatible
-    val modernTargetSupport = targetVersion.isJava9Compatible
+    val targetVersionInt = Integer.parseInt(targetVersion.majorVersion)
 
     val sourceSets = extensions.getByType<SourceSetContainer>()
 
     extensions.getByType<JavaPluginExtension>().apply {
-        if (!modernSourceSupport) {
-            sourceCompatibility = sourceVersion
-            targetCompatibility = targetVersion
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(targetVersionInt))
         }
         withSourcesJar()
     }
@@ -262,12 +257,6 @@ subprojects {
     }
 
     dependencies {
-        if (!modernTargetSupport) {
-            // If we are targeting a release below Java 9,
-            // work around JDK-8206937 by providing a shim for inaccessible classes.
-            "compileOnly"("me.eigenraven.java8unsupported:java-8-unsupported-shim:1.0.0")
-        }
-
         // Annotations
         "compileOnly"("com.google.code.findbugs:jsr305:3.0.2")
         "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.8.3")
@@ -276,11 +265,10 @@ subprojects {
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
 
-        // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
         // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
         // We"ll use that if it"s available, but otherwise we"ll use the older option.
-        if (modernSourceSupport) {
-            options.release.set(Integer.parseInt(targetVersion.majorVersion))
+        if (targetVersion.isJava9Compatible) {
+            options.release.set(targetVersionInt)
         }
     }
 

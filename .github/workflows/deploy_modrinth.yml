@@ -23,11 +23,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Set up JDK 21
+      - name: Set up Gradle JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
+
+      - name: Set up Build JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
