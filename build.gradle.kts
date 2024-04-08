@@ -1,6 +1,5 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.hypherionmc.modfusioner.plugin.FusionerExtension
-import org.gradle.internal.jvm.Jvm
 import xyz.wagyourtail.mini_jvmdg.MiniJVMDowngrade
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
