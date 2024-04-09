@@ -1,47 +1,23 @@
 # CraftPresence Changes
 
-## v2.3.7 (04/04/2024)
+## v2.3.8 (??/??/2024)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.5...release%2Fv2.3.7)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.7...release%2Fv2.3.8)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * ClassGraph (`4.8.165` -> `4.8.168`)
-    * Gradle (`8.6` -> `8.7`)
-    * UniCore (`1.0.6` -> `1.0.8`)
-    * DiscordIPC (`0.8.4` -> `0.8.5`)
-    * Fabric Loader (`0.15.7` -> `0.15.9`)
-* (Backend) Added two new UI Widget Types: `ButtonWidget` and `ScrollableTextWidget`
-    * `ButtonWidget`: A Row-Style button widget, based on the `TextWidget` implementation
-    * `ScrollableTextWidget`: A single-line implementation of `TextDisplayWidget`, also using the new scrolling string
-      functions rather then `drawMultilineString`
-* Implemented Several frontend UI Improvements:
-    * The Controls Screen has been improved to use a `ScrollPane` as well as adding `Reset Key` support
-    * Most String UI elements have been migrated from `TextDisplayWidget` to `ScrollableTextWidget` controls
-    * Removed `custom.` Placeholder Previews from `Status Messages` and `Presence Settings` to conserve spacing
+    * ClassGraph (`4.8.168` -> `4.8.170`)
+    * JUnixSocket (`2.9.0` -> `2.9.1`)
+    * UniCore (`1.0.8` -> `1.0.9-SNAPSHOT`)
+    * DiscordIPC (`0.8.5` -> `0.8.6-SNAPSHOT`)
 
 ### Fixes
 
-* Fixed incorrect KeyCode widget creation when re-entering Controls Screen
-    * Occurs when making a change, then leaving and re-entering the Controls Screen
-* (Backend) Fixed missing `super` calls with `TextWidget` controls
-* (Backend) Fixed `ScrollPane#checkScrollbarClick()` not checking `needsScrollbar()`
-    * This would have a chance to return a false-positive when clicking on the right-side of the pane
-* (Backend) Fixed `ScrollPane#getScrollBarWidth()` not checking `needsScrollbar()`
-    * Now returns 0 if false; also adjusts several previously mis-aligned UI elements
-* (Backend) Fixed an incorrect resize event call on some Minecraft versions
-    * Additionally, several UIs have been adjusted to restore widget settings (text, checked status, etc.) upon resizing
-* Fixed a broken translation for the `/craftpresence view` command (Related to `placeholders` command)
-* Fixed false-positive error related to `minecraft` translations
-    * Caused from the language being incorrectly set for the `RAW_TRANSLATOR`
-    * This issue only effected users on MC 1.10.2 or below
-* Fixed several `KeyUtils` and `ControlsGui` errors found in BTA 7.1
-    * These issues caused several discrepancies between it and the normal MC b1.7.3 port
-    * It is recommended to reset your config, if previously used on BTA 7.1, to prevent lingering issues
+* TBD
 
 ___
 
