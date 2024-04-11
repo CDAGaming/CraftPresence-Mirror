@@ -221,7 +221,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when Hovering over Message Label
-                                                                drawMultiLineString(
+                                                                screenInstance.drawMultiLineString(
                                                                         StringUtils.splitTextByNewLine(
                                                                                 Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
                                                                                         CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))

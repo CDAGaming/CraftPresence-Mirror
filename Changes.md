@@ -17,7 +17,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
-* TBD
+* Fixed incorrect Tooltip Rendering in `Server Messages` Entry Editor
 
 ___
 
