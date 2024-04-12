@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.TupleConsumer;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -84,7 +85,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void initializeUi() {
-        int controlIndex = 1;
+        int controlIndex = 0;
         if (!isLoaded() && !initialized) {
             resetText = "gui.config.message.button.remove";
             if (isNewValue) {
@@ -99,6 +100,13 @@ public class DynamicEditorGui extends ExtendedScreen {
             }
             initialized = true;
         }
+
+        final ScrollPane childFrame = addControl(
+                new ScrollPane(
+                        0, 32,
+                        getScreenWidth(), getScreenHeight() - 32
+                )
+        );
 
         this.isModuleMode = defaultData != null || currentData != null;
         this.willRenderSecondaryInput = isNewValue || overrideSecondaryRender;
@@ -138,7 +146,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             originalData = new ModuleData(currentData);
         }
 
-        primaryInput = addControl(
+        primaryInput = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(controlIndex++),
@@ -160,7 +168,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
         if (onSpecificCallback != null) {
             // Adding Specific Icon Button
-            defaultIcon = addControl(
+            defaultIcon = childFrame.addControl(
                     new TextWidget(
                             getFontRenderer(),
                             getButtonY(controlIndex++),
@@ -169,13 +177,13 @@ public class DynamicEditorGui extends ExtendedScreen {
                             "gui.config.message.button.icon.change"
                     )
             );
-            ConfigurationGui.addIconSelector(this, this, () -> defaultIcon,
+            ConfigurationGui.addIconSelector(this, childFrame, () -> defaultIcon,
                     (attributeName, currentValue) -> onSpecificCallback.accept(currentValue, this, false)
             );
             defaultIcon.setControlMessage(currentData.getIconOverride() != null ? currentData.getIconOverride() : "");
 
             // Adding Presence Settings Button
-            addControl(
+            childFrame.addControl(
                     new ExtendedButtonControl(
                             (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
@@ -186,7 +194,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         }
 
         if (willRenderSecondaryInput) {
-            secondaryInput = addControl(
+            secondaryInput = childFrame.addControl(
                     new TextWidget(
                             getFontRenderer(),
                             getButtonY(controlIndex),
