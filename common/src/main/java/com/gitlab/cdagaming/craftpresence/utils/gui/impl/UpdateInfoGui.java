@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.ModUpdaterUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
@@ -68,6 +67,16 @@ public class UpdateInfoGui extends ExtendedScreen {
                         () -> {
                             resetNotes();
                             modUpdater.checkForUpdates(this::updateNotes);
+                        },
+                        () -> {
+                            final String mainLine = Constants.TRANSLATOR.translate("gui.config.comment.title", Constants.VERSION_ID, CraftPresence.CONFIG._schemaVersion);
+                            final String subLine = Constants.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion);
+
+                            drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            mainLine + '\n' + subLine
+                                    )
+                            );
                         }
                 )
         );
@@ -135,31 +144,6 @@ public class UpdateInfoGui extends ExtendedScreen {
         );
 
         super.renderExtra();
-    }
-
-    @Override
-    public void postRender() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = Constants.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
-
-        // Hovering over Title Label
-        if (RenderUtils.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(mainTitle) / 2f), 10, getStringWidth(mainTitle), getFontHeight())) {
-            drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            Constants.TRANSLATOR.translate("gui.config.comment.title", Constants.VERSION_ID, CraftPresence.CONFIG._schemaVersion)
-                    )
-            );
-        }
-        // Hovering over Subtitle Label
-        if (RenderUtils.isMouseOver(getMouseX(), getMouseY(), (getScreenWidth() / 2f) - (getStringWidth(subTitle) / 2f), 20, getStringWidth(subTitle), getFontHeight())) {
-            drawMultiLineString(
-                    StringUtils.splitTextByNewLine(
-                            Constants.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion)
-                    )
-            );
-        }
-
-        super.postRender();
     }
 
     private void resetNotes() {
