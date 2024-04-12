@@ -15,8 +15,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * UniCore (`1.0.8` -> `1.0.9`)
     * DiscordIPC (`0.8.5` -> `0.8.6`)
 * Quality of Life UI Improvements
-    * `DynamicEditorGui`: Now uses the new Icon Selection System introduced in past updates
-    * `UpdateInfoGui`: Adjusted tooltip rendering from `screen#postRender` to `checkButton#onHover`
+    * `DynamicEditorGui`: Now uses the new Icon Selection System and `ScrollPane` layout introduced in past updates
+    * `UpdateInfoGui`: Moved tooltip rendering from UI title sections to a separate button
 
 ### Fixes
 

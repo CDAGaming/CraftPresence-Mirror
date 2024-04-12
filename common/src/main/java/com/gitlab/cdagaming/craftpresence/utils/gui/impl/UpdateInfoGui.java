@@ -67,7 +67,16 @@ public class UpdateInfoGui extends ExtendedScreen {
                         () -> {
                             resetNotes();
                             modUpdater.checkForUpdates(this::updateNotes);
-                        },
+                        }
+                )
+        );
+        // Added About Button
+        addControl(
+                new ExtendedButtonControl(
+                        6, 6,
+                        20, 20,
+                        "?",
+                        null,
                         () -> {
                             final String mainLine = Constants.TRANSLATOR.translate("gui.config.comment.title", Constants.VERSION_ID, CraftPresence.CONFIG._schemaVersion);
                             final String subLine = Constants.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion);
