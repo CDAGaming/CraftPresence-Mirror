@@ -53,7 +53,7 @@ public class ControlsGui extends ExtendedScreen {
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
     private Tuple<ExtendedButtonControl, ExtendedButtonControl, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
-    private ExtendedScreen childFrame;
+    private ScrollPane childFrame;
 
     public ControlsGui(GuiScreen parentScreen) {
         super(parentScreen);

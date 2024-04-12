@@ -57,7 +57,7 @@ public class CommandsGui extends ExtendedScreen {
     public ExtendedButtonControl proceedButton, copyButton;
     private String[] executionCommandArgs;
     private ExtendedTextControl commandInput;
-    private ExtendedScreen childFrame;
+    private ScrollPane childFrame;
     private TextDisplayWidget previewArea;
     private String executionString, commandString = "";
     private boolean blockInteractions = false;
