@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.3.8 (??/??/2024)
+## v2.3.8 (04/16/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.7...release%2Fv2.3.8)_
@@ -12,8 +12,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * ClassGraph (`4.8.168` -> `4.8.170`)
     * JUnixSocket (`2.9.0` -> `2.9.1`)
-    * UniCore (`1.0.8` -> `1.0.9-SNAPSHOT`)
-    * DiscordIPC (`0.8.5` -> `0.8.6-SNAPSHOT`)
+    * UniCore (`1.0.8` -> `1.0.9`)
+    * DiscordIPC (`0.8.5` -> `0.8.6`)
+* Quality of Life UI Improvements
+    * `DynamicEditorGui`: Now uses the new Icon Selection System introduced in past updates
+    * `UpdateInfoGui`: Adjusted tooltip rendering from `screen#postRender` to `checkButton#onHover`
 
 ### Fixes
 
