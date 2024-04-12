@@ -1216,7 +1216,7 @@ public class RenderUtils {
             final char currentCharacter = stringInput.charAt(stringSizeToWidth);
             final boolean flag = Character.isSpaceChar(currentCharacter) || currentCharacter == '\n';
             final String s1 = StringUtils.getFormatFromString(subString) + stringInput.substring(stringSizeToWidth + (flag ? 1 : 0));
-            return subString + "\n" + wrapFormattedStringToWidth(fontRenderer, s1, wrapWidth);
+            return subString + '\n' + wrapFormattedStringToWidth(fontRenderer, s1, wrapWidth);
         }
     }
 
