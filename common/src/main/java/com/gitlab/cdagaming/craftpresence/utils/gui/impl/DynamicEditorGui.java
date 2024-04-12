@@ -37,6 +37,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.BiConsumer;
 
+@SuppressWarnings("DuplicatedCode")
 public class DynamicEditorGui extends ExtendedScreen {
     private final TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, onRemoveEntry;
     private final BiConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
@@ -166,6 +167,28 @@ public class DynamicEditorGui extends ExtendedScreen {
             primaryInput.setControlMessage(primaryMessage);
         }
 
+        if (willRenderSecondaryInput) {
+            secondaryInput = childFrame.addControl(
+                    new TextWidget(
+                            getFontRenderer(),
+                            getButtonY(controlIndex++),
+                            180, 20,
+                            secondaryText,
+                            () -> {
+                                if (onHoverSecondaryCallback != null) {
+                                    onHoverSecondaryCallback.accept(attributeName, this);
+                                }
+                            }
+                    )
+            );
+            if (maxSecondaryLength > 0) {
+                secondaryInput.setControlMaxLength(maxSecondaryLength);
+            }
+            if (!StringUtils.isNullOrEmpty(secondaryMessage)) {
+                secondaryInput.setControlMessage(secondaryMessage);
+            }
+        }
+
         if (onSpecificCallback != null) {
             // Adding Specific Icon Button
             defaultIcon = childFrame.addControl(
@@ -191,28 +214,6 @@ public class DynamicEditorGui extends ExtendedScreen {
                             () -> onSpecificCallback.accept(attributeName, this, true)
                     )
             );
-        }
-
-        if (willRenderSecondaryInput) {
-            secondaryInput = childFrame.addControl(
-                    new TextWidget(
-                            getFontRenderer(),
-                            getButtonY(controlIndex),
-                            180, 20,
-                            secondaryText,
-                            () -> {
-                                if (onHoverSecondaryCallback != null) {
-                                    onHoverSecondaryCallback.accept(attributeName, this);
-                                }
-                            }
-                    )
-            );
-            if (maxSecondaryLength > 0) {
-                secondaryInput.setControlMaxLength(maxSecondaryLength);
-            }
-            if (!StringUtils.isNullOrEmpty(secondaryMessage)) {
-                secondaryInput.setControlMessage(secondaryMessage);
-            }
         }
 
         proceedButton = addControl(
