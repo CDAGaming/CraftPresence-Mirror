@@ -47,6 +47,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     public ModuleData defaultData, originalData, currentData;
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
+    private TextWidget defaultIcon;
 
     public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super(parentScreen);
@@ -159,14 +160,20 @@ public class DynamicEditorGui extends ExtendedScreen {
 
         if (onSpecificCallback != null) {
             // Adding Specific Icon Button
-            addControl(
-                    new ExtendedButtonControl(
-                            (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
-                            180, 20,
-                            "gui.config.message.button.icon.change",
-                            () -> onSpecificCallback.accept(attributeName, this, false)
+            defaultIcon = addControl(
+                    new TextWidget(
+                            getFontRenderer(),
+                            getButtonY(controlIndex++),
+                            147, 20,
+                            () -> onSpecificCallback.accept(defaultIcon.getControlMessage(), this, false),
+                            "gui.config.message.button.icon.change"
                     )
             );
+            ConfigurationGui.addIconSelector(this, this, () -> defaultIcon,
+                    (attributeName, currentValue) -> onSpecificCallback.accept(currentValue, this, false)
+            );
+            defaultIcon.setControlMessage(currentData.getIconOverride() != null ? currentData.getIconOverride() : "");
+
             // Adding Presence Settings Button
             addControl(
                     new ExtendedButtonControl(

@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -160,20 +159,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().guiSettings.fallbackGuiIcon;
-                                                                    final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                                    openScreen(
-                                                                            new SelectorGui(
-                                                                                    screenInstance,
-                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                                                                    specificIcon, attributeName,
-                                                                                    true, false, RenderType.DiscordAsset,
-                                                                                    (innerAttributeName, innerCurrentValue) -> {
-                                                                                        // Inner-Event to occur when proceeding with adjusted data
-                                                                                        screenInstance.currentData.setIconOverride(innerCurrentValue);
-                                                                                    }, null
-                                                                            )
-                                                                    );
+                                                                    screenInstance.currentData.setIconOverride(attributeName);
                                                                 }
                                                             },
                                                             (attributeName, screenInstance) -> {
@@ -351,20 +337,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().entitySettings.fallbackEntityIcon;
-                                                                    final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                                    openScreen(
-                                                                            new SelectorGui(
-                                                                                    screenInstance,
-                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                                                                    specificIcon, attributeName,
-                                                                                    true, false, RenderType.DiscordAsset,
-                                                                                    (innerAttributeName, innerCurrentValue) -> {
-                                                                                        // Inner-Event to occur when proceeding with adjusted data
-                                                                                        screenInstance.currentData.setIconOverride(innerCurrentValue);
-                                                                                    }, null
-                                                                            )
-                                                                    );
+                                                                    screenInstance.currentData.setIconOverride(attributeName);
                                                                 }
                                                             },
                                                             (attributeName, screenInstance) -> {
@@ -462,20 +435,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                             )
                                                                     );
                                                                 } else {
-                                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : getCurrentData().entitySettings.fallbackEntityIcon;
-                                                                    final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                                    openScreen(
-                                                                            new SelectorGui(
-                                                                                    screenInstance,
-                                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                                                                    specificIcon, attributeName,
-                                                                                    true, false, RenderType.DiscordAsset,
-                                                                                    (innerAttributeName, innerCurrentValue) -> {
-                                                                                        // Inner-Event to occur when proceeding with adjusted data
-                                                                                        screenInstance.currentData.setIconOverride(innerCurrentValue);
-                                                                                    }, null
-                                                                            )
-                                                                    );
+                                                                    screenInstance.currentData.setIconOverride(attributeName);
                                                                 }
                                                             },
                                                             (attributeName, screenInstance) -> {

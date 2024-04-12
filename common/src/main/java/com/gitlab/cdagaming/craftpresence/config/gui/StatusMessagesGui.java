@@ -30,12 +30,9 @@ import com.gitlab.cdagaming.craftpresence.config.category.Status;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -153,20 +150,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                             )
                                                     );
                                                 } else {
-                                                    final String defaultIcon = Config.getProperty(screenInstance.defaultData, "iconOverride") != null ? screenInstance.defaultData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
-                                                    final String specificIcon = Config.getProperty(screenInstance.currentData, "iconOverride") != null ? screenInstance.currentData.getIconOverride() : defaultIcon;
-                                                    openScreen(
-                                                            new SelectorGui(
-                                                                    screenInstance,
-                                                                    Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                                                    specificIcon, attributeName,
-                                                                    true, false, ScrollableListControl.RenderType.DiscordAsset,
-                                                                    (innerAttributeName, innerCurrentValue) -> {
-                                                                        // Inner-Event to occur when proceeding with adjusted data
-                                                                        screenInstance.currentData.setIconOverride(innerCurrentValue);
-                                                                    }, null
-                                                            )
-                                                    );
+                                                    screenInstance.currentData.setIconOverride(attributeName);
                                                 }
                                             }
                                     )
