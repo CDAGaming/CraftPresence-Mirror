@@ -10,7 +10,6 @@
   "gui.config.message.button.continue": "Continuar",
   "gui.config.message.button.controls": "Controles",
   "gui.config.message.button.download": "Descargar",
-  "gui.config.message.button.icon.change": "Cambiar icono",
   "gui.config.message.button.save": "Guardar",
   "gui.config.message.button.sync.config": "Sincronizar configuración",
   "gui.config.message.button.view_source": "Ver fuente",
