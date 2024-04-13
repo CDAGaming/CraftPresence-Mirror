@@ -110,14 +110,14 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                             currentScreen, entry.getValue().getFirst(),
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing new data
-                                                screenInstance.defaultData = (ModuleData) getCurrentData().getDefaults().getProperty(attributeName);
+                                                screenInstance.defaultData = (ModuleData) getInstanceData().getDefaults().getProperty(attributeName);
                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.resetText = "gui.config.message.button.reset_to_default";
                                             },
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing existing data
-                                                screenInstance.defaultData = (ModuleData) getCurrentData().getDefaults().getProperty(attributeName);
-                                                screenInstance.currentData = (ModuleData) getCurrentData().getProperty(attributeName);
+                                                screenInstance.defaultData = (ModuleData) getInstanceData().getDefaults().getProperty(attributeName);
+                                                screenInstance.currentData = (ModuleData) getInstanceData().getProperty(attributeName);
                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.status.edit_specific_status", attributeName);
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -127,13 +127,11 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when adjusting set data
                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                markAsChanged();
-                                                getCurrentData().setProperty(attributeName, screenInstance.currentData);
+                                                getInstanceData().setProperty(attributeName, screenInstance.currentData);
                                             },
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when removing set data
-                                                markAsChanged();
-                                                getCurrentData().resetProperty(attributeName);
+                                                getInstanceData().resetProperty(attributeName);
                                             },
                                             (attributeName, screenInstance, isPresenceButton) -> {
                                                 // Event to occur when adding specific info to set data

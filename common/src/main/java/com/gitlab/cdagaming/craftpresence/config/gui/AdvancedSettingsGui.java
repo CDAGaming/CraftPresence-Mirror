@@ -118,13 +118,13 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = getCurrentData().guiSettings.guiData.get("default");
+                                                                screenInstance.defaultData = getInstanceData().guiSettings.guiData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = getCurrentData().guiSettings.guiData.get("default");
-                                                                screenInstance.currentData = getCurrentData().guiSettings.guiData.get(attributeName);
+                                                                screenInstance.defaultData = getInstanceData().guiSettings.guiData.get("default");
+                                                                screenInstance.currentData = getInstanceData().guiSettings.guiData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -133,16 +133,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                markAsChanged();
-                                                                getCurrentData().guiSettings.guiData.put(attributeName, screenInstance.currentData);
+                                                                getInstanceData().guiSettings.guiData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.GUIS.GUI_NAMES.contains(attributeName)) {
                                                                     CraftPresence.GUIS.GUI_NAMES.add(attributeName);
                                                                 }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                markAsChanged();
-                                                                getCurrentData().guiSettings.guiData.remove(attributeName);
+                                                                getInstanceData().guiSettings.guiData.remove(attributeName);
                                                                 if (!CraftPresence.GUIS.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.GUIS.GUI_NAMES.remove(attributeName);
                                                                 }
@@ -213,18 +211,17 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getCurrentData().itemMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getInstanceData().itemMessages.getOrDefault("default", "");
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
-                                                                screenInstance.originalPrimaryMessage = getCurrentData().itemMessages.getOrDefault("default", "");
-                                                                screenInstance.primaryMessage = getCurrentData().itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
+                                                                screenInstance.originalPrimaryMessage = getInstanceData().itemMessages.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = getInstanceData().itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
-                                                                markAsChanged();
-                                                                getCurrentData().itemMessages.put(attributeName, inputText);
+                                                                getInstanceData().itemMessages.put(attributeName, inputText);
                                                                 if (!CraftPresence.TILE_ENTITIES.ITEM_NAMES.contains(attributeName)) {
                                                                     CraftPresence.TILE_ENTITIES.ITEM_NAMES.add(attributeName);
                                                                 }
@@ -236,8 +233,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                markAsChanged();
-                                                                getCurrentData().itemMessages.remove(attributeName);
+                                                                getInstanceData().itemMessages.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.ITEM_NAMES.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.BLOCK_NAMES.remove(attributeName);
                                                                 CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES.remove(attributeName);
@@ -296,13 +292,13 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = getCurrentData().entitySettings.targetData.get("default");
+                                                                screenInstance.defaultData = getInstanceData().entitySettings.targetData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = getCurrentData().entitySettings.targetData.get("default");
-                                                                screenInstance.currentData = getCurrentData().entitySettings.targetData.get(attributeName);
+                                                                screenInstance.defaultData = getInstanceData().entitySettings.targetData.get("default");
+                                                                screenInstance.currentData = getInstanceData().entitySettings.targetData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -311,16 +307,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                markAsChanged();
-                                                                getCurrentData().entitySettings.targetData.put(attributeName, screenInstance.currentData);
+                                                                getInstanceData().entitySettings.targetData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
                                                                 }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                markAsChanged();
-                                                                getCurrentData().entitySettings.targetData.remove(attributeName);
+                                                                getInstanceData().entitySettings.targetData.remove(attributeName);
                                                                 if (!CraftPresence.ENTITIES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                                 }
@@ -394,13 +388,13 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = getCurrentData().entitySettings.ridingData.get("default");
+                                                                screenInstance.defaultData = getInstanceData().entitySettings.ridingData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = getCurrentData().entitySettings.ridingData.get("default");
-                                                                screenInstance.currentData = getCurrentData().entitySettings.ridingData.get(attributeName);
+                                                                screenInstance.defaultData = getInstanceData().entitySettings.ridingData.get("default");
+                                                                screenInstance.currentData = getInstanceData().entitySettings.ridingData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -409,16 +403,14 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                markAsChanged();
-                                                                getCurrentData().entitySettings.ridingData.put(attributeName, screenInstance.currentData);
+                                                                getInstanceData().entitySettings.ridingData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.ENTITIES.ENTITY_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.add(attributeName);
                                                                 }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                markAsChanged();
-                                                                getCurrentData().entitySettings.ridingData.remove(attributeName);
+                                                                getInstanceData().entitySettings.ridingData.remove(attributeName);
                                                                 if (!CraftPresence.ENTITIES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.ENTITIES.ENTITY_NAMES.remove(attributeName);
                                                                 }

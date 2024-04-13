@@ -25,6 +25,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Fixes
 
 * Fixed incorrect Tooltip Rendering in `Server Messages` Entry Editor
+* Fixed config data loss related to `DynamicEditorGui` changes
+    * Caused from a regression in v2.3.5, when `getInstanceData()` was introduced
+    * This also fixes discarding changes after using the editor as well
 * (Backend) Fixed issues in `Module#transferFrom` function calls
     * This was the root cause behind the `Save` indicator failing to appear in certain cases
     * It also caused some data to be saved early, `ModuleData` as an example

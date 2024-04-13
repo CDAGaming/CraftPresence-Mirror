@@ -111,18 +111,17 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                         null, null,
                                         true, true, RenderType.None,
                                         (attributeName, currentValue) -> {
-                                            final ModuleData defaultBiomeData = getCurrentData().biomeData.get("default");
-                                            final ModuleData currentBiomeData = getCurrentData().biomeData.get(attributeName);
+                                            final ModuleData defaultBiomeData = getInstanceData().biomeData.get("default");
+                                            final ModuleData currentBiomeData = getInstanceData().biomeData.get(attributeName);
                                             final String defaultMessage = Config.getProperty(defaultBiomeData, "textOverride") != null ? defaultBiomeData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentBiomeData, "textOverride") != null ? currentBiomeData.getTextOverride() : "";
 
-                                            markAsChanged();
                                             final ModuleData newData = new ModuleData();
                                             if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
                                                 newData.setTextOverride(defaultMessage);
                                             }
                                             newData.setIconOverride(currentValue);
-                                            getCurrentData().biomeData.put(attributeName, newData);
+                                            getInstanceData().biomeData.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -131,13 +130,13 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = getCurrentData().biomeData.get("default");
+                                                                screenInstance.defaultData = getInstanceData().biomeData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = getCurrentData().biomeData.get("default");
-                                                                screenInstance.currentData = getCurrentData().biomeData.get(attributeName);
+                                                                screenInstance.defaultData = getInstanceData().biomeData.get("default");
+                                                                screenInstance.currentData = getInstanceData().biomeData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -146,16 +145,14 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                markAsChanged();
-                                                                getCurrentData().biomeData.put(attributeName, screenInstance.currentData);
+                                                                getInstanceData().biomeData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.BIOMES.BIOME_NAMES.contains(attributeName)) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.add(attributeName);
                                                                 }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                markAsChanged();
-                                                                getCurrentData().biomeData.remove(attributeName);
+                                                                getInstanceData().biomeData.remove(attributeName);
                                                                 if (!CraftPresence.BIOMES.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.BIOMES.BIOME_NAMES.remove(attributeName);
                                                                 }

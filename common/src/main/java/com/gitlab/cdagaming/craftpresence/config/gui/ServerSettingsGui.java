@@ -141,18 +141,17 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                         null, null,
                                         true, true, RenderType.ServerData,
                                         (attributeName, currentValue) -> {
-                                            final ModuleData defaultServerData = getCurrentData().serverData.get("default");
-                                            final ModuleData currentServerData = getCurrentData().serverData.get(attributeName);
+                                            final ModuleData defaultServerData = getInstanceData().serverData.get("default");
+                                            final ModuleData currentServerData = getInstanceData().serverData.get(attributeName);
                                             final String defaultMessage = Config.getProperty(defaultServerData, "textOverride") != null ? defaultServerData.getTextOverride() : "";
                                             final String currentMessage = Config.getProperty(currentServerData, "textOverride") != null ? currentServerData.getTextOverride() : "";
 
-                                            markAsChanged();
                                             final ModuleData newData = new ModuleData();
                                             if (StringUtils.isNullOrEmpty(currentMessage) || currentMessage.equals(defaultMessage)) {
                                                 newData.setTextOverride(defaultMessage);
                                             }
                                             newData.setIconOverride(currentValue);
-                                            getCurrentData().serverData.put(attributeName, newData);
+                                            getInstanceData().serverData.put(attributeName, newData);
                                         },
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -161,13 +160,13 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                             parentScreen, currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.defaultData = getCurrentData().serverData.get("default");
+                                                                screenInstance.defaultData = getInstanceData().serverData.get("default");
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.defaultData = getCurrentData().serverData.get("default");
-                                                                screenInstance.currentData = getCurrentData().serverData.get(attributeName);
+                                                                screenInstance.defaultData = getInstanceData().serverData.get("default");
+                                                                screenInstance.currentData = getInstanceData().serverData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
                                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName);
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
@@ -176,16 +175,14 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when adjusting set data
                                                                 screenInstance.currentData.setTextOverride(inputText);
-                                                                markAsChanged();
-                                                                getCurrentData().serverData.put(attributeName, screenInstance.currentData);
+                                                                getInstanceData().serverData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.SERVER.knownAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.add(attributeName);
                                                                 }
                                                             },
                                                             (screenInstance, attributeName, inputText) -> {
                                                                 // Event to occur when removing set data
-                                                                markAsChanged();
-                                                                getCurrentData().serverData.remove(attributeName);
+                                                                getInstanceData().serverData.remove(attributeName);
                                                                 if (!CraftPresence.SERVER.defaultAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.remove(attributeName);
                                                                 }
