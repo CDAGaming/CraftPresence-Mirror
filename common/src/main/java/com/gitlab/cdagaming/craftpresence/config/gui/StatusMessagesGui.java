@@ -129,9 +129,6 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.currentData.setTextOverride(inputText);
                                                 markAsChanged();
                                                 getCurrentData().setProperty(attributeName, screenInstance.currentData);
-                                                if (!CraftPresence.GUIS.GUI_NAMES.contains(attributeName)) {
-                                                    CraftPresence.GUIS.GUI_NAMES.add(attributeName);
-                                                }
                                             },
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when removing set data
