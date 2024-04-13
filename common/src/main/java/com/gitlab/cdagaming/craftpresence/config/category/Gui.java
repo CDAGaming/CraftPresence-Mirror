@@ -82,7 +82,9 @@ public class Gui extends Module implements Serializable {
             final Gui data = (Gui) target;
 
             fallbackGuiIcon = data.fallbackGuiIcon;
-            guiData = data.guiData;
+            for (Map.Entry<String, ModuleData> entry : data.guiData.entrySet()) {
+                guiData.put(entry.getKey(), new ModuleData(entry.getValue()));
+            }
         }
     }
 

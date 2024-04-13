@@ -127,7 +127,7 @@ public class PresenceData extends Module implements Serializable {
     }
 
     public PresenceData addButton(final String name, final Button button) {
-        this.buttons.put(name, button);
+        this.buttons.put(name, new Button(button));
         return this;
     }
 

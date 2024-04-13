@@ -74,8 +74,12 @@ public class Entity extends Module implements Serializable {
             final Entity data = (Entity) target;
 
             fallbackEntityIcon = data.fallbackEntityIcon;
-            targetData = data.targetData;
-            ridingData = data.ridingData;
+            for (Map.Entry<String, ModuleData> entry : data.targetData.entrySet()) {
+                targetData.put(entry.getKey(), new ModuleData(entry.getValue()));
+            }
+            for (Map.Entry<String, ModuleData> entry : data.ridingData.entrySet()) {
+                ridingData.put(entry.getKey(), new ModuleData(entry.getValue()));
+            }
         }
     }
 

@@ -86,7 +86,7 @@ public class Advanced extends Module implements Serializable {
             refreshRate = data.refreshRate;
             allowPlaceholderPreviews = data.allowPlaceholderPreviews;
             guiSettings = new Gui(data.guiSettings);
-            itemMessages = data.itemMessages;
+            itemMessages.putAll(data.itemMessages);
             entitySettings = new Entity(data.entitySettings);
             allowEndpointIcons = data.allowEndpointIcons;
             serverIconEndpoint = data.serverIconEndpoint;

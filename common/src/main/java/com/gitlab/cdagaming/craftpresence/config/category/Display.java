@@ -84,8 +84,8 @@ public class Display extends Module implements Serializable {
             final Display data = (Display) target;
 
             presenceData = new PresenceData(data.presenceData);
-            dynamicIcons = data.dynamicIcons;
-            dynamicVariables = data.dynamicVariables;
+            dynamicIcons.putAll(data.dynamicIcons);
+            dynamicVariables.putAll(data.dynamicVariables);
         }
     }
 
