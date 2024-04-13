@@ -18,6 +18,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * `DynamicEditorGui`: Now uses the new Icon Selection System, improved rendering order, and the `ScrollPane` layout
       introduced in past updates
     * `UpdateInfoGui`: Moved tooltip rendering from UI title sections to a separate button
+* Removed excessive debug logging from `DiscordUtils#imageOf`, when using a cached icon
+    * This had resulted in user confusion and never really worked properly due to parallel usage
+    * An example of one such fail case is using the Per-GUI system with Pack Integration
 
 ### Fixes
 

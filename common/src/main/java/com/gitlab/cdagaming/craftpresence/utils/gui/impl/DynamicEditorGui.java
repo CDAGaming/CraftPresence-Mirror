@@ -197,7 +197,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                             getButtonY(controlIndex++),
                             147, 20,
                             () -> onSpecificCallback.accept(defaultIcon.getControlMessage(), this, false),
-                            "gui.config.message.button.icon.change"
+                            "gui.config.message.editor.icon.change"
                     )
             );
             ConfigurationGui.addIconSelector(this, childFrame, () -> defaultIcon,

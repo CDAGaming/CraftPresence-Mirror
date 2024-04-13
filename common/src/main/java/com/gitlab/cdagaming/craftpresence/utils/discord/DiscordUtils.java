@@ -223,12 +223,6 @@ public class DiscordUtils {
      */
     public PresenceData forcedData = null;
     /**
-     * A Mapping of the Last Requested Image Cache Data
-     * <p>Used to prevent sending duplicate packets
-     * <p>Format: lastAttemptedKey, lastResultingKey
-     */
-    private Pair<String, String> lastRequestedImageData = new Pair<>();
-    /**
      * An Instance containing the Current Rich Presence Data
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
      */
@@ -1283,15 +1277,7 @@ public class DiscordUtils {
                 result = finalKey;
             } else {
                 result = cachedImageData.get(primaryKey);
-                if (StringUtils.isNullOrEmpty(lastRequestedImageData.getFirst()) || !lastRequestedImageData.getFirst().equals(primaryKey)) {
-                    if (showLogging && !result.equals(primaryKey)) {
-                        Constants.LOG.debugError(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.cached", primaryKey, result));
-                        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.request", primaryKey));
-                    }
-                }
             }
-            lastRequestedImageData.setFirst(primaryKey);
-            lastRequestedImageData.setSecond(result);
         } else {
             result = "";
         }
@@ -1389,7 +1375,6 @@ public class DiscordUtils {
             STATUS = allowReconnects ? DiscordStatus.Disconnected : DiscordStatus.Closed;
 
             CURRENT_USER = null;
-            lastRequestedImageData = new Pair<>();
             cachedImageData.clear();
 
             Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));
