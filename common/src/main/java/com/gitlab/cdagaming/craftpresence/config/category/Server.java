@@ -72,6 +72,7 @@ public class Server extends Module implements Serializable {
             fallbackServerIcon = data.fallbackServerIcon;
             fallbackServerName = data.fallbackServerName;
             fallbackServerMotd = data.fallbackServerMotd;
+            serverData.clear();
             for (Map.Entry<String, ModuleData> entry : data.serverData.entrySet()) {
                 serverData.put(entry.getKey(), new ModuleData(entry.getValue()));
             }

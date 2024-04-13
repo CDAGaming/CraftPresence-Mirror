@@ -68,6 +68,7 @@ public class Dimension extends Module implements Serializable {
             final Dimension data = (Dimension) target;
 
             fallbackDimensionIcon = data.fallbackDimensionIcon;
+            dimensionData.clear();
             for (Map.Entry<String, ModuleData> entry : data.dimensionData.entrySet()) {
                 dimensionData.put(entry.getKey(), new ModuleData(entry.getValue()));
             }

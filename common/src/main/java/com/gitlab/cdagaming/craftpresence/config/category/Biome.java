@@ -68,6 +68,7 @@ public class Biome extends Module implements Serializable {
             final Biome data = (Biome) target;
 
             fallbackBiomeIcon = data.fallbackBiomeIcon;
+            biomeData.clear();
             for (Map.Entry<String, ModuleData> entry : data.biomeData.entrySet()) {
                 biomeData.put(entry.getKey(), new ModuleData(entry.getValue()));
             }

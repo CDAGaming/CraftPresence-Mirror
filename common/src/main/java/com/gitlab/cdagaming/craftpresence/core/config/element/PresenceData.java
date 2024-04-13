@@ -79,6 +79,7 @@ public class PresenceData extends Module implements Serializable {
             setLargeImage(data.largeImageKey, data.largeImageText);
             setSmallImage(data.smallImageKey, data.smallImageText);
             setTimes(data.startTimestamp, data.endTimestamp);
+            buttons.clear();
             for (Map.Entry<String, Button> entry : data.buttons.entrySet()) {
                 addButton(entry.getKey(), entry.getValue());
             }
