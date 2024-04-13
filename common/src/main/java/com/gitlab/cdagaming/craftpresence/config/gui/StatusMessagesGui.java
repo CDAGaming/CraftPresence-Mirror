@@ -119,7 +119,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.defaultData = (ModuleData) getCurrentData().getDefaults().getProperty(attributeName);
                                                 screenInstance.currentData = (ModuleData) getCurrentData().getProperty(attributeName);
                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
+                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.status.edit_specific_status", attributeName);
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                 screenInstance.resetText = "gui.config.message.button.reset_to_default";
