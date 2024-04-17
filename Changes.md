@@ -1,36 +1,32 @@
 # CraftPresence Changes
 
-## v2.3.8 (04/16/2024)
+## v2.4.0 (??/??/2024)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.7...release%2Fv2.3.8)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.8...release%2Fv2.4.0)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * ClassGraph (`4.8.168` -> `4.8.170`)
-    * JUnixSocket (`2.9.0` -> `2.9.1`)
-    * UniCore (`1.0.8` -> `1.0.9`)
-    * DiscordIPC (`0.8.5` -> `0.8.6`)
-* Quality of Life UI Improvements
-    * `DynamicEditorGui`: Now uses the new Icon Selection System, improved rendering order, and the `ScrollPane` layout
-      introduced in past updates
-    * `UpdateInfoGui`: Moved tooltip rendering from UI title sections to a separate button
+    * Fabric Loader (`0.15.9` -> `0.15.10`)
+* `Presence Settings` UI Improvements
+    * Sync, Reset, and Instance support has been implemented -- additionally allowing for content to be preserved
+      through
+      resizing
+    * A new `Display Settings` UI has been added to the Main Config GUI, to decouple the Display-Specific options from
+      the `Presence Settings` screen (`Dynamic Icons`, `Dynamic Variables`)
 * Removed excessive debug logging from `DiscordUtils#imageOf`, when using a cached icon
     * This had resulted in user confusion and never really worked properly due to parallel usage
     * An example of one such fail case is using the Per-GUI system with Pack Integration
 
 ### Fixes
 
-* Fixed incorrect Tooltip Rendering in `Server Messages` Entry Editor
-* Fixed config data loss related to `DynamicEditorGui` changes
-    * Caused from a regression in v2.3.5, when `getInstanceData()` was introduced
-    * This also fixes discarding changes after using the editor as well
-* (Backend) Fixed issues in `Module#transferFrom` function calls
-    * This was the root cause behind the `Save` indicator failing to appear in certain cases
-    * It also caused some data to be saved early, `ModuleData` as an example
+* Fixed a missing tooltip for the `Presence Settings` button in the `DynamicEditorGui`
+* Fixed two possible `NullPointerException` cases for the `ColorEditorGui`
+    * Occurs if `syncSupplier` or `DEFAULTS` field is `null`
+    * The appropriate buttons will now be disabled if these are `null`
 
 ___
 
