@@ -224,7 +224,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected void appendControls() {
-        // Added About Button
+        // Adding About Button
         addControl(
                 new ExtendedButtonControl(
                         6, 6,
@@ -238,7 +238,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         )
                 )
         );
-        // Added Commands GUI Button
+        // Adding Commands GUI Button
         addControl(
                 new ExtendedButtonControl(
                         getScreenWidth() - 26, 6,

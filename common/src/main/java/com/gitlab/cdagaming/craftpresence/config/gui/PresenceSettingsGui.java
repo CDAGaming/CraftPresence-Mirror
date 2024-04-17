@@ -228,7 +228,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         startTimeFormat.setControlMessage(getInstanceData().startTimestamp);
         endTimeFormat.setControlMessage(getInstanceData().endTimestamp);
 
-        // Button Messages Button
+        // Adding Button Messages Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(8),

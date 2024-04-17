@@ -70,7 +70,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         }
                 )
         );
-        // Added About Button
+        // Adding About Button
         addControl(
                 new ExtendedButtonControl(
                         6, 6,

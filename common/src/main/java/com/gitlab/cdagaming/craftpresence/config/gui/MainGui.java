@@ -74,7 +74,7 @@ public class MainGui extends ConfigurationGui<Config> {
         }
 
         currentY++;
-        // Added General Settings Button
+        // Adding General Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
@@ -165,7 +165,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 )
         );
         currentY++;
-        // Added Status Settings Button
+        // Adding Status Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
@@ -179,7 +179,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         )
                 )
         );
-        // Added Advanced Settings Button
+        // Adding Advanced Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
@@ -194,7 +194,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 )
         );
         currentY++;
-        // Added Accessibility Settings Button
+        // Adding Accessibility Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
@@ -208,7 +208,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         )
                 )
         );
-        // Added Presence Settings Button
+        // Adding Presence Settings Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
