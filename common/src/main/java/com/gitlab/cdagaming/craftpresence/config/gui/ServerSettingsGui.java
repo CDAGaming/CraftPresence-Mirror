@@ -194,7 +194,9 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
                                                                     openScreen(
                                                                             new PresenceSettingsGui(
-                                                                                    screenInstance, currentPresenceData,
+                                                                                    screenInstance,
+                                                                                    currentPresenceData,
+                                                                                    defaultPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
                                                                             )
                                                                     );

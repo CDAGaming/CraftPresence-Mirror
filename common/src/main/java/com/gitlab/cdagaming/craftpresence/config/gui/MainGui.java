@@ -213,11 +213,11 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.presence_settings",
-                        () -> openScreen(new PresenceSettingsGui(currentScreen)),
+                        "gui.config.title.display_settings",
+                        () -> openScreen(new DisplaySettingsGui(currentScreen)),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.presence_settings")
+                                        Constants.TRANSLATOR.translate("gui.config.comment.display_settings")
                                 )
                         )
                 )
