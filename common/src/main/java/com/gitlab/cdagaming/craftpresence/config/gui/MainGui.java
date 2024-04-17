@@ -236,7 +236,7 @@ public class MainGui extends ConfigurationGui<Config> {
     protected void syncRenderStates() {
         // Ensure Critical Data is correct before continuing
         super.syncRenderStates();
-        getCurrentData().hasChanged = !getCurrentData().equals(getInstanceData());
+        getCurrentData().hasChanged = hasChanges(getInstanceData());
 
         biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);

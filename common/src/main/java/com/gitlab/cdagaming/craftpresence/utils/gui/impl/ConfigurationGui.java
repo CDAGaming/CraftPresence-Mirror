@@ -199,7 +199,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected boolean canReset() {
-        return allowedToReset() && getDefaultData() != null && !getCurrentData().equals(getDefaultData());
+        return allowedToReset() && hasChanges(getDefaultData());
     }
 
     protected boolean allowedToReset() {
@@ -279,12 +279,16 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected boolean setCurrentData(T data) {
-        if (data != null && !getCurrentData().equals(data)) {
+        if (hasChanges(data)) {
             getCurrentData().transferFrom(data);
             markAsChanged();
             return true;
         }
         return false;
+    }
+
+    protected boolean hasChanges(T data) {
+        return data != null && !getCurrentData().equals(data);
     }
 
     protected void markAsChanged() {

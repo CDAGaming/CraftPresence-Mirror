@@ -373,7 +373,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
 
     @Override
     protected boolean setCurrentData(PresenceData data) {
-        if (onChangedCallback != null && data != null && !getCurrentData().equals(data)) {
+        if (onChangedCallback != null && hasChanges(data)) {
             onChangedCallback.accept(data);
             markAsChanged();
             return true;
