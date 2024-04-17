@@ -367,7 +367,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
     @Override
     protected boolean allowedToSync() {
-        return true;
+        return syncSupplier != null;
     }
 
     @Override
