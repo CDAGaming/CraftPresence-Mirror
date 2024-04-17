@@ -88,10 +88,43 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
+        int controlIndex = 0;
+
+        if (!isDefaultModule) {
+            enabledCheckbox = childFrame.addControl(
+                    new CheckBoxControl(
+                            calc1, getButtonY(controlIndex),
+                            "gui.config.name.display.enabled",
+                            getInstanceData().enabled,
+                            () -> getInstanceData().enabled = enabledCheckbox.isChecked(),
+                            () -> drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            Constants.TRANSLATOR.translate("gui.config.comment.display.enabled")
+                                    )
+                            )
+                    )
+            );
+            useAsMainCheckbox = childFrame.addControl(
+                    new CheckBoxControl(
+                            calc2, getButtonY(controlIndex),
+                            "gui.config.name.display.use_as_main",
+                            getInstanceData().useAsMain,
+                            () -> getInstanceData().useAsMain = useAsMainCheckbox.isChecked(),
+                            () -> drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            Constants.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
+                                    )
+                            )
+                    )
+            );
+
+            controlIndex++;
+        }
+
         detailsFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(0),
+                        getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setDetails(detailsFormat.getControlMessage()),
                         "gui.config.name.display.details_message",
@@ -106,7 +139,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         gameStateFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(1),
+                        getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setGameState(gameStateFormat.getControlMessage()),
                         "gui.config.name.display.game_state_message",
@@ -121,7 +154,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         largeImageFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(2),
+                        getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().largeImageText = largeImageFormat.getControlMessage(),
                         "gui.config.name.display.large_image_message",
@@ -136,7 +169,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         smallImageFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(3),
+                        getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().smallImageText = smallImageFormat.getControlMessage(),
                         "gui.config.name.display.small_image_message",
@@ -157,7 +190,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         smallImageKeyFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(4),
+                        getButtonY(controlIndex++),
                         147, 20,
                         () -> getInstanceData().smallImageKey = smallImageKeyFormat.getControlMessage(),
                         "gui.config.name.display.small_image_key",
@@ -175,7 +208,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         largeImageKeyFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(5),
+                        getButtonY(controlIndex++),
                         147, 20,
                         () -> getInstanceData().largeImageKey = largeImageKeyFormat.getControlMessage(),
                         "gui.config.name.display.large_image_key",
@@ -197,7 +230,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         startTimeFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(6),
+                        getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setStartTime(startTimeFormat.getControlMessage()),
                         "gui.config.name.display.start_timestamp",
@@ -212,7 +245,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         endTimeFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(7),
+                        getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setEndTime(endTimeFormat.getControlMessage()),
                         "gui.config.name.display.end_timestamp",
@@ -231,7 +264,7 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         // Adding Button Messages Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(8),
+                        (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                         180, 20,
                         "gui.config.name.display.button_messages",
                         () -> openScreen(
@@ -306,35 +339,6 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
                         )
                 )
         );
-
-        if (!isDefaultModule) {
-            enabledCheckbox = childFrame.addControl(
-                    new CheckBoxControl(
-                            calc1, getButtonY(9),
-                            "gui.config.name.display.enabled",
-                            getInstanceData().enabled,
-                            () -> getInstanceData().enabled = enabledCheckbox.isChecked(),
-                            () -> drawMultiLineString(
-                                    StringUtils.splitTextByNewLine(
-                                            Constants.TRANSLATOR.translate("gui.config.comment.display.enabled")
-                                    )
-                            )
-                    )
-            );
-            useAsMainCheckbox = childFrame.addControl(
-                    new CheckBoxControl(
-                            calc2, getButtonY(9),
-                            "gui.config.name.display.use_as_main",
-                            getInstanceData().useAsMain,
-                            () -> getInstanceData().useAsMain = useAsMainCheckbox.isChecked(),
-                            () -> drawMultiLineString(
-                                    StringUtils.splitTextByNewLine(
-                                            Constants.TRANSLATOR.translate("gui.config.comment.display.use_as_main")
-                                    )
-                            )
-                    )
-            );
-        }
     }
 
     @Override
