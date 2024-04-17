@@ -211,7 +211,12 @@ public class DynamicEditorGui extends ExtendedScreen {
                             (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
                             "gui.config.title.presence_settings",
-                            () -> onSpecificCallback.accept(attributeName, this, true)
+                            () -> onSpecificCallback.accept(attributeName, this, true),
+                            () -> drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            Constants.TRANSLATOR.translate("gui.config.comment.presence_settings")
+                                    )
+                            )
                     )
             );
         }
