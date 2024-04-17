@@ -362,7 +362,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
     @Override
     protected boolean allowedToReset() {
-        return true;
+        return DEFAULTS != null;
     }
 
     @Override
