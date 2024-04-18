@@ -42,7 +42,7 @@ import java.util.Map;
 
 @SuppressWarnings("DuplicatedCode")
 public class StatusMessagesGui extends ConfigurationGui<Status> {
-    private final Status INSTANCE;
+    private final Status INSTANCE, DEFAULTS;
     // nameTranslation, [configPath,commentTranslation]
     private final Map<String, Pair<String, Runnable>> eventMappings = new HashMapBuilder<String, Pair<String, Runnable>>()
             .put("gui.config.name.status_messages.main_menu_message", new Pair<>(
@@ -81,6 +81,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
 
     StatusMessagesGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.status_messages");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
 
@@ -164,6 +165,11 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     }
 
     @Override
+    protected boolean allowedToReset() {
+        return true;
+    }
+
+    @Override
     protected Status getInstanceData() {
         return INSTANCE;
     }
@@ -171,5 +177,10 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     @Override
     protected Status getCurrentData() {
         return CraftPresence.CONFIG.statusMessages;
+    }
+
+    @Override
+    protected Status getDefaultData() {
+        return DEFAULTS;
     }
 }
