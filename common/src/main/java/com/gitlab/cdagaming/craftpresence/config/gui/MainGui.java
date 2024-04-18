@@ -236,13 +236,18 @@ public class MainGui extends ConfigurationGui<Config> {
     protected void syncRenderStates() {
         // Ensure Critical Data is correct before continuing
         super.syncRenderStates();
-        getCurrentData().hasChanged = hasChanges(getInstanceData());
+        getCurrentData().hasChanged = hasChangesBetween(getCurrentData(), getInstanceData());
 
         biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
         serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
 
         proceedButton.setControlMessage(getCurrentData().hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
+    }
+
+    @Override
+    protected boolean canReset() {
+        return allowedToReset() && hasChangesBetween(getCurrentData(), getDefaultData());
     }
 
     @Override
@@ -253,6 +258,11 @@ public class MainGui extends ConfigurationGui<Config> {
     @Override
     protected boolean allowedToSync() {
         return true;
+    }
+
+    @Override
+    protected boolean resetData() {
+        return setCurrentData(getDefaultData());
     }
 
     @Override

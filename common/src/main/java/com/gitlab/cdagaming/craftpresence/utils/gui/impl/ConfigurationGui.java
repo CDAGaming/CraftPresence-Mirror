@@ -199,7 +199,8 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected boolean canReset() {
-        return allowedToReset() && hasChanges(getDefaultData());
+        return allowedToReset() &&
+                hasChangesBetween(getInstanceData(), getDefaultData());
     }
 
     protected boolean allowedToReset() {
@@ -255,15 +256,18 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected boolean resetData() {
-        return setCurrentData(getDefaultData());
+        return setInstanceData(getDefaultData());
     }
 
     protected boolean syncData() {
-        return setCurrentData(getSyncData());
+        final T data = getSyncData();
+        return setCurrentData(data) && setInstanceData(data);
     }
 
     protected void applySettings() {
-        setCurrentData(getInstanceData());
+        if (setCurrentData(getInstanceData())) {
+            markAsChanged();
+        }
     }
 
     protected abstract T getInstanceData();
@@ -278,17 +282,24 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         return null;
     }
 
-    protected boolean setCurrentData(T data) {
-        if (hasChanges(data)) {
-            getCurrentData().transferFrom(data);
-            markAsChanged();
+    private boolean setData(T source, T target) {
+        if (hasChangesBetween(source, target)) {
+            source.transferFrom(target);
             return true;
         }
         return false;
     }
 
-    protected boolean hasChanges(T data) {
-        return data != null && !getCurrentData().equals(data);
+    protected boolean setCurrentData(T data) {
+        return setData(getCurrentData(), data);
+    }
+
+    protected boolean setInstanceData(T data) {
+        return setData(getInstanceData(), data);
+    }
+
+    protected boolean hasChangesBetween(T source, T target) {
+        return target != null && !source.equals(target);
     }
 
     protected void markAsChanged() {
