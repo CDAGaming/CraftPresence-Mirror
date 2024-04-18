@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
@@ -38,10 +39,11 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
-    private final Display INSTANCE;
+    private final Display INSTANCE, DEFAULTS;
 
     DisplaySettingsGui(GuiScreen parentScreen) {
         super(parentScreen, "gui.config.title", "gui.config.title.display_settings");
+        DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
 
@@ -59,9 +61,10 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                 new PresenceSettingsGui(
                                         currentScreen,
                                         getCurrentData().presenceData,
-                                        null, null,
+                                        getDefaultData().presenceData,
+                                        () -> getSyncData().presenceData,
                                         true,
-                                        (output) -> getCurrentData().presenceData.transferFrom(output)
+                                        (output) -> getInstanceData().presenceData.transferFrom(output)
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -234,6 +237,16 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     }
 
     @Override
+    protected boolean allowedToReset() {
+        return true;
+    }
+
+    @Override
+    protected boolean allowedToSync() {
+        return true;
+    }
+
+    @Override
     protected Display getInstanceData() {
         return INSTANCE;
     }
@@ -241,5 +254,18 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     @Override
     protected Display getCurrentData() {
         return CraftPresence.CONFIG.displaySettings;
+    }
+
+    @Override
+    protected Display getDefaultData() {
+        // Hotfix: Preserve `dynamicIcons` as a cache setting
+        DEFAULTS.dynamicIcons = getCurrentData().dynamicIcons;
+
+        return DEFAULTS;
+    }
+
+    @Override
+    protected Display getSyncData() {
+        return Config.loadOrCreate().displaySettings;
     }
 }
