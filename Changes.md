@@ -11,21 +11,23 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Fabric Loader (`0.15.9` -> `0.15.10`)
-* `Presence Settings` UI Improvements
-    * Sync, Reset, and Instance support has been implemented -- additionally allowing for content to be preserved
-      through
-      resizing
+* Quality of Life UI Improvements
+    * Reset and Instance support has been implemented for the `Presence Settings` screen -- additionally allowing for
+      content to be preserved through resizing
     * A new `Display Settings` UI has been added to the Main Config GUI, to decouple the Display-Specific options from
       the `Presence Settings` screen (`Dynamic Icons`, `Dynamic Variables`)
-* Removed excessive debug logging from `DiscordUtils#imageOf`, when using a cached icon
-    * This had resulted in user confusion and never really worked properly due to parallel usage
-    * An example of one such fail case is using the Per-GUI system with Pack Integration
+    * Removed `Sync Config` support for sub-categories due to recently discovered tech limitations
 
 ### Fixes
 
+* Fixed Issues relating to `Reset` and `Sync` config operations in the `ConfigurationGui`
+    * `Reset` now properly adjusts the `Instance` data instead of the `Current` data, fixing early changes in
+      sub-categories
+    * `Sync` now also adjusts the `Instance` data instead of just the `Current` data, fixing false save indicators
+* Resolved an issue where `markAsChanged()` was being triggered early in `Presence Settings`
 * Fixed a missing tooltip for the `Presence Settings` button in the `DynamicEditorGui`
-* Fixed two possible `NullPointerException` cases for the `ColorEditorGui`
-    * Occurs if `syncSupplier` or `DEFAULTS` field is `null`
+* Fixed a possible `NullPointerException` that could occur in the `ColorEditorGui`
+    * Occurs if the `DEFAULTS` field is `null`
     * The appropriate buttons will now be disabled if these are `null`
 
 ___
