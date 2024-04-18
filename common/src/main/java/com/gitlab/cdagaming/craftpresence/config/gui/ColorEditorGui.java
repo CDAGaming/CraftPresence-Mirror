@@ -38,12 +38,10 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.awt.*;
-import java.util.function.Supplier;
 
 @SuppressWarnings("DuplicatedCode")
 public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private final ColorData DEFAULTS, INSTANCE, CURRENT;
-    private final Supplier<ColorData> syncSupplier;
     private ColorData storedStart, storedEnd;
     // Start Color Data
     private SliderControl startRed, startGreen, startBlue, startAlpha;
@@ -53,12 +51,11 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private TextWidget textureLocationText, startColorText, endColorText;
     private SliderControl tintFactor;
 
-    ColorEditorGui(GuiScreen parentScreen, ColorData moduleData, ColorData defaultData, Supplier<ColorData> syncData) {
+    ColorEditorGui(GuiScreen parentScreen, ColorData moduleData, ColorData defaultData) {
         super(parentScreen, "gui.config.title", "gui.config.title.editor.color");
         DEFAULTS = defaultData;
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;
-        syncSupplier = syncData;
     }
 
     @Override
@@ -366,11 +363,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return syncSupplier != null;
-    }
-
-    @Override
     protected ColorData getInstanceData() {
         return INSTANCE;
     }
@@ -383,11 +375,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     @Override
     protected ColorData getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected ColorData getSyncData() {
-        return syncSupplier.get();
     }
 
     @Override

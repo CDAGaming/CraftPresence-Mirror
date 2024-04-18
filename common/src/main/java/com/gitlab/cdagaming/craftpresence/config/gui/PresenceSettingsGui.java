@@ -40,21 +40,19 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @SuppressWarnings("DuplicatedCode")
 public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
     private final PresenceData DEFAULTS, INSTANCE, CURRENT;
     private final boolean isDefaultModule;
     private final Consumer<PresenceData> onChangedCallback;
-    private final Supplier<PresenceData> syncSupplier;
     private TextWidget detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
 
     PresenceSettingsGui(GuiScreen parentScreen,
                         PresenceData moduleData, PresenceData defaultData,
-                        Supplier<PresenceData> syncData, final boolean isDefault,
+                        final boolean isDefault,
                         Consumer<PresenceData> changedCallback
     ) {
         super(parentScreen, "gui.config.title", "gui.config.title.presence_settings");
@@ -62,23 +60,14 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;
         isDefaultModule = isDefault;
-        syncSupplier = syncData;
         onChangedCallback = changedCallback;
     }
 
     PresenceSettingsGui(GuiScreen parentScreen,
                         PresenceData moduleData, PresenceData defaultData,
-                        Supplier<PresenceData> syncData,
                         Consumer<PresenceData> changedCallback
     ) {
-        this(parentScreen, moduleData, defaultData, syncData, false, changedCallback);
-    }
-
-    PresenceSettingsGui(GuiScreen parentScreen,
-                        PresenceData moduleData, PresenceData defaultData,
-                        Consumer<PresenceData> changedCallback
-    ) {
-        this(parentScreen, moduleData, defaultData, null, changedCallback);
+        this(parentScreen, moduleData, defaultData, false, changedCallback);
     }
 
     @Override
@@ -347,11 +336,6 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return syncSupplier != null;
-    }
-
-    @Override
     protected PresenceData getInstanceData() {
         return INSTANCE;
     }
@@ -364,11 +348,6 @@ public class PresenceSettingsGui extends ConfigurationGui<PresenceData> {
     @Override
     protected PresenceData getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected PresenceData getSyncData() {
-        return syncSupplier.get();
     }
 
     @Override

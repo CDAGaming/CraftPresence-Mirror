@@ -646,11 +646,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return true;
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
@@ -678,10 +673,5 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     @Override
     protected Advanced getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected Advanced getSyncData() {
-        return Config.loadOrCreate().advancedSettings;
     }
 }

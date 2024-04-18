@@ -225,11 +225,6 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return true;
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
@@ -250,10 +245,5 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     @Override
     protected Dimension getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected Dimension getSyncData() {
-        return Config.loadOrCreate().dimensionSettings;
     }
 }

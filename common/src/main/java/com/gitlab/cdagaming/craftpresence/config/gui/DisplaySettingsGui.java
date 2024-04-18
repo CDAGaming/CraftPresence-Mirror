@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
@@ -62,7 +61,6 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                         currentScreen,
                                         getCurrentData().presenceData,
                                         getDefaultData().presenceData,
-                                        () -> getSyncData().presenceData,
                                         true,
                                         (output) -> getInstanceData().presenceData.transferFrom(output)
                                 )
@@ -242,11 +240,6 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return true;
-    }
-
-    @Override
     protected Display getInstanceData() {
         return INSTANCE;
     }
@@ -262,10 +255,5 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
         DEFAULTS.dynamicIcons = getCurrentData().dynamicIcons;
 
         return DEFAULTS;
-    }
-
-    @Override
-    protected Display getSyncData() {
-        return Config.loadOrCreate().displaySettings;
     }
 }

@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
@@ -72,8 +71,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().tooltipBackground,
-                                        getDefaultData().tooltipBackground,
-                                        () -> getSyncData().tooltipBackground
+                                        getDefaultData().tooltipBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -93,8 +91,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().tooltipBorder,
-                                        getDefaultData().tooltipBorder,
-                                        () -> getSyncData().tooltipBorder
+                                        getDefaultData().tooltipBorder
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -114,8 +111,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().guiBackground,
-                                        getDefaultData().guiBackground,
-                                        () -> getSyncData().guiBackground
+                                        getDefaultData().guiBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -135,8 +131,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ColorEditorGui(
                                         currentScreen,
                                         getCurrentData().altGuiBackground,
-                                        getDefaultData().altGuiBackground,
-                                        () -> getSyncData().altGuiBackground
+                                        getDefaultData().altGuiBackground
                                 )
                         ),
                         () -> drawMultiLineString(
@@ -258,11 +253,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return true;
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
@@ -285,10 +275,5 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     @Override
     protected Accessibility getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected Accessibility getSyncData() {
-        return Config.loadOrCreate().accessibilitySettings;
     }
 }

@@ -255,11 +255,6 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return true;
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
@@ -280,10 +275,5 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     @Override
     protected Server getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected Server getSyncData() {
-        return Config.loadOrCreate().serverSettings;
     }
 }

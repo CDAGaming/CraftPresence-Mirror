@@ -225,11 +225,6 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return true;
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
@@ -250,10 +245,5 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     @Override
     protected Biome getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected Biome getSyncData() {
-        return Config.loadOrCreate().biomeSettings;
     }
 }

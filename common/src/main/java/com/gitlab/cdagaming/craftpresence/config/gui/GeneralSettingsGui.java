@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.config.category.General;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
@@ -311,11 +310,6 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     }
 
     @Override
-    protected boolean allowedToSync() {
-        return true;
-    }
-
-    @Override
     protected void syncRenderStates() {
         super.syncRenderStates();
 
@@ -337,10 +331,5 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     @Override
     protected General getDefaultData() {
         return DEFAULTS;
-    }
-
-    @Override
-    protected General getSyncData() {
-        return Config.loadOrCreate().generalSettings;
     }
 }
