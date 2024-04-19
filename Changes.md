@@ -11,6 +11,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Fabric Loader (`0.15.9` -> `0.15.10`)
+    * Unimined (`1.2.0-SNAPSHOT` -> `1.2.0`)
+    * Classgraph (`4.8.170` -> `4.8.172`)
+    * DiscordIPC (`0.8.6` -> `0.8.7`)
+    * UniCore (`1.0.9` -> `1.0.10`)
+    * SpotBugs (`4.8.3` -> `4.8.4`)
 * Quality of Life UI Improvements
     * Reset and Instance support has been implemented for the `Presence Settings` screen -- additionally allowing for
       content to be preserved through resizing
