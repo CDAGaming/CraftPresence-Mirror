@@ -28,21 +28,28 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ControlsGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
+import java.util.Map;
 
 public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     private final Accessibility INSTANCE, DEFAULTS;
+    // configName, [moduleData,defaultData]
+    private final Map<String, Pair<ColorData, ColorData>> colorSettings = StringUtils.newHashMap();
     private ExtendedTextControl languageIdText;
     private CheckBoxControl stripTranslationColorsButton, stripTranslationFormattingButton,
             stripExtraGuiElementsButton, renderTooltipsButton;
@@ -58,94 +65,32 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     protected void appendControls() {
         super.appendControls();
 
+        colorSettings.clear();
+
+        colorSettings.put(
+                "tooltipBackground",
+                new Pair<>(getInstanceData().tooltipBackground, getDefaultData().tooltipBackground)
+        );
+        colorSettings.put(
+                "tooltipBorder",
+                new Pair<>(getInstanceData().tooltipBorder, getDefaultData().tooltipBorder)
+        );
+        colorSettings.put(
+                "guiBackground",
+                new Pair<>(getInstanceData().guiBackground, getDefaultData().guiBackground)
+        );
+        colorSettings.put(
+                "altGuiBackground",
+                new Pair<>(getInstanceData().altGuiBackground, getDefaultData().altGuiBackground)
+        );
+
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
-
-        // Adding Tooltip Background Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        calc1, getButtonY(0),
-                        180, 20,
-                        "gui.config.name.accessibility.tooltip_background_color",
-                        () -> openScreen(
-                                new ColorEditorGui(
-                                        currentScreen,
-                                        getCurrentData().tooltipBackground,
-                                        getDefaultData().tooltipBackground
-                                )
-                        ),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_background_color")
-                                )
-                        )
-                )
-        );
-        // Adding Tooltip Border Color Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        calc2, getButtonY(0),
-                        180, 20,
-                        "gui.config.name.accessibility.tooltip_border_color",
-                        () -> openScreen(
-                                new ColorEditorGui(
-                                        currentScreen,
-                                        getCurrentData().tooltipBorder,
-                                        getDefaultData().tooltipBorder
-                                )
-                        ),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.tooltip_border_color")
-                                )
-                        )
-                )
-        );
-        // Adding Gui Background Color Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        calc1, getButtonY(1),
-                        180, 20,
-                        "gui.config.name.accessibility.gui_background_color",
-                        () -> openScreen(
-                                new ColorEditorGui(
-                                        currentScreen,
-                                        getCurrentData().guiBackground,
-                                        getDefaultData().guiBackground
-                                )
-                        ),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.gui_background_color")
-                                )
-                        )
-                )
-        );
-        // Adding Alternative Gui Background Color Button
-        childFrame.addControl(
-                new ExtendedButtonControl(
-                        calc2, getButtonY(1),
-                        180, 20,
-                        "gui.config.name.accessibility.alt_gui_background_color",
-                        () -> openScreen(
-                                new ColorEditorGui(
-                                        currentScreen,
-                                        getCurrentData().altGuiBackground,
-                                        getDefaultData().altGuiBackground
-                                )
-                        ),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.alt_gui_background_color")
-                                )
-                        )
-                )
-        );
 
         languageIdText = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(2),
+                        getButtonY(0),
                         180, 20,
                         () -> getInstanceData().languageId = languageIdText.getControlMessage(),
                         "gui.config.name.accessibility.language_id",
@@ -160,7 +105,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
         stripTranslationColorsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(3),
+                        calc1, getButtonY(1),
                         "gui.config.name.accessibility.strip_translation_colors",
                         getInstanceData().stripTranslationColors,
                         () -> getInstanceData().stripTranslationColors = stripTranslationColorsButton.isChecked(),
@@ -173,7 +118,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         stripTranslationFormattingButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(4, -10),
+                        calc1, getButtonY(2, -10),
                         "gui.config.name.accessibility.strip_translation_formatting",
                         getInstanceData().stripTranslationFormatting,
                         () -> getInstanceData().stripTranslationFormatting = stripTranslationFormattingButton.isChecked(),
@@ -196,7 +141,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         stripExtraGuiElementsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(5, -20),
+                        calc1, getButtonY(3, -20),
                         "gui.config.name.accessibility.strip_extra_gui_elements",
                         getInstanceData().stripExtraGuiElements,
                         () -> getInstanceData().stripExtraGuiElements = stripExtraGuiElementsButton.isChecked(),
@@ -209,7 +154,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
         renderTooltipsButton = childFrame.addControl(
                 new CheckBoxControl(
-                        calc1, getButtonY(6, -30),
+                        calc1, getButtonY(4, -30),
                         "gui.config.name.accessibility.render_tooltips",
                         getInstanceData().renderTooltips,
                         () -> getInstanceData().renderTooltips = renderTooltipsButton.isChecked(),
@@ -234,13 +179,48 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         final KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2, getButtonY(3, 4),
+                        calc2, getButtonY(1),
                         180, 20,
                         "gui.config.message.button.controls",
                         () -> openScreen(
                                 new ControlsGui(
                                         currentScreen, finalControlMode,
                                         controlInfo
+                                )
+                        )
+                )
+        );
+
+        // Adding Color Settings Button
+        childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc2, getButtonY(2),
+                        180, 20,
+                        "gui.config.name.accessibility.color_settings",
+                        () -> openScreen(
+                                new SelectorGui(
+                                        currentScreen,
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.item"),
+                                        colorSettings.keySet(),
+                                        null, null,
+                                        true, false, ScrollableListControl.RenderType.None,
+                                        null,
+                                        (currentValue, parentScreen) -> {
+                                            // Event to occur when Setting Dynamic/Specific Data
+                                            final Pair<ColorData, ColorData> settings = colorSettings.get(currentValue);
+                                            openScreen(
+                                                    new ColorEditorGui(
+                                                            parentScreen,
+                                                            settings.getFirst(),
+                                                            settings.getSecond()
+                                                    )
+                                            );
+                                        }
+                                )
+                        ),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.color_settings")
                                 )
                         )
                 )

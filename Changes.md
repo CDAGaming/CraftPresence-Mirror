@@ -22,6 +22,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * A new `Display Settings` UI has been added to the Main Config GUI, to decouple the Display-Specific options from
       the `Presence Settings` screen (`Dynamic Icons`, `Dynamic Variables`)
     * Removed `Sync Config` support for sub-categories due to recently discovered tech limitations
+    * `Accessibility Settings` has received layout improvements as well as adjustments for MC 1.20.5 changes
 
 ### Fixes
 
@@ -34,6 +35,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed a possible `NullPointerException` that could occur in the `ColorEditorGui`
     * Occurs if the `DEFAULTS` field is `null`
     * The appropriate buttons will now be disabled if these are `null`
+* Fixed config data loss related to `ColorEditorGui` changes
+    * This is the same issue that occurred with the `DynamicEditorGui` in v2.3.8
 
 ___
 
