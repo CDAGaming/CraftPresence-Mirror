@@ -21,6 +21,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
       content to be preserved through resizing
     * A new `Display Settings` UI has been added to the Main Config GUI, to decouple the Display-Specific options from
       the `Presence Settings` screen (`Dynamic Icons`, `Dynamic Variables`)
+    * The `Presence Settings` UI has been renamed to `Presence Editor` and has received several layout updates for a
+      cleaner look
     * Removed `Sync Config` support for sub-categories due to recently discovered tech limitations
     * `Accessibility Settings` has received layout improvements as well as adjustments for MC 1.20.5 changes
 

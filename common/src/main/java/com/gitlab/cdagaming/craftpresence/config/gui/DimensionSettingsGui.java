@@ -163,7 +163,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
                                                                     openScreen(
-                                                                            new PresenceSettingsGui(
+                                                                            new PresenceEditorGui(
                                                                                     screenInstance,
                                                                                     currentPresenceData,
                                                                                     defaultPresenceData,

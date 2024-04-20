@@ -191,12 +191,12 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                 )
         );
 
-        // Adding Color Settings Button
+        // Adding Color Editor Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(2),
                         180, 20,
-                        "gui.config.name.accessibility.color_settings",
+                        "gui.config.title.editor.color",
                         () -> openScreen(
                                 new SelectorGui(
                                         currentScreen,
@@ -220,7 +220,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.accessibility.color_settings")
+                                        Constants.TRANSLATOR.translate("gui.config.message.button.color_editor")
                                 )
                         )
                 )

@@ -50,14 +50,14 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     protected void appendControls() {
         super.appendControls();
 
-        // Adding Presence Settings Button
+        // Adding Presence Editor Button
         childFrame.addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(0),
                         180, 20,
-                        "gui.config.title.presence_settings",
+                        "gui.config.title.editor.presence",
                         () -> openScreen(
-                                new PresenceSettingsGui(
+                                new PresenceEditorGui(
                                         currentScreen,
                                         getCurrentData().presenceData,
                                         getDefaultData().presenceData,
@@ -67,7 +67,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.presence_settings")
+                                        Constants.TRANSLATOR.translate("gui.config.message.button.presence_editor")
                                 )
                         )
                 )

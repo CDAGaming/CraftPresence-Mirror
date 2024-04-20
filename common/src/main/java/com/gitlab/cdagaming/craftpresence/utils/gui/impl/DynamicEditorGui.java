@@ -205,16 +205,16 @@ public class DynamicEditorGui extends ExtendedScreen {
             );
             defaultIcon.setControlMessage(currentData.getIconOverride() != null ? currentData.getIconOverride() : "");
 
-            // Adding Presence Settings Button
+            // Adding Presence Editor Button
             childFrame.addControl(
                     new ExtendedButtonControl(
                             (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
-                            "gui.config.title.presence_settings",
+                            "gui.config.title.editor.presence",
                             () -> onSpecificCallback.accept(attributeName, this, true),
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
-                                            Constants.TRANSLATOR.translate("gui.config.comment.presence_settings")
+                                            Constants.TRANSLATOR.translate("gui.config.message.button.presence_editor")
                                     )
                             )
                     )
