@@ -220,7 +220,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.message.button.color_editor")
+                                        Constants.TRANSLATOR.translate("gui.config.message.hover.color_editor")
                                 )
                         )
                 )

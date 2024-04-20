@@ -214,7 +214,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                             () -> onSpecificCallback.accept(attributeName, this, true),
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
-                                            Constants.TRANSLATOR.translate("gui.config.message.button.presence_editor")
+                                            Constants.TRANSLATOR.translate("gui.config.message.hover.presence_editor")
                                     )
                             )
                     )

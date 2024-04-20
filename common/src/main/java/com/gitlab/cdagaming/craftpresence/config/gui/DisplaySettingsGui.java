@@ -67,7 +67,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         ),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.message.button.presence_editor")
+                                        Constants.TRANSLATOR.translate("gui.config.message.hover.presence_editor")
                                 )
                         )
                 )
