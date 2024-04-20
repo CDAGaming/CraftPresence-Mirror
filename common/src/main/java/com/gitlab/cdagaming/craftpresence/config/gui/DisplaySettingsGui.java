@@ -59,7 +59,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         () -> openScreen(
                                 new PresenceEditorGui(
                                         currentScreen,
-                                        getCurrentData().presenceData,
+                                        getInstanceData().presenceData,
                                         getDefaultData().presenceData,
                                         true,
                                         (output) -> getInstanceData().presenceData.transferFrom(output)

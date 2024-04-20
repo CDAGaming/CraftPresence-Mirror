@@ -37,7 +37,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed a possible `NullPointerException` that could occur in the `ColorEditorGui`
     * Occurs if the `DEFAULTS` field is `null`
     * The appropriate buttons will now be disabled if these are `null`
-* Fixed config data loss related to `ColorEditorGui` changes
+* Fixed config data loss related to `ColorEditorGui` and `DisplaySettingsGui` changes
     * This is the same issue that occurred with the `DynamicEditorGui` in v2.3.8
 
 ___
