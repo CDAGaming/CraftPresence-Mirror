@@ -49,7 +49,6 @@
   "gui.config.title.general": "Ajustes Generales",
   "gui.config.title.item.edit_specific_item": "CraftPresence - Editar Item(%1$s)",
   "gui.config.title.message": "CraftPresence - Mensaje",
-  "gui.config.title.presence_settings": "Ajustes de Presencia",
   "gui.config.title.selector.biome": "CraftPresence - Selecciona un Bioma",
   "gui.config.title.selector.button": "CraftPresence - Selecciona un Botón",
   "gui.config.title.selector.dimension": "CraftPresence - Selecciona una Dimensión",

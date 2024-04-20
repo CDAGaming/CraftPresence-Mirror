@@ -1,5 +1,4 @@
 {
-  "gui.config.comment.presence_settings": "Налаштувати формат і розташування повідомлень у Rich Presence.",
   "gui.config.comment.title": "Поточна версія -> %1$s (Схема v%2$s)",
   "gui.config.comment.title.accessibility": "Налаштувати параметри доступності\\n Містять у собі:\\n - Id мови\\n - Прив'язку клавіш\\n - Додаткові параметри налаштування графічного інтерфейсу",
   "gui.config.comment.title.advanced": "Налаштувати додаткові параметри моду",

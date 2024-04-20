@@ -21,7 +21,6 @@
   "gui.config.title.gui.edit_specific_gui": "CraftPresence - Arayüzü Düzenle (%1$s)",
   "gui.config.title.item.edit_specific_item": "CraftPresence - Eşyayı Düzenle (%1$s)",
   "gui.config.title.message": "CraftPresence - Mesaj",
-  "gui.config.title.presence_settings": "Varlık Ayarları",
   "gui.config.title.selector.biome": "CraftPresence - Bir biyom seç",
   "gui.config.title.selector.button": "CraftPresence - Bir buton seç",
   "gui.config.title.selector.dimension": "CraftPresence - Bir boyut seç",
