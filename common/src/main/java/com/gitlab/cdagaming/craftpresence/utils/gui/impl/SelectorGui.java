@@ -195,7 +195,7 @@ public class SelectorGui extends ExtendedScreen {
                                             openScreen(parentScreen);
                                         }
                                     } else {
-                                        if (allowDynamicEditing && onAdjustDynamicEntry != null) {
+                                        if (onAdjustDynamicEntry != null) {
                                             onAdjustDynamicEntry.accept(scrollList.currentValue, parentScreen);
                                         } else {
                                             openScreen(new MessageGui(parentScreen, "gui.config.message.null"));
