@@ -2,7 +2,7 @@ import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {
-    id("com.hypherionmc.modutils.modpublisher") version "2.0.5"
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.1"
 }
 
 /**
@@ -276,7 +276,7 @@ publisher {
     modrinthID = "DFqQfIBR"
     versionType = "deploymentType"()!!.lowercase()
     changelog = file("$rootDir/Changes.md").readText()
-    version = versionFormat.replace(Regex("\\s"), "").lowercase() // Modrinth Only
+    projectVersion = versionFormat.replace(Regex("\\s"), "").lowercase() // Modrinth Only
     displayName =
         "$archiveName v${"versionId"()}${if (versionLabel.isEmpty()) "" else " $versionLabel"} ($mcVersionLabel)"
     gameVersions = uploadVersions
