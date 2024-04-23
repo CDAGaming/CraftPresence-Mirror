@@ -64,7 +64,7 @@ dependencies {
 }
 
 val resourceTargets = listOf(
-    "mcmod.info", "META-INF/mods.toml", "mod_${"mod_name"()}.info"
+    "mcmod.info", "META-INF/mods.toml", "META-INF/neoforge.mods.toml", "mod_${"mod_name"()}.info"
 )
 val replaceProperties = mapOf(
     "version" to baseVersionLabel,
