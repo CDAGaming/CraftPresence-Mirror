@@ -271,6 +271,7 @@ publisher {
         modrinth(System.getenv("MODRINTH_TOKEN"))
     }
 
+    disableEmptyJarCheck = true
     debug = false
     curseID = "297038"
     modrinthID = "DFqQfIBR"
