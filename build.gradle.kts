@@ -10,7 +10,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
-    id("xyz.wagyourtail.unimined") version "1.2.1" apply false
+    id("xyz.wagyourtail.unimined") version "1.2.3" apply false
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.10"
@@ -141,7 +141,7 @@ subprojects {
     extensions.getByType<UniminedExtension>().useGlobalCache = false
 
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
-        side(if (isJarMod || isNeoForge) "client" else "combined")
+        side(if (isJarMod) "client" else "combined")
         version(mcVersion)
 
         mappings {

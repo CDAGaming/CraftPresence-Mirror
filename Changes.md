@@ -11,7 +11,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Fabric Loader (`0.15.9` -> `0.15.10`)
-    * Unimined (`1.2.0-SNAPSHOT` -> `1.2.1`)
+    * Unimined (`1.2.0-SNAPSHOT` -> `1.2.3`)
     * ClassGraph (`4.8.170` -> `4.8.172`)
     * DiscordIPC (`0.8.6` -> `0.8.7`)
     * UniCore (`1.0.9` -> `1.0.10`)
