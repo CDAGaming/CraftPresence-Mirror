@@ -40,7 +40,7 @@ import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScrolledSelectionList;
 import net.minecraft.client.render.FontRenderer;
-import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;

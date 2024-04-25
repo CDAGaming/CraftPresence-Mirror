@@ -43,10 +43,13 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.FontRenderer;
 import net.minecraft.client.render.Lighting;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.entity.ItemEntityRenderer;
+import net.minecraft.client.render.block.model.BlockModel;
+import net.minecraft.client.render.item.model.ItemModel;
+import net.minecraft.client.render.item.model.ItemModelDispatcher;
+import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -76,8 +79,6 @@ public class RenderUtils {
      * An active cache for all currently allocated internal Texture Object Results
      */
     private static final Map<String, Tuple<Boolean, String, String>> TEXTURE_CACHE = StringUtils.newHashMap();
-
-    public static ItemEntityRenderer itemRender = new ItemEntityRenderer();
 
     /**
      * Retrieve the default Screen Textures as Texture Data
@@ -263,8 +264,10 @@ public class RenderUtils {
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            itemRender.renderItemIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos, 1.0f);
-            itemRender.renderItemOverlayIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos, 1.0f);
+            BlockModel.setRenderBlocks(EntityRenderDispatcher.instance.itemRenderer.renderBlocksInstance);
+            final ItemModel itemModel = ItemModelDispatcher.getInstance().getDispatch(stack.getItem());
+            itemModel.renderItemIntoGui(Tessellator.instance, fontRenderer, client.renderEngine, stack, xPos, yPos, 1.0f);
+            itemModel.renderItemOverlayIntoGUI(Tessellator.instance, fontRenderer, client.renderEngine, stack, xPos, yPos, 1.0f);
 
             Lighting.disable();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
