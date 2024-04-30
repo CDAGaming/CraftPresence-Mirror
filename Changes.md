@@ -1,43 +1,24 @@
 # CraftPresence Changes
 
-## v2.3.9 (04/25/2024)
+## v2.4.0 (??/??/2024)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.8...release%2Fv2.3.9)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.9...release%2Fv2.4.0)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Fabric Loader (`0.15.9` -> `0.15.10`)
-    * Unimined (`1.2.0-SNAPSHOT` -> `1.2.3`)
-    * ClassGraph (`4.8.170` -> `4.8.172`)
-    * DiscordIPC (`0.8.6` -> `0.8.7`)
-    * UniCore (`1.0.9` -> `1.0.10`)
-    * SpotBugs (`4.8.3` -> `4.8.4`)
-    * ModPublisher (`2.0.5` -> `2.1.1`)
-* Quality of Life UI Improvements
-    * A new `Display Settings` UI has been added to the Main Config GUI, to decouple the Display-Specific options from
-      the `Presence Settings` screen (`Dynamic Icons`, `Dynamic Variables`)
-    * The `Presence Settings` UI has been renamed to `Presence Editor` and has received several layout updates for a
-      cleaner look as well as `Reset` support
-    * Removed `Sync Config` support for sub-categories due to recently discovered tech limitations
-    * `Accessibility Settings` has received layout improvements as well as adjustments for MC 1.20.5 changes
+    * Unimined (`1.2.3` -> `1.2.4`)
+    * ModPublisher (`2.1.1` -> `2.1.2`)
+* Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
+    * These changes are designed to support auto-locating data related to data pack additions
+    * These changes also resolve issues where repeated Registry Lookups could cause a crash in both modules
 
 ### Fixes
 
-* Fixed Issues relating to `Reset` and `Sync` config operations in the `ConfigurationGui`
-    * `Reset` now properly adjusts the `Instance` data instead of the `Current` data, fixing early changes in
-      sub-categories
-    * `Sync` now also adjusts the `Instance` data instead of just the `Current` data, fixing false save indicators
-* Resolved an issue where `markAsChanged()` was being triggered early in `Presence Settings`
-* Fixed a missing tooltip for the `Presence Settings` button in the `DynamicEditorGui`
-* Fixed a possible `NullPointerException` that could occur in the `ColorEditorGui`
-    * Occurs if the `DEFAULTS` field is `null`
-    * The appropriate buttons will now be disabled if these are `null`
-* Fixed config data loss related to `ColorEditorGui` and `DisplaySettingsGui` changes
-    * This is the same issue that occurred with the `DynamicEditorGui` in v2.3.8
+* TBD
 
 ___
 

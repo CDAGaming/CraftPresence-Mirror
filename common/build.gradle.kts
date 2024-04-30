@@ -2,7 +2,7 @@ import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.1"
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.2"
 }
 
 /**
@@ -271,7 +271,6 @@ publisher {
         modrinth(System.getenv("MODRINTH_TOKEN"))
     }
 
-    disableEmptyJarCheck = true
     debug = false
     curseID = "297038"
     modrinthID = "DFqQfIBR"
