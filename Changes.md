@@ -12,6 +12,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Unimined (`1.2.3` -> `1.2.4`)
     * ModPublisher (`2.1.1` -> `2.1.2`)
+    * Fabric Loader (`0.15.10` -> `0.15.11`)
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
     * These changes are designed to support auto-locating data related to data pack additions
     * These changes also resolve issues where repeated Registry Lookups could cause a crash in both modules
