@@ -126,7 +126,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition());
+        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition()).value();
         final ResourceLocation newIdentifier = CraftPresence.player.level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(newBiome);
         final String newBiomeName = newIdentifier != null ? newIdentifier.toString() : "Plains";
 
