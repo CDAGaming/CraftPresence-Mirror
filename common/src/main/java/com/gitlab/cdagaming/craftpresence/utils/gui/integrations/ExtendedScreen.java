@@ -60,13 +60,9 @@ public class ExtendedScreen extends GuiScreen {
      */
     private static int lastIndex = 0;
     /**
-     * The Parent or Past Screen
-     */
-    public final GuiScreen parentScreen;
-    /**
      * The Current Screen Instance
      */
-    public final GuiScreen currentScreen;
+    private final GuiScreen currentScreen;
     /**
      * Similar to buttonList, a list of compatible controls in this Screen
      */
@@ -79,6 +75,10 @@ public class ExtendedScreen extends GuiScreen {
      * Similar to buttonList, a list of compatible ScrollLists in this Screen
      */
     private final List<ScrollableListControl> extendedLists = StringUtils.newArrayList();
+    /**
+     * The Parent or Past Screen
+     */
+    private GuiScreen parentScreen;
     /**
      * The Current Screen Phase, used to define where in the initialization it is at
      */
@@ -133,8 +133,8 @@ public class ExtendedScreen extends GuiScreen {
      */
     public ExtendedScreen(final GuiScreen parentScreen) {
         setGameInstance(CraftPresence.instance);
+        setParent(parentScreen);
         currentScreen = this;
-        this.parentScreen = parentScreen;
         this.canClose = true;
         setContentHeight(0);
         setDebugMode(CommandUtils.isDebugMode());
@@ -685,7 +685,7 @@ public class ExtendedScreen extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) {
         if (isLoaded()) {
             if (keyCode == Keyboard.KEY_ESCAPE && canClose) {
-                openScreen(parentScreen);
+                openScreen(getParent());
                 return;
             }
 
@@ -809,6 +809,25 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void openScreen(final GuiScreen targetScreen) {
         RenderUtils.openScreen(getGameInstance(), targetScreen);
+    }
+
+    /**
+     * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
+     *
+     * @param targetScreen The target Gui Screen to display
+     * @param parentScreen The parent screen instance to set (If not already set)
+     */
+    public void openScreen(final ExtendedScreen targetScreen, final GuiScreen parentScreen) {
+        RenderUtils.openScreen(getGameInstance(), targetScreen, parentScreen);
+    }
+
+    /**
+     * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
+     *
+     * @param targetScreen The target Gui Screen to display
+     */
+    public void openScreen(final ExtendedScreen targetScreen) {
+        openScreen(targetScreen, getInstance());
     }
 
     /**
@@ -1401,6 +1420,33 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void setVerboseMode(final boolean isVerboseMode) {
         this.verboseMode = isVerboseMode;
+    }
+
+    /**
+     * Retrieve the current screen instance
+     *
+     * @return the current screen instance
+     */
+    public GuiScreen getInstance() {
+        return currentScreen;
+    }
+
+    /**
+     * Retrieve the parent or past screen instance
+     *
+     * @return the parent or past screen instance
+     */
+    public GuiScreen getParent() {
+        return parentScreen;
+    }
+
+    /**
+     * Sets the parent screen instance
+     *
+     * @param parentScreen the new parent screen
+     */
+    public void setParent(final GuiScreen parentScreen) {
+        this.parentScreen = parentScreen;
     }
 
     /**

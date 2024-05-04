@@ -37,7 +37,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
@@ -45,8 +44,8 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     private ExtendedButtonControl dimensionMessagesButton;
     private TextWidget defaultMessage, defaultIcon;
 
-    DimensionSettingsGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title", "gui.config.title.dimension_messages");
+    DimensionSettingsGui() {
+        super("gui.config.title", "gui.config.title.dimension_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -106,7 +105,6 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         "gui.config.name.dimension_messages.dimension_messages",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.dimension"), CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
                                         true, true, RenderType.None,
@@ -127,7 +125,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.defaultData = getInstanceData().dimensionData.get("default");
@@ -162,9 +160,8 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    openScreen(
+                                                                    screenInstance.openScreen(
                                                                             new PresenceEditorGui(
-                                                                                    screenInstance,
                                                                                     currentPresenceData,
                                                                                     defaultPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -183,7 +180,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )

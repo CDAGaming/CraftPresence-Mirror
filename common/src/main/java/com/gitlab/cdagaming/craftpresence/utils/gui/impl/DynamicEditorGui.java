@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.TupleConsumer;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.BiConsumer;
 
@@ -51,8 +50,8 @@ public class DynamicEditorGui extends ExtendedScreen {
     private ExtendedTextControl primaryInput, secondaryInput;
     private TextWidget defaultIcon;
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
-        super(parentScreen);
+    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
+        super();
         this.attributeName = attributeName;
         this.isNewValue = StringUtils.isNullOrEmpty(attributeName);
         this.isDefaultValue = !StringUtils.isNullOrEmpty(attributeName) && "default".equals(attributeName);
@@ -66,8 +65,8 @@ public class DynamicEditorGui extends ExtendedScreen {
         this.onHoverSecondaryCallback = onHoverSecondaryCallback;
     }
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
-        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
+    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
+        this(attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 Constants.TRANSLATOR.translate("gui.config.message.hover.value.name")
@@ -75,8 +74,8 @@ public class DynamicEditorGui extends ExtendedScreen {
                 ));
     }
 
-    public DynamicEditorGui(GuiScreen parentScreen, String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback) {
-        this(parentScreen, attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
+    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback) {
+        this(attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
                                 Constants.TRANSLATOR.translate("gui.config.message.hover.value.message")
@@ -137,7 +136,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                                 if (onRemoveEntry != null) {
                                     onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                                 }
-                                openScreen(parentScreen);
+                                openScreen(getParent());
                             }
                     )
             );
@@ -233,7 +232,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                             if (isAdjusting() && onAdjustEntry != null) {
                                 onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
                             }
-                            openScreen(parentScreen);
+                            openScreen(getParent());
                         },
                         () -> {
                             if (!proceedButton.isControlEnabled()) {

@@ -35,7 +35,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TexturedWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.awt.*;
 
@@ -51,8 +50,8 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private TextWidget textureLocationText, startColorText, endColorText;
     private SliderControl tintFactor;
 
-    ColorEditorGui(GuiScreen parentScreen, ColorData moduleData, ColorData defaultData) {
-        super(parentScreen, "gui.config.title", "gui.config.title.editor.color");
+    ColorEditorGui(ColorData moduleData, ColorData defaultData) {
+        super("gui.config.title", "gui.config.title.editor.color");
         DEFAULTS = defaultData;
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;

@@ -37,7 +37,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class BiomeSettingsGui extends ConfigurationGui<Biome> {
@@ -45,8 +44,8 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     private ExtendedButtonControl biomeMessagesButton;
     private TextWidget defaultMessage, defaultIcon;
 
-    BiomeSettingsGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title", "gui.config.title.biome_messages");
+    BiomeSettingsGui() {
+        super("gui.config.title", "gui.config.title.biome_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -106,7 +105,6 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         "gui.config.name.biome_messages.biome_messages",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
                                         true, true, RenderType.None,
@@ -127,7 +125,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.defaultData = getInstanceData().biomeData.get("default");
@@ -162,9 +160,8 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    openScreen(
+                                                                    screenInstance.openScreen(
                                                                             new PresenceEditorGui(
-                                                                                    screenInstance,
                                                                                     currentPresenceData,
                                                                                     defaultPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -183,7 +180,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )

@@ -56,7 +56,6 @@ public class SelectorGui extends ExtendedScreen {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen         The Parent Screen for this Instance
      * @param mainTitle            The Main Screen Title
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
@@ -67,8 +66,8 @@ public class SelectorGui extends ExtendedScreen {
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        super(parentScreen);
+    public SelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        super();
         itemList = originalList = StringUtils.newArrayList(list);
         originalValue = currentValue;
         this.mainTitle = mainTitle;
@@ -83,7 +82,6 @@ public class SelectorGui extends ExtendedScreen {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen         The Parent Screen for this Instance
      * @param mainTitle            The Main Screen Title
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
@@ -94,14 +92,13 @@ public class SelectorGui extends ExtendedScreen {
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, StringUtils.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
+    public SelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(mainTitle, StringUtils.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen         The Parent Screen for this Instance
      * @param mainTitle            The Main Screen Title
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
@@ -111,14 +108,13 @@ public class SelectorGui extends ExtendedScreen {
      * @param renderType           The {@link ScrollableListControl.RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
+    public SelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen         The Parent Screen for this Instance
      * @param mainTitle            The Main Screen Title
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
@@ -128,14 +124,13 @@ public class SelectorGui extends ExtendedScreen {
      * @param renderType           The {@link ScrollableListControl.RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
+    public SelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, ScrollableListControl.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen         The Parent Screen for this Instance
      * @param mainTitle            The Main Screen Title
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
@@ -144,14 +139,13 @@ public class SelectorGui extends ExtendedScreen {
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, ScrollableListControl.RenderType.None, onAdjustDynamicEntry);
+    public SelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, ScrollableListControl.RenderType.None, onAdjustDynamicEntry);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen         The Parent Screen for this Instance
      * @param mainTitle            The Main Screen Title
      * @param list                 The list to interpret
      * @param currentValue         The initial value to select within the list
@@ -160,8 +154,8 @@ public class SelectorGui extends ExtendedScreen {
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public SelectorGui(GuiScreen parentScreen, String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        this(parentScreen, mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, ScrollableListControl.RenderType.None, onAdjustDynamicEntry);
+    public SelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+        this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, ScrollableListControl.RenderType.None, onAdjustDynamicEntry);
     }
 
     @Override
@@ -187,22 +181,22 @@ public class SelectorGui extends ExtendedScreen {
                                         if (!scrollList.currentValue.equals(originalValue)) {
                                             if (onUpdatedCallback != null) {
                                                 onUpdatedCallback.accept(attributeName, scrollList.currentValue);
-                                                openScreen(parentScreen);
+                                                openScreen(getParent());
                                             } else {
-                                                openScreen(new MessageGui(parentScreen, "gui.config.message.null"));
+                                                openScreen(new MessageGui("gui.config.message.null"), getParent());
                                             }
                                         } else {
-                                            openScreen(parentScreen);
+                                            openScreen(getParent());
                                         }
                                     } else {
                                         if (onAdjustDynamicEntry != null) {
-                                            onAdjustDynamicEntry.accept(scrollList.currentValue, parentScreen);
+                                            onAdjustDynamicEntry.accept(scrollList.currentValue, getParent());
                                         } else {
-                                            openScreen(new MessageGui(parentScreen, "gui.config.message.null"));
+                                            openScreen(new MessageGui("gui.config.message.null"), getParent());
                                         }
                                     }
                                 } else {
-                                    openScreen(parentScreen);
+                                    openScreen(getParent());
                                 }
                             }
                     )
@@ -216,7 +210,7 @@ public class SelectorGui extends ExtendedScreen {
                                 (proceedButton.getLeft() - 100), (getScreenHeight() - 26),
                                 95, 20,
                                 "gui.config.message.button.add.new",
-                                () -> onAdjustDynamicEntry.accept(null, parentScreen)
+                                () -> onAdjustDynamicEntry.accept(null, getParent())
                         )
                 );
                 searchBoxRight -= 100;
@@ -232,7 +226,7 @@ public class SelectorGui extends ExtendedScreen {
 
             super.initializeUi();
         } else {
-            openScreen(new MessageGui(parentScreen, "gui.config.message.empty.list"));
+            openScreen(new MessageGui("gui.config.message.empty.list"), getParent());
         }
     }
 

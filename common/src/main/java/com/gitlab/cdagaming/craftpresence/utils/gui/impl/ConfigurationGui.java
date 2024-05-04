@@ -35,7 +35,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -45,15 +44,15 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     protected ScrollPane childFrame;
     protected ExtendedButtonControl resetConfigButton, syncConfigButton, proceedButton;
 
-    public ConfigurationGui(GuiScreen parentScreen, String title, String subTitle) {
-        super(parentScreen);
+    public ConfigurationGui(String title, String subTitle) {
+        super();
 
         this.title = title;
         this.subTitle = subTitle;
     }
 
-    public ConfigurationGui(GuiScreen parentScreen, String title) {
-        this(parentScreen, title, null);
+    public ConfigurationGui(String title) {
+        this(title, null);
     }
 
     public static void addIconSelector(final ExtendedScreen currentScreen, final ExtendedScreen parent, final Supplier<TextWidget> textWidget, final BiConsumer<String, String> onUpdatedCallback) {
@@ -69,7 +68,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         "...",
                         () -> currentScreen.openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         currentValue, null,
                                         true, false, ScrollableListControl.RenderType.DiscordAsset,
@@ -90,7 +88,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         "gui.config.message.button.back",
                         () -> {
                             applySettings();
-                            openScreen(parentScreen);
+                            openScreen(getParent());
                         }
                 )
         );
@@ -231,7 +229,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         6, 6,
                         20, 20,
                         "?",
-                        () -> openScreen(new AboutGui(currentScreen)),
+                        () -> openScreen(new AboutGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.button.about")
@@ -245,7 +243,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         getScreenWidth() - 26, 6,
                         20, 20,
                         ">_",
-                        () -> openScreen(new CommandsGui(currentScreen)),
+                        () -> openScreen(new CommandsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.button.commands")

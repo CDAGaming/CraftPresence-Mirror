@@ -35,7 +35,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ConfigurationGui<General> {
@@ -50,8 +49,8 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
     private int currentPreferredClient = DiscordBuild.ANY.ordinal();
 
-    GeneralSettingsGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title", "gui.config.title.general");
+    GeneralSettingsGui() {
+        super("gui.config.title", "gui.config.title.general");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }

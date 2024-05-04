@@ -32,15 +32,10 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.UpdateInfoGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 
 public class AboutGui extends ExtendedScreen {
-    public AboutGui(GuiScreen parentScreen) {
-        super(parentScreen);
-    }
-
     @Override
     public void initializeUi() {
         // Adding Version Check Button
@@ -49,7 +44,7 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.version_info",
-                        () -> openScreen(new UpdateInfoGui(currentScreen, ModUtils.UPDATER))
+                        () -> openScreen(new UpdateInfoGui(ModUtils.UPDATER))
                 )
         );
 
@@ -59,7 +54,7 @@ public class AboutGui extends ExtendedScreen {
                         6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> openScreen(parentScreen)
+                        () -> openScreen(getParent())
                 )
         );
 

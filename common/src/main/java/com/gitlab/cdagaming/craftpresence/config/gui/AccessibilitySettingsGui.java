@@ -40,7 +40,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 import java.util.Map;
@@ -55,8 +54,8 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
             stripExtraGuiElementsButton, renderTooltipsButton;
     private ExtendedButtonControl controlsButton;
 
-    AccessibilitySettingsGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title", "gui.config.title.accessibility");
+    AccessibilitySettingsGui() {
+        super("gui.config.title", "gui.config.title.accessibility");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -184,7 +183,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.message.button.controls",
                         () -> openScreen(
                                 new ControlsGui(
-                                        currentScreen, finalControlMode,
+                                        finalControlMode,
                                         controlInfo
                                 )
                         )
@@ -199,7 +198,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.title.editor.color",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"),
                                         colorSettings.keySet(),
                                         null, null,
@@ -210,10 +208,9 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                             final Pair<ColorData, ColorData> settings = colorSettings.get(currentValue);
                                             openScreen(
                                                     new ColorEditorGui(
-                                                            parentScreen,
                                                             settings.getFirst(),
                                                             settings.getSecond()
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )

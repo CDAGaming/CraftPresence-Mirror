@@ -35,13 +35,12 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;
 
-    DisplaySettingsGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title", "gui.config.title.display_settings");
+    DisplaySettingsGui() {
+        super("gui.config.title", "gui.config.title.display_settings");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -58,7 +57,6 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         "gui.config.title.editor.presence",
                         () -> openScreen(
                                 new PresenceEditorGui(
-                                        currentScreen,
                                         getInstanceData().presenceData,
                                         getDefaultData().presenceData,
                                         true,
@@ -81,7 +79,6 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.dynamic_icons",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.CustomDiscordAsset,
@@ -90,7 +87,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
@@ -151,7 +148,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )
@@ -172,7 +169,6 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         "gui.config.name.display.dynamic_variables",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"), getInstanceData().dynamicVariables.keySet(),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.None,
@@ -181,7 +177,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.maxPrimaryLength = 32767;
@@ -220,7 +216,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )

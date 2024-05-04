@@ -32,7 +32,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 @SuppressWarnings("DuplicatedCode")
@@ -42,8 +41,8 @@ public class MainGui extends ConfigurationGui<Config> {
             dimensionSet,
             serverSet;
 
-    public MainGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title");
+    public MainGui() {
+        super("gui.config.title");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -80,7 +79,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.general",
-                        () -> openScreen(new GeneralSettingsGui(currentScreen)),
+                        () -> openScreen(new GeneralSettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.title.general")
@@ -93,7 +92,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.biome_messages",
-                        () -> openScreen(new BiomeSettingsGui(currentScreen)),
+                        () -> openScreen(new BiomeSettingsGui()),
                         () -> {
                             if (!biomeSet.isControlEnabled()) {
                                 drawMultiLineString(
@@ -119,7 +118,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.dimension_messages",
-                        () -> openScreen(new DimensionSettingsGui(currentScreen)),
+                        () -> openScreen(new DimensionSettingsGui()),
                         () -> {
                             if (!dimensionSet.isControlEnabled()) {
                                 drawMultiLineString(
@@ -144,7 +143,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.server_messages",
-                        () -> openScreen(new ServerSettingsGui(currentScreen)),
+                        () -> openScreen(new ServerSettingsGui()),
                         () -> {
                             if (!serverSet.isControlEnabled()) {
                                 drawMultiLineString(
@@ -171,7 +170,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.status_messages",
-                        () -> openScreen(new StatusMessagesGui(currentScreen)),
+                        () -> openScreen(new StatusMessagesGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.title.status_messages")
@@ -185,7 +184,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.advanced",
-                        () -> openScreen(new AdvancedSettingsGui(currentScreen)),
+                        () -> openScreen(new AdvancedSettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.title.advanced")
@@ -200,7 +199,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc1, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.accessibility",
-                        () -> openScreen(new AccessibilitySettingsGui(currentScreen)),
+                        () -> openScreen(new AccessibilitySettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.title.accessibility")
@@ -214,7 +213,7 @@ public class MainGui extends ConfigurationGui<Config> {
                         calc2, getButtonY(currentY),
                         180, 20,
                         "gui.config.title.display_settings",
-                        () -> openScreen(new DisplaySettingsGui(currentScreen)),
+                        () -> openScreen(new DisplaySettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.display_settings")

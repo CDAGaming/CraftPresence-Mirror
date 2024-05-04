@@ -187,6 +187,20 @@ public class RenderUtils {
     }
 
     /**
+     * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
+     *
+     * @param client       The current game instance
+     * @param targetScreen The target Gui Screen to display
+     * @param parentScreen The parent screen instance to set (If not already set)
+     */
+    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final GuiScreen parentScreen) {
+        if (targetScreen.getParent() == null) {
+            targetScreen.setParent(parentScreen);
+        }
+        openScreen(client, targetScreen);
+    }
+
+    /**
      * Renders an {@link ItemStack} to the current Screen
      *
      * @param client       The current game instance

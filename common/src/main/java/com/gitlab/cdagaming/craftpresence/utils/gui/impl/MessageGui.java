@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
 
@@ -41,22 +40,20 @@ public class MessageGui extends ExtendedScreen {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen The Parent Screen for this Instance
-     * @param messageData  The message to display for this Instance
+     * @param messageData The message to display for this Instance
      */
-    public MessageGui(GuiScreen parentScreen, List<String> messageData) {
-        super(parentScreen);
+    public MessageGui(List<String> messageData) {
+        super();
         this.messageData = StringUtils.newArrayList(messageData);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen The Parent Screen for this Instance
-     * @param messageData  The message to display for this Instance
+     * @param messageData The message to display for this Instance
      */
-    public MessageGui(GuiScreen parentScreen, String messageData) {
-        this(parentScreen, StringUtils.splitTextByNewLine(
+    public MessageGui(String messageData) {
+        this(StringUtils.splitTextByNewLine(
                 Constants.TRANSLATOR.getLocalizedMessage(messageData)
         ));
     }
@@ -69,7 +66,7 @@ public class MessageGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.back",
-                        () -> openScreen(parentScreen)
+                        () -> openScreen(getParent())
                 )
         );
 

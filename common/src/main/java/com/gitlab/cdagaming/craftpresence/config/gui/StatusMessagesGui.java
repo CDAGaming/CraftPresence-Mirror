@@ -36,7 +36,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Map;
 
@@ -79,8 +78,8 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
             ))
             .build();
 
-    StatusMessagesGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title", "gui.config.title.status_messages");
+    StatusMessagesGui() {
+        super("gui.config.title", "gui.config.title.status_messages");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -108,7 +107,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                             entry.getKey(),
                             () -> openScreen(
                                     new DynamicEditorGui(
-                                            currentScreen, entry.getValue().getFirst(),
+                                            entry.getValue().getFirst(),
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing new data
                                                 screenInstance.defaultData = (ModuleData) getInstanceData().getDefaults().getProperty(attributeName);
@@ -139,9 +138,8 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 if (isPresenceButton) {
                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                    openScreen(
+                                                    screenInstance.openScreen(
                                                             new PresenceEditorGui(
-                                                                    screenInstance,
                                                                     currentPresenceData,
                                                                     defaultPresenceData,
                                                                     (output) -> screenInstance.currentData.setData(output)

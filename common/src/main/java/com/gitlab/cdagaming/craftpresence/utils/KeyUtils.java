@@ -224,7 +224,7 @@ public class KeyUtils {
                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
                 () -> {
                     if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
-                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(CraftPresence.instance.currentScreen));
+                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(), CraftPresence.instance.currentScreen);
                     }
                 },
                 (keyCode, shouldSave) -> {

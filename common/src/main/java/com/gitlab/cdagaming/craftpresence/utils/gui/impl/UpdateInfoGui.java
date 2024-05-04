@@ -34,7 +34,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Map;
 
@@ -49,11 +48,10 @@ public class UpdateInfoGui extends ExtendedScreen {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parentScreen The Parent Screen for this Instance
-     * @param modUpdater   An instance of the {@link ModUpdaterUtils}
+     * @param modUpdater An instance of the {@link ModUpdaterUtils}
      */
-    public UpdateInfoGui(GuiScreen parentScreen, ModUpdaterUtils modUpdater) {
-        super(parentScreen);
+    public UpdateInfoGui(ModUpdaterUtils modUpdater) {
+        super();
         this.modUpdater = modUpdater;
     }
 
@@ -95,7 +93,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> openScreen(parentScreen)
+                        () -> openScreen(getParent())
                 )
         );
         downloadButton = addControl(

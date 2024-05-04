@@ -42,7 +42,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
@@ -54,8 +53,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     private ExtendedTextControl refreshRate, maxConnectionAttempts,
             playerSkinEndpoint, serverIconEndpoint;
 
-    AdvancedSettingsGui(GuiScreen parentScreen) {
-        super(parentScreen, "gui.config.title", "gui.config.title.advanced");
+    AdvancedSettingsGui() {
+        super("gui.config.title", "gui.config.title.advanced");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -106,7 +105,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         "gui.config.name.advanced.gui_messages",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.gui"), CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
                                         true, true, RenderType.None,
@@ -115,7 +113,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.defaultData = getInstanceData().guiSettings.guiData.get("default");
@@ -150,9 +148,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    openScreen(
+                                                                    screenInstance.openScreen(
                                                                             new PresenceEditorGui(
-                                                                                    screenInstance,
                                                                                     currentPresenceData,
                                                                                     defaultPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -171,7 +168,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 ).setIdentifierType(IdentifierType.Gui)
@@ -201,7 +198,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         "gui.config.name.advanced.item_messages",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
                                         true, true, RenderType.ItemData,
@@ -210,7 +206,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getInstanceData().itemMessages.getOrDefault("default", "");
@@ -250,7 +246,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )
@@ -282,7 +278,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         "gui.config.name.advanced.entity_target_messages",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
                                         true, true, RenderType.EntityData,
@@ -291,7 +286,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.targetData.get("default");
@@ -326,9 +321,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    openScreen(
+                                                                    screenInstance.openScreen(
                                                                             new PresenceEditorGui(
-                                                                                    screenInstance,
                                                                                     currentPresenceData,
                                                                                     defaultPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -348,7 +342,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )
@@ -380,7 +374,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         "gui.config.name.advanced.entity_riding_messages",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
                                         true, true, RenderType.EntityData,
@@ -389,7 +382,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.ridingData.get("default");
@@ -424,9 +417,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 if (isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
-                                                                    openScreen(
+                                                                    screenInstance.openScreen(
                                                                             new PresenceEditorGui(
-                                                                                    screenInstance,
                                                                                     currentPresenceData,
                                                                                     defaultPresenceData,
                                                                                     (output) -> screenInstance.currentData.setData(output)
@@ -446,7 +438,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )

@@ -38,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.Consumer;
 
@@ -51,12 +50,11 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
 
-    PresenceEditorGui(GuiScreen parentScreen,
-                      PresenceData moduleData, PresenceData defaultData,
+    PresenceEditorGui(PresenceData moduleData, PresenceData defaultData,
                       final boolean isDefault,
                       Consumer<PresenceData> changedCallback
     ) {
-        super(parentScreen, "gui.config.title", "gui.config.title.editor.presence");
+        super("gui.config.title", "gui.config.title.editor.presence");
         DEFAULTS = defaultData;
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;
@@ -64,11 +62,10 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         onChangedCallback = changedCallback;
     }
 
-    PresenceEditorGui(GuiScreen parentScreen,
-                      PresenceData moduleData, PresenceData defaultData,
+    PresenceEditorGui(PresenceData moduleData, PresenceData defaultData,
                       Consumer<PresenceData> changedCallback
     ) {
-        this(parentScreen, moduleData, defaultData, false, changedCallback);
+        this(moduleData, defaultData, false, changedCallback);
     }
 
     @Override
@@ -298,7 +295,6 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         "gui.config.message.editor.presence.button_editor",
                         () -> openScreen(
                                 new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(getInstanceData().buttons),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.None,
@@ -307,7 +303,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                             // Event to occur when Setting Dynamic/Specific Data
                                             openScreen(
                                                     new DynamicEditorGui(
-                                                            parentScreen, currentValue,
+                                                            currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList(getInstanceData().buttons).size();
@@ -356,7 +352,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                                         )
                                                                 );
                                                             }
-                                                    )
+                                                    ), parentScreen
                                             );
                                         }
                                 )

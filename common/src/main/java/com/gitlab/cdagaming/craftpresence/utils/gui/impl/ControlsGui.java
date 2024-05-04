@@ -34,7 +34,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ButtonWidget;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
@@ -55,22 +54,22 @@ public class ControlsGui extends ExtendedScreen {
     private Tuple<ExtendedButtonControl, ExtendedButtonControl, Tuple<KeyBinding, Tuple<Runnable, BiConsumer<Integer, Boolean>, Predicate<Integer>>, Consumer<Throwable>>> entryData = null;
     private ScrollPane childFrame;
 
-    public ControlsGui(GuiScreen parentScreen) {
-        super(parentScreen);
+    public ControlsGui() {
+        super();
         this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings();
 
         sortMappings();
     }
 
-    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, List<String> filterData) {
-        super(parentScreen);
+    public ControlsGui(KeyUtils.FilterMode filterMode, List<String> filterData) {
+        super();
         this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings(filterMode, filterData);
 
         sortMappings();
     }
 
-    public ControlsGui(GuiScreen parentScreen, KeyUtils.FilterMode filterMode, String... filterData) {
-        this(parentScreen, filterMode, StringUtils.newArrayList(filterData));
+    public ControlsGui(KeyUtils.FilterMode filterMode, String... filterData) {
+        this(filterMode, StringUtils.newArrayList(filterData));
     }
 
     @Override
@@ -84,7 +83,7 @@ public class ControlsGui extends ExtendedScreen {
                         "gui.config.message.button.back",
                         () -> {
                             if (entryData == null) {
-                                openScreen(parentScreen);
+                                openScreen(getParent());
                             }
                         }
                 )

@@ -72,7 +72,7 @@ public class ModIPCListener implements IPCListener {
             CraftPresence.CLIENT.REQUESTER_USER = user;
 
             if (!(CraftPresence.instance.currentScreen instanceof CommandsGui)) {
-                RenderUtils.openScreen(CraftPresence.instance, new CommandsGui(CraftPresence.instance.currentScreen, "request"));
+                RenderUtils.openScreen(CraftPresence.instance, new CommandsGui("request"), CraftPresence.instance.currentScreen);
             } else {
                 ((CommandsGui) CraftPresence.instance.currentScreen).executeCommand("request");
             }

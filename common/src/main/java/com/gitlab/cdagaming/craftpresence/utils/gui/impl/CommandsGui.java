@@ -39,7 +39,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.meteordev.starscript.value.Value;
 
@@ -64,8 +63,8 @@ public class CommandsGui extends ExtendedScreen {
     private String[] commandArgs, filteredCommandArgs;
     private List<String> tabCompletions = StringUtils.newArrayList();
 
-    public CommandsGui(GuiScreen parentScreen, String... commandArgs) {
-        super(parentScreen);
+    public CommandsGui(String... commandArgs) {
+        super();
         executionCommandArgs = commandArgs;
         executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.main");
     }
@@ -122,7 +121,7 @@ public class CommandsGui extends ExtendedScreen {
                         6, (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.back",
-                        () -> openScreen(parentScreen)
+                        () -> openScreen(getParent())
                 )
         );
         copyButton = addControl(
@@ -304,7 +303,6 @@ public class CommandsGui extends ExtendedScreen {
 
                         if (!results.isEmpty()) {
                             openScreen(new SelectorGui(
-                                    currentScreen,
                                     Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                     results,
                                     null, null,
@@ -342,7 +340,6 @@ public class CommandsGui extends ExtendedScreen {
                         } else if (executionCommandArgs[1].equalsIgnoreCase("items")) {
                             if (CraftPresence.TILE_ENTITIES.enabled) {
                                 openScreen(new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                         CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
@@ -357,7 +354,6 @@ public class CommandsGui extends ExtendedScreen {
                         } else if (executionCommandArgs[1].equalsIgnoreCase("entities")) {
                             if (CraftPresence.ENTITIES.enabled) {
                                 openScreen(new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.entities"),
                                         CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
@@ -372,7 +368,6 @@ public class CommandsGui extends ExtendedScreen {
                         } else if (executionCommandArgs[1].equalsIgnoreCase("servers")) {
                             if (CraftPresence.SERVER.enabled) {
                                 openScreen(new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.servers"),
                                         CraftPresence.SERVER.knownAddresses,
                                         null, null,
@@ -387,7 +382,6 @@ public class CommandsGui extends ExtendedScreen {
                         } else if (executionCommandArgs[1].equalsIgnoreCase("screens")) {
                             if (CraftPresence.GUIS.enabled) {
                                 openScreen(new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
                                         CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
@@ -402,7 +396,6 @@ public class CommandsGui extends ExtendedScreen {
                         } else if (executionCommandArgs[1].equalsIgnoreCase("biomes")) {
                             if (CraftPresence.BIOMES.enabled) {
                                 openScreen(new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
                                         CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
@@ -417,7 +410,6 @@ public class CommandsGui extends ExtendedScreen {
                         } else if (executionCommandArgs[1].equalsIgnoreCase("dimensions")) {
                             if (CraftPresence.DIMENSIONS.enabled) {
                                 openScreen(new SelectorGui(
-                                        currentScreen,
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
                                         CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
@@ -460,7 +452,6 @@ public class CommandsGui extends ExtendedScreen {
                             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[2])) {
                                 if (executionCommandArgs[2].equalsIgnoreCase("custom")) {
                                     openScreen(new SelectorGui(
-                                            currentScreen,
                                             Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.custom"),
                                             DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                             null, null,
@@ -469,7 +460,6 @@ public class CommandsGui extends ExtendedScreen {
                                     ));
                                 } else if (executionCommandArgs[2].equalsIgnoreCase("all")) {
                                     openScreen(new SelectorGui(
-                                            currentScreen,
                                             Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"),
                                             DiscordAssetUtils.ASSET_LIST.keySet(),
                                             null, null,
