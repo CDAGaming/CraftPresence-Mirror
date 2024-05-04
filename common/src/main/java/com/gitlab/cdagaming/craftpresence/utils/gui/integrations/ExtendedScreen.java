@@ -815,7 +815,18 @@ public class ExtendedScreen extends GuiScreen {
      * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
      *
      * @param targetScreen The target Gui Screen to display
-     * @param parentScreen The parent screen instance to set (If not already set)
+     * @param parentScreen The parent screen instance to set, if possible
+     * @param setParent    Whether to allow modifying the parent screen instance
+     */
+    public void openScreen(final ExtendedScreen targetScreen, final GuiScreen parentScreen, final boolean setParent) {
+        RenderUtils.openScreen(getGameInstance(), targetScreen, parentScreen, setParent);
+    }
+
+    /**
+     * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
+     *
+     * @param targetScreen The target Gui Screen to display
+     * @param parentScreen The parent screen instance to set, if possible
      */
     public void openScreen(final ExtendedScreen targetScreen, final GuiScreen parentScreen) {
         RenderUtils.openScreen(getGameInstance(), targetScreen, parentScreen);

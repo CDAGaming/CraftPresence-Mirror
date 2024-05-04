@@ -191,13 +191,25 @@ public class RenderUtils {
      *
      * @param client       The current game instance
      * @param targetScreen The target Gui Screen to display
-     * @param parentScreen The parent screen instance to set (If not already set)
+     * @param parentScreen The parent screen instance to set, if possible
+     * @param setParent    Whether to allow modifying the parent screen instance
      */
-    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final GuiScreen parentScreen) {
-        if (targetScreen.getParent() == null) {
+    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final GuiScreen parentScreen, final boolean setParent) {
+        if (setParent) {
             targetScreen.setParent(parentScreen);
         }
         openScreen(client, targetScreen);
+    }
+
+    /**
+     * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
+     *
+     * @param client       The current game instance
+     * @param targetScreen The target Gui Screen to display
+     * @param parentScreen The parent screen instance to set, if possible
+     */
+    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final GuiScreen parentScreen) {
+        openScreen(client, targetScreen, parentScreen, targetScreen.getParent() == null);
     }
 
     /**
