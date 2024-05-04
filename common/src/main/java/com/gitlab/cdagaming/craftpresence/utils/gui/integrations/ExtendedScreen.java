@@ -146,7 +146,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     public ExtendedScreen() {
         this(null);
-        this.canClose = false;
     }
 
     /**
