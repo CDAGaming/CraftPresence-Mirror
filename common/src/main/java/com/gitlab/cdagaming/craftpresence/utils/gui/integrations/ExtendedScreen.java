@@ -135,7 +135,7 @@ public class ExtendedScreen extends GuiScreen {
         setGameInstance(CraftPresence.instance);
         setParent(parentScreen);
         currentScreen = this;
-        this.canClose = true;
+        setCanClose(true);
         setContentHeight(0);
         setDebugMode(CommandUtils.isDebugMode());
         setVerboseMode(CommandUtils.isVerboseMode());
@@ -683,7 +683,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (isLoaded()) {
-            if (keyCode == Keyboard.KEY_ESCAPE && canClose) {
+            if (keyCode == Keyboard.KEY_ESCAPE && canClose()) {
                 openScreen(getParent());
                 return;
             }
@@ -1457,6 +1457,24 @@ public class ExtendedScreen extends GuiScreen {
      */
     public void setParent(final GuiScreen parentScreen) {
         this.parentScreen = parentScreen;
+    }
+
+    /**
+     * Retrieve whether this Screen can be closed by normal means
+     *
+     * @return Whether this Screen can be closed by normal means
+     */
+    public boolean canClose() {
+        return canClose;
+    }
+
+    /**
+     * Sets whether this Screen can be closed by normal means
+     *
+     * @param canClose the new "canClose" status
+     */
+    public void setCanClose(final boolean canClose) {
+        this.canClose = canClose;
     }
 
     /**
