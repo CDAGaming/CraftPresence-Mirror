@@ -62,6 +62,7 @@ public class FunctionsLib {
         ss.set("randomString", FunctionsLib::randomString);
         ss.set("getFirst", FunctionsLib::getFirst);
         ss.set("getNbt", FunctionsLib::getNbt);
+        ss.set("getComponent", FunctionsLib::getComponent); // MC 1.20.5+
         ss.set("getNamespace", FunctionsLib::getNamespace);
         ss.set("getPath", FunctionsLib::getPath);
 
@@ -134,6 +135,11 @@ public class FunctionsLib {
         ss.set("convertTime", FunctionsLib::convertTime);
         ss.set("timeFromString", FunctionsLib::timeFromString); // toInstance
         ss.set("timeToString", FunctionsLib::timeToString); // toString
+    }
+
+    private static Value throwUnimplemented(Starscript ss) {
+        ss.error(Constants.TRANSLATOR.translate("craftpresence.message.unsupported"));
+        return Value.null_();
     }
 
     public static Value parseWith(TranslationUtils instance, Starscript ss, int argCount) {
@@ -315,6 +321,10 @@ public class FunctionsLib {
             }
         }
         return Value.null_();
+    }
+
+    public static Value getComponent(Starscript ss, int argCount) {
+        return throwUnimplemented(ss);
     }
 
     public static Value getNbt(Starscript ss, int argCount) {

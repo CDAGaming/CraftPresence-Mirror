@@ -16,6 +16,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
     * These changes are designed to support auto-locating data related to data pack additions
     * These changes also resolve issues where repeated Registry Lookups could cause a crash in both modules
+* Added a new script function, `getComponent`, to support the new `DataComponent` system introduced in MC 1.20.5+
+    * Usage: `getComponent(data=DataComponentHolder, path=String)`
+    * On versions below MC 1.20.5, an error will appear instead
 
 ### Fixes
 
