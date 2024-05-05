@@ -858,7 +858,12 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Calculated Y Value to place the Button at
      */
     public int getButtonY(final int order) {
-        return (40 + (25 * (order - 1)));
+        int topPosition = getTop();
+        if (getInstance() instanceof ScrollPane) {
+            final ScrollPane pane = ((ScrollPane) getInstance());
+            topPosition += pane.getPadding();
+        }
+        return topPosition + (5 * (order + 1)) + (20 * order);
     }
 
     /**

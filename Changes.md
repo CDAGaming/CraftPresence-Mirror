@@ -22,7 +22,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
-* TBD
+* (Backend) Modified `ExtendedScreen#getButtonY` to properly respond to `ScrollPane` padding and to better clarify the
+  logic
+    * For most screens, this places most UI elements slightly higher, but in a more proper position comparable to v1
 
 ___
 
