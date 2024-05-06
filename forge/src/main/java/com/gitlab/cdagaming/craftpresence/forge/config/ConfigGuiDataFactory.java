@@ -52,8 +52,6 @@ public class ConfigGuiDataFactory implements IModGuiFactory {
 
     @Override
     public GuiScreen createConfigGui(GuiScreen parentScreen) {
-        final MainGui screen = new MainGui();
-        screen.setParent(parentScreen);
-        return screen;
+        return new MainGui(parentScreen);
     }
 }

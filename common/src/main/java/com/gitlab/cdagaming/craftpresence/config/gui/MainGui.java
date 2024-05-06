@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 @SuppressWarnings("DuplicatedCode")
@@ -41,10 +42,16 @@ public class MainGui extends ConfigurationGui<Config> {
             dimensionSet,
             serverSet;
 
-    public MainGui() {
+    public MainGui(GuiScreen parentScreen) {
         super("gui.config.title");
+        setParent(parentScreen);
+
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
+    }
+
+    public MainGui() {
+        this(null);
     }
 
     @Override
