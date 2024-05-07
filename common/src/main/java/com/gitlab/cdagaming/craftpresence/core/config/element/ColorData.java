@@ -136,7 +136,7 @@ public class ColorData extends Module implements Serializable {
     }
 
     public void setEndColor(final ColorSection color) {
-        if (color != null) {
+        if (color != null && !color.equals(getStart())) {
             if (end == null) {
                 end = new ColorSection();
             }
