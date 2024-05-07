@@ -36,8 +36,6 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
-import java.awt.*;
-
 @SuppressWarnings("DuplicatedCode")
 public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private final ColorData DEFAULTS, INSTANCE, CURRENT;
@@ -94,11 +92,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         () -> {
                             final String newText = startColorText.getControlMessage();
                             if (StringUtils.isValidColorCode(newText)) {
-                                final Color newColor = StringUtils.findColor(newText);
-                                startRed.setSliderValue(newColor.getRed());
-                                startGreen.setSliderValue(newColor.getGreen());
-                                startBlue.setSliderValue(newColor.getBlue());
-                                startAlpha.setSliderValue(newColor.getAlpha());
+                                loadStartData(new ColorSection(
+                                        StringUtils.findColor(newText)
+                                ));
                             }
                         },
                         "gui.config.message.editor.hex_code"
@@ -215,11 +211,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         () -> {
                             final String newText = endColorText.getControlMessage();
                             if (StringUtils.isValidColorCode(newText)) {
-                                final Color newColor = StringUtils.findColor(newText);
-                                endRed.setSliderValue(newColor.getRed());
-                                endGreen.setSliderValue(newColor.getGreen());
-                                endBlue.setSliderValue(newColor.getBlue());
-                                endAlpha.setSliderValue(newColor.getAlpha());
+                                loadEndData(new ColorSection(
+                                        StringUtils.findColor(newText)
+                                ));
                             }
                         },
                         "gui.config.message.editor.hex_code"
@@ -376,19 +370,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         return DEFAULTS;
     }
 
-    @Override
-    protected boolean setCurrentData(ColorData data) {
-        // Hotfix: Ensure Optional Data Persistence
-        if (data.getStart() != null && data.getStart().equals(data.getEnd())) {
-            data.setEndColor(null);
-        }
-        if (StringUtils.isNullOrEmpty(data.getTexLocation())) {
-            data.setTexLocation(null);
-        }
-
-        return super.setCurrentData(data);
-    }
-
     private void setStartColor(final ColorSection sect) {
         getInstanceData().setStartColor(sect);
         storedStart.setStartColor(sect);
@@ -397,5 +378,19 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private void setEndColor(final ColorSection sect) {
         getInstanceData().setEndColor(sect);
         storedEnd.setStartColor(sect);
+    }
+
+    private void loadStartData(final ColorSection sect) {
+        startRed.setSliderValue(sect.red);
+        startGreen.setSliderValue(sect.green);
+        startBlue.setSliderValue(sect.blue);
+        startAlpha.setSliderValue(sect.alpha);
+    }
+
+    private void loadEndData(final ColorSection sect) {
+        endRed.setSliderValue(sect.red);
+        endGreen.setSliderValue(sect.green);
+        endBlue.setSliderValue(sect.blue);
+        endAlpha.setSliderValue(sect.alpha);
     }
 }
