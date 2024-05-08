@@ -330,9 +330,15 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         getInstanceData().setStartColor(sect);
         storedStart.setStartColor(sect);
 
-        // Create the `endColor` data, if the new `startColor` differs
-        if (!getInstanceData().hasEnd() && !sect.equals(storedEnd.getStart())) {
+        final boolean hasEnd = getInstanceData().hasEnd();
+        final ColorSection endSection = storedEnd.getStart();
+        if (!hasEnd && !sect.equals(endSection)) {
+            // Create the `endColor` data, if the new `startColor` differs
             setEndData();
+        } else if (hasEnd && sect.equals(endSection)) {
+            // "Sync End Color" if we currently have `endColor` data,
+            // but it equals the new `startColor` info
+            loadEndData(getInstanceData().getStart());
         }
     }
 
