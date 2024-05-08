@@ -127,8 +127,12 @@ public class ColorData extends Module implements Serializable {
         }
     }
 
+    public boolean hasEnd() {
+        return end != null;
+    }
+
     public ColorSection getEnd() {
-        return new ColorSection(end != null ? end : start);
+        return new ColorSection(hasEnd() ? end : start);
     }
 
     public Color getEndColor() {
@@ -137,7 +141,7 @@ public class ColorData extends Module implements Serializable {
 
     public void setEndColor(final ColorSection color) {
         if (color != null && !color.equals(getStart())) {
-            if (end == null) {
+            if (!hasEnd()) {
                 end = new ColorSection();
             }
             end.red = color.red;
@@ -149,8 +153,12 @@ public class ColorData extends Module implements Serializable {
         }
     }
 
+    public boolean hasTexLocation() {
+        return !StringUtils.isNullOrEmpty(texLocation);
+    }
+
     public String getTexLocation() {
-        return StringUtils.isNullOrEmpty(texLocation) ? "" : texLocation;
+        return hasTexLocation() ? texLocation : "";
     }
 
     public void setTexLocation(String texLocation) {
