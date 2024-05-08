@@ -20,6 +20,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Usage: `getComponent(data=DataComponentHolder, path=String)`
     * On versions below MC 1.20.5, an error will appear instead
 * (Backend) The default formatting for a slider's display value is now `%.1f` instead of a raw append
+* Added a `Sync End Color` button to the `Color Editor` UI
+    * Pressing this button, will set the `endData` to the current `startColor` data, effectively useful for quickly
+      removing the `endColor` data from the final saving
 
 ### Fixes
 

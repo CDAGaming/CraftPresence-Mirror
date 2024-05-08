@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
@@ -76,6 +77,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         final String alphaTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.value.alpha");
 
         final String tintFactorTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.tint_factor");
+        final String syncEndTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.color.sync_end_color");
 
         // Start Color Section
         childFrame.addWidget(new ScrollableTextWidget(
@@ -286,6 +288,15 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 )
         );
         tintFactor.setValueFormat("%.0f%%");
+        // Adding "Sync End Color" Button
+        childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc1, getButtonY(15),
+                        180, 20,
+                        syncEndTitle,
+                        () -> loadEndData(getInstanceData().getStart())
+                )
+        );
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
                 calc2, getButtonY(14, 1),
