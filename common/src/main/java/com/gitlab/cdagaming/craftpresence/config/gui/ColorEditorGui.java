@@ -122,6 +122,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        startRed.setValueFormat("%.0f");
         startGreen = childFrame.addControl(
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(3)),
@@ -144,6 +145,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        startGreen.setValueFormat("%.0f");
         startBlue = childFrame.addControl(
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(4)),
@@ -166,6 +168,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        startBlue.setValueFormat("%.0f");
         startAlpha = childFrame.addControl(
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(5)),
@@ -188,6 +191,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        startAlpha.setValueFormat("%.0f");
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
                 calc2, getButtonY(2, 1),
@@ -241,6 +245,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        endRed.setValueFormat("%.0f");
         endGreen = childFrame.addControl(
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(9)),
@@ -263,6 +268,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        endGreen.setValueFormat("%.0f");
         endBlue = childFrame.addControl(
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(10)),
@@ -285,6 +291,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        endBlue.setValueFormat("%.0f");
         endAlpha = childFrame.addControl(
                 new SliderControl(
                         new Pair<>(calc1, getButtonY(11)),
@@ -307,6 +314,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         )
                 )
         );
+        endAlpha.setValueFormat("%.0f");
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
                 calc2, getButtonY(8, 1),
@@ -341,6 +349,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         tintFactorTitle
                 )
         );
+        tintFactor.setValueFormat("%.0f%%");
         childFrame.addWidget(new TexturedWidget(
                 childFrame,
                 calc2, getButtonY(14, 1),

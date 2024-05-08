@@ -19,6 +19,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Added a new script function, `getComponent`, to support the new `DataComponent` system introduced in MC 1.20.5+
     * Usage: `getComponent(data=DataComponentHolder, path=String)`
     * On versions below MC 1.20.5, an error will appear instead
+* (Backend) The default formatting for a slider's display value is now `%.1f` instead of a raw append
 
 ### Fixes
 
@@ -30,6 +31,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Fixed an issue where `ColorData#setEndColor` and `ColorData#setTexLocation` could be applied incorrectly
     * This fix was previously present in `ColorEditorGui#setCurrentData` but has been moved into `ColorData` to remove
       duplicated logic and to resolve some edge-cases
+* Fixed redundant formatting in `Color Editor` Slider UI elements
+    * The RGBA sliders now use `Integer` formatting instead of `Float`
+    * The `Tint Factor` slider now uses a percentage value instead of `Float`
 
 ___
 
