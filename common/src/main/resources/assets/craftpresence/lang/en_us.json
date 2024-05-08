@@ -172,7 +172,7 @@
   "craftpresence.placeholders.getAssetUrl.usage": "getAssetUrl(input)",
   "craftpresence.placeholders.getClass.description": "Attempt to retrieve a class object, via the string path or object reference",
   "craftpresence.placeholders.getClass.usage": "getClass(reference=Object|String)",
-  "craftpresence.placeholders.getComponent.description": "Attempt to retrieve the Component Data with the specified path",
+  "craftpresence.placeholders.getComponent.description": "(MC 1.20.5+) Attempt to retrieve the Component Data with the specified path",
   "craftpresence.placeholders.getComponent.usage": "getComponent(data=DataComponentHolder, path=String)",
   "craftpresence.placeholders.getCurrentTime.description": "Retrieve the current time, as an Instant",
   "craftpresence.placeholders.getCurrentTime.usage": "getCurrentTime()",

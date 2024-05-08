@@ -267,6 +267,8 @@ The following functions are available for use anywhere in CraftPresence:
 * `getAssetType(input)` - Retrieves the Parsed Image Type from the specified key, if present
 * `getAssetUrl(input)` - Retrieves the Parsed Image Url from the specified key, if present
 * `getClass(reference=Object|String)` - Attempt to retrieve a class object, via the string path or object reference
+* `getComponent(data=DataComponentHolder, path=String)` - (MC 1.20.5+) Attempt to retrieve the Component Data with the
+  specified path
 * `getCurrentTime()` - Retrieve the current time, as an Instant
 * `getElapsedMillis()` - Retrieve the elapsed time, in milliseconds
 * `getElapsedNanos()` - Retrieve the elapsed time, in nanoseconds
