@@ -34,6 +34,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed redundant formatting in `Color Editor` Slider UI elements
     * The RGBA sliders now use `Integer` formatting instead of `Float`
     * The `Tint Factor` slider now uses a percentage value instead of `Float`
+* Fixed an edge-case in the `Color Editor` where editing a null `endColor` after editing `startColor` would result in an
+  incorrect result
+    * This is caused from the `getEnd` call pulling the `startColor` if null, and only adjusting the value of one slider
+      rather than all four
 
 ___
 

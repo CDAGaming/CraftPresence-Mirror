@@ -108,17 +108,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         redTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.red = (int) startRed.getSliderValue();
-                                    setStartColor(sect);
-                                },
+                                this::setStartData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.red = (int) startRed.getSliderValue();
-                                    setStartColor(sect);
-                                }
+                                this::setStartData
                         )
                 )
         );
@@ -131,17 +123,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         greenTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.green = (int) startGreen.getSliderValue();
-                                    setStartColor(sect);
-                                },
+                                this::setStartData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.green = (int) startGreen.getSliderValue();
-                                    setStartColor(sect);
-                                }
+                                this::setStartData
                         )
                 )
         );
@@ -154,17 +138,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         blueTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.blue = (int) startBlue.getSliderValue();
-                                    setStartColor(sect);
-                                },
+                                this::setStartData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.blue = (int) startBlue.getSliderValue();
-                                    setStartColor(sect);
-                                }
+                                this::setStartData
                         )
                 )
         );
@@ -177,17 +153,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         alphaTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.alpha = (int) startAlpha.getSliderValue();
-                                    setStartColor(sect);
-                                },
+                                this::setStartData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getStart();
-                                    sect.alpha = (int) startAlpha.getSliderValue();
-                                    setStartColor(sect);
-                                }
+                                this::setStartData
                         )
                 )
         );
@@ -231,17 +199,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         redTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.red = (int) endRed.getSliderValue();
-                                    setEndColor(sect);
-                                },
+                                this::setEndData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.red = (int) endRed.getSliderValue();
-                                    setEndColor(sect);
-                                }
+                                this::setEndData
                         )
                 )
         );
@@ -254,17 +214,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         greenTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.green = (int) endGreen.getSliderValue();
-                                    setEndColor(sect);
-                                },
+                                this::setEndData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.green = (int) endGreen.getSliderValue();
-                                    setEndColor(sect);
-                                }
+                                this::setEndData
                         )
                 )
         );
@@ -277,17 +229,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         blueTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.blue = (int) endBlue.getSliderValue();
-                                    setEndColor(sect);
-                                },
+                                this::setEndData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.blue = (int) endBlue.getSliderValue();
-                                    setEndColor(sect);
-                                }
+                                this::setEndData
                         )
                 )
         );
@@ -300,17 +244,9 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         0.0f, 255.0f, 1.0f,
                         alphaTitle,
                         new Tuple<>(
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.alpha = (int) endAlpha.getSliderValue();
-                                    setEndColor(sect);
-                                },
+                                this::setEndData,
                                 null,
-                                () -> {
-                                    final ColorSection sect = getInstanceData().getEnd();
-                                    sect.alpha = (int) endAlpha.getSliderValue();
-                                    setEndColor(sect);
-                                }
+                                this::setEndData
                         )
                 )
         );
@@ -396,10 +332,28 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         startAlpha.setSliderValue(sect.alpha);
     }
 
+    private void setStartData() {
+        final ColorSection sect = getInstanceData().getStart();
+        sect.red = (int) startRed.getSliderValue();
+        sect.green = (int) startGreen.getSliderValue();
+        sect.blue = (int) startBlue.getSliderValue();
+        sect.alpha = (int) startAlpha.getSliderValue();
+        setStartColor(sect);
+    }
+
     private void loadEndData(final ColorSection sect) {
         endRed.setSliderValue(sect.red);
         endGreen.setSliderValue(sect.green);
         endBlue.setSliderValue(sect.blue);
         endAlpha.setSliderValue(sect.alpha);
+    }
+
+    private void setEndData() {
+        final ColorSection sect = getInstanceData().getEnd();
+        sect.red = (int) endRed.getSliderValue();
+        sect.green = (int) endGreen.getSliderValue();
+        sect.blue = (int) endBlue.getSliderValue();
+        sect.alpha = (int) endAlpha.getSliderValue();
+        setEndColor(sect);
     }
 }
