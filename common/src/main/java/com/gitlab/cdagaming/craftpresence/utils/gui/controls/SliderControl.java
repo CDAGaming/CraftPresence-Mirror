@@ -58,6 +58,10 @@ public class SliderControl extends ExtendedButtonControl {
      */
     private final String windowTitle;
     /**
+     * The formatting for the "suffix" portion of the Slider Name
+     */
+    private String valueFormat = "%.1f";
+    /**
      * The Normalized Slider Value between 0.0f and 1.0f
      */
     private float sliderValue;
@@ -311,6 +315,25 @@ public class SliderControl extends ExtendedButtonControl {
     }
 
     /**
+     * Retrieves the formatting for the "suffix" portion of the Slider Name
+     *
+     * @return The formatting for the "suffix" portion of the Slider Name
+     */
+    public String getValueFormat() {
+        return valueFormat;
+    }
+
+    /**
+     * Sets the formatting for the "suffix" portion of the Slider Name
+     *
+     * @param newFormat the new formatting for the Slider Name "suffix"
+     */
+    public void setValueFormat(final String newFormat) {
+        valueFormat = newFormat;
+        updateMessage();
+    }
+
+    /**
      * Fired when the mouse button is released.<p>
      * Equivalent of MouseListener.mouseReleased(MouseEvent e).
      */
@@ -335,6 +358,13 @@ public class SliderControl extends ExtendedButtonControl {
         if (onSlideEvent != null) {
             onSlideEvent.run();
         }
-        setControlMessage(windowTitle + ": " + denormalizedSlideValue);
+        updateMessage();
+    }
+
+    /**
+     * Update the Slider's Display Message
+     */
+    public void updateMessage() {
+        setControlMessage(windowTitle + ": " + String.format(getValueFormat(), getSliderValue()));
     }
 }
