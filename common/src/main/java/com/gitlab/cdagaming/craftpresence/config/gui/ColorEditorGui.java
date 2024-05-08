@@ -318,6 +318,11 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private void setStartColor(final ColorSection sect) {
         getInstanceData().setStartColor(sect);
         storedStart.setStartColor(sect);
+
+        // Create the `endColor` data, if the new `startColor` differs
+        if (!getInstanceData().hasEnd() && !sect.equals(storedEnd.getStart())) {
+            setEndData();
+        }
     }
 
     private void setEndColor(final ColorSection sect) {
