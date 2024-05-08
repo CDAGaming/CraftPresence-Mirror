@@ -24,12 +24,12 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * (Backend) Modified `ExtendedScreen#getButtonY` to properly respond to `ScrollPane` padding and to better clarify the
   logic
-    * For most screens, this places most UI elements slightly higher, but in a more proper position comparable to v1
-* (Backend) Fixed an issue where `ColorData#setEndColor` could be applied incorrectly
-    * This issue primarily is visible in the `Color Editor` UI, where setting the `endColor` to the same values
-      as `startColor` wouldn't discard it when it should
-    * A check is now in-effect for if the new `endColor` matches the `startColor`, so it will now properly discard it if
-      the two values are equal
+    * For screens where this is used, this places UI elements in the proper position comparable to v1.x versions
+    * Old Calculation: `(40 + (25 * (order - 1)))`
+    * New Calculation `topPosition + (DEFAULT_ELEMENT_PADDING * (order + 1)) + (DEFAULT_ELEMENT_HEIGHT * order)`
+* (Backend) Fixed an issue where `ColorData#setEndColor` and `ColorData#setTexLocation` could be applied incorrectly
+    * This fix was previously present in `ColorEditorGui#setCurrentData` but has been moved into `ColorData` to remove
+      duplicated logic and to resolve some edge-cases
 
 ___
 

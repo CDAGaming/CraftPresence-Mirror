@@ -56,6 +56,14 @@ import java.util.List;
  */
 public class ExtendedScreen extends GuiScreen {
     /**
+     * The Default Vertical Padding between elements, used in {@link ExtendedScreen#getButtonY(int)}
+     */
+    private static final int DEFAULT_ELEMENT_PADDING = 5;
+    /**
+     * The Default Height of an element, used in {@link ExtendedScreen#getButtonY(int)}
+     */
+    private static final int DEFAULT_ELEMENT_HEIGHT = 20;
+    /**
      * The Last Used Control ID
      */
     private static int lastIndex = 0;
@@ -863,7 +871,7 @@ public class ExtendedScreen extends GuiScreen {
             final ScrollPane pane = ((ScrollPane) getInstance());
             topPosition += pane.getPadding();
         }
-        return topPosition + (5 * (order + 1)) + (20 * order);
+        return topPosition + (DEFAULT_ELEMENT_PADDING * (order + 1)) + (DEFAULT_ELEMENT_HEIGHT * order);
     }
 
     /**
