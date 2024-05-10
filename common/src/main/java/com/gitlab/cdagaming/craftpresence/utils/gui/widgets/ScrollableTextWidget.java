@@ -40,97 +40,89 @@ public class ScrollableTextWidget extends TextDisplayWidget {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param startX   The starting X position of the widget
      * @param startY   The starting Y position of the widget
      * @param width    The width of the widget
      * @param message  The text to be rendered with this widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width, final String message) {
-        super(parent, centered, startX, startY, width, message);
+    public ScrollableTextWidget(final boolean centered, final int startX, final int startY, final int width, final String message) {
+        super(centered, startX, startY, width, message);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent  The parent or source screen to refer to
      * @param startX  The starting X position of the widget
      * @param startY  The starting Y position of the widget
      * @param width   The width of the widget
      * @param message The text to be rendered with this widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final int startX, final int startY, final int width, final String message) {
-        super(parent, startX, startY, width, message);
+    public ScrollableTextWidget(final int startX, final int startY, final int width, final String message) {
+        super(startX, startY, width, message);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param startX   The starting X position of the widget
      * @param startY   The starting Y position of the widget
      * @param width    The width of the widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width) {
-        super(parent, centered, startX, startY, width);
+    public ScrollableTextWidget(final boolean centered, final int startX, final int startY, final int width) {
+        super(centered, startX, startY, width);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent The parent or source screen to refer to
      * @param startX The starting X position of the widget
      * @param startY The starting Y position of the widget
      * @param width  The width of the widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final int startX, final int startY, final int width) {
-        super(parent, startX, startY, width);
+    public ScrollableTextWidget(final int startX, final int startY, final int width) {
+        super(startX, startY, width);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param width    The width of the widget
      * @param message  The text to be rendered with this widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int width, final String message) {
-        super(parent, centered, width, message);
+    public ScrollableTextWidget(final boolean centered, final int width, final String message) {
+        super(centered, width, message);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent  The parent or source screen to refer to
      * @param width   The width of the widget
      * @param message The text to be rendered with this widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final int width, final String message) {
-        super(parent, width, message);
+    public ScrollableTextWidget(final int width, final String message) {
+        super(width, message);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param width    The width of the widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final boolean centered, final int width) {
-        super(parent, centered, width);
+    public ScrollableTextWidget(final boolean centered, final int width) {
+        super(centered, width);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent The parent or source screen to refer to
-     * @param width  The width of the widget
+     * @param width The width of the widget
      */
-    public ScrollableTextWidget(final ExtendedScreen parent, final int width) {
-        super(parent, width);
+    public ScrollableTextWidget(final int width) {
+        super(width);
     }
 
     @Override
@@ -162,7 +154,7 @@ public class ScrollableTextWidget extends TextDisplayWidget {
     }
 
     @Override
-    public List<String> refreshContent() {
+    public List<String> refreshContent(final ExtendedScreen screen) {
         return null;
     }
 

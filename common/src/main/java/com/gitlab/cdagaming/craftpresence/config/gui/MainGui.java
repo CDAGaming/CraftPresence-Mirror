@@ -73,7 +73,7 @@ public class MainGui extends ConfigurationGui<Config> {
         if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;
             childFrame.addWidget(new ScrollableTextWidget(
-                    childFrame, true,
+                    true,
                     0, getButtonY(currentY),
                     childFrame.getScreenWidth(), releaseNotice
             ));

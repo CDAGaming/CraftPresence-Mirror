@@ -38,10 +38,6 @@ import java.util.function.Supplier;
  */
 public class TexturedWidget implements DynamicWidget {
     /**
-     * The parent or source screen to refer to
-     */
-    private final ExtendedScreen parent;
-    /**
      * The starting X position of the widget
      */
     private int startX;
@@ -77,7 +73,6 @@ public class TexturedWidget implements DynamicWidget {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent       The parent or source screen to refer to
      * @param startX       The starting X position of the widget
      * @param startY       The starting Y position of the widget
      * @param width        The width of the widget
@@ -88,14 +83,13 @@ public class TexturedWidget implements DynamicWidget {
      * @param hasBorder    Whether the content should have a surrounding border
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public TexturedWidget(final ExtendedScreen parent,
-                          final int startX, final int startY,
-                          final int width, final int height,
-                          final double offset,
-                          final Supplier<Float> tintSupplier,
-                          final Supplier<ColorData> infoSupplier,
-                          final boolean hasBorder) {
-        this.parent = parent;
+    public TexturedWidget(
+            final int startX, final int startY,
+            final int width, final int height,
+            final double offset,
+            final Supplier<Float> tintSupplier,
+            final Supplier<ColorData> infoSupplier,
+            final boolean hasBorder) {
         setControlPosX(startX);
         setControlPosY(startY);
         setControlWidth(width);
@@ -123,7 +117,7 @@ public class TexturedWidget implements DynamicWidget {
                     null, null
             );
         }
-        parent.drawBackground(
+        screen.drawBackground(
                 getLeft(), getRight(),
                 getTop(), getBottom(),
                 getOffset(), getTintFactor(),

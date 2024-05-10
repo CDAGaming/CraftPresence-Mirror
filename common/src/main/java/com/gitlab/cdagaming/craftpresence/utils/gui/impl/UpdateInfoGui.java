@@ -113,7 +113,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                 )
         );
         infoPane = childFrame.addWidget(new TextDisplayWidget(
-                childFrame, 0, 0,
+                0, 0,
                 getScreenWidth()
         ));
 

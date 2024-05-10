@@ -81,7 +81,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         // Start Color Section
         childFrame.addWidget(new ScrollableTextWidget(
-                childFrame,
                 calc1, getButtonY(0),
                 childFrame.getScreenWidth(),
                 startColorTitle
@@ -163,7 +162,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         startAlpha.setValueFormat("%.0f");
         childFrame.addWidget(new TexturedWidget(
-                childFrame,
                 calc2, getButtonY(2, 1),
                 calcAlt, 93,
                 0.0D, () -> 1.0F,
@@ -172,7 +170,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         // End Color Section
         childFrame.addWidget(new ScrollableTextWidget(
-                childFrame,
                 calc1, getButtonY(6),
                 childFrame.getScreenWidth(),
                 endColorTitle
@@ -254,7 +251,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
         );
         endAlpha.setValueFormat("%.0f");
         childFrame.addWidget(new TexturedWidget(
-                childFrame,
                 calc2, getButtonY(8, 1),
                 calcAlt, 93,
                 0.0D, () -> 1.0F,
@@ -263,7 +259,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
 
         // Preview Section
         childFrame.addWidget(new ScrollableTextWidget(
-                childFrame,
                 calc1, getButtonY(12),
                 childFrame.getScreenWidth(),
                 previewTitle
@@ -298,7 +293,6 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                 )
         );
         childFrame.addWidget(new TexturedWidget(
-                childFrame,
                 calc2, getButtonY(14, 1),
                 calcAlt, 93,
                 0.0D, () -> tintFactor.getSliderValue(true),

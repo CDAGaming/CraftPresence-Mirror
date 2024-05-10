@@ -84,7 +84,6 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         // General Fields Section
         childFrame.addWidget(new ScrollableTextWidget(
-                childFrame,
                 calc1, getButtonY(controlIndex++),
                 childFrame.getScreenWidth(),
                 generalFieldsTitle
@@ -157,7 +156,6 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         // Large Image Section
         childFrame.addWidget(new ScrollableTextWidget(
-                childFrame,
                 calc1, getButtonY(controlIndex++),
                 childFrame.getScreenWidth(),
                 largeImageTitle
@@ -202,7 +200,6 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         // Small Image Section
         childFrame.addWidget(new ScrollableTextWidget(
-                childFrame,
                 calc1, getButtonY(controlIndex++),
                 childFrame.getScreenWidth(),
                 smallImageTitle
@@ -247,7 +244,6 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         // Extra Fields Section
         childFrame.addWidget(new ScrollableTextWidget(
-                childFrame,
                 calc1, getButtonY(controlIndex++),
                 childFrame.getScreenWidth(),
                 extraFieldsTitle

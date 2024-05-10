@@ -41,9 +41,9 @@ import java.util.Objects;
  */
 public class TextDisplayWidget implements DynamicWidget {
     /**
-     * The parent or source screen to refer to
+     * Whether render content needs an update
      */
-    private final ExtendedScreen parent;
+    private boolean needsUpdate = false;
     /**
      * The starting X position of the widget
      */
@@ -76,7 +76,6 @@ public class TextDisplayWidget implements DynamicWidget {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param startX   The starting X position of the widget
      * @param startY   The starting Y position of the widget
@@ -84,8 +83,7 @@ public class TextDisplayWidget implements DynamicWidget {
      * @param message  The text to be rendered with this widget
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width, final String message) {
-        this.parent = parent;
+    public TextDisplayWidget(final boolean centered, final int startX, final int startY, final int width, final String message) {
         setCentered(centered);
         setControlPosX(startX);
         setControlPosY(startY);
@@ -96,83 +94,76 @@ public class TextDisplayWidget implements DynamicWidget {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent  The parent or source screen to refer to
      * @param startX  The starting X position of the widget
      * @param startY  The starting Y position of the widget
      * @param width   The width of the widget
      * @param message The text to be rendered with this widget
      */
-    public TextDisplayWidget(final ExtendedScreen parent, final int startX, final int startY, final int width, final String message) {
-        this(parent, false, startX, startY, width, message);
+    public TextDisplayWidget(final int startX, final int startY, final int width, final String message) {
+        this(false, startX, startY, width, message);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param startX   The starting X position of the widget
      * @param startY   The starting Y position of the widget
      * @param width    The width of the widget
      */
-    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int startX, final int startY, final int width) {
-        this(parent, centered, startX, startY, width, "");
+    public TextDisplayWidget(final boolean centered, final int startX, final int startY, final int width) {
+        this(centered, startX, startY, width, "");
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent The parent or source screen to refer to
      * @param startX The starting X position of the widget
      * @param startY The starting Y position of the widget
      * @param width  The width of the widget
      */
-    public TextDisplayWidget(final ExtendedScreen parent, final int startX, final int startY, final int width) {
-        this(parent, false, startX, startY, width);
+    public TextDisplayWidget(final int startX, final int startY, final int width) {
+        this(false, startX, startY, width);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param width    The width of the widget
      * @param message  The text to be rendered with this widget
      */
-    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int width, final String message) {
-        this(parent, centered, 0, 0, width, message);
+    public TextDisplayWidget(final boolean centered, final int width, final String message) {
+        this(centered, 0, 0, width, message);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent  The parent or source screen to refer to
      * @param width   The width of the widget
      * @param message The text to be rendered with this widget
      */
-    public TextDisplayWidget(final ExtendedScreen parent, final int width, final String message) {
-        this(parent, false, width, message);
+    public TextDisplayWidget(final int width, final String message) {
+        this(false, width, message);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent   The parent or source screen to refer to
      * @param centered Whether the text should be center-aligned
      * @param width    The width of the widget
      */
-    public TextDisplayWidget(final ExtendedScreen parent, final boolean centered, final int width) {
-        this(parent, centered, width, "");
+    public TextDisplayWidget(final boolean centered, final int width) {
+        this(centered, width, "");
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
-     * @param parent The parent or source screen to refer to
-     * @param width  The width of the widget
+     * @param width The width of the widget
      */
-    public TextDisplayWidget(final ExtendedScreen parent, final int width) {
-        this(parent, false, width);
+    public TextDisplayWidget(final int width) {
+        this(false, width);
     }
 
     /**
@@ -193,8 +184,7 @@ public class TextDisplayWidget implements DynamicWidget {
     public TextDisplayWidget setMessage(final String newMessage) {
         if (!Objects.equals(newMessage, message)) {
             message = newMessage;
-            renderLines = refreshContent();
-            getParent().refreshContentHeight();
+            needsUpdate = true;
         }
         return this;
     }
@@ -228,18 +218,12 @@ public class TextDisplayWidget implements DynamicWidget {
         return StringUtils.newArrayList(renderLines);
     }
 
-    /**
-     * Retrieve the parent or source screen to refer to
-     *
-     * @return the parent screen
-     */
-    public ExtendedScreen getParent() {
-        return parent;
-    }
-
     @Override
     public void preDraw(ExtendedScreen screen) {
-        // N/A
+        if (needsUpdate) {
+            renderLines = refreshContent(screen);
+            needsUpdate = false;
+        }
     }
 
     @Override
@@ -307,23 +291,26 @@ public class TextDisplayWidget implements DynamicWidget {
     /**
      * Refresh the widget content, scaling the text accordingly
      *
+     * @param screen The Screen instance we're rendering to
      * @return the modified render lines for the widget
      */
-    public List<String> refreshContent() {
+    public List<String> refreshContent(final ExtendedScreen screen) {
         int padding = 0, barWidth = 0;
-        if (getParent() instanceof ScrollPane) {
-            final ScrollPane pane = ((ScrollPane) getParent());
+        if (screen instanceof ScrollPane) {
+            final ScrollPane pane = ((ScrollPane) screen);
             padding = pane.getPadding();
             barWidth = pane.getScrollBarWidth();
         }
 
-        final int width = MathUtils.clamp((getControlWidth() - getControlPosX()) - (padding * 2) - barWidth, 0, getParent().getMaxWidth());
-        final List<String> content = getParent().createRenderLines(
+        final int width = MathUtils.clamp((getControlWidth() - getControlPosX()) - (padding * 2) - barWidth, 0, screen.getMaxWidth());
+        final List<String> content = screen.createRenderLines(
                 getMessage(),
                 width
         );
-        final int height = content.size() * (getParent().getFontHeight() + 1);
+        final int height = content.size() * (screen.getFontHeight() + 1);
         setControlHeight(height + 2);
+
+        screen.refreshContentHeight();
         return content;
     }
 }
