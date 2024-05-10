@@ -151,7 +151,7 @@ public class CommandsGui extends ExtendedScreen {
         );
         previewArea = childFrame.addWidget(new TextDisplayWidget(
                 0, 0,
-                getScreenWidth(),
+                childFrame.getScreenWidth(),
                 executionString
         ));
         super.initializeUi();
