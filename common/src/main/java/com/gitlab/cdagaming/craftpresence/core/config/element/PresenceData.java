@@ -157,25 +157,26 @@ public class PresenceData extends Module implements Serializable {
             return false;
         }
 
-        PresenceData p = (PresenceData) obj;
-        boolean areButtonsEqual = buttons.size() == p.buttons.size();
+        final PresenceData other = (PresenceData) obj;
+
+        boolean areButtonsEqual = buttons.size() == other.buttons.size();
         if (areButtonsEqual) {
             for (Map.Entry<String, Button> entry : buttons.entrySet()) {
                 final String key = entry.getKey();
-                if (!p.buttons.containsKey(key) || !p.buttons.get(key).equals(entry.getValue())) {
+                if (!other.buttons.containsKey(key) || !other.buttons.get(key).equals(entry.getValue())) {
                     areButtonsEqual = false;
                     break;
                 }
             }
         }
 
-        return Objects.equals(p.details, details) &&
-                Objects.equals(p.gameState, gameState) &&
-                Objects.equals(p.largeImageKey, largeImageKey) &&
-                Objects.equals(p.largeImageText, largeImageText) &&
-                Objects.equals(p.smallImageKey, smallImageKey) &&
-                Objects.equals(p.startTimestamp, startTimestamp) &&
-                Objects.equals(p.endTimestamp, endTimestamp) &&
+        return Objects.equals(other.details, details) &&
+                Objects.equals(other.gameState, gameState) &&
+                Objects.equals(other.largeImageKey, largeImageKey) &&
+                Objects.equals(other.largeImageText, largeImageText) &&
+                Objects.equals(other.smallImageKey, smallImageKey) &&
+                Objects.equals(other.startTimestamp, startTimestamp) &&
+                Objects.equals(other.endTimestamp, endTimestamp) &&
                 areButtonsEqual;
     }
 
