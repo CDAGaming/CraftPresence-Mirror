@@ -238,8 +238,7 @@ public class TextDisplayWidget implements DynamicWidget {
                 getRenderLines(),
                 getControlPosX() + padding, getControlPosY() + padding,
                 getControlWidth() - padding - barWidth, -1, -1,
-                isCentered(), false,
-                screen.createDefaultTooltip().putSecond(null).putThird(null)
+                isCentered(), false
         );
     }
 

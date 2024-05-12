@@ -898,16 +898,21 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Creates a copy of the Default Tooltip Rendering Info
+     * Retrieve the tooltip Rendering Info for an Empty Background and Border
+     *
+     * @return the tooltip Rendering Info for an Empty Background and Border
+     */
+    public Tuple<Boolean, ColorData, ColorData> getEmptyTooltip() {
+        return RenderUtils.getEmptyTooltip();
+    }
+
+    /**
+     * Retrieve the Default Tooltip Rendering Info
      *
      * @return the default Tooltip Rendering Info
      */
-    public Tuple<Boolean, ColorData, ColorData> createDefaultTooltip() {
-        return new Tuple<>(
-                CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
-                CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
-                CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
-        );
+    public Tuple<Boolean, ColorData, ColorData> getDefaultTooltip() {
+        return RenderUtils.getDefaultTooltip();
     }
 
     /**
@@ -944,6 +949,29 @@ public class ExtendedScreen extends GuiScreen {
      * @param maxWidth     The maximum width to allow rendering to (Text will wrap if output is greater)
      * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
      * @param maxTextWidth The maximum width the output can be before wrapping
+     * @param isCentered   Whether to render the text in a center-styled layout (Disabled if maxWidth is not specified)
+     * @param isTooltip    Whether to render this layout in a tooltip-style (Issues may occur if combined with isCentered)
+     */
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final boolean isCentered, final boolean isTooltip) {
+        drawMultiLineString(
+                textToInput,
+                posX, posY,
+                maxWidth, maxHeight,
+                maxTextWidth,
+                isCentered, isTooltip,
+                isTooltip ? getDefaultTooltip() : getEmptyTooltip()
+        );
+    }
+
+    /**
+     * Renders a Specified Multi-Line String, constrained by position and dimension arguments
+     *
+     * @param textToInput  The Specified Multi-Line String, split by lines into a list
+     * @param posX         The starting X position to render the String
+     * @param posY         The starting Y position to render the String
+     * @param maxWidth     The maximum width to allow rendering to (Text will wrap if output is greater)
+     * @param maxHeight    The maximum height to allow rendering to (Text will wrap if output is greater)
+     * @param maxTextWidth The maximum width the output can be before wrapping
      */
     public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth) {
         drawMultiLineString(
@@ -951,8 +979,7 @@ public class ExtendedScreen extends GuiScreen {
                 posX, posY,
                 maxWidth, maxHeight,
                 maxTextWidth,
-                false, true,
-                createDefaultTooltip()
+                false, true
         );
     }
 

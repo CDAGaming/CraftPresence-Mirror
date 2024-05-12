@@ -37,13 +37,8 @@ import java.io.Serializable;
 public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
     private static final Accessibility DEFAULT = new Accessibility();
-    public ColorData tooltipBackground = new ColorData(
-            new ColorSection(16, 0, 16, 240)
-    );
-    public ColorData tooltipBorder = new ColorData(
-            new ColorSection(80, 0, 255, 80),
-            new ColorSection(40, 0, 127, 80)
-    );
+    public ColorData tooltipBackground = RenderUtils.DEFAULT_TOOLTIP_BACKGROUND;
+    public ColorData tooltipBorder = RenderUtils.DEFAULT_TOOLTIP_BORDER;
     public ColorData guiBackground = new ColorData(
             new ColorSection(64, 64, 64, 255),
             RenderUtils.DEFAULT_GUI_BACKGROUND

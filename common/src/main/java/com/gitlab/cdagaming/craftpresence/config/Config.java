@@ -255,6 +255,12 @@ public final class Config extends Module implements Serializable {
             needsReboot = true; // Max Connection Attempts changed
         }
 
+        if (accessibilitySettings.renderTooltips != old.accessibilitySettings.renderTooltips
+                || !accessibilitySettings.tooltipBackground.equals(old.accessibilitySettings.tooltipBackground) ||
+                !accessibilitySettings.tooltipBorder.equals(old.accessibilitySettings.tooltipBorder)) {
+            CommandUtils.setDefaultTooltip(); // Render Tooltips, Tooltip Background, or Tooltip Border changed
+        }
+
         if (advancedSettings.debugMode != old.advancedSettings.debugMode ||
                 advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
                 advancedSettings.refreshRate != old.advancedSettings.refreshRate) {

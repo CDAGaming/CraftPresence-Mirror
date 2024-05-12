@@ -96,8 +96,7 @@ public class AboutGui extends ExtendedScreen {
                 notice,
                 0, getScreenHeight() / 3,
                 getScreenWidth(), -1, -1,
-                true, false,
-                createDefaultTooltip().putSecond(null).putThird(null)
+                true, false
         );
 
         super.renderExtra();

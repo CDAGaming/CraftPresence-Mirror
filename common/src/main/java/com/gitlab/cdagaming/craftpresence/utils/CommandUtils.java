@@ -39,6 +39,7 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMC
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
@@ -291,6 +292,8 @@ public class CommandUtils {
      */
     public static void init() {
         updateModes();
+        setDefaultTooltip();
+
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
             final String type = pack.getKey();
             final Pack data = pack.getValue();
@@ -351,6 +354,17 @@ public class CommandUtils {
         if (CraftPresence.CONFIG != null) {
             CraftPresence.SCHEDULER.setRefreshRate(CraftPresence.CONFIG.advancedSettings.refreshRate);
         }
+    }
+
+    /**
+     * Synchronize Data for Rendering Tooltips, using config data
+     */
+    public static void setDefaultTooltip() {
+        RenderUtils.setDefaultTooltip(
+                CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
+                CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
+                CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
+        );
     }
 
     /**
