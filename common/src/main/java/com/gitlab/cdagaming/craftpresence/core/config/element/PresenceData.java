@@ -181,15 +181,12 @@ public class PresenceData extends Module implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        result = 31 * result + (details != null ? details.hashCode() : 0);
-        result = 31 * result + (gameState != null ? gameState.hashCode() : 0);
-        result = 31 * result + (largeImageKey != null ? largeImageKey.hashCode() : 0);
-        result = 31 * result + (largeImageText != null ? largeImageText.hashCode() : 0);
-        result = 31 * result + (smallImageKey != null ? smallImageKey.hashCode() : 0);
-        result = 31 * result + (startTimestamp != null ? startTimestamp.hashCode() : 0);
-        result = 31 * result + (endTimestamp != null ? endTimestamp.hashCode() : 0);
-        result = 31 * result + (buttons != null ? buttons.hashCode() : 0);
-        return result;
+        return Objects.hash(
+                details, gameState,
+                largeImageKey, largeImageText,
+                smallImageKey, smallImageText,
+                startTimestamp, endTimestamp,
+                buttons
+        );
     }
 }
