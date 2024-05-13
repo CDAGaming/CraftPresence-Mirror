@@ -37,8 +37,8 @@ import java.util.Objects;
 
 public class Gui extends Module implements Serializable {
     private static final long serialVersionUID = -5871047759131139250L;
+    private static final boolean hasReplayMod = FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null;
     private static final Gui DEFAULT = new Gui();
-    private static boolean checkedReplayMod = false, hasReplayMod = false;
     public String fallbackGuiIcon = "unknown";
     public Map<String, ModuleData> guiData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
@@ -52,11 +52,6 @@ public class Gui extends Module implements Serializable {
     }
 
     public Gui() {
-        if (!checkedReplayMod) {
-            hasReplayMod = FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null;
-            checkedReplayMod = true;
-        }
-
         if (hasReplayMod) {
             guiData.put("GuiReplayViewer", new ModuleData(
                     Constants.TRANSLATOR.translate("craftpresence.defaults.integrations.replaymod.viewer"),
