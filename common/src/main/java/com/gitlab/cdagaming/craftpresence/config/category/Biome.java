@@ -77,16 +77,6 @@ public class Biome extends Module implements Serializable {
     }
 
     @Override
-    public Object getProperty(final String name) {
-        return StringUtils.getField(Biome.class, this, name);
-    }
-
-    @Override
-    public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(Biome.class, this, value, name);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

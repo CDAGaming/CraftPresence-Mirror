@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.config;
 
 import io.github.cdagaming.unicore.utils.FileUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 /**
  * Module Section defining properties to be used in a configuration
@@ -61,7 +62,9 @@ public abstract class Module {
      * @param name the name of the property
      * @return the property value, if found
      */
-    public abstract Object getProperty(final String name);
+    public Object getProperty(final String name) {
+        return StringUtils.getField(this.getClass(), this, name);
+    }
 
     /**
      * Sets the specified property for this {@link Module}
@@ -69,7 +72,9 @@ public abstract class Module {
      * @param name  the name of the property
      * @param value the property value to assign
      */
-    public abstract void setProperty(final String name, final Object value);
+    public void setProperty(final String name, final Object value) {
+        StringUtils.updateField(this.getClass(), this, value, name);
+    }
 
     /**
      * Resets the specified property to that which matches the default instance for this {@link Module}

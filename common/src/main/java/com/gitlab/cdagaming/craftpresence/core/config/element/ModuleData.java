@@ -107,16 +107,6 @@ public class ModuleData extends Module implements Serializable {
     }
 
     @Override
-    public Object getProperty(final String name) {
-        return StringUtils.getField(ModuleData.class, this, name);
-    }
-
-    @Override
-    public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(ModuleData.class, this, value, name);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

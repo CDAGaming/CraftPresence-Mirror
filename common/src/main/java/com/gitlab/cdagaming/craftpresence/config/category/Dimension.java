@@ -77,16 +77,6 @@ public class Dimension extends Module implements Serializable {
     }
 
     @Override
-    public Object getProperty(final String name) {
-        return StringUtils.getField(Dimension.class, this, name);
-    }
-
-    @Override
-    public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(Dimension.class, this, value, name);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

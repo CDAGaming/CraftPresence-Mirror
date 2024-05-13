@@ -81,16 +81,6 @@ public class Server extends Module implements Serializable {
     }
 
     @Override
-    public Object getProperty(final String name) {
-        return StringUtils.getField(Server.class, this, name);
-    }
-
-    @Override
-    public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(Server.class, this, value, name);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
