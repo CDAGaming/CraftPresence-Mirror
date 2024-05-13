@@ -29,6 +29,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.awt.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ColorData extends Module implements Serializable {
     private static final ColorData DEFAULT = new ColorData();
@@ -173,5 +174,27 @@ public class ColorData extends Module implements Serializable {
     @Override
     public void setProperty(String name, Object value) {
         StringUtils.updateField(ColorData.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof ColorData)) {
+            return false;
+        }
+
+        final ColorData other = (ColorData) obj;
+
+        return Objects.equals(other.start, start) &&
+                Objects.equals(other.end, end) &&
+                Objects.equals(other.texLocation, texLocation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, end, texLocation);
     }
 }

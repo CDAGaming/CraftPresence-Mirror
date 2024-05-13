@@ -53,6 +53,7 @@ import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public final class Config extends Module implements Serializable {
     // Constants
@@ -664,5 +665,46 @@ public final class Config extends Module implements Serializable {
     @Override
     public void resetProperty(final String name) {
         resetProperty(name.split("\\."));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Config)) {
+            return false;
+        }
+
+        final Config other = (Config) obj;
+
+        return Objects.equals(other.hasChanged, hasChanged) &&
+                Objects.equals(other.isNewFile, isNewFile) &&
+                Objects.equals(other._README, _README) &&
+                Objects.equals(other._SOURCE, _SOURCE) &&
+                Objects.equals(other._schemaVersion, _schemaVersion) &&
+                Objects.equals(other._lastMCVersionId, _lastMCVersionId) &&
+                Objects.equals(other.generalSettings, generalSettings) &&
+                Objects.equals(other.biomeSettings, biomeSettings) &&
+                Objects.equals(other.dimensionSettings, dimensionSettings) &&
+                Objects.equals(other.serverSettings, serverSettings) &&
+                Objects.equals(other.statusMessages, statusMessages) &&
+                Objects.equals(other.advancedSettings, advancedSettings) &&
+                Objects.equals(other.accessibilitySettings, accessibilitySettings) &&
+                Objects.equals(other.displaySettings, displaySettings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                hasChanged, isNewFile,
+                _README, _SOURCE,
+                _schemaVersion, _lastMCVersionId,
+                generalSettings, biomeSettings,
+                dimensionSettings, serverSettings,
+                statusMessages, advancedSettings,
+                accessibilitySettings, displaySettings
+        );
     }
 }

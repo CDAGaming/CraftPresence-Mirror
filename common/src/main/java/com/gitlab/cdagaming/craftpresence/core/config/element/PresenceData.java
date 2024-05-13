@@ -159,17 +159,6 @@ public class PresenceData extends Module implements Serializable {
 
         final PresenceData other = (PresenceData) obj;
 
-        boolean areButtonsEqual = buttons.size() == other.buttons.size();
-        if (areButtonsEqual) {
-            for (Map.Entry<String, Button> entry : buttons.entrySet()) {
-                final String key = entry.getKey();
-                if (!other.buttons.containsKey(key) || !other.buttons.get(key).equals(entry.getValue())) {
-                    areButtonsEqual = false;
-                    break;
-                }
-            }
-        }
-
         return Objects.equals(other.details, details) &&
                 Objects.equals(other.gameState, gameState) &&
                 Objects.equals(other.largeImageKey, largeImageKey) &&
@@ -177,7 +166,7 @@ public class PresenceData extends Module implements Serializable {
                 Objects.equals(other.smallImageKey, smallImageKey) &&
                 Objects.equals(other.startTimestamp, startTimestamp) &&
                 Objects.equals(other.endTimestamp, endTimestamp) &&
-                areButtonsEqual;
+                Objects.equals(other.buttons, buttons);
     }
 
     @Override

@@ -33,6 +33,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class Gui extends Module implements Serializable {
     private static final long serialVersionUID = -5871047759131139250L;
@@ -97,5 +98,26 @@ public class Gui extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Gui.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Gui)) {
+            return false;
+        }
+
+        final Gui other = (Gui) obj;
+
+        return Objects.equals(other.fallbackGuiIcon, fallbackGuiIcon) &&
+                Objects.equals(other.guiData, guiData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fallbackGuiIcon, guiData);
     }
 }

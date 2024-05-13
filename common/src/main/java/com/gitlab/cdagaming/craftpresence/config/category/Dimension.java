@@ -32,6 +32,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class Dimension extends Module implements Serializable {
     private static final long serialVersionUID = 2779211521643527744L;
@@ -83,5 +84,26 @@ public class Dimension extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Dimension.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Dimension)) {
+            return false;
+        }
+
+        final Dimension other = (Dimension) obj;
+
+        return Objects.equals(other.fallbackDimensionIcon, fallbackDimensionIcon) &&
+                Objects.equals(other.dimensionData, dimensionData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fallbackDimensionIcon, dimensionData);
     }
 }

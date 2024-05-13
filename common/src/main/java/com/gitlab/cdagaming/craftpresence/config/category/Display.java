@@ -32,6 +32,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class Display extends Module implements Serializable {
     private static final long serialVersionUID = -3302764075156017733L;
@@ -99,5 +100,27 @@ public class Display extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Display.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Display)) {
+            return false;
+        }
+
+        final Display other = (Display) obj;
+
+        return Objects.equals(other.presenceData, presenceData) &&
+                Objects.equals(other.dynamicIcons, dynamicIcons) &&
+                Objects.equals(other.dynamicVariables, dynamicVariables);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(presenceData, dynamicIcons, dynamicVariables);
     }
 }

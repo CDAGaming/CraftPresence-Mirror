@@ -32,6 +32,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class Entity extends Module implements Serializable {
     private static final long serialVersionUID = -4294690176016925084L;
@@ -93,5 +94,27 @@ public class Entity extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Entity.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Entity)) {
+            return false;
+        }
+
+        final Entity other = (Entity) obj;
+
+        return Objects.equals(other.fallbackEntityIcon, fallbackEntityIcon) &&
+                Objects.equals(other.targetData, targetData) &&
+                Objects.equals(other.ridingData, ridingData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fallbackEntityIcon, targetData, ridingData);
     }
 }

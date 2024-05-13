@@ -31,6 +31,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class Advanced extends Module implements Serializable {
     private static final long serialVersionUID = 6035241954568785784L;
@@ -105,5 +106,48 @@ public class Advanced extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Advanced.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Advanced)) {
+            return false;
+        }
+
+        final Advanced other = (Advanced) obj;
+
+        return Objects.equals(other.enablePerGui, enablePerGui) &&
+                Objects.equals(other.enablePerItem, enablePerItem) &&
+                Objects.equals(other.enablePerEntity, enablePerEntity) &&
+                Objects.equals(other.formatWords, formatWords) &&
+                Objects.equals(other.debugMode, debugMode) &&
+                Objects.equals(other.verboseMode, verboseMode) &&
+                Objects.equals(other.refreshRate, refreshRate) &&
+                Objects.equals(other.allowPlaceholderPreviews, allowPlaceholderPreviews) &&
+                Objects.equals(other.guiSettings, guiSettings) &&
+                Objects.equals(other.itemMessages, itemMessages) &&
+                Objects.equals(other.entitySettings, entitySettings) &&
+                Objects.equals(other.allowEndpointIcons, allowEndpointIcons) &&
+                Objects.equals(other.serverIconEndpoint, serverIconEndpoint) &&
+                Objects.equals(other.playerSkinEndpoint, playerSkinEndpoint) &&
+                Objects.equals(other.allowDuplicatePackets, allowDuplicatePackets) &&
+                Objects.equals(other.maxConnectionAttempts, maxConnectionAttempts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                enablePerGui, enablePerItem, enablePerEntity,
+                formatWords, debugMode, verboseMode,
+                refreshRate, allowPlaceholderPreviews,
+                guiSettings, itemMessages, entitySettings,
+                allowEndpointIcons,
+                serverIconEndpoint, playerSkinEndpoint,
+                allowDuplicatePackets, maxConnectionAttempts
+        );
     }
 }

@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ModuleData extends Module implements Serializable {
     private static final long serialVersionUID = -5846802181463006850L;
@@ -113,5 +114,29 @@ public class ModuleData extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(ModuleData.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof ModuleData)) {
+            return false;
+        }
+
+        final ModuleData other = (ModuleData) obj;
+
+        return Objects.equals(other.textOverride, textOverride) &&
+                Objects.equals(other.iconOverride, iconOverride) &&
+                Objects.equals(other.data, data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                textOverride, iconOverride, data
+        );
     }
 }

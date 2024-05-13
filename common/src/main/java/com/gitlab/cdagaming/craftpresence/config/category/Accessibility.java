@@ -33,6 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Accessibility extends Module implements Serializable {
     private static final long serialVersionUID = -6804925684173174749L;
@@ -98,5 +99,41 @@ public class Accessibility extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(Accessibility.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Accessibility)) {
+            return false;
+        }
+
+        final Accessibility other = (Accessibility) obj;
+
+        return Objects.equals(other.tooltipBackground, tooltipBackground) &&
+                Objects.equals(other.tooltipBorder, tooltipBorder) &&
+                Objects.equals(other.guiBackground, guiBackground) &&
+                Objects.equals(other.altGuiBackground, altGuiBackground) &&
+                Objects.equals(other.languageId, languageId) &&
+                Objects.equals(other.stripTranslationColors, stripTranslationColors) &&
+                Objects.equals(other.stripTranslationFormatting, stripTranslationFormatting) &&
+                Objects.equals(other.stripExtraGuiElements, stripExtraGuiElements) &&
+                Objects.equals(other.renderTooltips, renderTooltips) &&
+                Objects.equals(other.configKeyCode, configKeyCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                tooltipBackground, tooltipBorder,
+                guiBackground, altGuiBackground,
+                languageId,
+                stripTranslationColors, stripTranslationFormatting,
+                stripExtraGuiElements, renderTooltips,
+                configKeyCode
+        );
     }
 }

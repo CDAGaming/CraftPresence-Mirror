@@ -30,6 +30,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class General extends Module implements Serializable {
     private static final long serialVersionUID = 1796294737844339558L;
@@ -101,5 +102,48 @@ public class General extends Module implements Serializable {
     @Override
     public void setProperty(final String name, final Object value) {
         StringUtils.updateField(General.class, this, value, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof General)) {
+            return false;
+        }
+
+        final General other = (General) obj;
+
+        return Objects.equals(other.detectATLauncherInstance, detectATLauncherInstance) &&
+                Objects.equals(other.detectCurseManifest, detectCurseManifest) &&
+                Objects.equals(other.detectMultiMCManifest, detectMultiMCManifest) &&
+                Objects.equals(other.detectMCUpdaterInstance, detectMCUpdaterInstance) &&
+                Objects.equals(other.detectTechnicPack, detectTechnicPack) &&
+                Objects.equals(other.detectModrinthPack, detectModrinthPack) &&
+                Objects.equals(other.detectBiomeData, detectBiomeData) &&
+                Objects.equals(other.detectDimensionData, detectDimensionData) &&
+                Objects.equals(other.detectWorldData, detectWorldData) &&
+                Objects.equals(other.clientId, clientId) &&
+                Objects.equals(other.defaultIcon, defaultIcon) &&
+                Objects.equals(other.enableJoinRequests, enableJoinRequests) &&
+                Objects.equals(other.partyPrivacyLevel, partyPrivacyLevel) &&
+                Objects.equals(other.preferredClientLevel, preferredClientLevel) &&
+                Objects.equals(other.resetTimeOnInit, resetTimeOnInit) &&
+                Objects.equals(other.autoRegister, autoRegister);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                detectATLauncherInstance, detectCurseManifest,
+                detectMultiMCManifest, detectMCUpdaterInstance,
+                detectTechnicPack, detectModrinthPack,
+                detectBiomeData, detectDimensionData, detectWorldData,
+                clientId, defaultIcon, enableJoinRequests,
+                partyPrivacyLevel, preferredClientLevel,
+                resetTimeOnInit, autoRegister
+        );
     }
 }
