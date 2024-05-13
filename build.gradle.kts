@@ -123,6 +123,9 @@ subprojects {
         // WagYourTail Mavens
         maven("https://maven.wagyourtail.xyz/releases")
         maven("https://maven.wagyourtail.xyz/snapshots")
+        // LenniReflect Mavens
+        maven("https://maven.lenni0451.net/releases/")
+        maven("https://maven.lenni0451.net/snapshots/")
         // OSS Mavens
         maven("https://s01.oss.sonatype.org/content/repositories/releases")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots")

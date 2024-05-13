@@ -13,7 +13,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Unimined (`1.2.3` -> `1.2.4`)
     * ModPublisher (`2.1.1` -> `2.1.2`)
     * Fabric Loader (`0.15.10` -> `0.15.11`)
-    * Lenni Reflect (`1.3.2` -> `1.3.3`)
+    * Lenni Reflect (`1.3.2` -> `1.3.4-SNAPSHOT`)
+    * UniCore (`1.0.10` -> `1.1.0-SNAPSHOT`)
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
     * These changes are designed to support auto-locating data related to data pack additions
     * These changes also resolve issues where repeated Registry Lookups could cause a crash in both modules
@@ -44,20 +45,20 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
       rather than all four
     * An additional case has been resolved where the `endColor` data wasn't being created, if the new `startColor`
       differs when it didn't before when using `setStartColor`
-* (Backend) Fixed a memory leak that could occur through repeated `Module#toString` calls
+* (Backend) Fixed memory leaks that could occur through repeated `Module#toString` calls
     * This occurs due to this function utilizing GSON, and since we used this in `Module#hashCode` and `Module#equals`,
       it was being called excessively
     * With this fix, `hashCode` and `equals` functions for all Config Categories should be much more performant,
       following `PresenceData` formatting with `Objects#hash` and `Objects#equals` usage
-* (Backend) Fixed a memory leak that could occur in `Gui#<init>` due to repeated calls to `FileUtils#findValidClass`
-    * A flag has been added so that this is only called on the first instance of `Gui#<init>` and use the cached result
-      for later instances
-* (Backend) Fixed a memory leak that could occur in `Constants#getModCount` due to repeated calls
-  to `FileUtils#findValidClass`
-    * A variable flag was added to store the result of the first call on this method, to use the cached result for later
-      instances
-    * As an additional safety measure, `Constants#getRawModCount` has been made `private`, since it is advised to only
-      use the main `Constants#getModCount` function
+* (Backend) Fixed memory leaks that could occur through repeated `FileUtils#findValidClass` calls
+    * Caching has been added to this method, preventing repetitive calls to `Class#forName`
+* (Backend) Fixed a possible discrepancy between using `FileUtils#findValidClass` and `FileUtils#scanClasses`
+    * This relates to the `useClassLoader` param in `findValidClass`, which now only defaults to true if below Java 16
+    * This behavior matches the behavior used in `ClassGraph` within `scanClasses
+* (Backend) Fixed memory leaks that could occur through `Lenni Reflect` reflection operations
+    * This issue effects `StringUtils#getFields`, `StringUtils#getMethods`, and methods using these functions
+    * Caching has been implemented to the `RStream#of`, `RStream#methods`, and `RStream#fields` functions to avoid
+      repetitive allocation
 
 ___
 
