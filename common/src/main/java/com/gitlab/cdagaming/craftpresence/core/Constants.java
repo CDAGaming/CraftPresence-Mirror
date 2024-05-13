@@ -128,6 +128,16 @@ public class Constants {
     public static boolean IS_GAME_CLOSING = false;
 
     /**
+     * If the Mod has checked for "Replay Mod" availability
+     */
+    private static boolean CHECKED_REPLAY_MOD = false;
+
+    /**
+     * If the Mod should enable "Replay Mod" Integration
+     */
+    private static boolean HAS_REPLAY_MOD = false;
+
+    /**
      * The Amount of Active Mods in the instance
      */
     private static int DETECTED_MOD_COUNT = -1;
@@ -148,6 +158,19 @@ public class Constants {
      */
     public static ThreadFactory getThreadFactory() {
         return FileUtils.getThreadFactory(NAME);
+    }
+
+    /**
+     * Retrieve if the Mod should enable "Replay Mod" Integration
+     *
+     * @return {@link Boolean#TRUE} if the Mod should enable "Replay Mod" Integration
+     */
+    public static boolean hasReplayMod() {
+        if (!CHECKED_REPLAY_MOD) {
+            HAS_REPLAY_MOD = FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null;
+            CHECKED_REPLAY_MOD = true;
+        }
+        return HAS_REPLAY_MOD;
     }
 
     /**

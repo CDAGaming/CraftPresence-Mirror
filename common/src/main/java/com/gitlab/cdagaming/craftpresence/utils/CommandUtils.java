@@ -42,7 +42,6 @@ import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.Map;
@@ -311,7 +310,7 @@ public class CommandUtils {
 
         // Setup Mod Integrations that are not Platform-Dependent
         // Use the loader-specific `setupIntegrations` methods for platform-dependent modules
-        if (FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null) {
+        if (Constants.hasReplayMod()) {
             addModule("integration.replaymod", new ReplayModUtils());
         }
     }

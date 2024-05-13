@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
@@ -37,7 +36,6 @@ import java.util.Objects;
 
 public class Gui extends Module implements Serializable {
     private static final long serialVersionUID = -5871047759131139250L;
-    private static final boolean hasReplayMod = FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null;
     private static final Gui DEFAULT = new Gui();
     public String fallbackGuiIcon = "unknown";
     public Map<String, ModuleData> guiData = new HashMapBuilder<String, ModuleData>()
@@ -52,7 +50,7 @@ public class Gui extends Module implements Serializable {
     }
 
     public Gui() {
-        if (hasReplayMod) {
+        if (Constants.hasReplayMod()) {
             guiData.put("GuiReplayViewer", new ModuleData(
                     Constants.TRANSLATOR.translate("craftpresence.defaults.integrations.replaymod.viewer"),
                     null

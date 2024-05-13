@@ -46,13 +46,13 @@ import java.util.List;
 @SuppressWarnings("DuplicatedCode")
 public class ReplayModUtils implements Module {
     // CLASS REFLECTION STORAGE -- DO NOT TOUCH !!!
-    private final Class<?> screenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiScreen");
-    private final Class<?> overlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiOverlay");
-    private final Class<?> abstractContainerClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiContainer");
-    private final Class<?> abstractScreenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiScreen");
-    private final Class<?> abstractOverlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiOverlay");
-    private final Class<?> videoRendererScreen = FileUtils.findValidClass("com.replaymod.render.gui.GuiVideoRenderer");
-    private final Class<?> videoRendererInfo = FileUtils.findValidClass("com.replaymod.render.rendering.VideoRenderer");
+    private static final Class<?> screenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiScreen");
+    private static final Class<?> overlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiOverlay");
+    private static final Class<?> abstractContainerClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiContainer");
+    private static final Class<?> abstractScreenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiScreen");
+    private static final Class<?> abstractOverlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiOverlay");
+    private static final Class<?> videoRendererScreen = FileUtils.findValidClass("com.replaymod.render.gui.GuiVideoRenderer");
+    private static final Class<?> videoRendererInfo = FileUtils.findValidClass("com.replaymod.render.rendering.VideoRenderer");
     /**
      * Whether this module is allowed to start and enabled
      */
