@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.config.category;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
-import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.Serializable;
 import java.util.Map;

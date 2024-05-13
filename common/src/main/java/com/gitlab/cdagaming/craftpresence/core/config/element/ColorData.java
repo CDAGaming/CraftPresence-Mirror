@@ -167,16 +167,6 @@ public class ColorData extends Module implements Serializable {
     }
 
     @Override
-    public Object getProperty(String name) {
-        return StringUtils.getField(ColorData.class, this);
-    }
-
-    @Override
-    public void setProperty(String name, Object value) {
-        StringUtils.updateField(ColorData.class, this, value, name);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
