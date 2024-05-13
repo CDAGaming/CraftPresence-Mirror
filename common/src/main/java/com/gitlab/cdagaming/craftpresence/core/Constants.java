@@ -128,6 +128,11 @@ public class Constants {
     public static boolean IS_GAME_CLOSING = false;
 
     /**
+     * The Amount of Active Mods in the instance
+     */
+    private static int DETECTED_MOD_COUNT = -1;
+
+    /**
      * Retrieve the Timer Instance for this Class, used for Scheduling Events
      *
      * @return the Timer Instance for this Class
@@ -151,33 +156,36 @@ public class Constants {
      * @return The Mods that are active in the instance
      */
     public static int getModCount() {
-        int modCount = -1;
-        final Class<?> fmlLoader = FileUtils.findValidClass("net.minecraftforge.fml.common.Loader");
-        final Class<?> quiltLoader = FileUtils.findValidClass("org.quiltmc.loader.api.QuiltLoader");
-        final Class<?> fabricLoader = FileUtils.findValidClass("net.fabricmc.loader.api.FabricLoader");
-        if (fmlLoader != null) {
-            final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, null, null, "instance");
-            if (loaderInstance != null) {
-                final Object mods = StringUtils.executeMethod(fmlLoader, loaderInstance, null, null, "getModList");
+        if (DETECTED_MOD_COUNT <= 0) {
+            int modCount = -1;
+            final Class<?> fmlLoader = FileUtils.findValidClass("net.minecraftforge.fml.common.Loader");
+            final Class<?> quiltLoader = FileUtils.findValidClass("org.quiltmc.loader.api.QuiltLoader");
+            final Class<?> fabricLoader = FileUtils.findValidClass("net.fabricmc.loader.api.FabricLoader");
+            if (fmlLoader != null) {
+                final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, null, null, "instance");
+                if (loaderInstance != null) {
+                    final Object mods = StringUtils.executeMethod(fmlLoader, loaderInstance, null, null, "getModList");
+                    if (mods instanceof List<?>) {
+                        modCount = ((List<?>) mods).size();
+                    }
+                }
+            } else if (quiltLoader != null) {
+                final Object mods = StringUtils.executeMethod(quiltLoader, null, null, null, "getAllMods");
                 if (mods instanceof List<?>) {
                     modCount = ((List<?>) mods).size();
                 }
-            }
-        } else if (quiltLoader != null) {
-            final Object mods = StringUtils.executeMethod(quiltLoader, null, null, null, "getAllMods");
-            if (mods instanceof List<?>) {
-                modCount = ((List<?>) mods).size();
-            }
-        } else if (fabricLoader != null) {
-            final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, null, null, "getInstance");
-            if (loaderInstance != null) {
-                final Object mods = StringUtils.executeMethod(fabricLoader, loaderInstance, null, null, "getAllMods");
-                if (mods instanceof List<?>) {
-                    modCount = ((List<?>) mods).size();
+            } else if (fabricLoader != null) {
+                final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, null, null, "getInstance");
+                if (loaderInstance != null) {
+                    final Object mods = StringUtils.executeMethod(fabricLoader, loaderInstance, null, null, "getAllMods");
+                    if (mods instanceof List<?>) {
+                        modCount = ((List<?>) mods).size();
+                    }
                 }
             }
+            DETECTED_MOD_COUNT = modCount > 0 ? modCount : getRawModCount();
         }
-        return modCount > 0 ? modCount : getRawModCount();
+        return DETECTED_MOD_COUNT;
     }
 
     /**
@@ -185,7 +193,7 @@ public class Constants {
      *
      * @return The Mods that are active in the directory
      */
-    public static int getRawModCount() {
+    private static int getRawModCount() {
         // Mod is within ClassLoader if in a Dev Environment
         // and is thus automatically counted if this is the case
         int modCount = 0;
