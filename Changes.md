@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.4.0 (??/??/2024)
+## v2.4.0 (06/04/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.9...release%2Fv2.4.0)_
@@ -26,6 +26,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Added a `Sync End Color` button to the `Color Editor` UI
     * Pressing this button, will set the `endData` to the current `startColor` data, effectively useful for quickly
       removing the `endColor` data from the final saving
+* Adjusted Mod Initialization in MC 1.7.10 and below to better detect (and avoid) running the mod on server-side
+    * This uses a similar system implemented for MC 1.13+ in v2.2.4
+    * This change is only applied for Forge, Risugami ModLoader, or users on similar modloaders
 
 ### Fixes
 
