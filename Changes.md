@@ -63,6 +63,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This issue effects `StringUtils#getFields`, `StringUtils#getMethods`, and methods using these functions
     * Caching has been implemented to the `RStream#of`, `RStream#methods`, and `RStream#fields` functions to avoid
       repetitive allocation
+* (Backend) Fixed memory leaks caused from unnecessary `DiscordUtils#removeArguments` calls
+    * This issue occurred in `DiscordUtils#syncPlaceholders` in how we were synchronizing `custom.` arguments
+    * The old method has been replaced with a new `refreshDynamicArguments` and designed to be more performant with
+      removals and iteration
 
 ___
 
