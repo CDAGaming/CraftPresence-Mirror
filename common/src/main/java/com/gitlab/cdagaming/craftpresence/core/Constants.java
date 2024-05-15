@@ -167,7 +167,7 @@ public class Constants {
      */
     public static boolean hasReplayMod() {
         if (!CHECKED_REPLAY_MOD) {
-            HAS_REPLAY_MOD = FileUtils.findValidClass("com.replaymod.core.ReplayMod") != null;
+            HAS_REPLAY_MOD = FileUtils.findClass("com.replaymod.core.ReplayMod") != null;
             CHECKED_REPLAY_MOD = true;
         }
         return HAS_REPLAY_MOD;
@@ -181,9 +181,9 @@ public class Constants {
     public static int getModCount() {
         if (DETECTED_MOD_COUNT <= 0) {
             int modCount = -1;
-            final Class<?> fmlLoader = FileUtils.findValidClass("net.minecraftforge.fml.common.Loader");
-            final Class<?> quiltLoader = FileUtils.findValidClass("org.quiltmc.loader.api.QuiltLoader");
-            final Class<?> fabricLoader = FileUtils.findValidClass("net.fabricmc.loader.api.FabricLoader");
+            final Class<?> fmlLoader = FileUtils.loadClass("net.minecraftforge.fml.common.Loader");
+            final Class<?> quiltLoader = FileUtils.loadClass("org.quiltmc.loader.api.QuiltLoader");
+            final Class<?> fabricLoader = FileUtils.loadClass("net.fabricmc.loader.api.FabricLoader");
             if (fmlLoader != null) {
                 final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, null, null, "instance");
                 if (loaderInstance != null) {

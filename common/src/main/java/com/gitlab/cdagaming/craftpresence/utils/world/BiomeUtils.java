@@ -187,7 +187,7 @@ public class BiomeUtils implements Module {
             for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Biome.class).values()) {
                 if (classInfo != null) {
                     try {
-                        Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
+                        Class<?> classObj = FileUtils.loadClass(classInfo.getName());
                         if (classObj != null) {
                             Biome biomeObj = (Biome) classObj.getDeclaredConstructor().newInstance();
                             if (!biomeTypes.contains(biomeObj)) {

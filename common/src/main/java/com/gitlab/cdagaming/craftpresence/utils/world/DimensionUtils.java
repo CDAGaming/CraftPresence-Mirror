@@ -196,7 +196,7 @@ public class DimensionUtils implements Module {
                 for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
                     if (classInfo != null) {
                         try {
-                            Class<?> classObj = FileUtils.findValidClass(FileUtils.CLASS_LOADER, true, classInfo.getName());
+                            Class<?> classObj = FileUtils.loadClass(classInfo.getName());
                             if (classObj != null) {
                                 WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
                                 if (!dimensionTypes.contains(providerObj.getDimensionType())) {

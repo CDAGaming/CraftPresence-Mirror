@@ -45,14 +45,6 @@ import java.util.List;
  */
 @SuppressWarnings("DuplicatedCode")
 public class ReplayModUtils implements Module {
-    // CLASS REFLECTION STORAGE -- DO NOT TOUCH !!!
-    private static final Class<?> screenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiScreen");
-    private static final Class<?> overlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiOverlay");
-    private static final Class<?> abstractContainerClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiContainer");
-    private static final Class<?> abstractScreenClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiScreen");
-    private static final Class<?> abstractOverlayClass = FileUtils.findValidClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiOverlay");
-    private static final Class<?> videoRendererScreen = FileUtils.findValidClass("com.replaymod.render.gui.GuiVideoRenderer");
-    private static final Class<?> videoRendererInfo = FileUtils.findValidClass("com.replaymod.render.rendering.VideoRenderer");
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -115,6 +107,9 @@ public class ReplayModUtils implements Module {
         if (CraftPresence.GUIS.CURRENT_SCREEN == null) {
             clearClientData();
         } else {
+            final Class<?> screenClass = FileUtils.loadClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiScreen");
+            final Class<?> overlayClass = FileUtils.loadClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiOverlay");
+
             final Object possibleScreen = StringUtils.executeMethod(screenClass, null, new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
             final Object possibleOverlay = StringUtils.executeMethod(overlayClass, null, new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
             if (possibleScreen == null && possibleOverlay == null) {
@@ -140,7 +135,11 @@ public class ReplayModUtils implements Module {
 
     @Override
     public void getAllData() {
-        final List<Class<?>> searchClasses = StringUtils.newArrayList(abstractContainerClass, abstractScreenClass, abstractOverlayClass);
+        final List<Class<?>> searchClasses = StringUtils.newArrayList(
+                FileUtils.findClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiContainer"),
+                FileUtils.findClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiScreen"),
+                FileUtils.findClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiOverlay")
+        );
 
         for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);
@@ -200,6 +199,9 @@ public class ReplayModUtils implements Module {
     }
 
     private void syncPlaceholders() {
+        final Class<?> videoRendererScreen = FileUtils.loadClass("com.replaymod.render.gui.GuiVideoRenderer");
+        final Class<?> videoRendererInfo = FileUtils.loadClass("com.replaymod.render.rendering.VideoRenderer");
+
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN != null && CURRENT_SCREEN.getClass() == videoRendererScreen) {
             CraftPresence.CLIENT.syncArgument("replaymod.time.current", secToString(

@@ -682,7 +682,7 @@ public class FunctionsLib {
                 instance = temp;
             }
         } else if (target.isString()) {
-            classToAccess = FileUtils.findValidClass(target.getString());
+            classToAccess = FileUtils.loadClass(target.getString());
         } else {
             ss.error("Second argument to cast(), classToAccess, needs to be either a string, object, or class.");
         }
@@ -849,7 +849,7 @@ public class FunctionsLib {
                 instance = temp;
             }
         } else if (target.isString()) {
-            classToAccess = FileUtils.findValidClass(target.getString());
+            classToAccess = FileUtils.loadClass(target.getString());
         } else {
             ss.error("First argument to getField(), classToAccess, needs to be either a string, object, or class.");
         }
@@ -894,7 +894,7 @@ public class FunctionsLib {
         if (value.isObject()) {
             result = value.getObject().getClass();
         } else if (value.isString()) {
-            result = FileUtils.findValidClass(value.getString());
+            result = FileUtils.loadClass(value.getString());
         } else {
             ss.error("First argument to getClass() needs to be a valid class-compatible object.");
         }
@@ -938,7 +938,7 @@ public class FunctionsLib {
                 instance = temp;
             }
         } else if (target.isString()) {
-            classToAccess = FileUtils.findValidClass(target.getString());
+            classToAccess = FileUtils.loadClass(target.getString());
         } else {
             ss.error("First argument to executeMethod(), classToAccess, needs to be either a string, object, or class.");
         }
@@ -991,7 +991,7 @@ public class FunctionsLib {
                             classObj = (Class<?>) temp;
                         }
                     } else if (data.isString()) {
-                        classObj = FileUtils.findValidClass(data.getString());
+                        classObj = FileUtils.loadClass(data.getString());
                     }
 
                     if (classObj == null) {
