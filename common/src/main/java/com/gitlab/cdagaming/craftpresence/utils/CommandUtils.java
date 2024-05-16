@@ -91,6 +91,10 @@ public class CommandUtils {
             ))
             .build();
     /**
+     * Whether we are currently using pack data
+     */
+    private static boolean usingPackData = false;
+    /**
      * The Current {@link MenuStatus} representing where we are at in the load process
      */
     private static MenuStatus status = MenuStatus.None;
@@ -191,13 +195,14 @@ public class CommandUtils {
                                 data.getPackIcon(), data.getPackType())
                 );
 
-                foundPack = true;
+                usingPackData = foundPack = true;
                 break;
             }
         }
 
-        if (!foundPack) {
+        if (!foundPack && usingPackData) {
             CraftPresence.CLIENT.removeArguments("pack");
+            usingPackData = false;
         }
     }
 
