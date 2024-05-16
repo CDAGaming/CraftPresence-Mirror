@@ -200,7 +200,6 @@ public class ReplayModUtils implements Module {
 
     private void syncPlaceholders() {
         final Class<?> videoRendererScreen = FileUtils.loadClass("com.replaymod.render.gui.GuiVideoRenderer");
-        final Class<?> videoRendererInfo = FileUtils.loadClass("com.replaymod.render.rendering.VideoRenderer");
 
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN != null && CURRENT_SCREEN.getClass() == videoRendererScreen) {
@@ -218,6 +217,7 @@ public class ReplayModUtils implements Module {
             final Object rendererObj = StringUtils.getField(
                     videoRendererScreen, CURRENT_SCREEN, "renderer"
             );
+            final Class<?> videoRendererInfo = FileUtils.loadClass("com.replaymod.render.rendering.VideoRenderer");
             if (rendererObj != null && rendererObj.getClass() == videoRendererInfo) {
                 CraftPresence.CLIENT.syncArgument("replaymod.frames.current",
                         StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"));
