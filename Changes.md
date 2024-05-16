@@ -67,6 +67,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This issue occurred in `DiscordUtils#syncPlaceholders` in how we were synchronizing `custom.` arguments
     * The old method has been replaced with a new `refreshDynamicArguments` and designed to be more performant with
       removals and iteration
+* Fixed the `Sync Config` button in the `Main Gui` not properly applying settings
+    * This was caused by the `Config#applyFrom(Config)` function not being called
 
 ___
 

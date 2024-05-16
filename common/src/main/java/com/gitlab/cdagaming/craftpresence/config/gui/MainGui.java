@@ -302,4 +302,14 @@ public class MainGui extends ConfigurationGui<Config> {
     protected Config getSyncData() {
         return Config.loadOrCreate();
     }
+
+    @Override
+    protected boolean syncData() {
+        final Config data = getSyncData();
+        if (setCurrentData(data)) {
+            getCurrentData().applyFrom(getInstanceData());
+            return setInstanceData(data);
+        }
+        return false;
+    }
 }
