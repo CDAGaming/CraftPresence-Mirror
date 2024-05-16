@@ -53,6 +53,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandsGui extends ExtendedScreen {
+    private static final Pattern SURROUNDED_BY_QUOTES = Pattern.compile("\"(.*?)\"");
     public ExtendedButtonControl proceedButton, copyButton;
     private String[] executionCommandArgs;
     private ExtendedTextControl commandInput;
@@ -258,7 +259,7 @@ public class CommandsGui extends ExtendedScreen {
                                     } else if (DiscordAssetUtils.isValidId(executionCommandArgs[i])) {
                                         clientId = executionCommandArgs[i];
                                     } else {
-                                        final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandString);
+                                        final Matcher matcher = SURROUNDED_BY_QUOTES.matcher(commandString);
                                         if (matcher.find()) {
                                             urlMeta = matcher.group(1);
                                         }
@@ -277,7 +278,7 @@ public class CommandsGui extends ExtendedScreen {
                     if (executionCommandArgs.length == 1) {
                         executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.compile");
                     } else {
-                        final Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(commandString);
+                        final Matcher matcher = SURROUNDED_BY_QUOTES.matcher(commandString);
                         if (matcher.find()) {
                             final String contents = matcher.group(1);
                             final StringBuilder out = new StringBuilder();
