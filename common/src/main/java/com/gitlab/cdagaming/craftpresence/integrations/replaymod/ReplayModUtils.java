@@ -58,6 +58,10 @@ public class ReplayModUtils implements Module {
      */
     private boolean hasScanned = false;
     /**
+     * Whether we are currently syncing placeholders in this module
+     */
+    private boolean usingPlaceholders = false;
+    /**
      * The name of the Current Gui the player is in
      */
     private String CURRENT_GUI_NAME;
@@ -77,7 +81,7 @@ public class ReplayModUtils implements Module {
         CURRENT_SCREEN = null;
 
         setInUse(false);
-        CraftPresence.CLIENT.removeArguments("replaymod");
+        clearPlaceholders();
     }
 
     @Override
@@ -198,6 +202,13 @@ public class ReplayModUtils implements Module {
         CraftPresence.CLIENT.syncArgument("screen.icon", formattedIcon);
     }
 
+    private void clearPlaceholders() {
+        if (usingPlaceholders) {
+            CraftPresence.CLIENT.removeArguments("replaymod");
+            usingPlaceholders = false;
+        }
+    }
+
     private void syncPlaceholders() {
         final Class<?> videoRendererScreen = FileUtils.loadClass("com.replaymod.render.gui.GuiVideoRenderer");
 
@@ -224,8 +235,9 @@ public class ReplayModUtils implements Module {
                 CraftPresence.CLIENT.syncArgument("replaymod.frames.total",
                         StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"));
             }
+            usingPlaceholders = true;
         } else {
-            CraftPresence.CLIENT.removeArguments("replaymod");
+            clearPlaceholders();
         }
     }
 
