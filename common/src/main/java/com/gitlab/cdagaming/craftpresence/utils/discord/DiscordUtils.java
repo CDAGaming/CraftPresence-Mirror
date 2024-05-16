@@ -63,7 +63,6 @@ import org.meteordev.starscript.value.Value;
 import org.meteordev.starscript.value.ValueMap;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -88,12 +87,6 @@ public class DiscordUtils {
      * <p>Format: evalKey, resultingKey
      */
     private final Map<String, String> cachedImageData = StringUtils.newHashMap();
-    /**
-     * A Mapping of the Last Iterated Dynamic Argument Data
-     * <p>Used to cache data related to dynamic variables
-     * <p>Format: key (Without "custom."), placeholderString
-     */
-    private final Map<String, String> cachedDynamicData = StringUtils.newHashMap();
     /**
      * The Current User, tied to the Rich Presence
      */
@@ -807,30 +800,15 @@ public class DiscordUtils {
     }
 
     /**
-     * Refresh Dynamic Variable Data, caching the results for later iteration
+     * Refresh Dynamic Variable Data, removing any data no longer in-play
+     *
+     * @param oldData The old data to interpret
+     * @param newData The new data to interpret
      */
-    public void refreshDynamicArguments() {
-        synchronized (cachedDynamicData) {
-            final Map<String, String> newData = CraftPresence.CONFIG.displaySettings.dynamicVariables;
-
-            // Iterate over cachedDynamicData directly for removals
-            final Iterator<Map.Entry<String, String>> iterator = cachedDynamicData.entrySet().iterator();
-            while (iterator.hasNext()) {
-                final Map.Entry<String, String> entry = iterator.next();
-                final String key = entry.getKey();
-                if (!key.equals("default") && !newData.containsKey(key)) {
-                    removeArguments("custom." + key);
-                    iterator.remove();
-                }
-            }
-
-            // Iterate over newData for additions
-            for (Map.Entry<String, String> entry : newData.entrySet()) {
-                final String key = entry.getKey();
-                if (!key.equals("default")) {
-                    syncArgument("custom." + key, entry.getValue());
-                    cachedDynamicData.put(key, entry.getValue());
-                }
+    public void syncDynamicVariables(final Map<String, String> oldData, final Map<String, String> newData) {
+        for (Map.Entry<String, String> entry : oldData.entrySet()) {
+            if (!entry.getKey().equals("default") && !newData.containsKey(entry.getKey())) {
+                removeArguments("custom." + entry.getKey());
             }
         }
     }
@@ -1132,7 +1110,11 @@ public class DiscordUtils {
         syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.world : null);
         syncArgument("_config.instance", CraftPresence.CONFIG);
         // Sync Custom Variables
-        refreshDynamicArguments();
+        for (Map.Entry<String, String> entry : CraftPresence.CONFIG.displaySettings.dynamicVariables.entrySet()) {
+            if (!entry.getKey().equals("default")) {
+                syncArgument("custom." + entry.getKey(), entry.getValue());
+            }
+        }
         // Add Any Generalized Argument Data needed
         final String playerName = CraftPresence.session.getUsername();
         syncArgument("player.name", playerName);

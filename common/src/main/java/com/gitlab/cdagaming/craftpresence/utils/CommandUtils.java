@@ -356,6 +356,15 @@ public class CommandUtils {
     }
 
     /**
+     * Refresh Dynamic Variable Data, removing any data no longer in-play
+     *
+     * @param oldData The old data to interpret
+     */
+    public static void syncDynamicVariables(final Map<String, String> oldData) {
+        CraftPresence.CLIENT.syncDynamicVariables(oldData, CraftPresence.CONFIG.displaySettings.dynamicVariables);
+    }
+
+    /**
      * Synchronize Data for Rendering Tooltips, using config data
      */
     public static void setDefaultTooltip() {
