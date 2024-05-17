@@ -84,8 +84,8 @@ public class TextReplacer implements DataMigrator {
                 configPath.add(entry.getKey());
                 final String[] pathData = configPath.toArray(new String[0]);
 
-                Object defaultValue = instance.getDefaults().getProperty(pathData);
-                Object currentValue = instance.getProperty(pathData);
+                Object defaultValue = instance.getDefaults().findProperty(pathData);
+                Object currentValue = instance.findProperty(pathData);
                 boolean shouldContinue = true;
 
                 if (defaultValue == null) {

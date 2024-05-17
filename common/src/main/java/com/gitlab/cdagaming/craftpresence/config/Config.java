@@ -155,7 +155,7 @@ public final class Config extends Module implements Serializable {
         if (instance == null) {
             return null;
         }
-        return instance.getProperty(path);
+        return instance.findProperty(path);
     }
 
     public static Object getProperty(final Module instance, final String name) {
@@ -425,7 +425,7 @@ public final class Config extends Module implements Serializable {
         }
 
         if (rawJson != null) {
-            final Object parentValue = getProperty(path);
+            final Object parentValue = findProperty(path);
             for (Map.Entry<String, JsonElement> entry : rawJson.getAsJsonObject().entrySet()) {
                 final String rawName = pathPrefix + entry.getKey();
                 final List<String> configPath = StringUtils.newArrayList(path);
@@ -433,8 +433,8 @@ public final class Config extends Module implements Serializable {
                 final String[] pathData = configPath.toArray(new String[0]);
 
                 final JsonElement rawValue = entry.getValue();
-                Object defaultValue = getDefaults().getProperty(pathData);
-                Object currentValue = getProperty(pathData);
+                Object defaultValue = getDefaults().findProperty(pathData);
+                Object currentValue = findProperty(pathData);
                 boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
@@ -618,6 +618,8 @@ public final class Config extends Module implements Serializable {
                 name = path[i];
                 if (instance instanceof Map<?, ?>) {
                     result = StringUtils.newHashMap((Map<?, ?>) instance).get(name);
+                } else if (instance instanceof Module) {
+                    result = ((Module) instance).getProperty(name);
                 } else {
                     result = StringUtils.getField(classObj, instance, name);
                 }
@@ -634,13 +636,8 @@ public final class Config extends Module implements Serializable {
         return new Pair<>(result, new Tuple<>(classObj, instance, name));
     }
 
-    public Object getProperty(final String... path) {
+    public Object findProperty(final String... path) {
         return lookupProperty(path).getFirst();
-    }
-
-    @Override
-    public Object getProperty(final String name) {
-        return getProperty(name.split("\\."));
     }
 
     public void setProperty(final Object value, final String... path) {
@@ -654,25 +651,23 @@ public final class Config extends Module implements Serializable {
                 Map<Object, Object> data = StringUtils.newHashMap((Map<?, ?>) fieldData.getSecond());
                 data.put(fieldData.getThird(), value);
 
-                StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), data, parentData.getThird());
+                if (parentData.getSecond() instanceof Module) {
+                    ((Module) parentData.getSecond()).setProperty(parentData.getThird(), data);
+                } else {
+                    StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), data, parentData.getThird());
+                }
             } else {
-                StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), value, fieldData.getThird());
+                if (fieldData.getSecond() instanceof Module) {
+                    ((Module) fieldData.getSecond()).setProperty(fieldData.getThird(), value);
+                } else {
+                    StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), value, fieldData.getThird());
+                }
             }
         }
     }
 
-    @Override
-    public void setProperty(final String name, final Object value) {
-        setProperty(value, name.split("\\."));
-    }
-
     public void resetProperty(final String... path) {
-        setProperty(getDefaults().getProperty(path), path);
-    }
-
-    @Override
-    public void resetProperty(final String name) {
-        resetProperty(name.split("\\."));
+        setProperty(getDefaults().findProperty(path), path);
     }
 
     @Override
