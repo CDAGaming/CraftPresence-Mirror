@@ -89,6 +89,36 @@ public class Gui extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "fallbackGuiIcon":
+                return fallbackGuiIcon;
+            case "guiData":
+                return guiData;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "fallbackGuiIcon":
+                    fallbackGuiIcon = (String) value;
+                    break;
+                case "guiData":
+                    guiData = (Map<String, ModuleData>) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

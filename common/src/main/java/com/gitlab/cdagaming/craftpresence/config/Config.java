@@ -640,6 +640,42 @@ public final class Config extends Module implements Serializable {
         return lookupProperty(path).getFirst();
     }
 
+    @Override
+    public Object getProperty(final String name) {
+        switch (name) {
+            case "hasChanged":
+                return hasChanged;
+            case "isNewFile":
+                return isNewFile;
+            case "_README":
+                return _README;
+            case "_SOURCE":
+                return _SOURCE;
+            case "_schemaVersion":
+                return _schemaVersion;
+            case "_lastMCVersionId":
+                return _lastMCVersionId;
+            case "generalSettings":
+                return generalSettings;
+            case "biomeSettings":
+                return biomeSettings;
+            case "dimensionSettings":
+                return dimensionSettings;
+            case "serverSettings":
+                return serverSettings;
+            case "statusMessages":
+                return statusMessages;
+            case "advancedSettings":
+                return advancedSettings;
+            case "accessibilitySettings":
+                return accessibilitySettings;
+            case "displaySettings":
+                return displaySettings;
+            default:
+                return null;
+        }
+    }
+
     public void setProperty(final Object value, final String... path) {
         final Pair<Object, Tuple<Class<?>, Object, String>> propertyData = lookupProperty(path);
         if (propertyData.getFirst() != null) {
@@ -663,6 +699,60 @@ public final class Config extends Module implements Serializable {
                     StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), value, fieldData.getThird());
                 }
             }
+        }
+    }
+
+    @Override
+    public void setProperty(final String name, final Object value) {
+        try {
+            switch (name) {
+                case "hasChanged":
+                    hasChanged = (Boolean) value;
+                    break;
+                case "isNewFile":
+                    isNewFile = (Boolean) value;
+                    break;
+                case "_README":
+                    _README = (String) value;
+                    break;
+                case "_SOURCE":
+                    _SOURCE = (String) value;
+                    break;
+                case "_schemaVersion":
+                    _schemaVersion = (Integer) value;
+                    break;
+                case "_lastMCVersionId":
+                    _lastMCVersionId = (Integer) value;
+                    break;
+                case "generalSettings":
+                    generalSettings = (General) value;
+                    break;
+                case "biomeSettings":
+                    biomeSettings = (Biome) value;
+                    break;
+                case "dimensionSettings":
+                    dimensionSettings = (Dimension) value;
+                    break;
+                case "serverSettings":
+                    serverSettings = (Server) value;
+                    break;
+                case "statusMessages":
+                    statusMessages = (Status) value;
+                    break;
+                case "advancedSettings":
+                    advancedSettings = (Advanced) value;
+                    break;
+                case "accessibilitySettings":
+                    accessibilitySettings = (Accessibility) value;
+                    break;
+                case "displaySettings":
+                    displaySettings = (Display) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
         }
     }
 

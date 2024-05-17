@@ -76,6 +76,36 @@ public class Dimension extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "fallbackDimensionIcon":
+                return fallbackDimensionIcon;
+            case "dimensionData":
+                return dimensionData;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "fallbackDimensionIcon":
+                    fallbackDimensionIcon = (String) value;
+                    break;
+                case "dimensionData":
+                    dimensionData = (Map<String, ModuleData>) value;
+                    break;
+                case "default":
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

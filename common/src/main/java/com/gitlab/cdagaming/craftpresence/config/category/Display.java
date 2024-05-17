@@ -92,6 +92,41 @@ public class Display extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "presenceData":
+                return presenceData;
+            case "dynamicIcons":
+                return dynamicIcons;
+            case "dynamicVariables":
+                return dynamicVariables;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "presenceData":
+                    presenceData = (PresenceData) value;
+                    break;
+                case "dynamicIcons":
+                    dynamicIcons = (Map<String, String>) value;
+                    break;
+                case "dynamicVariables":
+                    dynamicVariables = (Map<String, String>) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

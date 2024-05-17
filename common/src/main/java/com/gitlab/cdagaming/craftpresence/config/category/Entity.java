@@ -86,6 +86,41 @@ public class Entity extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "fallbackEntityIcon":
+                return fallbackEntityIcon;
+            case "targetData":
+                return targetData;
+            case "ridingData":
+                return ridingData;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "fallbackEntityIcon":
+                    fallbackEntityIcon = (String) value;
+                    break;
+                case "targetData":
+                    targetData = (Map<String, ModuleData>) value;
+                    break;
+                case "ridingData":
+                    ridingData = (Map<String, ModuleData>) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

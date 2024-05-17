@@ -94,6 +94,106 @@ public class General extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "detectATLauncherInstance":
+                return detectATLauncherInstance;
+            case "detectCurseManifest":
+                return detectCurseManifest;
+            case "detectMultiMCManifest":
+                return detectMultiMCManifest;
+            case "detectMCUpdaterInstance":
+                return detectMCUpdaterInstance;
+            case "detectTechnicPack":
+                return detectTechnicPack;
+            case "detectModrinthPack":
+                return detectModrinthPack;
+            case "detectBiomeData":
+                return detectBiomeData;
+            case "detectDimensionData":
+                return detectDimensionData;
+            case "detectWorldData":
+                return detectWorldData;
+            case "clientId":
+                return clientId;
+            case "defaultIcon":
+                return defaultIcon;
+            case "enableJoinRequests":
+                return enableJoinRequests;
+            case "partyPrivacyLevel":
+                return partyPrivacyLevel;
+            case "preferredClientLevel":
+                return preferredClientLevel;
+            case "resetTimeOnInit":
+                return resetTimeOnInit;
+            case "autoRegister":
+                return autoRegister;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "detectATLauncherInstance":
+                    detectATLauncherInstance = (Boolean) value;
+                    break;
+                case "detectCurseManifest":
+                    detectCurseManifest = (Boolean) value;
+                    break;
+                case "detectMultiMCManifest":
+                    detectMultiMCManifest = (Boolean) value;
+                    break;
+                case "detectMCUpdaterInstance":
+                    detectMCUpdaterInstance = (Boolean) value;
+                    break;
+                case "detectTechnicPack":
+                    detectTechnicPack = (Boolean) value;
+                    break;
+                case "detectModrinthPack":
+                    detectModrinthPack = (Boolean) value;
+                    break;
+                case "detectBiomeData":
+                    detectBiomeData = (Boolean) value;
+                    break;
+                case "detectDimensionData":
+                    detectDimensionData = (Boolean) value;
+                    break;
+                case "detectWorldData":
+                    detectWorldData = (Boolean) value;
+                    break;
+                case "clientId":
+                    clientId = (String) value;
+                    break;
+                case "defaultIcon":
+                    defaultIcon = (String) value;
+                    break;
+                case "enableJoinRequests":
+                    enableJoinRequests = (Boolean) value;
+                    break;
+                case "partyPrivacyLevel":
+                    partyPrivacyLevel = (Integer) value;
+                    break;
+                case "preferredClientLevel":
+                    preferredClientLevel = (Integer) value;
+                    break;
+                case "resetTimeOnInit":
+                    resetTimeOnInit = (Boolean) value;
+                    break;
+                case "autoRegister":
+                    autoRegister = (Boolean) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

@@ -82,6 +82,46 @@ public class Status extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "mainMenuData":
+                return mainMenuData;
+            case "loadingData":
+                return loadingData;
+            case "lanData":
+                return lanData;
+            case "singleplayerData":
+                return singleplayerData;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "mainMenuData":
+                    mainMenuData = (ModuleData) value;
+                    break;
+                case "loadingData":
+                    loadingData = (ModuleData) value;
+                    break;
+                case "lanData":
+                    lanData = (ModuleData) value;
+                    break;
+                case "singleplayerData":
+                    singleplayerData = (ModuleData) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

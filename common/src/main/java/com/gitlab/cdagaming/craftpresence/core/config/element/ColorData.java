@@ -34,7 +34,7 @@ import java.util.Objects;
 public class ColorData extends Module implements Serializable {
     private static final ColorData DEFAULT = new ColorData();
 
-    private final ColorSection start = new ColorSection();
+    private ColorSection start = new ColorSection();
     private ColorSection end;
     private String texLocation;
 
@@ -164,6 +164,38 @@ public class ColorData extends Module implements Serializable {
 
     public void setTexLocation(String texLocation) {
         this.texLocation = !StringUtils.isNullOrEmpty(texLocation) ? texLocation : null;
+    }
+
+    @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "start":
+                return start;
+            case "end":
+                return end;
+            case "texLocation":
+                return texLocation;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "start":
+                    start = (ColorSection) value;
+                    break;
+                case "end":
+                    end = (ColorSection) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
     }
 
     @Override

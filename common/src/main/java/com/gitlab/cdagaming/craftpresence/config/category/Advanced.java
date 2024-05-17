@@ -100,6 +100,106 @@ public class Advanced extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "enablePerGui":
+                return enablePerGui;
+            case "enablePerItem":
+                return enablePerItem;
+            case "enablePerEntity":
+                return enablePerEntity;
+            case "formatWords":
+                return formatWords;
+            case "debugMode":
+                return debugMode;
+            case "verboseMode":
+                return verboseMode;
+            case "refreshRate":
+                return refreshRate;
+            case "allowPlaceholderPreviews":
+                return allowPlaceholderPreviews;
+            case "guiSettings":
+                return guiSettings;
+            case "itemMessages":
+                return itemMessages;
+            case "entitySettings":
+                return entitySettings;
+            case "allowEndpointIcons":
+                return allowEndpointIcons;
+            case "serverIconEndpoint":
+                return serverIconEndpoint;
+            case "allowDuplicatePackets":
+                return allowDuplicatePackets;
+            case "maxConnectionAttempts":
+                return maxConnectionAttempts;
+            case "enableClassGraph":
+                return enableClassGraph;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "enablePerGui":
+                    enablePerGui = (Boolean) value;
+                    break;
+                case "enablePerItem":
+                    enablePerItem = (Boolean) value;
+                    break;
+                case "enablePerEntity":
+                    enablePerEntity = (Boolean) value;
+                    break;
+                case "formatWords":
+                    formatWords = (Boolean) value;
+                    break;
+                case "debugMode":
+                    debugMode = (Boolean) value;
+                    break;
+                case "verboseMode":
+                    verboseMode = (Boolean) value;
+                    break;
+                case "refreshRate":
+                    refreshRate = (Integer) value;
+                    break;
+                case "allowPlaceholderPreviews":
+                    allowPlaceholderPreviews = (Boolean) value;
+                    break;
+                case "guiSettings":
+                    guiSettings = (Gui) value;
+                    break;
+                case "itemMessages":
+                    itemMessages = (Map<String, String>) value;
+                    break;
+                case "entitySettings":
+                    entitySettings = (Entity) value;
+                    break;
+                case "allowEndpointIcons":
+                    allowEndpointIcons = (Boolean) value;
+                    break;
+                case "serverIconEndpoint":
+                    serverIconEndpoint = (String) value;
+                    break;
+                case "allowDuplicatePackets":
+                    allowDuplicatePackets = (Boolean) value;
+                    break;
+                case "maxConnectionAttempts":
+                    maxConnectionAttempts = (Integer) value;
+                    break;
+                case "enableClassGraph":
+                    enableClassGraph = (Boolean) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

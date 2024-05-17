@@ -84,6 +84,46 @@ public class ColorSection extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "red":
+                return red;
+            case "green":
+                return green;
+            case "blue":
+                return blue;
+            case "alpha":
+                return alpha;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "red":
+                    red = (Integer) value;
+                    break;
+                case "green":
+                    green = (Integer) value;
+                    break;
+                case "blue":
+                    blue = (Integer) value;
+                    break;
+                case "alpha":
+                    alpha = (Integer) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

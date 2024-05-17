@@ -86,6 +86,81 @@ public class PresenceData extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "enabled":
+                return enabled;
+            case "useAsMain":
+                return useAsMain;
+            case "details":
+                return details;
+            case "gameState":
+                return gameState;
+            case "largeImageKey":
+                return largeImageKey;
+            case "largeImageText":
+                return largeImageText;
+            case "smallImageKey":
+                return smallImageKey;
+            case "smallImageText":
+                return smallImageText;
+            case "startTimestamp":
+                return startTimestamp;
+            case "endTimestamp":
+                return endTimestamp;
+            case "buttons":
+                return buttons;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "enabled":
+                    enabled = (Boolean) value;
+                    break;
+                case "useAsMain":
+                    useAsMain = (Boolean) value;
+                    break;
+                case "details":
+                    details = (String) value;
+                    break;
+                case "gameState":
+                    gameState = (String) value;
+                    break;
+                case "largeImageKey":
+                    largeImageKey = (String) value;
+                    break;
+                case "largeImageText":
+                    largeImageText = (String) value;
+                    break;
+                case "smallImageKey":
+                    smallImageKey = (String) value;
+                    break;
+                case "smallImageText":
+                    smallImageText = (String) value;
+                    break;
+                case "startTimestamp":
+                    startTimestamp = (String) value;
+                    break;
+                case "endTimestamp":
+                    endTimestamp = (String) value;
+                    break;
+                case "buttons":
+                    buttons = (Map<String, Button>) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public PresenceData copy() {
         return new PresenceData(this);
     }

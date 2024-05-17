@@ -91,6 +91,76 @@ public class Accessibility extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "tooltipBackground":
+                return tooltipBackground;
+            case "tooltipBorder":
+                return tooltipBorder;
+            case "guiBackground":
+                return guiBackground;
+            case "altGuiBackground":
+                return altGuiBackground;
+            case "languageId":
+                return languageId;
+            case "stripTranslationColors":
+                return stripTranslationColors;
+            case "stripTranslationFormatting":
+                return stripTranslationFormatting;
+            case "stripExtraGuiElements":
+                return stripExtraGuiElements;
+            case "renderTooltips":
+                return renderTooltips;
+            case "configKeyCode":
+                return configKeyCode;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "tooltipBackground":
+                    tooltipBackground = (ColorData) value;
+                    break;
+                case "tooltipBorder":
+                    tooltipBorder = (ColorData) value;
+                    break;
+                case "guiBackground":
+                    guiBackground = (ColorData) value;
+                    break;
+                case "altGuiBackground":
+                    altGuiBackground = (ColorData) value;
+                    break;
+                case "languageId":
+                    languageId = (String) value;
+                    break;
+                case "stripTranslationColors":
+                    stripTranslationColors = (Boolean) value;
+                    break;
+                case "stripTranslationFormatting":
+                    stripTranslationFormatting = (Boolean) value;
+                    break;
+                case "stripExtraGuiElements":
+                    stripExtraGuiElements = (Boolean) value;
+                    break;
+                case "renderTooltips":
+                    renderTooltips = (Boolean) value;
+                    break;
+                case "configKeyCode":
+                    configKeyCode = (Integer) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

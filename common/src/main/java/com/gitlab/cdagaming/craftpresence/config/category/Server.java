@@ -80,6 +80,46 @@ public class Server extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "fallbackServerIcon":
+                return fallbackServerIcon;
+            case "fallbackServerName":
+                return fallbackServerName;
+            case "fallbackServerMotd":
+                return fallbackServerMotd;
+            case "serverData":
+                return serverData;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "fallbackServerIcon":
+                    fallbackServerIcon = (String) value;
+                    break;
+                case "fallbackServerName":
+                    fallbackServerName = (String) value;
+                    break;
+                case "fallbackServerMotd":
+                    fallbackServerMotd = (String) value;
+                    break;
+                case "serverData":
+                    serverData = (Map<String, ModuleData>) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

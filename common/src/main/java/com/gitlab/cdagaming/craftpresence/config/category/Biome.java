@@ -76,6 +76,36 @@ public class Biome extends Module implements Serializable {
     }
 
     @Override
+    public Object getProperty(String name) {
+        switch (name) {
+            case "fallbackBiomeIcon":
+                return fallbackBiomeIcon;
+            case "biomeData":
+                return biomeData;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setProperty(String name, Object value) {
+        try {
+            switch (name) {
+                case "fallbackBiomeIcon":
+                    fallbackBiomeIcon = (String) value;
+                    break;
+                case "biomeData":
+                    biomeData = (Map<String, ModuleData>) value;
+                    break;
+                default:
+                    break;
+            }
+        } catch (Throwable ex) {
+            printException(ex);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
