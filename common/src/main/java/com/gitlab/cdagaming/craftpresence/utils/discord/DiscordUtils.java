@@ -723,7 +723,7 @@ public class DiscordUtils {
 
                 if (oldData != null) {
                     final PresenceData presenceInfo = (PresenceData) Config.getProperty(oldData, "data");
-                    if (presenceInfo.equals(forcedData)) {
+                    if (presenceInfo != null && presenceInfo.equals(forcedData)) {
                         forcedData = null;
                     }
                 }
