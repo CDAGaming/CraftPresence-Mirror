@@ -53,6 +53,7 @@ public class Advanced extends Module implements Serializable {
     public String playerSkinEndpoint = "https://mc-heads.net/avatar/{getOrDefault(player.uuid.short, player.name)}";
     public boolean allowDuplicatePackets = false;
     public int maxConnectionAttempts = 10;
+    public boolean enableClassGraph = false;
 
     public Advanced(final Advanced other) {
         transferFrom(other);
@@ -94,6 +95,7 @@ public class Advanced extends Module implements Serializable {
             playerSkinEndpoint = data.playerSkinEndpoint;
             allowDuplicatePackets = data.allowDuplicatePackets;
             maxConnectionAttempts = data.maxConnectionAttempts;
+            enableClassGraph = data.enableClassGraph;
         }
     }
 
@@ -124,7 +126,8 @@ public class Advanced extends Module implements Serializable {
                 Objects.equals(other.serverIconEndpoint, serverIconEndpoint) &&
                 Objects.equals(other.playerSkinEndpoint, playerSkinEndpoint) &&
                 Objects.equals(other.allowDuplicatePackets, allowDuplicatePackets) &&
-                Objects.equals(other.maxConnectionAttempts, maxConnectionAttempts);
+                Objects.equals(other.maxConnectionAttempts, maxConnectionAttempts) &&
+                Objects.equals(other.enableClassGraph, enableClassGraph);
     }
 
     @Override
@@ -136,7 +139,8 @@ public class Advanced extends Module implements Serializable {
                 guiSettings, itemMessages, entitySettings,
                 allowEndpointIcons,
                 serverIconEndpoint, playerSkinEndpoint,
-                allowDuplicatePackets, maxConnectionAttempts
+                allowDuplicatePackets, maxConnectionAttempts,
+                enableClassGraph
         );
     }
 }

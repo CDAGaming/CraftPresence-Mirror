@@ -68,9 +68,13 @@ public class EntityUtils implements Module {
      */
     private boolean isInUse = false;
     /**
-     * Whether this module has performed an initial retrieval of items
+     * Whether this module has performed an initial retrieval of config items
      */
-    private boolean hasScanned = false;
+    private boolean hasScannedConfig = false;
+    /**
+     * Whether this module has performed an initial retrieval of internal items
+     */
+    private boolean hasScannedInternals = false;
     /**
      * The Player's Currently Targeted Entity Name, if any
      */
@@ -153,7 +157,8 @@ public class EntityUtils implements Module {
 
     @Override
     public void emptyData() {
-        hasScanned = false;
+        queueConfigScan();
+        queueInternalScan();
         DEFAULT_NAMES.clear();
         ENTITY_NAMES.clear();
         PLAYER_BINDINGS.clear();
@@ -178,11 +183,16 @@ public class EntityUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : enabled;
-        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
+        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
 
-        if (needsUpdate) {
-            scanForData();
-            hasScanned = true;
+        if (needsConfigUpdate) {
+            scanConfigData();
+            hasScannedConfig = true;
+        }
+        if (needsInternalUpdate) {
+            scanInternalData();
+            hasScannedInternals = true;
         }
 
         if (enabled) {
@@ -292,7 +302,7 @@ public class EntityUtils implements Module {
     }
 
     @Override
-    public void getAllData() {
+    public void getInternalData() {
         if (!EntityList.getEntityNameList().isEmpty()) {
             for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
@@ -323,7 +333,10 @@ public class EntityUtils implements Module {
                 }
             }
         }
+    }
 
+    @Override
+    public void getConfigData() {
         for (String entityTargetEntry : CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.keySet()) {
             if (!StringUtils.isNullOrEmpty(entityTargetEntry) && !ENTITY_NAMES.contains(entityTargetEntry)) {
                 ENTITY_NAMES.add(entityTargetEntry);
@@ -335,6 +348,31 @@ public class EntityUtils implements Module {
                 ENTITY_NAMES.add(entityRidingEntry);
             }
         }
+    }
+
+    @Override
+    public boolean hasScannedInternals() {
+        return hasScannedInternals;
+    }
+
+    @Override
+    public void queueInternalScan() {
+        hasScannedInternals = false;
+    }
+
+    @Override
+    public boolean canFetchConfig() {
+        return CraftPresence.CONFIG != null;
+    }
+
+    @Override
+    public boolean hasScannedConfig() {
+        return hasScannedConfig;
+    }
+
+    @Override
+    public void queueConfigScan() {
+        hasScannedConfig = false;
     }
 
     @Override

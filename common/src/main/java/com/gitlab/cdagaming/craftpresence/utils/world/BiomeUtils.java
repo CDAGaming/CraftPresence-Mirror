@@ -61,9 +61,13 @@ public class BiomeUtils implements Module {
      */
     private boolean isInUse = false;
     /**
-     * Whether this module has performed an initial retrieval of items
+     * Whether this module has performed an initial retrieval of config items
      */
-    private boolean hasScanned = false;
+    private boolean hasScannedConfig = false;
+    /**
+     * Whether this module has performed an initial retrieval of internal items
+     */
+    private boolean hasScannedInternals = false;
     /**
      * The Name of the Current Biome the Player is in
      */
@@ -79,7 +83,8 @@ public class BiomeUtils implements Module {
 
     @Override
     public void emptyData() {
-        hasScanned = false;
+        queueConfigScan();
+        queueInternalScan();
         DEFAULT_NAMES.clear();
         BIOME_NAMES.clear();
         clearClientData();
@@ -99,11 +104,16 @@ public class BiomeUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : enabled;
-        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
+        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
 
-        if (needsUpdate) {
-            scanForData();
-            hasScanned = true;
+        if (needsConfigUpdate) {
+            scanConfigData();
+            hasScannedConfig = true;
+        }
+        if (needsInternalUpdate) {
+            scanInternalData();
+            hasScannedInternals = true;
         }
 
         if (enabled) {
@@ -205,7 +215,7 @@ public class BiomeUtils implements Module {
     }
 
     @Override
-    public void getAllData() {
+    public void getInternalData() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
                 String biomeName = StringUtils.getOrDefault(biome.getBiomeName(), MappingUtils.getClassName(biome));
@@ -218,7 +228,10 @@ public class BiomeUtils implements Module {
                 }
             }
         }
+    }
 
+    @Override
+    public void getConfigData() {
         for (String biomeEntry : CraftPresence.CONFIG.biomeSettings.biomeData.keySet()) {
             if (!StringUtils.isNullOrEmpty(biomeEntry)) {
                 String name = StringUtils.formatIdentifier(biomeEntry, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
@@ -230,8 +243,33 @@ public class BiomeUtils implements Module {
     }
 
     @Override
-    public boolean canFetchData() {
-        return FileUtils.canScanClasses();
+    public boolean canFetchInternals() {
+        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+    }
+
+    @Override
+    public boolean hasScannedInternals() {
+        return hasScannedInternals;
+    }
+
+    @Override
+    public void queueInternalScan() {
+        hasScannedInternals = false;
+    }
+
+    @Override
+    public boolean canFetchConfig() {
+        return CraftPresence.CONFIG != null;
+    }
+
+    @Override
+    public boolean hasScannedConfig() {
+        return hasScannedConfig;
+    }
+
+    @Override
+    public void queueConfigScan() {
+        hasScannedConfig = false;
     }
 
     @Override

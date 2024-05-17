@@ -60,13 +60,37 @@ public interface Module {
     /**
      * Updates and Initializes Module Data, based on found Information
      */
-    void getAllData();
+    void getInternalData();
+
+    /**
+     * Updates and Initializes Module Data, based on found Information
+     */
+    void getConfigData();
 
     /**
      * Scans for applicable data related to this Module, within a new Thread.
      */
-    default void scanForData() {
-        Constants.getThreadFactory().newThread(this::getAllData).start();
+    default void scanConfigData() {
+        Constants.getThreadFactory().newThread(() -> {
+            try {
+                this.getConfigData();
+            } catch (Throwable ex) {
+                Constants.LOG.debugError(ex);
+            }
+        }).start();
+    }
+
+    /**
+     * Scans for applicable data related to this Module, within a new Thread.
+     */
+    default void scanInternalData() {
+        Constants.getThreadFactory().newThread(() -> {
+            try {
+                this.getInternalData();
+            } catch (Throwable ex) {
+                Constants.LOG.debugError(ex);
+            }
+        }).start();
     }
 
     /**
@@ -119,7 +143,32 @@ public interface Module {
      *
      * @return {@link Boolean#TRUE} if this module can access scan data
      */
-    default boolean canFetchData() {
+    default boolean canFetchInternals() {
         return true;
+    }
+
+    default boolean hasScannedInternals() {
+        return true;
+    }
+
+    default void queueInternalScan() {
+        // N/A
+    }
+
+    /**
+     * Determines whether we can check for data that can be accessed by the module
+     *
+     * @return {@link Boolean#TRUE} if this module can access config data
+     */
+    default boolean canFetchConfig() {
+        return true;
+    }
+
+    default boolean hasScannedConfig() {
+        return true;
+    }
+
+    default void queueConfigScan() {
+        // N/A
     }
 }

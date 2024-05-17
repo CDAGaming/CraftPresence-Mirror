@@ -76,9 +76,13 @@ public class GuiUtils implements Module {
      */
     private boolean isInUse = false;
     /**
-     * Whether this module has performed an initial retrieval of items
+     * Whether this module has performed an initial retrieval of config items
      */
-    private boolean hasScanned = false;
+    private boolean hasScannedConfig = false;
+    /**
+     * Whether this module has performed an initial retrieval of internal items
+     */
+    private boolean hasScannedInternals = false;
     /**
      * The name of the Current Gui the player is in
      */
@@ -95,7 +99,8 @@ public class GuiUtils implements Module {
 
     @Override
     public void emptyData() {
-        hasScanned = false;
+        queueConfigScan();
+        queueInternalScan();
         DEFAULT_NAMES.clear();
         GUI_NAMES.clear();
         GUI_CLASSES.clear();
@@ -116,11 +121,16 @@ public class GuiUtils implements Module {
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
         isFocused = CraftPresence.instance.currentScreen != null && (CraftPresence.instance.currentScreen.isFocused() || CraftPresence.player != null);
-        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
+        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
 
-        if (needsUpdate) {
-            scanForData();
-            hasScanned = true;
+        if (needsConfigUpdate) {
+            scanConfigData();
+            hasScannedConfig = true;
+        }
+        if (needsInternalUpdate) {
+            scanInternalData();
+            hasScannedInternals = true;
         }
 
         if (enabled) {
@@ -160,7 +170,7 @@ public class GuiUtils implements Module {
     }
 
     @Override
-    public void getAllData() {
+    public void getInternalData() {
         final List<Class<?>> searchClasses = StringUtils.newArrayList(GuiScreen.class, GuiContainer.class);
 
         for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses).values()) {
@@ -175,7 +185,10 @@ public class GuiUtils implements Module {
                 GUI_CLASSES.put(screenName, classObj);
             }
         }
+    }
 
+    @Override
+    public void getConfigData() {
         for (String guiEntry : CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.keySet()) {
             if (!StringUtils.isNullOrEmpty(guiEntry) && !GUI_NAMES.contains(guiEntry)) {
                 GUI_NAMES.add(guiEntry);
@@ -184,8 +197,33 @@ public class GuiUtils implements Module {
     }
 
     @Override
-    public boolean canFetchData() {
-        return FileUtils.canScanClasses();
+    public boolean canFetchInternals() {
+        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+    }
+
+    @Override
+    public boolean hasScannedInternals() {
+        return hasScannedInternals;
+    }
+
+    @Override
+    public void queueInternalScan() {
+        hasScannedInternals = false;
+    }
+
+    @Override
+    public boolean canFetchConfig() {
+        return CraftPresence.CONFIG != null;
+    }
+
+    @Override
+    public boolean hasScannedConfig() {
+        return hasScannedConfig;
+    }
+
+    @Override
+    public void queueConfigScan() {
+        hasScannedConfig = false;
     }
 
     @Override

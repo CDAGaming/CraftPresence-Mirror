@@ -88,9 +88,13 @@ public class TileEntityUtils implements Module {
      */
     private boolean isInUse = false;
     /**
-     * Whether this module has performed an initial retrieval of items
+     * Whether this module has performed an initial retrieval of config items
      */
-    private boolean hasScanned = false;
+    private boolean hasScannedConfig = false;
+    /**
+     * Whether this module has performed an initial retrieval of internal items
+     */
+    private boolean hasScannedInternals = false;
     /**
      * The Player's Current Main Hand Item, if any
      */
@@ -254,7 +258,8 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void emptyData() {
-        hasScanned = false;
+        queueConfigScan();
+        queueInternalScan();
         BLOCK_NAMES.clear();
         BLOCK_CLASSES.clear();
         ITEM_NAMES.clear();
@@ -289,11 +294,16 @@ public class TileEntityUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : enabled;
-        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
+        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
 
-        if (needsUpdate) {
-            scanForData();
-            hasScanned = true;
+        if (needsConfigUpdate) {
+            scanConfigData();
+            hasScannedConfig = true;
+        }
+        if (needsInternalUpdate) {
+            scanInternalData();
+            hasScannedInternals = true;
         }
 
         if (enabled) {
@@ -467,7 +477,7 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
-    public void getAllData() {
+    public void getInternalData() {
         for (Block block : Block.REGISTRY) {
             if (!isEmpty(block)) {
                 final ItemStack stack = getStackFrom(block);
@@ -500,6 +510,11 @@ public class TileEntityUtils implements Module {
             }
         }
 
+        verifyEntities();
+    }
+
+    @Override
+    public void getConfigData() {
         for (String itemEntry : CraftPresence.CONFIG.advancedSettings.itemMessages.keySet()) {
             if (!StringUtils.isNullOrEmpty(itemEntry)) {
                 if (!ITEM_NAMES.contains(itemEntry)) {
@@ -512,6 +527,31 @@ public class TileEntityUtils implements Module {
         }
 
         verifyEntities();
+    }
+
+    @Override
+    public boolean hasScannedInternals() {
+        return hasScannedInternals;
+    }
+
+    @Override
+    public void queueInternalScan() {
+        hasScannedInternals = false;
+    }
+
+    @Override
+    public boolean canFetchConfig() {
+        return CraftPresence.CONFIG != null;
+    }
+
+    @Override
+    public boolean hasScannedConfig() {
+        return hasScannedConfig;
+    }
+
+    @Override
+    public void queueConfigScan() {
+        hasScannedConfig = false;
     }
 
     @Override

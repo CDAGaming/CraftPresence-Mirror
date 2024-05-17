@@ -97,9 +97,13 @@ public class ServerUtils implements Module {
      */
     private boolean isInUse = false;
     /**
-     * Whether this module has performed an initial retrieval of items
+     * Whether this module has performed an initial retrieval of config items
      */
-    private boolean hasScanned = false;
+    private boolean hasScannedConfig = false;
+    /**
+     * Whether this module has performed an initial retrieval of internal items
+     */
+    private boolean hasScannedInternals = false;
     /**
      * The IP Address of the Current Server the Player is in
      */
@@ -161,9 +165,13 @@ public class ServerUtils implements Module {
      */
     private int maxPlayers;
     /**
+     * The current server list, derived from internal data
+     */
+    private ServerList serverList;
+    /**
      * The amount of Currently detected Server Addresses
      */
-    private int serverIndex;
+    private int serverIndex = 0;
     /**
      * Mapping storing the Current X, Y and Z Position of the Player in a World
      * Format: Position (X, Y, Z)
@@ -197,11 +205,14 @@ public class ServerUtils implements Module {
 
     @Override
     public void emptyData() {
-        hasScanned = false;
+        queueConfigScan();
+        queueInternalScan();
         currentPlayerList.clear();
         defaultAddresses.clear();
         knownAddresses.clear();
         knownServerData.clear();
+        serverList = null;
+        serverIndex = 0;
         clearClientData();
     }
 
@@ -241,11 +252,16 @@ public class ServerUtils implements Module {
     public void onTick() {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : enabled;
-        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
+        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
 
-        if (needsUpdate) {
-            scanForData();
-            hasScanned = true;
+        if (needsConfigUpdate) {
+            scanConfigData();
+            hasScannedConfig = true;
+        }
+        if (needsInternalUpdate) {
+            scanInternalData();
+            hasScannedInternals = true;
         }
 
         if (enabled) {
@@ -303,10 +319,11 @@ public class ServerUtils implements Module {
                     }
                 }
 
-                final ServerList serverList = new ServerList(CraftPresence.instance);
-                serverList.loadServerList();
-                if (serverList.countServers() != serverIndex || CraftPresence.CONFIG.serverSettings.serverData.size() != serverIndex) {
-                    scanForData();
+                if (serverList != null) {
+                    serverList.loadServerList();
+                    if (serverList.countServers() != serverIndex) {
+                        queueInternalScan();
+                    }
                 }
             }
 
@@ -386,7 +403,7 @@ public class ServerUtils implements Module {
 
                 if (CraftPresence.ENTITIES.enabled) {
                     CraftPresence.ENTITIES.ENTITY_NAMES.removeAll(CraftPresence.ENTITIES.PLAYER_BINDINGS.keySet());
-                    CraftPresence.ENTITIES.scanForData();
+                    CraftPresence.ENTITIES.queueInternalScan();
                 }
             }
         }
@@ -619,10 +636,12 @@ public class ServerUtils implements Module {
     }
 
     @Override
-    public void getAllData() {
+    public void getInternalData() {
         try {
-            final ServerList serverList = new ServerList(CraftPresence.instance);
-            serverList.loadServerList();
+            if (serverList == null) {
+                serverList = new ServerList(CraftPresence.instance);
+                serverList.loadServerList();
+            }
             serverIndex = serverList.countServers();
 
             for (int currentIndex = 0; currentIndex < serverIndex; currentIndex++) {
@@ -643,12 +662,40 @@ public class ServerUtils implements Module {
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
         }
+    }
 
+    @Override
+    public void getConfigData() {
         for (String serverEntry : CraftPresence.CONFIG.serverSettings.serverData.keySet()) {
             if (!StringUtils.isNullOrEmpty(serverEntry) && !knownAddresses.contains(serverEntry)) {
                 knownAddresses.add(serverEntry);
             }
         }
+    }
+
+    @Override
+    public boolean hasScannedInternals() {
+        return hasScannedInternals;
+    }
+
+    @Override
+    public void queueInternalScan() {
+        hasScannedInternals = false;
+    }
+
+    @Override
+    public boolean canFetchConfig() {
+        return CraftPresence.CONFIG != null;
+    }
+
+    @Override
+    public boolean hasScannedConfig() {
+        return hasScannedConfig;
+    }
+
+    @Override
+    public void queueConfigScan() {
+        hasScannedConfig = false;
     }
 
     @Override

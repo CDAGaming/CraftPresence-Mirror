@@ -268,6 +268,10 @@ public final class Config extends Module implements Serializable {
             CommandUtils.updateModes(); // Debug Mode, Verbose Mode, or Refresh Rate changed
         }
 
+        if (advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph) {
+            CommandUtils.setupClassScan(true); // Enable Class Graph changed
+        }
+
         if (displaySettings.dynamicVariables != old.displaySettings.dynamicVariables) {
             CommandUtils.syncDynamicVariables(old.displaySettings.dynamicVariables); // Dynamic Variables changed
         }

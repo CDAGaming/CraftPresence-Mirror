@@ -54,9 +54,9 @@ public class ReplayModUtils implements Module {
      */
     private boolean isInUse = false;
     /**
-     * Whether this module has performed an initial retrieval of items
+     * Whether this module has performed an initial retrieval of internal items
      */
-    private boolean hasScanned = false;
+    private boolean hasScannedInternals = false;
     /**
      * Whether we are currently syncing placeholders in this module
      */
@@ -72,6 +72,7 @@ public class ReplayModUtils implements Module {
 
     @Override
     public void emptyData() {
+        queueInternalScan();
         clearClientData();
     }
 
@@ -87,11 +88,11 @@ public class ReplayModUtils implements Module {
     @Override
     public void onTick() {
         enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
-        final boolean needsUpdate = enabled && !hasScanned && canFetchData();
+        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
 
-        if (needsUpdate) {
-            scanForData();
-            hasScanned = true;
+        if (needsInternalUpdate) {
+            scanInternalData();
+            hasScannedInternals = true;
         }
 
         if (isEnabled()) {
@@ -138,7 +139,7 @@ public class ReplayModUtils implements Module {
     }
 
     @Override
-    public void getAllData() {
+    public void getInternalData() {
         final List<Class<?>> searchClasses = StringUtils.newArrayList(
                 FileUtils.findClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiContainer"),
                 FileUtils.findClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiScreen"),
@@ -157,8 +158,23 @@ public class ReplayModUtils implements Module {
     }
 
     @Override
-    public boolean canFetchData() {
-        return FileUtils.canScanClasses();
+    public void getConfigData() {
+        // N/A
+    }
+
+    @Override
+    public boolean canFetchInternals() {
+        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+    }
+
+    @Override
+    public boolean hasScannedInternals() {
+        return hasScannedInternals;
+    }
+
+    @Override
+    public void queueInternalScan() {
+        hasScannedInternals = false;
     }
 
     @Override

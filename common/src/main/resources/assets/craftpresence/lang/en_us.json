@@ -461,6 +461,7 @@
   "gui.config.name.advanced.allow_endpoint_icons": "Allow Endpoint Icons",
   "gui.config.name.advanced.allow_placeholder_previews": "Allow Placeholder Previews",
   "gui.config.name.advanced.debug_mode": "Debug Mode",
+  "gui.config.name.advanced.enable_class_graph": "Enable ClassGraph Functions",
   "gui.config.name.advanced.enable_per_entity": "Enable Per-Entity System",
   "gui.config.name.advanced.enable_per_gui": "Enable Per-Gui System",
   "gui.config.name.advanced.enable_per_item": "Enable Per-Item System",

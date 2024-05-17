@@ -49,7 +49,8 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     private ExtendedButtonControl guiMessagesButton, itemMessagesButton, entityTargetMessagesButton, entityRidingMessagesButton;
     private CheckBoxControl enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             formatWordsButton, debugModeButton, verboseModeButton,
-            allowPlaceholderPreviewsButton, allowEndpointIconsButton, allowDuplicatePacketsButton;
+            allowPlaceholderPreviewsButton, allowEndpointIconsButton, allowDuplicatePacketsButton,
+            enableClassGraphButton;
     private ExtendedTextControl refreshRate, maxConnectionAttempts,
             playerSkinEndpoint, serverIconEndpoint;
 
@@ -579,6 +580,19 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.allow_duplicate_packets")
                                 )
                         )
+                )
+        );
+        enableClassGraphButton = childFrame.addControl(
+                new CheckBoxControl(
+                        calc2, getButtonY(8, -40),
+                        "gui.config.name.advanced.enable_class_graph",
+                        getInstanceData().enableClassGraph,
+                        () -> getInstanceData().enableClassGraph = enableClassGraphButton.isChecked()//,
+//                        () -> drawMultiLineString(
+//                                StringUtils.splitTextByNewLine(
+//                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_class_graph")
+//                                )
+//                        )
                 )
         );
         proceedButton.setOnHover(() -> {

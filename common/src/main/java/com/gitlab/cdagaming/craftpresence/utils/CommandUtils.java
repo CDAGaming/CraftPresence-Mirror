@@ -42,6 +42,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
+import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.Map;
@@ -297,6 +298,7 @@ public class CommandUtils {
     public static void init() {
         updateModes();
         setDefaultTooltip();
+        setupClassScan(false);
 
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
             final String type = pack.getKey();
@@ -378,6 +380,27 @@ public class CommandUtils {
                 CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
                 CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
         );
+    }
+
+    public static void setupClassScan(final boolean postLaunch) {
+        final boolean oldState = FileUtils.isClassGraphEnabled();
+        final boolean newState = CraftPresence.CONFIG.advancedSettings.enableClassGraph;
+        FileUtils.setClassGraphEnabled(newState);
+        if (oldState != newState) {
+            if (newState) {
+                FileUtils.detectClasses();
+                if (postLaunch) {
+                    // Ensure all Modules trigger a new internal scan
+                    // if we are re-populating the Class Map Data
+                    // after the game has launched
+                    for (Module module : modules.values()) {
+                        module.queueInternalScan();
+                    }
+                }
+            } else if (FileUtils.hasScannedClasses()) {
+                FileUtils.clearClassMap(true);
+            }
+        }
     }
 
     /**

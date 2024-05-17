@@ -36,7 +36,10 @@ import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.github.cdagaming.unicore.utils.*;
+import io.github.cdagaming.unicore.utils.MappingUtils;
+import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unicore.utils.ScheduleUtils;
+import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -134,7 +137,6 @@ public class CraftPresence {
     private void init() {
         // Initialize Dynamic Mappings and Critical Data
         CommandUtils.updateModes();
-        FileUtils.detectClasses();
         MappingUtils.getClassMap();
 
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
