@@ -84,7 +84,7 @@ tasks.processResources {
     filesMatching("mappings-fabric.srg") {
         filter { line ->
             @Suppress("NULL_FOR_NONNULL_TYPE")
-            if (line.startsWith("CL:")) line else null
+            if (line.startsWith("CL:")) line.replace("/", ".") else null
         }
     }
 }
