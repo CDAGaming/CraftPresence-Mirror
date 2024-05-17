@@ -756,7 +756,7 @@ public class DiscordUtils {
     public void syncArgument(final String argumentName, final Object data, final boolean plain) {
         synchronized (rawPlaceholderData) {
             if (!StringUtils.isNullOrEmpty(argumentName) &&
-                    (!rawPlaceholderData.containsKey(argumentName) || !Objects.equals(rawPlaceholderData.get(argumentName), data))
+                    !Objects.equals(rawPlaceholderData.get(argumentName), data)
             ) {
                 syncArgument(argumentName, () -> toValue(data, plain));
                 rawPlaceholderData.put(argumentName, data);
