@@ -1,16 +1,16 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.hypherionmc.modfusioner.plugin.FusionerExtension
-import xyz.wagyourtail.mini_jvmdg.MiniJVMDowngrade
+import xyz.wagyourtail.jvmdg.gradle.task.DowngradeFiles
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
-import xyz.wagyourtail.unimined.internal.minecraft.task.RemapJarTaskImpl
-import java.nio.file.Files
+import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
-    id("xyz.wagyourtail.unimined") version "1.2.5" apply false
+    id("xyz.wagyourtail.unimined") version "1.2.6-SNAPSHOT" apply false
+    id("xyz.wagyourtail.jvmdowngrader") version "0.4.0-SNAPSHOT"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.10"
@@ -50,6 +50,7 @@ val extCanUseATs = extAWFile.exists() && (!extIsLegacy || extProtocol > 60)
 subprojects {
     apply(plugin = "java")
     apply(plugin = "xyz.wagyourtail.unimined")
+    apply(plugin = "xyz.wagyourtail.jvmdowngrader")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "com.github.johnrengelman.shadow")
 
@@ -248,6 +249,19 @@ subprojects {
             } else if (usingIntermediary) {
                 devFallbackNamespace("intermediary")
             }
+
+            if ("isLegacyASM"()!!.toBoolean()) {
+                runs.config("client") {
+                    val downgradeClient = tasks.create("downgradeClient", DowngradeFiles::class.java) {
+                        downgradeTo = JavaVersion.VERSION_1_7
+                        toDowngrade = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
+                        classpath = project.files()
+                        debugSkipStubs.set(listOf(52))
+                    }
+                    launchClasspath = downgradeClient.outputCollection
+                    runFirst.add(downgradeClient)
+                }
+            }
         }
 
         minecraftRemapper.config {
@@ -320,23 +334,23 @@ subprojects {
 
     afterEvaluate {
         if ("isLegacyASM"()!!.toBoolean() && path != ":common") {
-            // TODO: Replace with JvmDowngrader, when ready
-            tasks.getByName<RemapJarTaskImpl>("remapJar") {
-                doLast {
-                    var pn = prodNamespace
-                    if (pn == null) pn = provider.mcPatcher.prodNamespace
-                    val cp = provider.sourceSet.runtimeClasspath.files
-                        .map { it.toPath() }
-                        .filter { !provider.isMinecraftJar(it) }
-                        .filter { Files.exists(it) } + setOf(
-                        // just one unimined internal, to get a remapped mc jar
-                        provider.getMinecraft(
-                            pn,
-                            pn
-                        )
-                    )
-                    MiniJVMDowngrade.downgradeZip(archiveFile.get().asFile.toPath(), cp.toSet())
-                }
+            val remapJar = tasks.getByName<RemapJarTask>("remapJar") {
+                destinationDirectory = temporaryDir
+            }
+
+            tasks.getByName("assemble").dependsOn("shadeDowngradedApi")
+            tasks.downgradeJar {
+                dependsOn(remapJar)
+                inputFile = remapJar.archiveFile.get().asFile
+                downgradeTo = JavaVersion.VERSION_1_7
+                debugSkipStubs.set(listOf(52))
+                destinationDirectory = temporaryDir
+            }
+
+            jvmdg.shadeDebugSkipStubs.add(52)
+            tasks.shadeDowngradedApi {
+                downgradeTo = JavaVersion.VERSION_1_7
+                archiveClassifier = remapJar.archiveClassifier
             }
         }
     }

@@ -2,7 +2,6 @@ package xyz.wagyourtail.replace_str;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import xyz.wagyourtail.mini_jvmdg.MiniJVMDowngrade;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -14,6 +13,11 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class ProcessClasses {
+    public static boolean isClassFile(byte[] byteArr) {
+        // check magic
+        return byteArr[0] == (byte) 0xCA && byteArr[1] == (byte) 0xFE && byteArr[2] == (byte) 0xBA && byteArr[3] == (byte) 0xBE;
+    }
+
     public static void process(Path input, Map<String, String> replaceTokens) throws IOException {
         final Stream<Path> entries = Files.walk(input);
         entries.forEach(file -> {
@@ -23,7 +27,7 @@ public class ProcessClasses {
                 byte[] byteArr = new byte[8];
                 if (is.read(byteArr) < 8)
                     return;
-                if (!MiniJVMDowngrade.isClassFile(byteArr)) return;
+                if (!isClassFile(byteArr)) return;
                 is.reset();
                 byte[] clazz = is.readAllBytes();
                 ClassReader cr = new ClassReader(clazz);
