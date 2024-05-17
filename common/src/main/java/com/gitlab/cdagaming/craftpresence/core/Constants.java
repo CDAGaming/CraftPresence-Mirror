@@ -34,9 +34,9 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.function.Supplier;
 
 /**
  * Constant Variables and Methods used throughout the Application
@@ -128,6 +128,11 @@ public class Constants {
     public static boolean IS_GAME_CLOSING = false;
 
     /**
+     * The Supplier for the Mod Count, used in {@link Constants#getModCount()}
+     */
+    public static Supplier<Integer> MOD_COUNT_SUPPLIER = null;
+
+    /**
      * If the Mod has checked for "Replay Mod" availability
      */
     private static boolean CHECKED_REPLAY_MOD = false;
@@ -180,33 +185,7 @@ public class Constants {
      */
     public static int getModCount() {
         if (DETECTED_MOD_COUNT <= 0) {
-            int modCount = -1;
-            final Class<?> fmlLoader = FileUtils.loadClass("net.minecraftforge.fml.common.Loader");
-            final Class<?> quiltLoader = FileUtils.loadClass("org.quiltmc.loader.api.QuiltLoader");
-            final Class<?> fabricLoader = FileUtils.loadClass("net.fabricmc.loader.api.FabricLoader");
-            if (fmlLoader != null) {
-                final Object loaderInstance = StringUtils.executeMethod(fmlLoader, null, null, null, "instance");
-                if (loaderInstance != null) {
-                    final Object mods = StringUtils.executeMethod(fmlLoader, loaderInstance, null, null, "getModList");
-                    if (mods instanceof List<?>) {
-                        modCount = ((List<?>) mods).size();
-                    }
-                }
-            } else if (quiltLoader != null) {
-                final Object mods = StringUtils.executeMethod(quiltLoader, null, null, null, "getAllMods");
-                if (mods instanceof List<?>) {
-                    modCount = ((List<?>) mods).size();
-                }
-            } else if (fabricLoader != null) {
-                final Object loaderInstance = StringUtils.executeMethod(fabricLoader, null, null, null, "getInstance");
-                if (loaderInstance != null) {
-                    final Object mods = StringUtils.executeMethod(fabricLoader, loaderInstance, null, null, "getAllMods");
-                    if (mods instanceof List<?>) {
-                        modCount = ((List<?>) mods).size();
-                    }
-                }
-            }
-            DETECTED_MOD_COUNT = modCount > 0 ? modCount : getRawModCount();
+            DETECTED_MOD_COUNT = MOD_COUNT_SUPPLIER != null ? MOD_COUNT_SUPPLIER.get() : getRawModCount();
         }
         return DETECTED_MOD_COUNT;
     }
