@@ -764,7 +764,7 @@ public class DiscordUtils {
      * @param data         The data to attach to the Specified Argument
      */
     public void syncArgument(final String argumentName, final Object data) {
-        syncArgument(argumentName, data, false);
+        syncArgument(argumentName, data, !(data instanceof String));
     }
 
     /**
