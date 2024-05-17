@@ -439,10 +439,7 @@ public class DiscordUtils {
                 if (!placeholderName.startsWith("overrides.")) {
                     transformer.addReplacer(placeholderName, () -> {
                         final String overrideName = "overrides." + placeholderName + "." + overrideId;
-                        return placeholders.containsKey(overrideName) &&
-                                !StringUtils.isNullOrEmpty(
-                                        placeholders.get(overrideName).get().toString()
-                                ) ? overrideName : placeholderName;
+                        return placeholders.containsKey(overrideName) ? overrideName : placeholderName;
                     });
                 }
             }
@@ -671,10 +668,7 @@ public class DiscordUtils {
      * @param args The Specified Arguments to Synchronize for
      */
     public void syncOverride(final ModuleData data, final String... args) {
-        PresenceData presenceInfo = null;
-        if (data != null && Config.getProperty(data, "data") != null) {
-            presenceInfo = data.getData();
-        }
+        final PresenceData presenceInfo = (PresenceData) Config.getProperty(data, "data");
         final boolean isPresenceOn = presenceInfo != null && presenceInfo.enabled;
 
         for (String argumentName : args) {
@@ -722,8 +716,9 @@ public class DiscordUtils {
                 overrideData.remove(argumentName);
                 removeArguments("overrides." + argumentName);
 
-                if (oldData != null && Config.getProperty(oldData, "data") != null) {
-                    if (oldData.getData().equals(forcedData)) {
+                if (oldData != null) {
+                    final PresenceData presenceInfo = (PresenceData) Config.getProperty(oldData, "data");
+                    if (presenceInfo.equals(forcedData)) {
                         forcedData = null;
                     }
                 }
