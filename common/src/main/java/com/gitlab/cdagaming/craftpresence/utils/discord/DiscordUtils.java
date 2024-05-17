@@ -772,7 +772,7 @@ public class DiscordUtils {
      *
      * @param args The Arguments to Initialize
      */
-    public void initArgument(final String... args) {
+    public void initArguments(final String... args) {
         // Initialize Specified Arguments to Empty Data
         for (String argumentName : args) {
             syncArgument(argumentName, Value::null_);
