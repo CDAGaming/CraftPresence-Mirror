@@ -192,7 +192,7 @@ public class BiomeUtils implements Module {
             }
         }
 
-        if (biomeTypes.isEmpty()) {
+        if (biomeTypes.isEmpty() && FileUtils.isClassGraphEnabled()) {
             // Fallback: Use Manual Class Lookup
             for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Biome.class).values()) {
                 if (classInfo != null) {

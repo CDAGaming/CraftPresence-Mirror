@@ -201,7 +201,7 @@ public class DimensionUtils implements Module {
                         dimensionTypes.add(type);
                     }
                 }
-            } else {
+            } else if (FileUtils.isClassGraphEnabled()) {
                 // Fallback 2: Use Manual Class Lookup
                 for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
                     if (classInfo != null) {

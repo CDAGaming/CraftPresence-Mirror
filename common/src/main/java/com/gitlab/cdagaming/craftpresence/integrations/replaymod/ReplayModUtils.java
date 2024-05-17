@@ -164,7 +164,7 @@ public class ReplayModUtils implements Module {
 
     @Override
     public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+        return CraftPresence.GUIS.canFetchInternals();
     }
 
     @Override

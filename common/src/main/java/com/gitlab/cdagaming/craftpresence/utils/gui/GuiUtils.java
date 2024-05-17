@@ -198,7 +198,7 @@ public class GuiUtils implements Module {
 
     @Override
     public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+        return MappingUtils.areMappingsLoaded() && FileUtils.isClassGraphEnabled() && FileUtils.canScanClasses();
     }
 
     @Override
