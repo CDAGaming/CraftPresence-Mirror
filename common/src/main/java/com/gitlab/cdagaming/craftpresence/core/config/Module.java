@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.core.config;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 /**
@@ -56,6 +57,15 @@ public abstract class Module {
     }
 
     /**
+     * Display the specified module exception
+     *
+     * @param ex The {@link Throwable} exception to display
+     */
+    public void printException(Throwable ex) {
+        Constants.LOG.debugError(ex);
+    }
+
+    /**
      * Retrieve the specified property for this {@link Module}
      *
      * @param name the name of the property
@@ -72,7 +82,11 @@ public abstract class Module {
      * @param value the property value to assign
      */
     public void setProperty(final String name, final Object value) {
-        StringUtils.updateField(this.getClass(), this, value, name);
+        try {
+            StringUtils.updateField(this.getClass(), this, value, name);
+        } catch (Throwable ex) {
+            printException(ex);
+        }
     }
 
     /**
