@@ -65,6 +65,7 @@ import org.meteordev.starscript.value.ValueMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -81,6 +82,10 @@ public class DiscordUtils {
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
     private final Map<String, Supplier<Value>> placeholderData = StringUtils.newTreeMap();
+    /**
+     * A Mapping of the Arguments available to use as RPC Message Placeholders
+     */
+    private final Map<String, Object> rawPlaceholderData = StringUtils.newTreeMap();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to cache data for repeated images in other areas
@@ -749,7 +754,14 @@ public class DiscordUtils {
      * @param plain        Whether the expression should be parsed as a plain string
      */
     public void syncArgument(final String argumentName, final Object data, final boolean plain) {
-        syncArgument(argumentName, () -> toValue(data, plain));
+        synchronized (rawPlaceholderData) {
+            if (!StringUtils.isNullOrEmpty(argumentName) &&
+                    (!rawPlaceholderData.containsKey(argumentName) || !Objects.equals(rawPlaceholderData.get(argumentName), data))
+            ) {
+                syncArgument(argumentName, () -> toValue(data, plain));
+                rawPlaceholderData.put(argumentName, data);
+            }
+        }
     }
 
     /**
@@ -787,6 +799,7 @@ public class DiscordUtils {
                     if (key.startsWith(format)) {
                         scriptEngine.remove(key);
                         placeholderData.remove(key);
+                        rawPlaceholderData.remove(key);
                         break;
                     }
                 }
