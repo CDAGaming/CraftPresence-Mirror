@@ -327,6 +327,7 @@
   "gui.config.comment.advanced.allow_endpoint_icons": "Whether to allow the endpoint icon system (Used primarily alongside Dynamic Icons)",
   "gui.config.comment.advanced.allow_placeholder_previews": "Whether to allow Placeholder Previews to be displayed in applicable tooltips throughout the Config Gui",
   "gui.config.comment.advanced.debug_mode": "Toggles Developer Mode, showing debug features and enabling debug logging\\n\\nOverridden Status -> %1$s",
+  "gui.config.comment.advanced.enable_class_graph": "Allows CraftPresence to utilize functions from ClassGraph, improving module auto-lookup results\\n Note the following:\\n - These functions can be memory-intensive, and not recommended unless needed\\n - Triggers a full module re-scan once enabled if previously disabled",
   "gui.config.comment.advanced.enable_per_entity": "Allows CraftPresence to change its display based on entity data\\n Note the following:\\n - Requires an option in a valid entity message list",
   "gui.config.comment.advanced.enable_per_gui": "Allows CraftPresence to change it's display based on the Gui you're in\\n Note the following:\\n - Requires an option in Gui messages\\n - In some Minecraft versions, Guis must be opened once before configuring",
   "gui.config.comment.advanced.enable_per_item": "Allows CraftPresence to change it's display based on the item you're holding\\n Note the following:\\n - Requires an option in item messages",

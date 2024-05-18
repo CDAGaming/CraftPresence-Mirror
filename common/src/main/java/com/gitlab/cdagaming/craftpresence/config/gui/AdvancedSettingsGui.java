@@ -587,12 +587,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         calc2, getButtonY(8, -40),
                         "gui.config.name.advanced.enable_class_graph",
                         getInstanceData().enableClassGraph,
-                        () -> getInstanceData().enableClassGraph = enableClassGraphButton.isChecked()//,
-//                        () -> drawMultiLineString(
-//                                StringUtils.splitTextByNewLine(
-//                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_class_graph")
-//                                )
-//                        )
+                        () -> getInstanceData().enableClassGraph = enableClassGraphButton.isChecked(),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_class_graph")
+                                )
+                        )
                 )
         );
         proceedButton.setOnHover(() -> {
