@@ -30,6 +30,28 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Adjusted Mod Initialization in MC 1.7.10 and below to better detect (and avoid) running the mod on server-side
     * This uses a similar system implemented for MC 1.13+ in v2.2.4
     * This change is only applied for Forge, Risugami ModLoader, or users on similar modloaders
+* Added a new `Advanced` Config Setting to toggle `ClassGraph` functionality
+    * This option allows disabling several backend functions, improving memory usage at the cost of some module
+      functionality
+    * Disabling this feature will prevent module auto-lookup functionality in some cases, but is set by default to be
+      disabled in response to several concerns over memory usage
+* (Backend) Adjusted Module Auto-Retrieval Processes for improved usability and error prevention
+    * `Module#getAllData` has been split into `Module#getInternalData` and `Module#getConfigData`
+    * `Module#scanForData` has been similarly split up, with separate threads now spawned for each part of the
+      auto-lookup
+    * `Module#canFetchData` has been split into `Module#canFetchInternals` and `Module#canFetchConfig`
+    * `Module#hasScanned...` and `Module#queue...` functions have also been added for configuring when to scan for what
+      data
+    * To align better with MC 1.20.5 and above, the scan order has been inverted for modules, with `config` data being
+      scanned first before `internal` data
+* (Backend) Added `printException` for Config Modules, now used in `setProperty`
+    * These exceptions will only display while `Debug Mode` is enabled
+* Adjusted the way the `general.mods` placeholder is calculated (`Constants#getModCount`)
+    * Now uses a `Supplier` from each implemented loader rather than Reflection
+      Statements (`Constants#MOD_COUNT_SUPPLIER`)
+    * Quilt now falls back to `getRawModCount` due to not having an independent build layer
+    * Added support for Rift, Flint, and Risugami ModLoader mod counts
+    * Fixes placeholder functionality for Forge 1.13+
 
 ### Fixes
 
@@ -68,8 +90,29 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This issue occurred in `DiscordUtils#syncPlaceholders` in how we were synchronizing `custom.` arguments
     * The old method has been replaced with a new more performant system
       for removals and iteration
+    * Several methods have also been adjusted to avoid excessive calls to this function as well
 * Fixed the `Sync Config` button in the `Main Gui` not properly applying settings
     * This was caused by the `Config#applyFrom(Config)` function not being called
+* (Backend) Fixed an issue where the `Server` module was improperly checking for new `ServerList` entries in some cases
+    * This also fixes an issue where adjusting `config` data could trigger an `internal` scan
+* (Backend) Fixed an issue where the `ReplayMod` module could be improperly cleared in some cases
+* (Backend) Fixed memory leaks that could occur through `MappingUtils` due to excessive `String#replace` operations
+    * Both `MappingUtils` and the way the mappings file is generated have been improved to avoid this issue
+* (Backend) Fixed memory leaks that could occur through `FileUtils#getClassNamesMatchingSuperType`
+  and `FileUtils#isSubclassOf`
+    * Both functions have been rewritten to be significantly more performant compared to past releases
+* (Backend) Fixed memory leaks that could occur due to excessive Reflection Usage in Config Modules
+    * This additionally improves the performance of `Config#handleVerification`
+    * This fix primarily effects `Module#getProperty` and `Module#setProperty` usage to be static-defined rather than
+      relying on reflection
+* Fixed an issue where `overrides.` placeholders could still be added, even if there was no override `PresenceData`
+  defined
+* Fixed an issue where empty parts of the `Presence Editor` could be ignored if `useAsMain` was false
+    * This change may affect configs relying on this for `overrides.` placeholders, please check and adjust your
+      settings
+* (Backend) Fixed some instances of excessive calls to `DiscordUtils#syncArgument`
+    * Better checks to ensure the object has changed have been implemented to prevent excessive calls to this function
+    * Further changes are planned for upcoming releases in order to further increase the performance of this function
 
 ___
 
