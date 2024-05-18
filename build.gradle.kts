@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     id("xyz.wagyourtail.unimined") version "1.2.6-SNAPSHOT" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "0.4.0-SNAPSHOT"
+    id("xyz.wagyourtail.jvmdowngrader") version "0.4.0"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.10"
