@@ -71,6 +71,10 @@ public class DimensionUtils implements Module {
      */
     private boolean hasScannedInternals = false;
     /**
+     * Whether this module has performed an initial event sync
+     */
+    private boolean hasInitialized = false;
+    /**
      * The Name of the Current Dimension the Player is in
      */
     private String CURRENT_DIMENSION_NAME;
@@ -101,6 +105,7 @@ public class DimensionUtils implements Module {
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("dimension", "data.dimension");
         CraftPresence.CLIENT.clearOverride("dimension.message", "dimension.icon");
+        hasInitialized = false;
     }
 
     @Override
@@ -152,32 +157,46 @@ public class DimensionUtils implements Module {
                 DIMENSION_NAMES.add(newDimension_Identifier);
             }
 
+            if (!hasInitialized) {
+                initPresence();
+                hasInitialized = true;
+            }
             updatePresence();
         }
     }
 
     @Override
+    public void initPresence() {
+        CraftPresence.CLIENT.syncFunction("dimension.default.icon", () -> CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
+
+        CraftPresence.CLIENT.syncFunction("data.dimension.instance", () -> CURRENT_DIMENSION);
+        CraftPresence.CLIENT.syncFunction("data.dimension.class", () -> CURRENT_DIMENSION.getClass());
+        CraftPresence.CLIENT.syncFunction("dimension.name", () -> CURRENT_DIMENSION_NAME, true);
+
+        CraftPresence.CLIENT.syncFunction("dimension.message", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
+
+            final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+            return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+        });
+        CraftPresence.CLIENT.syncFunction("dimension.icon", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
+
+            final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_DIMENSION_IDENTIFIER;
+            final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
+            return CraftPresence.CLIENT.imageOf("dimension.icon", true, currentIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
+        });
+        CraftPresence.CLIENT.syncTimestamp("data.dimension.time");
+    }
+
+    @Override
     public void updatePresence() {
-        // Form Dimension Argument List
         final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
 
-        final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
-        final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_DIMENSION_IDENTIFIER;
-        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-        final String formattedIcon = CraftPresence.CLIENT.imageOf("dimension.icon", true, currentIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
-
-        CraftPresence.CLIENT.syncArgument("dimension.default.icon", CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
-
-        CraftPresence.CLIENT.syncArgument("data.dimension.instance", CURRENT_DIMENSION);
-        CraftPresence.CLIENT.syncArgument("data.dimension.class", CURRENT_DIMENSION.getClass());
-        CraftPresence.CLIENT.syncArgument("dimension.name", CURRENT_DIMENSION_NAME);
-
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "dimension.message", "dimension.icon");
-        CraftPresence.CLIENT.syncArgument("dimension.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("dimension.icon", formattedIcon);
-        CraftPresence.CLIENT.syncTimestamp("data.dimension.time");
     }
 
     /**

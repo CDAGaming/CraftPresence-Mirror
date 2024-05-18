@@ -92,9 +92,13 @@ public class CommandUtils {
             ))
             .build();
     /**
-     * Whether we are currently using pack data
+     * The currently loaded pack data
      */
-    private static boolean usingPackData = false;
+    private static Map.Entry<String, Pack> loadedPack = null;
+    /**
+     * The currently loaded menu data
+     */
+    private static ModuleData loadedMenu = null;
     /**
      * The Current {@link MenuStatus} representing where we are at in the load process
      */
@@ -170,10 +174,9 @@ public class CommandUtils {
      * Synchronizes Module Placeholder Data, meant for RPC usage
      */
     public static void syncModuleArguments() {
-        for (Map.Entry<String, Module> module : modules.entrySet()) {
-            String name = module.getKey();
-            name = (name.startsWith("_") ? "" : "_") + name;
-            CraftPresence.CLIENT.syncArgument(name + ".instance", module.getValue());
+        for (String key : modules.keySet()) {
+            final String name = (key.startsWith("_") ? "" : "_") + key;
+            CraftPresence.CLIENT.syncFunction(name + ".instance", () -> modules.get(key));
         }
     }
 
@@ -181,29 +184,21 @@ public class CommandUtils {
      * Synchronizes the `pack` Arguments, based on any found Launcher Pack/Instance Data
      */
     public static void syncPackArguments() {
-        boolean foundPack = false;
-        for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
-            final Pack data = pack.getValue();
-            if (!data.hasPackType()) {
-                data.setPackType(pack.getKey());
-            }
+        if (loadedPack == null) return;
 
-            if (data.isEnabled() && data.hasPackName()) {
-                CraftPresence.CLIENT.syncArgument("pack.type", data.getPackType());
-                CraftPresence.CLIENT.syncArgument("pack.name", data.getPackName());
-                CraftPresence.CLIENT.syncArgument("pack.icon",
-                        CraftPresence.CLIENT.imageOf("pack.icon", true,
-                                data.getPackIcon(), data.getPackType())
-                );
-
-                usingPackData = foundPack = true;
-                break;
-            }
+        final Map.Entry<String, Pack> pack = loadedPack;
+        final Pack data = pack.getValue();
+        if (!data.hasPackType()) {
+            data.setPackType(pack.getKey());
         }
 
-        if (!foundPack && usingPackData) {
-            CraftPresence.CLIENT.removeArguments("pack");
-            usingPackData = false;
+        if (data.hasPackName()) {
+            CraftPresence.CLIENT.syncFunction("pack.type", data::getPackType, true);
+            CraftPresence.CLIENT.syncFunction("pack.name", data::getPackName, true);
+            CraftPresence.CLIENT.syncFunction("pack.icon",
+                    () -> CraftPresence.CLIENT.imageOf("pack.icon", true,
+                            data.getPackIcon(), data.getPackType())
+                    , true);
         }
     }
 
@@ -214,7 +209,9 @@ public class CommandUtils {
      * @param instance The instance of the module
      */
     public static void addModule(final String moduleId, final Module instance) {
-        modules.put(moduleId, instance);
+        if (!CraftPresence.initialized) {
+            modules.put(moduleId, instance);
+        }
     }
 
     /**
@@ -224,7 +221,9 @@ public class CommandUtils {
      * @param instance The instance of the module
      */
     public static void addModule(final String moduleId, final Pack instance) {
-        packModules.put(moduleId, instance);
+        if (!CraftPresence.initialized) {
+            packModules.put(moduleId, instance);
+        }
     }
 
     /**
@@ -307,6 +306,7 @@ public class CommandUtils {
                 Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.pack.init", type));
                 if (data.load()) {
                     Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.pack.loaded", type, data.getPackName(), data.getPackIcon()));
+                    loadedPack = pack;
                     break; // Only iterate until the first pack is found
                 } else {
                     Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.pack", type));
@@ -409,22 +409,30 @@ public class CommandUtils {
      * @param currentData the current Menu {@link ModuleData}
      */
     public static void syncMenuData(final ModuleData currentData) {
-        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : "";
-        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
-        final String formattedIcon = CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon);
+        if (loadedMenu == null) {
+            CraftPresence.CLIENT.syncFunction("menu.message", () ->
+                    Config.isValidProperty(loadedMenu, "textOverride") ? loadedMenu.getTextOverride() : ""
+            );
+            CraftPresence.CLIENT.syncFunction("menu.icon", () -> {
+                final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
+                return CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon);
+            });
+        }
+        loadedMenu = currentData;
 
         CraftPresence.CLIENT.clearPartyData();
         CraftPresence.CLIENT.syncOverride(currentData, "menu.message", "menu.icon");
-        CraftPresence.CLIENT.syncArgument("menu.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("menu.icon", formattedIcon);
     }
 
     /**
      * Clear the Menu Presence Data, derived from the Loading and Main Menu Events
      */
     public static void clearMenuPresence() {
-        CraftPresence.CLIENT.clearOverride("menu.message", "menu.icon");
-        CraftPresence.CLIENT.removeArguments("menu");
+        if (loadedMenu != null) {
+            CraftPresence.CLIENT.clearOverride("menu.message", "menu.icon");
+            CraftPresence.CLIENT.removeArguments("menu");
+            loadedMenu = null;
+        }
     }
 
     /**

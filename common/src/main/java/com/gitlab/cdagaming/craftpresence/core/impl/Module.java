@@ -53,6 +53,11 @@ public interface Module {
     void updateData();
 
     /**
+     * Initializes RPC Data related to this Module
+     */
+    void initPresence();
+
+    /**
      * Updates RPC Data related to this Module
      */
     void updatePresence();

@@ -33,8 +33,6 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
-import io.github.cdagaming.unicore.impl.Pair;
-import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
@@ -45,10 +43,8 @@ import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Server Utilities used to Parse Server Data and handle related RPC Events
@@ -105,9 +101,21 @@ public class ServerUtils implements Module {
      */
     private boolean hasScannedInternals = false;
     /**
+     * Whether this module has performed an initial event sync
+     */
+    private boolean hasInitialized = false;
+    /**
+     * Whether placeholders for the server data (if in use) have been initialized
+     */
+    private boolean hasInitializedServer = false;
+    /**
      * The IP Address of the Current Server the Player is in
      */
     private String currentServer_IP;
+    /**
+     * The IP Address of the Current Server the Player is in
+     */
+    private String formattedServer_IP;
     /**
      * The Name of the Current Server the Player is in
      */
@@ -120,42 +128,6 @@ public class ServerUtils implements Module {
      * The Message of the Day, split by new lines, of the Current Server the Player is in
      */
     private List<String> currentServer_MOTD_Lines = StringUtils.newArrayList();
-    /**
-     * The Current Server RPC Message being used, with Arguments
-     */
-    private String currentServerMessage = "";
-    /**
-     * The Current Server RPC Icon being used, with Arguments
-     */
-    private String currentServerIcon = "";
-    /**
-     * The current World Time data
-     */
-    private Pair<Long, Instant> worldTimeData;
-    /**
-     * The Current Formatted World Time (24-hour Format), as a String
-     */
-    private String timeString24;
-    /**
-     * The Current Formatted World Time (12-hour Format), as a String
-     */
-    private String timeString12;
-    /**
-     * The Current Formatted World Days, as a String
-     */
-    private long dayCount;
-    /**
-     * The Current World's Difficulty
-     */
-    private String currentDifficulty;
-    /**
-     * The Current World's Name
-     */
-    private String currentWorldName;
-    /**
-     * The Current World's Weather Name
-     */
-    private String currentWeatherName;
     /**
      * The Amount of Players in the Current Server the Player is in
      */
@@ -172,15 +144,6 @@ public class ServerUtils implements Module {
      * The amount of Currently detected Server Addresses
      */
     private int serverIndex = 0;
-    /**
-     * Mapping storing the Current X, Y and Z Position of the Player in a World
-     * Format: Position (X, Y, Z)
-     */
-    private Tuple<Double, Double, Double> currentCoordinates;
-    /**
-     * Mapping storing the Current and Maximum Health the Player currently has in a World
-     */
-    private Pair<Double, Double> currentHealth;
     /**
      * The Current Server Connection Data and Info
      */
@@ -202,6 +165,10 @@ public class ServerUtils implements Module {
      * If the Current Server is on a LAN-Based Connection (A Local Network Game)
      */
     private boolean isOnLAN = false;
+    /**
+     * If the Current Server is a Local Single-Player Connection
+     */
+    private boolean isOnSinglePlayer = false;
 
     @Override
     public void emptyData() {
@@ -219,33 +186,26 @@ public class ServerUtils implements Module {
     @Override
     public void clearClientData() {
         currentServer_IP = null;
+        formattedServer_IP = null;
         currentServer_MOTD = null;
         currentServer_MOTD_Lines.clear();
         currentServer_Name = null;
         currentServerData = null;
         currentConnection = null;
-        currentCoordinates = null;
-        currentHealth = null;
-        currentDifficulty = null;
-        currentWorldName = null;
-        currentWeatherName = null;
-        currentServerMessage = "";
-        currentServerIcon = "";
-        worldTimeData = null;
-        timeString24 = null;
-        timeString12 = null;
-        dayCount = 0L;
         currentPlayers = 0;
         maxPlayers = 0;
 
         queuedForUpdate = false;
         joinInProgress = false;
         isOnLAN = false;
+        isOnSinglePlayer = false;
         setInUse(false);
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
         CraftPresence.CLIENT.clearOverride("server.message", "server.icon");
         CraftPresence.CLIENT.clearPartyData();
+        hasInitialized = false;
+        hasInitializedServer = false;
     }
 
     @Override
@@ -285,14 +245,15 @@ public class ServerUtils implements Module {
             final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
             final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
             final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
-            final boolean newLANStatus = (CraftPresence.instance.isSingleplayer() && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());
+            final boolean newSinglePlayerStatus = CraftPresence.instance.isSingleplayer();
+            final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());
 
             final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
             final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-            final String newServer_MOTD = !isOnLAN && !CraftPresence.instance.isSingleplayer() &&
+            final String newServer_MOTD = !newLANStatus && !newSinglePlayerStatus &&
                     newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripAllFormatting(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
-            if (newLANStatus != isOnLAN || ((newServerData != null && !newServerData.equals(currentServerData)) ||
+            if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer || ((newServerData != null && !newServerData.equals(currentServerData)) ||
                     (newServerData == null && currentServerData != null)) ||
                     (newConnection != null && !newConnection.equals(currentConnection)) || !newServer_IP.equals(currentServer_IP) ||
                     (!StringUtils.isNullOrEmpty(newServer_MOTD) && !newServer_MOTD.equals(currentServer_MOTD)) ||
@@ -307,15 +268,16 @@ public class ServerUtils implements Module {
                 currentServerData = newServerData;
                 currentConnection = newConnection;
                 isOnLAN = newLANStatus;
+                isOnSinglePlayer = newSinglePlayerStatus;
                 queuedForUpdate = true;
 
                 if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
-                    final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
-                    if (!defaultAddresses.contains(formattedIP)) {
-                        defaultAddresses.add(formattedIP);
+                    formattedServer_IP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
+                    if (!defaultAddresses.contains(formattedServer_IP)) {
+                        defaultAddresses.add(formattedServer_IP);
                     }
-                    if (!knownAddresses.contains(formattedIP)) {
-                        knownAddresses.add(formattedIP);
+                    if (!knownAddresses.contains(formattedServer_IP)) {
+                        knownAddresses.add(formattedServer_IP);
                     }
                 }
 
@@ -325,69 +287,6 @@ public class ServerUtils implements Module {
                         queueInternalScan();
                     }
                 }
-            }
-
-            // NOTE: Universal + Custom Events
-
-            // `player` Sub-Arguments
-
-            // `player.position` Argument = Current Coordinates of Player
-            final Tuple<Double, Double, Double> newCoordinates = new Tuple<>(
-                    MathUtils.roundDouble(CraftPresence.player.posX, 3),
-                    MathUtils.roundDouble(CraftPresence.player.posY, 3),
-                    MathUtils.roundDouble(CraftPresence.player.posZ, 3)
-            );
-            if (!Objects.equals(newCoordinates, currentCoordinates)) {
-                currentCoordinates = newCoordinates;
-                queuedForUpdate = true;
-            }
-
-            // 'player.health' Argument = Current and Maximum Health of Player
-            final Pair<Double, Double> newHealth = new Pair<>(
-                    MathUtils.roundDouble(CraftPresence.player.getHealth(), 0),
-                    MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0)
-            );
-            if (!Objects.equals(newHealth, currentHealth)) {
-                currentHealth = newHealth;
-                queuedForUpdate = true;
-            }
-
-            // 'world' Sub-Arguments
-
-            // 'world.difficulty' Argument = Current Difficulty of the World
-            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
-                    ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
-            if (!newDifficulty.equals(currentDifficulty)) {
-                currentDifficulty = newDifficulty;
-                queuedForUpdate = true;
-            }
-
-            // `world.weather` Arguments = Current Weather Data of the World
-            final String newWeatherData = EntityUtils.getWeather(CraftPresence.player);
-            final String newWeatherName = Constants.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
-            if (!newWeatherName.equals(currentWeatherName)) {
-                currentWeatherName = newWeatherName;
-                queuedForUpdate = true;
-            }
-
-            // 'world.name' Argument = Current Name of the World
-            final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
-            final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
-            if (!newWorldName.equals(currentWorldName)) {
-                currentWorldName = newWorldName;
-                queuedForUpdate = true;
-            }
-
-            // 'world.time' Arguments = Current Time Data of the World
-            final Pair<Long, Instant> newTimeData = TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime());
-            if (!Objects.equals(newTimeData, worldTimeData)) {
-                dayCount = newTimeData.getFirst();
-                timeString24 = TimeUtils.toString(newTimeData.getSecond(), "HH:mm");
-                timeString12 = TimeUtils.toString(newTimeData.getSecond(), "hh:mm a");
-                worldTimeData = newTimeData;
-                queuedForUpdate = true;
             }
 
             // 'server.players' Argument = Current and Maximum Allowed Players in Server/World
@@ -409,7 +308,12 @@ public class ServerUtils implements Module {
         }
 
         if (queuedForUpdate) {
+            if (!hasInitialized) {
+                initPresence();
+                hasInitialized = true;
+            }
             updatePresence();
+            queuedForUpdate = false;
         }
     }
 
@@ -524,85 +428,153 @@ public class ServerUtils implements Module {
     }
 
     @Override
-    public void updatePresence() {
-        // Form General Argument Lists & Sub Argument Lists
-        CraftPresence.CLIENT.syncArgument("player.position.x", currentCoordinates.getFirst());
-        CraftPresence.CLIENT.syncArgument("player.position.y", currentCoordinates.getSecond());
-        CraftPresence.CLIENT.syncArgument("player.position.z", currentCoordinates.getThird());
+    public void initPresence() {
+        // Player Position Arguments
+        CraftPresence.CLIENT.syncFunction("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3));
+        CraftPresence.CLIENT.syncFunction("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3));
+        CraftPresence.CLIENT.syncFunction("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
 
-        CraftPresence.CLIENT.syncArgument("player.health.current", currentHealth.getFirst());
-        CraftPresence.CLIENT.syncArgument("player.health.max", currentHealth.getSecond());
+        // Player Health Arguments
+        CraftPresence.CLIENT.syncFunction("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
+        CraftPresence.CLIENT.syncFunction("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
 
         // World Data Arguments
-        CraftPresence.CLIENT.syncArgument("world.difficulty", StringUtils.getOrDefault(currentDifficulty));
-        CraftPresence.CLIENT.syncArgument("world.weather.name", StringUtils.getOrDefault(currentWeatherName));
-        CraftPresence.CLIENT.syncArgument("world.name", StringUtils.getOrDefault(currentWorldName));
-        if (worldTimeData != null) {
-            CraftPresence.CLIENT.syncArgument("world.time.day", dayCount);
-            CraftPresence.CLIENT.syncArgument("world.time.format_24", timeString24);
-            CraftPresence.CLIENT.syncArgument("world.time.format_12", timeString12);
-            CraftPresence.CLIENT.syncArgument("data.world.time.instance", worldTimeData);
-        } else {
-            CraftPresence.CLIENT.removeArguments("world.time", "data.world.time");
-        }
+        CraftPresence.CLIENT.syncFunction("world.difficulty", () -> {
+            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
+                    ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
+                    StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
+            return StringUtils.getOrDefault(newDifficulty);
+        });
+        CraftPresence.CLIENT.syncFunction("world.weather.name", () -> {
+            final String newWeatherData = EntityUtils.getWeather(CraftPresence.player);
+            final String newWeatherName = Constants.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
+            return StringUtils.getOrDefault(newWeatherName);
+        });
+        CraftPresence.CLIENT.syncFunction("world.name", () -> {
+            final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
+            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
+            return StringUtils.getOrDefault(newWorldName);
+        });
 
-        CraftPresence.CLIENT.syncArgument("server.default.icon", CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
+        // World Time Arguments
+        CraftPresence.CLIENT.syncFunction("world.time.day", () ->
+                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getFirst()
+        );
+        CraftPresence.CLIENT.syncFunction("world.time.format_24", () ->
+                        TimeUtils.toString(
+                                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
+                                "HH:mm"
+                        )
+                , true);
+        CraftPresence.CLIENT.syncFunction("world.time.format_12", () ->
+                        TimeUtils.toString(
+                                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
+                                "HH:mm a"
+                        )
+                , true);
+        CraftPresence.CLIENT.syncFunction("data.world.time.instance", () ->
+                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime())
+        );
 
-        ModuleData resultData = new ModuleData();
-        String formattedIcon;
-        if (!CraftPresence.instance.isSingleplayer() && currentServerData != null) {
-            // Player Amount Arguments
-            CraftPresence.CLIENT.syncArgument("server.players.current", currentPlayers);
-            CraftPresence.CLIENT.syncArgument("server.players.max", maxPlayers);
+        // Default Arguments
+        CraftPresence.CLIENT.syncFunction("server.default.icon", () -> CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
-            // Server Data Arguments (Multiplayer)
-            final String formattedIP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
-            CraftPresence.CLIENT.syncArgument("server.address.full", currentServer_IP);
-            CraftPresence.CLIENT.syncArgument("server.address.short", formattedIP);
-            CraftPresence.CLIENT.syncArgument("server.name", currentServer_Name);
-            CraftPresence.CLIENT.syncArgument("server.motd.raw", currentServer_MOTD);
-            if (!currentServer_MOTD_Lines.isEmpty()) {
-                int index = 1;
-                for (String motdPart : currentServer_MOTD_Lines) {
-                    CraftPresence.CLIENT.syncArgument("data.server.motd.line_" + index, motdPart);
-                    index++;
-                }
-            }
-
-            final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
-            final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
-            final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedIP);
-
-            final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : "";
-            final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : defaultIcon;
-            final String currentIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
-
-            resultData = primaryData != null ? primaryData : (alternateData != null ? alternateData : defaultData);
-            currentServerIcon = currentIcon;
-
-            // Attempt to find alternative icons, if no overrides are present
-            if (StringUtils.isNullOrEmpty(currentServerIcon)) {
-                if (CraftPresence.CLIENT.addEndpointIcon(
-                        CraftPresence.CONFIG,
-                        CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
-                        formattedIP
-                )) {
-                    currentServerIcon = formattedIP;
+        CraftPresence.CLIENT.syncFunction("server.message", () -> {
+            final boolean inServer = !isOnSinglePlayer && currentServerData != null;
+            if (inServer) {
+                if (isOnLAN) {
+                    final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.lanData;
+                    return Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "";
                 } else {
-                    currentServerIcon = currentServer_Name;
+                    final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
+                    final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
+                    final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedServer_IP);
+
+                    final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+                    final String alternateMessage = Config.isValidProperty(alternateData, "textOverride") ? alternateData.getTextOverride() : defaultMessage;
+                    return Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : alternateMessage;
                 }
+            } else if (isOnSinglePlayer) {
+                final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.singleplayerData;
+                return Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "";
+            }
+            return null;
+        });
+        CraftPresence.CLIENT.syncFunction("server.icon", () -> {
+            final boolean inServer = !isOnSinglePlayer && currentServerData != null;
+            String currentServerIcon = "";
+            if (inServer) {
+                if (isOnLAN) {
+                    final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.lanData;
+                    currentServerIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : "";
+                } else {
+                    final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
+                    final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
+                    final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedServer_IP);
+
+                    final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : "";
+                    final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : defaultIcon;
+                    currentServerIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : alternateIcon;
+
+                    // Attempt to find alternative icons, if no overrides are present
+                    if (StringUtils.isNullOrEmpty(currentServerIcon)) {
+                        if (CraftPresence.CLIENT.addEndpointIcon(
+                                CraftPresence.CONFIG,
+                                CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
+                                formattedServer_IP
+                        )) {
+                            currentServerIcon = formattedServer_IP;
+                        } else {
+                            currentServerIcon = currentServer_Name;
+                        }
+                    }
+                }
+            } else if (isOnSinglePlayer) {
+                final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.singleplayerData;
+                currentServerIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : "";
+            }
+            return CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
+        });
+    }
+
+    private void initServerArgs() {
+        // Player Amount Arguments
+        CraftPresence.CLIENT.syncFunction("server.players.current", () -> currentPlayers);
+        CraftPresence.CLIENT.syncFunction("server.players.max", () -> maxPlayers);
+
+        // Server Data Arguments (Multiplayer)
+        CraftPresence.CLIENT.syncFunction("server.address.full", () -> currentServer_IP);
+        CraftPresence.CLIENT.syncFunction("server.address.short", () -> formattedServer_IP);
+        CraftPresence.CLIENT.syncFunction("server.name", () -> currentServer_Name);
+        CraftPresence.CLIENT.syncFunction("server.motd.raw", () -> currentServer_MOTD);
+        if (!currentServer_MOTD_Lines.isEmpty()) {
+            for (int i = 0; i < currentServer_MOTD_Lines.size(); i++) {
+                final int index = i + 1;
+                CraftPresence.CLIENT.syncFunction("data.server.motd.line_" + index, () -> currentServer_MOTD_Lines.get(index));
+            }
+        }
+    }
+
+    @Override
+    public void updatePresence() {
+        final boolean inSingle = isOnSinglePlayer;
+        final boolean inServer = !inSingle && currentServerData != null;
+
+        ModuleData resultData = null;
+        if (inServer) {
+            if (hasInitializedServer) {
+                initServerArgs();
+                hasInitializedServer = false;
             }
 
             if (isOnLAN) {
-                // NOTE: LAN-Only Presence Updates
                 resultData = CraftPresence.CONFIG.statusMessages.lanData;
-                currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
-                currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
             } else {
-                // NOTE: Server-Only Presence Updates
-                final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-                final String alternateMessage = alternateData != null && Config.isValidProperty(alternateData, "textOverride") ? alternateData.getTextOverride() : defaultMessage;
-                currentServerMessage = primaryData != null && Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : alternateMessage;
+                final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
+                final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
+                final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedServer_IP);
+                resultData = primaryData != null ? primaryData : (alternateData != null ? alternateData : defaultData);
 
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.
@@ -621,18 +593,13 @@ public class ServerUtils implements Module {
                     CraftPresence.CLIENT.PARTY_PRIVACY = PartyPrivacy.from(CraftPresence.CONFIG.generalSettings.partyPrivacyLevel % 2);
                 }
             }
-        } else if (CraftPresence.instance.isSingleplayer()) {
-            // NOTE: SinglePlayer-Only Presence Updates
+        } else if (inSingle) {
             resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
-            currentServerMessage = Config.isValidProperty(resultData, "textOverride") ? resultData.getTextOverride() : "";
-            currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
         }
-        formattedIcon = CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
-        CraftPresence.CLIENT.syncOverride(resultData, "server.message", "server.icon");
-        CraftPresence.CLIENT.syncArgument("server.message", currentServerMessage);
-        CraftPresence.CLIENT.syncArgument("server.icon", formattedIcon);
-        queuedForUpdate = false;
+        if (resultData != null) {
+            CraftPresence.CLIENT.syncOverride(resultData, "server.message", "server.icon");
+        }
     }
 
     @Override

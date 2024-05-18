@@ -96,6 +96,34 @@ public class TileEntityUtils implements Module {
      */
     private boolean hasScannedInternals = false;
     /**
+     * Whether this module has performed an initial event sync
+     */
+    private boolean hasInitialized = false;
+    /**
+     * Whether placeholders for the main-hand have been initialized
+     */
+    private boolean hasInitializedMainHand = false;
+    /**
+     * Whether placeholders for the off-hand have been initialized
+     */
+    private boolean hasInitializedOffHand = false;
+    /**
+     * Whether placeholders for the helmet have been initialized
+     */
+    private boolean hasInitializedHelmet = false;
+    /**
+     * Whether placeholders for the chest have been initialized
+     */
+    private boolean hasInitializedChest = false;
+    /**
+     * Whether placeholders for the legs have been initialized
+     */
+    private boolean hasInitializedLegs = false;
+    /**
+     * Whether placeholders for the boots have been initialized
+     */
+    private boolean hasInitializedBoots = false;
+    /**
      * The Player's Current Main Hand Item, if any
      */
     private ItemStack CURRENT_MAIN_HAND_ITEM;
@@ -289,6 +317,13 @@ public class TileEntityUtils implements Module {
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("item", "data.item");
         CraftPresence.CLIENT.clearOverride("item.message", "item.icon");
+        hasInitialized = false;
+        hasInitializedMainHand = false;
+        hasInitializedOffHand = false;
+        hasInitializedHelmet = false;
+        hasInitializedChest = false;
+        hasInitializedLegs = false;
+        hasInitializedBoots = false;
     }
 
     @Override
@@ -391,88 +426,134 @@ public class TileEntityUtils implements Module {
         if (hasMainHandChanged || hasOffHandChanged ||
                 hasHelmetChanged || hasChestChanged ||
                 hasLegsChanged || hasBootsChanged) {
+            if (!hasInitialized) {
+                initPresence();
+                hasInitialized = true;
+            }
             updatePresence();
         }
     }
 
     @Override
-    public void updatePresence() {
-        // Retrieve Messages
-        final String defaultItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault("default", "");
-
-        final String offHandItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME);
-        final String mainItemMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, CURRENT_MAIN_HAND_ITEM_NAME);
-
-        final String helmetMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_HELMET_NAME, CURRENT_HELMET_NAME);
-        final String chestMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_CHEST_NAME, CURRENT_CHEST_NAME);
-        final String legsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_LEGS_NAME, CURRENT_LEGS_NAME);
-        final String bootsMessage = CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME);
-
-        CraftPresence.CLIENT.syncArgument("item.message.default", defaultItemMessage);
-        CraftPresence.CLIENT.syncArgument("item.message.holding", String.format("[%s, %s]",
+    public void initPresence() {
+        CraftPresence.CLIENT.syncFunction("item.message.default", () ->
+                CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault("default", "")
+        );
+        CraftPresence.CLIENT.syncFunction("item.message.holding", () -> String.format("[%s, %s]",
                 StringUtils.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, "N/A"),
                 StringUtils.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, "N/A")
         ), true);
-        CraftPresence.CLIENT.syncArgument("item.message.equipped", String.format("[%s, %s, %s, %s]",
+        CraftPresence.CLIENT.syncFunction("item.message.equipped", () -> String.format("[%s, %s, %s, %s]",
                 StringUtils.getOrDefault(CURRENT_HELMET_NAME, "N/A"),
                 StringUtils.getOrDefault(CURRENT_CHEST_NAME, "N/A"),
                 StringUtils.getOrDefault(CURRENT_LEGS_NAME, "N/A"),
                 StringUtils.getOrDefault(CURRENT_BOOTS_NAME, "N/A")
         ), true);
+    }
 
+    @Override
+    public void updatePresence() {
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
-            CraftPresence.CLIENT.syncArgument("data.item.main_hand.instance", CURRENT_MAIN_HAND_ITEM);
-            CraftPresence.CLIENT.syncArgument("data.item.main_hand.class", CURRENT_MAIN_HAND_ITEM.getClass());
-            CraftPresence.CLIENT.syncArgument("item.main_hand.name", CURRENT_MAIN_HAND_ITEM_NAME);
-            CraftPresence.CLIENT.syncArgument("item.main_hand.message", mainItemMessage);
-        } else {
+            if (!hasInitializedMainHand) {
+                CraftPresence.CLIENT.syncFunction("data.item.main_hand.instance", () -> CURRENT_MAIN_HAND_ITEM);
+                CraftPresence.CLIENT.syncFunction("data.item.main_hand.class", () -> CURRENT_MAIN_HAND_ITEM.getClass());
+                CraftPresence.CLIENT.syncFunction("item.main_hand.name", () -> CURRENT_MAIN_HAND_ITEM_NAME, true);
+                CraftPresence.CLIENT.syncFunction("item.main_hand.message", () ->
+                        CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
+                                CURRENT_MAIN_HAND_ITEM_NAME, CURRENT_MAIN_HAND_ITEM_NAME
+                        )
+                );
+                hasInitializedMainHand = true;
+            }
+        } else if (hasInitializedMainHand) {
             CraftPresence.CLIENT.removeArguments("item.main_hand", "data.item.main_hand");
+            hasInitializedMainHand = false;
         }
 
         if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
-            CraftPresence.CLIENT.syncArgument("data.item.off_hand.instance", CURRENT_OFFHAND_ITEM);
-            CraftPresence.CLIENT.syncArgument("data.item.off_hand.class", CURRENT_OFFHAND_ITEM.getClass());
-            CraftPresence.CLIENT.syncArgument("item.off_hand.name", CURRENT_OFFHAND_ITEM_NAME);
-            CraftPresence.CLIENT.syncArgument("item.off_hand.message", offHandItemMessage);
-        } else {
+            if (!hasInitializedOffHand) {
+                CraftPresence.CLIENT.syncFunction("data.item.off_hand.instance", () -> CURRENT_OFFHAND_ITEM);
+                CraftPresence.CLIENT.syncFunction("data.item.off_hand.class", () -> CURRENT_OFFHAND_ITEM.getClass());
+                CraftPresence.CLIENT.syncFunction("item.off_hand.name", () -> CURRENT_OFFHAND_ITEM_NAME, true);
+                CraftPresence.CLIENT.syncFunction("item.off_hand.message", () ->
+                        CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
+                                CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME
+                        )
+                );
+                hasInitializedOffHand = true;
+            }
+        } else if (hasInitializedOffHand) {
             CraftPresence.CLIENT.removeArguments("item.off_hand", "data.item.off_hand");
+            hasInitializedOffHand = false;
         }
 
         if (!isEmpty(CURRENT_HELMET)) {
-            CraftPresence.CLIENT.syncArgument("data.item.helmet.instance", CURRENT_HELMET);
-            CraftPresence.CLIENT.syncArgument("data.item.helmet.class", CURRENT_HELMET.getClass());
-            CraftPresence.CLIENT.syncArgument("item.helmet.name", CURRENT_HELMET_NAME);
-            CraftPresence.CLIENT.syncArgument("item.helmet.message", helmetMessage);
-        } else {
+            if (!hasInitializedHelmet) {
+                CraftPresence.CLIENT.syncFunction("data.item.helmet.instance", () -> CURRENT_HELMET);
+                CraftPresence.CLIENT.syncFunction("data.item.helmet.class", () -> CURRENT_HELMET.getClass());
+                CraftPresence.CLIENT.syncFunction("item.helmet.name", () -> CURRENT_HELMET_NAME, true);
+                CraftPresence.CLIENT.syncFunction("item.helmet.message", () ->
+                        CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
+                                CURRENT_HELMET_NAME, CURRENT_HELMET_NAME
+                        )
+                );
+                hasInitializedHelmet = true;
+            }
+        } else if (hasInitializedHelmet) {
             CraftPresence.CLIENT.removeArguments("item.helmet", "data.item.helmet");
+            hasInitializedHelmet = false;
         }
 
         if (!isEmpty(CURRENT_CHEST)) {
-            CraftPresence.CLIENT.syncArgument("data.item.chestplate.instance", CURRENT_CHEST);
-            CraftPresence.CLIENT.syncArgument("data.item.chestplate.class", CURRENT_CHEST.getClass());
-            CraftPresence.CLIENT.syncArgument("item.chestplate.name", CURRENT_CHEST_NAME);
-            CraftPresence.CLIENT.syncArgument("item.chestplate.message", chestMessage);
-        } else {
+            if (!hasInitializedChest) {
+                CraftPresence.CLIENT.syncFunction("data.item.chestplate.instance", () -> CURRENT_CHEST);
+                CraftPresence.CLIENT.syncFunction("data.item.chestplate.class", () -> CURRENT_CHEST.getClass());
+                CraftPresence.CLIENT.syncFunction("item.chestplate.name", () -> CURRENT_CHEST_NAME, true);
+                CraftPresence.CLIENT.syncFunction("item.chestplate.message", () ->
+                        CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
+                                CURRENT_CHEST_NAME, CURRENT_CHEST_NAME
+                        )
+                );
+                hasInitializedChest = true;
+            }
+        } else if (hasInitializedChest) {
             CraftPresence.CLIENT.removeArguments("item.chestplate", "data.item.chestplate");
+            hasInitializedChest = false;
         }
 
         if (!isEmpty(CURRENT_LEGS)) {
-            CraftPresence.CLIENT.syncArgument("data.item.leggings.instance", CURRENT_LEGS);
-            CraftPresence.CLIENT.syncArgument("data.item.leggings.class", CURRENT_LEGS.getClass());
-            CraftPresence.CLIENT.syncArgument("item.leggings.name", CURRENT_LEGS_NAME);
-            CraftPresence.CLIENT.syncArgument("item.leggings.message", legsMessage);
-        } else {
+            if (!hasInitializedLegs) {
+                CraftPresence.CLIENT.syncFunction("data.item.leggings.instance", () -> CURRENT_LEGS);
+                CraftPresence.CLIENT.syncFunction("data.item.leggings.class", () -> CURRENT_LEGS.getClass());
+                CraftPresence.CLIENT.syncFunction("item.leggings.name", () -> CURRENT_LEGS_NAME, true);
+                CraftPresence.CLIENT.syncFunction("item.leggings.message", () ->
+                        CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
+                                CURRENT_LEGS_NAME, CURRENT_LEGS_NAME
+                        )
+                );
+                hasInitializedLegs = true;
+            }
+        } else if (hasInitializedLegs) {
             CraftPresence.CLIENT.removeArguments("item.leggings", "data.item.leggings");
+            hasInitializedLegs = false;
         }
 
         if (!isEmpty(CURRENT_BOOTS)) {
-            CraftPresence.CLIENT.syncArgument("data.item.boots.instance", CURRENT_BOOTS);
-            CraftPresence.CLIENT.syncArgument("data.item.boots.class", CURRENT_BOOTS.getClass());
-            CraftPresence.CLIENT.syncArgument("item.boots.name", CURRENT_BOOTS_NAME);
-            CraftPresence.CLIENT.syncArgument("item.boots.message", bootsMessage);
-        } else {
+            if (!hasInitializedBoots) {
+                CraftPresence.CLIENT.syncFunction("data.item.boots.instance", () -> CURRENT_BOOTS);
+                CraftPresence.CLIENT.syncFunction("data.item.boots.class", () -> CURRENT_BOOTS.getClass());
+                CraftPresence.CLIENT.syncFunction("item.boots.name", () -> CURRENT_BOOTS_NAME, true);
+                CraftPresence.CLIENT.syncFunction("item.boots.message", () ->
+                        CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
+                                CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME
+                        )
+                );
+                hasInitializedBoots = true;
+            }
+        } else if (hasInitializedBoots) {
             CraftPresence.CLIENT.removeArguments("item.boots", "data.item.boots");
+            hasInitializedBoots = false;
         }
     }
 

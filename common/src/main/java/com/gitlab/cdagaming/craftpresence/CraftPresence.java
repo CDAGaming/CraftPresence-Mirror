@@ -96,6 +96,14 @@ public class CraftPresence {
      */
     public static EntityPlayer player;
     /**
+     * The current player username
+     */
+    public static String username;
+    /**
+     * The current player UUID
+     */
+    public static String uuid;
+    /**
      * The {@link Config} Instance for this Mod
      */
     public static Config CONFIG;
@@ -104,13 +112,13 @@ public class CraftPresence {
      */
     public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
     /**
+     * Whether the Mod has completed its Initialization Phase
+     */
+    public static boolean initialized = false;
+    /**
      * If specified, this callback runs on initial launch, once initialized
      */
     private final Runnable initCallback;
-    /**
-     * Whether the Mod has completed its Initialization Phase
-     */
-    private boolean initialized = false;
 
     /**
      * Begins Scheduling Ticks on Class Initialization
@@ -181,6 +189,9 @@ public class CraftPresence {
             if (initialized) {
                 session = instance.getSession();
                 player = instance.player;
+
+                username = session.getUsername();
+                uuid = session.getPlayerID();
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {

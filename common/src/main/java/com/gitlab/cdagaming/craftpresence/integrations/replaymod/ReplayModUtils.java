@@ -58,9 +58,17 @@ public class ReplayModUtils implements Module {
      */
     private boolean hasScannedInternals = false;
     /**
-     * Whether we are currently syncing placeholders in this module
+     * Whether this module has performed an initial event sync
      */
-    private boolean usingPlaceholders = false;
+    private boolean hasInitialized = false;
+    /**
+     * Whether placeholders for the main screen have been initialized
+     */
+    private boolean hasInitializedMain = false;
+    /**
+     * Whether placeholders for the sub screen have been initialized
+     */
+    private boolean hasInitializedSub = false;
     /**
      * The name of the Current Gui the player is in
      */
@@ -82,7 +90,11 @@ public class ReplayModUtils implements Module {
         CURRENT_SCREEN = null;
 
         setInUse(false);
-        clearPlaceholders();
+        clearMainPlaceholders();
+        clearSubPlaceholders();
+        hasInitialized = false;
+        hasInitializedMain = false;
+        hasInitializedSub = false;
     }
 
     @Override
@@ -131,6 +143,10 @@ public class ReplayModUtils implements Module {
                         CraftPresence.GUIS.GUI_NAMES.add(newScreenName);
                     }
 
+                    if (!hasInitialized) {
+                        initPresence();
+                        hasInitialized = true;
+                    }
                     updatePresence();
                 }
                 syncPlaceholders();
@@ -198,31 +214,43 @@ public class ReplayModUtils implements Module {
     }
 
     @Override
+    public void initPresence() {
+        CraftPresence.CLIENT.syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+
+        CraftPresence.CLIENT.syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
+        CraftPresence.CLIENT.syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
+
+        CraftPresence.CLIENT.syncFunction("screen.message", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
+
+            final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+            return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+        });
+        CraftPresence.CLIENT.syncFunction("screen.icon", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
+
+            final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_GUI_NAME;
+            final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
+            return CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+        });
+    }
+
+    @Override
     public void updatePresence() {
         final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
 
-        final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
-        final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_GUI_NAME;
-        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-        final String formattedIcon = CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
-
-        CraftPresence.CLIENT.syncArgument("screen.default.icon", CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
-
-        CraftPresence.CLIENT.syncArgument("data.screen.instance", CURRENT_SCREEN);
-        CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
-
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
-        CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("screen.icon", formattedIcon);
     }
 
-    private void clearPlaceholders() {
-        if (usingPlaceholders) {
-            CraftPresence.CLIENT.removeArguments("replaymod");
-            usingPlaceholders = false;
-        }
+    private void clearMainPlaceholders() {
+        CraftPresence.CLIENT.removeArguments("replaymod.time");
+    }
+
+    private void clearSubPlaceholders() {
+        CraftPresence.CLIENT.removeArguments("replaymod.frames");
     }
 
     private void syncPlaceholders() {
@@ -230,30 +258,39 @@ public class ReplayModUtils implements Module {
 
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN != null && CURRENT_SCREEN.getClass() == videoRendererScreen) {
-            CraftPresence.CLIENT.syncArgument("replaymod.time.current", secToString(
-                    StringUtils.getValidInteger(StringUtils.getField(
-                            videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
-                    )).getSecond() / 1000
-            ));
-            CraftPresence.CLIENT.syncArgument("replaymod.time.remaining", secToString(
-                    StringUtils.getValidInteger(StringUtils.getField(
-                            videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
-                    )).getSecond() / 1000
-            ));
+            if (!hasInitializedMain) {
+                CraftPresence.CLIENT.syncFunction("replaymod.time.current", () -> secToString(
+                        StringUtils.getValidInteger(StringUtils.getField(
+                                videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
+                        )).getSecond() / 1000
+                ), true);
+                CraftPresence.CLIENT.syncFunction("replaymod.time.remaining", () -> secToString(
+                        StringUtils.getValidInteger(StringUtils.getField(
+                                videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
+                        )).getSecond() / 1000
+                ), true);
+                hasInitializedMain = true;
+            }
 
             final Object rendererObj = StringUtils.getField(
                     videoRendererScreen, CURRENT_SCREEN, "renderer"
             );
             final Class<?> videoRendererInfo = FileUtils.loadClass("com.replaymod.render.rendering.VideoRenderer");
             if (rendererObj != null && rendererObj.getClass() == videoRendererInfo) {
-                CraftPresence.CLIENT.syncArgument("replaymod.frames.current",
-                        StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"));
-                CraftPresence.CLIENT.syncArgument("replaymod.frames.total",
-                        StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"));
+                if (!hasInitializedSub) {
+                    CraftPresence.CLIENT.syncFunction("replaymod.frames.current",
+                            () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"));
+                    CraftPresence.CLIENT.syncFunction("replaymod.frames.total",
+                            () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"));
+                    hasInitializedSub = true;
+                }
+            } else if (hasInitializedSub) {
+                clearSubPlaceholders();
+                hasInitializedSub = false;
             }
-            usingPlaceholders = true;
-        } else {
-            clearPlaceholders();
+        } else if (hasInitializedMain) {
+            clearMainPlaceholders();
+            hasInitializedMain = false;
         }
     }
 

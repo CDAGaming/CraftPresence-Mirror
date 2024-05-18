@@ -76,6 +76,26 @@ public class EntityUtils implements Module {
      */
     private boolean hasScannedInternals = false;
     /**
+     * Whether this module has performed an initial event sync
+     */
+    private boolean hasInitialized = false;
+    /**
+     * Whether placeholders for the target entity have been initialized
+     */
+    private boolean hasInitializedTarget = false;
+    /**
+     * Whether the target entity is being used for RPC override data
+     */
+    private boolean usingTargetOverrides = false;
+    /**
+     * Whether placeholders for the riding entity have been initialized
+     */
+    private boolean hasInitializedRiding = false;
+    /**
+     * Whether the riding entity is being used for RPC override data
+     */
+    private boolean usingRidingOverrides = false;
+    /**
      * The Player's Currently Targeted Entity Name, if any
      */
     private String CURRENT_TARGET_NAME;
@@ -178,6 +198,11 @@ public class EntityUtils implements Module {
                 "entity.target.message", "entity.target.icon",
                 "entity.riding.message", "entity.riding.icon"
         );
+        hasInitialized = false;
+        hasInitializedTarget = false;
+        usingTargetOverrides = false;
+        hasInitializedRiding = false;
+        usingRidingOverrides = false;
     }
 
     @Override
@@ -248,56 +273,99 @@ public class EntityUtils implements Module {
         }
 
         if (hasTargetChanged || hasRidingChanged) {
+            if (!hasInitialized) {
+                initPresence();
+                hasInitialized = true;
+            }
             updatePresence();
         }
+    }
+
+    @Override
+    public void initPresence() {
+        CraftPresence.CLIENT.syncFunction("entity.default.icon", () -> CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
     }
 
     @Override
     public void updatePresence() {
         // Form Entity Argument List
         final ModuleData defaultTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
-        final ModuleData defaultRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
-
         final ModuleData currentTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
+
+        final ModuleData defaultRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
         final ModuleData currentRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_RIDING_NAME);
-
-        final String defaultTargetMessage = Config.isValidProperty(defaultTargetData, "textOverride") ? defaultTargetData.getTextOverride() : "";
-        final String defaultRidingMessage = Config.isValidProperty(defaultRidingData, "textOverride") ? defaultRidingData.getTextOverride() : "";
-
-        final String currentTargetMessage = Config.isValidProperty(currentTargetData, "textOverride") ? currentTargetData.getTextOverride() : defaultTargetMessage;
-        final String currentRidingMessage = Config.isValidProperty(currentRidingData, "textOverride") ? currentRidingData.getTextOverride() : defaultRidingMessage;
-
-        final String currentTargetIcon = Config.isValidProperty(currentTargetData, "iconOverride") ? currentTargetData.getIconOverride() : CURRENT_TARGET_NAME;
-        final String currentRidingIcon = Config.isValidProperty(currentRidingData, "iconOverride") ? currentRidingData.getIconOverride() : CURRENT_RIDING_NAME;
-
-        final String formattedTargetIcon = CraftPresence.CLIENT.imageOf("entity.target.icon", true, currentTargetIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
-        final String formattedRidingIcon = CraftPresence.CLIENT.imageOf("entity.riding.icon", true, currentRidingIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
-
-        CraftPresence.CLIENT.syncArgument("entity.default.icon", CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
 
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
-            CraftPresence.CLIENT.syncArgument("data.entity.target.instance", CURRENT_TARGET);
-            CraftPresence.CLIENT.syncArgument("data.entity.target.class", CURRENT_TARGET.getClass());
-            CraftPresence.CLIENT.syncArgument("entity.target.name", CURRENT_TARGET_NAME);
+            if (!hasInitializedTarget) {
+                CraftPresence.CLIENT.syncFunction("data.entity.target.instance", () -> CURRENT_TARGET);
+                CraftPresence.CLIENT.syncFunction("data.entity.target.class", () -> CURRENT_TARGET.getClass());
+                CraftPresence.CLIENT.syncFunction("entity.target.name", () -> CURRENT_TARGET_NAME, true);
 
+                CraftPresence.CLIENT.syncFunction("entity.target.message", () -> {
+                    final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
+                    final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
+
+                    final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+                    return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+                });
+                CraftPresence.CLIENT.syncFunction("entity.target.icon", () -> {
+                    final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
+                    final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
+
+                    final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_TARGET_NAME;
+                    final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
+                    return CraftPresence.CLIENT.imageOf("entity.target.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
+                });
+                hasInitializedTarget = true;
+            }
             CraftPresence.CLIENT.syncOverride(currentTargetData != null ? currentTargetData : defaultTargetData, "entity.target.message", "entity.target.icon");
-            CraftPresence.CLIENT.syncArgument("entity.target.message", currentTargetMessage);
-            CraftPresence.CLIENT.syncArgument("entity.target.icon", formattedTargetIcon);
+            usingTargetOverrides = true;
         } else {
-            CraftPresence.CLIENT.removeArguments("entity.target", "data.entity.target");
+            if (hasInitializedTarget) {
+                CraftPresence.CLIENT.removeArguments("entity.target", "data.entity.target");
+                hasInitializedTarget = false;
+            }
+            if (usingTargetOverrides) {
+                CraftPresence.CLIENT.clearOverride("entity.target.message", "entity.target.icon");
+                usingTargetOverrides = false;
+            }
         }
 
         if (CURRENT_RIDING != null) {
-            CraftPresence.CLIENT.syncArgument("data.entity.riding.instance", CURRENT_RIDING);
-            CraftPresence.CLIENT.syncArgument("data.entity.riding.class", CURRENT_RIDING.getClass());
-            CraftPresence.CLIENT.syncArgument("entity.riding.name", CURRENT_RIDING_NAME);
+            if (!hasInitializedRiding) {
+                CraftPresence.CLIENT.syncFunction("data.entity.riding.instance", () -> CURRENT_RIDING);
+                CraftPresence.CLIENT.syncFunction("data.entity.riding.class", () -> CURRENT_RIDING.getClass());
+                CraftPresence.CLIENT.syncFunction("entity.riding.name", () -> CURRENT_RIDING_NAME, true);
 
+                CraftPresence.CLIENT.syncFunction("entity.riding.message", () -> {
+                    final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
+                    final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get(CURRENT_RIDING_NAME);
+
+                    final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+                    return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+                });
+                CraftPresence.CLIENT.syncFunction("entity.riding.icon", () -> {
+                    final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
+                    final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get(CURRENT_RIDING_NAME);
+
+                    final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_RIDING_NAME;
+                    final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
+                    return CraftPresence.CLIENT.imageOf("entity.riding.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
+                });
+                hasInitializedRiding = true;
+            }
             CraftPresence.CLIENT.syncOverride(currentRidingData != null ? currentRidingData : defaultRidingData, "entity.riding.message", "entity.riding.icon");
-            CraftPresence.CLIENT.syncArgument("entity.riding.message", currentRidingMessage);
-            CraftPresence.CLIENT.syncArgument("entity.riding.icon", formattedRidingIcon);
+            usingRidingOverrides = true;
         } else {
-            CraftPresence.CLIENT.removeArguments("entity.riding", "data.entity.riding");
+            if (hasInitializedRiding) {
+                CraftPresence.CLIENT.removeArguments("entity.riding", "data.entity.riding");
+                hasInitializedRiding = false;
+            }
+            if (usingRidingOverrides) {
+                CraftPresence.CLIENT.clearOverride("entity.riding.message", "entity.riding.icon");
+                usingRidingOverrides = false;
+            }
         }
     }
 

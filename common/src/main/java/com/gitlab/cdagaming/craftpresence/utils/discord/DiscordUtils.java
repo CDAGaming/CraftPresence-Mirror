@@ -258,14 +258,7 @@ public class DiscordUtils {
         );
 
         // Setup Default / Static Placeholders
-        FunctionsLib.init(scriptEngine);
-        syncArgument("general.mods", Constants.getModCount());
-        syncArgument("general.title", Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
-        syncArgument("general.version", ModUtils.MCVersion);
-        syncArgument("general.protocol", ModUtils.MCProtocolID);
-        syncArgument("general.brand", ModUtils.BRAND);
-        syncArgument("data.general.version", Constants.MCBuildVersion);
-        syncArgument("data.general.protocol", Constants.MCBuildProtocol);
+        syncPlaceholders();
     }
 
     /**
@@ -304,13 +297,7 @@ public class DiscordUtils {
      * Synchronizes Initial Rich Presence Data
      */
     public void postInit() {
-        // Update Start Timestamp, if needed
-        final long newStartTime = TimeUtils.toEpochMilli();
-        final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
-                lastStartTime :
-                newStartTime;
-        lastStartTime = currentStartTime;
-        syncArgument("data.general.time", Long.toString(currentStartTime));
+        // N/A
     }
 
     /**
@@ -659,11 +646,20 @@ public class DiscordUtils {
      *
      * @param args The Specified Arguments to Synchronize for
      */
+    public void syncTimestamp(final Supplier<Long> newTimestamp, final String... args) {
+        for (String argumentName : args) {
+            syncFunction(argumentName, () -> Long.toString(newTimestamp.get()), true);
+        }
+    }
+
+    /**
+     * Updates the specified placeholder(s) with a Unix Timestamp
+     *
+     * @param args The Specified Arguments to Synchronize for
+     */
     public void syncTimestamp(final String... args) {
         final long newTimestamp = TimeUtils.toEpochMilli();
-        for (String argumentName : args) {
-            syncArgument(argumentName, Long.toString(newTimestamp));
-        }
+        syncTimestamp(() -> newTimestamp, args);
     }
 
     /**
@@ -839,9 +835,21 @@ public class DiscordUtils {
      * @param newData The new data to interpret
      */
     public void syncDynamicVariables(final Map<String, String> oldData, final Map<String, String> newData) {
-        for (Map.Entry<String, String> entry : oldData.entrySet()) {
-            if (!entry.getKey().equals("default") && !newData.containsKey(entry.getKey())) {
-                removeArguments("custom." + entry.getKey());
+        final boolean hasOldData = oldData != null && !oldData.isEmpty();
+        if (hasOldData) {
+            for (Map.Entry<String, String> entry : oldData.entrySet()) {
+                if (!entry.getKey().equals("default") && !newData.containsKey(entry.getKey())) {
+                    removeArguments("custom." + entry.getKey());
+                }
+            }
+        }
+
+        for (String entry : newData.keySet()) {
+            if (!entry.equals("default") && (!hasOldData || !oldData.containsKey(entry))) {
+                syncFunction(
+                        "custom." + entry,
+                        () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
+                );
             }
         }
     }
@@ -1138,38 +1146,59 @@ public class DiscordUtils {
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
-        syncArgument("_general.instance", CraftPresence.instance);
-        syncArgument("_general.player", CraftPresence.player);
-        syncArgument("_general.world", CraftPresence.player != null ? CraftPresence.player.world : null);
-        syncArgument("_config.instance", CraftPresence.CONFIG);
+        FunctionsLib.init(scriptEngine);
+        syncFunction("general.mods", Constants::getModCount);
+        syncFunction("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
+        syncFunction("general.version", () -> ModUtils.MCVersion, true);
+        syncFunction("general.protocol", () -> ModUtils.MCProtocolID);
+        syncFunction("general.brand", () -> ModUtils.BRAND, true);
+
+        syncFunction("data.general.version", () -> Constants.MCBuildVersion, true);
+        syncFunction("data.general.protocol", () -> Constants.MCBuildProtocol);
+        syncTimestamp(() -> {
+            final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
+                    lastStartTime : TimeUtils.toEpochMilli();
+            lastStartTime = currentStartTime;
+            return currentStartTime;
+        }, "data.general.time");
+
+        syncFunction("_general.instance", () -> CraftPresence.instance);
+        syncFunction("_general.player", () -> CraftPresence.player);
+        syncFunction("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.world : null);
+        syncFunction("_config.instance", () -> CraftPresence.CONFIG);
+
         // Sync Custom Variables
-        for (Map.Entry<String, String> entry : CraftPresence.CONFIG.displaySettings.dynamicVariables.entrySet()) {
-            if (!entry.getKey().equals("default")) {
-                syncArgument("custom." + entry.getKey(), entry.getValue());
-            }
-        }
+        syncDynamicVariables(null, CraftPresence.CONFIG.displaySettings.dynamicVariables);
+
         // Add Any Generalized Argument Data needed
-        final String playerName = CraftPresence.session.getUsername();
-        syncArgument("player.name", playerName);
+        syncFunction("player.name", () -> CraftPresence.username, true);
 
         // UUID Data
-        final String uniqueId = CraftPresence.session.getPlayerID();
-        if (StringUtils.isValidUuid(uniqueId)) {
-            syncArgument("player.uuid.short", StringUtils.getFromUuid(uniqueId, true));
-            syncArgument("player.uuid.full", StringUtils.getFromUuid(uniqueId, false));
-        }
+        syncFunction("player.uuid.short", () -> {
+            final String uniqueId = CraftPresence.uuid;
+            return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, true) : null;
+        }, true);
+        syncFunction("player.uuid.full", () -> {
+            final String uniqueId = CraftPresence.uuid;
+            return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, false) : null;
+        }, true);
 
-        if (addEndpointIcon(
-                CraftPresence.CONFIG,
-                CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
-                playerName, uniqueId
-        )) {
-            syncArgument("player.icon", playerName);
-        }
+        syncFunction("player.icon", () -> {
+            if (addEndpointIcon(
+                    CraftPresence.CONFIG,
+                    CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                    CraftPresence.username, CraftPresence.uuid
+            )) {
+                return CraftPresence.username;
+            }
+            return null;
+        }, true);
 
         // Sync the Default Icon Argument
-        syncArgument("general.icon", CraftPresence.CONFIG.generalSettings.defaultIcon);
-        syncScriptArguments();
+        syncFunction("general.icon", () -> CraftPresence.CONFIG.generalSettings.defaultIcon, true);
+
+        CommandUtils.syncModuleArguments();
+        CommandUtils.syncPackArguments();
     }
 
     /**
@@ -1563,9 +1592,7 @@ public class DiscordUtils {
      * Perform any needed Tick events, tied to {@link ScheduleUtils#MINIMUM_REFRESH_RATE} ticks
      */
     public void onTick() {
-        CommandUtils.syncModuleArguments();
-        CommandUtils.syncPackArguments();
-        syncPlaceholders();
+        syncScriptArguments();
 
         // Menu Tick Event
         final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
@@ -1620,13 +1647,15 @@ public class DiscordUtils {
      * @param mode the approval state
      */
     public void respondToJoinRequest(final IPCClient.ApprovalMode mode) {
-        if (STATUS == DiscordStatus.JoinRequest) {
-            if (isConnected()) {
-                ipcInstance.respondToJoinRequest(REQUESTER_USER, mode);
+        if (REQUESTER_USER != null) {
+            if (STATUS == DiscordStatus.JoinRequest) {
+                if (isConnected()) {
+                    ipcInstance.respondToJoinRequest(REQUESTER_USER, mode);
+                }
+                STATUS = DiscordStatus.Ready;
             }
-            STATUS = DiscordStatus.Ready;
+            CraftPresence.SCHEDULER.TIMER = 0;
+            REQUESTER_USER = null;
         }
-        CraftPresence.SCHEDULER.TIMER = 0;
-        REQUESTER_USER = null;
     }
 }

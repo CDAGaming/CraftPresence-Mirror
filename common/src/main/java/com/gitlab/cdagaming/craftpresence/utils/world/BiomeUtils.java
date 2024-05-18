@@ -69,6 +69,10 @@ public class BiomeUtils implements Module {
      */
     private boolean hasScannedInternals = false;
     /**
+     * Whether this module has performed an initial event sync
+     */
+    private boolean hasInitialized = false;
+    /**
      * The Name of the Current Biome the Player is in
      */
     private String CURRENT_BIOME_NAME;
@@ -99,6 +103,7 @@ public class BiomeUtils implements Module {
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("biome", "data.biome");
         CraftPresence.CLIENT.clearOverride("biome.message", "biome.icon");
+        hasInitialized = false;
     }
 
     @Override
@@ -149,8 +154,38 @@ public class BiomeUtils implements Module {
                 BIOME_NAMES.add(newBiome_Identifier);
             }
 
+            if (!hasInitialized) {
+                initPresence();
+                hasInitialized = true;
+            }
             updatePresence();
         }
+    }
+
+    @Override
+    public void initPresence() {
+        CraftPresence.CLIENT.syncFunction("biome.default.icon", () -> CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
+
+        CraftPresence.CLIENT.syncFunction("data.biome.instance", () -> CURRENT_BIOME);
+        CraftPresence.CLIENT.syncFunction("data.biome.class", () -> CURRENT_BIOME.getClass());
+        CraftPresence.CLIENT.syncFunction("biome.name", () -> CURRENT_BIOME_NAME, true);
+
+        CraftPresence.CLIENT.syncFunction("biome.message", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
+
+            final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+            return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+        });
+        CraftPresence.CLIENT.syncFunction("biome.icon", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
+
+            final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
+            final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
+            return CraftPresence.CLIENT.imageOf("biome.icon", true, currentIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
+        });
+        CraftPresence.CLIENT.syncTimestamp("data.biome.time");
     }
 
     @Override
@@ -158,22 +193,7 @@ public class BiomeUtils implements Module {
         final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
 
-        final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
-        final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
-        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-        final String formattedIcon = CraftPresence.CLIENT.imageOf("biome.icon", true, currentIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
-
-        CraftPresence.CLIENT.syncArgument("biome.default.icon", CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
-
-        CraftPresence.CLIENT.syncArgument("data.biome.instance", CURRENT_BIOME);
-        CraftPresence.CLIENT.syncArgument("data.biome.class", CURRENT_BIOME.getClass());
-        CraftPresence.CLIENT.syncArgument("biome.name", CURRENT_BIOME_NAME);
-
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "biome.message", "biome.icon");
-        CraftPresence.CLIENT.syncArgument("biome.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("biome.icon", formattedIcon);
-        CraftPresence.CLIENT.syncTimestamp("data.biome.time");
     }
 
     /**

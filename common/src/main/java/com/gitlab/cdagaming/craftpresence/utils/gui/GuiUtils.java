@@ -84,6 +84,10 @@ public class GuiUtils implements Module {
      */
     private boolean hasScannedInternals = false;
     /**
+     * Whether this module has performed an initial event sync
+     */
+    private boolean hasInitialized = false;
+    /**
      * The name of the Current Gui the player is in
      */
     private String CURRENT_GUI_NAME;
@@ -115,6 +119,7 @@ public class GuiUtils implements Module {
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("screen", "data.screen");
         CraftPresence.CLIENT.clearOverride("screen.message", "screen.icon");
+        hasInitialized = false;
     }
 
     @Override
@@ -164,6 +169,10 @@ public class GuiUtils implements Module {
                     GUI_NAMES.add(newScreenName);
                 }
 
+                if (!hasInitialized) {
+                    initPresence();
+                    hasInitialized = true;
+                }
                 updatePresence();
             }
         }
@@ -247,24 +256,35 @@ public class GuiUtils implements Module {
     }
 
     @Override
+    public void initPresence() {
+        CraftPresence.CLIENT.syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+
+        CraftPresence.CLIENT.syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
+        CraftPresence.CLIENT.syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
+
+        CraftPresence.CLIENT.syncFunction("screen.message", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
+
+            final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
+            return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+        });
+        CraftPresence.CLIENT.syncFunction("screen.icon", () -> {
+            final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
+            final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
+
+            final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_GUI_NAME;
+            final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
+            return CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+        });
+        CraftPresence.CLIENT.syncTimestamp("data.screen.time");
+    }
+
+    @Override
     public void updatePresence() {
         final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
         final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
 
-        final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-        final String currentMessage = Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
-        final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_GUI_NAME;
-        final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-        final String formattedIcon = CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
-
-        CraftPresence.CLIENT.syncArgument("screen.default.icon", CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
-
-        CraftPresence.CLIENT.syncArgument("data.screen.instance", CURRENT_SCREEN);
-        CraftPresence.CLIENT.syncArgument("screen.name", CURRENT_GUI_NAME);
-
         CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
-        CraftPresence.CLIENT.syncArgument("screen.message", currentMessage);
-        CraftPresence.CLIENT.syncArgument("screen.icon", formattedIcon);
-        CraftPresence.CLIENT.syncTimestamp("data.screen.time");
     }
 }
