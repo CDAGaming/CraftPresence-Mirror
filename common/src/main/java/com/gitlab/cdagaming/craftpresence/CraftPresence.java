@@ -112,9 +112,13 @@ public class CraftPresence {
      */
     public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
     /**
+     * Whether module data for the Mod has completed its Initialization Phase
+     */
+    public static boolean isDataLoaded = false;
+    /**
      * Whether the Mod has completed its Initialization Phase
      */
-    public static boolean initialized = false;
+    private static boolean initialized = false;
     /**
      * If specified, this callback runs on initial launch, once initialized
      */
@@ -155,14 +159,16 @@ public class CraftPresence {
         ModUtils.UPDATER.checkForUpdates();
 
         CONFIG = Config.getInstance();
+
         CommandUtils.init();
+        if (initCallback != null) {
+            initCallback.run();
+        }
+        isDataLoaded = true;
 
         CLIENT.setup();
         CommandUtils.setupRPC();
 
-        if (initCallback != null) {
-            initCallback.run();
-        }
         initialized = true;
     }
 

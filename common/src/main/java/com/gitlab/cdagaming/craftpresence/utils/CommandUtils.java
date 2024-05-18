@@ -209,7 +209,7 @@ public class CommandUtils {
      * @param instance The instance of the module
      */
     public static void addModule(final String moduleId, final Module instance) {
-        if (!CraftPresence.initialized) {
+        if (!CraftPresence.isDataLoaded) {
             modules.put(moduleId, instance);
         }
     }
@@ -221,7 +221,7 @@ public class CommandUtils {
      * @param instance The instance of the module
      */
     public static void addModule(final String moduleId, final Pack instance) {
-        if (!CraftPresence.initialized) {
+        if (!CraftPresence.isDataLoaded) {
             packModules.put(moduleId, instance);
         }
     }
