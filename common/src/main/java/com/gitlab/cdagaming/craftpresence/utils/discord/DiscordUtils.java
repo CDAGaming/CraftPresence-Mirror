@@ -737,7 +737,7 @@ public class DiscordUtils {
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
      */
-    public void syncArgument(final String argumentName, final Supplier<Value> data) {
+    public void setArgument(final String argumentName, final Supplier<Value> data) {
         synchronized (placeholderData) {
             if (!StringUtils.isNullOrEmpty(argumentName)) {
                 scriptEngine.set(argumentName, data);
@@ -753,12 +753,26 @@ public class DiscordUtils {
      * @param data         The data to attach to the Specified Argument
      * @param plain        Whether the expression should be parsed as a plain string
      */
+    public void syncFunction(final String argumentName, final Supplier<Object> data, final boolean plain) {
+        if (!StringUtils.isNullOrEmpty(argumentName)) {
+            setArgument(argumentName, () -> toValue(data.get(), plain));
+        }
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the Specified Argument
+     * @param plain        Whether the expression should be parsed as a plain string
+     */
+    @Deprecated
     public void syncArgument(final String argumentName, final Object data, final boolean plain) {
         synchronized (rawPlaceholderData) {
             if (!StringUtils.isNullOrEmpty(argumentName) &&
                     !Objects.equals(rawPlaceholderData.get(argumentName), data)
             ) {
-                syncArgument(argumentName, () -> toValue(data, plain));
+                syncFunction(argumentName, () -> data, plain);
                 rawPlaceholderData.put(argumentName, data);
             }
         }
@@ -770,8 +784,19 @@ public class DiscordUtils {
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
      */
+    public void syncFunction(final String argumentName, final Supplier<Object> data) {
+        syncFunction(argumentName, data, false);
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the Specified Argument
+     */
+    @Deprecated
     public void syncArgument(final String argumentName, final Object data) {
-        syncArgument(argumentName, data, !(data instanceof String));
+        syncArgument(argumentName, data, false);
     }
 
     /**
@@ -782,7 +807,7 @@ public class DiscordUtils {
     public void initArguments(final String... args) {
         // Initialize Specified Arguments to Empty Data
         for (String argumentName : args) {
-            syncArgument(argumentName, Value::null_);
+            setArgument(argumentName, Value::null_);
         }
     }
 
