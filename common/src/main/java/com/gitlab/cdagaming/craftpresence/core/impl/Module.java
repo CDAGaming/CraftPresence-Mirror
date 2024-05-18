@@ -147,10 +147,18 @@ public interface Module {
         return true;
     }
 
+    /**
+     * Determine whether we have already scanned for internal module data
+     *
+     * @return {@link Boolean#TRUE} if already scanned
+     */
     default boolean hasScannedInternals() {
         return true;
     }
 
+    /**
+     * Queue a new internal scan to occur when possible
+     */
     default void queueInternalScan() {
         // N/A
     }
@@ -164,10 +172,18 @@ public interface Module {
         return true;
     }
 
+    /**
+     * Determine whether we have already scanned for config module data
+     *
+     * @return {@link Boolean#TRUE} if already scanned
+     */
     default boolean hasScannedConfig() {
         return true;
     }
 
+    /**
+     * Queue a new config scan to occur when possible
+     */
     default void queueConfigScan() {
         // N/A
     }
