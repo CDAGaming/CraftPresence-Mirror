@@ -27,7 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
@@ -46,7 +46,7 @@ import java.util.Objects;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class EntityUtils implements Module {
+public class EntityUtils implements ExtendedModule {
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -84,17 +84,9 @@ public class EntityUtils implements Module {
      */
     private boolean hasInitializedTarget = false;
     /**
-     * Whether the target entity is being used for RPC override data
-     */
-    private boolean usingTargetOverrides = false;
-    /**
      * Whether placeholders for the riding entity have been initialized
      */
     private boolean hasInitializedRiding = false;
-    /**
-     * Whether the riding entity is being used for RPC override data
-     */
-    private boolean usingRidingOverrides = false;
     /**
      * The Player's Currently Targeted Entity Name, if any
      */
@@ -194,15 +186,12 @@ public class EntityUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("entity", "data.entity");
-        CraftPresence.CLIENT.clearOverride(
-                "entity.target.message", "entity.target.icon",
-                "entity.riding.message", "entity.riding.icon"
+        CraftPresence.CLIENT.removeForcedData(
+                "entity.target", "entity.riding"
         );
         hasInitialized = false;
         hasInitializedTarget = false;
-        usingTargetOverrides = false;
         hasInitializedRiding = false;
-        usingRidingOverrides = false;
     }
 
     @Override
@@ -288,13 +277,6 @@ public class EntityUtils implements Module {
 
     @Override
     public void updatePresence() {
-        // Form Entity Argument List
-        final ModuleData defaultTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
-        final ModuleData currentTargetData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
-
-        final ModuleData defaultRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
-        final ModuleData currentRidingData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_RIDING_NAME);
-
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
             if (!hasInitializedTarget) {
@@ -307,7 +289,7 @@ public class EntityUtils implements Module {
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
 
                     final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-                    return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+                    return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, currentData != null ? currentData : defaultData);
                 });
                 CraftPresence.CLIENT.syncFunction("entity.target.icon", () -> {
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
@@ -315,21 +297,19 @@ public class EntityUtils implements Module {
 
                     final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_TARGET_NAME;
                     final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-                    return CraftPresence.CLIENT.imageOf("entity.target.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
+                    return getResult(CraftPresence.CLIENT.imageOf("entity.target.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
+                });
+                CraftPresence.CLIENT.addForcedData("entity.target", () -> {
+                    final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
+                    final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
+                    return getPresenceData(currentData != null ? currentData : defaultData);
                 });
                 hasInitializedTarget = true;
             }
-            CraftPresence.CLIENT.syncOverride(currentTargetData != null ? currentTargetData : defaultTargetData, "entity.target.message", "entity.target.icon");
-            usingTargetOverrides = true;
-        } else {
-            if (hasInitializedTarget) {
-                CraftPresence.CLIENT.removeArguments("entity.target", "data.entity.target");
-                hasInitializedTarget = false;
-            }
-            if (usingTargetOverrides) {
-                CraftPresence.CLIENT.clearOverride("entity.target.message", "entity.target.icon");
-                usingTargetOverrides = false;
-            }
+        } else if (hasInitializedTarget) {
+            CraftPresence.CLIENT.removeArguments("entity.target", "data.entity.target");
+            CraftPresence.CLIENT.removeForcedData("entity.target");
+            hasInitializedTarget = false;
         }
 
         if (CURRENT_RIDING != null) {
@@ -343,7 +323,7 @@ public class EntityUtils implements Module {
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get(CURRENT_RIDING_NAME);
 
                     final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-                    return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+                    return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, currentData != null ? currentData : defaultData);
                 });
                 CraftPresence.CLIENT.syncFunction("entity.riding.icon", () -> {
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
@@ -351,21 +331,19 @@ public class EntityUtils implements Module {
 
                     final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_RIDING_NAME;
                     final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-                    return CraftPresence.CLIENT.imageOf("entity.riding.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon);
+                    return getResult(CraftPresence.CLIENT.imageOf("entity.riding.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
+                });
+                CraftPresence.CLIENT.addForcedData("entity.riding", () -> {
+                    final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
+                    final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get(CURRENT_RIDING_NAME);
+                    return getPresenceData(currentData != null ? currentData : defaultData);
                 });
                 hasInitializedRiding = true;
             }
-            CraftPresence.CLIENT.syncOverride(currentRidingData != null ? currentRidingData : defaultRidingData, "entity.riding.message", "entity.riding.icon");
-            usingRidingOverrides = true;
-        } else {
-            if (hasInitializedRiding) {
-                CraftPresence.CLIENT.removeArguments("entity.riding", "data.entity.riding");
-                hasInitializedRiding = false;
-            }
-            if (usingRidingOverrides) {
-                CraftPresence.CLIENT.clearOverride("entity.riding.message", "entity.riding.icon");
-                usingRidingOverrides = false;
-            }
+        } else if (hasInitializedRiding) {
+            CraftPresence.CLIENT.removeArguments("entity.riding", "data.entity.riding");
+            CraftPresence.CLIENT.removeForcedData("entity.riding");
+            hasInitializedRiding = false;
         }
     }
 
@@ -416,6 +394,11 @@ public class EntityUtils implements Module {
                 ENTITY_NAMES.add(entityRidingEntry);
             }
         }
+    }
+
+    @Override
+    public String getOverrideText(ModuleData data) {
+        return CraftPresence.CLIENT.getOverrideText(getPresenceData(data));
     }
 
     @Override

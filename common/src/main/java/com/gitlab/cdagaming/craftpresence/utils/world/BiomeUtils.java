@@ -28,7 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -43,7 +43,7 @@ import java.util.List;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class BiomeUtils implements Module {
+public class BiomeUtils implements ExtendedModule {
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -102,7 +102,7 @@ public class BiomeUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("biome", "data.biome");
-        CraftPresence.CLIENT.clearOverride("biome.message", "biome.icon");
+        CraftPresence.CLIENT.removeForcedData("biome");
         hasInitialized = false;
     }
 
@@ -171,29 +171,27 @@ public class BiomeUtils implements Module {
         CraftPresence.CLIENT.syncFunction("biome.name", () -> CURRENT_BIOME_NAME, true);
 
         CraftPresence.CLIENT.syncFunction("biome.message", () -> {
-            final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
-            final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
+            final ModuleData defaultData = getDefaultData();
+            final ModuleData currentData = getData(CURRENT_BIOME_IDENTIFIER);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-            return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+            return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_BIOME_IDENTIFIER);
         });
         CraftPresence.CLIENT.syncFunction("biome.icon", () -> {
-            final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
-            final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
+            final ModuleData defaultData = getDefaultData();
+            final ModuleData currentData = getData(CURRENT_BIOME_IDENTIFIER);
 
             final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
             final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-            return CraftPresence.CLIENT.imageOf("biome.icon", true, currentIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
+            return getResult(CraftPresence.CLIENT.imageOf("biome.icon", true, currentIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon, CURRENT_BIOME_IDENTIFIER));
         });
+        CraftPresence.CLIENT.addForcedData("biome", () -> getPresenceData(CURRENT_BIOME_IDENTIFIER));
         CraftPresence.CLIENT.syncTimestamp("data.biome.time");
     }
 
     @Override
     public void updatePresence() {
-        final ModuleData defaultData = CraftPresence.CONFIG.biomeSettings.biomeData.get("default");
-        final ModuleData currentData = CraftPresence.CONFIG.biomeSettings.biomeData.get(CURRENT_BIOME_IDENTIFIER);
-
-        CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "biome.message", "biome.icon");
+        // N/A
     }
 
     /**
@@ -260,6 +258,16 @@ public class BiomeUtils implements Module {
                 }
             }
         }
+    }
+
+    @Override
+    public ModuleData getData(String key) {
+        return CraftPresence.CONFIG.biomeSettings.biomeData.get(key);
+    }
+
+    @Override
+    public String getOverrideText(ModuleData data) {
+        return CraftPresence.CLIENT.getOverrideText(getPresenceData(data));
     }
 
     @Override

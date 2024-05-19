@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
@@ -52,7 +52,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class ServerUtils implements Module {
+public class ServerUtils implements ExtendedModule {
     /**
      * The List of invalid MOTD (Message of the Day) Translations
      */
@@ -202,7 +202,7 @@ public class ServerUtils implements Module {
         setInUse(false);
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
-        CraftPresence.CLIENT.clearOverride("server.message", "server.icon");
+        CraftPresence.CLIENT.removeForcedData("server");
         CraftPresence.CLIENT.clearPartyData();
         hasInitialized = false;
         hasInitializedServer = false;
@@ -485,33 +485,36 @@ public class ServerUtils implements Module {
             if (inServer) {
                 if (isOnLAN) {
                     final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.lanData;
-                    return Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "";
+                    return getResult(Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "", primaryData);
                 } else {
-                    final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
-                    final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
-                    final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedServer_IP);
+                    final ModuleData defaultData = getDefaultData();
+                    final ModuleData alternateData = getData(currentServer_Name);
+                    final ModuleData primaryData = getData(formattedServer_IP);
 
                     final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
                     final String alternateMessage = Config.isValidProperty(alternateData, "textOverride") ? alternateData.getTextOverride() : defaultMessage;
-                    return Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : alternateMessage;
+                    return getResult(Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : alternateMessage,
+                            formattedServer_IP, currentServer_Name);
                 }
             } else if (isOnSinglePlayer) {
                 final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.singleplayerData;
-                return Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "";
+                return getResult(Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "", primaryData);
             }
             return null;
         });
         CraftPresence.CLIENT.syncFunction("server.icon", () -> {
             final boolean inServer = !isOnSinglePlayer && currentServerData != null;
             String currentServerIcon = "";
+            ModuleData resultData = null;
             if (inServer) {
                 if (isOnLAN) {
-                    final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.lanData;
-                    currentServerIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : "";
+                    resultData = CraftPresence.CONFIG.statusMessages.lanData;
+                    currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
                 } else {
-                    final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
-                    final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
-                    final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedServer_IP);
+                    final ModuleData defaultData = getDefaultData();
+                    final ModuleData alternateData = getData(currentServer_Name);
+                    final ModuleData primaryData = getData(formattedServer_IP);
+                    resultData = getOrDefault(primaryData, alternateData);
 
                     final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : "";
                     final String alternateIcon = Config.isValidProperty(alternateData, "iconOverride") ? alternateData.getIconOverride() : defaultIcon;
@@ -531,11 +534,25 @@ public class ServerUtils implements Module {
                     }
                 }
             } else if (isOnSinglePlayer) {
-                final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.singleplayerData;
-                currentServerIcon = Config.isValidProperty(primaryData, "iconOverride") ? primaryData.getIconOverride() : "";
+                resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
+                currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
             }
-            return CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
+            return getResult(CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), resultData);
         });
+        CraftPresence.CLIENT.addForcedData("server", () -> {
+            ModuleData resultData = null;
+            if (!isOnSinglePlayer && currentServerData != null) {
+                if (isOnLAN) {
+                    resultData = CraftPresence.CONFIG.statusMessages.lanData;
+                } else {
+                    resultData = getOrDefault(formattedServer_IP, currentServer_Name);
+                }
+            } else if (isOnSinglePlayer) {
+                resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
+            }
+            return getPresenceData(resultData);
+        });
+        CraftPresence.CLIENT.syncTimestamp("data.server.time");
     }
 
     private void initServerArgs() {
@@ -558,24 +575,13 @@ public class ServerUtils implements Module {
 
     @Override
     public void updatePresence() {
-        final boolean inSingle = isOnSinglePlayer;
-        final boolean inServer = !inSingle && currentServerData != null;
-
-        ModuleData resultData = null;
-        if (inServer) {
+        if (!isOnSinglePlayer && currentServerData != null) {
             if (hasInitializedServer) {
                 initServerArgs();
                 hasInitializedServer = false;
             }
 
-            if (isOnLAN) {
-                resultData = CraftPresence.CONFIG.statusMessages.lanData;
-            } else {
-                final ModuleData defaultData = CraftPresence.CONFIG.serverSettings.serverData.get("default");
-                final ModuleData alternateData = CraftPresence.CONFIG.serverSettings.serverData.get(currentServer_Name);
-                final ModuleData primaryData = CraftPresence.CONFIG.serverSettings.serverData.get(formattedServer_IP);
-                resultData = primaryData != null ? primaryData : (alternateData != null ? alternateData : defaultData);
-
+            if (!isOnLAN) {
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.
                 //
@@ -593,12 +599,6 @@ public class ServerUtils implements Module {
                     CraftPresence.CLIENT.PARTY_PRIVACY = PartyPrivacy.from(CraftPresence.CONFIG.generalSettings.partyPrivacyLevel % 2);
                 }
             }
-        } else if (inSingle) {
-            resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
-        }
-
-        if (resultData != null) {
-            CraftPresence.CLIENT.syncOverride(resultData, "server.message", "server.icon");
         }
     }
 
@@ -638,6 +638,16 @@ public class ServerUtils implements Module {
                 knownAddresses.add(serverEntry);
             }
         }
+    }
+
+    @Override
+    public ModuleData getData(String key) {
+        return CraftPresence.CONFIG.serverSettings.serverData.get(key);
+    }
+
+    @Override
+    public String getOverrideText(ModuleData data) {
+        return CraftPresence.CLIENT.getOverrideText(getPresenceData(data));
     }
 
     @Override
@@ -682,9 +692,6 @@ public class ServerUtils implements Module {
 
     @Override
     public void setInUse(boolean state) {
-        if (state && !this.isInUse) {
-            CraftPresence.CLIENT.syncTimestamp("data.server.time");
-        }
         this.isInUse = state;
     }
 

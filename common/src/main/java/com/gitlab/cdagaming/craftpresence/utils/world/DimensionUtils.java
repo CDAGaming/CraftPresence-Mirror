@@ -28,7 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -45,7 +45,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class DimensionUtils implements Module {
+public class DimensionUtils implements ExtendedModule {
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -104,7 +104,7 @@ public class DimensionUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("dimension", "data.dimension");
-        CraftPresence.CLIENT.clearOverride("dimension.message", "dimension.icon");
+        CraftPresence.CLIENT.removeForcedData("dimension");
         hasInitialized = false;
     }
 
@@ -174,29 +174,27 @@ public class DimensionUtils implements Module {
         CraftPresence.CLIENT.syncFunction("dimension.name", () -> CURRENT_DIMENSION_NAME, true);
 
         CraftPresence.CLIENT.syncFunction("dimension.message", () -> {
-            final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
-            final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
+            final ModuleData defaultData = getDefaultData();
+            final ModuleData currentData = getData(CURRENT_DIMENSION_IDENTIFIER);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-            return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+            return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_DIMENSION_IDENTIFIER);
         });
         CraftPresence.CLIENT.syncFunction("dimension.icon", () -> {
-            final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
-            final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
+            final ModuleData defaultData = getDefaultData();
+            final ModuleData currentData = getData(CURRENT_DIMENSION_IDENTIFIER);
 
             final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_DIMENSION_IDENTIFIER;
             final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-            return CraftPresence.CLIENT.imageOf("dimension.icon", true, currentIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
+            return getResult(CraftPresence.CLIENT.imageOf("dimension.icon", true, currentIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon), CURRENT_DIMENSION_IDENTIFIER);
         });
+        CraftPresence.CLIENT.addForcedData("dimension", () -> getPresenceData(CURRENT_DIMENSION_IDENTIFIER));
         CraftPresence.CLIENT.syncTimestamp("data.dimension.time");
     }
 
     @Override
     public void updatePresence() {
-        final ModuleData defaultData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get("default");
-        final ModuleData currentData = CraftPresence.CONFIG.dimensionSettings.dimensionData.get(CURRENT_DIMENSION_IDENTIFIER);
-
-        CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "dimension.message", "dimension.icon");
+        // N/A
     }
 
     /**
@@ -269,6 +267,16 @@ public class DimensionUtils implements Module {
                 }
             }
         }
+    }
+
+    @Override
+    public ModuleData getData(final String key) {
+        return CraftPresence.CONFIG.dimensionSettings.dimensionData.get(key);
+    }
+
+    @Override
+    public String getOverrideText(ModuleData data) {
+        return CraftPresence.CLIENT.getOverrideText(getPresenceData(data));
     }
 
     @Override

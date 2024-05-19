@@ -52,23 +52,23 @@ public class TileEntityUtils implements Module {
      */
     public static final ItemStack EMPTY_STACK = ItemStack.EMPTY;
     /**
-     * A List of the detected Block Names
+     * A List of the detected internal Block Names
      */
     public final List<String> BLOCK_NAMES = StringUtils.newArrayList();
     /**
-     * A List of the detected Item Names
+     * A List of the detected internal Item Names
      */
     public final List<String> ITEM_NAMES = StringUtils.newArrayList();
     /**
-     * A List of the detected Block Class Names
+     * A List of the detected internal Block Class Names
      */
     private final List<String> BLOCK_CLASSES = StringUtils.newArrayList();
     /**
-     * A List of the detected Item Class Names
+     * A List of the detected internal Item Class Names
      */
     private final List<String> ITEM_CLASSES = StringUtils.newArrayList();
     /**
-     * A List of the detected Tile Entity (Blocks + Items) Class Names
+     * A List of the detected internal Tile Entity (Blocks + Items) Class Names
      */
     private final List<String> TILE_ENTITY_CLASSES = StringUtils.newArrayList();
     /**
@@ -316,7 +316,6 @@ public class TileEntityUtils implements Module {
 
         setInUse(false);
         CraftPresence.CLIENT.removeArguments("item", "data.item");
-        CraftPresence.CLIENT.clearOverride("item.message", "item.icon");
         hasInitialized = false;
         hasInitializedMainHand = false;
         hasInitializedOffHand = false;
@@ -598,16 +597,11 @@ public class TileEntityUtils implements Module {
     public void getConfigData() {
         for (String itemEntry : CraftPresence.CONFIG.advancedSettings.itemMessages.keySet()) {
             if (!StringUtils.isNullOrEmpty(itemEntry)) {
-                if (!ITEM_NAMES.contains(itemEntry)) {
-                    ITEM_NAMES.add(itemEntry);
-                }
-                if (!BLOCK_NAMES.contains(itemEntry)) {
-                    BLOCK_NAMES.add(itemEntry);
+                if (!TILE_ENTITY_NAMES.contains(itemEntry)) {
+                    TILE_ENTITY_NAMES.add(itemEntry);
                 }
             }
         }
-
-        verifyEntities();
     }
 
     @Override

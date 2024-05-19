@@ -27,7 +27,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.replaymod;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -44,7 +44,7 @@ import java.util.List;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class ReplayModUtils implements Module {
+public class ReplayModUtils implements ExtendedModule {
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -179,6 +179,16 @@ public class ReplayModUtils implements Module {
     }
 
     @Override
+    public ModuleData getData(final String key) {
+        return CraftPresence.GUIS.getData(key);
+    }
+
+    @Override
+    public String getOverrideText(ModuleData data) {
+        return CraftPresence.GUIS.getOverrideText(data);
+    }
+
+    @Override
     public boolean canFetchInternals() {
         return CraftPresence.GUIS.canFetchInternals();
     }
@@ -221,28 +231,26 @@ public class ReplayModUtils implements Module {
         CraftPresence.CLIENT.syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
 
         CraftPresence.CLIENT.syncFunction("screen.message", () -> {
-            final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
-            final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
+            final ModuleData defaultData = getDefaultData();
+            final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
-            return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
+            return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_GUI_NAME);
         });
         CraftPresence.CLIENT.syncFunction("screen.icon", () -> {
-            final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
-            final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
+            final ModuleData defaultData = getDefaultData();
+            final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
             final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_GUI_NAME;
             final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-            return CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+            return getResult(CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon), CURRENT_GUI_NAME);
         });
+        CraftPresence.CLIENT.addForcedData("screen", () -> getPresenceData(CURRENT_GUI_NAME));
     }
 
     @Override
     public void updatePresence() {
-        final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get("default");
-        final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(CURRENT_GUI_NAME);
-
-        CraftPresence.CLIENT.syncOverride(currentData != null ? currentData : defaultData, "screen.message", "screen.icon");
+        // N/A
     }
 
     private void clearMainPlaceholders() {

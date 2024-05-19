@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
@@ -65,7 +64,6 @@ import org.meteordev.starscript.value.ValueMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -75,23 +73,19 @@ import java.util.function.Supplier;
  */
 public class DiscordUtils {
     /**
-     * A mapping of the arguments that have overwritten module data
-     */
-    private final Map<String, ModuleData> overrideData = StringUtils.newHashMap();
-    /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
     private final Map<String, Supplier<Value>> placeholderData = StringUtils.newTreeMap();
-    /**
-     * A Mapping of the Arguments available to use as RPC Message Placeholders
-     */
-    private final Map<String, Object> rawPlaceholderData = StringUtils.newTreeMap();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to cache data for repeated images in other areas
      * <p>Format: evalKey, resultingKey
      */
     private final Map<String, String> cachedImageData = StringUtils.newHashMap();
+    /**
+     * When this is not empty, {@link DiscordUtils#buildRichPresence(PresenceData)} will use the first applicable data entry instead of the generic data
+     */
+    private final Map<String, Supplier<PresenceData>> forcedData = StringUtils.newTreeMap();
     /**
      * The Current User, tied to the Rich Presence
      */
@@ -224,9 +218,9 @@ public class DiscordUtils {
      */
     public IPCClient ipcInstance;
     /**
-     * When this is not null, {@link DiscordUtils#buildRichPresence(PresenceData)} will use this data instead of the generic data
+     * The last requested override identifier, used in {@link DiscordUtils#getOverrideText(PresenceData)}
      */
-    public PresenceData forcedData = null;
+    private String overrideTarget = "";
     /**
      * An Instance containing the Current Rich Presence Data
      * <p>Also used to prevent sending duplicate packets with the same presence data, if any
@@ -404,7 +398,7 @@ public class DiscordUtils {
                 final Pair<String, VariableReplacementTransformer> resultData = generateTransformer(
                         data, overrideId, placeholders, replacements
                 );
-                return getCompileResult(resultData.getFirst(), null, resultData.getSecond());
+                return getCompileResult(resultData != null ? resultData.getFirst() : data, null, resultData != null ? resultData.getSecond() : null);
             } else {
                 return () -> Value.string(data);
             }
@@ -422,22 +416,11 @@ public class DiscordUtils {
      */
     @SafeVarargs
     public final Pair<String, VariableReplacementTransformer> generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
-        final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
-        String data = StringUtils.getOrDefault(input);
-
-        // Phase 1: Override System
-        if (!StringUtils.isNullOrEmpty(overrideId)) {
-            for (String placeholderName : placeholders.keySet()) {
-                if (!placeholderName.startsWith("overrides.")) {
-                    transformer.addReplacer(placeholderName, () -> {
-                        final String overrideName = "overrides." + placeholderName + "." + overrideId;
-                        return placeholders.containsKey(overrideName) ? overrideName : placeholderName;
-                    });
-                }
-            }
-        }
-        // Phase 2: args field (Pair<String, Supplier<String>>...)
+        overrideTarget = overrideId;
         if (replacements != null) {
+            final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
+            String data = StringUtils.getOrDefault(input);
+
             for (Pair<String, Supplier<String>> replacement : replacements) {
                 if (replacement != null) {
                     final Supplier<String> info = replacement.getSecond();
@@ -454,8 +437,9 @@ public class DiscordUtils {
                     }
                 }
             }
+            return new Pair<>(data, transformer);
         }
-        return new Pair<>(data, transformer);
+        return null;
     }
 
     /**
@@ -495,8 +479,12 @@ public class DiscordUtils {
             return Value::null_;
         }
 
-        for (Expr.Visitor transformer : transforms) {
-            result.accept(transformer);
+        if (transforms != null) {
+            for (Expr.Visitor transformer : transforms) {
+                if (transformer != null) {
+                    result.accept(transformer);
+                }
+            }
         }
 
         final Script script = Compiler.compile(result);
@@ -664,67 +652,55 @@ public class DiscordUtils {
     }
 
     /**
-     * Sync {@link ModuleData} overrides for the specified placeholder(s)
+     * Retrieve the override text for the specified {@link PresenceData}
+     * <p>Only applies when enabled and {@link PresenceData#useAsMain} is false
      *
-     * @param data The data to attach to the specified argument
-     * @param args The Specified Arguments to Synchronize for
+     * @param presenceData the {@link PresenceData} to interpret
+     * @return the retrieved override text if possible, otherwise null
      */
-    public void syncOverride(final ModuleData data, final String... args) {
-        final PresenceData presenceInfo = (PresenceData) Config.getProperty(data, "data");
-        final boolean isPresenceOn = presenceInfo != null && presenceInfo.enabled;
-
-        for (String argumentName : args) {
-            if (!StringUtils.isNullOrEmpty(argumentName)) {
-                overrideData.put(argumentName, data);
-
-                final String prefix = "overrides." + argumentName;
-                if (isPresenceOn && !presenceInfo.useAsMain) {
-                    syncArgument(prefix + ".details", presenceInfo.details);
-                    syncArgument(prefix + ".gameState", presenceInfo.gameState);
-                    syncArgument(prefix + ".largeImageKey", presenceInfo.largeImageKey);
-                    syncArgument(prefix + ".largeImageText", presenceInfo.largeImageText);
-                    syncArgument(prefix + ".smallImageKey", presenceInfo.smallImageKey);
-                    syncArgument(prefix + ".smallImageText", presenceInfo.smallImageText);
-                    syncArgument(prefix + ".startTimestamp", presenceInfo.startTimestamp);
-                    syncArgument(prefix + ".endTimestamp", presenceInfo.endTimestamp);
-
-                    for (Map.Entry<String, Button> buttonData : presenceInfo.buttons.entrySet()) {
-                        final String buttonId = buttonData.getKey();
-                        final Button buttonInfo = buttonData.getValue();
-                        if (!StringUtils.isNullOrEmpty(buttonId) && !buttonId.equalsIgnoreCase("default")) {
-                            syncArgument(prefix + "." + buttonId + ".label", buttonInfo.label);
-                            syncArgument(prefix + "." + buttonId + ".url", buttonInfo.url);
-                        }
-                    }
-                } else {
-                    removeArguments(prefix);
-                }
+    public String getOverrideText(final PresenceData presenceData) {
+        if (presenceData != null && presenceData.enabled && !presenceData.useAsMain) {
+            final String field = getOverrideTarget();
+            final boolean isButton = field.startsWith("button_");
+            Object result;
+            if (isButton) {
+                final String[] buttonInfo = field.split("\\.");
+                result = presenceData.buttons.get(buttonInfo[0]).getProperty(buttonInfo[1]);
+            } else {
+                result = presenceData.getProperty(field);
             }
+            return StringUtils.getOrDefault(result.toString());
         }
-        if (isPresenceOn && presenceInfo.useAsMain) {
-            forcedData = data.getData();
-        }
+        return null;
     }
 
     /**
-     * Remove {@link ModuleData} overrides for the specified placeholder
+     * Retrieve the last requested override identifier
      *
-     * @param args The Specified Argument(s) to interpret
+     * @return the last requested override identifier
      */
-    public void clearOverride(final String... args) {
-        for (String argumentName : args) {
-            if (!StringUtils.isNullOrEmpty(argumentName) && overrideData.containsKey(argumentName)) {
-                final ModuleData oldData = overrideData.get(argumentName);
-                overrideData.remove(argumentName);
-                removeArguments("overrides." + argumentName);
+    public String getOverrideTarget() {
+        return overrideTarget;
+    }
 
-                if (oldData != null) {
-                    final PresenceData presenceInfo = (PresenceData) Config.getProperty(oldData, "data");
-                    if (presenceInfo != null && presenceInfo.equals(forcedData)) {
-                        forcedData = null;
-                    }
-                }
-            }
+    /**
+     * Add the specified info to the forced data list
+     *
+     * @param key     The key to store the info under
+     * @param newData The {@link PresenceData} to interpret
+     */
+    public void addForcedData(final String key, final Supplier<PresenceData> newData) {
+        forcedData.put(key, newData);
+    }
+
+    /**
+     * Remove the specified elements from the forced data list
+     *
+     * @param args The elements to remove, if present
+     */
+    public void removeForcedData(final String... args) {
+        for (String argumentName : args) {
+            forcedData.remove(argumentName);
         }
     }
 
@@ -761,39 +737,9 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
-     * @param plain        Whether the expression should be parsed as a plain string
-     */
-    @Deprecated
-    public void syncArgument(final String argumentName, final Object data, final boolean plain) {
-        synchronized (rawPlaceholderData) {
-            if (!StringUtils.isNullOrEmpty(argumentName) &&
-                    !Objects.equals(rawPlaceholderData.get(argumentName), data)
-            ) {
-                syncFunction(argumentName, () -> data, plain);
-                rawPlaceholderData.put(argumentName, data);
-            }
-        }
-    }
-
-    /**
-     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
-     *
-     * @param argumentName The Specified Argument to Synchronize for
-     * @param data         The data to attach to the Specified Argument
      */
     public void syncFunction(final String argumentName, final Supplier<Object> data) {
         syncFunction(argumentName, data, false);
-    }
-
-    /**
-     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
-     *
-     * @param argumentName The Specified Argument to Synchronize for
-     * @param data         The data to attach to the Specified Argument
-     */
-    @Deprecated
-    public void syncArgument(final String argumentName, final Object data) {
-        syncArgument(argumentName, data, false);
     }
 
     /**
@@ -821,7 +767,6 @@ public class DiscordUtils {
                     if (key.startsWith(format)) {
                         scriptEngine.remove(key);
                         placeholderData.remove(key);
-                        rawPlaceholderData.remove(key);
                         break;
                     }
                 }
@@ -1586,7 +1531,17 @@ public class DiscordUtils {
      * @return the currently used instance of {@link PresenceData}
      */
     public PresenceData getPresenceData() {
-        return forcedData != null ? forcedData : CraftPresence.CONFIG.displaySettings.presenceData;
+        synchronized (forcedData) {
+            if (!forcedData.isEmpty()) {
+                for (Supplier<PresenceData> data : forcedData.values()) {
+                    final PresenceData presenceInfo = data.get();
+                    if (presenceInfo != null && presenceInfo.enabled && presenceInfo.useAsMain) {
+                        return presenceInfo;
+                    }
+                }
+            }
+        }
+        return CraftPresence.CONFIG.displaySettings.presenceData;
     }
 
     /**

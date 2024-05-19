@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.Pack;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.atlauncher.ATLauncherUtils;
@@ -417,11 +418,11 @@ public class CommandUtils {
                 final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
                 return CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon);
             });
+            CraftPresence.CLIENT.addForcedData("menu", () -> (PresenceData) Config.getProperty(loadedMenu, "data"));
         }
         loadedMenu = currentData;
 
         CraftPresence.CLIENT.clearPartyData();
-        CraftPresence.CLIENT.syncOverride(currentData, "menu.message", "menu.icon");
     }
 
     /**
@@ -429,7 +430,7 @@ public class CommandUtils {
      */
     public static void clearMenuPresence() {
         if (loadedMenu != null) {
-            CraftPresence.CLIENT.clearOverride("menu.message", "menu.icon");
+            CraftPresence.CLIENT.removeForcedData("menu");
             CraftPresence.CLIENT.removeArguments("menu");
             loadedMenu = null;
         }
