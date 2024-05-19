@@ -374,3 +374,9 @@ fusioner {
 
     relocateDuplicate("com.gitlab.cdagaming.craftpresence.core")
 }
+
+tasks {
+    jar {
+        enabled = false
+    }
+}
