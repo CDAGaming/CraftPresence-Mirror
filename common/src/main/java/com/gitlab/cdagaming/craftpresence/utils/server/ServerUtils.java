@@ -576,9 +576,9 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void updatePresence() {
         if (!isOnSinglePlayer && currentServerData != null) {
-            if (hasInitializedServer) {
+            if (!hasInitializedServer) {
                 initServerArgs();
-                hasInitializedServer = false;
+                hasInitializedServer = true;
             }
 
             if (!isOnLAN) {
