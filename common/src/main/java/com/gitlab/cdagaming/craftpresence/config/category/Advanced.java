@@ -128,6 +128,8 @@ public class Advanced extends Module implements Serializable {
                 return allowEndpointIcons;
             case "serverIconEndpoint":
                 return serverIconEndpoint;
+            case "playerSkinEndpoint":
+                return playerSkinEndpoint;
             case "allowDuplicatePackets":
                 return allowDuplicatePackets;
             case "maxConnectionAttempts":
@@ -181,6 +183,9 @@ public class Advanced extends Module implements Serializable {
                     break;
                 case "serverIconEndpoint":
                     serverIconEndpoint = (String) value;
+                    break;
+                case "playerSkinEndpoint":
+                    playerSkinEndpoint = (String) value;
                     break;
                 case "allowDuplicatePackets":
                     allowDuplicatePackets = (Boolean) value;
