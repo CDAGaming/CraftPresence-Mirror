@@ -743,6 +743,16 @@ public class DiscordUtils {
     }
 
     /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the Specified Argument
+     */
+    public void syncFunction(final String argumentName, final SFunction data) {
+        syncFunction(argumentName, () -> data);
+    }
+
+    /**
      * Initialize the Specified Arguments as Empty Data
      *
      * @param args The Arguments to Initialize
@@ -1091,7 +1101,7 @@ public class DiscordUtils {
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
-        FunctionsLib.init(scriptEngine);
+        FunctionsLib.init(this, scriptEngine);
         syncFunction("general.mods", Constants::getModCount);
         syncFunction("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
         syncFunction("general.version", () -> ModUtils.MCVersion, true);
@@ -1187,18 +1197,6 @@ public class DiscordUtils {
      */
     public boolean addEndpointIcon(final Config config, final String endpoint, final String name) {
         return addEndpointIcon(config, endpoint, name, "");
-    }
-
-    /**
-     * Synchronizes and Updates Placeholder data from the script engine in this module
-     */
-    public void syncScriptArguments() {
-        synchronized (placeholderData) {
-            final ValueMap map = scriptEngine.getGlobals();
-            for (String name : map.keys()) {
-                placeholderData.put(name, map.get(name));
-            }
-        }
     }
 
     /**
@@ -1547,8 +1545,6 @@ public class DiscordUtils {
      * Perform any needed Tick events, tied to {@link ScheduleUtils#MINIMUM_REFRESH_RATE} ticks
      */
     public void onTick() {
-        syncScriptArguments();
-
         // Menu Tick Event
         final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
         final boolean isFullyLoaded = Constants.HAS_GAME_LOADED && isAvailable();

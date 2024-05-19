@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
+import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -49,92 +50,92 @@ import java.util.Map;
  */
 @SuppressWarnings("DuplicatedCode")
 public class FunctionsLib {
-    public static void init(Starscript ss) {
+    public static void init(DiscordUtils instance, Starscript ss) {
         StandardLib.init(ss);
 
         // General Functions
-        ss.set("format", FunctionsLib::format);
-        ss.set("translate", FunctionsLib::translate);
-        ss.set("mcTranslate", FunctionsLib::mcTranslate);
-        ss.set("getFields", FunctionsLib::getFields);
-        ss.set("getMethods", FunctionsLib::getMethods);
-        ss.set("getJsonElement", FunctionsLib::getJsonElement);
-        ss.set("randomString", FunctionsLib::randomString);
-        ss.set("getFirst", FunctionsLib::getFirst);
-        ss.set("getNbt", FunctionsLib::getNbt);
-        ss.set("getComponent", FunctionsLib::getComponent); // MC 1.20.5+
-        ss.set("getNamespace", FunctionsLib::getNamespace);
-        ss.set("getPath", FunctionsLib::getPath);
+        instance.syncFunction("format", FunctionsLib::format);
+        instance.syncFunction("translate", FunctionsLib::translate);
+        instance.syncFunction("mcTranslate", FunctionsLib::mcTranslate);
+        instance.syncFunction("getFields", FunctionsLib::getFields);
+        instance.syncFunction("getMethods", FunctionsLib::getMethods);
+        instance.syncFunction("getJsonElement", FunctionsLib::getJsonElement);
+        instance.syncFunction("randomString", FunctionsLib::randomString);
+        instance.syncFunction("getFirst", FunctionsLib::getFirst);
+        instance.syncFunction("getNbt", FunctionsLib::getNbt);
+        instance.syncFunction("getComponent", FunctionsLib::getComponent); // MC 1.20.5+
+        instance.syncFunction("getNamespace", FunctionsLib::getNamespace);
+        instance.syncFunction("getPath", FunctionsLib::getPath);
 
         // MathUtils
-        ss.set("isWithinValue", FunctionsLib::isWithinValue);
-        ss.set("roundDouble", FunctionsLib::roundDouble);
-        ss.set("clampInt", FunctionsLib::clampInt);
-        ss.set("clampLong", FunctionsLib::clampLong);
-        ss.set("clampFloat", FunctionsLib::clampFloat);
-        ss.set("clampDouble", FunctionsLib::clampDouble);
-        ss.set("lerpFloat", FunctionsLib::lerpFloat);
-        ss.set("lerpDouble", FunctionsLib::lerpDouble);
-        ss.set("snapToStep", FunctionsLib::snapToStep);
+        instance.syncFunction("isWithinValue", FunctionsLib::isWithinValue);
+        instance.syncFunction("roundDouble", FunctionsLib::roundDouble);
+        instance.syncFunction("clampInt", FunctionsLib::clampInt);
+        instance.syncFunction("clampLong", FunctionsLib::clampLong);
+        instance.syncFunction("clampFloat", FunctionsLib::clampFloat);
+        instance.syncFunction("clampDouble", FunctionsLib::clampDouble);
+        instance.syncFunction("lerpFloat", FunctionsLib::lerpFloat);
+        instance.syncFunction("lerpDouble", FunctionsLib::lerpDouble);
+        instance.syncFunction("snapToStep", FunctionsLib::snapToStep);
 
         // DiscordUtils
-        ss.set("getResult", FunctionsLib::getResult);
-        ss.set("randomAsset", FunctionsLib::randomAsset);
-        ss.set("isValidId", FunctionsLib::isValidId);
-        ss.set("isValidAsset", FunctionsLib::isValidAsset);
-        ss.set("isCustomAsset", FunctionsLib::isCustomAsset);
-        ss.set("getAsset", FunctionsLib::getAsset);
-        ss.set("getAssetKey", FunctionsLib::getAssetKey);
-        ss.set("getAssetId", FunctionsLib::getAssetId);
-        ss.set("getAssetType", FunctionsLib::getAssetType);
-        ss.set("getAssetUrl", FunctionsLib::getAssetUrl);
+        instance.syncFunction("getResult", FunctionsLib::getResult);
+        instance.syncFunction("randomAsset", FunctionsLib::randomAsset);
+        instance.syncFunction("isValidId", FunctionsLib::isValidId);
+        instance.syncFunction("isValidAsset", FunctionsLib::isValidAsset);
+        instance.syncFunction("isCustomAsset", FunctionsLib::isCustomAsset);
+        instance.syncFunction("getAsset", FunctionsLib::getAsset);
+        instance.syncFunction("getAssetKey", FunctionsLib::getAssetKey);
+        instance.syncFunction("getAssetId", FunctionsLib::getAssetId);
+        instance.syncFunction("getAssetType", FunctionsLib::getAssetType);
+        instance.syncFunction("getAssetUrl", FunctionsLib::getAssetUrl);
 
         // StringUtils
-        ss.set("getOrDefault", FunctionsLib::getOrDefault);
-        ss.set("replace", FunctionsLib::replace);
-        ss.set("length", FunctionsLib::length);
-        ss.set("split", FunctionsLib::split);
-        ss.set("getArrayElement", FunctionsLib::getArrayElement);
-        ss.set("minify", FunctionsLib::minify);
-        ss.set("nullOrEmpty", FunctionsLib::nullOrEmpty);
-        ss.set("cast", FunctionsLib::cast);
-        ss.set("formatAddress", FunctionsLib::formatAddress);
-        ss.set("hasWhitespace", FunctionsLib::hasWhitespace);
-        ss.set("hasAlphaNumeric", FunctionsLib::hasAlphaNumeric);
-        ss.set("isUuid", FunctionsLib::isUuid);
-        ss.set("isColor", FunctionsLib::isColor);
-        ss.set("toCamelCase", FunctionsLib::toCamelCase);
-        ss.set("asIcon", FunctionsLib::asIcon);
-        ss.set("asProperWord", FunctionsLib::asProperWord);
-        ss.set("removeRepeatWords", FunctionsLib::removeRepeatWords);
-        ss.set("asIdentifier", FunctionsLib::asIdentifier);
-        ss.set("capitalizeWords", FunctionsLib::capitalizeWords);
-        ss.set("getField", FunctionsLib::getField);
-        ss.set("getClass", FunctionsLib::getClass);
-        ss.set("hasField", FunctionsLib::hasField);
-        ss.set("executeMethod", FunctionsLib::executeMethod);
-        ss.set("stripColors", FunctionsLib::stripColors);
-        ss.set("stripFormatting", FunctionsLib::stripFormatting);
-        ss.set("stripAllFormatting", FunctionsLib::stripAllFormatting);
+        instance.syncFunction("getOrDefault", FunctionsLib::getOrDefault);
+        instance.syncFunction("replace", FunctionsLib::replace);
+        instance.syncFunction("length", FunctionsLib::length);
+        instance.syncFunction("split", FunctionsLib::split);
+        instance.syncFunction("getArrayElement", FunctionsLib::getArrayElement);
+        instance.syncFunction("minify", FunctionsLib::minify);
+        instance.syncFunction("nullOrEmpty", FunctionsLib::nullOrEmpty);
+        instance.syncFunction("cast", FunctionsLib::cast);
+        instance.syncFunction("formatAddress", FunctionsLib::formatAddress);
+        instance.syncFunction("hasWhitespace", FunctionsLib::hasWhitespace);
+        instance.syncFunction("hasAlphaNumeric", FunctionsLib::hasAlphaNumeric);
+        instance.syncFunction("isUuid", FunctionsLib::isUuid);
+        instance.syncFunction("isColor", FunctionsLib::isColor);
+        instance.syncFunction("toCamelCase", FunctionsLib::toCamelCase);
+        instance.syncFunction("asIcon", FunctionsLib::asIcon);
+        instance.syncFunction("asProperWord", FunctionsLib::asProperWord);
+        instance.syncFunction("removeRepeatWords", FunctionsLib::removeRepeatWords);
+        instance.syncFunction("asIdentifier", FunctionsLib::asIdentifier);
+        instance.syncFunction("capitalizeWords", FunctionsLib::capitalizeWords);
+        instance.syncFunction("getField", FunctionsLib::getField);
+        instance.syncFunction("getClass", FunctionsLib::getClass);
+        instance.syncFunction("hasField", FunctionsLib::hasField);
+        instance.syncFunction("executeMethod", FunctionsLib::executeMethod);
+        instance.syncFunction("stripColors", FunctionsLib::stripColors);
+        instance.syncFunction("stripFormatting", FunctionsLib::stripFormatting);
+        instance.syncFunction("stripAllFormatting", FunctionsLib::stripAllFormatting);
 
         // TimeUtils
-        ss.set("getCurrentTime", FunctionsLib::getCurrentTime);
-        ss.set("getElapsedNanos", FunctionsLib::getElapsedNanos);
-        ss.set("getElapsedMillis", FunctionsLib::getElapsedMillis);
-        ss.set("getElapsedSeconds", FunctionsLib::getElapsedSeconds);
-        ss.set("timeToEpochSecond", FunctionsLib::timeToEpochSecond); // toEpochSecond
-        ss.set("timeToEpochMilli", FunctionsLib::timeToEpochMilli); // toEpochMilli
-        ss.set("timeFromEpochSecond", FunctionsLib::timeFromEpochSecond); // fromEpochSecond
-        ss.set("timeFromEpochMilli", FunctionsLib::timeFromEpochMilli); // fromEpochMilli
-        ss.set("dateToEpochSecond", FunctionsLib::dateToEpochSecond); // stringToEpochSecond
-        ss.set("dateToEpochMilli", FunctionsLib::dateToEpochMilli); // stringToEpochMilli
-        ss.set("epochSecondToDate", FunctionsLib::epochSecondToDate); // epochSecondToString
-        ss.set("epochMilliToDate", FunctionsLib::epochMilliToDate); // epochMilliToString
-        ss.set("convertTimeZone", FunctionsLib::convertTimeZone); // convertZone
-        ss.set("convertTimeFormat", FunctionsLib::convertTimeFormat); // convertFormat
-        ss.set("convertTime", FunctionsLib::convertTime);
-        ss.set("timeFromString", FunctionsLib::timeFromString); // toInstance
-        ss.set("timeToString", FunctionsLib::timeToString); // toString
+        instance.syncFunction("getCurrentTime", FunctionsLib::getCurrentTime);
+        instance.syncFunction("getElapsedNanos", FunctionsLib::getElapsedNanos);
+        instance.syncFunction("getElapsedMillis", FunctionsLib::getElapsedMillis);
+        instance.syncFunction("getElapsedSeconds", FunctionsLib::getElapsedSeconds);
+        instance.syncFunction("timeToEpochSecond", FunctionsLib::timeToEpochSecond); // toEpochSecond
+        instance.syncFunction("timeToEpochMilli", FunctionsLib::timeToEpochMilli); // toEpochMilli
+        instance.syncFunction("timeFromEpochSecond", FunctionsLib::timeFromEpochSecond); // fromEpochSecond
+        instance.syncFunction("timeFromEpochMilli", FunctionsLib::timeFromEpochMilli); // fromEpochMilli
+        instance.syncFunction("dateToEpochSecond", FunctionsLib::dateToEpochSecond); // stringToEpochSecond
+        instance.syncFunction("dateToEpochMilli", FunctionsLib::dateToEpochMilli); // stringToEpochMilli
+        instance.syncFunction("epochSecondToDate", FunctionsLib::epochSecondToDate); // epochSecondToString
+        instance.syncFunction("epochMilliToDate", FunctionsLib::epochMilliToDate); // epochMilliToString
+        instance.syncFunction("convertTimeZone", FunctionsLib::convertTimeZone); // convertZone
+        instance.syncFunction("convertTimeFormat", FunctionsLib::convertTimeFormat); // convertFormat
+        instance.syncFunction("convertTime", FunctionsLib::convertTime);
+        instance.syncFunction("timeFromString", FunctionsLib::timeFromString); // toInstance
+        instance.syncFunction("timeToString", FunctionsLib::timeToString); // toString
     }
 
     private static Value throwUnimplemented(Starscript ss) {
