@@ -1007,52 +1007,9 @@ public class DiscordUtils {
         final StringBuilder placeholderString = new StringBuilder();
         if (args != null && !args.isEmpty()) {
             for (Map.Entry<String, Supplier<Value>> argData : args.entrySet()) {
-                final String placeholderName = argData.getKey();
-                final String placeholderTranslation = String.format("%s.placeholders.%s.description",
-                        Constants.MOD_ID,
-                        placeholderName
-                );
-                final String placeholderUsage = String.format("%s.placeholders.%s.usage",
-                        Constants.MOD_ID,
-                        placeholderName
-                );
-
-                String placeholderDescription = "";
-                String placeholderFormat = "\\n - %s";
-
-                if (Constants.TRANSLATOR.hasTranslation(placeholderTranslation)) {
-                    placeholderDescription = Constants.TRANSLATOR.translate(placeholderTranslation);
-                    placeholderFormat = "\\n - %s = %s";
-                }
-
-                placeholderString.append(
-                        String.format(placeholderFormat,
-                                placeholderName.toLowerCase(),
-                                placeholderDescription
-                        )
-                );
-
-                if (Constants.TRANSLATOR.hasTranslation(placeholderUsage)) {
-                    placeholderString.append(String.format("\\n ==> %s \"%s\"",
-                            Constants.TRANSLATOR.translate("gui.config.message.editor.usage"),
-                            Constants.TRANSLATOR.translate(placeholderUsage)
-                    ));
-                }
-
-                if (addExtraData && isDefaultPlaceholder(placeholderName.toLowerCase())) {
-                    final Supplier<Value> suppliedInfo = argData.getValue();
-
-                    if (suppliedInfo != null) {
-                        final Value rawValue = suppliedInfo.get();
-                        final String tagValue = rawValue.toString();
-                        if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
-                            placeholderString.append(String.format("\\n ==> %s \"%s\"",
-                                    Constants.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                    (tagValue.length() >= 128) ? "<...>" : tagValue
-                            ));
-                        }
-                    }
-                }
+                placeholderString.append("\\n").append(generateArgumentMessage(
+                        argData.getKey(), argData.getValue(), true, addExtraData
+                ));
             }
         }
 
@@ -1061,6 +1018,113 @@ public class DiscordUtils {
         }
         resultString.append(placeholderString);
         return resultString.toString();
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param placeholderName The Specified Argument to interpret
+     * @param suppliedInfo    The current argument info, if any
+     * @param includeName     Whether to inline the description with the argument name
+     * @param addExtraData    Whether to add additional data to the string
+     * @param prefix          The prefix to begin each line with (Overwritten if `includeName` is true)
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String placeholderName, final Supplier<Value> suppliedInfo, final boolean includeName, final boolean addExtraData, final String prefix) {
+        final StringBuilder placeholderString = new StringBuilder();
+
+        final String placeholderTranslation = String.format("%s.placeholders.%s.description",
+                Constants.MOD_ID,
+                placeholderName
+        );
+        final String placeholderUsage = String.format("%s.placeholders.%s.usage",
+                Constants.MOD_ID,
+                placeholderName
+        );
+        final boolean hasDescription = Constants.TRANSLATOR.hasTranslation(placeholderTranslation);
+        String start = prefix;
+
+        if (includeName) {
+            String placeholderDescription = "";
+            String placeholderFormat = " - %s";
+
+            if (hasDescription) {
+                placeholderDescription = Constants.TRANSLATOR.translate(placeholderTranslation);
+                placeholderFormat = " - %s = %s";
+            }
+
+            placeholderString.append(
+                    String.format(placeholderFormat,
+                            placeholderName,
+                            placeholderDescription
+                    )
+            );
+            start = "\\n" + prefix;
+        } else if (hasDescription) {
+            placeholderString.append(String.format("%s \"%s\"",
+                    start + Constants.TRANSLATOR.translate("gui.config.message.editor.description"),
+                    Constants.TRANSLATOR.translate(placeholderTranslation)
+            ));
+            start = "\\n" + prefix;
+        }
+
+        if (Constants.TRANSLATOR.hasTranslation(placeholderUsage)) {
+            placeholderString.append(String.format("%s \"%s\"",
+                    start + Constants.TRANSLATOR.translate("gui.config.message.editor.usage"),
+                    Constants.TRANSLATOR.translate(placeholderUsage)
+            ));
+            start = "\\n" + prefix;
+        }
+
+        if (suppliedInfo != null && addExtraData && isDefaultPlaceholder(placeholderName.toLowerCase())) {
+            final Value rawValue = suppliedInfo.get();
+            final String tagValue = rawValue.toString();
+            if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
+                placeholderString.append(String.format("%s \"%s\"",
+                        start + Constants.TRANSLATOR.translate("gui.config.message.editor.preview"),
+                        (tagValue.length() >= 128) ? "<...>" : tagValue
+                ));
+            }
+        }
+        return placeholderString.toString();
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param placeholderName The Specified Argument to interpret
+     * @param includeName     Whether to inline the description with the argument name
+     * @param addExtraData    Whether to add additional data to the string
+     * @param prefix          The prefix to begin each line with (Overwritten if `includeName` is true)
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String placeholderName, final boolean includeName, final boolean addExtraData, final String prefix) {
+        return generateArgumentMessage(placeholderName, getArgument(placeholderName), includeName, addExtraData, prefix);
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param placeholderName The Specified Argument to interpret
+     * @param suppliedInfo    The current argument info, if any
+     * @param includeName     Whether to inline the description with the argument name
+     * @param addExtraData    Whether to add additional data to the string
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String placeholderName, final Supplier<Value> suppliedInfo, final boolean includeName, final boolean addExtraData) {
+        return generateArgumentMessage(placeholderName, suppliedInfo, includeName, addExtraData, " ==> ");
+    }
+
+    /**
+     * Generate a parsable display string for the argument data provided
+     *
+     * @param placeholderName The Specified Argument to interpret
+     * @param includeName     Whether to inline the description with the argument name
+     * @param addExtraData    Whether to add additional data to the string
+     * @return the parsable string
+     */
+    public String generateArgumentMessage(final String placeholderName, final boolean includeName, final boolean addExtraData) {
+        return generateArgumentMessage(placeholderName, includeName, addExtraData, " ==> ");
     }
 
     /**

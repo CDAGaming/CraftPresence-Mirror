@@ -42,13 +42,11 @@ import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.meteordev.starscript.value.Value;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Gui Widget for a Scrollable List
@@ -392,41 +390,13 @@ public class ScrollableListControl extends GuiSlot {
                 }
             }
         } else if (renderType == RenderType.Placeholder && isHovering) {
-            final String placeholderTranslation = String.format("%s.placeholders.%s.description",
-                    Constants.MOD_ID,
-                    originalName
+            final String message = CraftPresence.CLIENT.generateArgumentMessage(
+                    originalName, false,
+                    CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews,
+                    ""
             );
-            final String placeholderUsage = String.format("%s.placeholders.%s.usage",
-                    Constants.MOD_ID,
-                    originalName
-            );
-            if (Constants.TRANSLATOR.hasTranslation(placeholderTranslation)) {
-                hoverText.add(String.format("%s \"%s\"",
-                        Constants.TRANSLATOR.translate("gui.config.message.editor.description"),
-                        Constants.TRANSLATOR.translate(placeholderTranslation)
-                ));
-            }
-            if (Constants.TRANSLATOR.hasTranslation(placeholderUsage)) {
-                hoverText.add(String.format("%s \"%s\"",
-                        Constants.TRANSLATOR.translate("gui.config.message.editor.usage"),
-                        Constants.TRANSLATOR.translate(placeholderUsage)
-                ));
-            }
-
-            final boolean addExtraData = CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews;
-            if (addExtraData && CraftPresence.CLIENT.isDefaultPlaceholder(originalName.toLowerCase())) {
-                final Supplier<Value> suppliedInfo = CraftPresence.CLIENT.getArgument(originalName);
-
-                if (suppliedInfo != null) {
-                    final Value rawValue = suppliedInfo.get();
-                    final String tagValue = rawValue.toString();
-                    if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
-                        hoverText.add(String.format("%s \"%s\"",
-                                Constants.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                                (tagValue.length() >= 128) ? "<...>" : tagValue
-                        ));
-                    }
-                }
+            if (!StringUtils.isNullOrEmpty(message)) {
+                hoverText.addAll(StringUtils.splitTextByNewLine(message));
             }
         }
 
