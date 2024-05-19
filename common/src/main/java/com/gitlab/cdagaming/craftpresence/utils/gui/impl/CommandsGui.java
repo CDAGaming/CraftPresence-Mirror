@@ -40,7 +40,6 @@ import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import org.lwjgl.input.Keyboard;
-import org.meteordev.starscript.value.Value;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -48,7 +47,6 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -282,9 +280,9 @@ public class CommandsGui extends ExtendedScreen {
                         if (matcher.find()) {
                             final String contents = matcher.group(1);
                             final StringBuilder out = new StringBuilder();
-                            final Supplier<Value> data = CraftPresence.CLIENT.getCompileResult(contents, true, out);
 
-                            final String value = data.get().toString();
+                            final String value = CraftPresence.CLIENT.getCompileResult(contents, true, out)
+                                    .get().toString();
                             final int length = StringUtils.getBytes(value, "UTF-8").length;
 
                             executionString = Constants.TRANSLATOR.translate("craftpresence.command.compile",
