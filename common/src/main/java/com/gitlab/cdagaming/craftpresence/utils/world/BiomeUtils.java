@@ -73,11 +73,19 @@ public class BiomeUtils implements ExtendedModule {
      */
     private boolean hasInitialized = false;
     /**
-     * The Name of the Current Biome the Player is in
+     * The Raw Name of the Current Biome the Player is in
+     */
+    private String RAW_BIOME_NAME;
+    /**
+     * The Display Name of the Current Biome the Player is in
      */
     private String CURRENT_BIOME_NAME;
     /**
-     * The alternative name for the Current Biome the Player is in, if any
+     * The alternative raw name for the Current Biome the Player is in, if any
+     */
+    private String RAW_BIOME_IDENTIFIER;
+    /**
+     * The alternative display name for the Current Biome the Player is in, if any
      */
     private String CURRENT_BIOME_IDENTIFIER;
     /**
@@ -97,6 +105,8 @@ public class BiomeUtils implements ExtendedModule {
     @Override
     public void clearClientData() {
         CURRENT_BIOME = null;
+        RAW_BIOME_NAME = null;
+        RAW_BIOME_IDENTIFIER = null;
         CURRENT_BIOME_NAME = null;
         CURRENT_BIOME_IDENTIFIER = null;
 
@@ -136,22 +146,23 @@ public class BiomeUtils implements ExtendedModule {
     @Override
     public void updateData() {
         final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
-        final String newBiomeName = StringUtils.formatIdentifier(newBiome.getBiomeName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newBiomeName = newBiome.getBiomeName();
 
-        final String newBiome_primaryIdentifier = StringUtils.formatIdentifier(newBiome.getBiomeName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-        final String newBiome_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newBiome), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-        final String newBiome_Identifier = StringUtils.getOrDefault(newBiome_primaryIdentifier, newBiome_alternativeIdentifier);
+        final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
 
-        if (!newBiomeName.equals(CURRENT_BIOME_NAME) || !newBiome_Identifier.equals(CURRENT_BIOME_IDENTIFIER)) {
+        if (!newBiomeName.equals(RAW_BIOME_NAME) || !newBiomeIdentifier.equals(RAW_BIOME_IDENTIFIER)) {
             CURRENT_BIOME = newBiome;
-            CURRENT_BIOME_NAME = StringUtils.getOrDefault(newBiomeName, newBiome_Identifier);
-            CURRENT_BIOME_IDENTIFIER = newBiome_Identifier;
 
-            if (!DEFAULT_NAMES.contains(newBiome_Identifier)) {
-                DEFAULT_NAMES.add(newBiome_Identifier);
+            RAW_BIOME_NAME = StringUtils.getOrDefault(newBiomeName, newBiomeIdentifier);
+            RAW_BIOME_IDENTIFIER = newBiomeIdentifier;
+            CURRENT_BIOME_NAME = StringUtils.formatIdentifier(RAW_BIOME_NAME, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+            CURRENT_BIOME_IDENTIFIER = StringUtils.formatIdentifier(RAW_BIOME_IDENTIFIER, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+
+            if (!DEFAULT_NAMES.contains(CURRENT_BIOME_IDENTIFIER)) {
+                DEFAULT_NAMES.add(CURRENT_BIOME_IDENTIFIER);
             }
-            if (!BIOME_NAMES.contains(newBiome_Identifier)) {
-                BIOME_NAMES.add(newBiome_Identifier);
+            if (!BIOME_NAMES.contains(CURRENT_BIOME_IDENTIFIER)) {
+                BIOME_NAMES.add(CURRENT_BIOME_IDENTIFIER);
             }
 
             if (!hasInitialized) {
@@ -168,6 +179,10 @@ public class BiomeUtils implements ExtendedModule {
 
         CraftPresence.CLIENT.syncFunction("data.biome.instance", () -> CURRENT_BIOME);
         CraftPresence.CLIENT.syncFunction("data.biome.class", () -> CURRENT_BIOME.getClass());
+        CraftPresence.CLIENT.syncFunction("data.biome.name", () -> RAW_BIOME_NAME, true);
+        CraftPresence.CLIENT.syncFunction("data.biome.identifier", () -> RAW_BIOME_IDENTIFIER, true);
+
+        CraftPresence.CLIENT.syncFunction("biome.identifier", () -> CURRENT_BIOME_IDENTIFIER, true);
         CraftPresence.CLIENT.syncFunction("biome.name", () -> CURRENT_BIOME_NAME, true);
 
         CraftPresence.CLIENT.syncFunction("biome.message", () -> {

@@ -75,11 +75,19 @@ public class DimensionUtils implements ExtendedModule {
      */
     private boolean hasInitialized = false;
     /**
-     * The Name of the Current Dimension the Player is in
+     * The Raw Name of the Current Dimension the Player is in
+     */
+    private String RAW_DIMENSION_NAME;
+    /**
+     * The Display Name of the Current Dimension the Player is in
      */
     private String CURRENT_DIMENSION_NAME;
     /**
-     * The alternative name for the Current Dimension the Player is in, if any
+     * The alternative raw name for the Current Dimension the Player is in, if any
+     */
+    private String RAW_DIMENSION_IDENTIFIER;
+    /**
+     * The alternative display name for the Current Dimension the Player is in, if any
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
     /**
@@ -99,6 +107,8 @@ public class DimensionUtils implements ExtendedModule {
     @Override
     public void clearClientData() {
         CURRENT_DIMENSION = null;
+        RAW_DIMENSION_NAME = null;
+        RAW_DIMENSION_IDENTIFIER = null;
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
 
@@ -139,22 +149,23 @@ public class DimensionUtils implements ExtendedModule {
     public void updateData() {
         final WorldProvider newProvider = CraftPresence.player.world.provider;
         final DimensionType newDimensionType = newProvider.getDimensionType();
-        final String newDimensionName = StringUtils.formatIdentifier(newDimensionType.getName(), false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+        final String newDimensionName = newDimensionType.getName();
 
-        final String newDimension_primaryIdentifier = StringUtils.formatIdentifier(newDimensionType.getName(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-        final String newDimension_alternativeIdentifier = StringUtils.formatIdentifier(MappingUtils.getClassName(newProvider), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-        final String newDimension_Identifier = StringUtils.getOrDefault(newDimension_primaryIdentifier, newDimension_alternativeIdentifier);
+        final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newProvider));
 
-        if (!newDimensionName.equals(CURRENT_DIMENSION_NAME) || !newDimension_Identifier.equals(CURRENT_DIMENSION_IDENTIFIER)) {
+        if (!newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionIdentifier.equals(RAW_DIMENSION_IDENTIFIER)) {
             CURRENT_DIMENSION = newProvider;
-            CURRENT_DIMENSION_NAME = StringUtils.getOrDefault(newDimensionName, newDimension_Identifier);
-            CURRENT_DIMENSION_IDENTIFIER = newDimension_Identifier;
 
-            if (!DEFAULT_NAMES.contains(newDimension_Identifier)) {
-                DEFAULT_NAMES.add(newDimension_Identifier);
+            RAW_DIMENSION_NAME = StringUtils.getOrDefault(newDimensionName, newDimensionIdentifier);
+            RAW_DIMENSION_IDENTIFIER = newDimensionIdentifier;
+            CURRENT_DIMENSION_NAME = StringUtils.formatIdentifier(RAW_DIMENSION_NAME, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
+            CURRENT_DIMENSION_IDENTIFIER = StringUtils.formatIdentifier(RAW_DIMENSION_IDENTIFIER, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
+
+            if (!DEFAULT_NAMES.contains(CURRENT_DIMENSION_IDENTIFIER)) {
+                DEFAULT_NAMES.add(CURRENT_DIMENSION_IDENTIFIER);
             }
-            if (!DIMENSION_NAMES.contains(newDimension_Identifier)) {
-                DIMENSION_NAMES.add(newDimension_Identifier);
+            if (!DIMENSION_NAMES.contains(CURRENT_DIMENSION_IDENTIFIER)) {
+                DIMENSION_NAMES.add(CURRENT_DIMENSION_IDENTIFIER);
             }
 
             if (!hasInitialized) {
@@ -171,6 +182,10 @@ public class DimensionUtils implements ExtendedModule {
 
         CraftPresence.CLIENT.syncFunction("data.dimension.instance", () -> CURRENT_DIMENSION);
         CraftPresence.CLIENT.syncFunction("data.dimension.class", () -> CURRENT_DIMENSION.getClass());
+        CraftPresence.CLIENT.syncFunction("data.dimension.name", () -> RAW_DIMENSION_NAME, true);
+        CraftPresence.CLIENT.syncFunction("data.dimension.identifier", () -> RAW_DIMENSION_IDENTIFIER, true);
+
+        CraftPresence.CLIENT.syncFunction("dimension.identifier", () -> CURRENT_DIMENSION_IDENTIFIER, true);
         CraftPresence.CLIENT.syncFunction("dimension.name", () -> CURRENT_DIMENSION_NAME, true);
 
         CraftPresence.CLIENT.syncFunction("dimension.message", () -> {

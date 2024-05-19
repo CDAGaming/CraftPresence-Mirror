@@ -20,9 +20,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
     * These changes are designed to support auto-locating data related to data pack additions
     * These changes also resolve issues where repeated Registry Lookups could cause a crash in both modules
+    * Additional performance improvements have also been implemented for all MC versions for these modules
 * Added a new script function, `getComponent`, to support the new `DataComponent` system introduced in MC 1.20.5+
     * Usage: `getComponent(data=DataComponentHolder, path=String)`
     * On versions below MC 1.20.5, an error will appear instead
+* Added new `.identifier` placeholders for the `Biome` and `Dimension` modules
 * (Backend) The default formatting for a slider's display value is now `%.1f` instead of a raw append
 * Added a `Sync End Color` button to the `Color Editor` UI
     * Pressing this button, will set the `endData` to the current `startColor` data, effectively useful for quickly

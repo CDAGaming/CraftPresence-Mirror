@@ -164,11 +164,13 @@ The following placeholders are available for use anywhere in CraftPresence:
 * Biome Placeholders:
     * `biome.message` - The current biome's display data, while in-game
     * `biome.name` - The current biome name
+    * `biome.identifier` - The current biome identifier
     * `biome.icon` - The current biome icon
     * `biome.default.icon` - The default biome icon
 * Dimension Placeholders:
     * `dimension.message` - The current dimension's display data, while in-game
     * `dimension.name` - The current dimension name
+    * `dimension.identifier` - The current dimension identifier
     * `dimension.icon` - The current dimension icon
     * `dimension.default.icon` - The default dimension icon
 * Entity Placeholders:
