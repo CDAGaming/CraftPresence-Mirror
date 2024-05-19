@@ -1056,14 +1056,13 @@ public class DiscordUtils {
     /**
      * Retrieve whether this placeholder is a default-supplied one
      * <p>
-     * Non-default placeholder can contain dynamic data that we can't always account for.
+     * Non-default placeholders can contain dynamic data that we can't always account for.
      *
      * @param name The placeholder name to interpret
      * @return {@link Boolean#TRUE} if this is a default-supplied placeholder
      */
     public boolean isDefaultPlaceholder(final String name) {
-        return !name.startsWith("overrides.") &&
-                !name.startsWith("custom.") &&
+        return !name.startsWith("custom.") &&
                 !name.endsWith(".message") && !name.endsWith(".icon");
     }
 
