@@ -15,7 +15,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ModPublisher (`2.1.1` -> `2.1.2`)
     * Fabric Loader (`0.15.10` -> `0.15.11`)
     * Lenni Reflect (`1.3.2` -> `1.3.4`)
-    * UniCore (`1.0.10` -> `1.1.3`)
+    * UniCore (`1.0.10` -> `1.1.4`)
     * DiscordIPC (`0.8.7` -> `0.8.8`)
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
     * These changes are designed to support auto-locating data related to data pack additions
@@ -116,6 +116,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
       settings
 * Fixed an issue where `entitySettings#ridingData` was being incorrectly read
     * The `entity.riding.message` and `entity.riding.icon` placeholders should work properly again
+* Resolved an issue where parts of the mod may show up un-localized when using a different language
+    * This was caused by a regression when `TranslationUtils#getLocalizedMessage` was introduced
 
 ___
 
