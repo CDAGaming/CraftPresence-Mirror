@@ -10,7 +10,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Unimined (`1.2.3` -> `1.2.6-SNAPSHOT`)
+    * Unimined (`1.2.3` -> `1.2.6`)
     * JVMDowngrader (`local` -> `0.4.0`)
     * ModPublisher (`2.1.1` -> `2.1.2`)
     * Fabric Loader (`0.15.10` -> `0.15.11`)
@@ -52,6 +52,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Quilt now falls back to `getRawModCount` due to not having an independent build layer
     * Added support for Rift, Flint, and Risugami ModLoader mod counts
     * Fixes placeholder functionality for Forge 1.13+
+* (Backend) Improved performance for syncing placeholder arguments and compiling data
+    * These changes should conform better towards how Starscript was meant to be used
 
 ### Fixes
 
@@ -110,9 +112,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed an issue where empty parts of the `Presence Editor` could be ignored if `useAsMain` was false
     * This change may affect configs relying on this for `overrides.` placeholders, please check and adjust your
       settings
-* (Backend) Fixed some instances of excessive calls to `DiscordUtils#syncArgument`
-    * Better checks to ensure the object has changed have been implemented to prevent excessive calls to this function
-    * Further changes are planned for upcoming releases in order to further increase the performance of this function
+* Fixed an issue where `entitySettings#ridingData` was being incorrectly read
+    * The `entity.riding.message` and `entity.riding.icon` placeholders should work properly again
 
 ___
 
