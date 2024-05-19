@@ -644,7 +644,8 @@ public class DiscordUtils {
     /**
      * Updates the specified placeholder(s) with a Unix Timestamp
      *
-     * @param args The Specified Arguments to Synchronize for
+     * @param newTimestamp The new timestamp for these arguments
+     * @param args         The Specified Arguments to Synchronize for
      */
     public void syncTimestamp(final Supplier<Long> newTimestamp, final String... args) {
         for (String argumentName : args) {
