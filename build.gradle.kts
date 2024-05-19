@@ -9,6 +9,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
+    java
     id("xyz.wagyourtail.unimined") version "1.2.6" apply false
     id("xyz.wagyourtail.jvmdowngrader") version "0.4.0"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
