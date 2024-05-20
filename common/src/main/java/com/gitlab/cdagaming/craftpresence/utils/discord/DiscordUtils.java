@@ -889,11 +889,10 @@ public class DiscordUtils {
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
      * @param plain        Whether the expression should be parsed as a plain string
+     * @return the current {@link ValueMap} instance
      */
-    public void syncFunction(final String argumentName, final Supplier<Object> data, final boolean plain) {
-        if (!StringUtils.isNullOrEmpty(argumentName)) {
-            setArgument(argumentName, () -> toValue(data.get(), plain));
-        }
+    public ValueMap syncFunction(final String argumentName, final Supplier<Object> data, final boolean plain) {
+        return setArgument(argumentName, () -> toValue(data.get(), plain));
     }
 
     /**
@@ -901,9 +900,10 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
+     * @return the current {@link ValueMap} instance
      */
-    public void syncFunction(final String argumentName, final Supplier<Object> data) {
-        syncFunction(argumentName, data, false);
+    public ValueMap syncFunction(final String argumentName, final Supplier<Object> data) {
+        return syncFunction(argumentName, data, false);
     }
 
     /**
@@ -911,9 +911,10 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
+     * @return the current {@link ValueMap} instance
      */
-    public void syncFunction(final String argumentName, final SFunction data) {
-        syncFunction(argumentName, () -> data);
+    public ValueMap syncFunction(final String argumentName, final SFunction data) {
+        return syncFunction(argumentName, () -> data);
     }
 
     /**
