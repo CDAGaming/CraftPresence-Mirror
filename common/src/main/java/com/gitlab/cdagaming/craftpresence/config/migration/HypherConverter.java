@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
  * Migration from SimpleRPC (Hypherion) Config to our {@link Config} format
  */
 public class HypherConverter implements DataMigrator {
+    private static final Pattern EXPR_PATTERN = Pattern.compile("\\{(.*?)}");
     private static final int LOWEST_SUPPORTED = 13;
     private static final String EMPTY_QUOTES = "{''}";
     private final int fileVersion;
@@ -295,7 +296,7 @@ public class HypherConverter implements DataMigrator {
                 dataBuilder.append("{randomString(");
                 for (int i = 0; i < items.size(); i++) {
                     final String output = processPlaceholder(items.get(i), true);
-                    final boolean hasExpr = Pattern.compile("\\{(.*?)}").matcher(output).find();
+                    final boolean hasExpr = EXPR_PATTERN.matcher(output).find();
                     dataBuilder
                             .append(hasExpr ? "getResult(" : "")
                             .append(output)

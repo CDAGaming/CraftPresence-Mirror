@@ -211,7 +211,7 @@ public class DiscordAssetUtils {
         final DiscordAsset asset = get(list, key);
         if (asset != null) {
             if (!StringUtils.isNullOrEmpty(asset.getId())) {
-                return getDiscordAssetUrl(asset.getName());
+                return asset.getUrl();
             } else {
                 return CraftPresence.CLIENT.getResult(asset.getUrl());
             }
