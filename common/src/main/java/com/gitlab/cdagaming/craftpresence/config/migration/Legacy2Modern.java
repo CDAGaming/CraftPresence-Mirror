@@ -368,7 +368,7 @@ public class Legacy2Modern implements DataMigrator {
                             if (!StringUtils.isNullOrEmpty(convertedString) &&
                                     (convertedString.startsWith("[") && convertedString.endsWith("]"))) {
                                 // If Valid, interpret into formatted Array
-                                final String preArrayString = convertedString.replaceAll("\\[", "").replaceAll("]", "");
+                                final String preArrayString = convertedString.replace("[", "").replace("]", "");
                                 if (preArrayString.contains(", ")) {
                                     oldArray = preArrayString.split(", ");
                                 } else if (preArrayString.contains(",")) {

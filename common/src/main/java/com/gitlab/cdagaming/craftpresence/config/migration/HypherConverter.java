@@ -77,7 +77,7 @@ public class HypherConverter implements DataMigrator {
             .put("%replayframe%", "{replaymod.frames.current}")
             .put("%replaytotal%", "{replaymod.frames.total}")
             .put("%replaytime%", "{replaymod.time.current}")
-            .put("%replaytimeleft%", "{replaymod.time.remaining")
+            .put("%replaytimeleft%", "{replaymod.time.remaining}")
             //
             .put("%serverip%", "{server.address.short}")
             .put("%servername%", "{server.name}")
