@@ -709,8 +709,9 @@ public class DiscordUtils {
      * @param parent   The path parent, used in {@link ValueMap} traversal
      * @param name     The Specified Argument to Synchronize for
      * @param supplier The data to attach to the Specified Argument
+     * @return the current {@link ValueMap} instance
      */
-    private void setArgument(final ValueMap source, final String parent, final String name, final Supplier<Value> supplier) {
+    private ValueMap setArgument(final ValueMap source, final String parent, final String name, final Supplier<Value> supplier) {
         final int dotI = name.indexOf('.');
 
         if (dotI >= 0) {
@@ -745,6 +746,7 @@ public class DiscordUtils {
             source.setRaw(name, supplier);
             placeholderData.put(parent + name, supplier);
         }
+        return source;
     }
 
     /**
@@ -754,9 +756,10 @@ public class DiscordUtils {
      * @param source   The {@link ValueMap} to interpret
      * @param name     The Specified Argument to Synchronize for
      * @param supplier The data to attach to the Specified Argument
+     * @return the current {@link ValueMap} instance
      */
-    private void setArgument(final ValueMap source, final String name, final Supplier<Value> supplier) {
-        setArgument(source, "", name, supplier);
+    private ValueMap setArgument(final ValueMap source, final String name, final Supplier<Value> supplier) {
+        return setArgument(source, "", name, supplier);
     }
 
     /**
@@ -764,11 +767,14 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
+     * @return the current {@link ValueMap} instance
      */
-    public void setArgument(final String argumentName, final Supplier<Value> data) {
+    public ValueMap setArgument(final String argumentName, final Supplier<Value> data) {
+        final ValueMap globals = scriptEngine.getGlobals();
         if (!StringUtils.isNullOrEmpty(argumentName)) {
-            setArgument(scriptEngine.getGlobals(), argumentName, data);
+            return setArgument(globals, argumentName, data);
         }
+        return globals;
     }
 
     /**
