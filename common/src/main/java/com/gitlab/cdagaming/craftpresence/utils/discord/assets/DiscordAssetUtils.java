@@ -327,7 +327,7 @@ public class DiscordAssetUtils {
                     for (DiscordAsset asset : assets) {
                         // Ensure URL is set beforehand for non-custom Assets
                         // isLocalName is made false to avoid unneeded calls
-                        if (!StringUtils.isNullOrEmpty(asset.getUrl()) && asset.getType() != DiscordAsset.AssetType.CUSTOM) {
+                        if (asset.getType() != DiscordAsset.AssetType.CUSTOM) {
                             asset.setUrl(getDiscordAssetUrl(clientId, asset.getId(), false));
                         }
                         if (!ASSET_LIST.containsKey(asset.getName())) {
