@@ -35,6 +35,7 @@ import io.github.classgraph.ClassInfo;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Extension of {@link com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils} designed for ReplayMod
@@ -86,10 +87,11 @@ public class ReplayModUtils implements ExtendedModule {
 
     @Override
     public void clearClientData() {
+        setInUse(false);
+
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
 
-        setInUse(false);
         clearMainPlaceholders();
         clearSubPlaceholders();
         hasInitialized = false;
@@ -179,6 +181,11 @@ public class ReplayModUtils implements ExtendedModule {
     }
 
     @Override
+    public void syncFunction(String argumentName, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(event), plain);
+    }
+
+    @Override
     public ModuleData getData(final String key) {
         return CraftPresence.GUIS.getData(key);
     }
@@ -225,19 +232,19 @@ public class ReplayModUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        CraftPresence.CLIENT.syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+        syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        CraftPresence.CLIENT.syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
-        CraftPresence.CLIENT.syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
+        syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
+        syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
 
-        CraftPresence.CLIENT.syncFunction("screen.message", () -> {
+        syncFunction("screen.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_GUI_NAME);
         });
-        CraftPresence.CLIENT.syncFunction("screen.icon", () -> {
+        syncFunction("screen.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
@@ -267,12 +274,12 @@ public class ReplayModUtils implements ExtendedModule {
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN != null && CURRENT_SCREEN.getClass() == videoRendererScreen) {
             if (!hasInitializedMain) {
-                CraftPresence.CLIENT.syncFunction("replaymod.time.current", () -> secToString(
+                syncFunction("replaymod.time.current", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
                                 videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
                         )).getSecond() / 1000
                 ), true);
-                CraftPresence.CLIENT.syncFunction("replaymod.time.remaining", () -> secToString(
+                syncFunction("replaymod.time.remaining", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
                                 videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
                         )).getSecond() / 1000
@@ -286,9 +293,9 @@ public class ReplayModUtils implements ExtendedModule {
             final Class<?> videoRendererInfo = FileUtils.loadClass("com.replaymod.render.rendering.VideoRenderer");
             if (rendererObj != null && rendererObj.getClass() == videoRendererInfo) {
                 if (!hasInitializedSub) {
-                    CraftPresence.CLIENT.syncFunction("replaymod.frames.current",
+                    syncFunction("replaymod.frames.current",
                             () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"));
-                    CraftPresence.CLIENT.syncFunction("replaymod.frames.total",
+                    syncFunction("replaymod.frames.total",
                             () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"));
                     hasInitializedSub = true;
                 }

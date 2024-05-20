@@ -38,6 +38,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Gui Utilities used to Parse Gui Data and handle related RPC Events
@@ -113,10 +114,11 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public void clearClientData() {
+        setInUse(false);
+
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
 
-        setInUse(false);
         CraftPresence.CLIENT.removeArguments("screen", "data.screen");
         CraftPresence.CLIENT.removeForcedData("screen");
         hasInitialized = false;
@@ -206,6 +208,11 @@ public class GuiUtils implements ExtendedModule {
     }
 
     @Override
+    public void syncFunction(String argumentName, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(event), plain);
+    }
+
+    @Override
     public ModuleData getData(String key) {
         return CraftPresence.CONFIG.advancedSettings.guiSettings.guiData.get(key);
     }
@@ -267,19 +274,19 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        CraftPresence.CLIENT.syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+        syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        CraftPresence.CLIENT.syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
-        CraftPresence.CLIENT.syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
+        syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
+        syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
 
-        CraftPresence.CLIENT.syncFunction("screen.message", () -> {
+        syncFunction("screen.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
         });
-        CraftPresence.CLIENT.syncFunction("screen.icon", () -> {
+        syncFunction("screen.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 

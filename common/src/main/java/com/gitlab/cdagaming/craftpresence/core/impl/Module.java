@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 
+import java.util.function.Supplier;
+
 /**
  * Module Section defining properties to be used for Rich Presence Displays
  *
@@ -71,6 +73,35 @@ public interface Module {
      * Updates and Initializes Module Data, based on found Information
      */
     void getConfigData();
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param event        The data to attach to the Specified Argument
+     * @param plain        Whether the expression should be parsed as a plain string
+     */
+    void syncFunction(final String argumentName, final Supplier<Object> event, final boolean plain);
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param event        The data to attach to the Specified Argument
+     */
+    default void syncFunction(final String argumentName, final Supplier<Object> event) {
+        syncFunction(argumentName, event, false);
+    }
+
+    /**
+     * Retrieve a module-safe Supplier event for the specified args
+     *
+     * @param event The original event to interpret
+     * @return The processed event, relying on {@link Module#isInUse()}
+     */
+    default Supplier<Object> getModuleFunction(final Supplier<Object> event) {
+        return () -> isInUse() ? event.get() : null;
+    }
 
     /**
      * Scans for applicable data related to this Module, within a new Thread.

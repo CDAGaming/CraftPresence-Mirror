@@ -36,6 +36,7 @@ import io.github.classgraph.ClassInfo;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Biome Utilities used to Parse Biome Data and handle related RPC Events
@@ -104,13 +105,14 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void clearClientData() {
+        setInUse(false);
+
         CURRENT_BIOME = null;
         RAW_BIOME_NAME = null;
         RAW_BIOME_IDENTIFIER = null;
         CURRENT_BIOME_NAME = null;
         CURRENT_BIOME_IDENTIFIER = null;
 
-        setInUse(false);
         CraftPresence.CLIENT.removeArguments("biome", "data.biome");
         CraftPresence.CLIENT.removeForcedData("biome");
         hasInitialized = false;
@@ -175,24 +177,24 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        CraftPresence.CLIENT.syncFunction("biome.default.icon", () -> CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
+        syncFunction("biome.default.icon", () -> CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
 
-        CraftPresence.CLIENT.syncFunction("data.biome.instance", () -> CURRENT_BIOME);
-        CraftPresence.CLIENT.syncFunction("data.biome.class", () -> CURRENT_BIOME.getClass());
-        CraftPresence.CLIENT.syncFunction("data.biome.name", () -> RAW_BIOME_NAME, true);
-        CraftPresence.CLIENT.syncFunction("data.biome.identifier", () -> RAW_BIOME_IDENTIFIER, true);
+        syncFunction("data.biome.instance", () -> CURRENT_BIOME);
+        syncFunction("data.biome.class", () -> CURRENT_BIOME.getClass());
+        syncFunction("data.biome.name", () -> RAW_BIOME_NAME, true);
+        syncFunction("data.biome.identifier", () -> RAW_BIOME_IDENTIFIER, true);
 
-        CraftPresence.CLIENT.syncFunction("biome.identifier", () -> CURRENT_BIOME_IDENTIFIER, true);
-        CraftPresence.CLIENT.syncFunction("biome.name", () -> CURRENT_BIOME_NAME, true);
+        syncFunction("biome.identifier", () -> CURRENT_BIOME_IDENTIFIER, true);
+        syncFunction("biome.name", () -> CURRENT_BIOME_NAME, true);
 
-        CraftPresence.CLIENT.syncFunction("biome.message", () -> {
+        syncFunction("biome.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_BIOME_IDENTIFIER);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_BIOME_IDENTIFIER);
         });
-        CraftPresence.CLIENT.syncFunction("biome.icon", () -> {
+        syncFunction("biome.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_BIOME_IDENTIFIER);
 
@@ -273,6 +275,11 @@ public class BiomeUtils implements ExtendedModule {
                 }
             }
         }
+    }
+
+    @Override
+    public void syncFunction(String argumentName, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(event), plain);
     }
 
     @Override

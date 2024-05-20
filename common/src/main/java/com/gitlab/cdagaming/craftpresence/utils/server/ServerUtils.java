@@ -45,6 +45,7 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Server Utilities used to Parse Server Data and handle related RPC Events
@@ -185,6 +186,8 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void clearClientData() {
+        setInUse(false);
+
         currentServer_IP = null;
         formattedServer_IP = null;
         currentServer_MOTD = null;
@@ -199,7 +202,6 @@ public class ServerUtils implements ExtendedModule {
         joinInProgress = false;
         isOnLAN = false;
         isOnSinglePlayer = false;
-        setInUse(false);
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
         CraftPresence.CLIENT.removeForcedData("server");
@@ -430,27 +432,27 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void initPresence() {
         // Player Position Arguments
-        CraftPresence.CLIENT.syncFunction("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3));
-        CraftPresence.CLIENT.syncFunction("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3));
-        CraftPresence.CLIENT.syncFunction("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
+        syncFunction("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3));
+        syncFunction("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3));
+        syncFunction("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
 
         // Player Health Arguments
-        CraftPresence.CLIENT.syncFunction("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
-        CraftPresence.CLIENT.syncFunction("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
+        syncFunction("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
+        syncFunction("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
 
         // World Data Arguments
-        CraftPresence.CLIENT.syncFunction("world.difficulty", () -> {
+        syncFunction("world.difficulty", () -> {
             final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
                     StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
             return StringUtils.getOrDefault(newDifficulty);
         });
-        CraftPresence.CLIENT.syncFunction("world.weather.name", () -> {
+        syncFunction("world.weather.name", () -> {
             final String newWeatherData = EntityUtils.getWeather(CraftPresence.player);
             final String newWeatherName = Constants.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
             return StringUtils.getOrDefault(newWeatherName);
         });
-        CraftPresence.CLIENT.syncFunction("world.name", () -> {
+        syncFunction("world.name", () -> {
             final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
             final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
@@ -458,29 +460,29 @@ public class ServerUtils implements ExtendedModule {
         });
 
         // World Time Arguments
-        CraftPresence.CLIENT.syncFunction("world.time.day", () ->
+        syncFunction("world.time.day", () ->
                 TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getFirst()
         );
-        CraftPresence.CLIENT.syncFunction("world.time.format_24", () ->
+        syncFunction("world.time.format_24", () ->
                         TimeUtils.toString(
                                 TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
                                 "HH:mm"
                         )
                 , true);
-        CraftPresence.CLIENT.syncFunction("world.time.format_12", () ->
+        syncFunction("world.time.format_12", () ->
                         TimeUtils.toString(
                                 TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
-        CraftPresence.CLIENT.syncFunction("data.world.time.instance", () ->
+        syncFunction("data.world.time.instance", () ->
                 TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime())
         );
 
         // Default Arguments
-        CraftPresence.CLIENT.syncFunction("server.default.icon", () -> CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
+        syncFunction("server.default.icon", () -> CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
-        CraftPresence.CLIENT.syncFunction("server.message", () -> {
+        syncFunction("server.message", () -> {
             final boolean inServer = !isOnSinglePlayer && currentServerData != null;
             if (inServer) {
                 if (isOnLAN) {
@@ -502,7 +504,7 @@ public class ServerUtils implements ExtendedModule {
             }
             return null;
         });
-        CraftPresence.CLIENT.syncFunction("server.icon", () -> {
+        syncFunction("server.icon", () -> {
             final boolean inServer = !isOnSinglePlayer && currentServerData != null;
             String currentServerIcon = "";
             ModuleData resultData = null;
@@ -557,18 +559,18 @@ public class ServerUtils implements ExtendedModule {
 
     private void initServerArgs() {
         // Player Amount Arguments
-        CraftPresence.CLIENT.syncFunction("server.players.current", () -> currentPlayers);
-        CraftPresence.CLIENT.syncFunction("server.players.max", () -> maxPlayers);
+        syncFunction("server.players.current", () -> currentPlayers);
+        syncFunction("server.players.max", () -> maxPlayers);
 
         // Server Data Arguments (Multiplayer)
-        CraftPresence.CLIENT.syncFunction("server.address.full", () -> currentServer_IP);
-        CraftPresence.CLIENT.syncFunction("server.address.short", () -> formattedServer_IP);
-        CraftPresence.CLIENT.syncFunction("server.name", () -> currentServer_Name);
-        CraftPresence.CLIENT.syncFunction("server.motd.raw", () -> currentServer_MOTD);
+        syncFunction("server.address.full", () -> currentServer_IP);
+        syncFunction("server.address.short", () -> formattedServer_IP);
+        syncFunction("server.name", () -> currentServer_Name);
+        syncFunction("server.motd.raw", () -> currentServer_MOTD);
         if (!currentServer_MOTD_Lines.isEmpty()) {
             for (int i = 0; i < currentServer_MOTD_Lines.size(); i++) {
                 final int index = i + 1;
-                CraftPresence.CLIENT.syncFunction("data.server.motd.line_" + index, () -> currentServer_MOTD_Lines.get(index));
+                syncFunction("data.server.motd.line_" + index, () -> currentServer_MOTD_Lines.get(index));
             }
         }
     }
@@ -638,6 +640,11 @@ public class ServerUtils implements ExtendedModule {
                 knownAddresses.add(serverEntry);
             }
         }
+    }
+
+    @Override
+    public void syncFunction(String argumentName, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(event), plain);
     }
 
     @Override

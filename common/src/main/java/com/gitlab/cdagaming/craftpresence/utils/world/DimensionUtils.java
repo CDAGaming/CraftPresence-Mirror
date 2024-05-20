@@ -38,6 +38,7 @@ import net.minecraft.world.WorldProvider;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Dimension Utilities used to Parse Dimension Data and handle related RPC Events
@@ -106,13 +107,14 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void clearClientData() {
+        setInUse(false);
+
         CURRENT_DIMENSION = null;
         RAW_DIMENSION_NAME = null;
         RAW_DIMENSION_IDENTIFIER = null;
         CURRENT_DIMENSION_NAME = null;
         CURRENT_DIMENSION_IDENTIFIER = null;
 
-        setInUse(false);
         CraftPresence.CLIENT.removeArguments("dimension", "data.dimension");
         CraftPresence.CLIENT.removeForcedData("dimension");
         hasInitialized = false;
@@ -178,24 +180,24 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        CraftPresence.CLIENT.syncFunction("dimension.default.icon", () -> CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
+        syncFunction("dimension.default.icon", () -> CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
-        CraftPresence.CLIENT.syncFunction("data.dimension.instance", () -> CURRENT_DIMENSION);
-        CraftPresence.CLIENT.syncFunction("data.dimension.class", () -> CURRENT_DIMENSION.getClass());
-        CraftPresence.CLIENT.syncFunction("data.dimension.name", () -> RAW_DIMENSION_NAME, true);
-        CraftPresence.CLIENT.syncFunction("data.dimension.identifier", () -> RAW_DIMENSION_IDENTIFIER, true);
+        syncFunction("data.dimension.instance", () -> CURRENT_DIMENSION);
+        syncFunction("data.dimension.class", () -> CURRENT_DIMENSION.getClass());
+        syncFunction("data.dimension.name", () -> RAW_DIMENSION_NAME, true);
+        syncFunction("data.dimension.identifier", () -> RAW_DIMENSION_IDENTIFIER, true);
 
-        CraftPresence.CLIENT.syncFunction("dimension.identifier", () -> CURRENT_DIMENSION_IDENTIFIER, true);
-        CraftPresence.CLIENT.syncFunction("dimension.name", () -> CURRENT_DIMENSION_NAME, true);
+        syncFunction("dimension.identifier", () -> CURRENT_DIMENSION_IDENTIFIER, true);
+        syncFunction("dimension.name", () -> CURRENT_DIMENSION_NAME, true);
 
-        CraftPresence.CLIENT.syncFunction("dimension.message", () -> {
+        syncFunction("dimension.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_DIMENSION_IDENTIFIER);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_DIMENSION_IDENTIFIER);
         });
-        CraftPresence.CLIENT.syncFunction("dimension.icon", () -> {
+        syncFunction("dimension.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_DIMENSION_IDENTIFIER);
 
@@ -282,6 +284,11 @@ public class DimensionUtils implements ExtendedModule {
                 }
             }
         }
+    }
+
+    @Override
+    public void syncFunction(String argumentName, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(event), plain);
     }
 
     @Override
