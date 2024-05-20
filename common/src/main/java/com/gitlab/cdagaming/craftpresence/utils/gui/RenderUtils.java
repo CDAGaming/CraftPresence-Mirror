@@ -56,6 +56,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Rendering Utilities used to Parse Screen Data and handle rendering tasks
@@ -105,6 +106,10 @@ public class RenderUtils {
     private static final Tuple<Boolean, ColorData, ColorData> EMPTY_TOOLTIP = new Tuple<>(
             true, null, null
     );
+    /**
+     * An active cache for all currently allocated Texture Object Results
+     */
+    private static final Map<String, Tuple<Boolean, String, ResourceLocation>> TEXTURE_CACHE = StringUtils.newHashMap();
 
     /**
      * Retrieve the default Screen Textures as Texture Data
@@ -787,6 +792,9 @@ public class RenderUtils {
         final Tuple<Boolean, String, ResourceLocation> result = new Tuple<>(false, "", texLocation);
         if (!StringUtils.isNullOrEmpty(texture)) {
             texture = texture.trim();
+            if (TEXTURE_CACHE.containsKey(texture)) {
+                return TEXTURE_CACHE.get(texture);
+            }
         } else {
             return result;
         }
@@ -822,7 +830,9 @@ public class RenderUtils {
                 texLocation = ImageUtils.getTextureFromUrl(textureName, texture.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
             }
         }
-        return result.put(usingExternalTexture, texture, texLocation);
+        TEXTURE_CACHE.put(texture, result.put(usingExternalTexture, texture, texLocation));
+
+        return result;
     }
 
     /**
