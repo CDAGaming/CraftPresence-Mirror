@@ -415,7 +415,7 @@ public class CommandUtils {
                     Config.isValidProperty(loadedMenu, "textOverride") ? loadedMenu.getTextOverride() : ""
             );
             CraftPresence.CLIENT.syncFunction("menu.icon", () -> {
-                final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
+                final String currentIcon = Config.isValidProperty(loadedMenu, "iconOverride") ? loadedMenu.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
                 return CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon);
             });
             CraftPresence.CLIENT.addForcedData("menu", () -> (PresenceData) Config.getProperty(loadedMenu, "data"));
