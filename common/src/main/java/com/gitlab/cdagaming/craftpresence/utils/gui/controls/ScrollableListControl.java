@@ -391,7 +391,7 @@ public class ScrollableListControl extends GuiSlot {
             }
         } else if (renderType == RenderType.Placeholder && isHovering) {
             final String message = CraftPresence.CLIENT.generateArgumentMessage(
-                    originalName, false,
+                    originalName, false, false,
                     CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews,
                     ""
             );

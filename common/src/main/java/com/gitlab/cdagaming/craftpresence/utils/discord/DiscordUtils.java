@@ -1051,9 +1051,12 @@ public class DiscordUtils {
         final StringBuilder placeholderString = new StringBuilder();
         if (args != null && !args.isEmpty()) {
             for (Map.Entry<String, Supplier<Value>> argData : args.entrySet()) {
-                placeholderString.append("\\n").append(generateArgumentMessage(
-                        argData.getKey(), argData.getValue(), true, addExtraData
-                ));
+                final String argumentMessage = generateArgumentMessage(
+                        argData.getKey(), argData.getValue(), true, true, addExtraData
+                );
+                if (!StringUtils.isNullOrEmpty(argumentMessage)) {
+                    placeholderString.append("\\n").append(argumentMessage);
+                }
             }
         }
 
@@ -1069,23 +1072,29 @@ public class DiscordUtils {
      *
      * @param placeholderName The Specified Argument to interpret
      * @param suppliedInfo    The current argument info, if any
+     * @param requireDesc     Whether to require an argument description to return a result
      * @param includeName     Whether to inline the description with the argument name
      * @param addExtraData    Whether to add additional data to the string
      * @param prefix          The prefix to begin each line with (Overwritten if `includeName` is true)
-     * @return the parsable string
+     * @return the parsable string, or null if not found
      */
-    public String generateArgumentMessage(final String placeholderName, final Supplier<Value> suppliedInfo, final boolean includeName, final boolean addExtraData, final String prefix) {
-        final StringBuilder placeholderString = new StringBuilder();
-
+    public String generateArgumentMessage(final String placeholderName, final Supplier<Value> suppliedInfo, final boolean requireDesc, final boolean includeName, final boolean addExtraData, final String prefix) {
         final String placeholderTranslation = String.format("%s.placeholders.%s.description",
                 Constants.MOD_ID,
                 placeholderName
         );
+        final boolean hasDescription = Constants.TRANSLATOR.hasTranslation(placeholderTranslation);
+
+        if (requireDesc && !hasDescription) {
+            return null;
+        }
+
+        final StringBuilder placeholderString = new StringBuilder();
+
         final String placeholderUsage = String.format("%s.placeholders.%s.usage",
                 Constants.MOD_ID,
                 placeholderName
         );
-        final boolean hasDescription = Constants.TRANSLATOR.hasTranslation(placeholderTranslation);
         String start = prefix;
 
         if (includeName) {
@@ -1137,13 +1146,14 @@ public class DiscordUtils {
      * Generate a parsable display string for the argument data provided
      *
      * @param placeholderName The Specified Argument to interpret
+     * @param requireDesc     Whether to require an argument description to return a result
      * @param includeName     Whether to inline the description with the argument name
      * @param addExtraData    Whether to add additional data to the string
      * @param prefix          The prefix to begin each line with (Overwritten if `includeName` is true)
      * @return the parsable string
      */
-    public String generateArgumentMessage(final String placeholderName, final boolean includeName, final boolean addExtraData, final String prefix) {
-        return generateArgumentMessage(placeholderName, getArgument(placeholderName), includeName, addExtraData, prefix);
+    public String generateArgumentMessage(final String placeholderName, final boolean requireDesc, final boolean includeName, final boolean addExtraData, final String prefix) {
+        return generateArgumentMessage(placeholderName, getArgument(placeholderName), requireDesc, includeName, addExtraData, prefix);
     }
 
     /**
@@ -1151,24 +1161,26 @@ public class DiscordUtils {
      *
      * @param placeholderName The Specified Argument to interpret
      * @param suppliedInfo    The current argument info, if any
+     * @param requireDesc     Whether to require an argument description to return a result
      * @param includeName     Whether to inline the description with the argument name
      * @param addExtraData    Whether to add additional data to the string
      * @return the parsable string
      */
-    public String generateArgumentMessage(final String placeholderName, final Supplier<Value> suppliedInfo, final boolean includeName, final boolean addExtraData) {
-        return generateArgumentMessage(placeholderName, suppliedInfo, includeName, addExtraData, " ==> ");
+    public String generateArgumentMessage(final String placeholderName, final Supplier<Value> suppliedInfo, final boolean requireDesc, final boolean includeName, final boolean addExtraData) {
+        return generateArgumentMessage(placeholderName, suppliedInfo, requireDesc, includeName, addExtraData, " ==> ");
     }
 
     /**
      * Generate a parsable display string for the argument data provided
      *
      * @param placeholderName The Specified Argument to interpret
+     * @param requireDesc     Whether to require an argument description to return a result
      * @param includeName     Whether to inline the description with the argument name
      * @param addExtraData    Whether to add additional data to the string
      * @return the parsable string
      */
-    public String generateArgumentMessage(final String placeholderName, final boolean includeName, final boolean addExtraData) {
-        return generateArgumentMessage(placeholderName, includeName, addExtraData, " ==> ");
+    public String generateArgumentMessage(final String placeholderName, final boolean requireDesc, final boolean includeName, final boolean addExtraData) {
+        return generateArgumentMessage(placeholderName, requireDesc, includeName, addExtraData, " ==> ");
     }
 
     /**
