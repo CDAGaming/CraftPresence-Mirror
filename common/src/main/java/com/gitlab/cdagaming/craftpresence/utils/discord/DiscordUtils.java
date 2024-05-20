@@ -417,29 +417,30 @@ public class DiscordUtils {
     @SafeVarargs
     public final Pair<String, VariableReplacementTransformer> generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
         overrideTarget = overrideId;
-        if (replacements != null) {
-            final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
-            String data = StringUtils.getOrDefault(input);
+        if (replacements == null || replacements.length == 0) {
+            return null;
+        }
 
-            for (Pair<String, Supplier<String>> replacement : replacements) {
-                if (replacement != null) {
-                    final Supplier<String> info = replacement.getSecond();
-                    if (info != null) {
-                        final String value = info.get();
-                        if (placeholders.containsKey(value)) {
-                            transformer.addReplacer(replacement.getFirst(), info);
-                        } else {
-                            data = data.replace(
-                                    replacement.getFirst(),
-                                    !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
-                            );
-                        }
+        final VariableReplacementTransformer transformer = new VariableReplacementTransformer();
+        String data = StringUtils.getOrDefault(input);
+
+        for (Pair<String, Supplier<String>> replacement : replacements) {
+            if (replacement != null) {
+                final Supplier<String> info = replacement.getSecond();
+                if (info != null) {
+                    final String value = info.get();
+                    if (placeholders.containsKey(value)) {
+                        transformer.addReplacer(replacement.getFirst(), info);
+                    } else {
+                        data = data.replace(
+                                replacement.getFirst(),
+                                !StringUtils.isNullOrEmpty(value) ? "'" + value + "'" : "null"
+                        );
                     }
                 }
             }
-            return new Pair<>(data, transformer);
         }
-        return null;
+        return new Pair<>(data, transformer);
     }
 
     /**
