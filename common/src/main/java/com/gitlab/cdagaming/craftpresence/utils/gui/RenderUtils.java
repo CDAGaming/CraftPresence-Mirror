@@ -107,7 +107,7 @@ public class RenderUtils {
             true, null, null
     );
     /**
-     * An active cache for all currently allocated Texture Object Results
+     * An active cache for all currently allocated internal Texture Object Results
      */
     private static final Map<String, Tuple<Boolean, String, ResourceLocation>> TEXTURE_CACHE = StringUtils.newHashMap();
 
@@ -830,8 +830,11 @@ public class RenderUtils {
                 texLocation = ImageUtils.getTextureFromUrl(textureName, texture.toLowerCase().startsWith("file://") ? new File(formattedConvertedName) : formattedConvertedName);
             }
         }
-        TEXTURE_CACHE.put(texture, result.put(usingExternalTexture, texture, texLocation));
+        result.put(usingExternalTexture, texture, texLocation);
 
+        if (!usingExternalTexture) {
+            TEXTURE_CACHE.put(texture, result);
+        }
         return result;
     }
 
