@@ -288,10 +288,8 @@ The following functions are available for use anywhere in CraftPresence:
   value
 * `getPath(input)` - Retrieve the path portion of an Identifier-Style Object
 * `getResult(input)` - Perform recursive conversion on the specified input
-* `hasAlphaNumeric(input)` - Whether the specified string contains alphanumeric characters
 * `hasField(classObj=Object|String|Class, fieldName)` - Retrieves whether the specified class contains the specified
   field name
-* `hasWhitespace(input)` - Whether the specified string contains whitespace characters
 * `isColor(input)` - Determines whether an inputted String classifies as a valid Color Code
 * `isCustomAsset(input)` - Determines if the Specified Icon Key is present under the Custom Assets List
 * `isUuid(input)` - Checks via Regex whether the specified String classifies as a valid Uuid
@@ -310,8 +308,6 @@ The following functions are available for use anywhere in CraftPresence:
 * `randomAsset()` - Attempts to retrieve a Random Icon Key from the available assets
 * `randomString(args)` - Retrieves a random element from the specified arguments, as a string
 * `removeRepeatWords(input)` - Removes Duplicated Words within an inputted String
-* `replace(input, matchCase ?: false, matchWholeWord ?: false, useRegex ?: true, data=[from, to]...)` - Replaces Data in
-  a String
 * `roundDouble(num, places ?: 0)` - Rounds a Double to the defined decimal place, if possible
 * `snapToStep(num, valueStep)` - Rounds the Specified Value to the nearest value, using the Step Rate Value
 * `split(input, regex, limit ?: 0)` - Splits this string around matches of the given regular expression

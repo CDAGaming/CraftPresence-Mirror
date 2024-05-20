@@ -25,6 +25,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Added a new script function, `getComponent`, to support the new `DataComponent` system introduced in MC 1.20.5+
     * Usage: `getComponent(data=DataComponentHolder, path=String)`
     * On versions below MC 1.20.5, an error will appear instead
+* Removed the `hasAlphaNumeric`, `hasWhitespace`, and `replace` script function due to being obsolete
+    * The backend for these functions was barely functional and has been largely obsolete for a while
 * Added new `.identifier` placeholders for the `Biome` and `Dimension` modules
 * (Backend) The default formatting for a slider's display value is now `%.1f` instead of a raw append
 * Added a `Sync End Color` button to the `Color Editor` UI

@@ -92,7 +92,6 @@ public class FunctionsLib {
 
         // StringUtils
         instance.syncFunction("getOrDefault", FunctionsLib::getOrDefault);
-        instance.syncFunction("replace", FunctionsLib::replace);
         instance.syncFunction("length", FunctionsLib::length);
         instance.syncFunction("split", FunctionsLib::split);
         instance.syncFunction("getArrayElement", FunctionsLib::getArrayElement);
@@ -100,8 +99,6 @@ public class FunctionsLib {
         instance.syncFunction("nullOrEmpty", FunctionsLib::nullOrEmpty);
         instance.syncFunction("cast", FunctionsLib::cast);
         instance.syncFunction("formatAddress", FunctionsLib::formatAddress);
-        instance.syncFunction("hasWhitespace", FunctionsLib::hasWhitespace);
-        instance.syncFunction("hasAlphaNumeric", FunctionsLib::hasAlphaNumeric);
         instance.syncFunction("isUuid", FunctionsLib::isUuid);
         instance.syncFunction("isColor", FunctionsLib::isColor);
         instance.syncFunction("toCamelCase", FunctionsLib::toCamelCase);
@@ -542,72 +539,6 @@ public class FunctionsLib {
         return Value.string(StringUtils.getOrDefault(target, alternative));
     }
 
-    public static Value replace(Starscript ss, int argCount) {
-        final List<Value> args = StringUtils.newArrayList();
-        if (argCount < 3)
-            ss.error("replace() requires at least 3 arguments, got %d.", argCount);
-        for (int i = 0; i < argCount; i++) {
-            args.add(ss.pop());
-        }
-        StringUtils.revlist(args);
-
-        Value currentArg;
-        String source = "";
-
-        // Parse, then remove the source string from arguments
-        currentArg = args.get(0);
-        if (currentArg.isString()) {
-            source = currentArg.getString();
-        } else {
-            ss.error("First argument to replace() needs to be a string.");
-        }
-        args.remove(0);
-
-        boolean matchCase = false;
-        boolean matchWholeWord = false;
-        boolean useRegex = true;
-
-        // Parse optional arguments (All-or-none style)
-        currentArg = args.get(0);
-        if (currentArg.isBool()) {
-            matchCase = currentArg.getBool();
-            args.remove(0);
-
-            currentArg = args.get(0);
-            if (currentArg.isBool()) {
-                matchWholeWord = currentArg.getBool();
-                args.remove(0);
-
-                currentArg = args.get(0);
-                if (currentArg.isBool()) {
-                    useRegex = currentArg.getBool();
-                    args.remove(0);
-                }
-            }
-        }
-
-        final Map<String, String> data = StringUtils.newHashMap();
-        String tempKey = null;
-        if (!args.isEmpty()) {
-            for (Value info : args) {
-                if (!info.isString())
-                    ss.error("Incorrect type data supplied for replace(), please check input and documentation.");
-
-                final String param = info.getString();
-                if (StringUtils.isNullOrEmpty(tempKey)) {
-                    tempKey = param;
-                } else {
-                    data.put(tempKey, param);
-                    tempKey = null;
-                }
-            }
-        }
-        if (!StringUtils.isNullOrEmpty(tempKey)) {
-            ss.error("Incomplete data supplied for replace(), please check input and documentation.");
-        }
-        return Value.string(StringUtils.sequentialReplace(source, matchCase, matchWholeWord, useRegex, data));
-    }
-
     public static Value length(Starscript ss, int argCount) {
         if (argCount != 1) ss.error("length() requires 1 argument, got %d.", argCount);
         String source = ss.popString("First argument to length() needs to be a string.");
@@ -710,18 +641,6 @@ public class FunctionsLib {
         }
         String target = ss.popString("First argument to formatAddress() needs to be a string.");
         return Value.string(StringUtils.formatAddress(target, returnPort));
-    }
-
-    public static Value hasWhitespace(Starscript ss, int argCount) {
-        if (argCount != 1) ss.error("hasWhitespace() requires 1 argument, got %d.", argCount);
-        String source = ss.popString("First argument to hasWhitespace() needs to be a string.");
-        return Value.bool(StringUtils.containsWhitespace(source));
-    }
-
-    public static Value hasAlphaNumeric(Starscript ss, int argCount) {
-        if (argCount != 1) ss.error("hasAlphaNumeric() requires 1 argument, got %d.", argCount);
-        String source = ss.popString("First argument to hasAlphaNumeric() needs to be a string.");
-        return Value.bool(StringUtils.containsAlphaNumeric(source));
     }
 
     public static Value isUuid(Starscript ss, int argCount) {
