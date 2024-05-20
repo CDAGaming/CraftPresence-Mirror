@@ -75,7 +75,7 @@ public class DiscordUtils {
     /**
      * A Mapping of the Arguments available to use as RPC Message Placeholders
      */
-    private final Map<String, Supplier<Value>> placeholderData = StringUtils.newTreeMap();
+    private final Map<String, Supplier<Value>> placeholderData = StringUtils.newConcurrentHashMap();
     /**
      * A Mapping of the Last Requested Image Data
      * <p>Used to cache data for repeated images in other areas
@@ -390,18 +390,15 @@ public class DiscordUtils {
      */
     @SafeVarargs
     public final Supplier<Value> compileData(final String input, final String overrideId, final boolean plain, final Pair<String, Supplier<String>>... replacements) {
-        synchronized (placeholderData) {
-            final Map<String, Supplier<Value>> placeholders = StringUtils.newTreeMap(placeholderData);
-            final String data = StringUtils.getOrDefault(input);
+        final String data = StringUtils.getOrDefault(input);
 
-            if (!plain) {
-                final Pair<String, VariableReplacementTransformer> resultData = generateTransformer(
-                        data, overrideId, placeholders, replacements
-                );
-                return getCompileResult(resultData != null ? resultData.getFirst() : data, null, resultData != null ? resultData.getSecond() : null);
-            } else {
-                return () -> Value.string(data);
-            }
+        if (!plain) {
+            final Pair<String, VariableReplacementTransformer> resultData = generateTransformer(
+                    data, overrideId, replacements
+            );
+            return getCompileResult(resultData != null ? resultData.getFirst() : data, null, resultData != null ? resultData.getSecond() : null);
+        } else {
+            return () -> Value.string(data);
         }
     }
 
@@ -410,12 +407,11 @@ public class DiscordUtils {
      *
      * @param input        The original string to interpret
      * @param overrideId   The override identifier to interpret
-     * @param placeholders A mapping of the placeholders currently available
      * @param replacements A mapping of additional replacements to perform
      * @return the processed string, alongside the variable transformer
      */
     @SafeVarargs
-    public final Pair<String, VariableReplacementTransformer> generateTransformer(final String input, final String overrideId, final Map<String, Supplier<Value>> placeholders, final Pair<String, Supplier<String>>... replacements) {
+    public final Pair<String, VariableReplacementTransformer> generateTransformer(final String input, final String overrideId, final Pair<String, Supplier<String>>... replacements) {
         overrideTarget = overrideId;
         if (replacements == null || replacements.length == 0) {
             return null;
@@ -429,7 +425,7 @@ public class DiscordUtils {
                 final Supplier<String> info = replacement.getSecond();
                 if (info != null) {
                     final String value = info.get();
-                    if (placeholders.containsKey(value)) {
+                    if (placeholderData.containsKey(value)) {
                         transformer.addReplacer(replacement.getFirst(), info);
                     } else {
                         data = data.replace(
@@ -770,10 +766,8 @@ public class DiscordUtils {
      * @param data         The data to attach to the Specified Argument
      */
     public void setArgument(final String argumentName, final Supplier<Value> data) {
-        synchronized (placeholderData) {
-            if (!StringUtils.isNullOrEmpty(argumentName)) {
-                setArgument(scriptEngine.getGlobals(), argumentName, data);
-            }
+        if (!StringUtils.isNullOrEmpty(argumentName)) {
+            setArgument(scriptEngine.getGlobals(), argumentName, data);
         }
     }
 
@@ -828,15 +822,12 @@ public class DiscordUtils {
      * @param args The string formats to interpret
      */
     public void removeArguments(final String... args) {
-        synchronized (placeholderData) {
-            final List<String> items = StringUtils.newArrayList(placeholderData.keySet());
-            for (String key : items) {
-                for (String format : args) {
-                    if (key.startsWith(format)) {
-                        scriptEngine.remove(key);
-                        placeholderData.remove(key);
-                        break;
-                    }
+        for (String key : placeholderData.keySet()) {
+            for (String format : args) {
+                if (key.startsWith(format)) {
+                    scriptEngine.remove(key);
+                    placeholderData.remove(key);
+                    break;
                 }
             }
         }
@@ -920,36 +911,33 @@ public class DiscordUtils {
      * @return A List of the entries that satisfy the method conditions
      */
     public Map<String, Supplier<Value>> getArguments(final String... args) {
-        synchronized (placeholderData) {
-            final Map<String, Supplier<Value>> items = StringUtils.newTreeMap(placeholderData);
-            final Map<String, Supplier<Value>> list = StringUtils.newTreeMap();
+        final Map<String, Supplier<Value>> list = StringUtils.newTreeMap();
 
-            for (Map.Entry<String, Supplier<Value>> entry : items.entrySet()) {
-                final String item = entry.getKey();
-                final Supplier<Value> data = entry.getValue();
-                boolean addToList = args == null || args.length < 1 || args[0] == null;
-                if (!addToList) {
-                    for (String name : args) {
-                        if (!StringUtils.isNullOrEmpty(name)) {
-                            addToList = item.startsWith(name) ||
-                                    (name.equalsIgnoreCase("type:all") || name.equalsIgnoreCase("all")) ||
-                                    (name.startsWith("type:") && matchesType(
-                                            name.replaceFirst("type:", "").toLowerCase(),
-                                            data.get()
-                                    ));
-                        }
+        for (Map.Entry<String, Supplier<Value>> entry : placeholderData.entrySet()) {
+            final String item = entry.getKey();
+            final Supplier<Value> data = entry.getValue();
+            boolean addToList = args == null || args.length < 1 || args[0] == null;
+            if (!addToList) {
+                for (String name : args) {
+                    if (!StringUtils.isNullOrEmpty(name)) {
+                        addToList = item.startsWith(name) ||
+                                (name.equalsIgnoreCase("type:all") || name.equalsIgnoreCase("all")) ||
+                                (name.startsWith("type:") && matchesType(
+                                        name.replaceFirst("type:", "").toLowerCase(),
+                                        data.get()
+                                ));
+                    }
 
-                        if (addToList) {
-                            break;
-                        }
+                    if (addToList) {
+                        break;
                     }
                 }
-                if (addToList) {
-                    list.put(item, data);
-                }
             }
-            return list;
+            if (addToList) {
+                list.put(item, data);
+            }
         }
+        return list;
     }
 
     /**
@@ -997,9 +985,7 @@ public class DiscordUtils {
      * @return The entry that satisfies the method conditions, or null
      */
     public Supplier<Value> getArgument(final String key) {
-        synchronized (placeholderData) {
-            return placeholderData.getOrDefault(key, Value::null_);
-        }
+        return placeholderData.getOrDefault(key, Value::null_);
     }
 
     /**

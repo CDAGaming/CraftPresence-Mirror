@@ -72,7 +72,7 @@ public class ModUpdaterUtils {
     /**
      * The Changelog Data attached to the Target Version, if any
      */
-    public Map<String, String> changelogData = new LinkedHashMap<>();
+    public Map<String, String> changelogData = StringUtils.newLinkedHashMap();
     /**
      * The Current Version attached to this Instance
      */
