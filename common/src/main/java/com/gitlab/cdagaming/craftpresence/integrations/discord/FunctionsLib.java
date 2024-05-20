@@ -41,7 +41,6 @@ import org.meteordev.starscript.value.Value;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Standard library with some default functions and variables.
