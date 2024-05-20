@@ -778,6 +778,112 @@ public class DiscordUtils {
     }
 
     /**
+     * Removes the Specified Argument as an RPC Placeholder
+     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#remove(String)}
+     *
+     * @param source The {@link ValueMap} to interpret
+     * @param parent The path parent, used in {@link ValueMap} traversal
+     * @param name   The Specified Argument to Synchronize for
+     * @return the previous value assigned, if any
+     */
+    private Supplier<Value> removeArgument(final ValueMap source, final String parent, final String name) {
+        final int dotI = name.indexOf('.');
+
+        if (dotI >= 0) {
+            // Split name based on the dot
+            final String name1 = name.substring(0, dotI);
+            final String name2 = name.substring(dotI + 1);
+
+            // Get child value
+            final Supplier<Value> valueSupplier = source.getRaw(name1);
+            if (valueSupplier == null) return null;
+            else {
+                // Make sure the child value is a map
+                final Value value = valueSupplier.get();
+                if (!value.isMap()) {
+                    placeholderData.remove(parent + name1);
+                    return source.removeRaw(name1);
+                } else {
+                    return removeArgument(value.getMap(), parent + name1 + ".", name2);
+                }
+            }
+        } else {
+            placeholderData.remove(parent + name);
+            return source.removeRaw(name);
+        }
+    }
+
+    /**
+     * Removes the Specified Argument as an RPC Placeholder
+     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#remove(String)}
+     *
+     * @param source The {@link ValueMap} to interpret
+     * @param name   The Specified Argument to Synchronize for
+     * @return the previous value assigned, if any
+     */
+    private Supplier<Value> removeArgument(final ValueMap source, final String name) {
+        return removeArgument(source, "", name);
+    }
+
+    /**
+     * Removes the Specified Argument as an RPC Placeholder
+     *
+     * @param argumentName The Specified Argument to remove
+     * @return the previous value assigned, if any
+     */
+    public Supplier<Value> removeArgument(final String argumentName) {
+        if (!StringUtils.isNullOrEmpty(argumentName)) {
+            return removeArgument(scriptEngine.getGlobals(), argumentName);
+        }
+        return null;
+    }
+
+    /**
+     * Remove any arguments following the specified formats
+     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#remove(String)}
+     *
+     * @param source The {@link ValueMap} to interpret
+     * @param parent The path parent, used in {@link ValueMap} traversal
+     * @param args   The string formats to interpret
+     * @return a mapping of all removed objects, using format path:data
+     */
+    private Map<String, Supplier<Value>> removeArguments(final ValueMap source, final String parent, final String... args) {
+        if (args == null || args.length == 0) {
+            return null;
+        }
+
+        final boolean hasParent = !StringUtils.isNullOrEmpty(parent);
+        final String prefix = parent + (hasParent ? "." : "");
+
+        final Map<String, Supplier<Value>> results = StringUtils.newHashMap();
+        for (String arg : args) {
+            final String path = prefix + arg;
+            final Supplier<Value> supplier = getArgument(path);
+            if (supplier != null) {
+                final Value value = supplier.get();
+                if (value.isMap()) {
+                    final ValueMap newMap = value.getMap();
+                    results.putAll(
+                            removeArguments(newMap, path, newMap.keys().toArray(new String[0]))
+                    );
+                }
+                results.put(path, removeArgument(source, prefix, arg));
+            }
+        }
+        return results;
+    }
+
+    /**
+     * Remove any arguments following the specified formats
+     *
+     * @param args The string formats to interpret
+     * @return a mapping of all removed objects, using format path:data
+     */
+    public Map<String, Supplier<Value>> removeArguments(final String... args) {
+        return removeArguments(scriptEngine.getGlobals(), "", args);
+    }
+
+    /**
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
@@ -808,35 +914,6 @@ public class DiscordUtils {
      */
     public void syncFunction(final String argumentName, final SFunction data) {
         syncFunction(argumentName, () -> data);
-    }
-
-    /**
-     * Initialize the Specified Arguments as Empty Data
-     *
-     * @param args The Arguments to Initialize
-     */
-    public void initArguments(final String... args) {
-        // Initialize Specified Arguments to Empty Data
-        for (String argumentName : args) {
-            setArgument(argumentName, Value::null_);
-        }
-    }
-
-    /**
-     * Remove any arguments following the specified formats within the selected Argument Type
-     *
-     * @param args The string formats to interpret
-     */
-    public void removeArguments(final String... args) {
-        for (String key : placeholderData.keySet()) {
-            for (String format : args) {
-                if (key.startsWith(format)) {
-                    scriptEngine.remove(key);
-                    placeholderData.remove(key);
-                    break;
-                }
-            }
-        }
     }
 
     /**
