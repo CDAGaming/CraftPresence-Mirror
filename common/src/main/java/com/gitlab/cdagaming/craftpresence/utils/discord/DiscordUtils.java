@@ -707,6 +707,64 @@ public class DiscordUtils {
 
     /**
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#set(String, Supplier)}
+     *
+     * @param source   The {@link ValueMap} to interpret
+     * @param parent   The path parent, used in {@link ValueMap} traversal
+     * @param name     The Specified Argument to Synchronize for
+     * @param supplier The data to attach to the Specified Argument
+     */
+    private void setArgument(final ValueMap source, final String parent, final String name, final Supplier<Value> supplier) {
+        final int dotI = name.indexOf('.');
+
+        if (dotI >= 0) {
+            // Split name based on the dot
+            final String name1 = name.substring(0, dotI);
+            final String name2 = name.substring(dotI + 1);
+
+            // Get the map
+            ValueMap map;
+            final Supplier<Value> valueSupplier = source.getRaw(name1);
+
+            if (valueSupplier == null) {
+                map = new ValueMap();
+                final Supplier<Value> newSupplier = () -> Value.map(map);
+                source.setRaw(name1, newSupplier);
+                placeholderData.put(parent + name1, newSupplier);
+            } else {
+                final Value value = valueSupplier.get();
+
+                if (value.isMap()) map = value.getMap();
+                else {
+                    map = new ValueMap();
+                    final Supplier<Value> newSupplier = () -> Value.map(map);
+                    source.setRaw(name1, newSupplier);
+                    placeholderData.put(parent + name1, newSupplier);
+                }
+            }
+
+            // Set the supplier
+            setArgument(map, parent + name1 + ".", name2, supplier);
+        } else {
+            source.setRaw(name, supplier);
+            placeholderData.put(parent + name, supplier);
+        }
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#set(String, Supplier)}
+     *
+     * @param source   The {@link ValueMap} to interpret
+     * @param name     The Specified Argument to Synchronize for
+     * @param supplier The data to attach to the Specified Argument
+     */
+    private void setArgument(final ValueMap source, final String name, final Supplier<Value> supplier) {
+        setArgument(source, "", name, supplier);
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
@@ -714,8 +772,7 @@ public class DiscordUtils {
     public void setArgument(final String argumentName, final Supplier<Value> data) {
         synchronized (placeholderData) {
             if (!StringUtils.isNullOrEmpty(argumentName)) {
-                scriptEngine.set(argumentName, data);
-                placeholderData.put(argumentName, data);
+                setArgument(scriptEngine.getGlobals(), argumentName, data);
             }
         }
     }
