@@ -32,18 +32,17 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class TextReplacer implements DataMigrator {
-    final Map<String, String> replacers;
-    final boolean placeholderMode, matchCase, matchWholeWorld, useRegex;
+    private static final Pattern EXPR_PATTERN = Pattern.compile("\\{[^{}]*}");
 
-    public TextReplacer(final Map<String, String> replacers, final boolean placeholderMode,
-                        final boolean matchCase, final boolean matchWholeWorld, final boolean useRegex) {
+    final Map<String, String> replacers;
+    final boolean placeholderMode;
+
+    public TextReplacer(final Map<String, String> replacers, final boolean placeholderMode) {
         this.replacers = StringUtils.newHashMap(replacers);
         this.placeholderMode = placeholderMode;
-        this.matchCase = matchCase;
-        this.matchWholeWorld = matchWholeWorld;
-        this.useRegex = useRegex;
     }
 
     @Override
@@ -52,19 +51,29 @@ public class TextReplacer implements DataMigrator {
         return instance;
     }
 
+    private String doReplacement(final String match, final Map<String, String> replacers) {
+        String result = match;
+        if (!StringUtils.isNullOrEmpty(match) && !replacers.isEmpty()) {
+            for (Map.Entry<String, String> entry : replacers.entrySet()) {
+                result = result.replace(entry.getKey(), entry.getValue());
+            }
+        }
+        return result;
+    }
+
     private String processReplacement(final String original) {
         String result = original;
         if (placeholderMode) {
-            final List<String> expressions = StringUtils.getMatches("\\{[^{}]*\\}", original);
+            final List<String> expressions = StringUtils.getMatches(EXPR_PATTERN, original);
             if (!expressions.isEmpty()) {
                 for (String match : expressions) {
                     result = result.replace(match,
-                            StringUtils.sequentialReplace(match, matchCase, matchWholeWorld, useRegex, replacers)
+                            doReplacement(match, replacers)
                     );
                 }
             }
         } else {
-            result = StringUtils.sequentialReplace(result, matchCase, matchWholeWorld, useRegex, replacers);
+            result = doReplacement(result, replacers);
         }
         return result;
     }

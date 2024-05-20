@@ -44,11 +44,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * Migration from v1 (v1.x) to v2 (v2.0 - Latest Schema) Configs
  */
 public class Legacy2Modern implements DataMigrator {
+    private static final Pattern OPERATOR_PATTERN = Pattern.compile("\\{[^{}]*}[|]\\{[^{}]*}");
+    private static final Pattern ARRAY_PATTERN = Pattern.compile("\\[(\\S+?)]");
+
     private final File configFile;
     private final String encoding;
     private final Properties properties = new Properties();
@@ -359,7 +363,7 @@ public class Legacy2Modern implements DataMigrator {
                                 newValue = boolData.getSecond();
                             }
                         } else if (currentValue instanceof Map<?, ?>) {
-                            final String convertedString = StringUtils.removeMatches("\\[([^\\s]+?)\\]", originalValue.toString(), 0, 1);
+                            final String convertedString = StringUtils.getMatch(ARRAY_PATTERN, originalValue.toString());
                             final String[] oldArray;
 
                             final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
@@ -448,11 +452,11 @@ public class Legacy2Modern implements DataMigrator {
             final Predicate<String> optionCheck = entry.getThird();
             if (typeCheck.test(argumentType) && optionCheck.test(originalName) && result.toLowerCase().contains(original.toLowerCase())) {
                 Constants.LOG.debugInfo("Replacing statement in property \"%1$s\" (%2$s): \"%3$s\" => \"%4$s\"", originalName, argumentType, original, newValue);
-                result = StringUtils.replace(result, original, newValue, false, false, true); // v1 Placeholders were case-insensitive
+                result = result.replace(original, newValue); // v1 Placeholders were case-insensitive
             }
         }
 
-        final List<String> operatorMatches = StringUtils.getMatches("\\{[^{}]*}[|]\\{[^{}]*}", result);
+        final List<String> operatorMatches = StringUtils.getMatches(OPERATOR_PATTERN, result);
         if (!operatorMatches.isEmpty()) {
             for (String match : operatorMatches) {
                 final String[] split = match.split("\\|");

@@ -336,8 +336,7 @@ public final class Config extends Module implements Serializable {
                                     .put("world.time12", "world.time.format_12")
                                     .put("world.day", "world.time.day")
                                     .build(),
-                            true,
-                            true, false, true
+                            true
                     ).apply(this, rawJson);
                     currentVer = 3;
                 }
@@ -394,8 +393,7 @@ public final class Config extends Module implements Serializable {
                             new HashMapBuilder<String, String>()
                                     .put("data.screen.class", "getClass(data.screen.instance)")
                                     .build(),
-                            true,
-                            true, false, true
+                            true
                     ).apply(this, rawJson);
                     currentVer = 5;
                 }

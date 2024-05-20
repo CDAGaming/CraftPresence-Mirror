@@ -15,7 +15,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ModPublisher (`2.1.1` -> `2.1.2`)
     * Fabric Loader (`0.15.10` -> `0.15.11`)
     * Lenni Reflect (`1.3.2` -> `1.3.4`)
-    * UniCore (`1.0.10` -> `1.1.5`)
+    * UniCore (`1.0.10` -> `1.1.6`)
     * DiscordIPC (`0.8.7` -> `0.8.8`)
     * Starscript (`0.3.0` -> `0.3.2`)
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
