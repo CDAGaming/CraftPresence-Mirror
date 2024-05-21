@@ -542,6 +542,8 @@ public class ServerUtils implements ExtendedModule {
             return getResult(CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), resultData);
         });
         CraftPresence.CLIENT.addForcedData("server", () -> {
+            if (!isInUse()) return null;
+
             ModuleData resultData = null;
             if (!isOnSinglePlayer && currentServerData != null) {
                 if (isOnLAN) {

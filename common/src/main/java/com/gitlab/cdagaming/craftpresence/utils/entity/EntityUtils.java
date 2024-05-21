@@ -302,6 +302,8 @@ public class EntityUtils implements ExtendedModule {
                     return getResult(CraftPresence.CLIENT.imageOf("entity.target.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
                 });
                 CraftPresence.CLIENT.addForcedData("entity.target", () -> {
+                    if (!isInUse() || CURRENT_TARGET == null) return null;
+
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
                     return getPresenceData(currentData != null ? currentData : defaultData);
@@ -336,6 +338,8 @@ public class EntityUtils implements ExtendedModule {
                     return getResult(CraftPresence.CLIENT.imageOf("entity.riding.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
                 });
                 CraftPresence.CLIENT.addForcedData("entity.riding", () -> {
+                    if (!isInUse() || CURRENT_RIDING == null) return null;
+
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get(CURRENT_RIDING_NAME);
                     return getPresenceData(currentData != null ? currentData : defaultData);

@@ -205,7 +205,7 @@ public class DimensionUtils implements ExtendedModule {
             final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
             return getResult(CraftPresence.CLIENT.imageOf("dimension.icon", true, currentIcon, CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon), CURRENT_DIMENSION_IDENTIFIER);
         });
-        CraftPresence.CLIENT.addForcedData("dimension", () -> getPresenceData(CURRENT_DIMENSION_IDENTIFIER));
+        CraftPresence.CLIENT.addForcedData("dimension", () -> isInUse() ? getPresenceData(CURRENT_DIMENSION_IDENTIFIER) : null);
         CraftPresence.CLIENT.syncTimestamp("data.dimension.time");
     }
 

@@ -294,7 +294,7 @@ public class GuiUtils implements ExtendedModule {
             final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
             return getResult(CraftPresence.CLIENT.imageOf("screen.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon), CURRENT_GUI_NAME);
         });
-        CraftPresence.CLIENT.addForcedData("screen", () -> getPresenceData(CURRENT_GUI_NAME));
+        CraftPresence.CLIENT.addForcedData("screen", () -> isInUse() ? getPresenceData(CURRENT_GUI_NAME) : null);
         CraftPresence.CLIENT.syncTimestamp("data.screen.time");
     }
 
