@@ -900,6 +900,18 @@ public class DiscordUtils {
      *
      * @param argumentName The Specified Argument to Synchronize for
      * @param data         The data to attach to the Specified Argument
+     * @param plain        Whether the expression should be parsed as a plain string
+     * @return the current {@link ValueMap} instance
+     */
+    public ValueMap syncArgument(final String argumentName, final Object data, final boolean plain) {
+        return syncFunction(argumentName, () -> data, plain);
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the Specified Argument
      * @return the current {@link ValueMap} instance
      */
     public ValueMap syncFunction(final String argumentName, final Supplier<Object> data) {
@@ -913,8 +925,19 @@ public class DiscordUtils {
      * @param data         The data to attach to the Specified Argument
      * @return the current {@link ValueMap} instance
      */
+    public ValueMap syncArgument(final String argumentName, final Object data) {
+        return syncArgument(argumentName, data, false);
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the Specified Argument
+     * @return the current {@link ValueMap} instance
+     */
     public ValueMap syncFunction(final String argumentName, final SFunction data) {
-        return syncFunction(argumentName, () -> data);
+        return syncArgument(argumentName, data);
     }
 
     /**
