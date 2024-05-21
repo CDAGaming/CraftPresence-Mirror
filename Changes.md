@@ -25,7 +25,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Added a new script function, `getComponent`, to support the new `DataComponent` system introduced in MC 1.20.5+
     * Usage: `getComponent(data=DataComponentHolder, path=String)`
     * On versions below MC 1.20.5, an error will appear instead
-* Removed the `hasAlphaNumeric`, `hasWhitespace`, and `replace` script function due to being obsolete
+* Removed the `hasAlphaNumeric`, `hasWhitespace`, and `replace` script functions due to being obsolete
     * The backend for these functions was barely functional and has been largely obsolete for a while
 * Added new `.identifier` placeholders for the `Biome` and `Dimension` modules
 * (Backend) The default formatting for a slider's display value is now `%.1f` instead of a raw append
@@ -57,7 +57,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Quilt now falls back to `getRawModCount` due to not having an independent build layer
     * Added support for Rift, Flint, and Risugami ModLoader mod counts
     * Fixes placeholder functionality for Forge 1.13+
-* (Backend) Improved performance for syncing placeholder arguments and compiling data
+* (Backend) Improved performance for various placeholder argument options as well as compiling data
     * These changes should conform better towards how Starscript was meant to be used
 
 ### Fixes
@@ -121,6 +121,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * The `entity.riding.message` and `entity.riding.icon` placeholders should work properly again
 * Resolved an issue where parts of the mod may show up un-localized when using a different language
     * This was caused by a regression when `TranslationUtils#getLocalizedMessage` was introduced
+* Resolved a typo causing an issue in the `SimpleRPC` to `CraftPresence` config migration layer where
+  the `%replaytimeleft%` placeholder, if present, was incorrectly converted to an invalid Starscript expression
+    * This issue would cause a Starscript exception if the value was present in a `SimpleRPC` config
+* (Backend) Fixed an issue preventing `DiscordAssetUtils#setUrl` from triggering in `DiscordAssetUtils#loadAssets`
+    * This fix also brings a performance improvement to `DiscordAssetUtils#getUrl(list, key)`
 
 ___
 
