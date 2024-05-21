@@ -864,9 +864,12 @@ public class DiscordUtils {
                 final Value value = supplier.get();
                 if (value.isMap()) {
                     final ValueMap newMap = value.getMap();
-                    results.putAll(
-                            removeArguments(newMap, path, newMap.keys())
-                    );
+                    final Set<String> keys = newMap.keys();
+                    if (!keys.isEmpty()) {
+                        results.putAll(
+                                removeArguments(newMap, path, keys)
+                        );
+                    }
                 }
                 results.put(path, removeArgument(source, prefix, arg));
             }
