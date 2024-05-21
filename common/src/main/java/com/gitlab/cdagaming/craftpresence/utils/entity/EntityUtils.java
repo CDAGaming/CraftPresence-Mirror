@@ -282,18 +282,18 @@ public class EntityUtils implements ExtendedModule {
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
             if (!hasInitializedTarget) {
-                syncFunction("data.entity.target.instance", () -> CURRENT_TARGET);
-                syncFunction("data.entity.target.class", () -> CURRENT_TARGET.getClass());
-                syncFunction("entity.target.name", () -> CURRENT_TARGET_NAME, true);
+                syncFunction("data.entity.target.instance", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET);
+                syncFunction("data.entity.target.class", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET.getClass());
+                syncFunction("entity.target.name", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET_NAME, true);
 
-                syncFunction("entity.target.message", () -> {
+                syncFunction("entity.target.message", () -> CURRENT_TARGET != null, () -> {
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
 
                     final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
                     return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, currentData != null ? currentData : defaultData);
                 });
-                syncFunction("entity.target.icon", () -> {
+                syncFunction("entity.target.icon", () -> CURRENT_TARGET != null, () -> {
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get("default");
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.targetData.get(CURRENT_TARGET_NAME);
 
@@ -316,18 +316,18 @@ public class EntityUtils implements ExtendedModule {
 
         if (CURRENT_RIDING != null) {
             if (!hasInitializedRiding) {
-                syncFunction("data.entity.riding.instance", () -> CURRENT_RIDING);
-                syncFunction("data.entity.riding.class", () -> CURRENT_RIDING.getClass());
-                syncFunction("entity.riding.name", () -> CURRENT_RIDING_NAME, true);
+                syncFunction("data.entity.riding.instance", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING);
+                syncFunction("data.entity.riding.class", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING.getClass());
+                syncFunction("entity.riding.name", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING_NAME, true);
 
-                syncFunction("entity.riding.message", () -> {
+                syncFunction("entity.riding.message", () -> CURRENT_RIDING != null, () -> {
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get(CURRENT_RIDING_NAME);
 
                     final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
                     return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, currentData != null ? currentData : defaultData);
                 });
-                syncFunction("entity.riding.icon", () -> {
+                syncFunction("entity.riding.icon", () -> CURRENT_RIDING != null, () -> {
                     final ModuleData defaultData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get("default");
                     final ModuleData currentData = CraftPresence.CONFIG.advancedSettings.entitySettings.ridingData.get(CURRENT_RIDING_NAME);
 
