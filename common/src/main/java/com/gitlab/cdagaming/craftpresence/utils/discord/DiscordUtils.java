@@ -1092,7 +1092,7 @@ public class DiscordUtils {
      * @return The entry that satisfies the method conditions, or null
      */
     public Supplier<Value> getArgument(final String key) {
-        return placeholderData.getOrDefault(key, Value::null_);
+        return placeholderData.get(key);
     }
 
     /**
