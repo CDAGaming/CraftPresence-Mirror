@@ -64,6 +64,7 @@ import org.meteordev.starscript.value.ValueMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -847,8 +848,8 @@ public class DiscordUtils {
      * @param args   The string formats to interpret
      * @return a mapping of all removed objects, using format path:data
      */
-    private Map<String, Supplier<Value>> removeArguments(final ValueMap source, final String parent, final String... args) {
-        if (args == null || args.length == 0) {
+    private Map<String, Supplier<Value>> removeArguments(final ValueMap source, final String parent, final Set<String> args) {
+        if (args == null || args.isEmpty()) {
             return null;
         }
 
@@ -864,13 +865,29 @@ public class DiscordUtils {
                 if (value.isMap()) {
                     final ValueMap newMap = value.getMap();
                     results.putAll(
-                            removeArguments(newMap, path, newMap.keys().toArray(new String[0]))
+                            removeArguments(newMap, path, newMap.keys())
                     );
                 }
                 results.put(path, removeArgument(source, prefix, arg));
             }
         }
         return results;
+    }
+
+    /**
+     * Remove any arguments following the specified formats
+     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#remove(String)}
+     *
+     * @param source The {@link ValueMap} to interpret
+     * @param parent The path parent, used in {@link ValueMap} traversal
+     * @param args   The string formats to interpret
+     * @return a mapping of all removed objects, using format path:data
+     */
+    private Map<String, Supplier<Value>> removeArguments(final ValueMap source, final String parent, final String... args) {
+        if (args == null || args.length == 0) {
+            return null;
+        }
+        return removeArguments(source, parent, StringUtils.newHashSet(args));
     }
 
     /**

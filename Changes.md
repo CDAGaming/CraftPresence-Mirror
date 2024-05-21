@@ -15,9 +15,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ModPublisher (`2.1.1` -> `2.1.2`)
     * Fabric Loader (`0.15.10` -> `0.15.11`)
     * Lenni Reflect (`1.3.2` -> `1.3.4`)
-    * UniCore (`1.0.10` -> `1.1.6`)
-    * DiscordIPC (`0.8.7` -> `0.8.8`)
+    * UniCore (`1.0.10` -> `1.1.7`)
+    * DiscordIPC (`0.8.7` -> `0.8.9`)
     * Starscript (`0.3.0` -> `0.3.2`)
+    * SpotBugs Annotations (`4.8.4` -> `4.8.5`)
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
     * These changes are designed to support auto-locating data related to data pack additions
     * These changes also resolve issues where repeated Registry Lookups could cause a crash in both modules
