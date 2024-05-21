@@ -78,10 +78,33 @@ public interface Module {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
+     * @param condition    If specified, the extra conditions required to interpret the event
      * @param event        The data to attach to the Specified Argument
      * @param plain        Whether the expression should be parsed as a plain string
      */
-    void syncFunction(final String argumentName, final Supplier<Object> event, final boolean plain);
+    void syncFunction(final String argumentName, final Supplier<Boolean> condition, final Supplier<Object> event, final boolean plain);
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param event        The data to attach to the Specified Argument
+     * @param plain        Whether the expression should be parsed as a plain string
+     */
+    default void syncFunction(final String argumentName, final Supplier<Object> event, final boolean plain) {
+        syncFunction(argumentName, null, event, plain);
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param condition    If specified, the extra conditions required to interpret the event
+     * @param event        The data to attach to the Specified Argument
+     */
+    default void syncFunction(final String argumentName, final Supplier<Boolean> condition, final Supplier<Object> event) {
+        syncFunction(argumentName, condition, event, false);
+    }
 
     /**
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
@@ -90,7 +113,18 @@ public interface Module {
      * @param event        The data to attach to the Specified Argument
      */
     default void syncFunction(final String argumentName, final Supplier<Object> event) {
-        syncFunction(argumentName, event, false);
+        syncFunction(argumentName, null, event);
+    }
+
+    /**
+     * Retrieve a module-safe Supplier event for the specified args
+     *
+     * @param condition If specified, the extra conditions required to interpret the event
+     * @param event     The original event to interpret
+     * @return The processed event, relying on {@link Module#isInUse()} and any extra conditions
+     */
+    default Supplier<Object> getModuleFunction(final Supplier<Boolean> condition, final Supplier<Object> event) {
+        return () -> isInUse() && (condition == null || condition.get()) && event != null ? event.get() : null;
     }
 
     /**
@@ -100,7 +134,7 @@ public interface Module {
      * @return The processed event, relying on {@link Module#isInUse()}
      */
     default Supplier<Object> getModuleFunction(final Supplier<Object> event) {
-        return () -> isInUse() ? event.get() : null;
+        return getModuleFunction(null, event);
     }
 
     /**
