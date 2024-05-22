@@ -72,8 +72,8 @@ public class ButtonWidget extends ExtendedButtonControl {
      */
     public ButtonWidget(final int buttonId, final int y, final int widthIn, final int heightIn, final String buttonText, final String title, final Runnable titleHoverEvent, final String... optionalArgs) {
         super(buttonId, 0, y, widthIn, heightIn, buttonText, optionalArgs);
-        this.title = title;
         this.setDimensions = false;
+        setTitle(title);
         setOnTitleHover(titleHoverEvent);
     }
 
@@ -217,8 +217,8 @@ public class ButtonWidget extends ExtendedButtonControl {
 
     @Override
     public void draw(ExtendedScreen screen) {
-        if (!StringUtils.isNullOrEmpty(title) && setDimensions) {
-            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
+        if (!StringUtils.isNullOrEmpty(getTitle()) && setDimensions) {
+            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(getTitle());
 
             screen.renderScrollingString(
                     mainTitle,
@@ -233,7 +233,7 @@ public class ButtonWidget extends ExtendedButtonControl {
 
     @Override
     public void postDraw(ExtendedScreen screen) {
-        if (!StringUtils.isNullOrEmpty(title) && setDimensions) {
+        if (!StringUtils.isNullOrEmpty(getTitle()) && setDimensions) {
             if (screen.isOverScreen() && RenderUtils.isMouseOver(
                     screen.getMouseX(), screen.getMouseY(),
                     titleLeft, getTop(),
