@@ -146,7 +146,7 @@ public class ImageUtils {
             return getTextureFromUrl(textureName, URI.create(url).toURL());
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
-            return new ResourceLocation("");
+            return ResourceUtils.getEmptyResource();
         }
     }
 
@@ -162,7 +162,7 @@ public class ImageUtils {
             return getTextureFromUrl(textureName, new Pair<>(InputType.Url, url));
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
-            return new ResourceLocation("");
+            return ResourceUtils.getEmptyResource();
         }
     }
 
@@ -178,7 +178,7 @@ public class ImageUtils {
             return getTextureFromUrl(textureName, new Pair<>(InputType.FileData, url));
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
-            return new ResourceLocation("");
+            return ResourceUtils.getEmptyResource();
         }
     }
 
@@ -231,7 +231,7 @@ public class ImageUtils {
             final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(textureName).getSecond();
 
             if (bufferData == null || bufferData.getSecond() == null || bufferData.getSecond().isEmpty()) {
-                return new ResourceLocation("");
+                return ResourceUtils.getEmptyResource();
             } else if (textureName != null) {
                 final boolean shouldRepeat = textureName.endsWith(".gif") || stream.getSecond().toString().contains("gif");
                 final boolean doesContinue = bufferData.getFirst() < bufferData.getSecond().size() - 1;
@@ -264,10 +264,10 @@ public class ImageUtils {
                     return cachedTexture;
                 } catch (Exception ex) {
                     Constants.LOG.debugError(ex);
-                    return new ResourceLocation("");
+                    return ResourceUtils.getEmptyResource();
                 }
             } else {
-                return new ResourceLocation("");
+                return ResourceUtils.getEmptyResource();
             }
         }
     }

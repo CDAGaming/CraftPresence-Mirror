@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScissorStack;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenRectangle;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
+import com.gitlab.cdagaming.craftpresence.utils.ResourceUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
@@ -788,7 +789,7 @@ public class RenderUtils {
      * @return a {@link Tuple} with the mapping "usingExternalData:location:resource"
      */
     public static Tuple<Boolean, String, ResourceLocation> getTextureData(String texture) {
-        ResourceLocation texLocation = new ResourceLocation("");
+        ResourceLocation texLocation = ResourceUtils.getEmptyResource();
         final Tuple<Boolean, String, ResourceLocation> result = new Tuple<>(false, "", texLocation);
         if (!StringUtils.isNullOrEmpty(texture)) {
             texture = texture.trim();
@@ -819,9 +820,9 @@ public class RenderUtils {
 
                 if (texture.contains(":")) {
                     String[] splitInput = texture.split(":", 2);
-                    texLocation = new ResourceLocation(splitInput[0], splitInput[1]);
+                    texLocation = ResourceUtils.getResource(splitInput[0], splitInput[1]);
                 } else {
-                    texLocation = new ResourceLocation(texture);
+                    texLocation = ResourceUtils.getResource(texture);
                 }
             } else {
                 final String formattedConvertedName = texture.replaceFirst("file://", "");

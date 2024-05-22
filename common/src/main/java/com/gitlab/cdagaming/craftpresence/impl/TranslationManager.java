@@ -25,13 +25,13 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.utils.ResourceUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
 
 import java.io.InputStream;
 import java.util.List;
@@ -67,7 +67,7 @@ public record TranslationManager(TranslationUtils instance) implements IResource
         instance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                final List<IResource> resources = CraftPresence.instance.getResourceManager().getAllResources(new ResourceLocation(modId, langPath));
+                final List<IResource> resources = CraftPresence.instance.getResourceManager().getAllResources(ResourceUtils.getResource(modId, langPath));
                 for (IResource resource : resources) {
                     results.add(resource.getInputStream());
                 }

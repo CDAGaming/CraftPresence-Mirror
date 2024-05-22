@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
+import com.gitlab.cdagaming.craftpresence.utils.ResourceUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -326,7 +327,7 @@ public class ScrollableListControl extends GuiSlot {
         final boolean isInBounds = isWithinBounds(mouseXIn, mouseYIn);
         final boolean isHovering = isInBounds && isOverEntry;
 
-        ResourceLocation texture = new ResourceLocation("");
+        ResourceLocation texture = ResourceUtils.getEmptyResource();
         String assetUrl;
 
         if (renderType == RenderType.ServerData) {
