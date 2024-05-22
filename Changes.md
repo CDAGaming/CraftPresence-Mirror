@@ -19,6 +19,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * DiscordIPC (`0.8.7` -> `0.8.9`)
     * Starscript (`0.3.0` -> `0.3.2`)
     * SpotBugs Annotations (`4.8.4` -> `4.8.5`)
+* All versions of the mod are now built using Java 21, rather than being dependent on legacy Java
+    * This allows us to have a consistent API as well as develop under the current modern standards
+    * In versions where a downgrade is needed, this is performed using `JVMDowngrader` to ensure API compatibility
 * Adjusted the way `Dimension` and `Biome` module data is loaded in MC 1.16+
     * These changes are designed to support auto-locating data related to data pack additions
     * These changes also resolve issues where repeated Registry Lookups could cause a crash in both modules
