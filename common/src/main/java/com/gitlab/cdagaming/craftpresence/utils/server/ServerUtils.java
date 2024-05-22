@@ -220,7 +220,7 @@ public class ServerUtils implements ExtendedModule {
         ServerData newServerData;
         try {
             if (CraftPresence.instance.theWorld instanceof WorldClient) {
-                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, ((WorldClient)CraftPresence.instance.theWorld), "sendQueue", "field_1052_A", "A");
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, ((WorldClient)CraftPresence.instance.theWorld), "sendQueue", "field_1052_A", "z");
             }
         } catch (Exception ex) {
             newConnection = null;

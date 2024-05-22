@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
+import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
@@ -230,10 +231,26 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     }
 
     /**
+     * Returns the current Hover state of this control
+     * <p>
+     * 0 if the button is disabled<p>
+     * 1 if the mouse is NOT hovering over this button<p>
+     * 2 if it IS hovering over this button.
+     */
+    protected int getHoverState(boolean hoveredOrFocused) {
+        if (!isControlEnabled()) {
+            return 0;
+        } else if (hoveredOrFocused) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
+    /**
      * Fired when the mouse button is dragged.<p>
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
-    @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
             final int hoverState = getHoverState(isHoveringOrFocusingOver());
@@ -251,33 +268,48 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         }
     }
 
+    public void mouseReleased(int i, int j) {
+    }
+
     /**
      * Returns true if the mouse has been pressed on this control.<p>
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft arg, int mouseX, int mouseY) {
+    public boolean mousePressed(int mouseX, int mouseY) {
         return isOverScreen() && isControlEnabled() && isControlVisible() && isHoveringOver();
     }
 
     @Override
     public int getControlWidth() {
-        return width;
+        return StringUtils.getValidInteger(
+                StringUtils.getField(GuiButton.class, this, "width", "g")
+        ).getSecond();
     }
 
     @Override
     public void setControlWidth(final int width) {
-        this.width = width;
+        StringUtils.updateField(
+                GuiButton.class, this,
+                width,
+                "width", "g"
+        );
     }
 
     @Override
     public int getControlHeight() {
-        return height;
+        return StringUtils.getValidInteger(
+                StringUtils.getField(GuiButton.class, this, "height", "h")
+        ).getSecond();
     }
 
     @Override
     public void setControlHeight(final int height) {
-        this.height = height;
+        StringUtils.updateField(
+                GuiButton.class, this,
+                height,
+                "height", "h"
+        );
     }
 
     @Override
