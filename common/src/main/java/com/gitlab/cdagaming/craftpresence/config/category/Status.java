@@ -28,10 +28,12 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Status extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3055410101315942491L;
     private static final Status DEFAULT = new Status();
     public ModuleData mainMenuData = new ModuleData(
@@ -71,9 +73,7 @@ public class Status extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Status && !equals(target)) {
-            final Status data = (Status) target;
-
+        if (target instanceof Status data && !equals(target)) {
             mainMenuData = new ModuleData(data.mainMenuData);
             loadingData = new ModuleData(data.loadingData);
             lanData = new ModuleData(data.lanData);
@@ -83,18 +83,13 @@ public class Status extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "mainMenuData":
-                return mainMenuData;
-            case "loadingData":
-                return loadingData;
-            case "lanData":
-                return lanData;
-            case "singleplayerData":
-                return singleplayerData;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "mainMenuData" -> mainMenuData;
+            case "loadingData" -> loadingData;
+            case "lanData" -> lanData;
+            case "singleplayerData" -> singleplayerData;
+            default -> null;
+        };
     }
 
     @Override
@@ -127,11 +122,9 @@ public class Status extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Status)) {
+        if (!(obj instanceof Status other)) {
             return false;
         }
-
-        final Status other = (Status) obj;
 
         return Objects.equals(other.mainMenuData, mainMenuData) &&
                 Objects.equals(other.loadingData, loadingData) &&

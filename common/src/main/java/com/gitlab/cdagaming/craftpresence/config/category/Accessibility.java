@@ -31,10 +31,12 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Accessibility extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6804925684173174749L;
     private static final Accessibility DEFAULT = new Accessibility();
     public ColorData tooltipBackground = RenderUtils.DEFAULT_TOOLTIP_BACKGROUND;
@@ -74,8 +76,7 @@ public class Accessibility extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Accessibility && !equals(target)) {
-            final Accessibility data = (Accessibility) target;
+        if (target instanceof Accessibility data && !equals(target)) {
 
             tooltipBackground = new ColorData(data.tooltipBackground);
             tooltipBorder = new ColorData(data.tooltipBorder);
@@ -92,30 +93,19 @@ public class Accessibility extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "tooltipBackground":
-                return tooltipBackground;
-            case "tooltipBorder":
-                return tooltipBorder;
-            case "guiBackground":
-                return guiBackground;
-            case "altGuiBackground":
-                return altGuiBackground;
-            case "languageId":
-                return languageId;
-            case "stripTranslationColors":
-                return stripTranslationColors;
-            case "stripTranslationFormatting":
-                return stripTranslationFormatting;
-            case "stripExtraGuiElements":
-                return stripExtraGuiElements;
-            case "renderTooltips":
-                return renderTooltips;
-            case "configKeyCode":
-                return configKeyCode;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "tooltipBackground" -> tooltipBackground;
+            case "tooltipBorder" -> tooltipBorder;
+            case "guiBackground" -> guiBackground;
+            case "altGuiBackground" -> altGuiBackground;
+            case "languageId" -> languageId;
+            case "stripTranslationColors" -> stripTranslationColors;
+            case "stripTranslationFormatting" -> stripTranslationFormatting;
+            case "stripExtraGuiElements" -> stripExtraGuiElements;
+            case "renderTooltips" -> renderTooltips;
+            case "configKeyCode" -> configKeyCode;
+            default -> null;
+        };
     }
 
     @Override
@@ -166,11 +156,9 @@ public class Accessibility extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Accessibility)) {
+        if (!(obj instanceof Accessibility other)) {
             return false;
         }
-
-        final Accessibility other = (Accessibility) obj;
 
         return Objects.equals(other.tooltipBackground, tooltipBackground) &&
                 Objects.equals(other.tooltipBorder, tooltipBorder) &&

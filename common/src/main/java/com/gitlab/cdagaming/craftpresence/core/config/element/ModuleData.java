@@ -26,10 +26,12 @@ package com.gitlab.cdagaming.craftpresence.core.config.element;
 
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class ModuleData extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = -5846802181463006850L;
     private static final ModuleData DEFAULT = new ModuleData();
 
@@ -67,12 +69,10 @@ public class ModuleData extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof ModuleData && !equals(target)) {
-            final ModuleData data = (ModuleData) target;
-
-            setTextOverride(data.getTextOverride());
-            setIconOverride(data.getIconOverride());
-            setData(data.getData());
+        if (target instanceof ModuleData module && !equals(target)) {
+            setTextOverride(module.getTextOverride());
+            setIconOverride(module.getIconOverride());
+            setData(module.getData());
         }
     }
 
@@ -107,16 +107,12 @@ public class ModuleData extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "textOverride":
-                return textOverride;
-            case "iconOverride":
-                return iconOverride;
-            case "data":
-                return data;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "textOverride" -> textOverride;
+            case "iconOverride" -> iconOverride;
+            case "data" -> data;
+            default -> null;
+        };
     }
 
     @Override
@@ -146,11 +142,9 @@ public class ModuleData extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof ModuleData)) {
+        if (!(obj instanceof ModuleData other)) {
             return false;
         }
-
-        final ModuleData other = (ModuleData) obj;
 
         return Objects.equals(other.textOverride, textOverride) &&
                 Objects.equals(other.iconOverride, iconOverride) &&

@@ -29,11 +29,13 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class Biome extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7528869687150995557L;
     private static final Biome DEFAULT = new Biome();
     public String fallbackBiomeIcon = "unknown";
@@ -64,9 +66,7 @@ public class Biome extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Biome && !equals(target)) {
-            final Biome data = (Biome) target;
-
+        if (target instanceof Biome data && !equals(target)) {
             fallbackBiomeIcon = data.fallbackBiomeIcon;
             biomeData.clear();
             for (Map.Entry<String, ModuleData> entry : data.biomeData.entrySet()) {
@@ -77,14 +77,11 @@ public class Biome extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "fallbackBiomeIcon":
-                return fallbackBiomeIcon;
-            case "biomeData":
-                return biomeData;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "fallbackBiomeIcon" -> fallbackBiomeIcon;
+            case "biomeData" -> biomeData;
+            default -> null;
+        };
     }
 
     @Override
@@ -111,11 +108,9 @@ public class Biome extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Biome)) {
+        if (!(obj instanceof Biome other)) {
             return false;
         }
-
-        final Biome other = (Biome) obj;
 
         return Objects.equals(other.fallbackBiomeIcon, fallbackBiomeIcon) &&
                 Objects.equals(other.biomeData, biomeData);

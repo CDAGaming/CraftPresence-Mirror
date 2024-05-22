@@ -149,7 +149,7 @@ public class FunctionsLib {
         StringUtils.revlist(args);
 
         // Parse, then remove the source entity from arguments, if valid
-        Value source = args.get(0);
+        Value source = args.getFirst();
         String data = null;
         if (source.isString()) {
             data = source.getString();
@@ -158,7 +158,7 @@ public class FunctionsLib {
         if (data == null) {
             ss.error("First argument to parseWith() needs to be a valid String.");
         }
-        args.remove(0);
+        args.removeFirst();
 
         String result;
         // Parse remaining data into an Objects List
@@ -334,7 +334,7 @@ public class FunctionsLib {
         StringUtils.revlist(args);
 
         // Parse, then remove the source entity from arguments, if valid
-        Value source = args.get(0);
+        Value source = args.getFirst();
         Object data = null;
         if (source.isObject()) {
             data = source.getObject();
@@ -343,7 +343,7 @@ public class FunctionsLib {
         if (data == null) {
             ss.error("First argument to getNbt() needs to be a valid Entity or ItemStack object.");
         }
-        args.remove(0);
+        args.removeFirst();
 
         final List<String> path = StringUtils.newArrayList();
         for (Value info : args) {
@@ -378,8 +378,8 @@ public class FunctionsLib {
 
         Value currentArg;
 
-        currentArg = args.get(0);
-        args.remove(0);
+        currentArg = args.getFirst();
+        args.removeFirst();
 
         double value = 0;
         if (currentArg.isNumber()) {
@@ -388,8 +388,8 @@ public class FunctionsLib {
             ss.error("First argument to isWithinValue() needs to be a number.");
         }
 
-        currentArg = args.get(0);
-        args.remove(0);
+        currentArg = args.getFirst();
+        args.removeFirst();
 
         double min = value;
         if (currentArg.isNumber()) {
@@ -398,8 +398,8 @@ public class FunctionsLib {
             ss.error("Second argument to isWithinValue() needs to be a number.");
         }
 
-        currentArg = args.get(0);
-        args.remove(0);
+        currentArg = args.getFirst();
+        args.removeFirst();
 
         double max = min;
         if (currentArg.isNumber()) {
@@ -414,8 +414,8 @@ public class FunctionsLib {
         boolean check_sanity = true;
 
         if (argCount >= 5) {
-            currentArg = args.get(0);
-            args.remove(0);
+            currentArg = args.getFirst();
+            args.removeFirst();
 
             if (currentArg.isBool()) {
                 contains_min = currentArg.getBool();
@@ -423,8 +423,8 @@ public class FunctionsLib {
                 ss.error("Fourth argument to isWithinValue() needs to be a boolean.");
             }
 
-            currentArg = args.get(0);
-            args.remove(0);
+            currentArg = args.getFirst();
+            args.removeFirst();
 
             if (currentArg.isBool()) {
                 contains_max = currentArg.getBool();
@@ -433,8 +433,8 @@ public class FunctionsLib {
             }
 
             if (argCount == 6) {
-                currentArg = args.get(0);
-                args.remove(0);
+                currentArg = args.getFirst();
+                args.removeFirst();
 
                 if (currentArg.isBool()) {
                     check_sanity = currentArg.getBool();
@@ -595,19 +595,19 @@ public class FunctionsLib {
             args.add(ss.pop());
         }
         StringUtils.revlist(args);
-        Value target = args.get(0);
+        Value target = args.getFirst();
 
         // Argument 1: castObject
         Object instance = CraftPresence.CLIENT.fromValue(target);
-        args.remove(0);
-        target = args.get(0);
+        args.removeFirst();
+        target = args.getFirst();
         Class<?> classToAccess = null;
 
         // Argument 2: classToAccess
         if (target.isObject()) {
             Object temp = target.getObject();
-            if (temp instanceof Class<?>) {
-                classToAccess = (Class<?>) temp;
+            if (temp instanceof Class<?> classObj) {
+                classToAccess = classObj;
             } else {
                 classToAccess = temp.getClass();
                 instance = temp;
@@ -617,7 +617,7 @@ public class FunctionsLib {
         } else {
             ss.error("Second argument to cast(), classToAccess, needs to be either a string, object, or class.");
         }
-        args.remove(0); // Remove the classToAccess from parsing
+        args.removeFirst(); // Remove the classToAccess from parsing
 
         Object result = null;
 
@@ -752,7 +752,7 @@ public class FunctionsLib {
             args.add(ss.pop());
         }
         StringUtils.revlist(args);
-        Value target = args.get(0);
+        Value target = args.getFirst();
 
         Class<?> classToAccess = null;
         Object instance = null;
@@ -761,8 +761,8 @@ public class FunctionsLib {
         // Argument 1: classToAccess
         if (target.isObject()) {
             Object temp = target.getObject();
-            if (temp instanceof Class<?>) {
-                classToAccess = (Class<?>) temp;
+            if (temp instanceof Class<?> classObj) {
+                classToAccess = classObj;
             } else {
                 classToAccess = temp.getClass();
                 instance = temp;
@@ -772,13 +772,13 @@ public class FunctionsLib {
         } else {
             ss.error("First argument to getField(), classToAccess, needs to be either a string, object, or class.");
         }
-        args.remove(0); // Remove the classToAccess from parsing
+        args.removeFirst(); // Remove the classToAccess from parsing
 
         // Argument 2 becomes instance, if not already supplied
         if (instance == null) {
-            target = args.get(0);
+            target = args.getFirst();
             instance = CraftPresence.CLIENT.fromValue(target);
-            args.remove(0); // Remove the instance from parsing
+            args.removeFirst(); // Remove the instance from parsing
         }
 
         // Collect Field Names from remaining args
@@ -841,7 +841,7 @@ public class FunctionsLib {
             args.add(ss.pop());
         }
         StringUtils.revlist(args);
-        Value target = args.get(0);
+        Value target = args.getFirst();
 
         Class<?> classToAccess = null;
         Object instance = null;
@@ -850,8 +850,8 @@ public class FunctionsLib {
         // Argument 1: classToAccess
         if (target.isObject()) {
             Object temp = target.getObject();
-            if (temp instanceof Class<?>) {
-                classToAccess = (Class<?>) temp;
+            if (temp instanceof Class<?> classObj) {
+                classToAccess = classObj;
             } else {
                 classToAccess = temp.getClass();
                 instance = temp;
@@ -861,18 +861,18 @@ public class FunctionsLib {
         } else {
             ss.error("First argument to executeMethod(), classToAccess, needs to be either a string, object, or class.");
         }
-        args.remove(0); // Remove the classToAccess from parsing
+        args.removeFirst(); // Remove the classToAccess from parsing
 
         // Argument 2 becomes instance, if not already supplied
         if (instance == null) {
-            target = args.get(0);
+            target = args.getFirst();
             instance = CraftPresence.CLIENT.fromValue(target);
-            args.remove(0); // Remove the instance from parsing
+            args.removeFirst(); // Remove the instance from parsing
         }
 
         // Either the 2nd or 3rd param will be methodName, depending on args
         if (!args.isEmpty()) {
-            target = args.get(0); // Refresh arg table
+            target = args.getFirst(); // Refresh arg table
             if (target.isString()) {
                 final String name = target.getString();
                 if (name.contains(",")) {
@@ -883,7 +883,7 @@ public class FunctionsLib {
             } else {
                 ss.error("Incorrect argument type for executeMethod() param, methodName (needs to be a string).");
             }
-            args.remove(0); // Remove the methodName from parsing
+            args.removeFirst(); // Remove the methodName from parsing
         }
 
         // If the className or methodName is null, error as such
@@ -906,8 +906,8 @@ public class FunctionsLib {
                     Class<?> classObj = null;
                     if (data.isObject()) {
                         Object temp = data.getObject();
-                        if (temp instanceof Class<?>) {
-                            classObj = (Class<?>) temp;
+                        if (temp instanceof Class<?> paramClass) {
+                            classObj = paramClass;
                         }
                     } else if (data.isString()) {
                         classObj = FileUtils.loadClass(data.getString());
@@ -971,8 +971,8 @@ public class FunctionsLib {
     public static Value timeToEpochSecond(Starscript ss, int argCount) {
         if (argCount != 1) ss.error("timeToEpochSecond() requires 1 argument, got %d.", argCount);
         Object a = ss.popObject("Argument to timeToEpochSecond() needs to be an object.");
-        if (a instanceof Instant) {
-            return Value.number(TimeUtils.toEpochSecond((Instant) a));
+        if (a instanceof Instant data) {
+            return Value.number(TimeUtils.toEpochSecond(data));
         } else {
             ss.error("Argument to timeToEpochSecond() needs to be a valid Instant Object.");
         }
@@ -982,8 +982,8 @@ public class FunctionsLib {
     public static Value timeToEpochMilli(Starscript ss, int argCount) {
         if (argCount != 1) ss.error("timeToEpochMilli() requires 1 argument, got %d.", argCount);
         Object a = ss.popObject("Argument to timeToEpochMilli() needs to be an object.");
-        if (a instanceof Instant) {
-            return Value.number(TimeUtils.toEpochMilli((Instant) a));
+        if (a instanceof Instant data) {
+            return Value.number(TimeUtils.toEpochMilli(data));
         } else {
             ss.error("Argument to timeToEpochMilli() needs to be a valid Instant Object.");
         }
@@ -1098,8 +1098,8 @@ public class FunctionsLib {
         }
         String toFormat = ss.popString("Second argument to timeToString() needs to be a string.");
         Object date = ss.popObject("First argument to timeToString() needs to be an object.");
-        if (date instanceof Instant) {
-            return Value.string(TimeUtils.toString((Instant) date, toFormat, toTimeZone));
+        if (date instanceof Instant data) {
+            return Value.string(TimeUtils.toString(data, toFormat, toTimeZone));
         } else {
             ss.error("First Argument to timeToString() needs to be a valid Instant Object.");
         }

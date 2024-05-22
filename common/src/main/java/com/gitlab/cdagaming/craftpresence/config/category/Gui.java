@@ -29,11 +29,13 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class Gui extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = -5871047759131139250L;
     private static final Gui DEFAULT = new Gui();
     public String fallbackGuiIcon = "unknown";
@@ -77,9 +79,7 @@ public class Gui extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Gui && !equals(target)) {
-            final Gui data = (Gui) target;
-
+        if (target instanceof Gui data && !equals(target)) {
             fallbackGuiIcon = data.fallbackGuiIcon;
             guiData.clear();
             for (Map.Entry<String, ModuleData> entry : data.guiData.entrySet()) {
@@ -90,14 +90,11 @@ public class Gui extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "fallbackGuiIcon":
-                return fallbackGuiIcon;
-            case "guiData":
-                return guiData;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "fallbackGuiIcon" -> fallbackGuiIcon;
+            case "guiData" -> guiData;
+            default -> null;
+        };
     }
 
     @Override
@@ -124,11 +121,9 @@ public class Gui extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Gui)) {
+        if (!(obj instanceof Gui other)) {
             return false;
         }
-
-        final Gui other = (Gui) obj;
 
         return Objects.equals(other.fallbackGuiIcon, fallbackGuiIcon) &&
                 Objects.equals(other.guiData, guiData);

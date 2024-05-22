@@ -38,6 +38,7 @@ import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -91,12 +92,12 @@ public class ImageUtils {
                                             final Tuple<Boolean, String, String> base64Data = StringUtils.isBase64(originData.toString());
                                             final byte[] dataSet = base64Data.getFirst() ?
                                                     ImageFrame.decodeBase64(base64Data.getThird(), "UTF-8", false, false) :
-                                                    (originData instanceof byte[] ? (byte[]) originData : StringUtils.getBytes(originData.toString()));
+                                                    (originData instanceof byte[] byteData ? byteData : StringUtils.getBytes(originData.toString()));
                                             streamData = dataSet != null ? new ByteArrayInputStream(dataSet) : null;
                                             isGif = base64Data.getSecond().contains("gif");
                                             break;
                                         case Url:
-                                            streamData = UrlUtils.getURLStream(originData instanceof URL ? (URL) originData : new URL(originData.toString()));
+                                            streamData = UrlUtils.getURLStream(originData instanceof URL url ? url : URI.create(originData.toString()).toURL());
                                             isGif = originData.toString().endsWith(".gif");
                                             break;
                                         default:
@@ -142,7 +143,7 @@ public class ImageUtils {
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final String url) {
         try {
-            return getTextureFromUrl(textureName, new URL(url));
+            return getTextureFromUrl(textureName, URI.create(url).toURL());
         } catch (Exception ex) {
             Constants.LOG.debugError(ex);
             return new ResourceLocation("");
@@ -189,10 +190,10 @@ public class ImageUtils {
      * @return The Resulting Texture Data
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final Object url) {
-        if (url instanceof File) {
-            return getTextureFromUrl(textureName, (File) url);
-        } else if (url instanceof URL) {
-            return getTextureFromUrl(textureName, (URL) url);
+        if (url instanceof File file) {
+            return getTextureFromUrl(textureName, file);
+        } else if (url instanceof URL link) {
+            return getTextureFromUrl(textureName, link);
         } else {
             if (url.toString().toLowerCase().startsWith("http")) {
                 return getTextureFromUrl(textureName, url.toString());

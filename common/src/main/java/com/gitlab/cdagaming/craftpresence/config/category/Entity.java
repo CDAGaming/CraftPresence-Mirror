@@ -29,11 +29,13 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class Entity extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4294690176016925084L;
     private static final Entity DEFAULT = new Entity();
     public String fallbackEntityIcon = "unknown";
@@ -70,9 +72,7 @@ public class Entity extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Entity && !equals(target)) {
-            final Entity data = (Entity) target;
-
+        if (target instanceof Entity data && !equals(target)) {
             fallbackEntityIcon = data.fallbackEntityIcon;
             targetData.clear();
             for (Map.Entry<String, ModuleData> entry : data.targetData.entrySet()) {
@@ -87,16 +87,12 @@ public class Entity extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "fallbackEntityIcon":
-                return fallbackEntityIcon;
-            case "targetData":
-                return targetData;
-            case "ridingData":
-                return ridingData;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "fallbackEntityIcon" -> fallbackEntityIcon;
+            case "targetData" -> targetData;
+            case "ridingData" -> ridingData;
+            default -> null;
+        };
     }
 
     @Override
@@ -126,11 +122,9 @@ public class Entity extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Entity)) {
+        if (!(obj instanceof Entity other)) {
             return false;
         }
-
-        final Entity other = (Entity) obj;
 
         return Objects.equals(other.fallbackEntityIcon, fallbackEntityIcon) &&
                 Objects.equals(other.targetData, targetData) &&

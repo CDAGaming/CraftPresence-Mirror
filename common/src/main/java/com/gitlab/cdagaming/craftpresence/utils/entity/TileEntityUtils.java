@@ -182,14 +182,14 @@ public class TileEntityUtils implements Module {
     public static ItemStack getStackFrom(Object data) {
         ItemStack itemStack = null;
         if (data != null) {
-            if (data instanceof Block) {
-                data = getDefaultInstance((Block) data);
+            if (data instanceof Block block) {
+                data = getDefaultInstance(block);
             }
-            if (data instanceof Item) {
-                data = getDefaultInstance((Item) data);
+            if (data instanceof Item item) {
+                data = getDefaultInstance(item);
             }
-            if (data instanceof ItemStack) {
-                itemStack = (ItemStack) data;
+            if (data instanceof ItemStack stack) {
+                itemStack = stack;
             }
         }
         return itemStack;

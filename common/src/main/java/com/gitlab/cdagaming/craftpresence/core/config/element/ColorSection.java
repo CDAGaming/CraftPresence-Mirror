@@ -68,9 +68,7 @@ public class ColorSection extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof ColorSection && !equals(target)) {
-            final ColorSection data = (ColorSection) target;
-
+        if (target instanceof ColorSection data && !equals(target)) {
             red = data.red;
             green = data.green;
             blue = data.blue;
@@ -85,18 +83,13 @@ public class ColorSection extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "red":
-                return red;
-            case "green":
-                return green;
-            case "blue":
-                return blue;
-            case "alpha":
-                return alpha;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "red" -> red;
+            case "green" -> green;
+            case "blue" -> blue;
+            case "alpha" -> alpha;
+            default -> null;
+        };
     }
 
     @Override
@@ -129,11 +122,9 @@ public class ColorSection extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof ColorSection)) {
+        if (!(obj instanceof ColorSection other)) {
             return false;
         }
-
-        final ColorSection other = (ColorSection) obj;
 
         return Objects.equals(other.red, red) &&
                 Objects.equals(other.green, green) &&

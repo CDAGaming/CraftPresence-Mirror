@@ -37,7 +37,6 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
-@SuppressWarnings("DuplicatedCode")
 public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private final ColorData DEFAULTS, INSTANCE, CURRENT;
     private ColorData storedStart, storedEnd;

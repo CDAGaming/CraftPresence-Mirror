@@ -229,8 +229,7 @@ public class TextDisplayWidget implements DynamicWidget {
     @Override
     public void draw(ExtendedScreen screen) {
         int padding = 0, barWidth = 0;
-        if (screen instanceof ScrollPane) {
-            final ScrollPane pane = ((ScrollPane) screen);
+        if (screen instanceof ScrollPane pane) {
             padding = pane.getPadding();
             barWidth = pane.getScrollBarWidth();
         }
@@ -295,8 +294,7 @@ public class TextDisplayWidget implements DynamicWidget {
      */
     public List<String> refreshContent(final ExtendedScreen screen) {
         int padding = 0, barWidth = 0;
-        if (screen instanceof ScrollPane) {
-            final ScrollPane pane = ((ScrollPane) screen);
+        if (screen instanceof ScrollPane pane) {
             padding = pane.getPadding();
             barWidth = pane.getScrollBarWidth();
         }

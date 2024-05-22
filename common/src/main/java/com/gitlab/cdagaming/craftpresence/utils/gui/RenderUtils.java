@@ -746,8 +746,8 @@ public class RenderUtils {
         if (rectangle != null) {
             final int scale = computeGuiScale(mc);
             final int displayHeight = mc.displayHeight;
-            final int renderWidth = Math.max(0, rectangle.getWidth() * scale);
-            final int renderHeight = Math.max(0, rectangle.getHeight() * scale);
+            final int renderWidth = Math.max(0, rectangle.width() * scale);
+            final int renderHeight = Math.max(0, rectangle.height() * scale);
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
             GL11.glScissor(
                     rectangle.getLeft() * scale,

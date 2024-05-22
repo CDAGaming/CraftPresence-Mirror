@@ -71,10 +71,10 @@ public class ModIPCListener implements IPCListener {
             CraftPresence.CLIENT.STATUS = DiscordStatus.JoinRequest;
             CraftPresence.CLIENT.REQUESTER_USER = user;
 
-            if (!(CraftPresence.instance.currentScreen instanceof CommandsGui)) {
+            if (!(CraftPresence.instance.currentScreen instanceof CommandsGui commandScreen)) {
                 RenderUtils.openScreen(CraftPresence.instance, new CommandsGui("request"), CraftPresence.instance.currentScreen);
             } else {
-                ((CommandsGui) CraftPresence.instance.currentScreen).executeCommand("request");
+                commandScreen.executeCommand("request");
             }
         }
     }

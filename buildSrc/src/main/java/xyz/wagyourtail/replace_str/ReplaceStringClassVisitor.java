@@ -31,8 +31,8 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
         return new MethodVisitor(Opcodes.ASM9, super.visitMethod(access, name, descriptor, signature, exceptions)) {
             @Override
             public void visitLdcInsn(Object value) {
-                if (value instanceof String) {
-                    super.visitLdcInsn(replaceMatching((String) value, replaceTokens));
+                if (value instanceof String data) {
+                    super.visitLdcInsn(replaceMatching(data, replaceTokens));
                     return;
                 }
                 super.visitLdcInsn(value);
@@ -67,8 +67,8 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
 
     @Override
     public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-        if (value instanceof String) {
-            return new FieldVisitor(api, super.visitField(access, name, descriptor, signature, replaceMatching((String) value, replaceTokens))) {
+        if (value instanceof String data) {
+            return new FieldVisitor(api, super.visitField(access, name, descriptor, signature, replaceMatching(data, replaceTokens))) {
                 @Override
                 public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
                     return new ReplaceStringAnnotationVisitor(super.visitAnnotation(descriptor, visible), replaceTokens);
@@ -108,8 +108,8 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
 
         @Override
         public void visit(String name, Object value) {
-            if (value instanceof String) {
-                super.visit(name, replaceMatching((String) value, replaceTokens));
+            if (value instanceof String data) {
+                super.visit(name, replaceMatching(data, replaceTokens));
                 return;
             }
             super.visit(name, value);

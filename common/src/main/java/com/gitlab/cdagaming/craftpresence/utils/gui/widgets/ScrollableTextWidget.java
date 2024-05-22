@@ -128,8 +128,7 @@ public class ScrollableTextWidget extends TextDisplayWidget {
     @Override
     public void draw(ExtendedScreen screen) {
         int padding = 0, barWidth = 0;
-        if (screen instanceof ScrollPane) {
-            final ScrollPane pane = ((ScrollPane) screen);
+        if (screen instanceof ScrollPane pane) {
             padding = pane.getPadding();
             barWidth = pane.getScrollBarWidth();
         }

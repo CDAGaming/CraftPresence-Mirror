@@ -28,11 +28,13 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class PresenceData extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = -7560029890988753870L;
     private static final PresenceData DEFAULT = new PresenceData();
 
@@ -68,9 +70,7 @@ public class PresenceData extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof PresenceData && !equals(target)) {
-            final PresenceData data = (PresenceData) target;
-
+        if (target instanceof PresenceData data && !equals(target)) {
             enabled = data.enabled;
             useAsMain = data.useAsMain;
             setDetails(data.details);
@@ -87,32 +87,20 @@ public class PresenceData extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "enabled":
-                return enabled;
-            case "useAsMain":
-                return useAsMain;
-            case "details":
-                return details;
-            case "gameState":
-                return gameState;
-            case "largeImageKey":
-                return largeImageKey;
-            case "largeImageText":
-                return largeImageText;
-            case "smallImageKey":
-                return smallImageKey;
-            case "smallImageText":
-                return smallImageText;
-            case "startTimestamp":
-                return startTimestamp;
-            case "endTimestamp":
-                return endTimestamp;
-            case "buttons":
-                return buttons;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "enabled" -> enabled;
+            case "useAsMain" -> useAsMain;
+            case "details" -> details;
+            case "gameState" -> gameState;
+            case "largeImageKey" -> largeImageKey;
+            case "largeImageText" -> largeImageText;
+            case "smallImageKey" -> smallImageKey;
+            case "smallImageText" -> smallImageText;
+            case "startTimestamp" -> startTimestamp;
+            case "endTimestamp" -> endTimestamp;
+            case "buttons" -> buttons;
+            default -> null;
+        };
     }
 
     @Override
@@ -217,11 +205,9 @@ public class PresenceData extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof PresenceData)) {
+        if (!(obj instanceof PresenceData other)) {
             return false;
         }
-
-        final PresenceData other = (PresenceData) obj;
 
         return Objects.equals(other.details, details) &&
                 Objects.equals(other.gameState, gameState) &&

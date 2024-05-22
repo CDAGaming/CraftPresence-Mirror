@@ -26,10 +26,12 @@ package com.gitlab.cdagaming.craftpresence.core.config.element;
 
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Button extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = 636718807992670138L;
     private static final Button DEFAULT = new Button();
 
@@ -61,9 +63,7 @@ public class Button extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Button && !equals(target)) {
-            final Button data = (Button) target;
-
+        if (target instanceof Button data && !equals(target)) {
             label = data.label;
             url = data.url;
         }
@@ -71,14 +71,11 @@ public class Button extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "label":
-                return label;
-            case "url":
-                return url;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "label" -> label;
+            case "url" -> url;
+            default -> null;
+        };
     }
 
     @Override
@@ -105,11 +102,9 @@ public class Button extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Button)) {
+        if (!(obj instanceof Button other)) {
             return false;
         }
-
-        final Button other = (Button) obj;
 
         return Objects.equals(other.label, label) &&
                 Objects.equals(other.url, url);

@@ -362,11 +362,11 @@ public class Legacy2Modern implements DataMigrator {
                             if (boolData.getFirst()) {
                                 newValue = boolData.getSecond();
                             }
-                        } else if (currentValue instanceof Map<?, ?>) {
+                        } else if (currentValue instanceof Map<?, ?> map) {
                             final String convertedString = StringUtils.getMatch(ARRAY_PATTERN, originalValue.toString());
                             final String[] oldArray;
 
-                            final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
+                            final Map<Object, Object> newData = StringUtils.newHashMap(map);
                             final Class<?> expectedSecondaryClass = newData.get("default").getClass();
 
                             if (!StringUtils.isNullOrEmpty(convertedString) &&

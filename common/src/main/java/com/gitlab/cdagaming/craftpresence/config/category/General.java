@@ -28,10 +28,12 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class General extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1796294737844339558L;
     private static final General DEFAULT = new General();
     public boolean detectATLauncherInstance = true;
@@ -71,9 +73,7 @@ public class General extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof General && !equals(target)) {
-            final General data = (General) target;
-
+        if (target instanceof General data && !equals(target)) {
             detectATLauncherInstance = data.detectATLauncherInstance;
             detectCurseManifest = data.detectCurseManifest;
             detectMultiMCManifest = data.detectMultiMCManifest;
@@ -95,42 +95,25 @@ public class General extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "detectATLauncherInstance":
-                return detectATLauncherInstance;
-            case "detectCurseManifest":
-                return detectCurseManifest;
-            case "detectMultiMCManifest":
-                return detectMultiMCManifest;
-            case "detectMCUpdaterInstance":
-                return detectMCUpdaterInstance;
-            case "detectTechnicPack":
-                return detectTechnicPack;
-            case "detectModrinthPack":
-                return detectModrinthPack;
-            case "detectBiomeData":
-                return detectBiomeData;
-            case "detectDimensionData":
-                return detectDimensionData;
-            case "detectWorldData":
-                return detectWorldData;
-            case "clientId":
-                return clientId;
-            case "defaultIcon":
-                return defaultIcon;
-            case "enableJoinRequests":
-                return enableJoinRequests;
-            case "partyPrivacyLevel":
-                return partyPrivacyLevel;
-            case "preferredClientLevel":
-                return preferredClientLevel;
-            case "resetTimeOnInit":
-                return resetTimeOnInit;
-            case "autoRegister":
-                return autoRegister;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "detectATLauncherInstance" -> detectATLauncherInstance;
+            case "detectCurseManifest" -> detectCurseManifest;
+            case "detectMultiMCManifest" -> detectMultiMCManifest;
+            case "detectMCUpdaterInstance" -> detectMCUpdaterInstance;
+            case "detectTechnicPack" -> detectTechnicPack;
+            case "detectModrinthPack" -> detectModrinthPack;
+            case "detectBiomeData" -> detectBiomeData;
+            case "detectDimensionData" -> detectDimensionData;
+            case "detectWorldData" -> detectWorldData;
+            case "clientId" -> clientId;
+            case "defaultIcon" -> defaultIcon;
+            case "enableJoinRequests" -> enableJoinRequests;
+            case "partyPrivacyLevel" -> partyPrivacyLevel;
+            case "preferredClientLevel" -> preferredClientLevel;
+            case "resetTimeOnInit" -> resetTimeOnInit;
+            case "autoRegister" -> autoRegister;
+            default -> null;
+        };
     }
 
     @Override
@@ -199,11 +182,9 @@ public class General extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof General)) {
+        if (!(obj instanceof General other)) {
             return false;
         }
-
-        final General other = (General) obj;
 
         return Objects.equals(other.detectATLauncherInstance, detectATLauncherInstance) &&
                 Objects.equals(other.detectCurseManifest, detectCurseManifest) &&

@@ -35,7 +35,6 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
-@SuppressWarnings("DuplicatedCode")
 public class MainGui extends ConfigurationGui<Config> {
     private final Config INSTANCE, DEFAULTS;
     private ExtendedButtonControl biomeSet,

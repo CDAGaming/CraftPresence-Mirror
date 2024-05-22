@@ -29,11 +29,13 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class Display extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = -3302764075156017733L;
     private static final Display DEFAULT = new Display();
     public PresenceData presenceData = new PresenceData()
@@ -80,9 +82,7 @@ public class Display extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Display && !equals(target)) {
-            final Display data = (Display) target;
-
+        if (target instanceof Display data && !equals(target)) {
             presenceData = new PresenceData(data.presenceData);
             dynamicIcons.clear();
             dynamicIcons.putAll(data.dynamicIcons);
@@ -93,16 +93,12 @@ public class Display extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "presenceData":
-                return presenceData;
-            case "dynamicIcons":
-                return dynamicIcons;
-            case "dynamicVariables":
-                return dynamicVariables;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "presenceData" -> presenceData;
+            case "dynamicIcons" -> dynamicIcons;
+            case "dynamicVariables" -> dynamicVariables;
+            default -> null;
+        };
     }
 
     @Override
@@ -132,11 +128,9 @@ public class Display extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Display)) {
+        if (!(obj instanceof Display other)) {
             return false;
         }
-
-        final Display other = (Display) obj;
 
         return Objects.equals(other.presenceData, presenceData) &&
                 Objects.equals(other.dynamicIcons, dynamicIcons) &&

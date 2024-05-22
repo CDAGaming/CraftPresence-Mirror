@@ -40,7 +40,6 @@ import javax.annotation.Nonnull;
  *
  * @author CDAGaming
  */
-@SuppressWarnings("DuplicatedCode")
 public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
     /**
      * Optional Arguments used for functions within the Mod, if any

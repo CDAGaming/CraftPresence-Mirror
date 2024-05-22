@@ -28,11 +28,13 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class Advanced extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6035241954568785784L;
     private static final Advanced DEFAULT = new Advanced();
     public boolean enablePerGui = false;
@@ -75,9 +77,7 @@ public class Advanced extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Advanced && !equals(target)) {
-            final Advanced data = (Advanced) target;
-
+        if (target instanceof Advanced data && !equals(target)) {
             enablePerGui = data.enablePerGui;
             enablePerItem = data.enablePerItem;
             enablePerEntity = data.enablePerEntity;
@@ -101,44 +101,26 @@ public class Advanced extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "enablePerGui":
-                return enablePerGui;
-            case "enablePerItem":
-                return enablePerItem;
-            case "enablePerEntity":
-                return enablePerEntity;
-            case "formatWords":
-                return formatWords;
-            case "debugMode":
-                return debugMode;
-            case "verboseMode":
-                return verboseMode;
-            case "refreshRate":
-                return refreshRate;
-            case "allowPlaceholderPreviews":
-                return allowPlaceholderPreviews;
-            case "guiSettings":
-                return guiSettings;
-            case "itemMessages":
-                return itemMessages;
-            case "entitySettings":
-                return entitySettings;
-            case "allowEndpointIcons":
-                return allowEndpointIcons;
-            case "serverIconEndpoint":
-                return serverIconEndpoint;
-            case "playerSkinEndpoint":
-                return playerSkinEndpoint;
-            case "allowDuplicatePackets":
-                return allowDuplicatePackets;
-            case "maxConnectionAttempts":
-                return maxConnectionAttempts;
-            case "enableClassGraph":
-                return enableClassGraph;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "enablePerGui" -> enablePerGui;
+            case "enablePerItem" -> enablePerItem;
+            case "enablePerEntity" -> enablePerEntity;
+            case "formatWords" -> formatWords;
+            case "debugMode" -> debugMode;
+            case "verboseMode" -> verboseMode;
+            case "refreshRate" -> refreshRate;
+            case "allowPlaceholderPreviews" -> allowPlaceholderPreviews;
+            case "guiSettings" -> guiSettings;
+            case "itemMessages" -> itemMessages;
+            case "entitySettings" -> entitySettings;
+            case "allowEndpointIcons" -> allowEndpointIcons;
+            case "serverIconEndpoint" -> serverIconEndpoint;
+            case "playerSkinEndpoint" -> playerSkinEndpoint;
+            case "allowDuplicatePackets" -> allowDuplicatePackets;
+            case "maxConnectionAttempts" -> maxConnectionAttempts;
+            case "enableClassGraph" -> enableClassGraph;
+            default -> null;
+        };
     }
 
     @Override
@@ -210,11 +192,9 @@ public class Advanced extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Advanced)) {
+        if (!(obj instanceof Advanced other)) {
             return false;
         }
-
-        final Advanced other = (Advanced) obj;
 
         return Objects.equals(other.enablePerGui, enablePerGui) &&
                 Objects.equals(other.enablePerItem, enablePerItem) &&

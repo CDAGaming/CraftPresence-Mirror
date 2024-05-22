@@ -39,14 +39,10 @@ import java.util.List;
 /**
  * Utilities for Hooking a {@link TranslationUtils} instance to the Game Resource Manager
  *
+ * @param instance The currently linked {@link TranslationUtils} instance
  * @author CDAGaming
  */
-public class TranslationManager implements IResourceManagerReloadListener {
-    /**
-     * The currently linked {@link TranslationUtils} instance
-     */
-    private final TranslationUtils instance;
-
+public record TranslationManager(TranslationUtils instance) implements IResourceManagerReloadListener {
     /**
      * Initializes a new manager for the {@link TranslationUtils} instance
      *
@@ -56,7 +52,7 @@ public class TranslationManager implements IResourceManagerReloadListener {
         this.instance = instance;
         ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
 
-        getInstance().setLanguageSupplier((fallback) -> {
+        instance().setLanguageSupplier((fallback) -> {
             final String result;
             if (CraftPresence.instance.gameSettings != null) {
                 result = CraftPresence.instance.gameSettings.language;
@@ -68,7 +64,7 @@ public class TranslationManager implements IResourceManagerReloadListener {
             return result;
         });
 
-        getInstance().setResourceSupplier((modId, assetsPath, langPath) -> {
+        instance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
                 final List<IResource> resources = CraftPresence.instance.getResourceManager().getAllResources(new ResourceLocation(modId, langPath));
@@ -86,7 +82,8 @@ public class TranslationManager implements IResourceManagerReloadListener {
      *
      * @return the currently attached {@link TranslationUtils} instance
      */
-    public TranslationUtils getInstance() {
+    @Override
+    public TranslationUtils instance() {
         return instance;
     }
 
@@ -96,11 +93,11 @@ public class TranslationManager implements IResourceManagerReloadListener {
      * Consists of Synchronizing Data, and Updating Translation Data as needed
      */
     public void onTick() {
-        getInstance().onTick();
+        instance().onTick();
     }
 
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
-        getInstance().syncTranslations();
+        instance().syncTranslations();
     }
 }

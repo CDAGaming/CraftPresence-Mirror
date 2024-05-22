@@ -32,29 +32,17 @@ import javax.annotation.Nullable;
  * and to compute the intersection with another {@link ScreenRectangle}, which can be used
  * in various graphical computations, such as scissor tests in OpenGL.
  *
+ * @param posX   The X coordinate of the rectangle.
+ * @param posY   The Y coordinate of the rectangle.
+ * @param width  The width of the rectangle.
+ * @param height The height of the rectangle.
  * @author CDAGaming
  */
-public class ScreenRectangle {
+public record ScreenRectangle(int posX, int posY, int width, int height) {
     /**
      * A constant representing an empty {@link ScreenRectangle} with no area (width and height are 0).
      */
     private static final ScreenRectangle EMPTY = new ScreenRectangle(0, 0, 0, 0);
-    /**
-     * The X coordinate of the rectangle.
-     */
-    private final int posX;
-    /**
-     * The Y coordinate of the rectangle.
-     */
-    private final int posY;
-    /**
-     * The width of the rectangle.
-     */
-    private final int width;
-    /**
-     * The height of the rectangle.
-     */
-    private final int height;
 
     /**
      * Constructs a new {@code ScreenRectangle} with the specified position and dimensions.
@@ -64,11 +52,7 @@ public class ScreenRectangle {
      * @param width  The width of the rectangle.
      * @param height The height of the rectangle.
      */
-    public ScreenRectangle(final int posX, final int posY, final int width, final int height) {
-        this.posX = posX;
-        this.posY = posY;
-        this.width = width;
-        this.height = height;
+    public ScreenRectangle {
     }
 
     /**
@@ -102,7 +86,8 @@ public class ScreenRectangle {
      *
      * @return The X coordinate of the rectangle.
      */
-    public int getPosX() {
+    @Override
+    public int posX() {
         return posX;
     }
 
@@ -111,7 +96,8 @@ public class ScreenRectangle {
      *
      * @return The Y coordinate of the rectangle.
      */
-    public int getPosY() {
+    @Override
+    public int posY() {
         return posY;
     }
 
@@ -120,7 +106,8 @@ public class ScreenRectangle {
      *
      * @return The width of the rectangle.
      */
-    public int getWidth() {
+    @Override
+    public int width() {
         return width;
     }
 
@@ -129,7 +116,8 @@ public class ScreenRectangle {
      *
      * @return The height of the rectangle.
      */
-    public int getHeight() {
+    @Override
+    public int height() {
         return height;
     }
 
@@ -139,7 +127,7 @@ public class ScreenRectangle {
      * @return The top-most coordinate of the rectangle.
      */
     public int getTop() {
-        return getPosY();
+        return posY();
     }
 
     /**
@@ -148,7 +136,7 @@ public class ScreenRectangle {
      * @return The bottom-most coordinate of the rectangle.
      */
     public int getBottom() {
-        return getPosY() + getHeight();
+        return posY() + height();
     }
 
     /**
@@ -157,7 +145,7 @@ public class ScreenRectangle {
      * @return The left-most coordinate of the rectangle.
      */
     public int getLeft() {
-        return getPosX();
+        return posX();
     }
 
     /**
@@ -166,6 +154,6 @@ public class ScreenRectangle {
      * @return The right-most coordinate of the rectangle.
      */
     public int getRight() {
-        return getPosX() + getWidth();
+        return posX() + width();
     }
 }

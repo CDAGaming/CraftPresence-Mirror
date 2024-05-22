@@ -36,7 +36,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
-@SuppressWarnings("DuplicatedCode")
 public class GeneralSettingsGui extends ConfigurationGui<General> {
     private final General INSTANCE, DEFAULTS;
     private ExtendedButtonControl partyPrivacyLevelButton, preferredClientLevelButton;

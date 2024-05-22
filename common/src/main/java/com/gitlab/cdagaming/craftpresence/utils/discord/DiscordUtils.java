@@ -1016,19 +1016,14 @@ public class DiscordUtils {
      * @return the {@link Value} representation
      */
     public Value toValue(final Object data, final boolean plain) {
-        if (data instanceof Number) {
-            return Value.number(((Number) data).doubleValue());
-        } else if (data instanceof Boolean) {
-            return Value.bool((Boolean) data);
-        } else if (data instanceof ValueMap) {
-            return Value.map((ValueMap) data);
-        } else if (data instanceof SFunction) {
-            return Value.function((SFunction) data);
-        } else if (data instanceof String) {
-            return compileData(data.toString(), plain).get();
-        } else {
-            return data != null ? Value.object(data) : Value.null_();
-        }
+        return switch (data) {
+            case Number number -> Value.number(number.doubleValue());
+            case Boolean b -> Value.bool(b);
+            case ValueMap valueMap -> Value.map(valueMap);
+            case SFunction sFunction -> Value.function(sFunction);
+            case String s -> compileData(s, plain).get();
+            case null, default -> data != null ? Value.object(data) : Value.null_();
+        };
     }
 
     /**
@@ -1075,34 +1070,17 @@ public class DiscordUtils {
      * @return {@link Boolean#TRUE} if both the type and its condition is satisfied
      */
     public boolean matchesType(final String type, final Value data) {
-        switch (type) {
-            case "function":
-                return data.isFunction();
-            case "object":
-                return data.isObject();
-            case "bool":
-            case "boolean":
-                return data.isBool();
-            case "map":
-                return data.isMap();
-            case "int":
-            case "integer":
-            case "float":
-            case "double":
-            case "number":
-                return data.isNumber();
-            case "text":
-            case "string":
-                return data.isString();
-            case "empty":
-            case "null":
-                return data.isNull();
-            case "any":
-            case "all":
-                return true;
-            default:
-                return false;
-        }
+        return switch (type) {
+            case "function" -> data.isFunction();
+            case "object" -> data.isObject();
+            case "bool", "boolean" -> data.isBool();
+            case "map" -> data.isMap();
+            case "int", "integer", "float", "double", "number" -> data.isNumber();
+            case "text", "string" -> data.isString();
+            case "empty", "null" -> data.isNull();
+            case "any", "all" -> true;
+            default -> false;
+        };
     }
 
     /**
@@ -1187,7 +1165,7 @@ public class DiscordUtils {
             }
         }
 
-        if (placeholderString.length() == 0) {
+        if (placeholderString.isEmpty()) {
             placeholderString.append("\\n - N/A");
         }
         resultString.append(placeholderString);

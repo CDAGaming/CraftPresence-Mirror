@@ -87,8 +87,13 @@ subprojects {
         archivesName = "mod_name"()
     }
 
-    val targetVersion = "java_version"()?.let { JavaVersion.toVersion(it) }!!
+    val targetVersion = "source_java_version"()?.let { JavaVersion.toVersion(it) }!!
     val targetVersionInt = Integer.parseInt(targetVersion.majorVersion)
+
+    val buildVersion = "build_java_version"()?.let { JavaVersion.toVersion(it) }!!
+    val buildVersionInt = Integer.parseInt(buildVersion.majorVersion)
+
+    val shouldDowngrade = targetVersionInt > buildVersionInt
 
     val sourceSets = extensions.getByType<SourceSetContainer>()
 
@@ -252,15 +257,18 @@ subprojects {
                 devFallbackNamespace("intermediary")
             }
 
-            if ("isLegacyASM"()!!.toBoolean()) {
+            if (shouldDowngrade) {
+                val apiVersion = if (buildVersion.isJava7) JavaVersion.VERSION_1_8 else buildVersion
                 runs.config("client") {
                     val downgradeClient = tasks.create("downgradeClient", DowngradeFiles::class.java) {
-                        downgradeTo = JavaVersion.VERSION_1_7
+                        downgradeTo = buildVersion
                         toDowngrade = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
                         classpath = project.files()
-                        debugSkipStubs.set(listOf(52))
+                        if (buildVersion.isJava7) {
+                            debugSkipStubs.set(listOf(52))
+                        }
                     }
-                    launchClasspath = downgradeClient.outputCollection + files(jvmdg.getDowngradedApi(JavaVersion.VERSION_1_8))
+                    launchClasspath = downgradeClient.outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
                     runFirst.add(downgradeClient)
                 }
             }
@@ -335,7 +343,7 @@ subprojects {
     }
 
     afterEvaluate {
-        if ("isLegacyASM"()!!.toBoolean() && path != ":common") {
+        if (shouldDowngrade && path != ":common") {
             val remapJar = tasks.getByName<RemapJarTask>("remapJar") {
                 destinationDirectory = temporaryDir
             }
@@ -344,14 +352,18 @@ subprojects {
             tasks.downgradeJar {
                 dependsOn(remapJar)
                 inputFile = remapJar.archiveFile.get().asFile
-                downgradeTo = JavaVersion.VERSION_1_7
-                debugSkipStubs.set(listOf(52))
+                downgradeTo = buildVersion
+                if (buildVersion.isJava7) {
+                    debugSkipStubs.set(listOf(52))
+                }
                 destinationDirectory = temporaryDir
             }
 
-            jvmdg.shadeDebugSkipStubs.add(52)
+            if (buildVersion.isJava7) {
+                jvmdg.shadeDebugSkipStubs.add(52)
+            }
             tasks.shadeDowngradedApi {
-                downgradeTo = JavaVersion.VERSION_1_7
+                downgradeTo = buildVersion
                 archiveClassifier = remapJar.archiveClassifier
             }
         }

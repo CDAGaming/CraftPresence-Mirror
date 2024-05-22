@@ -29,11 +29,13 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class Dimension extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = 2779211521643527744L;
     private static final Dimension DEFAULT = new Dimension();
     public String fallbackDimensionIcon = "unknown";
@@ -64,9 +66,7 @@ public class Dimension extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Dimension && !equals(target)) {
-            final Dimension data = (Dimension) target;
-
+        if (target instanceof Dimension data && !equals(target)) {
             fallbackDimensionIcon = data.fallbackDimensionIcon;
             dimensionData.clear();
             for (Map.Entry<String, ModuleData> entry : data.dimensionData.entrySet()) {
@@ -77,14 +77,11 @@ public class Dimension extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "fallbackDimensionIcon":
-                return fallbackDimensionIcon;
-            case "dimensionData":
-                return dimensionData;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "fallbackDimensionIcon" -> fallbackDimensionIcon;
+            case "dimensionData" -> dimensionData;
+            default -> null;
+        };
     }
 
     @Override
@@ -111,11 +108,9 @@ public class Dimension extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Dimension)) {
+        if (!(obj instanceof Dimension other)) {
             return false;
         }
-
-        final Dimension other = (Dimension) obj;
 
         return Objects.equals(other.fallbackDimensionIcon, fallbackDimensionIcon) &&
                 Objects.equals(other.dimensionData, dimensionData);

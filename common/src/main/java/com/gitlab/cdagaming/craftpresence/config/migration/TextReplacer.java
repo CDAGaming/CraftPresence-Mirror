@@ -110,15 +110,14 @@ public class TextReplacer implements DataMigrator {
                         final List<String> paths = StringUtils.newArrayList(path);
                         paths.add(entry.getKey());
                         processElement(instance, entry.getValue(), paths.toArray(new String[0]));
-                    } else if (currentValue instanceof String) {
-                        final String originalResult = (String) currentValue;
+                    } else if (currentValue instanceof String originalResult) {
                         final String processResult = processReplacement(originalResult);
                         if (!processResult.equals(originalResult)) {
                             Constants.LOG.debugInfo("Modified property \"%s\": \"%s\" => \"%s\"", rawName, originalResult, processResult);
                             instance.setProperty((Object) processResult, pathData);
                         }
-                    } else if (currentValue instanceof Map<?, ?>) {
-                        final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
+                    } else if (currentValue instanceof Map<?, ?> map) {
+                        final Map<Object, Object> newData = StringUtils.newHashMap(map);
                         if (entry.getValue().isJsonObject()) {
                             for (Object dataEntry : newData.keySet()) {
                                 final List<String> paths = StringUtils.newArrayList(path);

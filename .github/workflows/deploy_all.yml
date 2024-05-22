@@ -23,12 +23,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Set up Build JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-
       - name: Set up Gradle JDK
         uses: actions/setup-java@v4
         with:

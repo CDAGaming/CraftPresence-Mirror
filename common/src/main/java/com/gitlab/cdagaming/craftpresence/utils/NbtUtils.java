@@ -69,10 +69,10 @@ public class NbtUtils {
      * @return the resulting NBT Tag, or null if not found
      */
     public static NBTBase getNbt(final Object data, final String... path) {
-        if (data instanceof Entity) {
-            return getNbt((Entity) data, path);
-        } else if (data instanceof ItemStack) {
-            return getNbt((ItemStack) data, path);
+        if (data instanceof Entity entity) {
+            return getNbt(entity, path);
+        } else if (data instanceof ItemStack stack) {
+            return getNbt(stack, path);
         }
         return null;
     }
@@ -116,11 +116,11 @@ public class NbtUtils {
         } else {
             NBTBase currentTag = root;
             for (int i = 0; i < path.length; i++) {
-                if (currentTag instanceof NBTTagCompound) {
-                    currentTag = ((NBTTagCompound) currentTag).getTag(path[i]);
-                } else if (currentTag instanceof NBTTagList) {
+                if (currentTag instanceof NBTTagCompound compound) {
+                    currentTag = compound.getTag(path[i]);
+                } else if (currentTag instanceof NBTTagList list) {
                     int index = Integer.parseInt(path[i]);
-                    currentTag = ((NBTTagList) currentTag).get(index);
+                    currentTag = list.get(index);
                 } else {
                     if (i == path.length - 1) {
                         break;

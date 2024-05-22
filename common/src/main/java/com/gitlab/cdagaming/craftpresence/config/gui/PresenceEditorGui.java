@@ -41,7 +41,6 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.Consumer;
 
-@SuppressWarnings("DuplicatedCode")
 public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
     private final PresenceData DEFAULTS, INSTANCE, CURRENT;
     private final boolean isDefaultModule;

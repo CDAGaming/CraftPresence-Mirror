@@ -97,9 +97,7 @@ public class ColorData extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof ColorData && !equals(target)) {
-            final ColorData data = (ColorData) target;
-
+        if (target instanceof ColorData data && !equals(target)) {
             setStartColor(data.start);
             setEndColor(data.end);
             setTexLocation(data.texLocation);
@@ -168,16 +166,12 @@ public class ColorData extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "start":
-                return start;
-            case "end":
-                return end;
-            case "texLocation":
-                return texLocation;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "start" -> start;
+            case "end" -> end;
+            case "texLocation" -> texLocation;
+            default -> null;
+        };
     }
 
     @Override
@@ -204,11 +198,9 @@ public class ColorData extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof ColorData)) {
+        if (!(obj instanceof ColorData other)) {
             return false;
         }
-
-        final ColorData other = (ColorData) obj;
 
         return Objects.equals(other.start, start) &&
                 Objects.equals(other.end, end) &&

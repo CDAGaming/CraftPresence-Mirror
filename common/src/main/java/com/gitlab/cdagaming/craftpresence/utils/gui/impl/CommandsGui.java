@@ -496,7 +496,7 @@ public class CommandsGui extends ExtendedScreen {
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
                                 commandString = commandString.replace(
-                                        filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.get(0)
+                                        filteredCommandArgs[filteredCommandArgs.length - 1], tabCompletions.getFirst()
                                 );
                                 commandInput.setControlMessage(commandString);
                             }

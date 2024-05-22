@@ -48,6 +48,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
@@ -57,6 +58,7 @@ import java.util.Objects;
 
 public final class Config extends Module implements Serializable {
     // Constants
+    @Serial
     private static final long serialVersionUID = -4853238501768086595L;
     private static final int MC_VERSION = ModUtils.MCProtocolID;
     private static final int VERSION = 6;
@@ -209,8 +211,7 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Config && !equals(target)) {
-            final Config data = (Config) target;
+        if (target instanceof Config data && !equals(target)) {
             hasChanged = data.hasChanged;
             isNewFile = data.isNewFile;
 
@@ -614,10 +615,10 @@ public final class Config extends Module implements Serializable {
         for (int i = 0; i < path.length; i++) {
             if (!StringUtils.isNullOrEmpty(path[i])) {
                 name = path[i];
-                if (instance instanceof Map<?, ?>) {
-                    result = StringUtils.newHashMap((Map<?, ?>) instance).get(name);
-                } else if (instance instanceof Module) {
-                    result = ((Module) instance).getProperty(name);
+                if (instance instanceof Map<?, ?> map) {
+                    result = StringUtils.newHashMap(map).get(name);
+                } else if (instance instanceof Module module) {
+                    result = module.getProperty(name);
                 } else {
                     result = StringUtils.getField(classObj, instance, name);
                 }
@@ -640,59 +641,44 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public Object getProperty(final String name) {
-        switch (name) {
-            case "hasChanged":
-                return hasChanged;
-            case "isNewFile":
-                return isNewFile;
-            case "_README":
-                return _README;
-            case "_SOURCE":
-                return _SOURCE;
-            case "_schemaVersion":
-                return _schemaVersion;
-            case "_lastMCVersionId":
-                return _lastMCVersionId;
-            case "generalSettings":
-                return generalSettings;
-            case "biomeSettings":
-                return biomeSettings;
-            case "dimensionSettings":
-                return dimensionSettings;
-            case "serverSettings":
-                return serverSettings;
-            case "statusMessages":
-                return statusMessages;
-            case "advancedSettings":
-                return advancedSettings;
-            case "accessibilitySettings":
-                return accessibilitySettings;
-            case "displaySettings":
-                return displaySettings;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "hasChanged" -> hasChanged;
+            case "isNewFile" -> isNewFile;
+            case "_README" -> _README;
+            case "_SOURCE" -> _SOURCE;
+            case "_schemaVersion" -> _schemaVersion;
+            case "_lastMCVersionId" -> _lastMCVersionId;
+            case "generalSettings" -> generalSettings;
+            case "biomeSettings" -> biomeSettings;
+            case "dimensionSettings" -> dimensionSettings;
+            case "serverSettings" -> serverSettings;
+            case "statusMessages" -> statusMessages;
+            case "advancedSettings" -> advancedSettings;
+            case "accessibilitySettings" -> accessibilitySettings;
+            case "displaySettings" -> displaySettings;
+            default -> null;
+        };
     }
 
     public void setProperty(final Object value, final String... path) {
         final Pair<Object, Tuple<Class<?>, Object, String>> propertyData = lookupProperty(path);
         if (propertyData.getFirst() != null) {
             final Tuple<Class<?>, Object, String> fieldData = propertyData.getSecond();
-            if (fieldData.getSecond() instanceof Map<?, ?>) {
+            if (fieldData.getSecond() instanceof Map<?, ?> map) {
                 final String[] parentPath = Arrays.copyOf(path, path.length - 1);
                 final Tuple<Class<?>, Object, String> parentData = lookupProperty(parentPath).getSecond();
 
-                Map<Object, Object> data = StringUtils.newHashMap((Map<?, ?>) fieldData.getSecond());
+                final Map<Object, Object> data = StringUtils.newHashMap(map);
                 data.put(fieldData.getThird(), value);
 
-                if (parentData.getSecond() instanceof Module) {
-                    ((Module) parentData.getSecond()).setProperty(parentData.getThird(), data);
+                if (parentData.getSecond() instanceof Module module) {
+                    module.setProperty(parentData.getThird(), data);
                 } else {
                     StringUtils.updateField(parentData.getFirst(), parentData.getSecond(), data, parentData.getThird());
                 }
             } else {
-                if (fieldData.getSecond() instanceof Module) {
-                    ((Module) fieldData.getSecond()).setProperty(fieldData.getThird(), value);
+                if (fieldData.getSecond() instanceof Module module) {
+                    module.setProperty(fieldData.getThird(), value);
                 } else {
                     StringUtils.updateField(fieldData.getFirst(), fieldData.getSecond(), value, fieldData.getThird());
                 }
@@ -764,11 +750,9 @@ public final class Config extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Config)) {
+        if (!(obj instanceof Config other)) {
             return false;
         }
-
-        final Config other = (Config) obj;
 
         return Objects.equals(other.hasChanged, hasChanged) &&
                 Objects.equals(other.isNewFile, isNewFile) &&

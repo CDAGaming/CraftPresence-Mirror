@@ -29,11 +29,13 @@ import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
 public class Server extends Module implements Serializable {
+    @Serial
     private static final long serialVersionUID = -3687928791637101400L;
     private static final Server DEFAULT = new Server();
     public String fallbackServerIcon = "default";
@@ -66,9 +68,7 @@ public class Server extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Server && !equals(target)) {
-            final Server data = (Server) target;
-
+        if (target instanceof Server data && !equals(target)) {
             fallbackServerIcon = data.fallbackServerIcon;
             fallbackServerName = data.fallbackServerName;
             fallbackServerMotd = data.fallbackServerMotd;
@@ -81,18 +81,13 @@ public class Server extends Module implements Serializable {
 
     @Override
     public Object getProperty(String name) {
-        switch (name) {
-            case "fallbackServerIcon":
-                return fallbackServerIcon;
-            case "fallbackServerName":
-                return fallbackServerName;
-            case "fallbackServerMotd":
-                return fallbackServerMotd;
-            case "serverData":
-                return serverData;
-            default:
-                return null;
-        }
+        return switch (name) {
+            case "fallbackServerIcon" -> fallbackServerIcon;
+            case "fallbackServerName" -> fallbackServerName;
+            case "fallbackServerMotd" -> fallbackServerMotd;
+            case "serverData" -> serverData;
+            default -> null;
+        };
     }
 
     @Override
@@ -125,11 +120,9 @@ public class Server extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Server)) {
+        if (!(obj instanceof Server other)) {
             return false;
         }
-
-        final Server other = (Server) obj;
 
         return Objects.equals(other.fallbackServerIcon, fallbackServerIcon) &&
                 Objects.equals(other.fallbackServerName, fallbackServerName) &&

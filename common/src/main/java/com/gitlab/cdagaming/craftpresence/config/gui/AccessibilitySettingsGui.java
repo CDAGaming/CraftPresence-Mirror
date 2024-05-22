@@ -233,7 +233,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     protected void syncRenderStates() {
         super.syncRenderStates();
 
-        //noinspection ConstantConditions
         stripTranslationFormattingButton.setControlEnabled(!ModUtils.IS_TEXT_FORMATTING_BLOCKED);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
