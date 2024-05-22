@@ -262,22 +262,22 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
 
     @Override
     public int getControlWidth() {
-        return width;
+        return xCoord;
     }
 
     @Override
     public void setControlWidth(final int width) {
-        this.width = width;
+        this.xCoord = width;
     }
 
     @Override
     public int getControlHeight() {
-        return height;
+        return yCoord;
     }
 
     @Override
     public void setControlHeight(final int height) {
-        this.height = height;
+        this.yCoord = height;
     }
 
     @Override
