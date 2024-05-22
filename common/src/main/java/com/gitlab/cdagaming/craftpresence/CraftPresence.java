@@ -178,7 +178,13 @@ public class CraftPresence {
     private void scheduleTick() {
         if (!Constants.IS_GAME_CLOSING) {
             Constants.getThreadPool().scheduleAtFixedRate(
-                    this::clientTick,
+                    () -> {
+                        try {
+                            this.clientTick();
+                        } catch (Throwable ex) {
+                            Constants.LOG.error(ex);
+                        }
+                    },
                     0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
             );
         }
