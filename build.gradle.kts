@@ -100,6 +100,7 @@ subprojects {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         // ModLoader Mavens
         maven("https://maven.neoforged.net/releases") {
