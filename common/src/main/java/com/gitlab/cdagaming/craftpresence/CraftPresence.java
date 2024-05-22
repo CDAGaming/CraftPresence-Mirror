@@ -206,7 +206,7 @@ public class CraftPresence {
                 session = instance.session;
                 player = instance.thePlayer;
 
-                username = session.username;
+                username = session.playerName;
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {

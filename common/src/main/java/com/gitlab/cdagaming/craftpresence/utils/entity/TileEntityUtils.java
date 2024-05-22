@@ -197,7 +197,7 @@ public class TileEntityUtils implements Module {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
+                return itemStack.itemDamage < -32768 || itemStack.itemDamage > 65535;
             }
         } else {
             return true;
@@ -236,7 +236,7 @@ public class TileEntityUtils implements Module {
         String result = "";
         if (!isEmpty(itemStack)) {
             result = StringUtils.getOrDefault(
-                    StringTranslate.getInstance().translateNamedKey(itemStack.getItem().getItemName())
+                    StringTranslate.func_20162_a().func_20161_b(itemStack.getItem().func_20009_a())
             );
         }
 
