@@ -383,6 +383,11 @@ public class CommandUtils {
         );
     }
 
+    /**
+     * Synchronize Data for Setting up ClassGraph functions in {@link FileUtils}
+     *
+     * @param postLaunch Whether this function is being run after initial launch
+     */
     public static void setupClassScan(final boolean postLaunch) {
         final boolean oldState = FileUtils.isClassGraphEnabled();
         final boolean newState = CraftPresence.CONFIG.advancedSettings.enableClassGraph;
