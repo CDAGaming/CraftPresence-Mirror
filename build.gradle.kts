@@ -88,19 +88,19 @@ subprojects {
         archivesName = "mod_name"()
     }
 
-    val targetVersion = "source_java_version"()?.let { JavaVersion.toVersion(it) }!!
-    val targetVersionInt = Integer.parseInt(targetVersion.majorVersion)
+    val sourceVersion = "source_java_version"()?.let { JavaVersion.toVersion(it) }!!
+    val sourceVersionInt = Integer.parseInt(sourceVersion.majorVersion)
 
     val buildVersion = "build_java_version"()?.let { JavaVersion.toVersion(it) }!!
     val buildVersionInt = Integer.parseInt(buildVersion.majorVersion)
 
-    val shouldDowngrade = targetVersionInt > buildVersionInt
+    val shouldDowngrade = sourceVersionInt > buildVersionInt
 
     val sourceSets = extensions.getByType<SourceSetContainer>()
 
     extensions.getByType<JavaPluginExtension>().apply {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(targetVersionInt))
+            languageVersion.set(JavaLanguageVersion.of(sourceVersionInt))
         }
         withSourcesJar()
     }
@@ -294,8 +294,8 @@ subprojects {
 
         // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
         // We"ll use that if it"s available, but otherwise we"ll use the older option.
-        if (targetVersion.isJava9Compatible) {
-            options.release.set(targetVersionInt)
+        if (sourceVersion.isJava9Compatible) {
+            options.release.set(sourceVersionInt)
         }
     }
 
