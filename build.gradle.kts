@@ -26,10 +26,11 @@ operator fun String.invoke(): String? {
 
 val extMcVersion = if ("display_version"()!!.isNotEmpty()) "display_version"() else "mc_version"()
 val extVersionLabel = "${if ("versionLabel"().equals("release", ignoreCase = true)) "" else "versionLabel"()}"
+val extModId = "${"mod_name"()}".lowercase()
 
 val extVersionInfoLabel = if (extVersionLabel.isEmpty()) "" else "-$extVersionLabel"
 val extBaseVersionLabel = ("versionId"() + extVersionInfoLabel.replace(Regex("\\s"), ".")).lowercase()
-val extClassPath = "${rootProject.group}".replace(".", "/") + "/${"mod_name"()}".lowercase()
+val extClassPath = "${rootProject.group}".replace(".", "/") + "/$extModId"
 
 val extVersionFormat = "$extBaseVersionLabel+$extMcVersion"
 val extFileFormat = "${"mod_name"()}-$extVersionFormat"
@@ -364,6 +365,7 @@ subprojects {
             }
             tasks.shadeDowngradedApi {
                 downgradeTo = buildVersion
+                shadePath = "$extModId/jvmdg/api"
                 archiveClassifier = remapJar.archiveClassifier
             }
         }
