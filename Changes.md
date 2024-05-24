@@ -11,7 +11,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Unimined (`1.2.3` -> `1.2.6`)
-    * JVMDowngrader (`local` -> `0.4.3`)
+    * JVMDowngrader (`local` -> `0.5.0`)
     * ModPublisher (`2.1.1` -> `2.1.2`)
     * Fabric Loader (`0.15.10` -> `0.15.11`)
     * Lenni Reflect (`1.3.2` -> `1.3.4`)
