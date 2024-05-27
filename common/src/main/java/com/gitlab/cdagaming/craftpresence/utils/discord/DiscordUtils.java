@@ -317,8 +317,11 @@ public class DiscordUtils {
             connectThreadActive = false;
         } catch (Exception ex) {
             if (ex.getClass() != NoDiscordClientException.class) {
+                final String messagePrefix = Constants.TRANSLATOR.translate("gui.config.message.editor.message");
+                final String verbosePrefix = Constants.TRANSLATOR.translate("craftpresence.logger.error.verbose");
+
                 Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.connect"));
-                Constants.LOG.debugError(ex);
+                Constants.LOG.printStackTrace(ex, messagePrefix, verbosePrefix);
 
                 // Mark as Closed if we experience an actual Exception
                 STATUS = DiscordStatus.Closed;
