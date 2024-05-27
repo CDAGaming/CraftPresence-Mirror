@@ -246,7 +246,7 @@ public class DiscordAssetUtils {
         try {
             DiscordAsset[] values = ASSET_LIST.values().toArray(new DiscordAsset[0]);
             return values[OSUtils.RANDOM.nextInt(values.length)];
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.invalid.icon.empty"));
             Constants.LOG.debugError(ex);
             return null;
@@ -338,7 +338,7 @@ public class DiscordAssetUtils {
                 syncCustomAssets();
             }
             return assets;
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.assets.load"));
             Constants.LOG.debugError(ex);
             return null;

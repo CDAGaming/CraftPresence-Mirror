@@ -585,7 +585,7 @@ public class CommandsGui extends ExtendedScreen {
                 // Create Data Directory if non-existent
                 try {
                     FileUtils.assertFileExists(dataDir);
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     Constants.LOG.debugError(ex);
                     hasError = true;
                 }

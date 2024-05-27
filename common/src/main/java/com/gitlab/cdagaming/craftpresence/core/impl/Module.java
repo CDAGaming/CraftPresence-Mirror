@@ -138,6 +138,15 @@ public interface Module {
     }
 
     /**
+     * Display the specified module exception
+     *
+     * @param ex The {@link Throwable} exception to display
+     */
+    default void printException(final Throwable ex) {
+        Constants.LOG.debugError(ex);
+    }
+
+    /**
      * Scans for applicable data related to this Module, within a new Thread.
      */
     default void scanConfigData() {
@@ -145,7 +154,7 @@ public interface Module {
             try {
                 this.getConfigData();
             } catch (Throwable ex) {
-                Constants.LOG.debugError(ex);
+                printException(ex);
             }
         }).start();
     }
@@ -158,7 +167,7 @@ public interface Module {
             try {
                 this.getInternalData();
             } catch (Throwable ex) {
-                Constants.LOG.debugError(ex);
+                printException(ex);
             }
         }).start();
     }

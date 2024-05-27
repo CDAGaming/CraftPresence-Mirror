@@ -139,7 +139,7 @@ public class ImageFrame {
     public static byte[] decodeBase64(final String input, final String encoding, final boolean useDecodingMethod, final boolean repeatCycle) {
         try {
             return Base64.getDecoder().decode(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             Constants.LOG.debugError(ex);
 
             if (!repeatCycle) {

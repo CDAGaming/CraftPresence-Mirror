@@ -1611,7 +1611,7 @@ public class DiscordUtils {
         if (isAvailable()) {
             try {
                 ipcInstance.close();
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 Constants.LOG.debugError(ex);
             }
 

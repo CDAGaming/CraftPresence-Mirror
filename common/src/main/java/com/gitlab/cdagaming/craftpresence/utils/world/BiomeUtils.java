@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.utils.world;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.Config;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.FileUtils;
@@ -240,7 +239,7 @@ public class BiomeUtils implements ExtendedModule {
                             }
                         }
                     } catch (Throwable ex) {
-                        Constants.LOG.debugError(ex);
+                        printException(ex);
                     }
                 }
             }

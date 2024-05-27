@@ -110,7 +110,7 @@ public final class Config extends Module implements Serializable {
             config = FileUtils.getJsonData(getConfigFile(), Config.class,
                     FileUtils.Modifiers.DISABLE_ESCAPES, FileUtils.Modifiers.PRETTY_PRINT);
             rawJson = FileUtils.getJsonData(getConfigFile(), JsonElement.class);
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             if (ex.getClass() != FileNotFoundException.class && ex.getClass() != NoSuchFileException.class) {
                 Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.save"));
                 Constants.LOG.debugError(ex);

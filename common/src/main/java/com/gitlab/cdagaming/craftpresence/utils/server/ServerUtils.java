@@ -424,8 +424,8 @@ public class ServerUtils implements ExtendedModule {
                 CraftPresence.instance.loadWorld(null);
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
-        } catch (Exception ex) {
-            Constants.LOG.debugError(ex);
+        } catch (Throwable ex) {
+            printException(ex);
         }
     }
 
@@ -630,8 +630,8 @@ public class ServerUtils implements ExtendedModule {
                     }
                 }
             }
-        } catch (Exception ex) {
-            Constants.LOG.debugError(ex);
+        } catch (Throwable ex) {
+            printException(ex);
         }
     }
 

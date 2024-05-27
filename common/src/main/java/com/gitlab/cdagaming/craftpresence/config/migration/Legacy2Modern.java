@@ -335,7 +335,7 @@ public class Legacy2Modern implements DataMigrator {
     public Config apply(Config instance, JsonElement rawJson, Object... args) {
         try (Reader configReader = new InputStreamReader(Files.newInputStream(configFile.toPath()), Charset.forName(encoding))) {
             properties.load(configReader);
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.save"));
             Constants.LOG.debugError(ex);
         } finally {

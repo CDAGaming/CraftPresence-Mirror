@@ -112,7 +112,7 @@ public class ImageUtils {
                                             for (ImageFrame frame : frames) {
                                                 try {
                                                     bufferData.getSecond().add(frame);
-                                                } catch (Exception ex) {
+                                                } catch (Throwable ex) {
                                                     Constants.LOG.debugError(ex);
                                                 }
                                             }
@@ -122,12 +122,12 @@ public class ImageUtils {
                                         cachedImages.get(request.getFirst()).setSecond(bufferData);
                                         cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
                                     }
-                                } catch (Exception ex) {
+                                } catch (Throwable ex) {
                                     Constants.LOG.debugError(ex);
                                 }
                             }
                         }
-                    } catch (Exception ex) {
+                    } catch (Throwable ex) {
                         Constants.LOG.debugError(ex);
                     }
                 }
@@ -144,7 +144,7 @@ public class ImageUtils {
     public static ResourceLocation getTextureFromUrl(final String textureName, final String url) {
         try {
             return getTextureFromUrl(textureName, URI.create(url).toURL());
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             Constants.LOG.debugError(ex);
             return ResourceUtils.getEmptyResource();
         }
@@ -160,7 +160,7 @@ public class ImageUtils {
     public static ResourceLocation getTextureFromUrl(final String textureName, final URL url) {
         try {
             return getTextureFromUrl(textureName, new Pair<>(InputType.Url, url));
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             Constants.LOG.debugError(ex);
             return ResourceUtils.getEmptyResource();
         }
@@ -176,7 +176,7 @@ public class ImageUtils {
     public static ResourceLocation getTextureFromUrl(final String textureName, final File url) {
         try {
             return getTextureFromUrl(textureName, new Pair<>(InputType.FileData, url));
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             Constants.LOG.debugError(ex);
             return ResourceUtils.getEmptyResource();
         }
@@ -223,7 +223,7 @@ public class ImageUtils {
                 cachedImages.put(textureName, new Tuple<>(stream, new Pair<>(0, StringUtils.newArrayList()), null));
                 try {
                     urlRequests.put(new Pair<>(textureName, stream));
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     Constants.LOG.debugError(ex);
                 }
             }
@@ -262,7 +262,7 @@ public class ImageUtils {
                         resources.add(cachedTexture);
                     }
                     return cachedTexture;
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     Constants.LOG.debugError(ex);
                     return ResourceUtils.getEmptyResource();
                 }
