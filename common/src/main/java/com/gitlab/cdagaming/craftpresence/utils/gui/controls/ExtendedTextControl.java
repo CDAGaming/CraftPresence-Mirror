@@ -197,7 +197,7 @@ public class ExtendedTextControl extends EditBox implements DynamicWidget {
      * @param focused the new focus state for the control
      */
     public void setControlFocused(final boolean focused) {
-        this.setFocus(focused);
+        this.setFocused(focused);
     }
 
     /**
