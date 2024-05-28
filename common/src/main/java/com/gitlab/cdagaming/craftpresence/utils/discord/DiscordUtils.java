@@ -1142,15 +1142,11 @@ public class DiscordUtils {
      */
     public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, Supplier<Value>> args) {
         final StringBuilder resultString = new StringBuilder(
-                Constants.TRANSLATOR.translate(
-                        String.format("%s.placeholders.notes", Constants.MOD_ID)
-                )
+                Constants.TRANSLATOR.translate(Constants.MOD_ID + ".placeholders.notes")
         );
-        resultString.append("\\n\\n").append(
-                Constants.TRANSLATOR.translate(
-                        String.format("%s.placeholders.title", Constants.MOD_ID)
-                )
-        );
+        resultString.append("\\n\\n")
+                .append(Constants.TRANSLATOR.translate(Constants.MOD_ID + ".placeholders.title"));
+
         if (!formats.isEmpty()) {
             resultString.append(" (").append(String.join(",", formats)).append(")");
         }
@@ -1187,10 +1183,7 @@ public class DiscordUtils {
      * @return the parsable string, or null if not found
      */
     public String generateArgumentMessage(final String placeholderName, final Supplier<Value> suppliedInfo, final boolean requireDesc, final boolean includeName, final boolean addExtraData, final String prefix) {
-        final String placeholderTranslation = String.format("%s.placeholders.%s.description",
-                Constants.MOD_ID,
-                placeholderName
-        );
+        final String placeholderTranslation = Constants.MOD_ID + ".placeholders." + placeholderName + ".description";
         final boolean hasDescription = Constants.TRANSLATOR.hasTranslation(placeholderTranslation);
 
         if (requireDesc && !hasDescription) {
@@ -1199,41 +1192,37 @@ public class DiscordUtils {
 
         final StringBuilder placeholderString = new StringBuilder();
 
-        final String placeholderUsage = String.format("%s.placeholders.%s.usage",
-                Constants.MOD_ID,
-                placeholderName
-        );
+        final String placeholderUsage = Constants.MOD_ID + ".placeholders." + placeholderName + ".usage";
         String start = prefix;
 
         if (includeName) {
             String placeholderDescription = "";
-            String placeholderFormat = " - %s";
+            String placeholderFormat = " - ";
 
             if (hasDescription) {
                 placeholderDescription = Constants.TRANSLATOR.translate(placeholderTranslation);
-                placeholderFormat = " - %s = %s";
+                placeholderFormat = " - " + placeholderName + " = " + placeholderDescription;
+            } else {
+                placeholderFormat += placeholderName;
             }
 
-            placeholderString.append(
-                    String.format(placeholderFormat,
-                            placeholderName,
-                            placeholderDescription
-                    )
-            );
+            placeholderString.append(placeholderFormat);
             start = "\\n" + prefix;
         } else if (hasDescription) {
-            placeholderString.append(String.format("%s \"%s\"",
-                    start + Constants.TRANSLATOR.translate("gui.config.message.editor.description"),
-                    Constants.TRANSLATOR.translate(placeholderTranslation)
-            ));
+            placeholderString.append(start)
+                    .append(Constants.TRANSLATOR.translate("gui.config.message.editor.description"))
+                    .append(" \"")
+                    .append(Constants.TRANSLATOR.translate(placeholderTranslation))
+                    .append("\"");
             start = "\\n" + prefix;
         }
 
         if (Constants.TRANSLATOR.hasTranslation(placeholderUsage)) {
-            placeholderString.append(String.format("%s \"%s\"",
-                    start + Constants.TRANSLATOR.translate("gui.config.message.editor.usage"),
-                    Constants.TRANSLATOR.translate(placeholderUsage)
-            ));
+            placeholderString.append(start)
+                    .append(Constants.TRANSLATOR.translate("gui.config.message.editor.usage"))
+                    .append(" \"")
+                    .append(Constants.TRANSLATOR.translate(placeholderUsage))
+                    .append("\"");
             start = "\\n" + prefix;
         }
 
@@ -1241,10 +1230,11 @@ public class DiscordUtils {
             final Value rawValue = suppliedInfo.get();
             final String tagValue = rawValue.toString();
             if (!rawValue.isNull() && !rawValue.isFunction() && !StringUtils.isNullOrEmpty(tagValue)) {
-                placeholderString.append(String.format("%s \"%s\"",
-                        start + Constants.TRANSLATOR.translate("gui.config.message.editor.preview"),
-                        (tagValue.length() >= 128) ? "<...>" : tagValue
-                ));
+                placeholderString.append(start)
+                        .append(Constants.TRANSLATOR.translate("gui.config.message.editor.preview"))
+                        .append(" \"")
+                        .append(tagValue.length() >= 128 ? "<...>" : tagValue)
+                        .append("\"");
             }
         }
         return placeholderString.toString();
