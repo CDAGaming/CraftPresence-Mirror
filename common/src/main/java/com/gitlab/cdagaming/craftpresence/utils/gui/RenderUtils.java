@@ -1133,6 +1133,17 @@ public class RenderUtils {
     }
 
     /**
+     * Get the Width of a Character from the FontRenderer
+     *
+     * @param fontRenderer The Font Renderer Instance
+     * @param string       The character to interpret
+     * @return the character's width from the font renderer
+     */
+    public static int getCharWidth(final FontRenderer fontRenderer, final char string) {
+        return fontRenderer.getCharWidth(string);
+    }
+
+    /**
      * Get the Current Font Height for this Screen
      *
      * @param fontRenderer The Font Renderer Instance
@@ -1334,8 +1345,7 @@ public class RenderUtils {
         int currentIndex = -1;
 
         for (boolean flag = false; currentLine < stringLength; ++currentLine) {
-            char currentCharacter = stringEntry.charAt(currentLine);
-            String stringOfCharacter = String.valueOf(currentCharacter);
+            final char currentCharacter = stringEntry.charAt(currentLine);
             switch (currentCharacter) {
                 case '\n':
                     --currentLine;
@@ -1343,14 +1353,14 @@ public class RenderUtils {
                 case ' ':
                     currentIndex = currentLine;
                 default:
-                    charWidth += getStringWidth(fontRenderer, stringOfCharacter);
+                    charWidth += getCharWidth(fontRenderer, currentCharacter);
                     if (flag) {
                         ++charWidth;
                     }
                     break;
                 case StringUtils.COLOR_CHAR:
                     if (currentLine < stringLength - 1) {
-                        char code = stringEntry.charAt(++currentLine);
+                        final char code = stringEntry.charAt(++currentLine);
                         if (code == 'l' || code == 'L') {
                             flag = true;
                         } else if (code == 'r' || code == 'R' || StringUtils.isFormatColor(code)) {
