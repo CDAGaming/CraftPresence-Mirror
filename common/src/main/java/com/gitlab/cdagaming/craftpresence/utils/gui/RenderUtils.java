@@ -911,7 +911,7 @@ public class RenderUtils {
                 final List<String> wrappedTextLines = StringUtils.newArrayList();
                 int wrappedTooltipWidth = 0;
                 for (int i = 0; i < textLines.size(); i++) {
-                    final List<String> wrappedLine = StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, textLines.get(i), tooltipTextWidth), true);
+                    final List<String> wrappedLine = listFormattedStringToWidth(fontRenderer, textLines.get(i), tooltipTextWidth);
                     if (i == 0) {
                         titleLinesCount = wrappedLine.size();
                     }
@@ -1139,7 +1139,7 @@ public class RenderUtils {
      * @param string       The character to interpret
      * @return the character's width from the font renderer
      */
-    public static int getCharWidth(final FontRenderer fontRenderer, final char string) {
+    private static int getCharWidth(final FontRenderer fontRenderer, final char string) {
         return fontRenderer.getCharWidth(string);
     }
 
@@ -1316,7 +1316,7 @@ public class RenderUtils {
      * @param wrapWidth    The target width per line, to wrap the input around
      * @return The converted and wrapped version of the original input
      */
-    public static String wrapFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
+    private static String wrapFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
         final int stringSizeToWidth = sizeStringToWidth(fontRenderer, stringInput, wrapWidth);
 
         if (stringInput.length() <= stringSizeToWidth) {
@@ -1338,7 +1338,7 @@ public class RenderUtils {
      * @param wrapWidth    The target width to wrap within
      * @return The expected wrapped width the String should be
      */
-    public static int sizeStringToWidth(final FontRenderer fontRenderer, final String stringEntry, final int wrapWidth) {
+    private static int sizeStringToWidth(final FontRenderer fontRenderer, final String stringEntry, final int wrapWidth) {
         final int stringLength = stringEntry.length();
         int charWidth = 0;
         int currentLine = 0;
