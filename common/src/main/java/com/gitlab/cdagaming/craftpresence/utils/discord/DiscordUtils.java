@@ -446,13 +446,14 @@ public class DiscordUtils {
     /**
      * Interpret the processed {@link Script} from parsing the specified args, and compile it
      *
-     * @param data        The data or expression to be parsed
-     * @param showLogging Whether to display logging for this function
-     * @param output      If specified, attach the decompiled info to this {@link Appendable}
-     * @param transforms  Any additional expression transformations, to be done before compiling
+     * @param data          The data or expression to be parsed
+     * @param showLogging   Whether to display logging for this function
+     * @param verbosePrefix The logging prefix to use, if showLogging is false
+     * @param output        If specified, attach the decompiled info to this {@link Appendable}
+     * @param transforms    Any additional expression transformations, to be done before compiling
      * @return the processed output
      */
-    public Supplier<Value> getCompileResult(final String data, final boolean showLogging, final Appendable output, Expr.Visitor... transforms) {
+    public Supplier<Value> getCompileResult(final String data, final boolean showLogging, final String verbosePrefix, final Appendable output, Expr.Visitor... transforms) {
         Parser.Result result = null;
         try {
             result = Parser.parse(data);
@@ -461,7 +462,6 @@ public class DiscordUtils {
 
         final String originalPrefix = Constants.TRANSLATOR.translate("gui.config.message.editor.original");
         final String messagePrefix = Constants.TRANSLATOR.translate("gui.config.message.editor.message");
-        final String verbosePrefix = Constants.TRANSLATOR.translate("craftpresence.logger.error.verbose");
         if (result == null || result.hasErrors()) {
             if (result != null) {
                 Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.parser"));
@@ -516,7 +516,7 @@ public class DiscordUtils {
      * @return the processed output
      */
     public Supplier<Value> getCompileResult(final String data, final Appendable output, Expr.Visitor... transforms) {
-        return getCompileResult(data, Constants.LOG.isDebugMode(), output, transforms);
+        return getCompileResult(data, Constants.LOG.isDebugMode(), Constants.TRANSLATOR.translate("craftpresence.logger.error.verbose"), output, transforms);
     }
 
     /**

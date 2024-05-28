@@ -281,7 +281,7 @@ public class CommandsGui extends ExtendedScreen {
                             final String contents = matcher.group(1);
                             final StringBuilder out = new StringBuilder();
 
-                            final String value = CraftPresence.CLIENT.getCompileResult(contents, true, out)
+                            final String value = CraftPresence.CLIENT.getCompileResult(contents, true, null, out)
                                     .get().toString();
                             final int length = StringUtils.getBytes(value, "UTF-8").length;
 
