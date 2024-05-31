@@ -63,6 +63,7 @@ import org.meteordev.starscript.value.ValueMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -85,7 +86,7 @@ public class DiscordUtils {
     /**
      * When this is not empty, {@link DiscordUtils#buildRichPresence(PresenceData)} will use the first applicable data entry instead of the generic data
      */
-    private final Map<String, Supplier<PresenceData>> forcedData = StringUtils.newTreeMap();
+    private final Map<String, Supplier<PresenceData>> forcedData = StringUtils.newConcurrentMap();
     /**
      * The Current User, tied to the Rich Presence
      */
@@ -1405,20 +1406,9 @@ public class DiscordUtils {
             connectThreadActive = true;
         }
 
-        if (isConnected()) {
-            boolean allowed = ALLOW_DUPLICATE_PACKETS;
-            if (!allowed) {
-                allowed = (currentPresence == null && presence != null) ||
-                        (presence == null && currentPresence != null) ||
-                        (presence != null &&
-                                !presence.toJson().toString().equals(currentPresence.toJson().toString())
-                        );
-            }
-
-            if (allowed) {
-                ipcInstance.sendRichPresence(presence);
-                currentPresence = presence;
-            }
+        if (isConnected() && (ALLOW_DUPLICATE_PACKETS || !Objects.equals(presence, currentPresence))) {
+            ipcInstance.sendRichPresence(presence);
+            currentPresence = presence;
         }
     }
 
@@ -1678,13 +1668,11 @@ public class DiscordUtils {
      * @return the currently used instance of {@link PresenceData}
      */
     public PresenceData getPresenceData() {
-        synchronized (forcedData) {
-            if (!forcedData.isEmpty()) {
-                for (Supplier<PresenceData> data : forcedData.values()) {
-                    final PresenceData presenceInfo = data.get();
-                    if (presenceInfo != null && presenceInfo.enabled && presenceInfo.useAsMain) {
-                        return presenceInfo;
-                    }
+        if (!forcedData.isEmpty()) {
+            for (Supplier<PresenceData> data : forcedData.values()) {
+                final PresenceData presenceInfo = data.get();
+                if (presenceInfo != null && presenceInfo.enabled && presenceInfo.useAsMain) {
+                    return presenceInfo;
                 }
             }
         }
