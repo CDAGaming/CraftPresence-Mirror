@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.4.0 (06/04/2024)
+## v2.4.0 (06/13/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.3.9...release%2Fv2.4.0)_
@@ -63,6 +63,12 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Fixes placeholder functionality for Forge 1.13+
 * (Backend) Improved performance for various placeholder argument options as well as compiling data
     * These changes should conform better towards how Starscript was meant to be used
+* (Breaking) Overhauled the `Override` system for Placeholder Arguments
+    * `overrides.` placeholders have been removed, with overrides now applied directly to the placeholder
+      when `useAsMain` is false and such override data exists
+    * Empty Parts of the `Presence Editor` are no longer ignored if `useAsMain` was false
+    * For `useAsMain` mode, the `forcedData` iteration has been adjusted to now use the first non-null entry, rather
+      than the last
 
 ### Fixes
 
@@ -116,11 +122,6 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This additionally improves the performance of `Config#handleVerification`
     * This fix primarily effects `Module#getProperty` and `Module#setProperty` usage to be static-defined rather than
       relying on reflection
-* Fixed an issue where `overrides.` placeholders could still be added, even if there was no override `PresenceData`
-  defined
-* Fixed an issue where empty parts of the `Presence Editor` could be ignored if `useAsMain` was false
-    * This change may affect configs relying on this for `overrides.` placeholders, please check and adjust your
-      settings
 * Fixed an issue where `entitySettings#ridingData` was being incorrectly read
     * The `entity.riding.message` and `entity.riding.icon` placeholders should work properly again
 * Resolved an issue where parts of the mod may show up un-localized when using a different language
