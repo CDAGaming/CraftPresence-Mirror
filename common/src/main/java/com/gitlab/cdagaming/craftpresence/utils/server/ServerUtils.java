@@ -539,7 +539,7 @@ public class ServerUtils implements ExtendedModule {
                 resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
                 currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
             }
-            return getResult(CraftPresence.CLIENT.imageOf("server.icon", true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), resultData);
+            return getResult(CraftPresence.CLIENT.imageOf(true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), resultData);
         });
         CraftPresence.CLIENT.addForcedData("server", () -> {
             if (!isInUse()) return null;

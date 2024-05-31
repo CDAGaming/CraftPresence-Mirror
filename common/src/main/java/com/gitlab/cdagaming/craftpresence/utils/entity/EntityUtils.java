@@ -299,7 +299,7 @@ public class EntityUtils implements ExtendedModule {
 
                     final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_TARGET_NAME;
                     final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-                    return getResult(CraftPresence.CLIENT.imageOf("entity.target.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
+                    return getResult(CraftPresence.CLIENT.imageOf(true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
                 });
                 CraftPresence.CLIENT.addForcedData("entity.target", () -> {
                     if (!isInUse() || CURRENT_TARGET == null) return null;
@@ -335,7 +335,7 @@ public class EntityUtils implements ExtendedModule {
 
                     final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_RIDING_NAME;
                     final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-                    return getResult(CraftPresence.CLIENT.imageOf("entity.riding.icon", true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
+                    return getResult(CraftPresence.CLIENT.imageOf(true, currentIcon, CraftPresence.CONFIG.advancedSettings.entitySettings.fallbackEntityIcon), currentData != null ? currentData : defaultData);
                 });
                 CraftPresence.CLIENT.addForcedData("entity.riding", () -> {
                     if (!isInUse() || CURRENT_RIDING == null) return null;

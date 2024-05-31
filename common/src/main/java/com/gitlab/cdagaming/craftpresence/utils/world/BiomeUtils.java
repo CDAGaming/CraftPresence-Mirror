@@ -199,7 +199,7 @@ public class BiomeUtils implements ExtendedModule {
 
             final String defaultIcon = Config.isValidProperty(defaultData, "iconOverride") ? defaultData.getIconOverride() : CURRENT_BIOME_IDENTIFIER;
             final String currentIcon = Config.isValidProperty(currentData, "iconOverride") ? currentData.getIconOverride() : defaultIcon;
-            return getResult(CraftPresence.CLIENT.imageOf("biome.icon", true, currentIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon, CURRENT_BIOME_IDENTIFIER));
+            return getResult(CraftPresence.CLIENT.imageOf(true, currentIcon, CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon, CURRENT_BIOME_IDENTIFIER));
         });
         CraftPresence.CLIENT.addForcedData("biome", () -> isInUse() ? getPresenceData(CURRENT_BIOME_IDENTIFIER) : null);
         CraftPresence.CLIENT.syncTimestamp("data.biome.time");

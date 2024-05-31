@@ -1523,44 +1523,12 @@ public class DiscordUtils {
     /**
      * Attempts to locate the specified Image, and if not existent, use the alternative String, and null if allowed
      *
-     * @param argumentName The Specified Argument to interpret
-     * @param allowNull    If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
-     * @param evalStrings  The Specified Icon Key(s) to search for from the {@link DiscordUtils#CLIENT_ID} Assets
-     * @return The found or alternative matching Icon Key
-     */
-    public String imageOf(final String argumentName, final boolean allowNull, final String... evalStrings) {
-        return imageOf(allowNull, isImageInUse(argumentName) || isImageInUse(evalStrings), evalStrings);
-    }
-
-    /**
-     * Attempts to locate the specified Image, and if not existent, use the alternative String, and null if allowed
-     *
      * @param allowNull   If allowed to return null if unable to find any matches, otherwise uses the Default Icon in Config
      * @param evalStrings The Specified Icon Key(s) to search for from the {@link DiscordUtils#CLIENT_ID} Assets
      * @return The found or alternative matching Icon Key
      */
     public String imageOf(final boolean allowNull, final String... evalStrings) {
         return imageOf(allowNull, true, evalStrings);
-    }
-
-    /**
-     * Determine whether any of the specified strings are currently being used as an RPC image
-     *
-     * @param evalStrings The specified Icon Key(s) to interpret
-     * @return whether any of the inputs are currently being used as an RPC image
-     */
-    public boolean isImageInUse(final String... evalStrings) {
-        final PresenceData configData = getPresenceData();
-        for (String evalString : evalStrings) {
-            if (!StringUtils.isNullOrEmpty(evalString)) {
-                if (configData.largeImageKey.contains(evalString) ||
-                        configData.smallImageKey.contains(evalString)
-                ) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**

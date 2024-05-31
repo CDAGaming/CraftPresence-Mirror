@@ -197,7 +197,7 @@ public class CommandUtils {
             CraftPresence.CLIENT.syncFunction("pack.type", data::getPackType, true);
             CraftPresence.CLIENT.syncFunction("pack.name", data::getPackName, true);
             CraftPresence.CLIENT.syncFunction("pack.icon",
-                    () -> CraftPresence.CLIENT.imageOf("pack.icon", true,
+                    () -> CraftPresence.CLIENT.imageOf(true,
                             data.getPackIcon(), data.getPackType())
                     , true);
         }
@@ -421,7 +421,7 @@ public class CommandUtils {
             );
             CraftPresence.CLIENT.syncFunction("menu.icon", () -> {
                 final String currentIcon = Config.isValidProperty(loadedMenu, "iconOverride") ? loadedMenu.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
-                return CraftPresence.CLIENT.imageOf("menu.icon", true, currentIcon);
+                return CraftPresence.CLIENT.imageOf(true, currentIcon);
             });
             CraftPresence.CLIENT.addForcedData("menu", () -> (PresenceData) Config.getProperty(loadedMenu, "data"));
         }
