@@ -290,7 +290,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         "gui.config.message.editor.presence.button_editor",
                         () -> openScreen(
                                 new SelectorGui(
-                                        Constants.TRANSLATOR.translate("gui.config.title.selector.button"), CraftPresence.CLIENT.createButtonsList(getInstanceData().buttons),
+                                        Constants.TRANSLATOR.translate("gui.config.title.selector.button"), getInstanceData().buttons.keySet(),
                                         null, null,
                                         true, true, ScrollableListControl.RenderType.None,
                                         null,
@@ -301,7 +301,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                             currentValue,
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
-                                                                screenInstance.attributeName = "button_" + CraftPresence.CLIENT.createButtonsList(getInstanceData().buttons).size();
+                                                                screenInstance.attributeName = "button_" + getInstanceData().buttons.size();
                                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
                                                                 screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");

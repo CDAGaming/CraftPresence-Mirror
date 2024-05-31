@@ -331,31 +331,6 @@ public class DiscordUtils {
     }
 
     /**
-     * Creates a string-based representation of the button-list, from config values
-     *
-     * @param list The list to interpret
-     * @return the output list
-     */
-    public List<String> createButtonsList(final Map<String, Button> list) {
-        final List<String> result = StringUtils.newArrayList();
-        for (String buttonEntry : list.keySet()) {
-            if (!StringUtils.isNullOrEmpty(buttonEntry)) {
-                result.add(buttonEntry);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Creates a string-based representation of the button-list, from config values
-     *
-     * @return the output list
-     */
-    public List<String> createButtonsList() {
-        return createButtonsList(getPresenceData().buttons);
-    }
-
-    /**
      * Removes any invalid data from a placeholder argument
      *
      * @param input    The string to interpret
