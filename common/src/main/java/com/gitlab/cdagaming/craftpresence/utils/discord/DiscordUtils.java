@@ -61,7 +61,6 @@ import org.meteordev.starscript.utils.VariableReplacementTransformer;
 import org.meteordev.starscript.value.Value;
 import org.meteordev.starscript.value.ValueMap;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1098,31 +1097,22 @@ public class DiscordUtils {
     }
 
     /**
-     * Determines whether there are any matching arguments within the specified type matching the specified string formats
-     *
-     * @param args The string formats to interpret
-     * @return Whether the resulting list has any matching entries
-     */
-    public boolean hasArgumentsMatching(final String... args) {
-        return !getArguments(args).isEmpty();
-    }
-
-    /**
      * Generate a parsable display string for the argument data provided
      *
-     * @param formats      The argument formats to interpret
      * @param addExtraData Whether to add additional data to the string
      * @param args         The data to interpret
+     * @param formats      The argument formats to interpret
      * @return the parsable string
      */
-    public String generateArgumentMessage(final List<String> formats, final boolean addExtraData, final Map<String, Supplier<Value>> args) {
+    public String generateArgumentMessage(final boolean addExtraData, final Map<String, Supplier<Value>> args, final String... formats) {
         final StringBuilder resultString = new StringBuilder(
                 Constants.TRANSLATOR.translate(Constants.MOD_ID + ".placeholders.notes")
         );
         resultString.append("\\n\\n")
                 .append(Constants.TRANSLATOR.translate(Constants.MOD_ID + ".placeholders.title"));
 
-        if (!formats.isEmpty()) {
+        final boolean hasNoFormats = formats == null || formats.length < 1 || formats[0] == null;
+        if (!hasNoFormats) {
             resultString.append(" (").append(String.join(",", formats)).append(")");
         }
         resultString.append(":");
@@ -1171,11 +1161,10 @@ public class DiscordUtils {
         String start = prefix;
 
         if (includeName) {
-            String placeholderDescription = "";
             String placeholderFormat = " - ";
 
             if (hasDescription) {
-                placeholderDescription = Constants.TRANSLATOR.translate(placeholderTranslation);
+                final String placeholderDescription = Constants.TRANSLATOR.translate(placeholderTranslation);
                 placeholderFormat = " - " + placeholderName + " = " + placeholderDescription;
             } else {
                 placeholderFormat += placeholderName;
@@ -1277,7 +1266,7 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final boolean addExtraData, final String... formats) {
-        return generateArgumentMessage(Arrays.asList(formats), addExtraData, getArguments(formats));
+        return generateArgumentMessage(addExtraData, getArguments(formats), formats);
     }
 
     /**
