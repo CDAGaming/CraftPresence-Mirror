@@ -131,6 +131,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This issue would cause a Starscript exception if the value was present in a `SimpleRPC` config
 * (Backend) Fixed an issue preventing `DiscordAssetUtils#setUrl` from triggering in `DiscordAssetUtils#loadAssets`
     * This fix also brings a performance improvement to `DiscordAssetUtils#getUrl(list, key)`
+* (Backend) Fixed a `DiscordIPC` Issue preventing Mod Functionality on Java 22
+    * This primarily effected Windows users or those using a non-standard filesystem
+    * Users effected would receive a false `Unable to connect to Discord...` message
+    * Several other error messages have also been improved alongside this fix
 
 ___
 
