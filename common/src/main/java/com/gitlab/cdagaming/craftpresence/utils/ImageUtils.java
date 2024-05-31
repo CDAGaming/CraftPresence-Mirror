@@ -65,7 +65,7 @@ public class ImageUtils {
      * <p>
      * Format: textureName;[[textureInputType, textureObj], [textureIndex, imageData], textureData]
      */
-    private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = StringUtils.newHashMap();
+    private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = StringUtils.newConcurrentHashMap();
 
     static {
         Constants.getThreadFactory().newThread(
@@ -214,61 +214,59 @@ public class ImageUtils {
      * @return The Resulting Texture Data
      */
     public static ResourceLocation getTextureFromUrl(final String textureName, final Pair<InputType, Object> stream) {
-        synchronized (cachedImages) {
-            if (!cachedImages.containsKey(textureName) || !cachedImages.get(textureName).getFirst().equals(stream)) {
-                // Setup Initial data if not present (Or reset if the stream has changed)
-                //
-                // Note that the ResourceLocation needs to be
-                // initially null here for compatibility reasons
-                cachedImages.put(textureName, new Tuple<>(stream, new Pair<>(0, StringUtils.newArrayList()), null));
-                try {
-                    urlRequests.put(new Pair<>(textureName, stream));
-                } catch (Throwable ex) {
-                    Constants.LOG.debugError(ex);
-                }
+        if (!cachedImages.containsKey(textureName) || !cachedImages.get(textureName).getFirst().equals(stream)) {
+            // Setup Initial data if not present (Or reset if the stream has changed)
+            //
+            // Note that the ResourceLocation needs to be
+            // initially null here for compatibility reasons
+            cachedImages.put(textureName, new Tuple<>(stream, new Pair<>(0, StringUtils.newArrayList()), null));
+            try {
+                urlRequests.put(new Pair<>(textureName, stream));
+            } catch (Throwable ex) {
+                Constants.LOG.debugError(ex);
             }
+        }
 
-            final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(textureName).getSecond();
+        final Pair<Integer, List<ImageFrame>> bufferData = cachedImages.get(textureName).getSecond();
 
-            if (bufferData == null || bufferData.getSecond() == null || bufferData.getSecond().isEmpty()) {
-                return ResourceUtils.getEmptyResource();
-            } else if (textureName != null) {
-                final boolean shouldRepeat = textureName.endsWith(".gif") || stream.getSecond().toString().contains("gif");
-                final boolean doesContinue = bufferData.getFirst() < bufferData.getSecond().size() - 1;
+        if (bufferData == null || bufferData.getSecond() == null || bufferData.getSecond().isEmpty()) {
+            return ResourceUtils.getEmptyResource();
+        } else if (textureName != null) {
+            final boolean shouldRepeat = textureName.endsWith(".gif") || stream.getSecond().toString().contains("gif");
+            final boolean doesContinue = bufferData.getFirst() < bufferData.getSecond().size() - 1;
 
-                final List<ResourceLocation> resources = cachedImages.get(textureName).getThird();
-                if (bufferData.getFirst() < resources.size()) {
-                    final ResourceLocation texLocation = resources.get(bufferData.getFirst());
-                    if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
-                        if (doesContinue) {
-                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime();
-                        } else if (shouldRepeat) {
-                            bufferData.getSecond().get(bufferData.setFirst(0)).setRenderTime();
-                        }
+            final List<ResourceLocation> resources = cachedImages.get(textureName).getThird();
+            if (bufferData.getFirst() < resources.size()) {
+                final ResourceLocation texLocation = resources.get(bufferData.getFirst());
+                if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
+                    if (doesContinue) {
+                        bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime();
+                    } else if (shouldRepeat) {
+                        bufferData.getSecond().get(bufferData.setFirst(0)).setRenderTime();
                     }
-                    return texLocation;
                 }
-                try {
-                    final DynamicTexture dynTexture = new DynamicTexture(bufferData.getSecond().get(bufferData.getFirst()).getImage());
-                    final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName.toLowerCase() + (shouldRepeat ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
-                    if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
-                        if (doesContinue) {
-                            bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime();
-                        } else if (shouldRepeat) {
-                            bufferData.setFirst(0);
-                        }
+                return texLocation;
+            }
+            try {
+                final DynamicTexture dynTexture = new DynamicTexture(bufferData.getSecond().get(bufferData.getFirst()).getImage());
+                final ResourceLocation cachedTexture = CraftPresence.instance.getTextureManager().getDynamicTextureLocation(textureName.toLowerCase() + (shouldRepeat ? "_" + cachedImages.get(textureName).getSecond().getFirst() : ""), dynTexture);
+                if (bufferData.getSecond().get(bufferData.getFirst()).shouldRenderNext()) {
+                    if (doesContinue) {
+                        bufferData.getSecond().get(bufferData.setFirst(bufferData.getFirst() + 1)).setRenderTime();
+                    } else if (shouldRepeat) {
+                        bufferData.setFirst(0);
                     }
-                    if (!resources.contains(cachedTexture)) {
-                        resources.add(cachedTexture);
-                    }
-                    return cachedTexture;
-                } catch (Throwable ex) {
-                    Constants.LOG.debugError(ex);
-                    return ResourceUtils.getEmptyResource();
                 }
-            } else {
+                if (!resources.contains(cachedTexture)) {
+                    resources.add(cachedTexture);
+                }
+                return cachedTexture;
+            } catch (Throwable ex) {
+                Constants.LOG.debugError(ex);
                 return ResourceUtils.getEmptyResource();
             }
+        } else {
+            return ResourceUtils.getEmptyResource();
         }
     }
 
