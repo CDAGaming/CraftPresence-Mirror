@@ -2,7 +2,7 @@ import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.2"
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.4"
 }
 
 /**
