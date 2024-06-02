@@ -169,13 +169,10 @@ public class EntityUtils implements ExtendedModule {
     }
 
     @Override
-    public void emptyData() {
-        queueConfigScan();
-        queueInternalScan();
+    public void clearFieldData() {
         DEFAULT_NAMES.clear();
         ENTITY_NAMES.clear();
         PLAYER_BINDINGS.clear();
-        clearClientData();
     }
 
     @Override

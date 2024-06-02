@@ -80,12 +80,6 @@ public class ReplayModUtils implements ExtendedModule {
     private Object CURRENT_SCREEN;
 
     @Override
-    public void emptyData() {
-        queueInternalScan();
-        clearClientData();
-    }
-
-    @Override
     public void clearClientData() {
         setInUse(false);
 

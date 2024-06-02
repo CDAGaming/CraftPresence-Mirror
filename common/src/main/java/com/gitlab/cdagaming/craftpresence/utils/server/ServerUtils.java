@@ -172,16 +172,13 @@ public class ServerUtils implements ExtendedModule {
     private boolean isOnSinglePlayer = false;
 
     @Override
-    public void emptyData() {
-        queueConfigScan();
-        queueInternalScan();
+    public void clearFieldData() {
         currentPlayerList.clear();
         defaultAddresses.clear();
         knownAddresses.clear();
         knownServerData.clear();
         serverList = null;
         serverIndex = 0;
-        clearClientData();
     }
 
     @Override

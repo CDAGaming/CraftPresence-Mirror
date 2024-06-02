@@ -37,7 +37,19 @@ public interface Module {
     /**
      * Clears FULL Data from this Module
      */
-    void emptyData();
+    default void emptyData() {
+        queueConfigScan();
+        queueInternalScan();
+        clearFieldData();
+        clearClientData();
+    }
+
+    /**
+     * Clears Field Data from this Module (PARTIAL Clear)
+     */
+    default void clearFieldData() {
+        // N/A
+    }
 
     /**
      * Clears Runtime Client Data from this Module (PARTIAL Clear)

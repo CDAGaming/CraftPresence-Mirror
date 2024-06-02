@@ -286,9 +286,7 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
-    public void emptyData() {
-        queueConfigScan();
-        queueInternalScan();
+    public void clearFieldData() {
         BLOCK_NAMES.clear();
         BLOCK_CLASSES.clear();
         ITEM_NAMES.clear();
@@ -296,7 +294,6 @@ public class TileEntityUtils implements Module {
         TILE_ENTITY_NAMES.clear();
         TILE_ENTITY_CLASSES.clear();
         TILE_ENTITY_RESOURCES.clear();
-        clearClientData();
     }
 
     @Override

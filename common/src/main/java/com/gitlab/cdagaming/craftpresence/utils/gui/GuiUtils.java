@@ -103,13 +103,10 @@ public class GuiUtils implements ExtendedModule {
     }
 
     @Override
-    public void emptyData() {
-        queueConfigScan();
-        queueInternalScan();
+    public void clearFieldData() {
         DEFAULT_NAMES.clear();
         GUI_NAMES.clear();
         GUI_CLASSES.clear();
-        clearClientData();
     }
 
     @Override

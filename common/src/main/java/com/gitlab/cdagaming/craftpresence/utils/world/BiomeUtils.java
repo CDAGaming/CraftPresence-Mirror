@@ -94,12 +94,9 @@ public class BiomeUtils implements ExtendedModule {
     private Biome CURRENT_BIOME;
 
     @Override
-    public void emptyData() {
-        queueConfigScan();
-        queueInternalScan();
+    public void clearFieldData() {
         DEFAULT_NAMES.clear();
         BIOME_NAMES.clear();
-        clearClientData();
     }
 
     @Override

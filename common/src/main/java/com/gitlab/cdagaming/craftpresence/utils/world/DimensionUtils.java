@@ -96,12 +96,9 @@ public class DimensionUtils implements ExtendedModule {
     private WorldProvider CURRENT_DIMENSION;
 
     @Override
-    public void emptyData() {
-        queueConfigScan();
-        queueInternalScan();
+    public void clearFieldData() {
         DEFAULT_NAMES.clear();
         DIMENSION_NAMES.clear();
-        clearClientData();
     }
 
     @Override
