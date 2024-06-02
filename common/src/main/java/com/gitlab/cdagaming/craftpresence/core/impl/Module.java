@@ -68,8 +68,42 @@ public interface Module {
 
     /**
      * Module Event to Occur on each tick within the Application
+     * <p>This runs prior to the {@link Module#onTick()} method
      */
-    void onTick();
+    default void preTick() {
+        // N/A
+    }
+
+    /**
+     * Module Event to Occur on each tick within the Application
+     */
+    default void onTick() {
+        preTick();
+
+        setEnabled(canBeEnabled());
+        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
+
+        if (needsConfigUpdate) {
+            scanConfigData();
+            markConfigScanned();
+        }
+        if (needsInternalUpdate) {
+            scanInternalData();
+            markInternalsScanned();
+        }
+
+        if (isEnabled()) {
+            if (canBeUsed()) {
+                setInUse(true);
+                updateData();
+            } else if (isInUse()) {
+                clearClientData();
+            }
+        } else if (isInUse()) {
+            emptyData();
+        }
+    }
 
     /**
      * Synchronizes Data related to this module, if needed
@@ -195,6 +229,15 @@ public interface Module {
     }
 
     /**
+     * Returns whether the module can be enabled
+     *
+     * @return {@link Boolean#TRUE} if this module can be enabled
+     */
+    default boolean canBeEnabled() {
+        return true;
+    }
+
+    /**
      * Returns whether the module is currently enabled
      *
      * @return {@link Boolean#TRUE} if this module is enabled
@@ -210,6 +253,15 @@ public interface Module {
      */
     default void setEnabled(boolean state) {
         // N/A
+    }
+
+    /**
+     * Returns whether the module can be used
+     *
+     * @return {@link Boolean#TRUE} if this module can be used
+     */
+    default boolean canBeUsed() {
+        return true;
     }
 
     /**
@@ -258,10 +310,26 @@ public interface Module {
     }
 
     /**
+     * Sets whether we have already scanned for internal module data
+     *
+     * @param state the new scan state
+     */
+    default void setScannedInternals(final boolean state) {
+        // N/A
+    }
+
+    /**
+     * Mark Internal Module Data as scanned
+     */
+    default void markInternalsScanned() {
+        setScannedInternals(true);
+    }
+
+    /**
      * Queue a new internal scan to occur when possible
      */
     default void queueInternalScan() {
-        // N/A
+        setScannedInternals(false);
     }
 
     /**
@@ -283,9 +351,25 @@ public interface Module {
     }
 
     /**
+     * Sets whether we have already scanned for config module data
+     *
+     * @param state the new scan state
+     */
+    default void setScannedConfig(final boolean state) {
+        // N/A
+    }
+
+    /**
+     * Mark Config Module Data as scanned
+     */
+    default void markConfigScanned() {
+        setScannedConfig(true);
+    }
+
+    /**
      * Queue a new config scan to occur when possible
      */
     default void queueConfigScan() {
-        // N/A
+        setScannedConfig(false);
     }
 }

@@ -115,33 +115,6 @@ public class DimensionUtils implements ExtendedModule {
     }
 
     @Override
-    public void onTick() {
-        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectDimensionData : isEnabled());
-        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
-
-        if (needsConfigUpdate) {
-            scanConfigData();
-            hasScannedConfig = true;
-        }
-        if (needsInternalUpdate) {
-            scanInternalData();
-            hasScannedInternals = true;
-        }
-
-        if (isEnabled()) {
-            if (CraftPresence.player != null) {
-                setInUse(true);
-                updateData();
-            } else if (isInUse()) {
-                clearClientData();
-            }
-        } else if (isInUse()) {
-            emptyData();
-        }
-    }
-
-    @Override
     public void updateData() {
         final WorldProvider newProvider = CraftPresence.player.world.provider;
         final DimensionType newDimensionType = newProvider.getDimensionType();
@@ -306,8 +279,8 @@ public class DimensionUtils implements ExtendedModule {
     }
 
     @Override
-    public void queueInternalScan() {
-        hasScannedInternals = false;
+    public void setScannedInternals(final boolean state) {
+        hasScannedInternals = state;
     }
 
     @Override
@@ -321,8 +294,13 @@ public class DimensionUtils implements ExtendedModule {
     }
 
     @Override
-    public void queueConfigScan() {
-        hasScannedConfig = false;
+    public void setScannedConfig(final boolean state) {
+        hasScannedConfig = state;
+    }
+
+    @Override
+    public boolean canBeEnabled() {
+        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectDimensionData : isEnabled();
     }
 
     @Override
@@ -333,6 +311,11 @@ public class DimensionUtils implements ExtendedModule {
     @Override
     public void setEnabled(boolean state) {
         this.enabled = state;
+    }
+
+    @Override
+    public boolean canBeUsed() {
+        return CraftPresence.player != null;
     }
 
     @Override

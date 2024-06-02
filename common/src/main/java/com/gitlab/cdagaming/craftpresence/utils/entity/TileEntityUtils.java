@@ -323,33 +323,6 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
-    public void onTick() {
-        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : isEnabled());
-        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
-
-        if (needsConfigUpdate) {
-            scanConfigData();
-            hasScannedConfig = true;
-        }
-        if (needsInternalUpdate) {
-            scanInternalData();
-            hasScannedInternals = true;
-        }
-
-        if (isEnabled()) {
-            if (CraftPresence.player != null) {
-                setInUse(true);
-                updateData();
-            } else if (isInUse()) {
-                clearClientData();
-            }
-        } else if (isInUse()) {
-            emptyData();
-        }
-    }
-
-    @Override
     public void updateData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
         final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getHeldItemOffhand();
@@ -612,8 +585,8 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
-    public void queueInternalScan() {
-        hasScannedInternals = false;
+    public void setScannedInternals(final boolean state) {
+        hasScannedInternals = state;
     }
 
     @Override
@@ -627,8 +600,13 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
-    public void queueConfigScan() {
-        hasScannedConfig = false;
+    public void setScannedConfig(final boolean state) {
+        hasScannedConfig = state;
+    }
+
+    @Override
+    public boolean canBeEnabled() {
+        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : isEnabled();
     }
 
     @Override
@@ -639,6 +617,11 @@ public class TileEntityUtils implements Module {
     @Override
     public void setEnabled(boolean state) {
         this.enabled = state;
+    }
+
+    @Override
+    public boolean canBeUsed() {
+        return CraftPresence.player != null;
     }
 
     @Override

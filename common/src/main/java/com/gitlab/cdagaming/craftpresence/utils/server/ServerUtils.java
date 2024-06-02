@@ -206,32 +206,8 @@ public class ServerUtils implements ExtendedModule {
     }
 
     @Override
-    public void onTick() {
+    public void preTick() {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
-
-        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : isEnabled());
-        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
-
-        if (needsConfigUpdate) {
-            scanConfigData();
-            hasScannedConfig = true;
-        }
-        if (needsInternalUpdate) {
-            scanInternalData();
-            hasScannedInternals = true;
-        }
-
-        if (isEnabled()) {
-            if (CraftPresence.player != null && !joinInProgress) {
-                setInUse(true);
-                updateData();
-            } else if (isInUse()) {
-                clearClientData();
-            }
-        } else if (isInUse()) {
-            emptyData();
-        }
     }
 
     @Override
@@ -661,8 +637,8 @@ public class ServerUtils implements ExtendedModule {
     }
 
     @Override
-    public void queueInternalScan() {
-        hasScannedInternals = false;
+    public void setScannedInternals(final boolean state) {
+        hasScannedInternals = state;
     }
 
     @Override
@@ -676,8 +652,13 @@ public class ServerUtils implements ExtendedModule {
     }
 
     @Override
-    public void queueConfigScan() {
-        hasScannedConfig = false;
+    public void setScannedConfig(final boolean state) {
+        hasScannedConfig = state;
+    }
+
+    @Override
+    public boolean canBeEnabled() {
+        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : isEnabled();
     }
 
     @Override
@@ -688,6 +669,11 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void setEnabled(boolean state) {
         this.enabled = state;
+    }
+
+    @Override
+    public boolean canBeUsed() {
+        return CraftPresence.player != null && !joinInProgress;
     }
 
     @Override

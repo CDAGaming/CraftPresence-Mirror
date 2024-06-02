@@ -92,28 +92,6 @@ public class ReplayModUtils implements ExtendedModule {
     }
 
     @Override
-    public void onTick() {
-        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : isEnabled());
-        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
-
-        if (needsInternalUpdate) {
-            scanInternalData();
-            hasScannedInternals = true;
-        }
-
-        if (isEnabled()) {
-            if (CraftPresence.GUIS.CURRENT_SCREEN != null) {
-                setInUse(true);
-                updateData();
-            } else if (isInUse()) {
-                clearClientData();
-            }
-        } else if (isInUse()) {
-            emptyData();
-        }
-    }
-
-    @Override
     public void updateData() {
         if (CraftPresence.GUIS.CURRENT_SCREEN == null) {
             clearClientData();
@@ -198,8 +176,13 @@ public class ReplayModUtils implements ExtendedModule {
     }
 
     @Override
-    public void queueInternalScan() {
-        hasScannedInternals = false;
+    public void setScannedInternals(final boolean state) {
+        hasScannedInternals = state;
+    }
+
+    @Override
+    public boolean canBeEnabled() {
+        return CraftPresence.GUIS.canBeEnabled();
     }
 
     @Override
@@ -210,6 +193,11 @@ public class ReplayModUtils implements ExtendedModule {
     @Override
     public void setEnabled(boolean state) {
         this.enabled = state;
+    }
+
+    @Override
+    public boolean canBeUsed() {
+        return CraftPresence.GUIS.canBeUsed();
     }
 
     @Override
