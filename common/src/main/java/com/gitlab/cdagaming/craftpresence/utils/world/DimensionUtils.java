@@ -102,9 +102,7 @@ public class DimensionUtils implements ExtendedModule {
     }
 
     @Override
-    public void clearClientData() {
-        setInUse(false);
-
+    public void clearAttributes() {
         CURRENT_DIMENSION = null;
         RAW_DIMENSION_NAME = null;
         RAW_DIMENSION_IDENTIFIER = null;

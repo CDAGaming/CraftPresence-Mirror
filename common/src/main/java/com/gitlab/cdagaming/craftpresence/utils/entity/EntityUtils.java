@@ -176,9 +176,7 @@ public class EntityUtils implements ExtendedModule {
     }
 
     @Override
-    public void clearClientData() {
-        setInUse(false);
-
+    public void clearAttributes() {
         CURRENT_TARGET = null;
         CURRENT_RIDING = null;
         CURRENT_TARGET_NAME = null;

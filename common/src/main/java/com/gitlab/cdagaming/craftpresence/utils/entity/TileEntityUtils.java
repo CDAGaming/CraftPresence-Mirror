@@ -297,9 +297,7 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
-    public void clearClientData() {
-        setInUse(false);
-
+    public void clearAttributes() {
         CURRENT_MAIN_HAND_ITEM = EMPTY_STACK;
         CURRENT_OFFHAND_ITEM = EMPTY_STACK;
         CURRENT_MAIN_HAND_ITEM_NAME = null;

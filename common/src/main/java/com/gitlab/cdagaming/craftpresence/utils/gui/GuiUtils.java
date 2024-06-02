@@ -110,9 +110,7 @@ public class GuiUtils implements ExtendedModule {
     }
 
     @Override
-    public void clearClientData() {
-        setInUse(false);
-
+    public void clearAttributes() {
         CURRENT_GUI_NAME = null;
         CURRENT_SCREEN = null;
 

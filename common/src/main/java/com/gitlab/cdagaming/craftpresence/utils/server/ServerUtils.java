@@ -182,9 +182,7 @@ public class ServerUtils implements ExtendedModule {
     }
 
     @Override
-    public void clearClientData() {
-        setInUse(false);
-
+    public void clearAttributes() {
         currentServer_IP = null;
         formattedServer_IP = null;
         currentServer_MOTD = null;

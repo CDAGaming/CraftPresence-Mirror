@@ -100,9 +100,7 @@ public class BiomeUtils implements ExtendedModule {
     }
 
     @Override
-    public void clearClientData() {
-        setInUse(false);
-
+    public void clearAttributes() {
         CURRENT_BIOME = null;
         RAW_BIOME_NAME = null;
         RAW_BIOME_IDENTIFIER = null;

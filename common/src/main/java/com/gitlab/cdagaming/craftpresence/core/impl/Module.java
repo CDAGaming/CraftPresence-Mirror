@@ -54,7 +54,17 @@ public interface Module {
     /**
      * Clears Runtime Client Data from this Module (PARTIAL Clear)
      */
-    void clearClientData();
+    default void clearClientData() {
+        setInUse(false);
+        clearAttributes();
+    }
+
+    /**
+     * Clears Module Attribute Data from this Module (PARTIAL Clear)
+     */
+    default void clearAttributes() {
+        // N/A
+    }
 
     /**
      * Module Event to Occur on each tick within the Application
