@@ -60,6 +60,13 @@ public interface Module {
     }
 
     /**
+     * Clears Active Module Data (PARTIAL Clear)
+     */
+    default void clearActiveData() {
+        clearClientData();
+    }
+
+    /**
      * Clears Module Attribute Data from this Module (PARTIAL Clear)
      */
     default void clearAttributes() {
@@ -71,6 +78,14 @@ public interface Module {
      * <p>This runs prior to the {@link Module#onTick()} method
      */
     default void preTick() {
+        // N/A
+    }
+
+    /**
+     * Module Event to Occur on each tick within the Application
+     * <p>This runs after the {@link Module#onTick()} method
+     */
+    default void postTick() {
         // N/A
     }
 
@@ -98,11 +113,13 @@ public interface Module {
                 setInUse(true);
                 updateData();
             } else if (isInUse()) {
-                clearClientData();
+                clearActiveData();
             }
         } else if (isInUse()) {
             emptyData();
         }
+
+        postTick();
     }
 
     /**
