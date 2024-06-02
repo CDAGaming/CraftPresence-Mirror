@@ -57,10 +57,6 @@ public class GuiUtils implements ExtendedModule {
      */
     public boolean isFocused = false;
     /**
-     * Whether this module is allowed to start and enabled
-     */
-    public boolean enabled = false;
-    /**
      * A List of the detected Gui Screen Names
      */
     public List<String> GUI_NAMES = StringUtils.newArrayList();
@@ -72,6 +68,10 @@ public class GuiUtils implements ExtendedModule {
      * The Current Instance of the Gui the player is in
      */
     public GuiScreen CURRENT_SCREEN;
+    /**
+     * Whether this module is allowed to start and enabled
+     */
+    private boolean enabled = false;
     /**
      * Whether this module is active and currently in use
      */
@@ -126,10 +126,10 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
+        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : isEnabled());
         isFocused = CraftPresence.instance.currentScreen != null && (CraftPresence.instance.currentScreen.isFocused() || CraftPresence.player != null);
-        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
+        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
 
         if (needsConfigUpdate) {
             scanConfigData();
@@ -140,7 +140,7 @@ public class GuiUtils implements ExtendedModule {
             hasScannedInternals = true;
         }
 
-        if (enabled) {
+        if (isEnabled()) {
             if (CraftPresence.instance.currentScreen != null) {
                 setInUse(true);
                 updateData();

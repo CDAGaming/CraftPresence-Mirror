@@ -49,7 +49,7 @@ public class ReplayModUtils implements ExtendedModule {
     /**
      * Whether this module is allowed to start and enabled
      */
-    public boolean enabled = false;
+    private boolean enabled = false;
     /**
      * Whether this module is active and currently in use
      */
@@ -101,8 +101,8 @@ public class ReplayModUtils implements ExtendedModule {
 
     @Override
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : enabled;
-        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
+        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerGui : isEnabled());
+        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
 
         if (needsInternalUpdate) {
             scanInternalData();

@@ -243,9 +243,9 @@ public class MainGui extends ConfigurationGui<Config> {
         super.syncRenderStates();
         getCurrentData().hasChanged = hasChangesBetween(getCurrentData(), getInstanceData());
 
-        biomeSet.setControlEnabled(CraftPresence.BIOMES.enabled);
-        dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
-        serverSet.setControlEnabled(CraftPresence.SERVER.enabled);
+        biomeSet.setControlEnabled(CraftPresence.BIOMES.isEnabled());
+        dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.isEnabled());
+        serverSet.setControlEnabled(CraftPresence.SERVER.isEnabled());
 
         proceedButton.setControlMessage(getCurrentData().hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }

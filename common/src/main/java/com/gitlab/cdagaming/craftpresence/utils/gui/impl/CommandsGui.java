@@ -337,7 +337,7 @@ public class CommandsGui extends ExtendedScreen {
                             executeCommand("search", "all");
                             return;
                         } else if (executionCommandArgs[1].equalsIgnoreCase("items")) {
-                            if (CraftPresence.TILE_ENTITIES.enabled) {
+                            if (CraftPresence.TILE_ENTITIES.isEnabled()) {
                                 openScreen(new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                         CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
@@ -351,7 +351,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("entities")) {
-                            if (CraftPresence.ENTITIES.enabled) {
+                            if (CraftPresence.ENTITIES.isEnabled()) {
                                 openScreen(new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.entities"),
                                         CraftPresence.ENTITIES.ENTITY_NAMES,
@@ -365,7 +365,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("servers")) {
-                            if (CraftPresence.SERVER.enabled) {
+                            if (CraftPresence.SERVER.isEnabled()) {
                                 openScreen(new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.servers"),
                                         CraftPresence.SERVER.knownAddresses,
@@ -379,7 +379,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("screens")) {
-                            if (CraftPresence.GUIS.enabled) {
+                            if (CraftPresence.GUIS.isEnabled()) {
                                 openScreen(new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
                                         CraftPresence.GUIS.GUI_NAMES,
@@ -393,7 +393,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("biomes")) {
-                            if (CraftPresence.BIOMES.enabled) {
+                            if (CraftPresence.BIOMES.isEnabled()) {
                                 openScreen(new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
                                         CraftPresence.BIOMES.BIOME_NAMES,
@@ -407,7 +407,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("dimensions")) {
-                            if (CraftPresence.DIMENSIONS.enabled) {
+                            if (CraftPresence.DIMENSIONS.isEnabled()) {
                                 openScreen(new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
                                         CraftPresence.DIMENSIONS.DIMENSION_NAMES,

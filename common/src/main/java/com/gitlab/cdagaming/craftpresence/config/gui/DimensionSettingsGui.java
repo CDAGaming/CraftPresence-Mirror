@@ -226,7 +226,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
         super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
-        dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.enabled);
+        dimensionMessagesButton.setControlEnabled(CraftPresence.DIMENSIONS.isEnabled());
     }
 
     @Override

@@ -70,10 +70,6 @@ public class ServerUtils implements ExtendedModule {
             "selectServer.defaultName"
     );
     /**
-     * Whether this module is allowed to start and enabled
-     */
-    public boolean enabled = false;
-    /**
      * The Current Player Map, if available
      */
     public List<NetworkPlayerInfo> currentPlayerList = StringUtils.newArrayList();
@@ -89,6 +85,10 @@ public class ServerUtils implements ExtendedModule {
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = StringUtils.newHashMap();
+    /**
+     * Whether this module is allowed to start and enabled
+     */
+    private boolean enabled = false;
     /**
      * Whether this module is active and currently in use
      */
@@ -213,9 +213,10 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void onTick() {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : enabled;
-        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
+
+        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : isEnabled());
+        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
 
         if (needsConfigUpdate) {
             scanConfigData();
@@ -226,7 +227,7 @@ public class ServerUtils implements ExtendedModule {
             hasScannedInternals = true;
         }
 
-        if (enabled) {
+        if (isEnabled()) {
             if (CraftPresence.player != null && !joinInProgress) {
                 setInUse(true);
                 updateData();
@@ -302,7 +303,7 @@ public class ServerUtils implements ExtendedModule {
             if (!newPlayerList.equals(currentPlayerList)) {
                 currentPlayerList = newPlayerList;
 
-                if (CraftPresence.ENTITIES.enabled) {
+                if (CraftPresence.ENTITIES.isEnabled()) {
                     CraftPresence.ENTITIES.ENTITY_NAMES.removeAll(CraftPresence.ENTITIES.PLAYER_BINDINGS.keySet());
                     CraftPresence.ENTITIES.queueInternalScan();
                 }

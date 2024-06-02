@@ -256,7 +256,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
         super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultName.getControlMessage()) || !StringUtils.isNullOrEmpty(defaultMOTD.getControlMessage()));
-        serverMessagesButton.setControlEnabled(CraftPresence.SERVER.enabled);
+        serverMessagesButton.setControlEnabled(CraftPresence.SERVER.isEnabled());
     }
 
     @Override

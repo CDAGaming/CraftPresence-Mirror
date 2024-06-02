@@ -659,10 +659,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 (refreshRateData.getFirst() && refreshRateData.getSecond() >= ScheduleUtils.MINIMUM_REFRESH_RATE)
         );
 
-        guiMessagesButton.setControlEnabled(CraftPresence.GUIS.enabled);
-        itemMessagesButton.setControlEnabled(CraftPresence.TILE_ENTITIES.enabled);
-        entityTargetMessagesButton.setControlEnabled(CraftPresence.ENTITIES.enabled);
-        entityRidingMessagesButton.setControlEnabled(CraftPresence.ENTITIES.enabled);
+        guiMessagesButton.setControlEnabled(CraftPresence.GUIS.isEnabled());
+        itemMessagesButton.setControlEnabled(CraftPresence.TILE_ENTITIES.isEnabled());
+        entityTargetMessagesButton.setControlEnabled(CraftPresence.ENTITIES.isEnabled());
+        entityRidingMessagesButton.setControlEnabled(CraftPresence.ENTITIES.isEnabled());
     }
 
     @Override

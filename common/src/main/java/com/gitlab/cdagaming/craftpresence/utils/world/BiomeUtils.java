@@ -45,10 +45,6 @@ import java.util.function.Supplier;
 @SuppressWarnings("DuplicatedCode")
 public class BiomeUtils implements ExtendedModule {
     /**
-     * Whether this module is allowed to start and enabled
-     */
-    public boolean enabled = false;
-    /**
      * A List of the detected Biome Names
      */
     public List<String> BIOME_NAMES = StringUtils.newArrayList();
@@ -56,6 +52,10 @@ public class BiomeUtils implements ExtendedModule {
      * A List of the default detected Biome Names
      */
     public List<String> DEFAULT_NAMES = StringUtils.newArrayList();
+    /**
+     * Whether this module is allowed to start and enabled
+     */
+    private boolean enabled = false;
     /**
      * Whether this module is active and currently in use
      */
@@ -119,9 +119,9 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : enabled;
-        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
+        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : isEnabled());
+        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
 
         if (needsConfigUpdate) {
             scanConfigData();
@@ -132,7 +132,7 @@ public class BiomeUtils implements ExtendedModule {
             hasScannedInternals = true;
         }
 
-        if (enabled) {
+        if (isEnabled()) {
             if (CraftPresence.player != null) {
                 setInUse(true);
                 updateData();

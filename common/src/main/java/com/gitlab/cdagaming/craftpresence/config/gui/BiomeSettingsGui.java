@@ -226,7 +226,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
         super.syncRenderStates();
 
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(defaultMessage.getControlMessage()));
-        biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.enabled);
+        biomeMessagesButton.setControlEnabled(CraftPresence.BIOMES.isEnabled());
     }
 
     @Override

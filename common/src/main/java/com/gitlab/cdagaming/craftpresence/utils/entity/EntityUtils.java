@@ -49,10 +49,6 @@ import java.util.function.Supplier;
 @SuppressWarnings("DuplicatedCode")
 public class EntityUtils implements ExtendedModule {
     /**
-     * Whether this module is allowed to start and enabled
-     */
-    public boolean enabled = false;
-    /**
      * A List of the detected Entity Names
      */
     public List<String> ENTITY_NAMES = StringUtils.newArrayList();
@@ -64,6 +60,10 @@ public class EntityUtils implements ExtendedModule {
      * A Mapping representing the link between UUIDs and Player Names
      */
     public Map<String, String> PLAYER_BINDINGS = StringUtils.newHashMap();
+    /**
+     * Whether this module is allowed to start and enabled
+     */
+    private boolean enabled = false;
     /**
      * Whether this module is active and currently in use
      */
@@ -198,9 +198,9 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : enabled;
-        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
+        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : isEnabled());
+        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
 
         if (needsConfigUpdate) {
             scanConfigData();
@@ -211,7 +211,7 @@ public class EntityUtils implements ExtendedModule {
             hasScannedInternals = true;
         }
 
-        if (enabled) {
+        if (isEnabled()) {
             if (CraftPresence.player != null) {
                 setInUse(true);
                 updateData();
@@ -370,7 +370,7 @@ public class EntityUtils implements ExtendedModule {
         }
 
         // If Server Data is enabled, allow Uuid's to count as entities
-        if (CraftPresence.SERVER.enabled) {
+        if (CraftPresence.SERVER.isEnabled()) {
             for (NetworkPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
                 if (playerInfo != null) {
                     final String uuidString = playerInfo.getGameProfile().getId().toString();

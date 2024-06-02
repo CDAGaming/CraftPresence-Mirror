@@ -73,10 +73,6 @@ public class TileEntityUtils implements Module {
      */
     private final List<String> TILE_ENTITY_CLASSES = StringUtils.newArrayList();
     /**
-     * Whether this module is allowed to start and enabled
-     */
-    public boolean enabled = false;
-    /**
      * A List of the detected Entity (Blocks + Items) Names
      */
     public List<String> TILE_ENTITY_NAMES = StringUtils.newArrayList();
@@ -84,6 +80,10 @@ public class TileEntityUtils implements Module {
      * A List storing a mapping of Tile Entity textures, mapped as entityName:entityObject
      */
     public Map<String, ItemStack> TILE_ENTITY_RESOURCES = StringUtils.newHashMap();
+    /**
+     * Whether this module is allowed to start and enabled
+     */
+    private boolean enabled = false;
     /**
      * Whether this module is active and currently in use
      */
@@ -329,9 +329,9 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void onTick() {
-        enabled = !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : enabled;
-        final boolean needsConfigUpdate = enabled && !hasScannedConfig() && canFetchConfig();
-        final boolean needsInternalUpdate = enabled && !hasScannedInternals() && canFetchInternals();
+        setEnabled(!CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : isEnabled());
+        final boolean needsConfigUpdate = isEnabled() && !hasScannedConfig() && canFetchConfig();
+        final boolean needsInternalUpdate = isEnabled() && !hasScannedInternals() && canFetchInternals();
 
         if (needsConfigUpdate) {
             scanConfigData();
@@ -342,7 +342,7 @@ public class TileEntityUtils implements Module {
             hasScannedInternals = true;
         }
 
-        if (enabled) {
+        if (isEnabled()) {
             if (CraftPresence.player != null) {
                 setInUse(true);
                 updateData();
