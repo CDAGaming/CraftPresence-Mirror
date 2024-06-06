@@ -16,10 +16,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ModFusioner (`1.0.10` -> `1.0.12`)
     * Fabric Loader (`0.15.10` -> `0.15.11`)
     * Lenni Reflect (`1.3.2` -> `1.3.4`)
-    * UniCore (`1.0.10` -> `1.1.8`)
+    * UniCore (`1.0.10` -> `1.1.9`)
     * DiscordIPC (`0.8.7` -> `0.9.1`)
     * Starscript (`0.3.0` -> `0.3.3`)
     * SpotBugs Annotations (`4.8.4` -> `4.8.5`)
+    * ClassGraph (`4.8.172` -> `4.8.173`)
 * All versions of the mod are now built using Java 21, rather than being dependent on legacy Java
     * This allows us to have a consistent API as well as develop under the current modern standards
     * In versions where a downgrade is needed, this is performed using `JVMDowngrader` to ensure API compatibility
