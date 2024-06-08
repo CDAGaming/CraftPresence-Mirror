@@ -793,31 +793,6 @@ public class DiscordUtils {
     }
 
     /**
-     * Removes the Specified Argument as an RPC Placeholder
-     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#remove(String)}
-     *
-     * @param source The {@link ValueMap} to interpret
-     * @param name   The Specified Argument to Synchronize for
-     * @return the previous value assigned, if any
-     */
-    private Supplier<Value> removeArgument(final ValueMap source, final String name) {
-        return removeArgument(source, "", name);
-    }
-
-    /**
-     * Removes the Specified Argument as an RPC Placeholder
-     *
-     * @param argumentName The Specified Argument to remove
-     * @return the previous value assigned, if any
-     */
-    public Supplier<Value> removeArgument(final String argumentName) {
-        if (!StringUtils.isNullOrEmpty(argumentName)) {
-            return removeArgument(scriptEngine.getGlobals(), argumentName);
-        }
-        return null;
-    }
-
-    /**
      * Remove any arguments following the specified formats
      * <p>INTERNAL USAGE ONLY. See {@link ValueMap#remove(String)}
      *
@@ -873,12 +848,24 @@ public class DiscordUtils {
 
     /**
      * Remove any arguments following the specified formats
+     * <p>INTERNAL USAGE ONLY. See {@link ValueMap#remove(String)}
+     *
+     * @param source The {@link ValueMap} to interpret
+     * @param args   The string formats to interpret
+     * @return a mapping of all removed objects, using format path:data
+     */
+    private Map<String, Supplier<Value>> removeArguments(final ValueMap source, final String... args) {
+        return removeArguments(source, "", args);
+    }
+
+    /**
+     * Remove any arguments following the specified formats
      *
      * @param args The string formats to interpret
      * @return a mapping of all removed objects, using format path:data
      */
     public Map<String, Supplier<Value>> removeArguments(final String... args) {
-        return removeArguments(scriptEngine.getGlobals(), "", args);
+        return removeArguments(scriptEngine.getGlobals(), args);
     }
 
     /**
