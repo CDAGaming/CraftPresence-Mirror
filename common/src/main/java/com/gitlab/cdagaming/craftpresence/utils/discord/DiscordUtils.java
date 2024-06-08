@@ -947,9 +947,9 @@ public class DiscordUtils {
     public void syncDynamicVariables(final Map<String, String> oldData, final Map<String, String> newData) {
         final boolean hasOldData = oldData != null && !oldData.isEmpty();
         if (hasOldData) {
-            for (Map.Entry<String, String> entry : oldData.entrySet()) {
-                if (!entry.getKey().equals("default") && !newData.containsKey(entry.getKey())) {
-                    removeArguments("custom." + entry.getKey());
+            for (String entry : oldData.keySet()) {
+                if (!entry.equals("default") && !newData.containsKey(entry)) {
+                    removeArguments("custom." + entry);
                 }
             }
         }
