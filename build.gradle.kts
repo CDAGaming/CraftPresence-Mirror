@@ -94,7 +94,7 @@ subprojects {
     val buildVersion = "build_java_version"()?.let { JavaVersion.toVersion(it) }!!
     val buildVersionInt = Integer.parseInt(buildVersion.majorVersion)
 
-    val shouldDowngrade = sourceVersionInt > buildVersionInt
+    val shouldDowngrade = sourceVersionInt > buildVersionInt && path != ":common"
 
     val sourceSets = extensions.getByType<SourceSetContainer>()
 
@@ -344,7 +344,7 @@ subprojects {
     }
 
     afterEvaluate {
-        if (shouldDowngrade && path != ":common") {
+        if (shouldDowngrade) {
             val remapJar = tasks.getByName<RemapJarTask>("remapJar") {
                 destinationDirectory = temporaryDir
             }
