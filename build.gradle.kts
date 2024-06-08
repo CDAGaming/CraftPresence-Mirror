@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 plugins {
     java
     id("xyz.wagyourtail.unimined") version "1.2.7-SNAPSHOT" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "0.7.0"
+    id("xyz.wagyourtail.jvmdowngrader") version "0.7.1"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.12"
@@ -343,6 +343,9 @@ subprojects {
         if (shouldDowngrade) {
             // Setup JVMDG Globals
             jvmdg.downgradeTo = buildVersion
+            jvmdg.shadePath = {
+                "$extModId/jvmdg/api"
+            }
             if (buildVersion.isJava7) {
                 jvmdg.debugSkipStubs.add(buildVersion)
             }
