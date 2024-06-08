@@ -172,6 +172,17 @@ public interface Module {
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
      *
      * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the Specified Argument
+     * @param plain        Whether the expression should be parsed as a plain string
+     */
+    default void syncArgument(final String argumentName, final Object data, final boolean plain) {
+        syncArgument(argumentName, () -> data, plain);
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
      * @param condition    If specified, the extra conditions required to interpret the event
      * @param event        The data to attach to the Specified Argument
      */
@@ -187,6 +198,16 @@ public interface Module {
      */
     default void syncArgument(final String argumentName, final Supplier<Object> event) {
         syncArgument(argumentName, null, event);
+    }
+
+    /**
+     * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
+     *
+     * @param argumentName The Specified Argument to Synchronize for
+     * @param data         The data to attach to the Specified Argument
+     */
+    default void syncArgument(final String argumentName, final Object data) {
+        syncArgument(argumentName, data, false);
     }
 
     /**
