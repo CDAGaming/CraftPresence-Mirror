@@ -405,14 +405,14 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void initPresence() {
-        syncFunction("item.message.default", () ->
+        syncArgument("item.message.default", () ->
                 CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault("default", "")
         );
-        syncFunction("item.message.holding", () -> String.format("[%s, %s]",
+        syncArgument("item.message.holding", () -> String.format("[%s, %s]",
                 StringUtils.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, "N/A"),
                 StringUtils.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, "N/A")
         ), true);
-        syncFunction("item.message.equipped", () -> String.format("[%s, %s, %s, %s]",
+        syncArgument("item.message.equipped", () -> String.format("[%s, %s, %s, %s]",
                 StringUtils.getOrDefault(CURRENT_HELMET_NAME, "N/A"),
                 StringUtils.getOrDefault(CURRENT_CHEST_NAME, "N/A"),
                 StringUtils.getOrDefault(CURRENT_LEGS_NAME, "N/A"),
@@ -425,10 +425,10 @@ public class TileEntityUtils implements Module {
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (!isEmpty(CURRENT_MAIN_HAND_ITEM)) {
             if (!hasInitializedMainHand) {
-                syncFunction("data.item.main_hand.instance", () -> CURRENT_MAIN_HAND_ITEM != null, () -> CURRENT_MAIN_HAND_ITEM);
-                syncFunction("data.item.main_hand.class", () -> CURRENT_MAIN_HAND_ITEM != null, () -> CURRENT_MAIN_HAND_ITEM.getClass());
-                syncFunction("item.main_hand.name", () -> CURRENT_MAIN_HAND_ITEM != null, () -> CURRENT_MAIN_HAND_ITEM_NAME, true);
-                syncFunction("item.main_hand.message", () -> CURRENT_MAIN_HAND_ITEM != null, () ->
+                syncArgument("data.item.main_hand.instance", () -> CURRENT_MAIN_HAND_ITEM != null, () -> CURRENT_MAIN_HAND_ITEM);
+                syncArgument("data.item.main_hand.class", () -> CURRENT_MAIN_HAND_ITEM != null, () -> CURRENT_MAIN_HAND_ITEM.getClass());
+                syncArgument("item.main_hand.name", () -> CURRENT_MAIN_HAND_ITEM != null, () -> CURRENT_MAIN_HAND_ITEM_NAME, true);
+                syncArgument("item.main_hand.message", () -> CURRENT_MAIN_HAND_ITEM != null, () ->
                         CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
                                 CURRENT_MAIN_HAND_ITEM_NAME, CURRENT_MAIN_HAND_ITEM_NAME
                         )
@@ -442,10 +442,10 @@ public class TileEntityUtils implements Module {
 
         if (!isEmpty(CURRENT_OFFHAND_ITEM)) {
             if (!hasInitializedOffHand) {
-                syncFunction("data.item.off_hand.instance", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM);
-                syncFunction("data.item.off_hand.class", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM.getClass());
-                syncFunction("item.off_hand.name", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM_NAME, true);
-                syncFunction("item.off_hand.message", () -> CURRENT_OFFHAND_ITEM != null, () ->
+                syncArgument("data.item.off_hand.instance", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM);
+                syncArgument("data.item.off_hand.class", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM.getClass());
+                syncArgument("item.off_hand.name", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM_NAME, true);
+                syncArgument("item.off_hand.message", () -> CURRENT_OFFHAND_ITEM != null, () ->
                         CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
                                 CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME
                         )
@@ -459,10 +459,10 @@ public class TileEntityUtils implements Module {
 
         if (!isEmpty(CURRENT_HELMET)) {
             if (!hasInitializedHelmet) {
-                syncFunction("data.item.helmet.instance", () -> CURRENT_HELMET != null, () -> CURRENT_HELMET);
-                syncFunction("data.item.helmet.class", () -> CURRENT_HELMET != null, () -> CURRENT_HELMET.getClass());
-                syncFunction("item.helmet.name", () -> CURRENT_HELMET != null, () -> CURRENT_HELMET_NAME, true);
-                syncFunction("item.helmet.message", () -> CURRENT_HELMET != null, () ->
+                syncArgument("data.item.helmet.instance", () -> CURRENT_HELMET != null, () -> CURRENT_HELMET);
+                syncArgument("data.item.helmet.class", () -> CURRENT_HELMET != null, () -> CURRENT_HELMET.getClass());
+                syncArgument("item.helmet.name", () -> CURRENT_HELMET != null, () -> CURRENT_HELMET_NAME, true);
+                syncArgument("item.helmet.message", () -> CURRENT_HELMET != null, () ->
                         CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
                                 CURRENT_HELMET_NAME, CURRENT_HELMET_NAME
                         )
@@ -476,10 +476,10 @@ public class TileEntityUtils implements Module {
 
         if (!isEmpty(CURRENT_CHEST)) {
             if (!hasInitializedChest) {
-                syncFunction("data.item.chestplate.instance", () -> CURRENT_CHEST != null, () -> CURRENT_CHEST);
-                syncFunction("data.item.chestplate.class", () -> CURRENT_CHEST != null, () -> CURRENT_CHEST.getClass());
-                syncFunction("item.chestplate.name", () -> CURRENT_CHEST != null, () -> CURRENT_CHEST_NAME, true);
-                syncFunction("item.chestplate.message", () -> CURRENT_CHEST != null, () ->
+                syncArgument("data.item.chestplate.instance", () -> CURRENT_CHEST != null, () -> CURRENT_CHEST);
+                syncArgument("data.item.chestplate.class", () -> CURRENT_CHEST != null, () -> CURRENT_CHEST.getClass());
+                syncArgument("item.chestplate.name", () -> CURRENT_CHEST != null, () -> CURRENT_CHEST_NAME, true);
+                syncArgument("item.chestplate.message", () -> CURRENT_CHEST != null, () ->
                         CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
                                 CURRENT_CHEST_NAME, CURRENT_CHEST_NAME
                         )
@@ -493,10 +493,10 @@ public class TileEntityUtils implements Module {
 
         if (!isEmpty(CURRENT_LEGS)) {
             if (!hasInitializedLegs) {
-                syncFunction("data.item.leggings.instance", () -> CURRENT_LEGS != null, () -> CURRENT_LEGS);
-                syncFunction("data.item.leggings.class", () -> CURRENT_LEGS != null, () -> CURRENT_LEGS.getClass());
-                syncFunction("item.leggings.name", () -> CURRENT_LEGS != null, () -> CURRENT_LEGS_NAME, true);
-                syncFunction("item.leggings.message", () -> CURRENT_LEGS != null, () ->
+                syncArgument("data.item.leggings.instance", () -> CURRENT_LEGS != null, () -> CURRENT_LEGS);
+                syncArgument("data.item.leggings.class", () -> CURRENT_LEGS != null, () -> CURRENT_LEGS.getClass());
+                syncArgument("item.leggings.name", () -> CURRENT_LEGS != null, () -> CURRENT_LEGS_NAME, true);
+                syncArgument("item.leggings.message", () -> CURRENT_LEGS != null, () ->
                         CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
                                 CURRENT_LEGS_NAME, CURRENT_LEGS_NAME
                         )
@@ -510,10 +510,10 @@ public class TileEntityUtils implements Module {
 
         if (!isEmpty(CURRENT_BOOTS)) {
             if (!hasInitializedBoots) {
-                syncFunction("data.item.boots.instance", () -> CURRENT_BOOTS != null, () -> CURRENT_BOOTS);
-                syncFunction("data.item.boots.class", () -> CURRENT_BOOTS != null, () -> CURRENT_BOOTS.getClass());
-                syncFunction("item.boots.name", () -> CURRENT_BOOTS != null, () -> CURRENT_BOOTS_NAME, true);
-                syncFunction("item.boots.message", () -> CURRENT_BOOTS != null, () ->
+                syncArgument("data.item.boots.instance", () -> CURRENT_BOOTS != null, () -> CURRENT_BOOTS);
+                syncArgument("data.item.boots.class", () -> CURRENT_BOOTS != null, () -> CURRENT_BOOTS.getClass());
+                syncArgument("item.boots.name", () -> CURRENT_BOOTS != null, () -> CURRENT_BOOTS_NAME, true);
+                syncArgument("item.boots.message", () -> CURRENT_BOOTS != null, () ->
                         CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
                                 CURRENT_BOOTS_NAME, CURRENT_BOOTS_NAME
                         )
@@ -575,8 +575,8 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
-    public void syncFunction(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
-        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(condition, event), plain);
+    public void syncArgument(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncArgument(argumentName, getModuleFunction(condition, event), plain);
     }
 
     @Override

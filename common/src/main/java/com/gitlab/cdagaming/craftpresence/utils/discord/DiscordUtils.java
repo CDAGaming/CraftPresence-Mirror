@@ -613,7 +613,7 @@ public class DiscordUtils {
      */
     public void syncTimestamp(final Supplier<Long> newTimestamp, final String... args) {
         for (String argumentName : args) {
-            syncFunction(argumentName, () -> Long.toString(newTimestamp.get()), true);
+            syncArgument(argumentName, () -> Long.toString(newTimestamp.get()), true);
         }
     }
 
@@ -889,7 +889,7 @@ public class DiscordUtils {
      * @param plain        Whether the expression should be parsed as a plain string
      * @return the current {@link ValueMap} instance
      */
-    public ValueMap syncFunction(final String argumentName, final Supplier<Object> data, final boolean plain) {
+    public ValueMap syncArgument(final String argumentName, final Supplier<Object> data, final boolean plain) {
         return setArgument(argumentName, () -> toValue(data.get(), plain));
     }
 
@@ -902,7 +902,7 @@ public class DiscordUtils {
      * @return the current {@link ValueMap} instance
      */
     public ValueMap syncArgument(final String argumentName, final Object data, final boolean plain) {
-        return syncFunction(argumentName, () -> data, plain);
+        return syncArgument(argumentName, () -> data, plain);
     }
 
     /**
@@ -912,8 +912,8 @@ public class DiscordUtils {
      * @param data         The data to attach to the Specified Argument
      * @return the current {@link ValueMap} instance
      */
-    public ValueMap syncFunction(final String argumentName, final Supplier<Object> data) {
-        return syncFunction(argumentName, data, false);
+    public ValueMap syncArgument(final String argumentName, final Supplier<Object> data) {
+        return syncArgument(argumentName, data, false);
     }
 
     /**
@@ -956,7 +956,7 @@ public class DiscordUtils {
 
         for (String entry : newData.keySet()) {
             if (!entry.equals("default") && (!hasOldData || !oldData.containsKey(entry))) {
-                syncFunction(
+                syncArgument(
                         "custom." + entry,
                         () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
                 );
@@ -1285,14 +1285,14 @@ public class DiscordUtils {
      */
     public void syncPlaceholders() {
         FunctionsLib.init(this, scriptEngine);
-        syncFunction("general.mods", Constants::getModCount);
-        syncFunction("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
-        syncFunction("general.version", () -> ModUtils.MCVersion, true);
-        syncFunction("general.protocol", () -> ModUtils.MCProtocolID);
-        syncFunction("general.brand", () -> ModUtils.BRAND, true);
+        syncArgument("general.mods", Constants::getModCount);
+        syncArgument("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
+        syncArgument("general.version", () -> ModUtils.MCVersion, true);
+        syncArgument("general.protocol", () -> ModUtils.MCProtocolID);
+        syncArgument("general.brand", () -> ModUtils.BRAND, true);
 
-        syncFunction("data.general.version", () -> Constants.MCBuildVersion, true);
-        syncFunction("data.general.protocol", () -> Constants.MCBuildProtocol);
+        syncArgument("data.general.version", () -> Constants.MCBuildVersion, true);
+        syncArgument("data.general.protocol", () -> Constants.MCBuildProtocol);
         syncTimestamp(() -> {
             final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
                     lastStartTime : TimeUtils.toEpochMilli();
@@ -1300,28 +1300,28 @@ public class DiscordUtils {
             return currentStartTime;
         }, "data.general.time");
 
-        syncFunction("_general.instance", () -> CraftPresence.instance);
-        syncFunction("_general.player", () -> CraftPresence.player);
-        syncFunction("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.world : null);
-        syncFunction("_config.instance", () -> CraftPresence.CONFIG);
+        syncArgument("_general.instance", () -> CraftPresence.instance);
+        syncArgument("_general.player", () -> CraftPresence.player);
+        syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.world : null);
+        syncArgument("_config.instance", () -> CraftPresence.CONFIG);
 
         // Sync Custom Variables
         syncDynamicVariables(null, CraftPresence.CONFIG.displaySettings.dynamicVariables);
 
         // Add Any Generalized Argument Data needed
-        syncFunction("player.name", () -> CraftPresence.username, true);
+        syncArgument("player.name", () -> CraftPresence.username, true);
 
         // UUID Data
-        syncFunction("player.uuid.short", () -> {
+        syncArgument("player.uuid.short", () -> {
             final String uniqueId = CraftPresence.uuid;
             return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, true) : null;
         }, true);
-        syncFunction("player.uuid.full", () -> {
+        syncArgument("player.uuid.full", () -> {
             final String uniqueId = CraftPresence.uuid;
             return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, false) : null;
         }, true);
 
-        syncFunction("player.icon", () -> {
+        syncArgument("player.icon", () -> {
             if (addEndpointIcon(
                     CraftPresence.CONFIG,
                     CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
@@ -1333,7 +1333,7 @@ public class DiscordUtils {
         }, true);
 
         // Sync the Default Icon Argument
-        syncFunction("general.icon", () -> CraftPresence.CONFIG.generalSettings.defaultIcon, true);
+        syncArgument("general.icon", () -> CraftPresence.CONFIG.generalSettings.defaultIcon, true);
 
         CommandUtils.syncModuleArguments();
         CommandUtils.syncPackArguments();

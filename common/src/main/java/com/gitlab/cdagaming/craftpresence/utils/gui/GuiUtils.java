@@ -180,8 +180,8 @@ public class GuiUtils implements ExtendedModule {
     }
 
     @Override
-    public void syncFunction(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
-        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(condition, event), plain);
+    public void syncArgument(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncArgument(argumentName, getModuleFunction(condition, event), plain);
     }
 
     @Override
@@ -256,19 +256,19 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+        syncArgument("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
-        syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
+        syncArgument("data.screen.instance", () -> CURRENT_SCREEN);
+        syncArgument("screen.name", () -> CURRENT_GUI_NAME, true);
 
-        syncFunction("screen.message", () -> {
+        syncArgument("screen.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage;
         });
-        syncFunction("screen.icon", () -> {
+        syncArgument("screen.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 

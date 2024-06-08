@@ -151,8 +151,8 @@ public class ReplayModUtils implements ExtendedModule {
     }
 
     @Override
-    public void syncFunction(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
-        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(condition, event), plain);
+    public void syncArgument(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncArgument(argumentName, getModuleFunction(condition, event), plain);
     }
 
     @Override
@@ -212,19 +212,19 @@ public class ReplayModUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        syncFunction("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
+        syncArgument("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        syncFunction("data.screen.instance", () -> CURRENT_SCREEN);
-        syncFunction("screen.name", () -> CURRENT_GUI_NAME, true);
+        syncArgument("data.screen.instance", () -> CURRENT_SCREEN);
+        syncArgument("screen.name", () -> CURRENT_GUI_NAME, true);
 
-        syncFunction("screen.message", () -> {
+        syncArgument("screen.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_GUI_NAME);
         });
-        syncFunction("screen.icon", () -> {
+        syncArgument("screen.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_GUI_NAME);
 
@@ -254,12 +254,12 @@ public class ReplayModUtils implements ExtendedModule {
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN != null && CURRENT_SCREEN.getClass() == videoRendererScreen) {
             if (!hasInitializedMain) {
-                syncFunction("replaymod.time.current", () -> secToString(
+                syncArgument("replaymod.time.current", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
                                 videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
                         )).getSecond() / 1000
                 ), true);
-                syncFunction("replaymod.time.remaining", () -> secToString(
+                syncArgument("replaymod.time.remaining", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
                                 videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
                         )).getSecond() / 1000
@@ -273,9 +273,9 @@ public class ReplayModUtils implements ExtendedModule {
             final Class<?> videoRendererInfo = FileUtils.loadClass("com.replaymod.render.rendering.VideoRenderer");
             if (rendererObj != null && rendererObj.getClass() == videoRendererInfo) {
                 if (!hasInitializedSub) {
-                    syncFunction("replaymod.frames.current",
+                    syncArgument("replaymod.frames.current",
                             () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"));
-                    syncFunction("replaymod.frames.total",
+                    syncArgument("replaymod.frames.total",
                             () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"));
                     hasInitializedSub = true;
                 }

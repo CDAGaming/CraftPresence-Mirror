@@ -155,7 +155,7 @@ public interface Module {
      * @param event        The data to attach to the Specified Argument
      * @param plain        Whether the expression should be parsed as a plain string
      */
-    void syncFunction(final String argumentName, final Supplier<Boolean> condition, final Supplier<Object> event, final boolean plain);
+    void syncArgument(final String argumentName, final Supplier<Boolean> condition, final Supplier<Object> event, final boolean plain);
 
     /**
      * Synchronizes the Specified Argument as an RPC Message or an Icon Placeholder
@@ -164,8 +164,8 @@ public interface Module {
      * @param event        The data to attach to the Specified Argument
      * @param plain        Whether the expression should be parsed as a plain string
      */
-    default void syncFunction(final String argumentName, final Supplier<Object> event, final boolean plain) {
-        syncFunction(argumentName, null, event, plain);
+    default void syncArgument(final String argumentName, final Supplier<Object> event, final boolean plain) {
+        syncArgument(argumentName, null, event, plain);
     }
 
     /**
@@ -175,8 +175,8 @@ public interface Module {
      * @param condition    If specified, the extra conditions required to interpret the event
      * @param event        The data to attach to the Specified Argument
      */
-    default void syncFunction(final String argumentName, final Supplier<Boolean> condition, final Supplier<Object> event) {
-        syncFunction(argumentName, condition, event, false);
+    default void syncArgument(final String argumentName, final Supplier<Boolean> condition, final Supplier<Object> event) {
+        syncArgument(argumentName, condition, event, false);
     }
 
     /**
@@ -185,8 +185,8 @@ public interface Module {
      * @param argumentName The Specified Argument to Synchronize for
      * @param event        The data to attach to the Specified Argument
      */
-    default void syncFunction(final String argumentName, final Supplier<Object> event) {
-        syncFunction(argumentName, null, event);
+    default void syncArgument(final String argumentName, final Supplier<Object> event) {
+        syncArgument(argumentName, null, event);
     }
 
     /**

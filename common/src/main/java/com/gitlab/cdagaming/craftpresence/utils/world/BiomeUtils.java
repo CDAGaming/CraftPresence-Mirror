@@ -144,24 +144,24 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        syncFunction("biome.default.icon", () -> CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
+        syncArgument("biome.default.icon", () -> CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
 
-        syncFunction("data.biome.instance", () -> CURRENT_BIOME);
-        syncFunction("data.biome.class", () -> CURRENT_BIOME.getClass());
-        syncFunction("data.biome.name", () -> RAW_BIOME_NAME, true);
-        syncFunction("data.biome.identifier", () -> RAW_BIOME_IDENTIFIER, true);
+        syncArgument("data.biome.instance", () -> CURRENT_BIOME);
+        syncArgument("data.biome.class", () -> CURRENT_BIOME.getClass());
+        syncArgument("data.biome.name", () -> RAW_BIOME_NAME, true);
+        syncArgument("data.biome.identifier", () -> RAW_BIOME_IDENTIFIER, true);
 
-        syncFunction("biome.identifier", () -> CURRENT_BIOME_IDENTIFIER, true);
-        syncFunction("biome.name", () -> CURRENT_BIOME_NAME, true);
+        syncArgument("biome.identifier", () -> CURRENT_BIOME_IDENTIFIER, true);
+        syncArgument("biome.name", () -> CURRENT_BIOME_NAME, true);
 
-        syncFunction("biome.message", () -> {
+        syncArgument("biome.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_BIOME_IDENTIFIER);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_BIOME_IDENTIFIER);
         });
-        syncFunction("biome.icon", () -> {
+        syncArgument("biome.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_BIOME_IDENTIFIER);
 
@@ -245,8 +245,8 @@ public class BiomeUtils implements ExtendedModule {
     }
 
     @Override
-    public void syncFunction(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
-        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(condition, event), plain);
+    public void syncArgument(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncArgument(argumentName, getModuleFunction(condition, event), plain);
     }
 
     @Override

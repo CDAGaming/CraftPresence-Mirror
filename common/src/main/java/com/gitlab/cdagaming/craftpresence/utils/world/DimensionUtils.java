@@ -147,24 +147,24 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void initPresence() {
-        syncFunction("dimension.default.icon", () -> CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
+        syncArgument("dimension.default.icon", () -> CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
-        syncFunction("data.dimension.instance", () -> CURRENT_DIMENSION);
-        syncFunction("data.dimension.class", () -> CURRENT_DIMENSION.getClass());
-        syncFunction("data.dimension.name", () -> RAW_DIMENSION_NAME, true);
-        syncFunction("data.dimension.identifier", () -> RAW_DIMENSION_IDENTIFIER, true);
+        syncArgument("data.dimension.instance", () -> CURRENT_DIMENSION);
+        syncArgument("data.dimension.class", () -> CURRENT_DIMENSION.getClass());
+        syncArgument("data.dimension.name", () -> RAW_DIMENSION_NAME, true);
+        syncArgument("data.dimension.identifier", () -> RAW_DIMENSION_IDENTIFIER, true);
 
-        syncFunction("dimension.identifier", () -> CURRENT_DIMENSION_IDENTIFIER, true);
-        syncFunction("dimension.name", () -> CURRENT_DIMENSION_NAME, true);
+        syncArgument("dimension.identifier", () -> CURRENT_DIMENSION_IDENTIFIER, true);
+        syncArgument("dimension.name", () -> CURRENT_DIMENSION_NAME, true);
 
-        syncFunction("dimension.message", () -> {
+        syncArgument("dimension.message", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_DIMENSION_IDENTIFIER);
 
             final String defaultMessage = Config.isValidProperty(defaultData, "textOverride") ? defaultData.getTextOverride() : "";
             return getResult(Config.isValidProperty(currentData, "textOverride") ? currentData.getTextOverride() : defaultMessage, CURRENT_DIMENSION_IDENTIFIER);
         });
-        syncFunction("dimension.icon", () -> {
+        syncArgument("dimension.icon", () -> {
             final ModuleData defaultData = getDefaultData();
             final ModuleData currentData = getData(CURRENT_DIMENSION_IDENTIFIER);
 
@@ -254,8 +254,8 @@ public class DimensionUtils implements ExtendedModule {
     }
 
     @Override
-    public void syncFunction(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
-        CraftPresence.CLIENT.syncFunction(argumentName, getModuleFunction(condition, event), plain);
+    public void syncArgument(String argumentName, Supplier<Boolean> condition, Supplier<Object> event, boolean plain) {
+        CraftPresence.CLIENT.syncArgument(argumentName, getModuleFunction(condition, event), plain);
     }
 
     @Override

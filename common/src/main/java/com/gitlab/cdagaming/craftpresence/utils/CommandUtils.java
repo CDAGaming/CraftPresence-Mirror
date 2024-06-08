@@ -177,7 +177,7 @@ public class CommandUtils {
     public static void syncModuleArguments() {
         for (String key : modules.keySet()) {
             final String name = (key.startsWith("_") ? "" : "_") + key;
-            CraftPresence.CLIENT.syncFunction(name + ".instance", () -> modules.get(key));
+            CraftPresence.CLIENT.syncArgument(name + ".instance", () -> modules.get(key));
         }
     }
 
@@ -194,9 +194,9 @@ public class CommandUtils {
         }
 
         if (data.hasPackName()) {
-            CraftPresence.CLIENT.syncFunction("pack.type", data::getPackType, true);
-            CraftPresence.CLIENT.syncFunction("pack.name", data::getPackName, true);
-            CraftPresence.CLIENT.syncFunction("pack.icon",
+            CraftPresence.CLIENT.syncArgument("pack.type", data::getPackType, true);
+            CraftPresence.CLIENT.syncArgument("pack.name", data::getPackName, true);
+            CraftPresence.CLIENT.syncArgument("pack.icon",
                     () -> CraftPresence.CLIENT.imageOf(true,
                             data.getPackIcon(), data.getPackType())
                     , true);
@@ -416,10 +416,10 @@ public class CommandUtils {
      */
     public static void syncMenuData(final ModuleData currentData) {
         if (loadedMenu == null) {
-            CraftPresence.CLIENT.syncFunction("menu.message", () ->
+            CraftPresence.CLIENT.syncArgument("menu.message", () ->
                     Config.isValidProperty(loadedMenu, "textOverride") ? loadedMenu.getTextOverride() : ""
             );
-            CraftPresence.CLIENT.syncFunction("menu.icon", () -> {
+            CraftPresence.CLIENT.syncArgument("menu.icon", () -> {
                 final String currentIcon = Config.isValidProperty(loadedMenu, "iconOverride") ? loadedMenu.getIconOverride() : CraftPresence.CONFIG.generalSettings.defaultIcon;
                 return CraftPresence.CLIENT.imageOf(true, currentIcon);
             });
