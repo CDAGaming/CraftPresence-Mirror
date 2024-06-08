@@ -1,6 +1,6 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.hypherionmc.modfusioner.plugin.FusionerExtension
-import xyz.wagyourtail.jvmdg.gradle.task.DowngradeFiles
+import xyz.wagyourtail.jvmdg.gradle.task.files.DowngradeFiles
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 plugins {
     java
     id("xyz.wagyourtail.unimined") version "1.2.7-SNAPSHOT" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "0.6.1"
+    id("xyz.wagyourtail.jvmdowngrader") version "0.7.0"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.12"
@@ -262,12 +262,8 @@ subprojects {
                 val apiVersion = if (buildVersion.isJava7) JavaVersion.VERSION_1_8 else buildVersion
                 runs.config("client") {
                     val downgradeClient = tasks.create("downgradeClient", DowngradeFiles::class.java) {
-                        downgradeTo = buildVersion
-                        toDowngrade = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
+                        inputCollection = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
                         classpath = project.files()
-                        if (buildVersion.isJava7) {
-                            debugSkipStubs.set(listOf(52))
-                        }
                     }
                     launchClasspath = downgradeClient.outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
                     runFirst.add(downgradeClient)
@@ -345,6 +341,12 @@ subprojects {
 
     afterEvaluate {
         if (shouldDowngrade) {
+            // Setup JVMDG Globals
+            jvmdg.downgradeTo = buildVersion
+            if (buildVersion.isJava7) {
+                jvmdg.debugSkipStubs.add(buildVersion)
+            }
+
             val remapJar = tasks.getByName<RemapJarTask>("remapJar") {
                 destinationDirectory = temporaryDir
             }
@@ -353,19 +355,10 @@ subprojects {
             tasks.downgradeJar {
                 dependsOn(remapJar)
                 inputFile = remapJar.archiveFile.get().asFile
-                downgradeTo = buildVersion
-                if (buildVersion.isJava7) {
-                    debugSkipStubs.set(listOf(52))
-                }
                 destinationDirectory = temporaryDir
             }
 
-            if (buildVersion.isJava7) {
-                jvmdg.shadeDebugSkipStubs.add(52)
-            }
             tasks.shadeDowngradedApi {
-                downgradeTo = buildVersion
-                shadePath = "$extModId/jvmdg/api"
                 archiveClassifier = remapJar.archiveClassifier
             }
         }
