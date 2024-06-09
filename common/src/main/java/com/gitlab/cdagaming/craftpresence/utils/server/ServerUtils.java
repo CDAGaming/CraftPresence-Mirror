@@ -410,7 +410,7 @@ public class ServerUtils implements ExtendedModule {
                 serverData.status = CommonComponents.EMPTY;
             }
 
-            ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData);
+            ConnectScreen.startConnecting(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, ServerAddress.parseString(serverData.ip), serverData, false);
         } catch (Throwable ex) {
             printException(ex);
         }
@@ -429,9 +429,9 @@ public class ServerUtils implements ExtendedModule {
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String newDifficulty = CraftPresence.player.level.getLevelData().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = CraftPresence.player.level().getLevelData().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.player.level.getDifficulty().name().toLowerCase());
+                    StringUtils.formatWord(CraftPresence.player.level().getDifficulty().name().toLowerCase());
             return StringUtils.getOrDefault(newDifficulty);
         });
         syncArgument("world.weather.name", () -> {
@@ -442,29 +442,29 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("world.name", () -> {
             final String defaultWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getWorldData().getLevelName() : "";
-            final String secondaryWorldName = CraftPresence.player.level.getServer() != null ? StringUtils.getOrDefault(CraftPresence.player.level.getServer().getWorldData().getLevelName(), defaultWorldName) : defaultWorldName;
+            final String secondaryWorldName = CraftPresence.player.level().getServer() != null ? StringUtils.getOrDefault(CraftPresence.player.level().getServer().getWorldData().getLevelName(), defaultWorldName) : defaultWorldName;
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime()).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.player.level().getDayTime()).getFirst()
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.player.level().getDayTime()).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.player.level().getDayTime()).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime())
+                TimeUtils.fromWorldTime(CraftPresence.player.level().getDayTime())
         );
 
         // Default Arguments

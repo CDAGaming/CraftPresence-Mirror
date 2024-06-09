@@ -43,7 +43,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Style;
@@ -86,7 +86,7 @@ public class RenderUtils {
      */
     public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
     /**
-     * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, PoseStack, Font, int, int, ItemStack, float)}
+     * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(GuiGraphics, Font, int, int, ItemStack, float)}
      */
     private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
     /**
@@ -281,17 +281,18 @@ public class RenderUtils {
      * @param stack        The {@link ItemStack} instance to interpret
      * @param scale        The Scale to render the Object at
      */
-    public static void drawItemStack(@Nonnull final Minecraft client, @Nonnull final PoseStack lv, final Font fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
+    public static void drawItemStack(@Nonnull final GuiGraphics client, final Font fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
         if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
+            final PoseStack lv = client.pose();
             lv.pushPose();
             lv.scale(scale, scale, 1.0f);
             RenderSystem.enableDepthTest();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            client.getItemRenderer().renderAndDecorateItem(lv, stack, xPos, yPos);
-            client.getItemRenderer().renderGuiItemDecorations(lv, fontRenderer, stack, xPos, yPos);
+            client.renderItem(stack, xPos, yPos);
+            client.renderItemDecorations(fontRenderer, stack, xPos, yPos);
 
             RenderSystem.disableDepthTest();
             lv.popPose();
@@ -703,8 +704,8 @@ public class RenderUtils {
      * @param right  The Right side length of the Object
      * @param bottom The bottom length of the Object
      */
-    public static void enableScissor(@Nonnull final Minecraft mc, final int left, final int top, final int right, final int bottom) {
-        GuiComponent.enableScissor(left, top, right, bottom);
+    public static void enableScissor(@Nonnull final GuiGraphics mc, final int left, final int top, final int right, final int bottom) {
+        mc.enableScissor(left, top, right, bottom);
     }
 
     /**
@@ -712,8 +713,8 @@ public class RenderUtils {
      *
      * @param mc The Minecraft Instance
      */
-    public static void disableScissor(@Nonnull final Minecraft mc) {
-        GuiComponent.disableScissor();
+    public static void disableScissor(@Nonnull final GuiGraphics mc) {
+        mc.disableScissor();
     }
 
     /**
@@ -811,7 +812,7 @@ public class RenderUtils {
      * @param isTooltip    Whether to render this layout in a tooltip-style (Issues may occur if combined with isCentered)
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
-    public static void drawMultiLineString(@Nonnull final Minecraft mc, @Nonnull PoseStack matrixStack,
+    public static void drawMultiLineString(@Nonnull final Minecraft mc, @Nonnull GuiGraphics matrixStack,
                                            final List<String> textToInput,
                                            final int posX, final int posY,
                                            final int maxWidth, final int maxHeight,
@@ -1010,8 +1011,8 @@ public class RenderUtils {
                 }
             }
 
-            matrixStack.pushPose();
-            matrixStack.translate(0.0, 0.0, zLevel);
+            matrixStack.pose().pushPose();
+            matrixStack.pose().translate(0.0, 0.0, zLevel);
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 final String line = textLines.get(lineNumber);
@@ -1027,7 +1028,7 @@ public class RenderUtils {
                 tooltipY += fontHeight + 1;
             }
 
-            matrixStack.popPose();
+            matrixStack.pose().popPose();
         }
     }
 
@@ -1040,7 +1041,7 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderCenteredString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+    public static void renderCenteredString(@Nonnull final GuiGraphics matrixStack, final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
         renderString(matrixStack, fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2f), yPos, color);
     }
 
@@ -1053,7 +1054,7 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderCenteredString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+    public static void renderCenteredString(@Nonnull final GuiGraphics matrixStack, final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
         renderString(matrixStack, fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2), yPos, color);
     }
 
@@ -1066,8 +1067,13 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
-        fontRenderer.drawShadow(matrixStack, text, xPos, yPos, color);
+    public static void renderString(@Nonnull final GuiGraphics matrixStack, final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+        if (!StringUtils.isNullOrEmpty(text)) {
+            fontRenderer.drawInBatch(
+                    text, xPos, yPos, color, true, matrixStack.pose().last().pose(), matrixStack.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880, fontRenderer.isBidirectional()
+            );
+            matrixStack.flushIfUnmanaged();
+        }
     }
 
     /**
@@ -1079,7 +1085,7 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+    public static void renderString(@Nonnull final GuiGraphics matrixStack, final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
         renderString(matrixStack, fontRenderer, text, (float) xPos, (float) yPos, color);
     }
 
@@ -1117,7 +1123,7 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+    public static void renderScrollingString(@Nonnull final GuiGraphics matrixStack,
                                              @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,
@@ -1134,9 +1140,9 @@ public class RenderUtils {
             final double renderDistance = Math.max(renderWidth * 0.5D, 3D);
             final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
-            enableScissor(mc, (int) minX, (int) minY, (int) maxX, (int) maxY);
+            enableScissor(matrixStack, (int) minX, (int) minY, (int) maxX, (int) maxY);
             renderString(matrixStack, fontRenderer, message, minX - (float) offset, renderY, color);
-            disableScissor(mc);
+            disableScissor(matrixStack);
         } else {
             final float renderX = MathUtils.clamp(centerX, minX + lineWidth / 2f, maxX - lineWidth / 2f);
             renderCenteredString(matrixStack, fontRenderer, message, renderX, renderY, color);
@@ -1156,7 +1162,7 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+    public static void renderScrollingString(@Nonnull final GuiGraphics matrixStack,
                                              @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,
@@ -1173,9 +1179,9 @@ public class RenderUtils {
             final double renderDistance = Math.max(renderWidth * 0.5D, 3D);
             final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
-            enableScissor(mc, minX, minY, maxX, maxY);
+            enableScissor(matrixStack, minX, minY, maxX, maxY);
             renderString(matrixStack, fontRenderer, message, minX - (int) offset, renderY, color);
-            disableScissor(mc);
+            disableScissor(matrixStack);
         } else {
             final int renderX = MathUtils.clamp(centerX, minX + lineWidth / 2, maxX - lineWidth / 2);
             renderCenteredString(matrixStack, fontRenderer, message, renderX, renderY, color);
@@ -1194,7 +1200,7 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+    public static void renderScrollingString(@Nonnull final GuiGraphics matrixStack,
                                              @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,
@@ -1216,7 +1222,7 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+    public static void renderScrollingString(@Nonnull final GuiGraphics matrixStack,
                                              @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,

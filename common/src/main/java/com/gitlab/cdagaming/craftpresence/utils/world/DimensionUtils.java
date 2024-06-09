@@ -129,7 +129,7 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Level newProvider = CraftPresence.player.level;
+        final Level newProvider = CraftPresence.player.level();
         final ResourceLocation newDimensionType = newProvider.dimension().location();
         final String newDimensionName = newDimensionType.toString();
 
@@ -201,7 +201,7 @@ public class DimensionUtils implements ExtendedModule {
      */
     private List<ResourceLocation> getDimensionTypes() {
         List<ResourceLocation> dimensionTypes = StringUtils.newArrayList();
-        Optional<HolderLookup.RegistryLookup<DimensionType>> dimensionRegistry = CraftPresence.player.level.registryAccess().lookup(Registries.DIMENSION_TYPE);
+        Optional<HolderLookup.RegistryLookup<DimensionType>> dimensionRegistry = CraftPresence.player.level().registryAccess().lookup(Registries.DIMENSION_TYPE);
 
         if (dimensionRegistry.isPresent()) {
             List<Holder.Reference<DimensionType>> defaultDimensionTypes = StringUtils.newArrayList(dimensionRegistry.get().listElements().toList());

@@ -128,8 +128,8 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Biome newBiome = CraftPresence.player.level.getBiome(CraftPresence.player.blockPosition()).value();
-        final ResourceLocation newIdentifier = CraftPresence.player.level.registryAccess().registryOrThrow(Registries.BIOME).getKey(newBiome);
+        final Biome newBiome = CraftPresence.player.level().getBiome(CraftPresence.player.blockPosition()).value();
+        final ResourceLocation newIdentifier = CraftPresence.player.level().registryAccess().registryOrThrow(Registries.BIOME).getKey(newBiome);
         final String newBiomeName = newIdentifier != null ? newIdentifier.toString() : "Plains";
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
@@ -200,7 +200,7 @@ public class BiomeUtils implements ExtendedModule {
      */
     private List<ResourceLocation> getBiomeTypes() {
         List<ResourceLocation> biomeTypes = StringUtils.newArrayList();
-        Optional<HolderLookup.RegistryLookup<Biome>> biomeRegistry = CraftPresence.player.level.registryAccess().lookup(Registries.BIOME);
+        Optional<HolderLookup.RegistryLookup<Biome>> biomeRegistry = CraftPresence.player.level().registryAccess().lookup(Registries.BIOME);
 
         if (biomeRegistry.isPresent()) {
             List<Holder.Reference<Biome>> defaultBiomeTypes = StringUtils.newArrayList(biomeRegistry.get().listElements().toList());
