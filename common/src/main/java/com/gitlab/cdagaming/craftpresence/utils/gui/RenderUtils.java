@@ -41,7 +41,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Matrix4f;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
@@ -50,7 +49,7 @@ import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -843,6 +842,7 @@ public class RenderUtils {
      * Renders a Specified Multi-Line String, constrained by position and dimension arguments
      *
      * @param mc           The current game instance
+     * @param matrixStack  The Matrix Stack, used for Rendering
      * @param textToInput  The Specified Multi-Line String, split by lines into a list
      * @param posX         The starting X position to render the String
      * @param posY         The starting Y position to render the String
@@ -854,7 +854,7 @@ public class RenderUtils {
      * @param isTooltip    Whether to render this layout in a tooltip-style (Issues may occur if combined with isCentered)
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
-    public static void drawMultiLineString(@Nonnull final Minecraft mc,
+    public static void drawMultiLineString(@Nonnull final Minecraft mc, @Nonnull PoseStack matrixStack,
                                            final List<String> textToInput,
                                            final int posX, final int posY,
                                            final int maxWidth, final int maxHeight,
@@ -957,7 +957,7 @@ public class RenderUtils {
 
             final ColorData backgroundColorInfo = colorInfo.getSecond();
             final ColorData borderColorInfo = colorInfo.getThird();
-            final int zLevel = 300;
+            final int zLevel = 400;
 
             // Render Background
             if (backgroundColorInfo != null) {
@@ -1053,17 +1053,15 @@ public class RenderUtils {
                 }
             }
 
-            PoseStack lv = new PoseStack();
-            MultiBufferSource.BufferSource lv2 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-            lv.translate(0.0, 0.0, zLevel);
-            Matrix4f lv3 = lv.last().pose();
+            matrixStack.pushPose();
+            matrixStack.translate(0.0, 0.0, zLevel);
 
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 final String line = textLines.get(lineNumber);
                 final int lineWidth = getStringWidth(fontRenderer, line);
                 final int renderX = isCentered ? (tooltipX + (tooltipTextWidth - lineWidth) / 2) : tooltipX;
 
-                fontRenderer.drawInBatch(line, renderX, tooltipY, -1, true, lv3, lv2, false, 0, 15728880);
+                renderString(matrixStack, fontRenderer, line, renderX, tooltipY, -1);
 
                 if (isTooltip && lineNumber + 1 == titleLinesCount) {
                     tooltipY += 2;
@@ -1072,7 +1070,7 @@ public class RenderUtils {
                 tooltipY += fontHeight + 1;
             }
 
-            lv2.endBatch();
+            matrixStack.popPose();
         }
     }
 
@@ -1085,8 +1083,8 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderCenteredString(final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
-        renderString(fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2f), yPos, color);
+    public static void renderCenteredString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+        renderString(matrixStack, fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2f), yPos, color);
     }
 
     /**
@@ -1098,8 +1096,8 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderCenteredString(final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
-        renderString(fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2), yPos, color);
+    public static void renderCenteredString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+        renderString(matrixStack, fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2), yPos, color);
     }
 
     /**
@@ -1111,8 +1109,8 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderString(final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
-        fontRenderer.drawShadow(text, xPos, yPos, color);
+    public static void renderString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+        fontRenderer.drawShadow(matrixStack, text, xPos, yPos, color);
     }
 
     /**
@@ -1124,8 +1122,8 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderString(final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
-        renderString(fontRenderer, text, (float) xPos, (float) yPos, color);
+    public static void renderString(@Nonnull final PoseStack matrixStack, final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+        renderString(matrixStack, fontRenderer, text, (float) xPos, (float) yPos, color);
     }
 
     /**
@@ -1162,7 +1160,8 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final Minecraft mc,
+    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+                                             @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,
                                              final float centerX,
@@ -1179,11 +1178,11 @@ public class RenderUtils {
             final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
             enableScissor(mc, (int) minX, (int) minY, (int) maxX, (int) maxY);
-            renderString(fontRenderer, message, minX - (float) offset, renderY, color);
+            renderString(matrixStack, fontRenderer, message, minX - (float) offset, renderY, color);
             disableScissor(mc);
         } else {
             final float renderX = MathUtils.clamp(centerX, minX + lineWidth / 2f, maxX - lineWidth / 2f);
-            renderCenteredString(fontRenderer, message, renderX, renderY, color);
+            renderCenteredString(matrixStack, fontRenderer, message, renderX, renderY, color);
         }
     }
 
@@ -1200,7 +1199,8 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final Minecraft mc,
+    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+                                             @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,
                                              final int centerX,
@@ -1217,11 +1217,11 @@ public class RenderUtils {
             final double percentage = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * renderTime / renderDistance)) / 2D + 0.5D;
             final double offset = MathUtils.lerp(percentage, 0.0D, renderWidth);
             enableScissor(mc, minX, minY, maxX, maxY);
-            renderString(fontRenderer, message, minX - (int) offset, renderY, color);
+            renderString(matrixStack, fontRenderer, message, minX - (int) offset, renderY, color);
             disableScissor(mc);
         } else {
             final int renderX = MathUtils.clamp(centerX, minX + lineWidth / 2, maxX - lineWidth / 2);
-            renderCenteredString(fontRenderer, message, renderX, renderY, color);
+            renderCenteredString(matrixStack, fontRenderer, message, renderX, renderY, color);
         }
     }
 
@@ -1237,13 +1237,14 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final Minecraft mc,
+    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+                                             @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,
                                              final float minX, final float minY,
                                              final float maxX, final float maxY,
                                              final int color) {
-        renderScrollingString(mc, fontRenderer, message, maxX - ((maxX - minX) / 2f), minX, minY, maxX, maxY, color);
+        renderScrollingString(matrixStack, mc, fontRenderer, message, maxX - ((maxX - minX) / 2f), minX, minY, maxX, maxY, color);
     }
 
     /**
@@ -1258,13 +1259,14 @@ public class RenderUtils {
      * @param maxY         The maximum Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderScrollingString(@Nonnull final Minecraft mc,
+    public static void renderScrollingString(@Nonnull final PoseStack matrixStack,
+                                             @Nonnull final Minecraft mc,
                                              final Font fontRenderer,
                                              final String message,
                                              final int minX, final int minY,
                                              final int maxX, final int maxY,
                                              final int color) {
-        renderScrollingString(mc, fontRenderer, message, maxX - ((maxX - minX) / 2), minX, minY, maxX, maxY, color);
+        renderScrollingString(matrixStack, mc, fontRenderer, message, maxX - ((maxX - minX) / 2), minX, minY, maxX, maxY, color);
     }
 
     /**
@@ -1300,6 +1302,8 @@ public class RenderUtils {
      * @return The converted and wrapped version of the original input
      */
     public static List<String> listFormattedStringToWidth(final Font fontRenderer, final String stringInput, final int wrapWidth) {
-        return fontRenderer.split(stringInput, wrapWidth);
+        final List<String> result = StringUtils.newArrayList();
+        fontRenderer.getSplitter().splitLines(stringInput, wrapWidth, Style.EMPTY).forEach(line -> result.add(line.getString()));
+        return result;
     }
 }

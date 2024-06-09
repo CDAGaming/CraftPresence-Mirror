@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.TextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -58,7 +59,7 @@ public class ExtendedTextControl extends EditBox implements DynamicWidget {
      * @param heightIn        The Height for this Control
      */
     public ExtendedTextControl(final int componentId, final Font fontRendererObj, final int x, final int y, final int widthIn, final int heightIn) {
-        super(fontRendererObj, x, y, widthIn, heightIn, "");
+        super(fontRendererObj, x, y, widthIn, heightIn, new TextComponent(""));
         setControlMaxLength(DEFAULT_TEXT_LIMIT);
     }
 

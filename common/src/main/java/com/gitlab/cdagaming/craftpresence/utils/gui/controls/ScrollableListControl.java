@@ -33,6 +33,7 @@ import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -288,6 +289,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
     /**
      * Renders a Slot Entry for this Control
      *
+     * @param matrices     The Matrix Stack, used for Rendering
      * @param originalName The original entry name, before processing
      * @param xPos         The Starting X Position to render the Object at
      * @param yPos         The Starting Y Position to render the Object at
@@ -296,7 +298,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
      * @param mouseXIn     The Mouse's Current X Position
      * @param mouseYIn     The Mouse's Current Y Position
      */
-    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn) {
+    public void renderSlotItem(@Nonnull final PoseStack matrices, final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn) {
         final List<String> hoverText = StringUtils.newArrayList();
         String displayName = entryAliases.getOrDefault(originalName, originalName);
         int xOffset = xPos;
@@ -402,7 +404,8 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
             hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
 
-        RenderUtils.renderScrollingString(minecraft,
+        RenderUtils.renderScrollingString(matrices,
+                minecraft,
                 getFontRenderer(),
                 displayName,
                 xOffset + (RenderUtils.getStringWidth(getFontRenderer(), displayName) / 2),
@@ -545,6 +548,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
         /**
          * Renders this Entry to the List
          *
+         * @param matrices    The Matrix Stack, used for Rendering
          * @param index       The Index of the Entry within the List
          * @param yPos        The Y Coordinate to render at
          * @param xPos        The X Coordinate to render at
@@ -556,8 +560,8 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
          * @param tickDelta   The Rendering Tick Rate
          */
         @Override
-        public void render(int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            ScrollableListControl.this.renderSlotItem(name, xPos, yPos, entryWidth, entryHeight, mouseX, mouseY);
+        public void render(@Nonnull PoseStack matrices, int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            ScrollableListControl.this.renderSlotItem(matrices, name, xPos, yPos, entryWidth, entryHeight, mouseX, mouseY);
         }
 
         /**
