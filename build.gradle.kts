@@ -347,7 +347,7 @@ subprojects {
                 "$extModId/jvmdg/api"
             }
             if (buildVersion.isJava7) {
-                jvmdg.debugSkipStubs.add(buildVersion)
+                jvmdg.debugSkipStubs.add(JavaVersion.VERSION_1_8)
             }
 
             val remapJar = tasks.getByName<RemapJarTask>("remapJar") {
