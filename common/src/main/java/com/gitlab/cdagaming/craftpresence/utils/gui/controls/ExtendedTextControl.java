@@ -93,7 +93,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlWidth() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "width", "field_22077_f", "f"
+                "width", "field_22077_f", "g"
         )).getSecond();
     }
 
@@ -102,7 +102,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 width,
-                "width", "field_22077_f", "f"
+                "width", "field_22077_f", "g"
         );
     }
 
@@ -110,7 +110,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlHeight() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "height", "field_22076_g", "g"
+                "height", "field_22076_g", "h"
         )).getSecond();
     }
 
@@ -119,7 +119,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 height,
-                "height", "field_22076_g", "g"
+                "height", "field_22076_g", "h"
         );
     }
 
@@ -159,7 +159,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
     public int getControlPosY() {
         return StringUtils.getValidInteger(StringUtils.getField(
                 GuiTextField.class, this,
-                "yPos", "field_22078_e", "e"
+                "yPos", "field_22078_e", "f"
         )).getSecond();
     }
 
@@ -168,7 +168,7 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
         StringUtils.updateField(
                 GuiTextField.class, this,
                 posY,
-                "yPos", "field_22078_e", "e"
+                "yPos", "field_22078_e", "f"
         );
     }
 

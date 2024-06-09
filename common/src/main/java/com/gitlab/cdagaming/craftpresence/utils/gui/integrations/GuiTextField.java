@@ -324,7 +324,7 @@ public class GuiTextField extends Gui {
                 } else {
                     int selX = x + this.fontRenderer.getStringWidth(this.arrow + strOffset.substring(0, selOffs));
                     drawRect(
-                            selX, y - 1, selX + 1, y + 1 + this.fontRenderer.field_41063_b, -3092272
+                            selX, y - 1, selX + 1, y + 1 + 8, -3092272
                     );
                 }
             }

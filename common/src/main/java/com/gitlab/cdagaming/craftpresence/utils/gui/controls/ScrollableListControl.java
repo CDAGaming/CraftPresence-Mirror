@@ -179,10 +179,10 @@ public class ScrollableListControl extends GuiSlot {
                 top,
                 bottom,
                 StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "left", "field_22258_g", "j")
+                        StringUtils.getField(GuiSlot.class, this, "left", "field_22258_g", "e")
                 ).getSecond(),
                 StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "right", "field_22259_f", "i")
+                        StringUtils.getField(GuiSlot.class, this, "right", "field_22259_f", "d")
                 ).getSecond()
         );
     }

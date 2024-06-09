@@ -175,7 +175,7 @@ public class KeyUtils {
      */
     void setKey(final KeyBinding instance, final int newKey) {
         instance.keyCode = newKey;
-        KeyBinding.resetKeyBindingArrayAndHash();
+        KeyBinding.func_35961_b();
     }
 
     /**
