@@ -10,7 +10,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Unimined (`1.2.3` -> `1.2.7-SNAPSHOT`)
+    * Unimined (`1.2.3` -> `1.2.7`)
     * JVMDowngrader (`local` -> `0.7.1`)
     * ModPublisher (`2.1.1` -> `2.1.4`)
     * ModFusioner (`1.0.10` -> `1.0.12`)
