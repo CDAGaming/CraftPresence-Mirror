@@ -744,7 +744,7 @@ public class RenderUtils {
     public static int computeGuiScale(@Nonnull final Minecraft mc) {
         int scaleFactor = 1;
 
-        int k = mc.gameSettings.field_25148_H;
+        int k = 0;
         if (k == 0) {
             k = 1000;
         }

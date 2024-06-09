@@ -31,6 +31,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.StringTranslate;
 
 import java.util.List;
 import java.util.Map;
@@ -235,7 +236,7 @@ public class TileEntityUtils implements Module {
         String result = "";
         if (!isEmpty(itemStack)) {
             result = StringUtils.getOrDefault(
-                    itemStack.getItem().func_25009_k()
+                    StringTranslate.getInstance().translateNamedKey(itemStack.getItem().getItemName())
             );
         }
 
