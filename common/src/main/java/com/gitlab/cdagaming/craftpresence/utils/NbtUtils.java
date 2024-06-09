@@ -30,6 +30,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.src.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Utilities for interpreting NBT and related Data Types
@@ -114,13 +115,15 @@ public class NbtUtils {
             NBTBase currentTag = root;
             for (int i = 0; i < path.length; i++) {
                 if (currentTag instanceof NBTTagCompound temp) {
-                    for (Object item : temp.func_28110_c()) {
+                    final Map tags = (Map) StringUtils.getField(NBTTagCompound.class, temp, "tagMap", "field_1094_a", "a");
+                    for (Object item : tags.values()) {
                         NBTBase nbt = (NBTBase) item;
                         if (nbt.getKey().equals(path[i])) {
                             currentTag = nbt;
                             break;
                         }
                     }
+                    break;
                 } else if (currentTag instanceof NBTTagList list) {
                     int index = Integer.parseInt(path[i]);
                     currentTag = list.tagAt(index);
