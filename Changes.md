@@ -12,6 +12,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Shadow (`com.github.johnrengelman.shadow@8.1.1` -> `io.github.goooler.shadow@8.1.7`)
     * Gradle (`8.7` -> `8.8`)
+    * Unimined (`1.2.7` -> `1.2.9`)
+    * UniCore (`1.1.9` -> `1.1.10-SNAPSHOT`)
+    * DiscordIPC (`0.9.1` -> `0.9.2-SNAPSHOT`)
+    * Starscript (`0.3.3` -> `0.3.4-SNAPSHOT`)
 
 ### Fixes
 

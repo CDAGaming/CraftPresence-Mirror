@@ -36,7 +36,7 @@ unimined.minecraft {
             customSearge = (mcMappingsType != "mojmap" && mcMappingsType != "parchment")
         }
         if (isNeoForge) {
-            neoForged(forgeData)
+            neoForge(forgeData)
         } else {
             minecraftForge(forgeData)
         }
