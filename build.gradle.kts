@@ -13,7 +13,7 @@ plugins {
     id("xyz.wagyourtail.unimined") version "1.2.7" apply false
     id("xyz.wagyourtail.jvmdowngrader") version "0.7.1"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
-    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
+    id("io.github.goooler.shadow") version "8.1.7" apply false
     id("com.hypherionmc.modutils.modfusioner") version "1.0.12"
 }
 
@@ -54,7 +54,7 @@ subprojects {
     apply(plugin = "xyz.wagyourtail.unimined")
     apply(plugin = "xyz.wagyourtail.jvmdowngrader")
     apply(plugin = "com.diffplug.spotless")
-    apply(plugin = "com.github.johnrengelman.shadow")
+    apply(plugin = "io.github.goooler.shadow")
 
     val versionInfoLabel by extra(extVersionInfoLabel)
     val baseVersionLabel by extra(extBaseVersionLabel)
