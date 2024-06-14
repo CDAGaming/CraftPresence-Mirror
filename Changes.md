@@ -11,6 +11,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Shadow (`com.github.johnrengelman.shadow@8.1.1` -> `io.github.goooler.shadow@8.1.7`)
+    * Gradle (`8.7` -> `8.8`)
 
 ### Fixes
 
