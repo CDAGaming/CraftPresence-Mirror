@@ -457,7 +457,7 @@ public class RenderUtils {
                                    final double left, final double right, final double top, final double bottom,
                                    final double zLevel,
                                    final double minU, final double maxU, final double minV, final double maxV,
-                                   Object startColorObj, Object endColorObj,
+                                   final Object startColorObj, final Object endColorObj,
                                    final ResourceLocation texLocation) {
         try {
             if (texLocation != null) {
@@ -528,7 +528,7 @@ public class RenderUtils {
                                    final double regionWidth, final double regionHeight,
                                    final double u, final double v,
                                    final double textureWidth, final double textureHeight,
-                                   Object startColorObj, Object endColorObj,
+                                   final Object startColorObj, final Object endColorObj,
                                    final ResourceLocation texLocation) {
         drawTexture(mc,
                 left, right, top, bottom,
@@ -559,7 +559,7 @@ public class RenderUtils {
     public static void drawTexture(@Nonnull final Minecraft mc,
                                    final double left, final double right, final double top, final double bottom,
                                    final double zLevel, final boolean usingExternalTexture,
-                                   Object startColorObj, Object endColorObj,
+                                   final Object startColorObj, final Object endColorObj,
                                    final ResourceLocation texLocation) {
         drawTexture(mc,
                 left, right, top, bottom,
@@ -585,7 +585,7 @@ public class RenderUtils {
      */
     public static void drawGradient(final double left, final double right, final double top, final double bottom,
                                     final double zLevel,
-                                    Object startColorObj, Object endColorObj) {
+                                    final Object startColorObj, final Object endColorObj) {
         final Pair<Color, Color> colorData = StringUtils.findColor(startColorObj, endColorObj);
         final Color startColor = colorData.getFirst();
         final Color endColor = colorData.getSecond();
