@@ -33,6 +33,7 @@ import io.github.cdagaming.unicore.utils.UrlUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Set of Utilities used for Retrieving and Alerting on Any Mod Updates
@@ -41,45 +42,45 @@ import java.util.Map;
  */
 public class ModUpdaterUtils {
     /**
-     * The Current Update State for this Mod Updater Instance
-     */
-    public UpdateState currentState = UpdateState.PENDING;
-    /**
      * The MOD ID attached to this Mod Updater Instance
      */
-    public String modID;
+    private final String modID;
     /**
      * The Update URL to retrieve Updates from in this Instance
      */
-    public String updateUrl;
-    /**
-     * The Download Url, references as the "homepage" element in the Json
-     */
-    public String downloadUrl;
-    /**
-     * The Target Latest/Unstable Version for this Instance, based on retrieved data
-     */
-    public String targetLatestVersion;
-    /**
-     * The Target Recommended/Stable Version for this Instance, based on retrieved data
-     */
-    public String targetRecommendedVersion;
-    /**
-     * The Target Main Version for this Instance, dependent on Update State
-     */
-    public String targetVersion;
+    private final String updateUrl;
     /**
      * The Changelog Data attached to the Target Version, if any
      */
-    public Map<String, String> changelogData = StringUtils.newLinkedHashMap();
+    private final Map<String, String> changelogData = StringUtils.newLinkedHashMap();
     /**
      * The Current Version attached to this Instance
      */
-    public String currentVersion;
+    private final String currentVersion;
     /**
      * The Current Game Version attached to this Instance
      */
-    public String currentGameVersion;
+    private final String currentGameVersion;
+    /**
+     * The Current Update State for this Mod Updater Instance
+     */
+    private UpdateState currentState = UpdateState.PENDING;
+    /**
+     * The Download Url, otherwise known as the "homepage" element in the Json
+     */
+    private String downloadUrl;
+    /**
+     * The Target Latest/Unstable Version for this Instance, based on retrieved data
+     */
+    private String targetLatestVersion;
+    /**
+     * The Target Recommended/Stable Version for this Instance, based on retrieved data
+     */
+    private String targetRecommendedVersion;
+    /**
+     * The Target Main Version for this Instance, dependent on Update State
+     */
+    private String targetVersion;
 
     /**
      * Initializes this Module from the Specified Arguments
@@ -106,6 +107,42 @@ public class ModUpdaterUtils {
         targetVersion = "";
         downloadUrl = "";
         changelogData.clear();
+    }
+
+    /**
+     * Retrieve the current {@link UpdateState} from this Module
+     *
+     * @return the current {@link UpdateState}
+     */
+    public UpdateState getStatus() {
+        return currentState;
+    }
+
+    /**
+     * Retrieve the Download Url, otherwise known as the "homepage" element in the Json
+     *
+     * @return the download url for this module
+     */
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    /**
+     * Retrieve whether any changelog data exists for this module
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean hasChanges() {
+        return !changelogData.isEmpty();
+    }
+
+    /**
+     * Retrieve the changelog data attached to this module
+     *
+     * @return the changelog data for this module
+     */
+    public Set<Map.Entry<String, String>> getChanges() {
+        return changelogData.entrySet();
     }
 
     /**
@@ -214,7 +251,7 @@ public class ModUpdaterUtils {
         /**
          * The CFU State representing a "Failed" status
          */
-        FAILED,
+        FAILED(),
         /**
          * The CFU State representing an "Up to Date" status
          */
@@ -222,11 +259,11 @@ public class ModUpdaterUtils {
         /**
          * The CFU State representing an "Ahead" status
          */
-        AHEAD,
+        AHEAD(),
         /**
          * The CFU State representing an "Outdated" status
          */
-        OUTDATED,
+        OUTDATED(),
         /**
          * The CFU State representing an "Outdated Beta" status
          */
@@ -234,16 +271,16 @@ public class ModUpdaterUtils {
         /**
          * The CFU State representing a "Beta" status
          */
-        BETA,
+        BETA(),
         /**
          * The CFU State representing a "Pending" status
          */
-        PENDING;
+        PENDING();
 
         final String displayName;
 
         UpdateState() {
-            displayName = StringUtils.formatWord(name().toLowerCase());
+            this.displayName = StringUtils.formatWord(name().toLowerCase());
         }
 
         UpdateState(final String displayName) {

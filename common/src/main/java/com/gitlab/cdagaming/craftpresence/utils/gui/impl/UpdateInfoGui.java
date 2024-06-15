@@ -50,7 +50,7 @@ public class UpdateInfoGui extends ExtendedScreen {
      *
      * @param modUpdater An instance of the {@link ModUpdaterUtils}
      */
-    public UpdateInfoGui(ModUpdaterUtils modUpdater) {
+    public UpdateInfoGui(final ModUpdaterUtils modUpdater) {
         super();
         this.modUpdater = modUpdater;
     }
@@ -101,7 +101,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.download",
-                        () -> UrlUtils.openUrl(modUpdater.downloadUrl)
+                        () -> UrlUtils.openUrl(modUpdater.getDownloadUrl())
                 )
         );
 
@@ -124,10 +124,10 @@ public class UpdateInfoGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        downloadButton.setControlEnabled(modUpdater.currentState == ModUpdaterUtils.UpdateState.OUTDATED ||
-                modUpdater.currentState == ModUpdaterUtils.UpdateState.BETA_OUTDATED);
+        downloadButton.setControlEnabled(modUpdater.getStatus() == ModUpdaterUtils.UpdateState.OUTDATED ||
+                modUpdater.getStatus() == ModUpdaterUtils.UpdateState.BETA_OUTDATED);
 
-        checkButton.setControlEnabled(modUpdater.currentState != ModUpdaterUtils.UpdateState.PENDING);
+        checkButton.setControlEnabled(modUpdater.getStatus() != ModUpdaterUtils.UpdateState.PENDING);
 
         super.preRender();
     }
@@ -135,7 +135,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     @Override
     public void renderExtra() {
         final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = Constants.TRANSLATOR.translate("gui.config.title.changes", modUpdater.currentState.getDisplayName());
+        final String subTitle = Constants.TRANSLATOR.translate("gui.config.title.changes", modUpdater.getStatus().getDisplayName());
 
         renderScrollingString(
                 mainTitle,
@@ -160,11 +160,11 @@ public class UpdateInfoGui extends ExtendedScreen {
     }
 
     private void updateNotes() {
-        if (!modUpdater.changelogData.isEmpty()) {
+        if (modUpdater.hasChanges()) {
             final StringBuilder notice = new StringBuilder();
             notice.append(Constants.TRANSLATOR.translate("gui.config.message.changelog"));
 
-            for (Map.Entry<String, String> entry : modUpdater.changelogData.entrySet()) {
+            for (Map.Entry<String, String> entry : modUpdater.getChanges()) {
                 notice
                         .append('\n').append("  ").append(entry.getKey()).append(":")
                         .append('\n').append(entry.getValue())

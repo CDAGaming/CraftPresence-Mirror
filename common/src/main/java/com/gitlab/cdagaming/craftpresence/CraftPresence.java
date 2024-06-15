@@ -129,7 +129,7 @@ public class CraftPresence {
      *
      * @param callback The callback to run upon post-initialization
      */
-    public CraftPresence(Runnable callback) {
+    public CraftPresence(final Runnable callback) {
         initCallback = callback;
         scheduleTick();
     }
