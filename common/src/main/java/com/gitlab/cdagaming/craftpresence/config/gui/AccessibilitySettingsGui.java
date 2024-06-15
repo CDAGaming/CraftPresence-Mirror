@@ -170,7 +170,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
         if (Constants.IS_LEGACY_SOFT) {
             controlInfo.clear();
-            StringUtils.addEntriesNotPresent(controlInfo, CraftPresence.KEYBINDINGS.getRawKeyMappings().keySet());
+            StringUtils.addEntriesNotPresent(controlInfo, CraftPresence.KEYBINDINGS.getKeys());
 
             controlMode = KeyUtils.FilterMode.Name;
         }

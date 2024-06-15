@@ -39,6 +39,7 @@ import org.lwjgl.input.Keyboard;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -244,14 +245,23 @@ public class KeyUtils {
     }
 
     /**
+     * Retrieves the unfiltered Key Names for Vanilla MC KeyBind Schema
+     *
+     * @return The unfiltered key names
+     */
+    public Set<String> getKeys() {
+        return KEY_MAPPINGS.keySet();
+    }
+
+    /**
      * Retrieves the unfiltered Key Mappings for Vanilla MC KeyBind Schema
      * <p>
      * Format: rawKeyField:keyMapping
      *
      * @return The unfiltered key mappings
      */
-    public Map<String, KeyMapping> getRawKeyMappings() {
-        return StringUtils.newHashMap(KEY_MAPPINGS);
+    public Set<Map.Entry<String, KeyMapping>> getKeyEntries() {
+        return KEY_MAPPINGS.entrySet();
     }
 
     /**
@@ -262,7 +272,7 @@ public class KeyUtils {
     void onTick() {
         if (!areKeysRegistered()) {
             if (CraftPresence.instance.gameSettings != null) {
-                for (Map.Entry<String, KeyMapping> entry : KEY_MAPPINGS.entrySet()) {
+                for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
                     final KeyBinding mapping = entry.getValue().binding();
                     final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
                     if (!categoryMap.containsKey(mapping.getKeyCategory())) {
@@ -282,7 +292,7 @@ public class KeyUtils {
             final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
             try {
-                for (Map.Entry<String, KeyMapping> entry : KEY_MAPPINGS.entrySet()) {
+                for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
                     final String keyName = entry.getKey();
                     final KeyMapping keyData = entry.getValue();
                     final KeyBinding keyBind = keyData.binding();
@@ -354,7 +364,7 @@ public class KeyUtils {
     public Map<String, KeyMapping> getKeyMappings(final FilterMode mode, final List<String> filterData) {
         final Map<String, KeyMapping> filteredMappings = StringUtils.newHashMap();
 
-        for (Map.Entry<String, KeyMapping> entry : KEY_MAPPINGS.entrySet()) {
+        for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
             final String keyName = entry.getKey();
             if (mode == FilterMode.None ||
                     mode == FilterMode.Category ||
