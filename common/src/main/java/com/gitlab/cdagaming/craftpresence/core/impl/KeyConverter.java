@@ -25,9 +25,10 @@
 package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +40,7 @@ public class KeyConverter {
     /**
      * Internal Mappings for all available KeyBinds within LWJGL
      */
-    private static final Set<KeyBindMapping> keyMappings = Set.of(
+    private static final List<KeyBindMapping> keyMappings = StringUtils.newArrayList(
             new KeyBindMapping(0, -1, "None"),
             new KeyBindMapping(1, 256, "Escape"),
             new KeyBindMapping(2, 49, "1"),
