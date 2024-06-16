@@ -251,7 +251,7 @@ public class ModUpdaterUtils {
         /**
          * The CFU State representing a "Failed" status
          */
-        FAILED(),
+        FAILED,
         /**
          * The CFU State representing an "Up to Date" status
          */
@@ -259,11 +259,11 @@ public class ModUpdaterUtils {
         /**
          * The CFU State representing an "Ahead" status
          */
-        AHEAD(),
+        AHEAD,
         /**
          * The CFU State representing an "Outdated" status
          */
-        OUTDATED(),
+        OUTDATED,
         /**
          * The CFU State representing an "Outdated Beta" status
          */
@@ -271,16 +271,16 @@ public class ModUpdaterUtils {
         /**
          * The CFU State representing a "Beta" status
          */
-        BETA(),
+        BETA,
         /**
          * The CFU State representing a "Pending" status
          */
-        PENDING();
+        PENDING;
 
-        final String displayName;
+        private final String displayName;
 
         UpdateState() {
-            this.displayName = StringUtils.formatWord(name().toLowerCase());
+            displayName = StringUtils.formatWord(name().toLowerCase());
         }
 
         UpdateState(final String displayName) {
