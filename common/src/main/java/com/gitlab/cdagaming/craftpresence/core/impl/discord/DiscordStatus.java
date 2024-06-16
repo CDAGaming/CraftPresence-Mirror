@@ -24,8 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.core.impl.discord;
 
-import io.github.cdagaming.unicore.utils.StringUtils;
-
 /**
  * Constants representing various Discord client statuses,
  * such as Ready, Errored, Disconnected, and event trigger names
@@ -50,59 +48,22 @@ public enum DiscordStatus {
      * Constant for the "joinGame" Discord Status
      * <p>Triggers when accepting and queuing a Join Request
      */
-    JoinGame("Join Game"),
+    JoinGame,
 
     /**
      * Constant for the "joinRequest" Discord Status
      * <p>Triggers when receiving a Join Request
      */
-    JoinRequest("Join Request"),
+    JoinRequest,
 
     /**
      * Constant for the "spectateGame" Discord Status
      * <p>Triggers when queuing to spectate a game
      */
-    SpectateGame("Spectate Game"),
+    SpectateGame,
 
     /**
      * 'Wildcard' build constant used to specify an errored or invalid status
      */
-    Invalid;
-
-    private final String displayName;
-
-    DiscordStatus() {
-        displayName = StringUtils.formatWord(name());
-    }
-
-    DiscordStatus(final String displayName) {
-        this.displayName = displayName;
-    }
-
-    /**
-     * Gets a {@link DiscordStatus} matching the specified display name.
-     * <p>
-     * This is only internally implemented.
-     *
-     * @param displayName The display name to get from.
-     * @return The DiscordStatus corresponding to the display name, or
-     * {@link DiscordStatus#Invalid} if none match.
-     */
-    public static DiscordStatus from(String displayName) {
-        for (DiscordStatus value : values()) {
-            if (value.getDisplayName() != null && value.getDisplayName().equals(displayName)) {
-                return value;
-            }
-        }
-        return Invalid;
-    }
-
-    /**
-     * Retrieves the display name for the specified {@link DiscordStatus}
-     *
-     * @return The display name corresponding to the {@link DiscordStatus}
-     */
-    public String getDisplayName() {
-        return displayName;
-    }
+    Invalid
 }

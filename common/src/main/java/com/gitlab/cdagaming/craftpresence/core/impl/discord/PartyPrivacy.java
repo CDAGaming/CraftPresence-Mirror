@@ -24,8 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.core.impl.discord;
 
-import io.github.cdagaming.unicore.utils.StringUtils;
-
 /**
  * Constants representing various Discord client party privacy levels,
  * such as Public or Private
@@ -53,43 +51,6 @@ public enum PartyPrivacy {
     public static PartyPrivacy from(int index) {
         for (PartyPrivacy value : values()) {
             if (value.ordinal() == index) {
-                return value;
-            }
-        }
-        return Public;
-    }
-
-    /**
-     * Gets a {@link PartyPrivacy} matching the specified display name.
-     * <p>
-     * This is only internally implemented.
-     *
-     * @param name The name to get from.
-     * @return The {@link PartyPrivacy} corresponding to the parameters, or
-     * {@link PartyPrivacy#Public} if none match.
-     */
-    public static PartyPrivacy from(String name) {
-        for (PartyPrivacy value : values()) {
-            if (!StringUtils.isNullOrEmpty(value.name()) && value.name().equalsIgnoreCase(name)) {
-                return value;
-            }
-        }
-        return Public;
-    }
-
-    /**
-     * Gets a {@link PartyPrivacy} matching the specified name.
-     * <p>
-     * This is only internally implemented.
-     *
-     * @param index The index to get from.
-     * @param name  The name to get from.
-     * @return The {@link PartyPrivacy} corresponding to the parameters, or
-     * {@link PartyPrivacy#Public} if none match.
-     */
-    public static PartyPrivacy from(int index, String name) {
-        for (PartyPrivacy value : values()) {
-            if (!StringUtils.isNullOrEmpty(value.name()) && value.name().equalsIgnoreCase(name) && value.ordinal() == index) {
                 return value;
             }
         }
