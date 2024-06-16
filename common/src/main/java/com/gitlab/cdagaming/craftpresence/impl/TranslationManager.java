@@ -78,16 +78,6 @@ public record TranslationManager(TranslationUtils instance) implements IResource
     }
 
     /**
-     * Retrieve the current {@link TranslationUtils} instance we're attached to
-     *
-     * @return the currently attached {@link TranslationUtils} instance
-     */
-    @Override
-    public TranslationUtils instance() {
-        return instance;
-    }
-
-    /**
      * The Event to Run on each Client Tick, if passed initialization events
      * <p>
      * Consists of Synchronizing Data, and Updating Translation Data as needed
