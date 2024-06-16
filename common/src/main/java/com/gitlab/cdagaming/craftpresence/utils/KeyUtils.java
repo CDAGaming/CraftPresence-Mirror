@@ -116,14 +116,14 @@ public class KeyUtils {
      */
     public static String getKeyName(final int original) {
         final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
-        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
+        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
         if (isValidKeyCode(original)) {
             // If Input is a valid Integer and Valid KeyCode,
             // Parse depending on Protocol
             if (ModUtils.MCProtocolID <= 340 && KeyConverter.toGlfw.containsKey(original)) {
-                return KeyConverter.toGlfw.get(original).getSecond();
+                return KeyConverter.toGlfw.get(original).name();
             } else if (ModUtils.MCProtocolID > 340 && KeyConverter.fromGlfw.containsKey(original)) {
-                return KeyConverter.fromGlfw.get(original).getSecond();
+                return KeyConverter.fromGlfw.get(original).name();
             } else {
                 // If no other Mapping Layer contains the KeyCode Name,
                 // Fallback to LWJGL Methods to retrieve the KeyCode Name
@@ -290,7 +290,7 @@ public class KeyUtils {
 
         if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
             final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
-            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).getSecond();
+            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
             try {
                 for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
                     final String keyName = entry.getKey();

@@ -25,10 +25,10 @@
 package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import io.github.cdagaming.unicore.impl.HashMapBuilder;
-import io.github.cdagaming.unicore.impl.Pair;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * KeyCode Conversion Layer used to translate between other Keyboard Data Types
@@ -37,270 +37,274 @@ import java.util.Map;
  */
 public class KeyConverter {
     /**
+     * Internal Mappings for all available KeyBinds within LWJGL
+     */
+    private static final Set<KeyBindMapping> keyMappings = Set.of(
+            new KeyBindMapping(0, -1, "None"),
+            new KeyBindMapping(1, 256, "Escape"),
+            new KeyBindMapping(2, 49, "1"),
+            new KeyBindMapping(3, 50, "2"),
+            new KeyBindMapping(4, 51, "3"),
+            new KeyBindMapping(5, 52, "4"),
+            new KeyBindMapping(6, 53, "5"),
+            new KeyBindMapping(7, 54, "6"),
+            new KeyBindMapping(8, 55, "7"),
+            new KeyBindMapping(9, 56, "8"),
+            new KeyBindMapping(10, 57, "9"),
+            new KeyBindMapping(11, 48, "0"),
+            new KeyBindMapping(12, 45, "Minus"),
+            new KeyBindMapping(13, 61, "Equals"),
+            new KeyBindMapping(14, 259, "Backspace"),
+            new KeyBindMapping(15, 258, "Tab"),
+            new KeyBindMapping(16, 81, "Q"),
+            new KeyBindMapping(17, 87, "W"),
+            new KeyBindMapping(18, 69, "E"),
+            new KeyBindMapping(19, 82, "R"),
+            new KeyBindMapping(20, 84, "T"),
+            new KeyBindMapping(21, 89, "Y"),
+            new KeyBindMapping(22, 85, "U"),
+            new KeyBindMapping(23, 73, "I"),
+            new KeyBindMapping(24, 79, "O"),
+            new KeyBindMapping(25, 80, "P"),
+            new KeyBindMapping(26, 91, "Left Bracket"),
+            new KeyBindMapping(27, 93, "Right Bracket"),
+            new KeyBindMapping(28, 257, "Return"),
+            new KeyBindMapping(29, 341, "Left Control"),
+            new KeyBindMapping(30, 65, "A"),
+            new KeyBindMapping(31, 83, "S"),
+            new KeyBindMapping(32, 68, "D"),
+            new KeyBindMapping(33, 70, "F"),
+            new KeyBindMapping(34, 71, "G"),
+            new KeyBindMapping(35, 72, "H"),
+            new KeyBindMapping(36, 74, "J"),
+            new KeyBindMapping(37, 75, "K"),
+            new KeyBindMapping(38, 76, "L"),
+            new KeyBindMapping(39, 59, "Semicolon"),
+            new KeyBindMapping(40, 39, "Apostrophe"),
+            new KeyBindMapping(41, 96, "Grave"),
+            new KeyBindMapping(42, 340, "Left Shift"),
+            new KeyBindMapping(43, 92, "Backslash"),
+            new KeyBindMapping(44, 90, "Z"),
+            new KeyBindMapping(45, 88, "X"),
+            new KeyBindMapping(46, 67, "C"),
+            new KeyBindMapping(47, 86, "V"),
+            new KeyBindMapping(48, 66, "B"),
+            new KeyBindMapping(49, 78, "N"),
+            new KeyBindMapping(50, 77, "M"),
+            new KeyBindMapping(51, 44, "Comma"),
+            new KeyBindMapping(52, 46, "Period"),
+            new KeyBindMapping(53, 47, "Slash"),
+            new KeyBindMapping(54, 344, "Right Shift"),
+            new KeyBindMapping(55, 332, "Keypad - Multiply"),
+            new KeyBindMapping(56, 342, "Left Alt"),
+            new KeyBindMapping(57, 32, "Space"),
+            new KeyBindMapping(58, 280, "Caps Lock"),
+            new KeyBindMapping(59, 290, "F1"),
+            new KeyBindMapping(60, 291, "F2"),
+            new KeyBindMapping(61, 292, "F3"),
+            new KeyBindMapping(62, 293, "F4"),
+            new KeyBindMapping(63, 294, "F5"),
+            new KeyBindMapping(64, 295, "F6"),
+            new KeyBindMapping(65, 296, "F7"),
+            new KeyBindMapping(66, 297, "F8"),
+            new KeyBindMapping(67, 298, "F9"),
+            new KeyBindMapping(68, 299, "F10"),
+            new KeyBindMapping(69, 282, "Number Lock"),
+            new KeyBindMapping(70, 281, "Scroll Lock"),
+            new KeyBindMapping(71, 327, "Keypad - 7"),
+            new KeyBindMapping(72, 328, "Keypad - 8"),
+            new KeyBindMapping(73, 329, "Keypad - 9"),
+            new KeyBindMapping(74, 333, "Keypad - Subtract"),
+            new KeyBindMapping(75, 324, "Keypad - 4"),
+            new KeyBindMapping(76, 325, "Keypad - 5"),
+            new KeyBindMapping(77, 326, "Keypad - 6"),
+            new KeyBindMapping(78, 334, "Keypad - Add"),
+            new KeyBindMapping(79, 321, "Keypad - 1"),
+            new KeyBindMapping(80, 322, "Keypad - 2"),
+            new KeyBindMapping(81, 323, "Keypad - 3"),
+            new KeyBindMapping(82, 320, "Keypad - 0"),
+            new KeyBindMapping(83, 330, "Keypad - Decimal"),
+            new KeyBindMapping(87, 300, "F11"),
+            new KeyBindMapping(88, 301, "F12"),
+            new KeyBindMapping(100, 302, "F13"),
+            new KeyBindMapping(101, 303, "F14"),
+            new KeyBindMapping(102, 304, "F15"),
+            new KeyBindMapping(103, 305, "F16"),
+            new KeyBindMapping(104, 306, "F17"),
+            new KeyBindMapping(105, 307, "F18"),
+            new KeyBindMapping(112, -1, "Kana"),
+            new KeyBindMapping(113, 308, "F19"),
+            new KeyBindMapping(121, -1, "Convert"),
+            new KeyBindMapping(123, -1, "NoConvert"),
+            new KeyBindMapping(125, -1, "Symbol - Yen"),
+            new KeyBindMapping(141, 336, "Keypad - Equals"),
+            new KeyBindMapping(144, -1, "Symbol - Circumflex"),
+            new KeyBindMapping(145, -1, "Symbol - At"),
+            new KeyBindMapping(146, -1, "Symbol - Colon"),
+            new KeyBindMapping(147, -1, "Underline"),
+            new KeyBindMapping(148, -1, "Kanji"),
+            new KeyBindMapping(149, -1, "Stop"),
+            new KeyBindMapping(150, -1, "AX"),
+            new KeyBindMapping(151, -1, "Unlabeled"),
+            new KeyBindMapping(156, 335, "Keypad - Enter"),
+            new KeyBindMapping(157, 345, "Right Control"),
+            new KeyBindMapping(179, -1, "Keypad - Comma"),
+            new KeyBindMapping(181, 331, "Keypad - Divide"),
+            new KeyBindMapping(183, -1, "SysRq"),
+            new KeyBindMapping(184, 346, "Right Alt"),
+            new KeyBindMapping(196, -1, "Function"),
+            new KeyBindMapping(197, 284, "Pause"),
+            new KeyBindMapping(199, 268, "Home"),
+            new KeyBindMapping(200, 265, "Up Arrow"),
+            new KeyBindMapping(201, 266, "Page Up"),
+            new KeyBindMapping(203, 263, "Left Arrow"),
+            new KeyBindMapping(205, 262, "Right Arrow"),
+            new KeyBindMapping(207, 269, "End"),
+            new KeyBindMapping(208, 264, "Down Arrow"),
+            new KeyBindMapping(209, 267, "Page Down"),
+            new KeyBindMapping(210, 260, "Insert"),
+            new KeyBindMapping(211, 261, "Delete"),
+            new KeyBindMapping(219, 343, "Left Meta"),
+            new KeyBindMapping(220, 347, "Right Meta"),
+            new KeyBindMapping(221, -1, "Apps"),
+            new KeyBindMapping(222, -1, "Power"),
+            new KeyBindMapping(223, -1, "Sleep"),
+            new KeyBindMapping(-1, 0, "None"),
+            new KeyBindMapping(32, 57, "Space"),
+            new KeyBindMapping(39, 40, "Apostrophe"),
+            new KeyBindMapping(44, 51, "Comma"),
+            new KeyBindMapping(45, 12, "Minus"),
+            new KeyBindMapping(46, 52, "Period"),
+            new KeyBindMapping(47, 53, "Slash"),
+            new KeyBindMapping(48, 11, "0"),
+            new KeyBindMapping(49, 2, "1"),
+            new KeyBindMapping(50, 3, "2"),
+            new KeyBindMapping(51, 4, "3"),
+            new KeyBindMapping(52, 5, "4"),
+            new KeyBindMapping(53, 6, "5"),
+            new KeyBindMapping(54, 7, "6"),
+            new KeyBindMapping(55, 8, "7"),
+            new KeyBindMapping(56, 9, "8"),
+            new KeyBindMapping(57, 10, "9"),
+            new KeyBindMapping(59, 39, "Semicolon"),
+            new KeyBindMapping(61, 13, "Equals"),
+            new KeyBindMapping(65, 30, "A"),
+            new KeyBindMapping(66, 48, "B"),
+            new KeyBindMapping(67, 46, "C"),
+            new KeyBindMapping(68, 32, "D"),
+            new KeyBindMapping(69, 18, "E"),
+            new KeyBindMapping(70, 33, "F"),
+            new KeyBindMapping(71, 34, "G"),
+            new KeyBindMapping(72, 35, "H"),
+            new KeyBindMapping(73, 23, "I"),
+            new KeyBindMapping(74, 36, "J"),
+            new KeyBindMapping(75, 37, "K"),
+            new KeyBindMapping(76, 38, "L"),
+            new KeyBindMapping(77, 50, "M"),
+            new KeyBindMapping(78, 49, "N"),
+            new KeyBindMapping(79, 24, "O"),
+            new KeyBindMapping(80, 25, "P"),
+            new KeyBindMapping(81, 16, "Q"),
+            new KeyBindMapping(82, 19, "R"),
+            new KeyBindMapping(83, 31, "S"),
+            new KeyBindMapping(84, 20, "T"),
+            new KeyBindMapping(85, 22, "U"),
+            new KeyBindMapping(86, 47, "V"),
+            new KeyBindMapping(87, 17, "W"),
+            new KeyBindMapping(88, 45, "X"),
+            new KeyBindMapping(89, 21, "Y"),
+            new KeyBindMapping(90, 44, "Z"),
+            new KeyBindMapping(91, 26, "Left Bracket"),
+            new KeyBindMapping(92, 43, "Backslash"),
+            new KeyBindMapping(93, 27, "Right Bracket"),
+            new KeyBindMapping(96, 41, "Grave"),
+            new KeyBindMapping(161, 0, "WORLD_1"),
+            new KeyBindMapping(162, 0, "WORLD_2"),
+            new KeyBindMapping(256, 1, "Escape"),
+            new KeyBindMapping(257, 28, "Return / Enter"),
+            new KeyBindMapping(258, 15, "Tab"),
+            new KeyBindMapping(259, 14, "Backspace"),
+            new KeyBindMapping(260, 210, "Insert"),
+            new KeyBindMapping(261, 211, "Delete"),
+            new KeyBindMapping(262, 205, "Right Arrow"),
+            new KeyBindMapping(263, 203, "Left Arrow"),
+            new KeyBindMapping(264, 208, "Down Arrow"),
+            new KeyBindMapping(265, 200, "Up Arrow"),
+            new KeyBindMapping(266, 201, "Page Up"),
+            new KeyBindMapping(267, 209, "Page Down"),
+            new KeyBindMapping(268, 199, "Home"),
+            new KeyBindMapping(269, 207, "End"),
+            new KeyBindMapping(280, 58, "Caps Lock"),
+            new KeyBindMapping(281, 70, "Scroll Lock"),
+            new KeyBindMapping(282, 69, "Number Lock"),
+            new KeyBindMapping(283, 0, "Print Screen"),
+            new KeyBindMapping(284, 197, "Pause"),
+            new KeyBindMapping(290, 59, "F1"),
+            new KeyBindMapping(291, 60, "F2"),
+            new KeyBindMapping(292, 61, "F3"),
+            new KeyBindMapping(293, 62, "F4"),
+            new KeyBindMapping(294, 63, "F5"),
+            new KeyBindMapping(295, 64, "F6"),
+            new KeyBindMapping(296, 65, "F7"),
+            new KeyBindMapping(297, 66, "F8"),
+            new KeyBindMapping(298, 67, "F9"),
+            new KeyBindMapping(299, 68, "F10"),
+            new KeyBindMapping(300, 87, "F11"),
+            new KeyBindMapping(301, 88, "F12"),
+            new KeyBindMapping(302, 100, "F13"),
+            new KeyBindMapping(303, 101, "F14"),
+            new KeyBindMapping(304, 102, "F15"),
+            new KeyBindMapping(305, 103, "F16"),
+            new KeyBindMapping(306, 104, "F17"),
+            new KeyBindMapping(307, 105, "F18"),
+            new KeyBindMapping(308, 113, "F19"),
+            new KeyBindMapping(309, 0, "F20"),
+            new KeyBindMapping(310, 0, "F21"),
+            new KeyBindMapping(311, 0, "F22"),
+            new KeyBindMapping(312, 0, "F23"),
+            new KeyBindMapping(313, 0, "F24"),
+            new KeyBindMapping(314, 0, "F25"),
+            new KeyBindMapping(320, 82, "Keypad - 0"),
+            new KeyBindMapping(321, 79, "Keypad - 1"),
+            new KeyBindMapping(322, 80, "Keypad - 2"),
+            new KeyBindMapping(323, 81, "Keypad - 3"),
+            new KeyBindMapping(324, 75, "Keypad - 4"),
+            new KeyBindMapping(325, 76, "Keypad - 5"),
+            new KeyBindMapping(326, 77, "Keypad - 6"),
+            new KeyBindMapping(327, 71, "Keypad - 7"),
+            new KeyBindMapping(328, 72, "Keypad - 8"),
+            new KeyBindMapping(329, 73, "Keypad - 9"),
+            new KeyBindMapping(330, 83, "Keypad - Decimal"),
+            new KeyBindMapping(331, 181, "Keypad - Divide"),
+            new KeyBindMapping(332, 55, "Keypad - Multiply"),
+            new KeyBindMapping(333, 74, "Keypad - Subtract"),
+            new KeyBindMapping(334, 78, "Keypad - Add"),
+            new KeyBindMapping(335, 156, "Keypad - Enter"),
+            new KeyBindMapping(336, 141, "Keypad - Equals"),
+            new KeyBindMapping(340, 42, "Left Shift"),
+            new KeyBindMapping(341, 29, "Left Control"),
+            new KeyBindMapping(342, 56, "Left Alt"),
+            new KeyBindMapping(343, 219, "Left Meta"),
+            new KeyBindMapping(344, 54, "Right Shift"),
+            new KeyBindMapping(345, 157, "Right Control"),
+            new KeyBindMapping(346, 184, "Right Alt"),
+            new KeyBindMapping(347, 220, "Right Meta"),
+            new KeyBindMapping(348, 0, "KEY_MENU")
+    );
+    /**
      * Mapping from lwjgl2 to lwjgl3
      * Note: Characters that are Unavailable in lwjgl3 are listed as lwjgl3's Unknown Keycode (-1)
-     * Format: LWJGL2 Key;[LWJGL3 Key, Universal Key Name]
+     * Format: LWJGL2 Key;KeyMapping
      */
-    public static final Map<Integer, Pair<Integer, String>> toGlfw = new HashMapBuilder<Integer, Pair<Integer, String>>()
-            .put(0, new Pair<>(-1, "None"))
-            .put(1, new Pair<>(256, "Escape"))
-            .put(2, new Pair<>(49, "1"))
-            .put(3, new Pair<>(50, "2"))
-            .put(4, new Pair<>(51, "3"))
-            .put(5, new Pair<>(52, "4"))
-            .put(6, new Pair<>(53, "5"))
-            .put(7, new Pair<>(54, "6"))
-            .put(8, new Pair<>(55, "7"))
-            .put(9, new Pair<>(56, "8"))
-            .put(10, new Pair<>(57, "9"))
-            .put(11, new Pair<>(48, "0"))
-            .put(12, new Pair<>(45, "Minus"))
-            .put(13, new Pair<>(61, "Equals"))
-            .put(14, new Pair<>(259, "Backspace"))
-            .put(15, new Pair<>(258, "Tab"))
-            .put(16, new Pair<>(81, "Q"))
-            .put(17, new Pair<>(87, "W"))
-            .put(18, new Pair<>(69, "E"))
-            .put(19, new Pair<>(82, "R"))
-            .put(20, new Pair<>(84, "T"))
-            .put(21, new Pair<>(89, "Y"))
-            .put(22, new Pair<>(85, "U"))
-            .put(23, new Pair<>(73, "I"))
-            .put(24, new Pair<>(79, "O"))
-            .put(25, new Pair<>(80, "P"))
-            .put(26, new Pair<>(91, "Left Bracket"))
-            .put(27, new Pair<>(93, "Right Bracket"))
-            .put(28, new Pair<>(257, "Return"))
-            .put(29, new Pair<>(341, "Left Control"))
-            .put(30, new Pair<>(65, "A"))
-            .put(31, new Pair<>(83, "S"))
-            .put(32, new Pair<>(68, "D"))
-            .put(33, new Pair<>(70, "F"))
-            .put(34, new Pair<>(71, "G"))
-            .put(35, new Pair<>(72, "H"))
-            .put(36, new Pair<>(74, "J"))
-            .put(37, new Pair<>(75, "K"))
-            .put(38, new Pair<>(76, "L"))
-            .put(39, new Pair<>(59, "Semicolon"))
-            .put(40, new Pair<>(39, "Apostrophe"))
-            .put(41, new Pair<>(96, "Grave"))
-            .put(42, new Pair<>(340, "Left Shift"))
-            .put(43, new Pair<>(92, "Backslash"))
-            .put(44, new Pair<>(90, "Z"))
-            .put(45, new Pair<>(88, "X"))
-            .put(46, new Pair<>(67, "C"))
-            .put(47, new Pair<>(86, "V"))
-            .put(48, new Pair<>(66, "B"))
-            .put(49, new Pair<>(78, "N"))
-            .put(50, new Pair<>(77, "M"))
-            .put(51, new Pair<>(44, "Comma"))
-            .put(52, new Pair<>(46, "Period"))
-            .put(53, new Pair<>(47, "Slash"))
-            .put(54, new Pair<>(344, "Right Shift"))
-            .put(55, new Pair<>(332, "Keypad - Multiply"))
-            .put(56, new Pair<>(342, "Left Alt"))
-            .put(57, new Pair<>(32, "Space"))
-            .put(58, new Pair<>(280, "Caps Lock"))
-            .put(59, new Pair<>(290, "F1"))
-            .put(60, new Pair<>(291, "F2"))
-            .put(61, new Pair<>(292, "F3"))
-            .put(62, new Pair<>(293, "F4"))
-            .put(63, new Pair<>(294, "F5"))
-            .put(64, new Pair<>(295, "F6"))
-            .put(65, new Pair<>(296, "F7"))
-            .put(66, new Pair<>(297, "F8"))
-            .put(67, new Pair<>(298, "F9"))
-            .put(68, new Pair<>(299, "F10"))
-            .put(69, new Pair<>(282, "Number Lock"))
-            .put(70, new Pair<>(281, "Scroll Lock"))
-            .put(71, new Pair<>(327, "Keypad - 7"))
-            .put(72, new Pair<>(328, "Keypad - 8"))
-            .put(73, new Pair<>(329, "Keypad - 9"))
-            .put(74, new Pair<>(333, "Keypad - Subtract"))
-            .put(75, new Pair<>(324, "Keypad - 4"))
-            .put(76, new Pair<>(325, "Keypad - 5"))
-            .put(77, new Pair<>(326, "Keypad - 6"))
-            .put(78, new Pair<>(334, "Keypad - Add"))
-            .put(79, new Pair<>(321, "Keypad - 1"))
-            .put(80, new Pair<>(322, "Keypad - 2"))
-            .put(81, new Pair<>(323, "Keypad - 3"))
-            .put(82, new Pair<>(320, "Keypad - 0"))
-            .put(83, new Pair<>(330, "Keypad - Decimal"))
-            .put(87, new Pair<>(300, "F11"))
-            .put(88, new Pair<>(301, "F12"))
-            .put(100, new Pair<>(302, "F13"))
-            .put(101, new Pair<>(303, "F14"))
-            .put(102, new Pair<>(304, "F15"))
-            .put(103, new Pair<>(305, "F16"))
-            .put(104, new Pair<>(306, "F17"))
-            .put(105, new Pair<>(307, "F18"))
-            .put(112, new Pair<>(-1, "Kana"))
-            .put(113, new Pair<>(308, "F19"))
-            .put(121, new Pair<>(-1, "Convert"))
-            .put(123, new Pair<>(-1, "NoConvert"))
-            .put(125, new Pair<>(-1, "Symbol - Yen"))
-            .put(141, new Pair<>(336, "Keypad - Equals"))
-            .put(144, new Pair<>(-1, "Symbol - Circumflex"))
-            .put(145, new Pair<>(-1, "Symbol - At"))
-            .put(146, new Pair<>(-1, "Symbol - Colon"))
-            .put(147, new Pair<>(-1, "Underline"))
-            .put(148, new Pair<>(-1, "Kanji"))
-            .put(149, new Pair<>(-1, "Stop"))
-            .put(150, new Pair<>(-1, "AX"))
-            .put(151, new Pair<>(-1, "Unlabeled"))
-            .put(156, new Pair<>(335, "Keypad - Enter"))
-            .put(157, new Pair<>(345, "Right Control"))
-            .put(179, new Pair<>(-1, "Keypad - Comma"))
-            .put(181, new Pair<>(331, "Keypad - Divide"))
-            .put(183, new Pair<>(-1, "SysRq"))
-            .put(184, new Pair<>(346, "Right Alt"))
-            .put(196, new Pair<>(-1, "Function"))
-            .put(197, new Pair<>(284, "Pause"))
-            .put(199, new Pair<>(268, "Home"))
-            .put(200, new Pair<>(265, "Up Arrow"))
-            .put(201, new Pair<>(266, "Page Up"))
-            .put(203, new Pair<>(263, "Left Arrow"))
-            .put(205, new Pair<>(262, "Right Arrow"))
-            .put(207, new Pair<>(269, "End"))
-            .put(208, new Pair<>(264, "Down Arrow"))
-            .put(209, new Pair<>(267, "Page Down"))
-            .put(210, new Pair<>(260, "Insert"))
-            .put(211, new Pair<>(261, "Delete"))
-            .put(219, new Pair<>(343, "Left Meta"))
-            .put(220, new Pair<>(347, "Right Meta"))
-            .put(221, new Pair<>(-1, "Apps"))
-            .put(222, new Pair<>(-1, "Power"))
-            .put(223, new Pair<>(-1, "Sleep"))
-            .build();
-
+    public static final Map<Integer, KeyBindMapping> toGlfw = keyMappings.stream()
+            .collect(Collectors.toMap(KeyBindMapping::lwjgl2Key, mapping -> mapping));
     /**
      * Mapping from lwjgl3 to lwjgl2
      * Note: Characters that are Unavailable in lwjgl2 are listed as lwjgl2's Unknown Keycode (0)
-     * Format: LWJGL3 Key;[LWJGL2 Key, Universal Key Name]
+     * Format: LWJGL3 Key;KeyMapping
      */
-    public static final Map<Integer, Pair<Integer, String>> fromGlfw = new HashMapBuilder<Integer, Pair<Integer, String>>()
-            .put(-1, new Pair<>(0, "None"))
-            .put(32, new Pair<>(57, "Space"))
-            .put(39, new Pair<>(40, "Apostrophe"))
-            .put(44, new Pair<>(51, "Comma"))
-            .put(45, new Pair<>(12, "Minus"))
-            .put(46, new Pair<>(52, "Period"))
-            .put(47, new Pair<>(53, "Slash"))
-            .put(48, new Pair<>(11, "0"))
-            .put(49, new Pair<>(2, "1"))
-            .put(50, new Pair<>(3, "2"))
-            .put(51, new Pair<>(4, "3"))
-            .put(52, new Pair<>(5, "4"))
-            .put(53, new Pair<>(6, "5"))
-            .put(54, new Pair<>(7, "6"))
-            .put(55, new Pair<>(8, "7"))
-            .put(56, new Pair<>(9, "8"))
-            .put(57, new Pair<>(10, "9"))
-            .put(59, new Pair<>(39, "Semicolon"))
-            .put(61, new Pair<>(13, "Equals"))
-            .put(65, new Pair<>(30, "A"))
-            .put(66, new Pair<>(48, "B"))
-            .put(67, new Pair<>(46, "C"))
-            .put(68, new Pair<>(32, "D"))
-            .put(69, new Pair<>(18, "E"))
-            .put(70, new Pair<>(33, "F"))
-            .put(71, new Pair<>(34, "G"))
-            .put(72, new Pair<>(35, "H"))
-            .put(73, new Pair<>(23, "I"))
-            .put(74, new Pair<>(36, "J"))
-            .put(75, new Pair<>(37, "K"))
-            .put(76, new Pair<>(38, "L"))
-            .put(77, new Pair<>(50, "M"))
-            .put(78, new Pair<>(49, "N"))
-            .put(79, new Pair<>(24, "O"))
-            .put(80, new Pair<>(25, "P"))
-            .put(81, new Pair<>(16, "Q"))
-            .put(82, new Pair<>(19, "R"))
-            .put(83, new Pair<>(31, "S"))
-            .put(84, new Pair<>(20, "T"))
-            .put(85, new Pair<>(22, "U"))
-            .put(86, new Pair<>(47, "V"))
-            .put(87, new Pair<>(17, "W"))
-            .put(88, new Pair<>(45, "X"))
-            .put(89, new Pair<>(21, "Y"))
-            .put(90, new Pair<>(44, "Z"))
-            .put(91, new Pair<>(26, "Left Bracket"))
-            .put(92, new Pair<>(43, "Backslash"))
-            .put(93, new Pair<>(27, "Right Bracket"))
-            .put(96, new Pair<>(41, "Grave"))
-            .put(161, new Pair<>(0, "WORLD_1"))
-            .put(162, new Pair<>(0, "WORLD_2"))
-            .put(256, new Pair<>(1, "Escape"))
-            .put(257, new Pair<>(28, "Return / Enter"))
-            .put(258, new Pair<>(15, "Tab"))
-            .put(259, new Pair<>(14, "Backspace"))
-            .put(260, new Pair<>(210, "Insert"))
-            .put(261, new Pair<>(211, "Delete"))
-            .put(262, new Pair<>(205, "Right Arrow"))
-            .put(263, new Pair<>(203, "Left Arrow"))
-            .put(264, new Pair<>(208, "Down Arrow"))
-            .put(265, new Pair<>(200, "Up Arrow"))
-            .put(266, new Pair<>(201, "Page Up"))
-            .put(267, new Pair<>(209, "Page Down"))
-            .put(268, new Pair<>(199, "Home"))
-            .put(269, new Pair<>(207, "End"))
-            .put(280, new Pair<>(58, "Caps Lock"))
-            .put(281, new Pair<>(70, "Scroll Lock"))
-            .put(282, new Pair<>(69, "Number Lock"))
-            .put(283, new Pair<>(0, "Print Screen"))
-            .put(284, new Pair<>(197, "Pause"))
-            .put(290, new Pair<>(59, "F1"))
-            .put(291, new Pair<>(60, "F2"))
-            .put(292, new Pair<>(61, "F3"))
-            .put(293, new Pair<>(62, "F4"))
-            .put(294, new Pair<>(63, "F5"))
-            .put(295, new Pair<>(64, "F6"))
-            .put(296, new Pair<>(65, "F7"))
-            .put(297, new Pair<>(66, "F8"))
-            .put(298, new Pair<>(67, "F9"))
-            .put(299, new Pair<>(68, "F10"))
-            .put(300, new Pair<>(87, "F11"))
-            .put(301, new Pair<>(88, "F12"))
-            .put(302, new Pair<>(100, "F13"))
-            .put(303, new Pair<>(101, "F14"))
-            .put(304, new Pair<>(102, "F15"))
-            .put(305, new Pair<>(103, "F16"))
-            .put(306, new Pair<>(104, "F17"))
-            .put(307, new Pair<>(105, "F18"))
-            .put(308, new Pair<>(113, "F19"))
-            .put(309, new Pair<>(0, "F20"))
-            .put(310, new Pair<>(0, "F21"))
-            .put(311, new Pair<>(0, "F22"))
-            .put(312, new Pair<>(0, "F23"))
-            .put(313, new Pair<>(0, "F24"))
-            .put(314, new Pair<>(0, "F25"))
-            .put(320, new Pair<>(82, "Keypad - 0"))
-            .put(321, new Pair<>(79, "Keypad - 1"))
-            .put(322, new Pair<>(80, "Keypad - 2"))
-            .put(323, new Pair<>(81, "Keypad - 3"))
-            .put(324, new Pair<>(75, "Keypad - 4"))
-            .put(325, new Pair<>(76, "Keypad - 5"))
-            .put(326, new Pair<>(77, "Keypad - 6"))
-            .put(327, new Pair<>(71, "Keypad - 7"))
-            .put(328, new Pair<>(72, "Keypad - 8"))
-            .put(329, new Pair<>(73, "Keypad - 9"))
-            .put(330, new Pair<>(83, "Keypad - Decimal"))
-            .put(331, new Pair<>(181, "Keypad - Divide"))
-            .put(332, new Pair<>(55, "Keypad - Multiply"))
-            .put(333, new Pair<>(74, "Keypad - Subtract"))
-            .put(334, new Pair<>(78, "Keypad - Add"))
-            .put(335, new Pair<>(156, "Keypad - Enter"))
-            .put(336, new Pair<>(141, "Keypad - Equals"))
-            .put(340, new Pair<>(42, "Left Shift"))
-            .put(341, new Pair<>(29, "Left Control"))
-            .put(342, new Pair<>(56, "Left Alt"))
-            .put(343, new Pair<>(219, "Left Meta"))
-            .put(344, new Pair<>(54, "Right Shift"))
-            .put(345, new Pair<>(157, "Right Control"))
-            .put(346, new Pair<>(184, "Right Alt"))
-            .put(347, new Pair<>(220, "Right Meta"))
-            .put(348, new Pair<>(0, "KEY_MENU"))
-            .build();
+    public static final Map<Integer, KeyBindMapping> fromGlfw = keyMappings.stream()
+            .collect(Collectors.toMap(KeyBindMapping::lwjgl3Key, mapping -> mapping));
 
     /**
      * Converts a KeyCode using the Specified Conversion Mode, if possible
@@ -313,13 +317,13 @@ public class KeyConverter {
      * @return The resulting converted KeyCode, or the mode's unknown key
      */
     public static int convertKey(final int originalKey, final int protocol, final ConversionMode mode) {
-        final Pair<Integer, String> unknownKeyData = mode == ConversionMode.Lwjgl2 ? fromGlfw.get(-1) : toGlfw.get(0);
+        final KeyBindMapping unknownKeyData = mode == ConversionMode.Lwjgl2 ? fromGlfw.get(-1) : toGlfw.get(0);
         int resultKey = (protocol <= 340 ? -1 : 0);
 
         if (mode == ConversionMode.Lwjgl2) {
-            resultKey = fromGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+            resultKey = fromGlfw.getOrDefault(originalKey, unknownKeyData).lwjgl2Key();
         } else if (mode == ConversionMode.Lwjgl3) {
-            resultKey = toGlfw.getOrDefault(originalKey, unknownKeyData).getFirst();
+            resultKey = toGlfw.getOrDefault(originalKey, unknownKeyData).lwjgl3Key();
         } else if (mode == ConversionMode.None) {
             // If Input is a valid Integer and Valid KeyCode,
             // Retain the Original Value
@@ -357,6 +361,16 @@ public class KeyConverter {
          * Constant for the "Unknown" Conversion Mode.
          */
         Unknown
+    }
+
+    /**
+     * A Mapping for KeyBind data across different LWJGL versions
+     *
+     * @param lwjgl2Key The KeyBind representation for LWJGL2
+     * @param lwjgl3Key The KeyBind representation for LWJGL3
+     * @param name      The name of the KeyBind
+     */
+    public record KeyBindMapping(int lwjgl2Key, int lwjgl3Key, String name) {
     }
 
 }
