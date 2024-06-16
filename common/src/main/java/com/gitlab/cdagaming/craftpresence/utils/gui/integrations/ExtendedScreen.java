@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -227,6 +228,25 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Whether the specified key is a valid escape key
+     *
+     * @param keyCode The KeyCode entered, if any
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isEscapeKey(final int keyCode) {
+        return keyCode == (ModUtils.MCProtocolID > 340 ? 256 : 1);
+    }
+
+    /**
+     * Controls whether repeat events are reported or not. If repeat events
+     * are enabled, key down events are reported when a key is pressed and held for
+     * a certain amount of time (OS dependent).
+     */
+    public static void enableRepeatEvents(final boolean enable) {
+        Keyboard.enableRepeatEvents(enable);
+    }
+
+    /**
      * Pre-Initializes this Screen
      * <p>
      * Responsible for Setting preliminary data
@@ -236,7 +256,7 @@ public class ExtendedScreen extends GuiScreen {
         // Clear Data before Initialization
         super.initGui();
         clearData();
-        Keyboard.enableRepeatEvents(true);
+        enableRepeatEvents(true);
 
         currentPhase = Phase.INIT;
         initializeUi();
@@ -690,7 +710,7 @@ public class ExtendedScreen extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (isLoaded()) {
-            if (keyCode == Keyboard.KEY_ESCAPE && canClose()) {
+            if (isEscapeKey(keyCode) && canClose()) {
                 openScreen(getParent());
                 return;
             }
@@ -783,7 +803,7 @@ public class ExtendedScreen extends GuiScreen {
             }
             clearData();
             resetIndex();
-            Keyboard.enableRepeatEvents(false);
+            enableRepeatEvents(false);
         }
     }
 

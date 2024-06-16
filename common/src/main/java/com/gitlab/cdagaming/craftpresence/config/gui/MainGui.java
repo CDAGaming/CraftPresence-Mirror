@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.input.Keyboard;
 
 public class MainGui extends ConfigurationGui<Config> {
     private final Config INSTANCE, DEFAULTS;
@@ -231,7 +230,7 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == Keyboard.KEY_ESCAPE && getCurrentData().hasChanged) {
+        if (isEscapeKey(keyCode) && getCurrentData().hasChanged) {
             syncData();
         }
         super.keyTyped(typedChar, keyCode);

@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
@@ -39,7 +40,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import org.lwjgl.input.Keyboard;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -486,12 +486,12 @@ public class CommandsGui extends ExtendedScreen {
     protected void keyTyped(char typedChar, int keyCode) {
         if (!blockInteractions) {
             if (commandInput.isControlFocused()) {
-                if (keyCode == Keyboard.KEY_ESCAPE) {
+                if (isEscapeKey(keyCode)) {
                     commandInput.setControlFocused(false);
                 } else {
                     if (commandString.startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                             (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(Constants.MOD_ID))) {
-                        if (keyCode == Keyboard.KEY_TAB && !tabCompletions.isEmpty()) {
+                        if (keyCode == (ModUtils.MCProtocolID > 340 ? 258 : 15) && !tabCompletions.isEmpty()) { // Tab Key Event
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
@@ -500,7 +500,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                                 commandInput.setControlMessage(commandString);
                             }
-                        } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
+                        } else if (keyCode == (ModUtils.MCProtocolID > 340 ? 257 : 28) || keyCode == (ModUtils.MCProtocolID > 340 ? 335 : 156)) { // Enter Key Event
                             executeCommand(filteredCommandArgs);
                             childFrame.resetMouseScroll();
                             childFrame.setMouseScroll(0);
