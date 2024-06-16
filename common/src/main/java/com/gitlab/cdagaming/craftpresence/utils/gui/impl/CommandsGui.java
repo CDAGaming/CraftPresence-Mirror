@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
@@ -491,7 +490,7 @@ public class CommandsGui extends ExtendedScreen {
                 } else {
                     if (commandString.startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
                             (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(Constants.MOD_ID))) {
-                        if (keyCode == (ModUtils.MCProtocolID > 340 ? 258 : 15) && !tabCompletions.isEmpty()) { // Tab Key Event
+                        if (keyCode == getKeyByVersion(15, 258) && !tabCompletions.isEmpty()) { // Tab Key Event
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
@@ -500,7 +499,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                                 commandInput.setControlMessage(commandString);
                             }
-                        } else if (keyCode == (ModUtils.MCProtocolID > 340 ? 257 : 28) || keyCode == (ModUtils.MCProtocolID > 340 ? 335 : 156)) { // Enter Key Event
+                        } else if (keyCode == getKeyByVersion(28, 257) || keyCode == getKeyByVersion(156, 335)) { // Enter Key Event
                             executeCommand(filteredCommandArgs);
                             childFrame.resetMouseScroll();
                             childFrame.setMouseScroll(0);

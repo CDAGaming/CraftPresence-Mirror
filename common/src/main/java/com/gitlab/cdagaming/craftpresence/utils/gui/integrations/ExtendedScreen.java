@@ -228,13 +228,24 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Return a KeyCode, dependent on the LWJGL version
+     *
+     * @param lwjgl2Key The KeyCode to return if on LWJGL2
+     * @param lwjgl3Key The KeyCode to return if on LWJGL3
+     * @return the processed KeyCode
+     */
+    public static int getKeyByVersion(final int lwjgl2Key, final int lwjgl3Key) {
+        return ModUtils.MCProtocolID > 340 ? lwjgl3Key : lwjgl2Key;
+    }
+
+    /**
      * Whether the specified key is a valid escape key
      *
      * @param keyCode The KeyCode entered, if any
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isEscapeKey(final int keyCode) {
-        return keyCode == (ModUtils.MCProtocolID > 340 ? 256 : 1);
+        return keyCode == getKeyByVersion(1, 256);
     }
 
     /**

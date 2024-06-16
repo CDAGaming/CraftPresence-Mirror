@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -240,7 +239,7 @@ public class ControlsGui extends ExtendedScreen {
 
         // Ensure a Valid KeyCode is entered
         if (!KeyUtils.isValidKeyCode(keyToSubmit) || KeyUtils.isValidClearCode(keyToSubmit)) {
-            keyToSubmit = ModUtils.MCProtocolID > 340 ? -1 : 0; // KEY_NONE
+            keyToSubmit = getKeyByVersion(0, -1); // KEY_NONE
         }
 
         final String formattedKey = KeyUtils.getKeyName(keyToSubmit);
