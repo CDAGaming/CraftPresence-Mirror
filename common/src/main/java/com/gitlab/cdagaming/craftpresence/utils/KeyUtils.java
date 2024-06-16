@@ -65,15 +65,15 @@ public class KeyUtils {
      */
     private static final List<Integer> invalidKeys = StringUtils.newArrayList();
     /**
+     * List of Keys that are in queue for later syncing operations
+     */
+    public final Map<String, Integer> keySyncQueue = StringUtils.newHashMap();
+    /**
      * Key Mappings for Vanilla MC KeyBind Schema
      * <p>
      * Format: rawKeyField:keyMapping
      */
     private final Map<String, KeyMapping> KEY_MAPPINGS = StringUtils.newHashMap();
-    /**
-     * List of Keys that are in queue for later syncing operations
-     */
-    public final Map<String, Integer> keySyncQueue = StringUtils.newHashMap();
     /**
      * Determines whether KeyBindings have been fully registered and attached to needed systems.
      */
@@ -272,15 +272,15 @@ public class KeyUtils {
     void onTick() {
         if (!areKeysRegistered()) {
             if (CraftPresence.instance.gameSettings != null) {
-                for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
-                    final KeyBinding mapping = entry.getValue().binding();
+                for (KeyMapping entry : KEY_MAPPINGS.values()) {
+                    final String category = entry.category();
                     final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
-                    if (!categoryMap.containsKey(mapping.getKeyCategory())) {
+                    if (!categoryMap.containsKey(category)) {
                         final Optional<Integer> largest = categoryMap.values().stream().max(Integer::compareTo);
                         final int largestInt = largest.orElse(0);
-                        categoryMap.put(mapping.getKeyCategory(), largestInt + 1);
+                        categoryMap.put(category, largestInt + 1);
                     }
-                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, mapping);
+                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, entry.binding());
                 }
                 keysRegistered = true;
             } else {
@@ -295,8 +295,7 @@ public class KeyUtils {
                 for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
                     final String keyName = entry.getKey();
                     final KeyMapping keyData = entry.getValue();
-                    final KeyBinding keyBind = keyData.binding();
-                    final int currentBind = keyBind.getKeyCode();
+                    final int currentBind = keyData.keyCode();
                     boolean hasBeenRun = false;
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
@@ -308,8 +307,8 @@ public class KeyUtils {
                                 if (keyData.errorCallback() != null) {
                                     keyData.errorCallback().accept(ex);
                                 } else {
-                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyBind.getKeyDescription()));
-                                    syncKeyData(keyName, ImportMode.Specific, keyBind.getKeyCodeDefault());
+                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyData.description()));
+                                    syncKeyData(keyName, ImportMode.Specific, keyData.defaultKeyCode());
                                 }
                             } finally {
                                 hasBeenRun = true;
@@ -347,7 +346,7 @@ public class KeyUtils {
         } else if (mode == ImportMode.Vanilla) {
             keyData.configEvent().accept(keyCode, true);
         } else if (mode == ImportMode.Specific) {
-            syncKeyData(keyData.binding().getKeyDescription(), ImportMode.Config, keyCode);
+            syncKeyData(keyData.description(), ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
         } else {
             Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
@@ -366,19 +365,13 @@ public class KeyUtils {
 
         for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
             final String keyName = entry.getKey();
+            final KeyMapping keyData = entry.getValue();
             if (mode == FilterMode.None ||
-                    mode == FilterMode.Category ||
-                    mode == FilterMode.ID ||
+                    (mode == FilterMode.Category && filterData.contains(keyData.category())) ||
+                    (mode == FilterMode.ID && filterData.contains(keyData.description())) ||
                     (mode == FilterMode.Name && filterData.contains(keyName))
             ) {
-                final KeyMapping keyData = entry.getValue();
-                if (mode == FilterMode.None ||
-                        (mode == FilterMode.Category && filterData.contains(keyData.binding().getKeyCategory())) ||
-                        (mode == FilterMode.ID && filterData.contains(keyData.binding().getKeyDescription())) ||
-                        mode == FilterMode.Name
-                ) {
-                    filteredMappings.put(keyName, keyData);
-                }
+                filteredMappings.put(keyName, keyData);
             }
         }
         return filteredMappings;
@@ -391,19 +384,6 @@ public class KeyUtils {
      */
     public Map<String, KeyMapping> getKeyMappings() {
         return getKeyMappings(FilterMode.None, StringUtils.newArrayList());
-    }
-
-    /**
-     * Mapping dictating KeyBind data attributes
-     *
-     * @param binding          The KeyBinding object attached to this instance
-     * @param runEvent         The event to execute when the KeyBind is being pressed
-     * @param configEvent      The event to execute when the KeyBind is being rebound to another key
-     * @param vanillaPredicate The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
-     * @param errorCallback    The event to execute upon an exception occurring during KeyBind events
-     */
-    public record KeyMapping(KeyBinding binding, Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
-                             Predicate<Integer> vanillaPredicate, Consumer<Throwable> errorCallback) {
     }
 
     /**
@@ -451,5 +431,53 @@ public class KeyUtils {
          * Constant for the "None" Filter Mode.
          */
         None
+    }
+
+    /**
+     * Mapping dictating KeyBind data attributes
+     *
+     * @param binding          The KeyBinding object attached to this instance
+     * @param runEvent         The event to execute when the KeyBind is being pressed
+     * @param configEvent      The event to execute when the KeyBind is being rebound to another key
+     * @param vanillaPredicate The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
+     * @param errorCallback    The event to execute upon an exception occurring during KeyBind events
+     */
+    public record KeyMapping(KeyBinding binding, Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
+                             Predicate<Integer> vanillaPredicate, Consumer<Throwable> errorCallback) {
+        /**
+         * Retrieve the category for this KeyBind
+         *
+         * @return the KeyBind category
+         */
+        public String category() {
+            return binding.getKeyCategory();
+        }
+
+        /**
+         * Retrieve the description for this KeyBind
+         *
+         * @return the KeyBind description
+         */
+        public String description() {
+            return binding.getKeyDescription();
+        }
+
+        /**
+         * Retrieve the current key for this KeyBind
+         *
+         * @return the currently assigned key code
+         */
+        public int keyCode() {
+            return binding.getKeyCode();
+        }
+
+        /**
+         * Retrieve the default key for this KeyBind
+         *
+         * @return the default assigned key code
+         */
+        public int defaultKeyCode() {
+            return binding.getKeyCodeDefault();
+        }
     }
 }

@@ -131,10 +131,10 @@ public class ControlsGui extends ExtendedScreen {
         for (Map.Entry<String, KeyUtils.KeyMapping> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
             final KeyUtils.KeyMapping keyData = entry.getValue();
-            if (!categorizedNames.containsKey(keyData.binding().getKeyCategory())) {
-                categorizedNames.put(keyData.binding().getKeyCategory(), StringUtils.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.binding().getKeyCategory()).contains(keyName)) {
-                categorizedNames.get(keyData.binding().getKeyCategory()).add(keyName);
+            if (!categorizedNames.containsKey(keyData.category())) {
+                categorizedNames.put(keyData.category(), StringUtils.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyData.category()).contains(keyName)) {
+                categorizedNames.get(keyData.category()).add(keyName);
             }
         }
     }
@@ -164,8 +164,8 @@ public class ControlsGui extends ExtendedScreen {
             for (String keyName : entry.getValue()) {
                 final KeyUtils.KeyMapping keyData = keyMappings.get(keyName);
 
-                final String keyTitle = keyData.binding().getKeyDescription();
-                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.binding().getKeyCode());
+                final String keyTitle = keyData.description();
+                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.keyCode());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         95, 20,
@@ -189,7 +189,7 @@ public class ControlsGui extends ExtendedScreen {
                 keyResetButton.setOnClick(() -> resetEntryData(keyCodeWidget, keyResetButton, keyData));
                 keyCodeWidget.setOnClick(() -> setupEntryData(keyCodeWidget, keyResetButton, keyData));
 
-                keyResetButton.setControlEnabled(keyCode != keyData.binding().getKeyCodeDefault());
+                keyResetButton.setControlEnabled(keyCode != keyData.defaultKeyCode());
 
                 childFrame.addControl(keyCodeWidget);
                 childFrame.addControl(keyResetButton);
@@ -225,7 +225,7 @@ public class ControlsGui extends ExtendedScreen {
     private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final KeyUtils.KeyMapping keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
             entryData = new Tuple<>(button, resetButton, keyData);
-            setKeyData(keyData.binding().getKeyCodeDefault());
+            setKeyData(keyData.defaultKeyCode());
         }
     }
 
@@ -259,7 +259,7 @@ public class ControlsGui extends ExtendedScreen {
         }
 
         entryData.getSecond().setControlEnabled(
-                keyToSubmit != entryData.getThird().binding().getKeyCodeDefault()
+                keyToSubmit != entryData.getThird().defaultKeyCode()
         );
 
         clearEntryData();
