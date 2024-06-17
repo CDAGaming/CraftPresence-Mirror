@@ -121,7 +121,7 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public void preTick() {
-        isFocused = CraftPresence.instance.currentScreen != null && (CraftPresence.instance.currentScreen.isFocused() || CraftPresence.player != null);
+        isFocused = CraftPresence.instance.currentScreen != null && (CraftPresence.instance.inGameHasFocus || CraftPresence.player != null);
     }
 
     @Override

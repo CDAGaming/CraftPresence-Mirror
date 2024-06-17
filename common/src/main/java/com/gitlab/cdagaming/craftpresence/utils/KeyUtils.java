@@ -38,7 +38,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -244,13 +243,6 @@ public class KeyUtils {
         if (!areKeysRegistered()) {
             if (CraftPresence.instance.gameSettings != null) {
                 for (KeyBindData entry : KEY_MAPPINGS.values()) {
-                    final String category = entry.category();
-                    final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
-                    if (!categoryMap.containsKey(category)) {
-                        final Optional<Integer> largest = categoryMap.values().stream().max(Integer::compareTo);
-                        final int largestInt = largest.orElse(0);
-                        categoryMap.put(category, largestInt + 1);
-                    }
                     CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, entry.binding());
                 }
                 keysRegistered = true;
