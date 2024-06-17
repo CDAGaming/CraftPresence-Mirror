@@ -27,9 +27,11 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.core.component.DataComponentHolder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.*;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 
 import java.util.List;
 
@@ -56,9 +58,9 @@ public class NbtUtils {
      * @param stack The ItemStack data to interpret
      * @return the resulting NBT Tag, or null if not found
      */
-    public static CompoundTag getNbt(final ItemStack stack) {
+    public static CompoundTag getNbt(final DataComponentHolder stack) {
         CompoundTag result = new CompoundTag();
-        return stack != null ? stack.save(result) : result;
+        return stack != null ? stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag() : result;
     }
 
     /**
@@ -71,8 +73,8 @@ public class NbtUtils {
     public static Tag getNbt(final Object data, final String... path) {
         if (data instanceof Entity entity) {
             return getNbt(entity, path);
-        } else if (data instanceof ItemStack stack) {
-            return getNbt(stack, path);
+        } else if (data instanceof DataComponentHolder component) {
+            return getNbt(component, path);
         }
         return null;
     }
@@ -97,7 +99,7 @@ public class NbtUtils {
      * @param path  The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static Tag getNbt(final ItemStack stack, final String... path) {
+    public static Tag getNbt(final DataComponentHolder stack, final String... path) {
         return getNbt(
                 getNbt(stack), path
         );
