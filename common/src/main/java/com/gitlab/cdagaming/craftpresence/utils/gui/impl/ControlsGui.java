@@ -40,13 +40,13 @@ import java.util.Map;
 
 public class ControlsGui extends ExtendedScreen {
     // Format: See KeyUtils#KEY_MAPPINGS
-    private final Map<String, KeyUtils.KeyMapping> keyMappings;
+    private final Map<String, KeyUtils.KeyBindData> keyMappings;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = StringUtils.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
-    private Tuple<ExtendedButtonControl, ExtendedButtonControl, KeyUtils.KeyMapping> entryData = null;
+    private Tuple<ExtendedButtonControl, ExtendedButtonControl, KeyUtils.KeyBindData> entryData = null;
     private ScrollPane childFrame;
 
     public ControlsGui() {
@@ -127,9 +127,9 @@ public class ControlsGui extends ExtendedScreen {
      * Sort Key Mappings via their categories, used for placement into gui
      */
     private void sortMappings() {
-        for (Map.Entry<String, KeyUtils.KeyMapping> entry : keyMappings.entrySet()) {
+        for (Map.Entry<String, KeyUtils.KeyBindData> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
-            final KeyUtils.KeyMapping keyData = entry.getValue();
+            final KeyUtils.KeyBindData keyData = entry.getValue();
             if (!categorizedNames.containsKey(keyData.category())) {
                 categorizedNames.put(keyData.category(), StringUtils.newArrayList(keyName));
             } else if (!categorizedNames.get(keyData.category()).contains(keyName)) {
@@ -161,7 +161,7 @@ public class ControlsGui extends ExtendedScreen {
 
             final int middle = (childFrame.getScreenWidth() / 2) + 3;
             for (String keyName : entry.getValue()) {
-                final KeyUtils.KeyMapping keyData = keyMappings.get(keyName);
+                final KeyUtils.KeyBindData keyData = keyMappings.get(keyName);
 
                 final String keyTitle = keyData.description();
                 final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.keyCode());
@@ -205,7 +205,7 @@ public class ControlsGui extends ExtendedScreen {
      * @param resetButton The Reset Button related to the KeyCode Button
      * @param keyData     The key data attached to the entry
      */
-    private void setupEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final KeyUtils.KeyMapping keyData) {
+    private void setupEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final KeyUtils.KeyBindData keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
             entryData = new Tuple<>(button, resetButton, keyData);
 
@@ -221,7 +221,7 @@ public class ControlsGui extends ExtendedScreen {
      * @param resetButton The Reset Button related to the KeyCode Button
      * @param keyData     The key data attached to the entry
      */
-    private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final KeyUtils.KeyMapping keyData) {
+    private void resetEntryData(final ExtendedButtonControl button, final ExtendedButtonControl resetButton, final KeyUtils.KeyBindData keyData) {
         if (entryData == null && button.getOptionalArgs() != null) {
             entryData = new Tuple<>(button, resetButton, keyData);
             setKeyData(keyData.defaultKeyCode());

@@ -73,7 +73,7 @@ public class KeyUtils {
      * <p>
      * Format: rawKeyField:keyMapping
      */
-    private final Map<String, KeyMapping> KEY_MAPPINGS = StringUtils.newHashMap();
+    private final Map<String, KeyBindData> KEY_MAPPINGS = StringUtils.newHashMap();
     /**
      * Determines whether KeyBindings have been fully registered and attached to needed systems.
      */
@@ -188,7 +188,7 @@ public class KeyUtils {
         final KeyBinding keyBind = createKey(id, name, category, defaultKey, currentKey);
         KEY_MAPPINGS.put(
                 id,
-                new KeyMapping(
+                new KeyBindData(
                         keyBind,
                         onPress, onBind, onOutdated,
                         callback
@@ -260,7 +260,7 @@ public class KeyUtils {
      *
      * @return The unfiltered key mappings
      */
-    public Set<Map.Entry<String, KeyMapping>> getKeyEntries() {
+    public Set<Map.Entry<String, KeyBindData>> getKeyEntries() {
         return KEY_MAPPINGS.entrySet();
     }
 
@@ -272,7 +272,7 @@ public class KeyUtils {
     void onTick() {
         if (!areKeysRegistered()) {
             if (CraftPresence.instance.gameSettings != null) {
-                for (KeyMapping entry : KEY_MAPPINGS.values()) {
+                for (KeyBindData entry : KEY_MAPPINGS.values()) {
                     final String category = entry.category();
                     final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
                     if (!categoryMap.containsKey(category)) {
@@ -292,9 +292,9 @@ public class KeyUtils {
             final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
             try {
-                for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
+                for (Map.Entry<String, KeyBindData> entry : getKeyEntries()) {
                     final String keyName = entry.getKey();
-                    final KeyMapping keyData = entry.getValue();
+                    final KeyBindData keyData = entry.getValue();
                     final int currentBind = keyData.keyCode();
                     boolean hasBeenRun = false;
 
@@ -340,7 +340,7 @@ public class KeyUtils {
      * @param keyCode The new keycode to synchronize
      */
     private void syncKeyData(final String keyName, final ImportMode mode, final int keyCode) {
-        final KeyMapping keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
+        final KeyBindData keyData = KEY_MAPPINGS.getOrDefault(keyName, null);
         if (mode == ImportMode.Config) {
             setKey(keyData.binding(), keyCode);
         } else if (mode == ImportMode.Vanilla) {
@@ -360,12 +360,12 @@ public class KeyUtils {
      * @param filterData The filter data to attach to the filter mode
      * @return The filtered key mappings
      */
-    public Map<String, KeyMapping> getKeyMappings(final FilterMode mode, final List<String> filterData) {
-        final Map<String, KeyMapping> filteredMappings = StringUtils.newHashMap();
+    public Map<String, KeyBindData> getKeyMappings(final FilterMode mode, final List<String> filterData) {
+        final Map<String, KeyBindData> filteredMappings = StringUtils.newHashMap();
 
-        for (Map.Entry<String, KeyMapping> entry : getKeyEntries()) {
+        for (Map.Entry<String, KeyBindData> entry : getKeyEntries()) {
             final String keyName = entry.getKey();
-            final KeyMapping keyData = entry.getValue();
+            final KeyBindData keyData = entry.getValue();
             if (mode == FilterMode.None ||
                     (mode == FilterMode.Category && filterData.contains(keyData.category())) ||
                     (mode == FilterMode.ID && filterData.contains(keyData.description())) ||
@@ -382,7 +382,7 @@ public class KeyUtils {
      *
      * @return The filtered key mappings
      */
-    public Map<String, KeyMapping> getKeyMappings() {
+    public Map<String, KeyBindData> getKeyMappings() {
         return getKeyMappings(FilterMode.None, StringUtils.newArrayList());
     }
 
@@ -442,8 +442,8 @@ public class KeyUtils {
      * @param vanillaPredicate The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
      * @param errorCallback    The event to execute upon an exception occurring during KeyBind events
      */
-    public record KeyMapping(KeyBinding binding, Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
-                             Predicate<Integer> vanillaPredicate, Consumer<Throwable> errorCallback) {
+    public record KeyBindData(KeyBinding binding, Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
+                              Predicate<Integer> vanillaPredicate, Consumer<Throwable> errorCallback) {
         /**
          * Retrieve the category for this KeyBind
          *
