@@ -44,7 +44,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -146,7 +146,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
      * @param parentScreen The Parent Screen for this Instance
      */
     public ExtendedScreen(final Screen parentScreen) {
-        super(new TextComponent(""));
+        super(Component.literal(""));
         setGameInstance(CraftPresence.instance);
         setParent(parentScreen);
         currentScreen = this;
