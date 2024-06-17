@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.Minecraft;
@@ -157,12 +158,11 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Draws this button to the screen.
      */
     @Override
-    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partial) {
-        setCurrentFontRender(mc.fontRenderer);
+    public void render(int mouseX, int mouseY, float partial) {
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
 
-            mouseDragged(mc, mouseX, mouseY);
+            renderBg(CraftPresence.instance, mouseX, mouseY);
             final int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (isChecked())
@@ -175,7 +175,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
                 );
 
             final int left = getControlPosX() + getBoxWidth() + 2;
-            RenderUtils.renderScrollingString(mc,
+            RenderUtils.renderScrollingString(CraftPresence.instance,
                     getFontRenderer(), getDisplayMessage(),
                     left + (RenderUtils.getStringWidth(getFontRenderer(), getDisplayMessage()) / 2),
                     left, getTop(), getRight() - 2, getBottom(),
@@ -189,7 +189,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
             final int hoverState = getHoverState(isHoveringOrFocusingOver());
 

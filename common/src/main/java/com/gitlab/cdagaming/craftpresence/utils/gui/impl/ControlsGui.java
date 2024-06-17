@@ -115,11 +115,12 @@ public class ControlsGui extends ExtendedScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
         if (entryData != null) {
             setKeyData(keyCode);
+            return true;
         } else {
-            super.keyTyped(typedChar, keyCode);
+            return super.keyPressed(keyCode, mouseX, mouseY);
         }
     }
 

@@ -197,7 +197,7 @@ public class CraftPresence {
      */
     private void clientTick() {
         if (!Constants.IS_GAME_CLOSING) {
-            instance = Minecraft.getMinecraft();
+            instance = Minecraft.getInstance();
             if (initialized) {
                 session = instance.getSession();
                 player = instance.player;

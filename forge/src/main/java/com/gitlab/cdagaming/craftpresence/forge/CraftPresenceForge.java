@@ -25,18 +25,28 @@
 package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraftforge.fml.common.Loader;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
 
 /**
  * The Primary Application Class and Utilities
  *
  * @author CDAGaming
  */
-@Mod(modid = "craftpresence", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*")
+@Mod("craftpresence")
 public class CraftPresenceForge {
     /**
      * Begins Scheduling Ticks on Class Initialization
@@ -45,9 +55,37 @@ public class CraftPresenceForge {
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
-        MappingUtils.setFilePath("/mappings-forge.srg");
-        Constants.MOD_COUNT_SUPPLIER = () -> Loader.instance().getModList().size();
-        new CraftPresence(this::setupIntegrations);
+
+        try {
+            // Workaround: Client-side only fix for Forge Clients
+            // - Reference => https://gitlab.com/CDAGaming/CraftPresence/-/issues/99
+            ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+        } catch (Throwable ignored) {
+            // before forge-1.13.2-25.0.103
+        }
+
+        try {
+            // Workaround: Modify "ModInfo#hasConfigUI" for certain Forge Clients
+            // - Reference => https://github.com/MinecraftForge/MinecraftForge/pull/6208
+            final ModList modList = ModList.get();
+            final List<ModInfo> sortedList = (List<ModInfo>) StringUtils.getField(ModList.class, modList, "sortedList");
+            final ModInfo modInfo = sortedList.stream().filter(info -> info.getModId().equals("craftpresence")).findFirst().get();
+            sortedList.set(sortedList.indexOf(modInfo), new CraftPresenceModInfo(modInfo));
+            StringUtils.updateField(ModList.class, modList, sortedList, "sortedList");
+
+            // Register The Config GUI Factory, used in Forge for Mod Menu integration
+            ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, parentScreen) -> new MainGui(parentScreen));
+        } catch (Throwable ex) {
+            Constants.LOG.error("Failed to register Config GUI Factory for @MOD_NAME@.", ex);
+        }
+
+        if (FMLEnvironment.dist.isClient()) {
+            MappingUtils.setFilePath("/mappings-forge.srg");
+            Constants.MOD_COUNT_SUPPLIER = () -> ModList.get().getMods().size();
+            new CraftPresence(this::setupIntegrations);
+        } else {
+            Constants.LOG.info("Disabling @MOD_NAME@, as it is client side only.");
+        }
     }
 
     /**
@@ -55,5 +93,16 @@ public class CraftPresenceForge {
      */
     public void setupIntegrations() {
         // N/A
+    }
+
+    private static class CraftPresenceModInfo extends ModInfo {
+        public CraftPresenceModInfo(ModInfo modInfo) {
+            super(modInfo.getOwningFile(), modInfo.getModConfig());
+        }
+
+        @Override
+        public boolean hasConfigUI() {
+            return true;
+        }
     }
 }
