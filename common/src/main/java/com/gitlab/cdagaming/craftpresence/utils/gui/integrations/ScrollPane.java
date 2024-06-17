@@ -219,7 +219,7 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double wheelY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double wheelX, double wheelY) {
         scrollBy((float) (-wheelY * getHeightPerScroll()));
         return true;
     }

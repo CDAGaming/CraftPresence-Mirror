@@ -388,7 +388,7 @@ public class ServerUtils implements ExtendedModule {
         final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            CraftPresence.instance.execute(() -> joinServer(new ServerData(serverName, serverIP, false)));
+            CraftPresence.instance.execute(() -> joinServer(new ServerData(serverName, serverIP, ServerData.Type.OTHER)));
         } else {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }
