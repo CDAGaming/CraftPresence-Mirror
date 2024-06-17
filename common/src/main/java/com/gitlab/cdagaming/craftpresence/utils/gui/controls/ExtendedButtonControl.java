@@ -78,7 +78,7 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
      */
     public ExtendedButtonControl(final int buttonId, final int x, final int y, final int widthIn, final int heightIn, final String buttonText, final String... optionalArgs) {
         super(x, y, widthIn, heightIn, Component.literal(buttonText), (button) -> {
-        });
+        }, Button.DEFAULT_NARRATION);
 
         this.optionalArgs = optionalArgs;
     }
@@ -284,22 +284,22 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
 
     @Override
     public int getControlPosX() {
-        return this.x;
+        return this.getX();
     }
 
     @Override
     public void setControlPosX(final int posX) {
-        this.x = posX;
+        this.setX(posX);
     }
 
     @Override
     public int getControlPosY() {
-        return this.y;
+        return this.getY();
     }
 
     @Override
     public void setControlPosY(final int posY) {
-        this.y = posY;
+        this.setY(posY);
     }
 
     /**
