@@ -39,8 +39,10 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -54,7 +56,7 @@ import java.util.List;
  *
  * @author CDAGaming
  */
-public class ExtendedScreen extends Screen {
+public class ExtendedScreen extends Screen implements NarratableEntry {
     /**
      * The Default Vertical Padding between elements, used in {@link ExtendedScreen#getButtonY(int)}
      */
@@ -310,8 +312,7 @@ public class ExtendedScreen extends Screen {
             currentPhase = Phase.PREINIT;
             setContentHeight(0);
 
-            buttons.clear();
-            children.clear();
+            clearWidgets();
             extendedControls.clear();
             extendedWidgets.clear();
             extendedLists.clear();
@@ -368,19 +369,6 @@ public class ExtendedScreen extends Screen {
     }
 
     /**
-     * Adds a Compatible Button to this Screen with specified type
-     *
-     * @param buttonIn The Button to add to this Screen
-     * @param <T>      The Button's Class Type
-     * @return The added button with attached class type
-     */
-    @Nonnull
-    @Override
-    protected <T extends AbstractWidget> T addButton(@Nonnull T buttonIn) {
-        return addControl(buttonIn);
-    }
-
-    /**
      * Adds a Compatible Control to this Screen with specified type
      *
      * @param buttonIn The Control to add to this Screen
@@ -388,15 +376,14 @@ public class ExtendedScreen extends Screen {
      * @return The added control with attached class type
      */
     @Nonnull
-    public <T extends GuiEventListener> T addControl(@Nonnull T buttonIn) {
+    public <T extends GuiEventListener & Widget & NarratableEntry> T addControl(@Nonnull T buttonIn) {
         if (buttonIn instanceof DynamicWidget widget && !extendedWidgets.contains(buttonIn)) {
             addWidget(widget);
         }
-        if (buttonIn instanceof AbstractWidget abstractWidget && !buttons.contains(buttonIn)) {
-            buttons.add(abstractWidget);
-        }
-        if (buttonIn instanceof GuiEventListener listener && !children.contains(buttonIn)) {
-            children.add(listener);
+        if (!children().contains(buttonIn) && buttonIn instanceof ExtendedScreen) {
+            super.addWidget(buttonIn);
+        } else if (buttonIn instanceof Widget) {
+            addRenderableWidget(buttonIn);
         }
         if (!extendedControls.contains(buttonIn)) {
             extendedControls.add(buttonIn);
@@ -413,8 +400,8 @@ public class ExtendedScreen extends Screen {
      */
     @Nonnull
     public <T extends ScrollableListControl> T addList(@Nonnull T buttonIn) {
-        if (buttonIn instanceof GuiEventListener listener && !children.contains(buttonIn)) {
-            children.add(listener);
+        if (buttonIn instanceof Widget) {
+            addRenderableWidget(buttonIn);
         }
         if (!extendedLists.contains(buttonIn)) {
             extendedLists.add(buttonIn);
@@ -667,12 +654,6 @@ public class ExtendedScreen extends Screen {
 
             renderBackground(matrixStack);
 
-            for (ScrollableListControl listControl : getLists()) {
-                if (listControl.isVisible()) {
-                    listControl.render(matrixStack, mouseX, mouseY, partialTicks);
-                }
-            }
-
             super.render(matrixStack, mouseX, mouseY, partialTicks);
 
             renderExtra();
@@ -808,6 +789,16 @@ public class ExtendedScreen extends Screen {
             resetIndex();
             enableRepeatEvents(false);
         }
+    }
+
+    @Override
+    public @Nonnull NarrationPriority narrationPriority() {
+        return NarrationPriority.NONE;
+    }
+
+    @Override
+    public void updateNarration(@Nonnull NarrationElementOutput arg) {
+        // N/A
     }
 
     /**

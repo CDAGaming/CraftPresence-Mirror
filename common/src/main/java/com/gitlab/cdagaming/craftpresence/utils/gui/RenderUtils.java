@@ -37,10 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.*;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
@@ -49,6 +46,7 @@ import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -291,10 +289,9 @@ public class RenderUtils {
     public static void drawItemStack(@Nonnull final Minecraft client, final Font fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
         if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
-            RenderSystem.pushMatrix();
-            RenderSystem.scalef(scale, scale, 1.0f);
-            RenderSystem.enableRescaleNormal();
-            RenderSystem.enableColorMaterial();
+            final PoseStack lv = RenderSystem.getModelViewStack();
+            lv.pushPose();
+            lv.scale(scale, scale, 1.0f);
             RenderSystem.enableDepthTest();
 
             final int xPos = Math.round(x / scale);
@@ -303,9 +300,8 @@ public class RenderUtils {
             client.getItemRenderer().renderGuiItemDecorations(fontRenderer, stack, xPos, yPos);
 
             RenderSystem.disableDepthTest();
-            RenderSystem.disableColorMaterial();
-            RenderSystem.disableRescaleNormal();
-            RenderSystem.popMatrix();
+            lv.popPose();
+            RenderSystem.applyModelViewMatrix();
         } catch (Throwable ex) {
             Constants.LOG.debugError(ex);
             if (!BLOCKED_RENDER_ITEMS.contains(stack)) {
@@ -417,13 +413,14 @@ public class RenderUtils {
                 if (data.getFirst()) {
                     RenderSystem.bindTexture(data.getSecond());
                 } else {
-                    mc.getTextureManager().bind(texLocation);
+                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                    RenderSystem.setShaderTexture(0, texLocation);
                 }
             }
         } catch (Exception ignored) {
             return;
         }
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         RenderSystem.enableDepthTest();
@@ -464,7 +461,8 @@ public class RenderUtils {
                 if (data.getFirst()) {
                     RenderSystem.bindTexture(data.getSecond());
                 } else {
-                    mc.getTextureManager().bind(texLocation);
+                    RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+                    RenderSystem.setShaderTexture(0, texLocation);
                 }
             }
         } catch (Exception ignored) {
@@ -479,26 +477,20 @@ public class RenderUtils {
         }
 
         RenderSystem.enableBlend();
-        RenderSystem.disableAlphaTest();
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
-        RenderSystem.disableLighting();
-        RenderSystem.disableFog();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         final Tesselator tessellator = Tesselator.getInstance();
         final BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         buffer.vertex(left, bottom, zLevel).uv((float) minU, (float) maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
         buffer.vertex(right, bottom, zLevel).uv((float) maxU, (float) maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
         buffer.vertex(right, top, zLevel).uv((float) maxU, (float) minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
         buffer.vertex(left, top, zLevel).uv((float) minU, (float) minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
         tessellator.end();
 
-        RenderSystem.shadeModel(GL11.GL_FLAT);
         RenderSystem.disableBlend();
-        RenderSystem.disableAlphaTest();
     }
 
     /**
@@ -595,22 +587,19 @@ public class RenderUtils {
         RenderSystem.disableDepthTest();
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
-        RenderSystem.disableAlphaTest();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
         final Tesselator tessellator = Tesselator.getInstance();
         final BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         buffer.vertex(left, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
         buffer.vertex(right, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
         buffer.vertex(right, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
         buffer.vertex(left, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
         tessellator.end();
 
-        RenderSystem.shadeModel(GL11.GL_FLAT);
         RenderSystem.disableBlend();
-        RenderSystem.enableAlphaTest();
         RenderSystem.enableTexture();
         RenderSystem.enableDepthTest();
     }
@@ -706,7 +695,7 @@ public class RenderUtils {
                                  final double minU, final double maxU, final double minV, final double maxV) {
         final Tesselator tessellator = Tesselator.getInstance();
         final BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.vertex(left, bottom, zLevel).uv((float) minU, (float) maxV).endVertex();
         buffer.vertex(right, bottom, zLevel).uv((float) maxU, (float) maxV).endVertex();
         buffer.vertex(right, top, zLevel).uv((float) maxU, (float) minV).endVertex();
@@ -748,14 +737,13 @@ public class RenderUtils {
             final int displayHeight = mc.getWindow().getHeight();
             final int renderWidth = Math.max(0, rectangle.width() * scale);
             final int renderHeight = Math.max(0, rectangle.height() * scale);
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            GL11.glScissor(
+            RenderSystem.enableScissor(
                     rectangle.getLeft() * scale,
                     displayHeight - rectangle.getBottom() * scale,
                     renderWidth, renderHeight
             );
         } else {
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            RenderSystem.disableScissor();
         }
     }
 
