@@ -128,22 +128,22 @@ public class ExtendedTextControl extends EditBox implements DynamicWidget {
 
     @Override
     public int getControlPosX() {
-        return this.x;
+        return this.getX();
     }
 
     @Override
     public void setControlPosX(final int posX) {
-        this.x = posX;
+        this.setX(posX);
     }
 
     @Override
     public int getControlPosY() {
-        return this.y;
+        return this.getY();
     }
 
     @Override
     public void setControlPosY(final int posY) {
-        this.y = posY;
+        this.setY(posY);
     }
 
     /**

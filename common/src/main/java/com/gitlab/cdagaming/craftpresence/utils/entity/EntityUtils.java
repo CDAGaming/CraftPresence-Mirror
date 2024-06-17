@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -324,7 +324,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final List<EntityType<?>> defaultEntityTypes = StringUtils.newArrayList(Registry.ENTITY_TYPE.iterator());
+        final List<EntityType<?>> defaultEntityTypes = StringUtils.newArrayList(BuiltInRegistries.ENTITY_TYPE.iterator());
 
         if (!defaultEntityTypes.isEmpty()) {
             for (EntityType<?> entityLocation : defaultEntityTypes) {
