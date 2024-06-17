@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.4.1 (??/??/2024)
+## v2.4.1 (06/18/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.4.0...release%2Fv2.4.1)_
@@ -14,13 +14,17 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Gradle (`8.7` -> `8.8`)
     * Unimined (`1.2.7` -> `1.2.9`)
     * JVMDowngrader (`0.7.1` -> `0.7.2`)
-    * UniCore (`1.1.9` -> `1.1.10-SNAPSHOT`)
-    * DiscordIPC (`0.9.1` -> `0.9.2-SNAPSHOT`)
-    * Starscript (`0.3.3` -> `0.3.4-SNAPSHOT`)
+    * UniCore (`1.1.9` -> `1.1.10`)
+    * DiscordIPC (`0.9.1` -> `0.9.2`)
+    * Starscript (`0.3.3` -> `0.3.4`)
+* Misc. API and Performance Improvements
 
 ### Fixes
 
-* TBD
+* Fixed a runtime ASM crash that could occur on Forge clients in MC 1.13.x and 1.14.x
+    * This issue could also occur on certain versions of Fabric Loader
+* Fixed the "Config" button being unavailable on the Forge Mod Menu on MC 1.13.x and above
+    * An error will also be logged if the mod fails to register a config factory
 
 ___
 
