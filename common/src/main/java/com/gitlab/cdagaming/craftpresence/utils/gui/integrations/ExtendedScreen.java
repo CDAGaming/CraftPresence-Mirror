@@ -252,8 +252,10 @@ public class ExtendedScreen extends GuiScreen {
      * Controls whether repeat events are reported or not. If repeat events
      * are enabled, key down events are reported when a key is pressed and held for
      * a certain amount of time (OS dependent).
+     *
+     * @param enable the new enable state
      */
-    public void enableRepeatEvents(final boolean enable) {
+    public static void enableRepeatEvents(final boolean enable) {
         Keyboard.enableRepeatEvents(enable);
     }
 
