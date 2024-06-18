@@ -17,6 +17,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * UniCore (`1.1.9` -> `1.1.10`)
     * DiscordIPC (`0.9.1` -> `0.9.2`)
     * Starscript (`0.3.3` -> `0.3.4`)
+* The Simple RPC Config Migration Layer (`HypherConverter`) is now supported on MC 1.6.4 and below
+    * Certain Settings, such as the `realms_list` event, will not migrate on these versions
 * Misc. API and Performance Improvements
 
 ### Fixes
