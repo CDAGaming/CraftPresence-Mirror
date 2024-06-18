@@ -33,6 +33,8 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
+import com.mojang.realmsclient.RealmsMainScreen;
+import com.mojang.realmsclient.dto.RealmsServer;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
@@ -112,6 +114,10 @@ public class ServerUtils implements ExtendedModule {
      */
     private boolean hasInitializedServer = false;
     /**
+     * Whether placeholders for the realm data (if in use) have been initialized
+     */
+    private boolean hasInitializedRealm = false;
+    /**
      * The IP Address of the Current Server the Player is in
      */
     private String currentServer_IP;
@@ -152,6 +158,10 @@ public class ServerUtils implements ExtendedModule {
      */
     private ServerData currentServerData;
     /**
+     * The Current Realm Connection Data and Info
+     */
+    private RealmsServer currentRealmData;
+    /**
      * The Player's Current Connection Data
      */
     private ClientPacketListener currentConnection;
@@ -172,6 +182,10 @@ public class ServerUtils implements ExtendedModule {
      * If the Current Server is a Local Single-Player Connection
      */
     private boolean isOnSinglePlayer = false;
+    /**
+     * If the Current Server is a Realm Connection
+     */
+    private boolean isOnRealm = false;
 
     @Override
     public void clearFieldData() {
@@ -191,6 +205,7 @@ public class ServerUtils implements ExtendedModule {
         currentServer_MOTD_Lines.clear();
         currentServer_Name = null;
         currentServerData = null;
+        currentRealmData = null;
         currentConnection = null;
         currentPlayers = 0;
         maxPlayers = 0;
@@ -199,17 +214,26 @@ public class ServerUtils implements ExtendedModule {
         joinInProgress = false;
         isOnLAN = false;
         isOnSinglePlayer = false;
+        isOnRealm = false;
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
         CraftPresence.CLIENT.removeForcedData("server");
         CraftPresence.CLIENT.clearPartyData();
         hasInitialized = false;
         hasInitializedServer = false;
+        hasInitializedRealm = false;
     }
 
     @Override
     public void preTick() {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
+    }
+
+    private RealmsServer findRealmData(final ClientPacketListener connection) {
+        if (connection.postDisconnectScreen instanceof RealmsMainScreen realmsMainScreen) {
+            return realmsMainScreen.getSelectedServer();
+        }
+        return null;
     }
 
     @Override
@@ -218,85 +242,23 @@ public class ServerUtils implements ExtendedModule {
         final ClientPacketListener newConnection = CraftPresence.instance.getConnection();
 
         if (!joinInProgress) {
-            final List<PlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getOnlinePlayers()) : StringUtils.newArrayList();
-            final int newCurrentPlayers = newConnection != null ? newConnection.getOnlinePlayers().size() : 1;
-
-            // 1.13+ Check for New Maximum Players
-            int newMaxPlayers;
-            if (newServerData != null) {
-                try {
-                    newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status.getString()).split("/")[1]).getSecond();
-
-                    if (newMaxPlayers < newCurrentPlayers) {
-                        newMaxPlayers = newCurrentPlayers + 1;
-                    }
-                } catch (Exception ex) {
-                    newMaxPlayers = newCurrentPlayers + 1;
+            // If connected to a Realm, locate the RealmServer instance
+            // before continuing any further in module ticking
+            boolean newRealmStatus = newServerData != null && newConnection != null && newServerData.isRealm();
+            if (newRealmStatus) {
+                if (currentRealmData == null) {
+                    currentRealmData = findRealmData(newConnection);
                 }
+                newRealmStatus = currentRealmData != null;
+            }
+            if (newRealmStatus != isOnRealm) {
+                isOnRealm = newRealmStatus;
+            }
+
+            if (isOnRealm) {
+                updateRealmData(newServerData, newConnection);
             } else {
-                newMaxPlayers = newCurrentPlayers + 1;
-            }
-
-            final boolean newSinglePlayerStatus = CraftPresence.instance.isLocalServer();
-            final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (newServerData != null && newServerData.isLan());
-            final boolean isMotdValid = newServerData != null && newServerData.motd != null;
-
-            final String newServer_IP = newServerData != null && !StringUtils.isNullOrEmpty(newServerData.ip) ? newServerData.ip : "127.0.0.1";
-            final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-            final String newServer_MOTD = !isOnLAN && !newSinglePlayerStatus &&
-                    isMotdValid && !isInvalidMotd(newServerData.motd.getString()) ? StringUtils.stripAllFormatting(newServerData.motd.getString()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
-
-            if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer || ((newServerData != null && !newServerData.equals(currentServerData)) ||
-                    (newServerData == null && currentServerData != null)) ||
-                    (newConnection != null && !newConnection.equals(currentConnection)) || !newServer_IP.equals(currentServer_IP) ||
-                    (!StringUtils.isNullOrEmpty(newServer_MOTD) && !newServer_MOTD.equals(currentServer_MOTD)) ||
-                    (!StringUtils.isNullOrEmpty(newServer_Name) && !newServer_Name.equals(currentServer_Name))) {
-                currentServer_IP = newServer_IP;
-
-                if (!newServer_MOTD.equals(currentServer_MOTD)) {
-                    currentServer_MOTD = newServer_MOTD;
-                    currentServer_MOTD_Lines = StringUtils.splitTextByNewLine(newServer_MOTD);
-                }
-                currentServer_Name = newServer_Name;
-                currentServerData = newServerData;
-                currentConnection = newConnection;
-                isOnLAN = newLANStatus;
-                isOnSinglePlayer = newSinglePlayerStatus;
-                queuedForUpdate = true;
-
-                if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
-                    formattedServer_IP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
-                    if (!defaultAddresses.contains(formattedServer_IP)) {
-                        defaultAddresses.add(formattedServer_IP);
-                    }
-                    if (!knownAddresses.contains(formattedServer_IP)) {
-                        knownAddresses.add(formattedServer_IP);
-                    }
-                }
-
-                if (serverList != null) {
-                    serverList.load();
-                    if (serverList.size() != serverIndex) {
-                        queueInternalScan();
-                    }
-                }
-            }
-
-            // 'server.players' Argument = Current and Maximum Allowed Players in Server/World
-            if (newCurrentPlayers != currentPlayers || newMaxPlayers != maxPlayers) {
-                currentPlayers = newCurrentPlayers;
-                maxPlayers = newMaxPlayers;
-                queuedForUpdate = true;
-            }
-
-            // Update Player List as needed, and Sync with Entity System if enabled
-            if (!newPlayerList.equals(currentPlayerList)) {
-                currentPlayerList = newPlayerList;
-
-                if (CraftPresence.ENTITIES.isEnabled()) {
-                    CraftPresence.ENTITIES.ENTITY_NAMES.removeAll(CraftPresence.ENTITIES.PLAYER_BINDINGS.keySet());
-                    CraftPresence.ENTITIES.queueInternalScan();
-                }
+                updateServerData(newServerData, newConnection);
             }
         }
 
@@ -308,6 +270,122 @@ public class ServerUtils implements ExtendedModule {
             updatePresence();
             queuedForUpdate = false;
         }
+    }
+
+    private void processData(final boolean newLANStatus, final boolean newSinglePlayerStatus,
+                             final ServerData newServerData, final ClientPacketListener newConnection,
+                             final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
+                             final int newCurrentPlayers, final int newMaxPlayers, final List<PlayerInfo> newPlayerList) {
+        if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer || ((newServerData != null && !newServerData.equals(currentServerData)) ||
+                (newServerData == null && currentServerData != null)) ||
+                (newConnection != null && !newConnection.equals(currentConnection)) || !newServer_IP.equals(currentServer_IP) ||
+                (!StringUtils.isNullOrEmpty(newServer_MOTD) && !newServer_MOTD.equals(currentServer_MOTD)) ||
+                (!StringUtils.isNullOrEmpty(newServer_Name) && !newServer_Name.equals(currentServer_Name))) {
+            currentServer_IP = newServer_IP;
+
+            if (!newServer_MOTD.equals(currentServer_MOTD)) {
+                currentServer_MOTD = newServer_MOTD;
+                currentServer_MOTD_Lines = StringUtils.splitTextByNewLine(newServer_MOTD);
+            }
+            currentServer_Name = newServer_Name;
+            currentServerData = newServerData;
+            currentConnection = newConnection;
+            isOnLAN = newLANStatus;
+            isOnSinglePlayer = newSinglePlayerStatus;
+            queuedForUpdate = true;
+
+            if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
+                formattedServer_IP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
+                if (!defaultAddresses.contains(formattedServer_IP)) {
+                    defaultAddresses.add(formattedServer_IP);
+                }
+                if (!knownAddresses.contains(formattedServer_IP)) {
+                    knownAddresses.add(formattedServer_IP);
+                }
+            }
+
+            if (serverList != null) {
+                serverList.load();
+                if (serverList.size() != serverIndex) {
+                    queueInternalScan();
+                }
+            }
+        }
+
+        // 'server.players' Argument = Current and Maximum Allowed Players in Server/World
+        if (newCurrentPlayers != currentPlayers || newMaxPlayers != maxPlayers) {
+            currentPlayers = newCurrentPlayers;
+            maxPlayers = newMaxPlayers;
+            queuedForUpdate = true;
+        }
+
+        // Update Player List as needed, and Sync with Entity System if enabled
+        if (!newPlayerList.equals(currentPlayerList)) {
+            currentPlayerList = newPlayerList;
+
+            if (CraftPresence.ENTITIES.isEnabled()) {
+                CraftPresence.ENTITIES.ENTITY_NAMES.removeAll(CraftPresence.ENTITIES.PLAYER_BINDINGS.keySet());
+                CraftPresence.ENTITIES.queueInternalScan();
+            }
+        }
+    }
+
+    private String getServerAddress(final ServerData newServerData) {
+        return newServerData != null && !StringUtils.isNullOrEmpty(newServerData.ip) ? newServerData.ip : "127.0.0.1";
+    }
+
+    private void updateRealmData(final ServerData newServerData, final ClientPacketListener newConnection) {
+        final List<PlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getOnlinePlayers()) : StringUtils.newArrayList();
+        final int newCurrentPlayers = newConnection != null ? newConnection.getOnlinePlayers().size() : 1;
+
+        final String newServer_IP = getServerAddress(newServerData);
+        final String newServer_Name = currentRealmData.getName();
+        final String newServer_MOTD = !isInvalidMotd(currentRealmData.getDescription()) ?
+                StringUtils.stripAllFormatting(currentRealmData.getDescription()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+
+        processData(false, false,
+                newServerData, newConnection,
+                newServer_IP, newServer_MOTD, newServer_Name,
+                newCurrentPlayers, 10,
+                newPlayerList
+        );
+    }
+
+    private void updateServerData(final ServerData newServerData, final ClientPacketListener newConnection) {
+        final List<PlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getOnlinePlayers()) : StringUtils.newArrayList();
+        final int newCurrentPlayers = newConnection != null ? newConnection.getOnlinePlayers().size() : 1;
+
+        // 1.13+ Check for New Maximum Players
+        int newMaxPlayers;
+        if (newServerData != null) {
+            try {
+                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status.getString()).split("/")[1]).getSecond();
+
+                if (newMaxPlayers < newCurrentPlayers) {
+                    newMaxPlayers = newCurrentPlayers + 1;
+                }
+            } catch (Exception ex) {
+                newMaxPlayers = newCurrentPlayers + 1;
+            }
+        } else {
+            newMaxPlayers = newCurrentPlayers + 1;
+        }
+
+        final boolean newSinglePlayerStatus = CraftPresence.instance.isLocalServer();
+        final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (newServerData != null && newServerData.isLan());
+        final boolean isMotdValid = newServerData != null && newServerData.motd != null;
+
+        final String newServer_IP = getServerAddress(newServerData);
+        final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
+        final String newServer_MOTD = !isOnLAN && !newSinglePlayerStatus &&
+                isMotdValid && !isInvalidMotd(newServerData.motd.getString()) ? StringUtils.stripAllFormatting(newServerData.motd.getString()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+
+        processData(newLANStatus, newSinglePlayerStatus,
+                newServerData, newConnection,
+                newServer_IP, newServer_MOTD, newServer_Name,
+                newCurrentPlayers, newMaxPlayers,
+                newPlayerList
+        );
     }
 
     /**
@@ -470,7 +548,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("server.default.icon", () -> CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
         syncArgument("server.message", () -> {
-            final boolean inServer = !isOnSinglePlayer && currentServerData != null;
+            final boolean inServer = !isOnRealm && !isOnSinglePlayer && currentServerData != null;
             if (inServer) {
                 if (isOnLAN) {
                     final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.lanData;
@@ -488,11 +566,14 @@ public class ServerUtils implements ExtendedModule {
             } else if (isOnSinglePlayer) {
                 final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.singleplayerData;
                 return getResult(Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "", primaryData);
+            } else if (isOnRealm) {
+                final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.realmData;
+                return getResult(Config.isValidProperty(primaryData, "textOverride") ? primaryData.getTextOverride() : "", primaryData);
             }
             return null;
         });
         syncArgument("server.icon", () -> {
-            final boolean inServer = !isOnSinglePlayer && currentServerData != null;
+            final boolean inServer = !isOnRealm && !isOnSinglePlayer && currentServerData != null;
             String currentServerIcon = "";
             ModuleData resultData = null;
             if (inServer) {
@@ -525,6 +606,14 @@ public class ServerUtils implements ExtendedModule {
             } else if (isOnSinglePlayer) {
                 resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
                 currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
+            } else if (isOnRealm) {
+                resultData = CraftPresence.CONFIG.statusMessages.realmData;
+                currentServerIcon = Config.isValidProperty(resultData, "iconOverride") ? resultData.getIconOverride() : "";
+
+                // Attempt to find alternative icons, if no overrides are present
+                if (StringUtils.isNullOrEmpty(currentServerIcon)) {
+                    currentServerIcon = StringUtils.getOrDefault(currentRealmData.minigameImage);
+                }
             }
             return getResult(CraftPresence.CLIENT.imageOf(true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), resultData);
         });
@@ -532,7 +621,7 @@ public class ServerUtils implements ExtendedModule {
             if (!isInUse()) return null;
 
             ModuleData resultData = null;
-            if (!isOnSinglePlayer && currentServerData != null) {
+            if (!isOnRealm && !isOnSinglePlayer && currentServerData != null) {
                 if (isOnLAN) {
                     resultData = CraftPresence.CONFIG.statusMessages.lanData;
                 } else {
@@ -540,6 +629,8 @@ public class ServerUtils implements ExtendedModule {
                 }
             } else if (isOnSinglePlayer) {
                 resultData = CraftPresence.CONFIG.statusMessages.singleplayerData;
+            } else if (isOnRealm) {
+                resultData = CraftPresence.CONFIG.statusMessages.realmData;
             }
             return getPresenceData(resultData);
         });
@@ -564,6 +655,11 @@ public class ServerUtils implements ExtendedModule {
         }
     }
 
+    private void initRealmArgs() {
+        // Setup Realm Exclusive Data
+        syncArgument("server.minigame", () -> currentRealmData.getMinigameName());
+    }
+
     @Override
     public void updatePresence() {
         if (!isOnSinglePlayer && currentServerData != null) {
@@ -572,7 +668,12 @@ public class ServerUtils implements ExtendedModule {
                 hasInitializedServer = true;
             }
 
-            if (!isOnLAN) {
+            if (isOnRealm && !hasInitializedRealm) {
+                initRealmArgs();
+                hasInitializedRealm = true;
+            }
+
+            if (!isOnRealm && !isOnLAN) {
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.
                 //

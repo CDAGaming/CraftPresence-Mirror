@@ -54,7 +54,6 @@ public class HypherConverter implements DataMigrator {
     private static final Pattern EXPR_PATTERN = Pattern.compile("\\{(.*?)}");
     private static final int LOWEST_SUPPORTED = 13;
     private static final int HIGHEST_SUPPORTED = 18;
-    private static final String EMPTY_QUOTES = "{''}";
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
     // oldName -> newName
@@ -89,10 +88,10 @@ public class HypherConverter implements DataMigrator {
             .put("%motd%", "{server.motd.raw}")
             .put("%servericon%", "{server.icon}")
             //
-            .put("%realmname%", EMPTY_QUOTES) // Realm Event - Unimplemented
-            .put("%realmdescription%", EMPTY_QUOTES) // Realm Event - Unimplemented
-            .put("%realmgame%", EMPTY_QUOTES) // Realm Event - Unimplemented
-            .put("%realmicon%", EMPTY_QUOTES) // Realm Event - Unimplemented
+            .put("%realmname%", "{server.name}")
+            .put("%realmdescription%", "{server.motd.raw}")
+            .put("%realmgame%", "{server.minigame}")
+            .put("%realmicon%", "{server.icon}")
             .build();
     private int configVersion = -1, serverEntryVersion = -1, replayModVersion = -1;
 
@@ -176,8 +175,9 @@ public class HypherConverter implements DataMigrator {
 
             instance.statusMessages.loadingData.setData(convertPresenceData(conf.get("init")));
             instance.statusMessages.mainMenuData.setData(convertPresenceData(conf.get("main_menu")));
-            instance.statusMessages.singleplayerData.setData(convertPresenceData(conf.get("single_player"), !areOverridesEnabled));
-            instance.serverSettings.serverData.get("default").setData(convertPresenceData(conf.get("multi_player"), !areOverridesEnabled));
+            instance.statusMessages.realmData.setData(convertPresenceData(conf.get("realms")));
+            instance.statusMessages.singleplayerData.setData(convertPresenceData(conf.get("single_player")));
+            instance.serverSettings.serverData.get("default").setData(convertPresenceData(conf.get("multi_player")));
             instance.displaySettings.presenceData = convertPresenceData(conf.get("generic"));
 
             instance.save();

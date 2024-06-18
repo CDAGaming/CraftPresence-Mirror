@@ -76,6 +76,14 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                     )
             )
             ))
+            .put("gui.config.name.status_messages.realm_message", new Pair<>(
+                    "realmData", () -> drawMultiLineString(
+                    StringUtils.splitTextByNewLine(
+                            Constants.TRANSLATOR.translate("gui.config.comment.status_messages.realm_message",
+                                    CraftPresence.CLIENT.generateArgumentMessage("server.", "world.", "player."))
+                    )
+            )
+            ))
             .build();
 
     StatusMessagesGui() {
