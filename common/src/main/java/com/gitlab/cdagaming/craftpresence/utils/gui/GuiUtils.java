@@ -130,7 +130,10 @@ public class GuiUtils implements ExtendedModule {
             clearClientData();
         } else {
             final GuiScreen newScreen = CraftPresence.instance.currentScreen;
-            final String newScreenName = MappingUtils.getClassName(newScreen);
+            final String newScreenName = StringUtils.getOrDefault(
+                    MappingUtils.getClassName(newScreen),
+                    MappingUtils.getClassName(GuiScreen.class)
+            );
 
             if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
                 CURRENT_SCREEN = newScreen;

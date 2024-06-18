@@ -33,6 +33,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed a race-case issue that could cause a `Config` to incorrectly modify default settings when it has no prior data
     * This could cause issues such as the `Reset to Default` button to be unavailable on first launch
 * Fixed false-positive save indicators on the `MainUI` when changing keybindings in `ControlsGui`
+* Fixed an issue where the Current GUI Screen Name could be null on some MC versions under certain conditions
+    * When this occurs, the Screen Name will fall back to `GuiScreen` rather than being an empty string
+    * This also resolves empty Selector List entries in the Per-GUI system as well
 
 ___
 
