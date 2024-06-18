@@ -25,6 +25,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This issue could also occur on certain versions of Fabric Loader
 * Fixed the "Config" button being unavailable on the Forge Mod Menu on MC 1.13.x and above
     * An error will also be logged if the mod fails to register a config factory
+* Fixed an oversight causing the `HypherConverter` to crash in newer-than-supported versions of Simple RPC
+    * An error will now be logged when a newer-than-supported version is used, similar to the error for
+      older-than-supported version
 
 ___
 

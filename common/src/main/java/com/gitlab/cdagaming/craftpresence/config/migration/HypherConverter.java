@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.google.gson.JsonElement;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
+import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
 import me.hypherionmc.moonconfig.core.UnmodifiableConfig;
@@ -52,6 +53,7 @@ import java.util.regex.Pattern;
 public class HypherConverter implements DataMigrator {
     private static final Pattern EXPR_PATTERN = Pattern.compile("\\{(.*?)}");
     private static final int LOWEST_SUPPORTED = 13;
+    private static final int HIGHEST_SUPPORTED = 18;
     private static final String EMPTY_QUOTES = "{''}";
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
@@ -112,10 +114,10 @@ public class HypherConverter implements DataMigrator {
         Constants.LOG.info("Simple RPC (By: HypherionSA) config data found, attempting to migrate settings to CraftPresence...");
         try (FileConfig conf = FileConfig.of(configPath)) {
             conf.load();
-            configVersion = conf.get("general.version");
+            configVersion = conf.getOrElse("general.version", -1);
             Constants.LOG.debugInfo("Main Config file found (Version: %d, File Version: %d), interpreting data...", configVersion, fileVersion);
-            if (configVersion < LOWEST_SUPPORTED) {
-                Constants.LOG.error("You are using an outdated Simple RPC config file (Must be at least v%d, you have v%d), skipping...", LOWEST_SUPPORTED, configVersion);
+            if (!MathUtils.isWithinValue(configVersion, LOWEST_SUPPORTED, HIGHEST_SUPPORTED, true, true)) {
+                Constants.LOG.error("You are using an unsupported Simple RPC config file (Supported Versions: v%d - v%d, Found Version: v%d), skipping...", LOWEST_SUPPORTED, HIGHEST_SUPPORTED, configVersion);
                 return instance;
             }
 
