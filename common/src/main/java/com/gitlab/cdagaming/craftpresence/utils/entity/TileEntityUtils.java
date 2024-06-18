@@ -28,11 +28,11 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.block.Block;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.IRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 import java.util.Map;
@@ -210,7 +210,7 @@ public class TileEntityUtils implements Module {
             if (itemStack.getCount() <= 0) {
                 return true;
             } else {
-                return itemStack.getDamage() < -32768 || itemStack.getDamage() > 65535;
+                return itemStack.getDamageValue() < -32768 || itemStack.getDamageValue() > 65535;
             }
         } else {
             return true;
@@ -249,7 +249,7 @@ public class TileEntityUtils implements Module {
         String result = "";
         if (!isEmpty(itemStack)) {
             result = StringUtils.getOrDefault(
-                    itemStack.getDisplayName().getFormattedText()
+                    itemStack.getHoverName().getString()
             );
         }
 
@@ -325,12 +325,12 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void updateData() {
-        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
-        final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getHeldItemOffhand();
-        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory.get(3);
-        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory.get(2);
-        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory.get(1);
-        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory.get(0);
+        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getMainHandItem();
+        final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getOffhandItem();
+        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armor.get(3);
+        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armor.get(2);
+        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armor.get(1);
+        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armor.get(0);
 
         final boolean hasMainHandChanged = NEW_CURRENT_MAIN_HAND_ITEM != CURRENT_MAIN_HAND_ITEM;
         final boolean hasOffHandChanged = NEW_CURRENT_OFFHAND_ITEM != CURRENT_OFFHAND_ITEM;
@@ -529,8 +529,8 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        final List<Block> defaultBlocks = StringUtils.newArrayList(IRegistry.BLOCK.iterator());
-        final List<Item> defaultItems = StringUtils.newArrayList(IRegistry.ITEM.iterator());
+        final List<Block> defaultBlocks = StringUtils.newArrayList(Registry.BLOCK.iterator());
+        final List<Item> defaultItems = StringUtils.newArrayList(Registry.ITEM.iterator());
 
         for (Block block : defaultBlocks) {
             if (!isEmpty(block)) {

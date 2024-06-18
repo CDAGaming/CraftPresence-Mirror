@@ -38,11 +38,11 @@ import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -54,7 +54,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
-public class ScrollableListControl extends GuiSlot {
+public class ScrollableListControl extends ObjectSelectionList<ScrollableListControl.StringEntry> {
     /**
      * Mapping representing a link between the entries original name, and it's display name
      */
@@ -83,6 +83,11 @@ public class ScrollableListControl extends GuiSlot {
      * The current screen instance
      */
     public ExtendedScreen currentScreen;
+
+    /**
+     * The visibility for this control
+     */
+    public boolean visible = true;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -149,6 +154,14 @@ public class ScrollableListControl extends GuiSlot {
         );
     }
 
+    @Override
+    public void setSelected(StringEntry entry) {
+        super.setSelected(entry);
+        if (entry != null) {
+            currentValue = entry.name;
+        }
+    }
+
     /**
      * Sets the Identifier Type to be linked to this Render Type
      *
@@ -170,10 +183,10 @@ public class ScrollableListControl extends GuiSlot {
     public boolean isWithinBounds(final int mouseX, final int mouseY) {
         return RenderUtils.isMouseWithin(
                 mouseX, mouseY,
-                top,
-                bottom,
-                left,
-                right
+                y0,
+                y1,
+                x0,
+                x1
         );
     }
 
@@ -183,75 +196,8 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Amount of Items in the List
      */
     @Override
-    protected int getSize() {
+    protected int getItemCount() {
         return itemList.size();
-    }
-
-    /**
-     * The Event to Occur if a Slot/Element is Clicked within the List
-     *
-     * @param mouseX      The Mouse's Current X Position
-     * @param mouseZ      The Mouse's Current Y Position
-     * @param mouseButton Which Mouse Button was Clicked
-     */
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseZ, int mouseButton) {
-        if (isMouseInList(mouseX, mouseZ)) {
-            int scrollIndex = getEntryAt(mouseX, mouseZ);
-            if (scrollIndex != -1) {
-                currentValue = getSelectedItem(scrollIndex);
-            }
-        }
-        return super.mouseClicked(mouseX, mouseZ, mouseButton);
-    }
-
-    /**
-     * Whether the Specified Slot Number is the Currently Selected Slot
-     *
-     * @param slotIndex The Slot's ID Number to check
-     * @return {@link Boolean#TRUE} if the Slot Number is the Currently Selected Slot
-     */
-    @Override
-    public boolean isSelected(int slotIndex) {
-        return getSelectedItem(slotIndex).equals(currentValue);
-    }
-
-    /**
-     * Renders the Background for this Control
-     */
-    @Override
-    protected void drawBackground() {
-        // N/A
-    }
-
-    /**
-     * Renders the Slots for this Control
-     *
-     * @param slotIndex    The Slot Identification Number
-     * @param xPos         The Starting X Position to render the Object at
-     * @param yPos         The Starting Y Position to render the Object at
-     * @param heightIn     The Height for the Object to render to
-     * @param mouseXIn     The Mouse's Current X Position
-     * @param mouseYIn     The Mouse's Current Y Position
-     * @param partialTicks The Current Partial Tick Ratio
-     */
-    @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, int mouseXIn, int mouseYIn, float partialTicks) {
-        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, getListWidth(), heightIn, mouseXIn, mouseYIn);
-    }
-
-    /**
-     * Attempts to Retrieve the Slot Item Name from the Slot's ID Number
-     *
-     * @param slotIndex The Slot's ID Number
-     * @return The Name of the found slot, if any
-     */
-    public String getSelectedItem(final int slotIndex) {
-        try {
-            return itemList.get(slotIndex);
-        } catch (Exception ex) {
-            return null;
-        }
     }
 
     /**
@@ -259,8 +205,8 @@ public class ScrollableListControl extends GuiSlot {
      *
      * @return The Current Font Renderer for this Control
      */
-    public FontRenderer getFontRenderer() {
-        return mc.fontRenderer != null ? mc.fontRenderer : GuiUtils.getDefaultFontRenderer();
+    public Font getFontRenderer() {
+        return minecraft.font != null ? minecraft.font : GuiUtils.getDefaultFontRenderer();
     }
 
     /**
@@ -270,6 +216,22 @@ public class ScrollableListControl extends GuiSlot {
      */
     public int getFontHeight() {
         return RenderUtils.getFontHeight(getFontRenderer());
+    }
+
+    /**
+     * Getter for Visibility for this control
+     */
+    public boolean isVisible() {
+        return this.visible;
+    }
+
+    /**
+     * Setter for Visibility for this control
+     *
+     * @param value The new visibility value for this control
+     */
+    public void setVisible(final boolean value) {
+        this.visible = value;
     }
 
     /**
@@ -284,7 +246,7 @@ public class ScrollableListControl extends GuiSlot {
         if (!itemList.equals(this.itemList)) {
             this.itemList = itemList;
             // Reset the scrollbar to prevent OOB issues
-            scrollBy(Integer.MIN_VALUE);
+            setScrollAmount(Integer.MIN_VALUE);
 
             setupAliasData();
         }
@@ -295,6 +257,7 @@ public class ScrollableListControl extends GuiSlot {
      */
     public void setupAliasData() {
         entryAliases.clear();
+        clearEntries();
 
         for (String originalName : StringUtils.newArrayList(itemList)) {
             String displayName = originalName;
@@ -309,16 +272,17 @@ public class ScrollableListControl extends GuiSlot {
             if (!originalName.equals(displayName)) {
                 entryAliases.put(originalName, displayName);
             }
-        }
-    }
 
-    /**
-     * Setter for Visibility for this control
-     *
-     * @param value The new visibility value for this control
-     */
-    public void setVisible(boolean value) {
-        this.visible = value;
+            final StringEntry dataEntry = new StringEntry(originalName, renderType);
+            this.addEntry(dataEntry);
+            if (originalName.equals(currentValue)) {
+                this.setSelected(dataEntry);
+            }
+        }
+
+        if (this.getSelected() != null) {
+            this.centerScrollOn(this.getSelected());
+        }
     }
 
     /**
@@ -347,8 +311,8 @@ public class ScrollableListControl extends GuiSlot {
         if (renderType == RenderType.ServerData) {
             final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
-            if (data != null && !StringUtils.isNullOrEmpty(data.getBase64EncodedIconData())) {
-                assetUrl = "data:image/png;base64," + data.getBase64EncodedIconData();
+            if (data != null && !StringUtils.isNullOrEmpty(data.getIconB64())) {
+                assetUrl = "data:image/png;base64," + data.getIconB64();
                 texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
             } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
@@ -398,7 +362,7 @@ public class ScrollableListControl extends GuiSlot {
                 final ItemStack stack = data.get(originalName);
                 if (!TileEntityUtils.isEmpty(stack)) {
                     RenderUtils.drawItemStack(
-                            mc, getFontRenderer(), xOffset, yPos + 4, stack,
+                            minecraft, getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
                     );
                     xOffset += 35;
@@ -418,7 +382,7 @@ public class ScrollableListControl extends GuiSlot {
         if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
             final double yOffset = yPos + 4.5;
             final double size = 32;
-            RenderUtils.drawTexture(mc,
+            RenderUtils.drawTexture(minecraft,
                     xOffset, xOffset + size, yOffset, yOffset + size,
                     0.0D,
                     0.0D, 1.0D,
@@ -438,7 +402,7 @@ public class ScrollableListControl extends GuiSlot {
             hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
 
-        RenderUtils.renderScrollingString(mc,
+        RenderUtils.renderScrollingString(minecraft,
                 getFontRenderer(),
                 displayName,
                 xOffset + (RenderUtils.getStringWidth(getFontRenderer(), displayName) / 2),
@@ -540,6 +504,85 @@ public class ScrollableListControl extends GuiSlot {
                 }
             }
             return identifierName;
+        }
+    }
+
+    /**
+     * Gui Entry for a Scrollable List
+     *
+     * @author CDAGaming
+     */
+    public class StringEntry extends ObjectSelectionList.Entry<StringEntry> {
+        /**
+         * The rendering type to render this entry in
+         */
+        private final RenderType renderType;
+        /**
+         * The name of this Entry
+         */
+        private final String name;
+
+        /**
+         * Initialization Event for this Control, assigning defined arguments
+         *
+         * @param name The name to assign to this Entry
+         */
+        public StringEntry(String name) {
+            this(name, RenderType.None);
+        }
+
+        /**
+         * Initialization Event for this Control, assigning defined arguments
+         *
+         * @param name       The name to assign to this Entry
+         * @param renderType The Render Type to assign to this Entry
+         */
+        public StringEntry(String name, RenderType renderType) {
+            this.name = name;
+            this.renderType = renderType;
+        }
+
+        /**
+         * Renders this Entry to the List
+         *
+         * @param index       The Index of the Entry within the List
+         * @param yPos        The Y Coordinate to render at
+         * @param xPos        The X Coordinate to render at
+         * @param entryWidth  The specified Entry's Width
+         * @param entryHeight The specified Entry's Height
+         * @param mouseX      The Event Mouse X Coordinate
+         * @param mouseY      The Event Mouse Y Coordinate
+         * @param hovered     Whether the specified entry is currently hovered over
+         * @param tickDelta   The Rendering Tick Rate
+         */
+        @Override
+        public void render(int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            ScrollableListControl.this.renderSlotItem(name, xPos, yPos, entryWidth, entryHeight, mouseX, mouseY);
+        }
+
+        /**
+         * Event to trigger upon the mouse being clicked
+         *
+         * @param mouseX The Event Mouse X Coordinate
+         * @param mouseY The Event Mouse Y Coordinate
+         * @param button The Event Mouse Button Clicked
+         * @return The Event Result
+         */
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (button == 0) {
+                this.onPressed();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * The Event to occur when this Entry is pressed
+         */
+        private void onPressed() {
+            ScrollableListControl.this.setSelected(this);
         }
     }
 }

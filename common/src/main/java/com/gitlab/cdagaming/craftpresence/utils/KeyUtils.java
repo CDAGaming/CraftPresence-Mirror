@@ -31,10 +31,10 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.mojang.blaze3d.platform.InputConstants;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiControls;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.controls.ControlsScreen;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -155,8 +155,8 @@ public class KeyUtils {
      * @param currentKey The current key for this binding
      * @return the created KeyBind instance
      */
-    KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
-        final KeyBinding result = new KeyBinding(name, defaultKey, category);
+    KeyMapping createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
+        final KeyMapping result = new KeyMapping(name, defaultKey, category);
         keySyncQueue.put(id, currentKey);
         return result;
     }
@@ -175,7 +175,7 @@ public class KeyUtils {
      * @param callback   The event to execute upon an exception occurring during KeyBind events
      * @return the created and registered KeyBind instance
      */
-    KeyBinding registerKey(final String id, final String name,
+    KeyMapping registerKey(final String id, final String name,
                            final String category,
                            final int defaultKey, final int currentKey,
                            final Runnable onPress,
@@ -186,7 +186,7 @@ public class KeyUtils {
             throw new UnsupportedOperationException("KeyBindings already registered!");
         }
 
-        final KeyBinding keyBind = createKey(id, name, category, defaultKey, currentKey);
+        final KeyMapping keyBind = createKey(id, name, category, defaultKey, currentKey);
         KEY_MAPPINGS.put(
                 id,
                 new KeyBindData(
@@ -204,18 +204,18 @@ public class KeyUtils {
      * @param instance the KeyBind instance to modify
      * @param newKey   the new key for the specified KeyBinding
      */
-    void setKey(final KeyBinding instance, final int newKey) {
+    void setKey(final KeyMapping instance, final int newKey) {
         final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
         final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
 
-        final InputMappings.Input inputKey;
+        final InputConstants.Key inputKey;
         if (getKeyName(newKey).equals(unknownKeyName)) {
-            inputKey = InputMappings.INPUT_INVALID;
+            inputKey = InputConstants.UNKNOWN;
         } else {
-            inputKey = InputMappings.getInputByCode(newKey, GLFW.glfwGetKeyScancode(newKey));
+            inputKey = InputConstants.getKey(newKey, GLFW.glfwGetKeyScancode(newKey));
         }
-        instance.bind(inputKey);
-        KeyBinding.resetKeyBindingArrayAndHash();
+        instance.setKey(inputKey);
+        KeyMapping.resetMapping();
     }
 
     /**
@@ -230,8 +230,8 @@ public class KeyUtils {
                 CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
                 () -> {
-                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
-                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(), CraftPresence.instance.currentScreen);
+                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.screen instanceof ExtendedScreen)) {
+                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(), CraftPresence.instance.screen);
                     }
                 },
                 (keyCode, shouldSave) -> {
@@ -281,16 +281,16 @@ public class KeyUtils {
      */
     void onTick() {
         if (!areKeysRegistered()) {
-            if (CraftPresence.instance.gameSettings != null) {
+            if (CraftPresence.instance.options != null) {
                 for (KeyBindData entry : KEY_MAPPINGS.values()) {
                     final String category = entry.category();
-                    final Map<String, Integer> categoryMap = KeyBinding.CATEGORY_ORDER;
+                    final Map<String, Integer> categoryMap = KeyMapping.CATEGORY_SORT_ORDER;
                     if (!categoryMap.containsKey(category)) {
                         final Optional<Integer> largest = categoryMap.values().stream().max(Integer::compareTo);
                         final int largestInt = largest.orElse(0);
                         categoryMap.put(category, largestInt + 1);
                     }
-                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, entry.binding());
+                    CraftPresence.instance.options.keyMappings = StringUtils.addToArray(CraftPresence.instance.options.keyMappings, entry.binding());
                 }
                 keysRegistered = true;
             } else {
@@ -298,7 +298,7 @@ public class KeyUtils {
             }
         }
 
-        if (CraftPresence.instance.mainWindow != null && CraftPresence.CONFIG != null) {
+        if (CraftPresence.instance.window != null && CraftPresence.CONFIG != null) {
             final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
             final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
             try {
@@ -310,7 +310,7 @@ public class KeyUtils {
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (GLFW.glfwGetKey(CraftPresence.instance.mainWindow.getHandle(), currentBind) == GLFW.GLFW_PRESS && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                        if (GLFW.glfwGetKey(CraftPresence.instance.window.getWindow(), currentBind) == GLFW.GLFW_PRESS && !(CraftPresence.instance.screen instanceof ControlsScreen)) {
                             try {
                                 keyData.runEvent().run();
                             } catch (Throwable ex) {
@@ -452,7 +452,7 @@ public class KeyUtils {
      * @param vanillaPredicate The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
      * @param errorCallback    The event to execute upon an exception occurring during KeyBind events
      */
-    public record KeyBindData(KeyBinding binding, Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
+    public record KeyBindData(KeyMapping binding, Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
                               Predicate<Integer> vanillaPredicate, Consumer<Throwable> errorCallback) {
         /**
          * Retrieve the category for this KeyBind
@@ -460,7 +460,7 @@ public class KeyUtils {
          * @return the KeyBind category
          */
         public String category() {
-            return binding.getKeyCategory();
+            return binding.getCategory();
         }
 
         /**
@@ -469,7 +469,7 @@ public class KeyUtils {
          * @return the KeyBind description
          */
         public String description() {
-            return binding.getKeyDescription();
+            return binding.getName();
         }
 
         /**
@@ -478,7 +478,7 @@ public class KeyUtils {
          * @return the currently assigned key code
          */
         public int keyCode() {
-            return binding.keyCode.getKeyCode();
+            return binding.key.getValue();
         }
 
         /**
@@ -487,7 +487,7 @@ public class KeyUtils {
          * @return the default assigned key code
          */
         public int defaultKeyCode() {
-            return binding.getDefault().getKeyCode();
+            return binding.getDefaultKey().getValue();
         }
     }
 }

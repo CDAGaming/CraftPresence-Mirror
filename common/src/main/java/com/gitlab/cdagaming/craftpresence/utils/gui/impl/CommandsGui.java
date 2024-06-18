@@ -159,7 +159,7 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         proceedButton.setControlEnabled(!blockInteractions);
         copyButton.setControlEnabled(!blockInteractions);
-        commandInput.setEnabled(!blockInteractions);
+        commandInput.setEditable(!blockInteractions);
 
         if (!blockInteractions) {
             checkCommands();

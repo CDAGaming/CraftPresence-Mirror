@@ -32,7 +32,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 public class MainGui extends ConfigurationGui<Config> {
     private final Config INSTANCE, DEFAULTS;
@@ -40,7 +40,7 @@ public class MainGui extends ConfigurationGui<Config> {
             dimensionSet,
             serverSet;
 
-    public MainGui(GuiScreen parentScreen) {
+    public MainGui(Screen parentScreen) {
         super("gui.config.title");
         setParent(parentScreen);
 

@@ -36,21 +36,21 @@ import com.gitlab.cdagaming.craftpresence.utils.ResourceUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -92,7 +92,7 @@ public class RenderUtils {
      */
     private static final ScissorStack scissorStack = new ScissorStack();
     /**
-     * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, FontRenderer, int, int, ItemStack, float)}
+     * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, Font, int, int, ItemStack, float)}
      */
     private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
     /**
@@ -247,8 +247,8 @@ public class RenderUtils {
      * @param client       The current game instance
      * @param targetScreen The target Gui Screen to display
      */
-    public static void openScreen(@Nonnull final Minecraft client, final GuiScreen targetScreen) {
-        client.addScheduledTask(() -> client.displayGuiScreen(targetScreen));
+    public static void openScreen(@Nonnull final Minecraft client, final Screen targetScreen) {
+        client.execute(() -> client.setScreen(targetScreen));
     }
 
     /**
@@ -259,7 +259,7 @@ public class RenderUtils {
      * @param parentScreen The parent screen instance to set, if possible
      * @param setParent    Whether to allow modifying the parent screen instance
      */
-    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final GuiScreen parentScreen, final boolean setParent) {
+    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final Screen parentScreen, final boolean setParent) {
         if (setParent) {
             targetScreen.setParent(parentScreen);
         }
@@ -273,7 +273,7 @@ public class RenderUtils {
      * @param targetScreen The target Gui Screen to display
      * @param parentScreen The parent screen instance to set, if possible
      */
-    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final GuiScreen parentScreen) {
+    public static void openScreen(@Nonnull final Minecraft client, final ExtendedScreen targetScreen, final Screen parentScreen) {
         openScreen(client, targetScreen, parentScreen, targetScreen.getParent() == null);
     }
 
@@ -287,7 +287,7 @@ public class RenderUtils {
      * @param stack        The {@link ItemStack} instance to interpret
      * @param scale        The Scale to render the Object at
      */
-    public static void drawItemStack(@Nonnull final Minecraft client, final FontRenderer fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
+    public static void drawItemStack(@Nonnull final Minecraft client, final Font fontRenderer, final int x, final int y, final ItemStack stack, final float scale) {
         if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
             GlStateManager.pushMatrix();
@@ -295,14 +295,14 @@ public class RenderUtils {
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableColorMaterial();
             GlStateManager.enableDepthTest();
-            RenderHelper.enableGUIStandardItemLighting();
+            Lighting.turnOnGui();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            client.getItemRenderer().renderItemAndEffectIntoGUI(stack, xPos, yPos);
-            client.getItemRenderer().renderItemOverlays(fontRenderer, stack, xPos, yPos);
+            client.getItemRenderer().renderAndDecorateItem(stack, xPos, yPos);
+            client.getItemRenderer().renderGuiItemDecorations(fontRenderer, stack, xPos, yPos);
 
-            RenderHelper.disableStandardItemLighting();
+            Lighting.turnOff();
             GlStateManager.disableDepthTest();
             GlStateManager.disableColorMaterial();
             GlStateManager.disableRescaleNormal();
@@ -418,7 +418,7 @@ public class RenderUtils {
                 if (data.getFirst()) {
                     GlStateManager.bindTexture(data.getSecond());
                 } else {
-                    mc.getTextureManager().bindTexture(texLocation);
+                    mc.getTextureManager().bind(texLocation);
                 }
             }
         } catch (Exception ignored) {
@@ -465,7 +465,7 @@ public class RenderUtils {
                 if (data.getFirst()) {
                     GlStateManager.bindTexture(data.getSecond());
                 } else {
-                    mc.getTextureManager().bindTexture(texLocation);
+                    mc.getTextureManager().bind(texLocation);
                 }
             }
         } catch (Exception ignored) {
@@ -488,14 +488,14 @@ public class RenderUtils {
         GlStateManager.disableFog();
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        final Tessellator tessellator = Tessellator.getInstance();
-        final BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        buffer.pos(left, bottom, zLevel).tex(minU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, bottom, zLevel).tex(maxU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, top, zLevel).tex(maxU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.pos(left, top, zLevel).tex(minU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        tessellator.draw();
+        final Tesselator tessellator = Tesselator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuilder();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer.vertex(left, bottom, zLevel).uv(minU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.vertex(right, bottom, zLevel).uv(maxU, maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.vertex(right, top, zLevel).uv(maxU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        buffer.vertex(left, top, zLevel).uv(minU, minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        tessellator.end();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
@@ -594,25 +594,25 @@ public class RenderUtils {
         }
 
         GlStateManager.disableDepthTest();
-        GlStateManager.disableTexture2D();
+        GlStateManager.disableTexture();
         GlStateManager.enableBlend();
         GlStateManager.disableAlphaTest();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-        final Tessellator tessellator = Tessellator.getInstance();
-        final BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(left, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.pos(right, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.pos(left, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        tessellator.draw();
+        final Tesselator tessellator = Tesselator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuilder();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.vertex(left, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.vertex(right, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
+        buffer.vertex(right, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        buffer.vertex(left, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+        tessellator.end();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
         GlStateManager.enableAlphaTest();
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
         GlStateManager.enableDepthTest();
     }
 
@@ -705,14 +705,14 @@ public class RenderUtils {
     public static void innerBlit(final double left, final double right, final double top, final double bottom,
                                  final double zLevel,
                                  final double minU, final double maxU, final double minV, final double maxV) {
-        final Tessellator tessellator = Tessellator.getInstance();
-        final BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos(left, bottom, zLevel).tex(minU, maxV).endVertex();
-        buffer.pos(right, bottom, zLevel).tex(maxU, maxV).endVertex();
-        buffer.pos(right, top, zLevel).tex(maxU, minV).endVertex();
-        buffer.pos(left, top, zLevel).tex(minU, minV).endVertex();
-        tessellator.draw();
+        final Tesselator tessellator = Tesselator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuilder();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.vertex(left, bottom, zLevel).uv(minU, maxV).endVertex();
+        buffer.vertex(right, bottom, zLevel).uv(maxU, maxV).endVertex();
+        buffer.vertex(right, top, zLevel).uv(maxU, minV).endVertex();
+        buffer.vertex(left, top, zLevel).uv(minU, minV).endVertex();
+        tessellator.end();
     }
 
     /**
@@ -746,7 +746,7 @@ public class RenderUtils {
     private static void applyScissor(@Nonnull final Minecraft mc, final ScreenRectangle rectangle) {
         if (rectangle != null) {
             final int scale = computeGuiScale(mc);
-            final int displayHeight = mc.mainWindow.getHeight();
+            final int displayHeight = mc.window.getHeight();
             final int renderWidth = Math.max(0, rectangle.width() * scale);
             final int renderHeight = Math.max(0, rectangle.height() * scale);
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -771,12 +771,12 @@ public class RenderUtils {
     public static int computeGuiScale(@Nonnull final Minecraft mc) {
         int scaleFactor = 1;
 
-        int k = mc.gameSettings.guiScale;
+        int k = mc.options.guiScale;
         if (k == 0) {
             k = 1000;
         }
 
-        while (scaleFactor < k && mc.mainWindow.getWidth() / (scaleFactor + 1) >= 320 && mc.mainWindow.getHeight() / (scaleFactor + 1) >= 240) {
+        while (scaleFactor < k && mc.window.getWidth() / (scaleFactor + 1) >= 320 && mc.window.getHeight() / (scaleFactor + 1) >= 240) {
             ++scaleFactor;
         }
         return scaleFactor;
@@ -859,7 +859,7 @@ public class RenderUtils {
                                            final int posX, final int posY,
                                            final int maxWidth, final int maxHeight,
                                            final int maxTextWidth,
-                                           final FontRenderer fontRenderer,
+                                           final Font fontRenderer,
                                            final boolean isCentered,
                                            final boolean isTooltip,
                                            final Tuple<Boolean, ColorData, ColorData> colorInfo) {
@@ -1078,7 +1078,7 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderCenteredString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+    public static void renderCenteredString(final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
         renderString(fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2f), yPos, color);
     }
 
@@ -1091,7 +1091,7 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderCenteredString(final FontRenderer fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+    public static void renderCenteredString(final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
         renderString(fontRenderer, text, xPos - (getStringWidth(fontRenderer, text) / 2), yPos, color);
     }
 
@@ -1104,8 +1104,8 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderString(final FontRenderer fontRenderer, final String text, final float xPos, final float yPos, final int color) {
-        fontRenderer.drawStringWithShadow(text, xPos, yPos, color);
+    public static void renderString(final Font fontRenderer, final String text, final float xPos, final float yPos, final int color) {
+        fontRenderer.drawShadow(text, xPos, yPos, color);
     }
 
     /**
@@ -1117,7 +1117,7 @@ public class RenderUtils {
      * @param yPos         The Y position to render the text at
      * @param color        The color to render the text in
      */
-    public static void renderString(final FontRenderer fontRenderer, final String text, final int xPos, final int yPos, final int color) {
+    public static void renderString(final Font fontRenderer, final String text, final int xPos, final int yPos, final int color) {
         renderString(fontRenderer, text, (float) xPos, (float) yPos, color);
     }
 
@@ -1128,8 +1128,8 @@ public class RenderUtils {
      * @param string       The string to interpret
      * @return the string's width from the font renderer
      */
-    public static int getStringWidth(final FontRenderer fontRenderer, final String string) {
-        return fontRenderer.getStringWidth(string);
+    public static int getStringWidth(final Font fontRenderer, final String string) {
+        return fontRenderer.width(string);
     }
 
     /**
@@ -1138,8 +1138,8 @@ public class RenderUtils {
      * @param fontRenderer The Font Renderer Instance
      * @return The Current Font Height for this Screen
      */
-    public static int getFontHeight(final FontRenderer fontRenderer) {
-        return fontRenderer.FONT_HEIGHT;
+    public static int getFontHeight(final Font fontRenderer) {
+        return fontRenderer.lineHeight;
     }
 
     /**
@@ -1156,7 +1156,7 @@ public class RenderUtils {
      * @param color        The color to render the text in
      */
     public static void renderScrollingString(@Nonnull final Minecraft mc,
-                                             final FontRenderer fontRenderer,
+                                             final Font fontRenderer,
                                              final String message,
                                              final float centerX,
                                              final float minX, final float minY,
@@ -1194,7 +1194,7 @@ public class RenderUtils {
      * @param color        The color to render the text in
      */
     public static void renderScrollingString(@Nonnull final Minecraft mc,
-                                             final FontRenderer fontRenderer,
+                                             final Font fontRenderer,
                                              final String message,
                                              final int centerX,
                                              final int minX, final int minY,
@@ -1231,7 +1231,7 @@ public class RenderUtils {
      * @param color        The color to render the text in
      */
     public static void renderScrollingString(@Nonnull final Minecraft mc,
-                                             final FontRenderer fontRenderer,
+                                             final Font fontRenderer,
                                              final String message,
                                              final float minX, final float minY,
                                              final float maxX, final float maxY,
@@ -1252,7 +1252,7 @@ public class RenderUtils {
      * @param color        The color to render the text in
      */
     public static void renderScrollingString(@Nonnull final Minecraft mc,
-                                             final FontRenderer fontRenderer,
+                                             final Font fontRenderer,
                                              final String message,
                                              final int minX, final int minY,
                                              final int maxX, final int maxY,
@@ -1292,7 +1292,7 @@ public class RenderUtils {
      * @param wrapWidth    The target width per line, to wrap the input around
      * @return The converted and wrapped version of the original input
      */
-    public static List<String> listFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
-        return fontRenderer.listFormattedStringToWidth(stringInput, wrapWidth);
+    public static List<String> listFormattedStringToWidth(final Font fontRenderer, final String stringInput, final int wrapWidth) {
+        return fontRenderer.split(stringInput, wrapWidth);
     }
 }

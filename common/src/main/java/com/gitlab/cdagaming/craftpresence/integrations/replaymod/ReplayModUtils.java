@@ -32,7 +32,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -99,8 +99,8 @@ public class ReplayModUtils implements ExtendedModule {
             final Class<?> screenClass = FileUtils.loadClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiScreen");
             final Class<?> overlayClass = FileUtils.loadClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiOverlay");
 
-            final Object possibleScreen = StringUtils.executeMethod(screenClass, null, new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
-            final Object possibleOverlay = StringUtils.executeMethod(overlayClass, null, new Class[]{GuiScreen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
+            final Object possibleScreen = StringUtils.executeMethod(screenClass, null, new Class[]{Screen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
+            final Object possibleOverlay = StringUtils.executeMethod(overlayClass, null, new Class[]{Screen.class}, new Object[]{CraftPresence.GUIS.CURRENT_SCREEN}, "from");
             if (possibleScreen == null && possibleOverlay == null) {
                 clearClientData();
             } else {
