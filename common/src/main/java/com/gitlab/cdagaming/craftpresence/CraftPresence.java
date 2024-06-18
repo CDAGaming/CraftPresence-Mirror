@@ -158,7 +158,7 @@ public class CraftPresence {
         // Check for Updates before continuing
         ModUtils.UPDATER.checkForUpdates();
 
-        CONFIG = Config.getInstance();
+        CONFIG = Config.getInstanceData();
 
         CommandUtils.init();
         if (initCallback != null) {

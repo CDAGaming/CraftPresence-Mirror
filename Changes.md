@@ -28,6 +28,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed an oversight causing the `HypherConverter` to crash in newer-than-supported versions of Simple RPC
     * An error will now be logged when a newer-than-supported version is used, similar to the error for
       older-than-supported version
+* Fixed a race-case issue that could cause a `Config` to incorrectly modify default settings when it has no prior data
+    * This could cause issues such as the `Reset to Default` button to be unavailable on first launch
 
 ___
 

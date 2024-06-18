@@ -90,8 +90,12 @@ public final class Config extends Module implements Serializable {
         // N/A
     }
 
-    public static Config getInstance() {
+    public static Config getInstanceData() {
         return new Config(INSTANCE);
+    }
+
+    public static Config getDefaultData() {
+        return new Config(DEFAULT);
     }
 
     public static String getConfigPath() {
@@ -131,7 +135,7 @@ public final class Config extends Module implements Serializable {
         final boolean hasNoData = config == null;
         final boolean isInvalidData = !hasNoData && (forceCreate || (config._schemaVersion <= 0 || config._lastMCVersionId <= 0));
         if (hasNoData || isInvalidData) {
-            config = hasNoData ? DEFAULT : config.getDefaults();
+            config = hasNoData ? getDefaultData() : config.getDefaults();
             config.isNewFile = true;
             config.hasChanged = isInvalidData;
         }
@@ -201,7 +205,7 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public Config getDefaults() {
-        return new Config(DEFAULT);
+        return getDefaultData();
     }
 
     @Override
