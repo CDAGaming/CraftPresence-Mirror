@@ -748,19 +748,13 @@ public final class Config extends Module implements Serializable {
         setProperty(getDefaults().findProperty(path), path);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        if (!(obj instanceof Config other)) {
-            return false;
-        }
-
+    public boolean areFlagsEqual(final Config other) {
         return Objects.equals(other.hasChanged, hasChanged) &&
-                Objects.equals(other.isNewFile, isNewFile) &&
-                Objects.equals(other._README, _README) &&
+                Objects.equals(other.isNewFile, isNewFile);
+    }
+
+    public boolean areSettingsEqual(final Config other) {
+        return Objects.equals(other._README, _README) &&
                 Objects.equals(other._SOURCE, _SOURCE) &&
                 Objects.equals(other._schemaVersion, _schemaVersion) &&
                 Objects.equals(other._lastMCVersionId, _lastMCVersionId) &&
@@ -772,6 +766,19 @@ public final class Config extends Module implements Serializable {
                 Objects.equals(other.advancedSettings, advancedSettings) &&
                 Objects.equals(other.accessibilitySettings, accessibilitySettings) &&
                 Objects.equals(other.displaySettings, displaySettings);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Config other)) {
+            return false;
+        }
+
+        return areFlagsEqual(other) && areSettingsEqual(other);
     }
 
     @Override

@@ -310,4 +310,9 @@ public class MainGui extends ConfigurationGui<Config> {
         }
         return false;
     }
+
+    @Override
+    protected boolean hasChangesBetween(Config source, Config target) {
+        return target != null && !source.areSettingsEqual(target);
+    }
 }
