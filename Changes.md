@@ -12,7 +12,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Shadow (`com.github.johnrengelman.shadow@8.1.1` -> `io.github.goooler.shadow@8.1.7`)
     * Gradle (`8.7` -> `8.8`)
-    * Unimined (`1.2.7` -> `1.2.10-SNAPSHOT`)
+    * Unimined (`1.2.7` -> `1.2.12-SNAPSHOT`)
     * JVMDowngrader (`0.7.1` -> `0.7.2`)
     * UniCore (`1.1.9` -> `1.1.10`)
     * DiscordIPC (`0.9.1` -> `0.9.2`)
@@ -22,7 +22,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Adjusted `server` override, `server.message`, and `server.icon` placeholders to use `realmData` instead
       of `serverData`
     * Adjusted `server.name` and `server.motd` placeholders to use the Realm Name and Description accordingly
-    * Adjusted `server.icon` to fall back to the Realm minigame icon, if available
+    * Adjusted `server.icon` to fall back to the Realm owner icon, if available
     * Added `server.minigame` as a Realm Exclusive placeholder for the minigame name
 * Several changes to the Simple RPC Config Migration Layer (`HypherConverter`)
     * Now supported on MC 1.6.4 and below (Some settings are skipped on some MC versions)
