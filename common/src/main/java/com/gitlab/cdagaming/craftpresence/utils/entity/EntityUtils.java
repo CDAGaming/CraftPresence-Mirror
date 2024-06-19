@@ -141,9 +141,9 @@ public class EntityUtils implements ExtendedModule {
         String name = "clear";
         if (worldObj != null) {
             final WorldInfo info = worldObj.getWorldInfo();
-            if (info.isThundering()) {
+            if (info.getIsThundering()) {
                 name = "thunder";
-            } else if (info.isRaining()) {
+            } else if (info.getIsRaining()) {
                 name = "rain";
             } else {
                 name = "clear";
@@ -335,9 +335,9 @@ public class EntityUtils implements ExtendedModule {
 
         // If Server Data is enabled, allow Uuid's to count as entities
         if (CraftPresence.SERVER.isEnabled()) {
-            for (GuiPlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
+            for (String playerInfo : CraftPresence.SERVER.currentPlayerList) {
                 if (playerInfo != null) {
-                    final String uuidString = playerInfo.name;
+                    final String uuidString = playerInfo;
                     if (!StringUtils.isNullOrEmpty(uuidString)) {
                         if (!ENTITY_NAMES.contains(uuidString)) {
                             ENTITY_NAMES.add(uuidString);

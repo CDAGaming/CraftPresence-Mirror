@@ -43,13 +43,13 @@ import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Gui;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiTextField;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
 /**
@@ -229,7 +229,12 @@ public class ExtendedScreen extends GuiScreen {
      * @param input the text to interpret
      */
     public static void copyToClipboard(final String input) {
-        func_50050_a(StringUtils.normalize(input));
+        final String data = StringUtils.normalize(input);
+        try {
+            final StringSelection contents = new StringSelection(data);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(contents, null);
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -642,8 +647,7 @@ public class ExtendedScreen extends GuiScreen {
 
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl textField) {
-                    final Object reflectedInfo = StringUtils.getField(GuiTextField.class, textField, "isEnabled", "field_50043_m", "m");
-                    if (reflectedInfo != null && reflectedInfo.toString().equalsIgnoreCase("true")) {
+                    if (textField.isEnabled) {
                         textField.drawTextBox();
                     }
                 }
@@ -750,7 +754,7 @@ public class ExtendedScreen extends GuiScreen {
 
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedTextControl textField) {
-                    textField.func_50037_a(typedChar, keyCode);
+                    textField.textboxKeyTyped(typedChar, keyCode);
                 }
                 if (extendedControl instanceof ExtendedScreen extendedScreen) {
                     extendedScreen.keyTyped(typedChar, keyCode);

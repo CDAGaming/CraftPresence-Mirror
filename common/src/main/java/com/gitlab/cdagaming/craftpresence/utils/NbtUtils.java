@@ -140,23 +140,23 @@ public class NbtUtils {
             return null;
         }
 
-        switch (tag.getId()) {
+        switch (tag.getType()) {
             case 1:
-                return ((NBTTagByte) tag).data;
+                return ((NBTTagByte) tag).byteValue;
             case 2:
-                return ((NBTTagShort) tag).data;
+                return ((NBTTagShort) tag).shortValue;
             case 3:
-                return ((NBTTagInt) tag).data;
+                return ((NBTTagInt) tag).intValue;
             case 4:
-                return ((NBTTagLong) tag).data;
+                return ((NBTTagLong) tag).longValue;
             case 5:
-                return ((NBTTagFloat) tag).data;
+                return ((NBTTagFloat) tag).floatValue;
             case 6:
-                return ((NBTTagDouble) tag).data;
+                return ((NBTTagDouble) tag).doubleValue;
             case 7:
                 return ((NBTTagByteArray) tag).byteArray;
             case 8:
-                return ((NBTTagString) tag).data;
+                return ((NBTTagString) tag).stringValue;
             case 9: {
                 final NBTTagList list = ((NBTTagList) tag);
                 final List<Object> converted = StringUtils.newArrayList();
@@ -175,7 +175,6 @@ public class NbtUtils {
                     return tag.toString();
                 }
             case 11:
-                return ((NBTTagIntArray) tag).field_48181_a;
             case 0:
             case 12:
             case 99:
