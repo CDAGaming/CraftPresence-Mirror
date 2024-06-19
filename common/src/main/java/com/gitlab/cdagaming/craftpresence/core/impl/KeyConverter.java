@@ -178,6 +178,13 @@ public class KeyConverter {
             new KeyBindMapping(223, -1, "Sleep")
     );
     /**
+     * Mapping from lwjgl2 to lwjgl3
+     * Note: Characters that are Unavailable in lwjgl3 are listed as lwjgl3's Unknown Keycode (-1)
+     * Format: LWJGL2 Key;KeyMapping
+     */
+    public static final Map<Integer, KeyBindMapping> toGlfw = Stream.concat(keyMappings.stream(), lwjgl2KeyMappings.stream())
+            .collect(Collectors.toMap(KeyBindMapping::lwjgl2Key, mapping -> mapping));
+    /**
      * Internal Mappings for all unique KeyBinds within LWJGL 3
      */
     private static final List<KeyBindMapping> lwjgl3KeyMappings = StringUtils.newArrayList(
@@ -192,13 +199,6 @@ public class KeyConverter {
             new KeyBindMapping(0, 314, "F25"),
             new KeyBindMapping(0, 348, "KEY_MENU")
     );
-    /**
-     * Mapping from lwjgl2 to lwjgl3
-     * Note: Characters that are Unavailable in lwjgl3 are listed as lwjgl3's Unknown Keycode (-1)
-     * Format: LWJGL2 Key;KeyMapping
-     */
-    public static final Map<Integer, KeyBindMapping> toGlfw = Stream.concat(keyMappings.stream(), lwjgl2KeyMappings.stream())
-            .collect(Collectors.toMap(KeyBindMapping::lwjgl2Key, mapping -> mapping));
     /**
      * Mapping from lwjgl3 to lwjgl2
      * Note: Characters that are Unavailable in lwjgl2 are listed as lwjgl2's Unknown Keycode (0)
