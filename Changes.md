@@ -18,15 +18,16 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * DiscordIPC (`0.9.1` -> `0.9.2`)
     * Starscript (`0.3.3` -> `0.3.4`)
 * Implemented full support for Minecraft Realms Status Configuration
-  * Added a new `Realm Message` option to `Status Messages`
-  * Adjusted `server` override, `server.message`, and `server.icon` placeholders to use `realmData` instead of `serverData`
-  * Adjusted `server.name` and `server.motd` placeholders to use the Realm Name and Description accordingly
-  * Adjusted `server.icon` to fall back to the Realm minigame icon, if available
-  * Added `server.minigame` as a Realm Exclusive placeholder for the minigame name
+    * Added a new `Realm Message` option to `Status Messages`
+    * Adjusted `server` override, `server.message`, and `server.icon` placeholders to use `realmData` instead
+      of `serverData`
+    * Adjusted `server.name` and `server.motd` placeholders to use the Realm Name and Description accordingly
+    * Adjusted `server.icon` to fall back to the Realm minigame icon, if available
+    * Added `server.minigame` as a Realm Exclusive placeholder for the minigame name
 * Several changes to the Simple RPC Config Migration Layer (`HypherConverter`)
-  * Now supported on MC 1.6.4 and below (Some settings are skipped on some MC versions)
-  * Added support for the `%realmname%`, `%realmdescription%`, `%realmgame%`, and `%realmicon%` placeholders
-  * Added support for the `realms` event
+    * Now supported on MC 1.6.4 and below (Some settings are skipped on some MC versions)
+    * Added support for the `%realmname%`, `%realmdescription%`, `%realmgame%`, and `%realmicon%` placeholders
+    * Added support for the `realms` event
 * Misc. API and Performance Improvements
 
 ### Fixes
@@ -44,7 +45,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed an issue where the Current GUI Screen Name could be null on some MC versions under certain conditions
     * When this occurs, the Screen Name will fall back to `GuiScreen` rather than being an empty string
     * This also resolves empty Selector List entries in the Per-GUI system as well
-* Fixed an issue in the `HypherConverter` that could cause the `single_player` and `multi_player` events to be converted incorrectly if `dimension_overrides.enabled` was `true`
+* Fixed an issue in the `HypherConverter` that could cause the `single_player` and `multi_player` events to be converted
+  incorrectly if `dimension_overrides.enabled` was `true`
+* Fixed an issue where extra IP entries could appear in `Server Messages` when joining a LAN, SinglePlayer, or Realm
+  world
 
 ___
 

@@ -332,11 +332,14 @@ public class ServerUtils implements ExtendedModule {
 
             if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
                 formattedServer_IP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
-                if (!defaultAddresses.contains(formattedServer_IP)) {
-                    defaultAddresses.add(formattedServer_IP);
-                }
-                if (!knownAddresses.contains(formattedServer_IP)) {
-                    knownAddresses.add(formattedServer_IP);
+
+                if (!isOnRealm && !isOnSinglePlayer && !isOnLAN) {
+                    if (!defaultAddresses.contains(formattedServer_IP)) {
+                        defaultAddresses.add(formattedServer_IP);
+                    }
+                    if (!knownAddresses.contains(formattedServer_IP)) {
+                        knownAddresses.add(formattedServer_IP);
+                    }
                 }
             }
 
