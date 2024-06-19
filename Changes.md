@@ -1,9 +1,9 @@
 # CraftPresence Changes
 
-## v2.4.1 (06/18/2024)
+## v2.4.2 (06/20/2024)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.4.0...release%2Fv2.4.1)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.4.0...release%2Fv2.4.2)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
@@ -17,8 +17,16 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * UniCore (`1.1.9` -> `1.1.10`)
     * DiscordIPC (`0.9.1` -> `0.9.2`)
     * Starscript (`0.3.3` -> `0.3.4`)
-* The Simple RPC Config Migration Layer (`HypherConverter`) is now supported on MC 1.6.4 and below
-    * Certain Settings, such as the `realms_list` event, will not migrate on these versions
+* Implemented full support for Minecraft Realms Status Configuration
+  * Added a new `Realm Message` option to `Status Messages`
+  * Adjusted `server` override, `server.message`, and `server.icon` placeholders to use `realmData` instead of `serverData`
+  * Adjusted `server.name` and `server.motd` placeholders to use the Realm Name and Description accordingly
+  * Adjusted `server.icon` to fall back to the Realm minigame icon, if available
+  * Added `server.minigame` as a Realm Exclusive placeholder for the minigame name
+* Several changes to the Simple RPC Config Migration Layer (`HypherConverter`)
+  * Now supported on MC 1.6.4 and below (Some settings are skipped on some MC versions)
+  * Added support for the `%realmname%`, `%realmdescription%`, `%realmgame%`, and `%realmicon%` placeholders
+  * Added support for the `realms` event
 * Misc. API and Performance Improvements
 
 ### Fixes
@@ -36,6 +44,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed an issue where the Current GUI Screen Name could be null on some MC versions under certain conditions
     * When this occurs, the Screen Name will fall back to `GuiScreen` rather than being an empty string
     * This also resolves empty Selector List entries in the Per-GUI system as well
+* Fixed an issue in the `HypherConverter` that could cause the `single_player` and `multi_player` events to be converted incorrectly if `dimension_overrides.enabled` was `true`
 
 ___
 
@@ -43,14 +52,9 @@ ___
 
 #### Known Issues
 
-Despite configuration compatibility being ensured between v1.8.x/v1.9.x and v2.0,
+Despite configuration compatibility often being ensured between versions,
 caution is advised to ensure the best experience, while also baring in mind that features can be adjusted, removed, or
 added/iterated upon between releases.
-
-The following known issues are present in this build:
-
-* The HypherionMC Config Layer (To Convert a Simple RPC config to CraftPresence) contains the following known issues:
-    * Placeholders related to the realm event are currently unimplemented and parse as `{''}`.
 
 Please refer to the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) to view more info relating
 to known issues.

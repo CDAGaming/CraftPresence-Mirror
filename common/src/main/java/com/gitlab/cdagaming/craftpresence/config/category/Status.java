@@ -52,6 +52,10 @@ public class Status extends Module implements Serializable {
             Constants.TRANSLATOR.translate("craftpresence.defaults.state.single_player"),
             null
     );
+    public ModuleData realmData = new ModuleData(
+            Constants.TRANSLATOR.translate("craftpresence.defaults.state.realm"),
+            null
+    );
 
     public Status(final Status other) {
         transferFrom(other);
@@ -78,6 +82,7 @@ public class Status extends Module implements Serializable {
             loadingData = new ModuleData(data.loadingData);
             lanData = new ModuleData(data.lanData);
             singleplayerData = new ModuleData(data.singleplayerData);
+            realmData = new ModuleData(data.realmData);
         }
     }
 
@@ -88,6 +93,7 @@ public class Status extends Module implements Serializable {
             case "loadingData" -> loadingData;
             case "lanData" -> lanData;
             case "singleplayerData" -> singleplayerData;
+            case "realmData" -> realmData;
             default -> null;
         };
     }
@@ -107,6 +113,9 @@ public class Status extends Module implements Serializable {
                     break;
                 case "singleplayerData":
                     singleplayerData = (ModuleData) value;
+                    break;
+                case "realmData":
+                    realmData = (ModuleData) value;
                     break;
                 default:
                     break;
@@ -129,13 +138,14 @@ public class Status extends Module implements Serializable {
         return Objects.equals(other.mainMenuData, mainMenuData) &&
                 Objects.equals(other.loadingData, loadingData) &&
                 Objects.equals(other.lanData, lanData) &&
-                Objects.equals(other.singleplayerData, singleplayerData);
+                Objects.equals(other.singleplayerData, singleplayerData) &&
+                Objects.equals(other.realmData, realmData);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                mainMenuData, loadingData, lanData, singleplayerData
+                mainMenuData, loadingData, lanData, singleplayerData, realmData
         );
     }
 }

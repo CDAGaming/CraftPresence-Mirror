@@ -198,6 +198,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `server.address.short` - (MP) The formatted current server address
     * `server.name` - (MP) The current server name
     * `server.motd.raw` - (MP) The current raw server motd
+    * `server.minigame` - (Realm) The current realm minigame name
 * Item Placeholders:
     * `item.message.default` - The default item display data, while applicable
     * `item.message.holding` - The held item(s) display data, while applicable
