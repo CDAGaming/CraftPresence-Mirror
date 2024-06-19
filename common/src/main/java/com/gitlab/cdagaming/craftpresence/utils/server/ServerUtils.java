@@ -270,8 +270,9 @@ public class ServerUtils implements ExtendedModule {
             // before continuing any further in module ticking
             //
             // Note: A Realm is only checked for *once* under set conditions
-            if (!hasCheckedRealm && newServerData != null && newConnection != null) {
-                if (CraftPresence.instance.isConnectedToRealms()) {
+            if (!hasCheckedRealm) {
+                final boolean canCheckRealm = newServerData != null && newConnection != null;
+                if (canCheckRealm && CraftPresence.instance.isConnectedToRealms()) {
                     currentRealmData = findRealmData(newConnection);
                     isOnRealm = currentRealmData != null;
                 }
