@@ -238,7 +238,7 @@ public class ScrollableListControl extends GuiSlot {
      */
     @Override
     protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn) {
-        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, 220, heightIn, field_35409_k, field_35408_l);
+        renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, 220, heightIn, currentScreen.getMouseX(), currentScreen.getMouseY());
     }
 
     /**
