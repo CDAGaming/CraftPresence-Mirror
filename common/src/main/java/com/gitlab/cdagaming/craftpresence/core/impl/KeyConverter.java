@@ -182,7 +182,7 @@ public class KeyConverter {
      * Note: Characters that are Unavailable in lwjgl3 are listed as lwjgl3's Unknown Keycode (-1)
      * Format: LWJGL2 Key;KeyMapping
      */
-    public static final Map<Integer, KeyBindMapping> toGlfw = Stream.concat(keyMappings.stream(), lwjgl2KeyMappings.stream())
+    public static final Map<Integer, KeyBindMapping> toGlfw = generateKeyStream(keyMappings, lwjgl2KeyMappings)
             .collect(Collectors.toMap(KeyBindMapping::lwjgl2Key, mapping -> mapping));
     /**
      * Internal Mappings for all unique KeyBinds within LWJGL 3
@@ -204,8 +204,33 @@ public class KeyConverter {
      * Note: Characters that are Unavailable in lwjgl2 are listed as lwjgl2's Unknown Keycode (0)
      * Format: LWJGL3 Key;KeyMapping
      */
-    public static final Map<Integer, KeyBindMapping> fromGlfw = Stream.concat(keyMappings.stream(), lwjgl3KeyMappings.stream())
+    public static final Map<Integer, KeyBindMapping> fromGlfw = generateKeyStream(keyMappings, lwjgl3KeyMappings)
             .collect(Collectors.toMap(KeyBindMapping::lwjgl3Key, mapping -> mapping));
+
+    /**
+     * Generate a combined {@link KeyBindMapping} stream
+     *
+     * @param mappings The primary mappings to use (Required)
+     * @param extras   The extra mappings to use (Optional)
+     * @return the processed stream
+     */
+    private static Stream<KeyBindMapping> generateKeyStream(final List<KeyBindMapping> mappings, final List<KeyBindMapping> extras) {
+        final List<KeyBindMapping> results = StringUtils.newArrayList(mappings);
+        if (extras != null && !extras.isEmpty()) {
+            results.addAll(extras);
+        }
+        return results.stream();
+    }
+
+    /**
+     * Generate a combined {@link KeyBindMapping} stream
+     *
+     * @param mappings The primary mappings to use (Required)
+     * @return the processed stream
+     */
+    private static Stream<KeyBindMapping> generateKeyStream(final List<KeyBindMapping> mappings) {
+        return generateKeyStream(mappings, null);
+    }
 
     /**
      * Converts a KeyCode using the Specified Conversion Mode, if possible
