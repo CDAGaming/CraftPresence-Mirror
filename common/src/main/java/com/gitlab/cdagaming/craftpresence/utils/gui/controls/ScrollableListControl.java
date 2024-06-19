@@ -54,6 +54,7 @@ import java.util.Map;
  *
  * @author CDAGaming
  */
+@SuppressWarnings("DuplicatedCode")
 public class ScrollableListControl extends GuiSlot {
     /**
      * Mapping representing a link between the entries original name, and it's display name

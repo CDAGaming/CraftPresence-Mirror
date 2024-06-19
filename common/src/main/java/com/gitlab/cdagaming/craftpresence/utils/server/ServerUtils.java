@@ -35,6 +35,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
+import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
@@ -656,7 +657,20 @@ public class ServerUtils implements ExtendedModule {
 
                 // Attempt to find alternative icons, if no overrides are present
                 if (StringUtils.isNullOrEmpty(currentServerIcon)) {
-                    currentServerIcon = StringUtils.getOrDefault(currentRealmData.minigameImage);
+                    // Logic cloned from ScrollableListControl#renderSlotItem
+                    final String originalName = currentRealmData.ownerUUID;
+                    final boolean isValidUuid = StringUtils.isValidUuid(originalName);
+                    if (!CraftPresence.CONFIG.hasChanged && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                            !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
+                        return CraftPresence.CLIENT.compileData(String.format(
+                                        CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                                        originalName
+                                ),
+                                new Pair<>("player.name", () -> originalName),
+                                new Pair<>("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
+                                new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
+                        ).get().toString();
+                    }
                 }
             }
             return getResult(CraftPresence.CLIENT.imageOf(true, currentServerIcon, CraftPresence.CONFIG.serverSettings.fallbackServerIcon), resultData);
