@@ -233,6 +233,12 @@ public class ServerUtils implements ExtendedModule {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
     }
 
+    /**
+     * Attempt to locate Realm Data from the current connection
+     *
+     * @param connection The Server Connection Data and Info
+     * @return the found realm data, or null
+     */
     @SuppressWarnings("RedundantCast")
     private RealmsServer findRealmData(final NetHandlerPlayClient connection) {
         try {
@@ -272,9 +278,9 @@ public class ServerUtils implements ExtendedModule {
             }
 
             if (isOnRealm) {
-                updateRealmData(newServerData, newConnection);
+                processRealmData(newServerData, newConnection);
             } else {
-                updateServerData(newServerData, newConnection);
+                processServerData(newServerData, newConnection);
             }
         }
 
@@ -288,6 +294,20 @@ public class ServerUtils implements ExtendedModule {
         }
     }
 
+    /**
+     * Process Server Data from the supplied arguments
+     *
+     * @param newLANStatus          If the Current Server is on a LAN-Based Connection (A Local Network Game)
+     * @param newSinglePlayerStatus If the Current Server is a Local Single-Player Connection
+     * @param newServerData         The Current Server Connection Data and Info
+     * @param newConnection         The Player's Current Connection Data
+     * @param newServer_IP          The IP Address of the Current Server the Player is in
+     * @param newServer_MOTD        The Message of the Day of the Current Server the Player is in
+     * @param newServer_Name        The Name of the Current Server the Player is in
+     * @param newCurrentPlayers     The Amount of Players in the Current Server the Player is in
+     * @param newMaxPlayers         The Maximum Amount of Players allowed in the Current Server the Player is in
+     * @param newPlayerList         The Current Player Map, if available
+     */
     private void processData(final boolean newLANStatus, final boolean newSinglePlayerStatus,
                              final ServerData newServerData, final NetHandlerPlayClient newConnection,
                              final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
@@ -346,11 +366,23 @@ public class ServerUtils implements ExtendedModule {
         }
     }
 
+    /**
+     * Retrieve the server address from the specified data
+     *
+     * @param newServerData The Current Server Connection Data and Info
+     * @return the found server address
+     */
     private String getServerAddress(final ServerData newServerData) {
         return newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
     }
 
-    private void updateRealmData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
+    /**
+     * Process Realm Data from the supplied arguments
+     *
+     * @param newServerData The Current Server Connection Data and Info
+     * @param newConnection The Player's Current Connection Data
+     */
+    private void processRealmData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
         final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
         final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
 
@@ -367,7 +399,13 @@ public class ServerUtils implements ExtendedModule {
         );
     }
 
-    private void updateServerData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
+    /**
+     * Process Server Data from the supplied arguments
+     *
+     * @param newServerData The Current Server Connection Data and Info
+     * @param newConnection The Player's Current Connection Data
+     */
+    private void processServerData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
         final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
         final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
         final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
