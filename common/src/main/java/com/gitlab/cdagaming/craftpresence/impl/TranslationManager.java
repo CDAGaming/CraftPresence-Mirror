@@ -67,9 +67,9 @@ public record TranslationManager(TranslationUtils instance) implements ResourceM
         instance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                final List<Resource> resources = CraftPresence.instance.getResourceManager().getResources(ResourceUtils.getResource(modId, langPath));
+                final List<Resource> resources = CraftPresence.instance.getResourceManager().getResourceStack(ResourceUtils.getResource(modId, langPath));
                 for (Resource resource : resources) {
-                    results.add(resource.getInputStream());
+                    results.add(resource.open());
                 }
             } catch (Exception ignored) {
             }

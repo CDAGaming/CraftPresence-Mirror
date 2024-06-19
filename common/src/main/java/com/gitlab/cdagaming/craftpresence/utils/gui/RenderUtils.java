@@ -712,7 +712,7 @@ public class RenderUtils {
     public static int computeGuiScale(@Nonnull final Minecraft mc) {
         int scaleFactor = 1;
 
-        int k = mc.options.guiScale;
+        int k = mc.options.guiScale().get();
         if (k == 0) {
             k = 1000;
         }
