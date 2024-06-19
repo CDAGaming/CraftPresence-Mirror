@@ -45,7 +45,8 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.realms.RealmsScreenProxy;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.realms.RealmsScreen;
 
 import java.util.List;
 import java.util.Map;
@@ -243,8 +244,8 @@ public class ServerUtils implements ExtendedModule {
     @SuppressWarnings("RedundantCast")
     private RealmsServer findRealmData(final ClientPacketListener connection) {
         try {
-            if (connection.callbackScreen instanceof RealmsScreenProxy realmsProxy &&
-                    realmsProxy.getScreen() instanceof RealmsMainScreen realmsMainScreen) {
+            if (connection.callbackScreen instanceof RealmsScreen realmsProxy &&
+                    realmsProxy instanceof RealmsMainScreen realmsMainScreen) {
                 return (RealmsServer) StringUtils.executeMethod(
                         RealmsMainScreen.class, realmsMainScreen,
                         new Class[]{long.class},
@@ -418,7 +419,7 @@ public class ServerUtils implements ExtendedModule {
         int newMaxPlayers;
         if (newServerData != null) {
             try {
-                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status).split("/")[1]).getSecond();
+                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status.getString()).split("/")[1]).getSecond();
 
                 if (newMaxPlayers < newCurrentPlayers) {
                     newMaxPlayers = newCurrentPlayers + 1;
@@ -437,7 +438,7 @@ public class ServerUtils implements ExtendedModule {
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
         final String newServer_MOTD = !isOnLAN && !newSinglePlayerStatus &&
-                isMotdValid && !isInvalidMotd(newServerData.motd) ? StringUtils.stripAllFormatting(newServerData.motd) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+                isMotdValid && !isInvalidMotd(newServerData.motd.getString()) ? StringUtils.stripAllFormatting(newServerData.motd.getString()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
         processData(newLANStatus, newSinglePlayerStatus,
                 newServerData, newConnection,
@@ -543,8 +544,8 @@ public class ServerUtils implements ExtendedModule {
                 // Stub Server Data if not pinged
                 serverData.pinged = true;
                 serverData.ping = -2L;
-                serverData.motd = "";
-                serverData.status = "";
+                serverData.motd = TextComponent.EMPTY;
+                serverData.status = TextComponent.EMPTY;
             }
 
             if (CraftPresence.player != null) {
@@ -581,8 +582,9 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getLevelName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.level.getLevelData().getLevelName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String defaultWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
+            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getWorldData().getLevelName() : "";
+            final String secondaryWorldName = CraftPresence.player.level.getServer() != null ? StringUtils.getOrDefault(CraftPresence.player.level.getServer().getWorldData().getLevelName(), defaultWorldName) : defaultWorldName;
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
