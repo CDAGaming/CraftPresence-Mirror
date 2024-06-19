@@ -1115,7 +1115,7 @@ public class RenderUtils {
      * @return The Current Font Height for this Screen
      */
     public static int getFontHeight(final FontRenderer fontRenderer) {
-        return fontRenderer.FONT_HEIGHT;
+        return fontRenderer.field_41063_b;
     }
 
     /**

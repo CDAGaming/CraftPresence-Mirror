@@ -348,9 +348,9 @@ public class ServerUtils implements ExtendedModule {
      * @param newConnection The Player's Current Connection Data
      */
     private void processServerData(final ServerData newServerData, final NetClientHandler newConnection) {
-        final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerNames) : StringUtils.newArrayList();
-        final int newCurrentPlayers = newConnection != null ? newConnection.playerNames.size() : 1;
-        final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
+        final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.field_35786_c) : StringUtils.newArrayList();
+        final int newCurrentPlayers = newConnection != null ? newConnection.field_35786_c.size() : 1;
+        final int newMaxPlayers = newConnection != null && newConnection.field_35785_d >= newCurrentPlayers ? newConnection.field_35785_d : newCurrentPlayers + 1;
         final boolean newSinglePlayerStatus = !CraftPresence.instance.isMultiplayerWorld();
         final boolean newLANStatus = false;
 
