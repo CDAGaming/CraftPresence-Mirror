@@ -120,6 +120,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 // Event to occur when initializing new data
                                                 screenInstance.defaultData = (ModuleData) getInstanceData().getDefaults().getProperty(attributeName);
                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
+                                                screenInstance.isDefaultValue = true;
                                                 screenInstance.resetText = "gui.config.message.button.reset_to_default";
                                             },
                                             (attributeName, screenInstance) -> {
@@ -130,6 +131,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.status.edit_specific_status", attributeName);
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
+                                                screenInstance.isDefaultValue = screenInstance.isPreliminaryData || (screenInstance.currentData.equals(screenInstance.defaultData));
                                                 screenInstance.resetText = "gui.config.message.button.reset_to_default";
                                             },
                                             (screenInstance, attributeName, inputText) -> {
