@@ -49,22 +49,18 @@ public class ControlsGui extends ExtendedScreen {
     private Tuple<ExtendedButtonControl, ExtendedButtonControl, KeyUtils.KeyBindData> entryData = null;
     private ScrollPane childFrame;
 
-    public ControlsGui() {
+    public ControlsGui(Map<String, KeyUtils.KeyBindData> keyMappings) {
         super();
-        this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings();
-
+        this.keyMappings = keyMappings;
         sortMappings();
     }
 
-    public ControlsGui(KeyUtils.FilterMode filterMode, List<String> filterData) {
-        super();
-        this.keyMappings = CraftPresence.KEYBINDINGS.getKeyMappings(filterMode, filterData);
-
-        sortMappings();
+    public ControlsGui(List<String> filterData) {
+        this(CraftPresence.KEYBINDINGS.getKeyMappings(filterData));
     }
 
-    public ControlsGui(KeyUtils.FilterMode filterMode, String... filterData) {
-        this(filterMode, StringUtils.newArrayList(filterData));
+    public ControlsGui(String... filterData) {
+        this(CraftPresence.KEYBINDINGS.getKeyMappings(filterData));
     }
 
     @Override
@@ -148,14 +144,12 @@ public class ControlsGui extends ExtendedScreen {
         int currentAllocatedRow = 0;
 
         for (Map.Entry<String, List<String>> entry : categorizedNames.entrySet()) {
-            if (!Constants.IS_LEGACY_SOFT) {
-                childFrame.addWidget(new ScrollableTextWidget(
-                        true,
-                        0, getButtonY(currentAllocatedRow),
-                        childFrame.getScreenWidth(),
-                        Constants.TRANSLATOR.translate(entry.getKey())
-                ));
-            }
+            childFrame.addWidget(new ScrollableTextWidget(
+                    true,
+                    0, getButtonY(currentAllocatedRow),
+                    childFrame.getScreenWidth(),
+                    Constants.TRANSLATOR.translate(entry.getKey())
+            ));
 
             currentAllocatedRow++;
 

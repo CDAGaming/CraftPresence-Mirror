@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Keyboard Utilities to Parse KeyCodes and handle KeyCode Events
@@ -190,6 +191,8 @@ public class KeyUtils {
                 id,
                 new KeyBindData(
                         keyBind,
+                        keyBind::getKeyCategory,
+                        keyBind::getKeyCodeDefault,
                         onPress, onBind, onOutdated,
                         callback
                 )
@@ -354,23 +357,22 @@ public class KeyUtils {
     }
 
     /**
-     * Filter Key Mappings based on the specified filter mode and filter data
+     * Filter Key Mappings based on the specified filter data
      *
-     * @param mode       The filter mode to interpret data by
-     * @param filterData The filter data to attach to the filter mode
+     * @param filterData The filter data to attach, representing categories
      * @return The filtered key mappings
      */
-    public Map<String, KeyBindData> getKeyMappings(final FilterMode mode, final List<String> filterData) {
+    public Map<String, KeyBindData> getKeyMappings(final List<String> filterData) {
         final Map<String, KeyBindData> filteredMappings = StringUtils.newHashMap();
+        if (filterData == null || filterData.isEmpty()) {
+            filteredMappings.putAll(KEY_MAPPINGS);
+            return filteredMappings;
+        }
 
         for (Map.Entry<String, KeyBindData> entry : getKeyEntries()) {
             final String keyName = entry.getKey();
             final KeyBindData keyData = entry.getValue();
-            if (mode == FilterMode.None ||
-                    (mode == FilterMode.Category && filterData.contains(keyData.category())) ||
-                    (mode == FilterMode.ID && filterData.contains(keyData.description())) ||
-                    (mode == FilterMode.Name && filterData.contains(keyName))
-            ) {
+            if (filterData.contains(keyData.category())) {
                 filteredMappings.put(keyName, keyData);
             }
         }
@@ -378,12 +380,13 @@ public class KeyUtils {
     }
 
     /**
-     * Filter Key Mappings based on the specified filter mode and filter data
+     * Filter Key Mappings based on the specified filter data
      *
+     * @param filterData The filter data to attach, representing categories
      * @return The filtered key mappings
      */
-    public Map<String, KeyBindData> getKeyMappings() {
-        return getKeyMappings(FilterMode.None, StringUtils.newArrayList());
+    public Map<String, KeyBindData> getKeyMappings(final String... filterData) {
+        return getKeyMappings((filterData == null || filterData.length == 0) ? null : StringUtils.newArrayList(filterData));
     }
 
     /**
@@ -412,37 +415,20 @@ public class KeyUtils {
     }
 
     /**
-     * Constants representing various Filter Mode Types
-     */
-    public enum FilterMode {
-        /**
-         * Constant for the "Category" Filter Mode.
-         */
-        Category,
-        /**
-         * Constant for the "Name" Filter Mode.
-         */
-        Name,
-        /**
-         * Constant for the "ID" Filter Mode.
-         */
-        ID,
-        /**
-         * Constant for the "None" Filter Mode.
-         */
-        None
-    }
-
-    /**
      * Mapping dictating KeyBind data attributes
      *
-     * @param binding          The KeyBinding object attached to this instance
-     * @param runEvent         The event to execute when the KeyBind is being pressed
-     * @param configEvent      The event to execute when the KeyBind is being rebound to another key
-     * @param vanillaPredicate The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
-     * @param errorCallback    The event to execute upon an exception occurring during KeyBind events
+     * @param binding            The KeyBinding object attached to this instance
+     * @param categorySupplier   The supplier for the KeyBind category title
+     * @param defaultKeySupplier The supplier for the default key for this KeyBind
+     * @param runEvent           The event to execute when the KeyBind is being pressed
+     * @param configEvent        The event to execute when the KeyBind is being rebound to another key
+     * @param vanillaPredicate   The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
+     * @param errorCallback      The event to execute upon an exception occurring during KeyBind events
      */
-    public record KeyBindData(KeyBinding binding, Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
+    public record KeyBindData(KeyBinding binding,
+                              Supplier<String> categorySupplier,
+                              Supplier<Integer> defaultKeySupplier,
+                              Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
                               Predicate<Integer> vanillaPredicate, Consumer<Throwable> errorCallback) {
         /**
          * Retrieve the category for this KeyBind
@@ -450,7 +436,7 @@ public class KeyUtils {
          * @return the KeyBind category
          */
         public String category() {
-            return binding.getKeyCategory();
+            return categorySupplier().get();
         }
 
         /**
@@ -459,7 +445,7 @@ public class KeyUtils {
          * @return the KeyBind description
          */
         public String description() {
-            return binding.getKeyDescription();
+            return binding().getKeyDescription();
         }
 
         /**
@@ -468,7 +454,7 @@ public class KeyUtils {
          * @return the currently assigned key code
          */
         public int keyCode() {
-            return binding.getKeyCode();
+            return binding().getKeyCode();
         }
 
         /**
@@ -477,7 +463,7 @@ public class KeyUtils {
          * @return the default assigned key code
          */
         public int defaultKeyCode() {
-            return binding.getKeyCodeDefault();
+            return defaultKeySupplier().get();
         }
     }
 }

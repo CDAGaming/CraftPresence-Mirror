@@ -29,7 +29,6 @@ import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
@@ -41,7 +40,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
-import java.util.List;
 import java.util.Map;
 
 public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
@@ -166,16 +164,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         );
 
         // Adding Controls Button
-        final List<String> controlInfo = StringUtils.newArrayList("key.craftpresence.category");
-        KeyUtils.FilterMode controlMode = KeyUtils.FilterMode.Category;
-        if (Constants.IS_LEGACY_SOFT) {
-            controlInfo.clear();
-            StringUtils.addEntriesNotPresent(controlInfo, CraftPresence.KEYBINDINGS.getKeys());
-
-            controlMode = KeyUtils.FilterMode.Name;
-        }
-
-        final KeyUtils.FilterMode finalControlMode = controlMode;
         controlsButton = childFrame.addControl(
                 new ExtendedButtonControl(
                         calc2, getButtonY(1),
@@ -183,8 +171,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "gui.config.message.button.controls",
                         () -> openScreen(
                                 new ControlsGui(
-                                        finalControlMode,
-                                        controlInfo
+                                        "key.craftpresence.category"
                                 )
                         )
                 )
