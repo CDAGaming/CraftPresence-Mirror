@@ -268,39 +268,13 @@ public class DiscordAssetUtils {
      * <p>
      * Url Format: [assetsEndpoint]/[clientId]/[id].png
      *
-     * @param clientId    The client id to load asset data from
-     * @param keyId       The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
-     * @param isLocalName Whether the specified Key ID is a Key name derived from the currently synced Client ID
-     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client ID)
-     */
-    public static String getDiscordAssetUrl(final String clientId, final String keyId, final boolean isLocalName) {
-        return !StringUtils.isNullOrEmpty(keyId) ? assetsEndpoint
-                + clientId + "/" + (isLocalName ? getId(keyId) : keyId) + ".png" : "";
-    }
-
-    /**
-     * Attempts to retrieve the Asset Url from the specified icon key, if present
-     * <p>
-     * Url Format: [assetsEndpoint]/[clientId]/[id].png
-     *
      * @param clientId The client id to load asset data from
      * @param keyId    The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
      * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client ID)
      */
     public static String getDiscordAssetUrl(final String clientId, final String keyId) {
-        return getDiscordAssetUrl(clientId, keyId, clientId.equals(CraftPresence.CONFIG.generalSettings.clientId));
-    }
-
-    /**
-     * Attempts to retrieve the Asset Url from the specified icon key, if present
-     * <p>
-     * Url Format: [assetsEndpoint]/[clientId]/[id].png
-     *
-     * @param keyId The Specified Key ID to gain info for (Can only be a key name if isLocalName is true)
-     * @return The asset url in String form (As in Url form, it'll only work if it is a valid Client ID)
-     */
-    public static String getDiscordAssetUrl(final String keyId) {
-        return getDiscordAssetUrl(CraftPresence.CONFIG.generalSettings.clientId, keyId);
+        return !StringUtils.isNullOrEmpty(keyId) ? assetsEndpoint
+                + clientId + "/" + keyId + ".png" : "";
     }
 
     /**
@@ -309,7 +283,7 @@ public class DiscordAssetUtils {
      * Default Url Format: [applicationEndpoint]/[clientId]/assets
      *
      * @param clientId     The client id to load asset data from
-     * @param filterToMain Whether this client id is submitting its assets as the assets to use in CraftPresence
+     * @param filterToMain Whether this client id is submitting its assets as the assets to use in runtime
      * @return The list of discord asset data attached to this client id
      */
     public static DiscordAsset[] loadAssets(final String clientId, final boolean filterToMain) {
@@ -326,9 +300,8 @@ public class DiscordAssetUtils {
                 if (assets != null) {
                     for (DiscordAsset asset : assets) {
                         // Ensure URL is set beforehand for non-custom Assets
-                        // isLocalName is made false to avoid unneeded calls
                         if (asset.getType() != DiscordAsset.AssetType.CUSTOM) {
-                            asset.setUrl(getDiscordAssetUrl(clientId, asset.getId(), false));
+                            asset.setUrl(getDiscordAssetUrl(clientId, asset.getId()));
                         }
                         if (!ASSET_LIST.containsKey(asset.getName())) {
                             ASSET_LIST.put(asset.getName(), asset);

@@ -600,7 +600,7 @@ public class CommandsGui extends ExtendedScreen {
                                 clientId, i + 1, assetList.length
                         );
                         final DiscordAsset asset = assetList[i];
-                        final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId(), false) + urlMeta;
+                        final String assetUrl = DiscordAssetUtils.getDiscordAssetUrl(clientId, asset.getId()) + urlMeta;
                         final String assetName = asset.getName() + ".png";
                         if (doFullCopy) {
                             FileUtils.downloadFile(assetUrl, new File(filePath + assetName));
