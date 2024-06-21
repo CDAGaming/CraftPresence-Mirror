@@ -4,9 +4,6 @@ import xyz.wagyourtail.jvmdg.gradle.task.files.DowngradeFiles
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 plugins {
     java
@@ -304,9 +301,7 @@ subprojects {
                     "Specification-Version" to "1", // We are version 1 of ourselves
                     "Implementation-Title" to "mod_name"(),
                     "Implementation-Version" to archiveVersion.get(),
-                    "Implementation-Vendor" to "CDAGaming",
-                    "Implementation-Timestamp" to LocalDateTime.now().atOffset(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"))
+                    "Implementation-Vendor" to "CDAGaming"
                 )
             )
         }
