@@ -68,8 +68,6 @@ public final class Config extends Module implements Serializable {
     private static final Config INSTANCE = loadOrCreate();
     private transient boolean hasChanged = false, isNewFile = false;
     // Global Settings
-    public String _README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
-    public String _SOURCE = "https://gitlab.com/CDAGaming/CraftPresence";
     public int _schemaVersion = 0;
     public int _lastMCVersionId = 0;
     // Other Settings
@@ -227,8 +225,6 @@ public final class Config extends Module implements Serializable {
             setChanged(data.hasChanged());
             isNewFile = data.isNewFile;
 
-            _README = data._README;
-            _SOURCE = data._SOURCE;
             _schemaVersion = data._schemaVersion;
             _lastMCVersionId = data._lastMCVersionId;
 
@@ -656,8 +652,6 @@ public final class Config extends Module implements Serializable {
         return switch (name) {
             case "hasChanged" -> hasChanged;
             case "isNewFile" -> isNewFile;
-            case "_README" -> _README;
-            case "_SOURCE" -> _SOURCE;
             case "_schemaVersion" -> _schemaVersion;
             case "_lastMCVersionId" -> _lastMCVersionId;
             case "generalSettings" -> generalSettings;
@@ -708,12 +702,6 @@ public final class Config extends Module implements Serializable {
                 case "isNewFile":
                     isNewFile = (Boolean) value;
                     break;
-                case "_README":
-                    _README = (String) value;
-                    break;
-                case "_SOURCE":
-                    _SOURCE = (String) value;
-                    break;
                 case "_schemaVersion":
                     _schemaVersion = (Integer) value;
                     break;
@@ -762,9 +750,7 @@ public final class Config extends Module implements Serializable {
     }
 
     public boolean areSettingsEqual(final Config other) {
-        return Objects.equals(other._README, _README) &&
-                Objects.equals(other._SOURCE, _SOURCE) &&
-                Objects.equals(other._schemaVersion, _schemaVersion) &&
+        return Objects.equals(other._schemaVersion, _schemaVersion) &&
                 Objects.equals(other._lastMCVersionId, _lastMCVersionId) &&
                 Objects.equals(other.generalSettings, generalSettings) &&
                 Objects.equals(other.biomeSettings, biomeSettings) &&
@@ -793,7 +779,6 @@ public final class Config extends Module implements Serializable {
     public int hashCode() {
         return Objects.hash(
                 hasChanged, isNewFile,
-                _README, _SOURCE,
                 _schemaVersion, _lastMCVersionId,
                 generalSettings, biomeSettings,
                 dimensionSettings, serverSettings,

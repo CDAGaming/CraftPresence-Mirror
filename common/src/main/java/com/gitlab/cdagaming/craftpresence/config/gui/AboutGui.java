@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -64,7 +63,7 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 51),
                         180, 20,
                         "gui.config.message.button.view_source",
-                        () -> UrlUtils.openUrl(CraftPresence.CONFIG._SOURCE)
+                        () -> UrlUtils.openUrl(Constants.URL_SOURCE)
                 )
         );
 
@@ -74,7 +73,7 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
                         "gui.config.message.button.wiki",
-                        () -> UrlUtils.openUrl(CraftPresence.CONFIG._README)
+                        () -> UrlUtils.openUrl(Constants.URL_README)
                 )
         );
 

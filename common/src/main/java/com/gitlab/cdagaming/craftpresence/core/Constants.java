@@ -91,6 +91,16 @@ public class Constants {
     public static final String UPDATE_JSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json";
 
     /**
+     * The URL for the Application's "README"
+     */
+    public static final String URL_README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
+
+    /**
+     * The URL for the Application's "Source"
+     */
+    public static final String URL_SOURCE = "https://gitlab.com/CDAGaming/CraftPresence";
+
+    /**
      * If this Application is within the Soft Floor of Legacy Mode
      * <p>This variable becomes true only on versions before 13w41a (When the protocol number was reset)
      */
