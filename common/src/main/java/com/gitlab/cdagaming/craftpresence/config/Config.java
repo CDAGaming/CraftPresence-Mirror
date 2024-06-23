@@ -66,7 +66,7 @@ public final class Config extends Module implements Serializable {
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     private static final Config DEFAULT = new Config().applyDefaults();
     private static final Config INSTANCE = loadOrCreate();
-    public transient boolean hasChanged = false, isNewFile = false;
+    private transient boolean hasChanged = false, isNewFile = false;
     // Global Settings
     public String _README = "https://gitlab.com/CDAGaming/CraftPresence/-/wikis/home";
     public String _SOURCE = "https://gitlab.com/CDAGaming/CraftPresence";
@@ -137,7 +137,7 @@ public final class Config extends Module implements Serializable {
         if (hasNoData || isInvalidData) {
             config = hasNoData ? getDefaultData() : config.getDefaults();
             config.isNewFile = true;
-            config.hasChanged = isInvalidData;
+            config.setChanged(isInvalidData);
         }
 
         final boolean wasNewFile = config.isNewFile;
@@ -193,6 +193,14 @@ public final class Config extends Module implements Serializable {
         return VERSION;
     }
 
+    public boolean hasChanged() {
+        return hasChanged;
+    }
+
+    public void setChanged(final boolean hasChanged) {
+        this.hasChanged = hasChanged;
+    }
+
     public Config applyDefaults(final Config config) {
         config._schemaVersion = getSchemaVersion();
         config._lastMCVersionId = getGameVersion();
@@ -216,7 +224,7 @@ public final class Config extends Module implements Serializable {
     @Override
     public void transferFrom(Module target) {
         if (target instanceof Config data && !equals(target)) {
-            hasChanged = data.hasChanged;
+            setChanged(data.hasChanged());
             isNewFile = data.isNewFile;
 
             _README = data._README;
@@ -236,9 +244,9 @@ public final class Config extends Module implements Serializable {
     }
 
     public void applySettings() {
-        if (hasChanged) {
+        if (hasChanged()) {
             CommandUtils.reloadData(true);
-            hasChanged = false;
+            setChanged(false);
         }
         isNewFile = false;
     }

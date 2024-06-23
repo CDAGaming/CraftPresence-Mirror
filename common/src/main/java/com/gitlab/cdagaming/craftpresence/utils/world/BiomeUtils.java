@@ -291,7 +291,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public boolean canBeEnabled() {
-        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectBiomeData : isEnabled();
+        return !CraftPresence.CONFIG.hasChanged() ? CraftPresence.CONFIG.generalSettings.detectBiomeData : isEnabled();
     }
 
     @Override

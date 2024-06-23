@@ -320,7 +320,7 @@ public class KeyUtils {
                     }
 
                     // Only check for Keyboard updates if the key is not active but is in queue for a sync
-                    if (!hasBeenRun && !CraftPresence.CONFIG.hasChanged) {
+                    if (!hasBeenRun && !CraftPresence.CONFIG.hasChanged()) {
                         if (keySyncQueue.containsKey(keyName)) {
                             syncKeyData(keyName, ImportMode.Config, keySyncQueue.get(keyName));
                             keySyncQueue.remove(keyName);

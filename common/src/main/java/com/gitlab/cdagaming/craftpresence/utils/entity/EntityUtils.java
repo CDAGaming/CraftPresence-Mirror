@@ -407,7 +407,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public boolean canBeEnabled() {
-        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : isEnabled();
+        return !CraftPresence.CONFIG.hasChanged() ? CraftPresence.CONFIG.advancedSettings.enablePerEntity : isEnabled();
     }
 
     @Override

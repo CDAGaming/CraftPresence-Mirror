@@ -661,7 +661,7 @@ public class ServerUtils implements ExtendedModule {
                     // Logic cloned from ScrollableListControl#renderSlotItem
                     final String originalName = currentRealmData.ownerUUID;
                     final boolean isValidUuid = StringUtils.isValidUuid(originalName);
-                    if (!CraftPresence.CONFIG.hasChanged && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+                    if (!CraftPresence.CONFIG.hasChanged() && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                             !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {
                         return CraftPresence.CLIENT.compileData(String.format(
                                         CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
@@ -833,7 +833,7 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public boolean canBeEnabled() {
-        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectWorldData : isEnabled();
+        return !CraftPresence.CONFIG.hasChanged() ? CraftPresence.CONFIG.generalSettings.detectWorldData : isEnabled();
     }
 
     @Override

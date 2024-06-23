@@ -230,7 +230,7 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (isEscapeKey(keyCode) && getCurrentData().hasChanged) {
+        if (isEscapeKey(keyCode) && getCurrentData().hasChanged()) {
             syncData();
         }
         super.keyTyped(typedChar, keyCode);
@@ -240,13 +240,13 @@ public class MainGui extends ConfigurationGui<Config> {
     protected void syncRenderStates() {
         // Ensure Critical Data is correct before continuing
         super.syncRenderStates();
-        getCurrentData().hasChanged = hasChangesBetween(getCurrentData(), getInstanceData());
+        getCurrentData().setChanged(hasChangesBetween(getCurrentData(), getInstanceData()));
 
         biomeSet.setControlEnabled(CraftPresence.BIOMES.isEnabled());
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.isEnabled());
         serverSet.setControlEnabled(CraftPresence.SERVER.isEnabled());
 
-        proceedButton.setControlMessage(getCurrentData().hasChanged ? "gui.config.message.button.save" : "gui.config.message.button.back");
+        proceedButton.setControlMessage(getCurrentData().hasChanged() ? "gui.config.message.button.save" : "gui.config.message.button.back");
     }
 
     @Override
@@ -271,7 +271,7 @@ public class MainGui extends ConfigurationGui<Config> {
 
     @Override
     protected void applySettings() {
-        if (getCurrentData().hasChanged) {
+        if (getCurrentData().hasChanged()) {
             getCurrentData().save();
             Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.config.save"));
             getCurrentData().applyFrom(getInstanceData());

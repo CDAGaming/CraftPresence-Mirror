@@ -1336,7 +1336,7 @@ public class DiscordUtils {
      * @return {@link Boolean#TRUE} if operation is allowed
      */
     public boolean addEndpointIcon(final Config config, final String endpoint, final String name, final String key) {
-        final boolean canUseEndpointIcon = !config.hasChanged &&
+        final boolean canUseEndpointIcon = !config.hasChanged() &&
                 config.advancedSettings.allowEndpointIcons &&
                 !StringUtils.isNullOrEmpty(endpoint);
 
@@ -1682,7 +1682,7 @@ public class DiscordUtils {
             CommandUtils.clearMenuState();
         }
         // Join Request Tick Event
-        if (!CraftPresence.CONFIG.hasChanged && isFullyLoaded) {
+        if (!CraftPresence.CONFIG.hasChanged() && isFullyLoaded) {
             // Processing for Join Request Systems
             if (REQUESTER_USER != null && CraftPresence.SCHEDULER.TIMER <= 0) {
                 respondToJoinRequest(IPCClient.ApprovalMode.DENY);

@@ -301,6 +301,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     protected void markAsChanged() {
-        CraftPresence.CONFIG.hasChanged = true;
+        CraftPresence.CONFIG.setChanged(true);
     }
 }

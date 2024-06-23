@@ -300,7 +300,7 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public boolean canBeEnabled() {
-        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.generalSettings.detectDimensionData : isEnabled();
+        return !CraftPresence.CONFIG.hasChanged() ? CraftPresence.CONFIG.generalSettings.detectDimensionData : isEnabled();
     }
 
     @Override

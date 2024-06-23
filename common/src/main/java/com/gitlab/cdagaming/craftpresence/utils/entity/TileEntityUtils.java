@@ -606,7 +606,7 @@ public class TileEntityUtils implements Module {
 
     @Override
     public boolean canBeEnabled() {
-        return !CraftPresence.CONFIG.hasChanged ? CraftPresence.CONFIG.advancedSettings.enablePerItem : isEnabled();
+        return !CraftPresence.CONFIG.hasChanged() ? CraftPresence.CONFIG.advancedSettings.enablePerItem : isEnabled();
     }
 
     @Override

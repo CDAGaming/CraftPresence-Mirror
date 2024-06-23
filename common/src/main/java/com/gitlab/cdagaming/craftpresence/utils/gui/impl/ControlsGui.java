@@ -243,7 +243,7 @@ public class ControlsGui extends ExtendedScreen {
         try {
             entryData.getThird().configEvent().accept(keyToSubmit, false);
             CraftPresence.KEYBINDINGS.keySyncQueue.put(internalName, keyToSubmit);
-            CraftPresence.CONFIG.hasChanged = true;
+            CraftPresence.CONFIG.setChanged(true);
 
             entryData.getFirst().setControlMessage(formattedKey);
         } catch (Throwable ex) {
