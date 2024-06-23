@@ -57,16 +57,16 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class Config extends Module implements Serializable {
-    // Constants
     @Serial
     private static final long serialVersionUID = -4853238501768086595L;
+
+    // Constants
     private static final int MC_VERSION = ModUtils.MCProtocolID;
     private static final int VERSION = 6;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     private static final Config DEFAULT = new Config().applyDefaults();
     private static final Config INSTANCE = loadOrCreate();
-    private transient boolean hasChanged = false, isNewFile = false;
     // Global Settings
     public int _schemaVersion = 0;
     public int _lastMCVersionId = 0;
@@ -79,6 +79,8 @@ public final class Config extends Module implements Serializable {
     public Advanced advancedSettings = new Advanced();
     public Accessibility accessibilitySettings = new Accessibility();
     public Display displaySettings = new Display();
+    // Metadata
+    private transient boolean hasChanged = false, isNewFile = false;
 
     public Config(final Config other) {
         transferFrom(other);
