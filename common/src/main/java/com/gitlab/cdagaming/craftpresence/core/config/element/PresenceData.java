@@ -209,7 +209,9 @@ public class PresenceData extends Module implements Serializable {
             return false;
         }
 
-        return Objects.equals(other.details, details) &&
+        return Objects.equals(other.enabled, enabled) &&
+                Objects.equals(other.useAsMain, useAsMain) &&
+                Objects.equals(other.details, details) &&
                 Objects.equals(other.gameState, gameState) &&
                 Objects.equals(other.largeImageKey, largeImageKey) &&
                 Objects.equals(other.largeImageText, largeImageText) &&
@@ -222,6 +224,7 @@ public class PresenceData extends Module implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(
+                enabled, useAsMain,
                 details, gameState,
                 largeImageKey, largeImageText,
                 smallImageKey, smallImageText,

@@ -20,6 +20,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Fixes
 
 * Fixed a visual error where the `Reset to Default` button can appear incorrectly in certain areas of `Status Messages`
+* Fixed an issue where `PresenceData` would not be marked as changed if `enabled` or `useAsMain` was modified
 
 ___
 
