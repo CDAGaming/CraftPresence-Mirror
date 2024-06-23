@@ -9,11 +9,17 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Changes
 
-* TBD
+* (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
+    * Unimined (`1.2.12` -> `1.2.14`)
+    * SpotBugs Annotations (`4.8.5` -> `4.8.6`)
+    * UniCore (`1.1.10` -> `1.1.11-SNAPSHOT`)
+* Improved `Controls` UI functionality for MC 1.6.4 and below
+    * The UI now appears the same as modern versions of MC
+* Misc. Improvements to consolidate API calls and overall file size
 
 ### Fixes
 
-* TBD
+* Fixed a visual error where the `Reset to Default` button can appear incorrectly in certain areas of `Status Messages`
 
 ___
 

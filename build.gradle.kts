@@ -7,7 +7,7 @@ import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 
 plugins {
     java
-    id("xyz.wagyourtail.unimined") version "1.2.12" apply false
+    id("xyz.wagyourtail.unimined") version "1.2.14" apply false
     id("xyz.wagyourtail.jvmdowngrader") version "0.7.2"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("io.github.goooler.shadow") version "8.1.7" apply false
@@ -279,7 +279,7 @@ subprojects {
     dependencies {
         // Annotations
         "compileOnly"("com.google.code.findbugs:jsr305:3.0.2")
-        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.8.5")
+        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.8.6")
     }
 
     tasks.withType<JavaCompile>().configureEach {
