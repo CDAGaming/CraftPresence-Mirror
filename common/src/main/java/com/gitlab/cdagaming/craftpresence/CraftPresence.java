@@ -158,12 +158,12 @@ public class CraftPresence {
         // Check for Updates before continuing
         ModUtils.UPDATER.checkForUpdates();
 
-        CONFIG = new Config(Config.loadOrCreate(
+        CONFIG = Config.loadOrCreate(
                 config -> config.applyEvents(
                         (instance -> CommandUtils.reloadData(true)),
                         CommandUtils::applyData
-                )
-        ));
+                ).setGameVersion(ModUtils.MCProtocolID)
+        );
 
         CommandUtils.init();
         if (initCallback != null) {

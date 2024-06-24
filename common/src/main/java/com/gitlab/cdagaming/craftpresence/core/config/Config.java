@@ -81,6 +81,7 @@ public final class Config extends Module implements Serializable {
     private transient boolean hasChanged = false, isNewFile = false;
     private transient Consumer<Config> onApplySettings;
     private transient BiConsumer<Config, Config> onApplyFrom;
+    private transient int gameVersion = MC_VERSION;
 
     public Config(final Config other) {
         transferFrom(other);
@@ -189,24 +190,41 @@ public final class Config extends Module implements Serializable {
         return property != null && !StringUtils.isNullOrEmpty(property.toString());
     }
 
-    public static int getGameVersion() {
-        return MC_VERSION;
+    public static int getGameVersion(final Config config) {
+        return config != null ? config.gameVersion : MC_VERSION;
     }
 
     public static int getSchemaVersion() {
         return VERSION;
     }
 
-    public static Config applyDefaults(final Config config) {
+    public static Config applyDefaults(final Config config, final int protocol) {
         config._schemaVersion = getSchemaVersion();
-        config._lastMCVersionId = getGameVersion();
+        config._lastMCVersionId = protocol;
         return config;
+    }
+
+    public static Config applyDefaults(final Config config) {
+        return applyDefaults(config, MC_VERSION);
     }
 
     public static Config applyEvents(final Config config, final Consumer<Config> onApplySettings, final BiConsumer<Config, Config> onApplyFrom) {
         config.onApplySettings = onApplySettings;
         config.onApplyFrom = onApplyFrom;
         return config;
+    }
+
+    public static Config setGameVersion(final Config config, final int version) {
+        config.gameVersion = version;
+        return config;
+    }
+
+    public int getGameVersion() {
+        return getGameVersion(this);
+    }
+
+    public Config setGameVersion(final int version) {
+        return setGameVersion(this, version);
     }
 
     public boolean hasChanged() {
@@ -217,8 +235,12 @@ public final class Config extends Module implements Serializable {
         this.hasChanged = hasChanged;
     }
 
+    public Config applyDefaults(final int protocol) {
+        return applyDefaults(this, protocol);
+    }
+
     public Config applyDefaults() {
-        return applyDefaults(this);
+        return applyDefaults(MC_VERSION);
     }
 
     public Config applyEvents(final Consumer<Config> onApplySettings, final BiConsumer<Config, Config> onApplyFrom) {
@@ -237,10 +259,7 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Config data && !equals(target)) {
-            _schemaVersion = data._schemaVersion;
-            _lastMCVersionId = data._lastMCVersionId;
-
+        if (target instanceof Config data && !areSettingsEqual(data)) {
             generalSettings = new General(data.generalSettings);
             biomeSettings = new Biome(data.biomeSettings);
             dimensionSettings = new Dimension(data.dimensionSettings);
@@ -625,6 +644,7 @@ public final class Config extends Module implements Serializable {
             case "isNewFile" -> isNewFile;
             case "onApplySettings" -> onApplySettings;
             case "onApplyFrom" -> onApplyFrom;
+            case "gameVersion" -> gameVersion;
             case "_schemaVersion" -> _schemaVersion;
             case "_lastMCVersionId" -> _lastMCVersionId;
             case "generalSettings" -> generalSettings;
@@ -681,6 +701,9 @@ public final class Config extends Module implements Serializable {
                 case "onApplyFrom":
                     onApplyFrom = (BiConsumer<Config, Config>) value;
                     break;
+                case "gameVersion":
+                    gameVersion = (Integer) value;
+                    break;
                 case "_schemaVersion":
                     _schemaVersion = (Integer) value;
                     break;
@@ -727,13 +750,14 @@ public final class Config extends Module implements Serializable {
         return Objects.equals(other.hasChanged, hasChanged) &&
                 Objects.equals(other.isNewFile, isNewFile) &&
                 Objects.equals(other.onApplySettings, onApplySettings) &&
-                Objects.equals(other.onApplyFrom, onApplyFrom);
+                Objects.equals(other.onApplyFrom, onApplyFrom) &&
+                Objects.equals(other.gameVersion, gameVersion) &&
+                Objects.equals(other._schemaVersion, _schemaVersion) &&
+                Objects.equals(other._lastMCVersionId, _lastMCVersionId);
     }
 
     public boolean areSettingsEqual(final Config other) {
-        return Objects.equals(other._schemaVersion, _schemaVersion) &&
-                Objects.equals(other._lastMCVersionId, _lastMCVersionId) &&
-                Objects.equals(other.generalSettings, generalSettings) &&
+        return Objects.equals(other.generalSettings, generalSettings) &&
                 Objects.equals(other.biomeSettings, biomeSettings) &&
                 Objects.equals(other.dimensionSettings, dimensionSettings) &&
                 Objects.equals(other.serverSettings, serverSettings) &&
@@ -761,6 +785,7 @@ public final class Config extends Module implements Serializable {
         return Objects.hash(
                 hasChanged, isNewFile,
                 onApplySettings, onApplyFrom,
+                gameVersion,
                 _schemaVersion, _lastMCVersionId,
                 generalSettings, biomeSettings,
                 dimensionSettings, serverSettings,
