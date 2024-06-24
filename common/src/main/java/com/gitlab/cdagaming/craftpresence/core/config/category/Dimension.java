@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config.category;
+package com.gitlab.cdagaming.craftpresence.core.config.category;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
@@ -34,43 +34,43 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
-public class Biome extends Module implements Serializable {
+public class Dimension extends Module implements Serializable {
     @Serial
-    private static final long serialVersionUID = 7528869687150995557L;
-    private static final Biome DEFAULT = new Biome();
-    public String fallbackBiomeIcon = "unknown";
-    public Map<String, ModuleData> biomeData = new HashMapBuilder<String, ModuleData>()
+    private static final long serialVersionUID = 2779211521643527744L;
+    private static final Dimension DEFAULT = new Dimension();
+    public String fallbackDimensionIcon = "unknown";
+    public Map<String, ModuleData> dimensionData = new HashMapBuilder<String, ModuleData>()
             .put("default", new ModuleData(
-                    Constants.TRANSLATOR.translate("craftpresence.defaults.biome_messages.biome_messages"),
-                    null // Defaults to the Biome Name if nothing is supplied
+                    Constants.TRANSLATOR.translate("craftpresence.defaults.dimension_messages.dimension_messages"),
+                    null // Defaults to the Dimension Name if nothing is supplied
             ))
             .build();
 
-    public Biome(final Biome other) {
+    public Dimension(final Dimension other) {
         transferFrom(other);
     }
 
-    public Biome() {
+    public Dimension() {
         // N/A
     }
 
     @Override
-    public Biome getDefaults() {
-        return new Biome(DEFAULT);
+    public Dimension getDefaults() {
+        return new Dimension(DEFAULT);
     }
 
     @Override
-    public Biome copy() {
-        return new Biome(this);
+    public Dimension copy() {
+        return new Dimension(this);
     }
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Biome data && !equals(target)) {
-            fallbackBiomeIcon = data.fallbackBiomeIcon;
-            biomeData.clear();
-            for (Map.Entry<String, ModuleData> entry : data.biomeData.entrySet()) {
-                biomeData.put(entry.getKey(), new ModuleData(entry.getValue()));
+        if (target instanceof Dimension data && !equals(target)) {
+            fallbackDimensionIcon = data.fallbackDimensionIcon;
+            dimensionData.clear();
+            for (Map.Entry<String, ModuleData> entry : data.dimensionData.entrySet()) {
+                dimensionData.put(entry.getKey(), new ModuleData(entry.getValue()));
             }
         }
     }
@@ -78,8 +78,8 @@ public class Biome extends Module implements Serializable {
     @Override
     public Object getProperty(String name) {
         return switch (name) {
-            case "fallbackBiomeIcon" -> fallbackBiomeIcon;
-            case "biomeData" -> biomeData;
+            case "fallbackDimensionIcon" -> fallbackDimensionIcon;
+            case "dimensionData" -> dimensionData;
             default -> null;
         };
     }
@@ -88,13 +88,13 @@ public class Biome extends Module implements Serializable {
     public void setProperty(String name, Object value) {
         try {
             switch (name) {
-                case "fallbackBiomeIcon":
-                    fallbackBiomeIcon = (String) value;
+                case "fallbackDimensionIcon":
+                    fallbackDimensionIcon = (String) value;
                     break;
-                case "biomeData":
-                    biomeData = (Map<String, ModuleData>) value;
+                case "dimensionData":
+                    dimensionData = (Map<String, ModuleData>) value;
                     break;
-                default:
+                case "default":
                     break;
             }
         } catch (Throwable ex) {
@@ -108,16 +108,16 @@ public class Biome extends Module implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof Biome other)) {
+        if (!(obj instanceof Dimension other)) {
             return false;
         }
 
-        return Objects.equals(other.fallbackBiomeIcon, fallbackBiomeIcon) &&
-                Objects.equals(other.biomeData, biomeData);
+        return Objects.equals(other.fallbackDimensionIcon, fallbackDimensionIcon) &&
+                Objects.equals(other.dimensionData, dimensionData);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fallbackBiomeIcon, biomeData);
+        return Objects.hash(fallbackDimensionIcon, dimensionData);
     }
 }
