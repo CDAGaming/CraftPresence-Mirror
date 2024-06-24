@@ -26,8 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils.server;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;

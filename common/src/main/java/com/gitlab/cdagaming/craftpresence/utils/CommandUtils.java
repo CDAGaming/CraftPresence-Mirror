@@ -26,8 +26,8 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
@@ -273,6 +273,62 @@ public class CommandUtils {
         } finally {
             CraftPresence.SCHEDULER.TICK_LOCK.unlock();
             CraftPresence.SCHEDULER.postTick();
+        }
+    }
+
+    /**
+     * Apply Data, based on the differences in the specified arguments
+     *
+     * @param current The current config data
+     * @param old     The old config data
+     */
+    public static void applyData(final Config current, final Config old) {
+        boolean needsReboot = false;
+        if (!current.generalSettings.clientId.equals(old.generalSettings.clientId)) {
+            needsReboot = true; // Client ID changed
+        } else if (current.generalSettings.preferredClientLevel != old.generalSettings.preferredClientLevel) {
+            needsReboot = true; // Preferred Client Level changed
+        } else if (current.generalSettings.resetTimeOnInit != old.generalSettings.resetTimeOnInit) {
+            needsReboot = true; // Reset Time On Init changed
+        } else if (current.generalSettings.autoRegister != old.generalSettings.autoRegister) {
+            needsReboot = true; // Auto Register changed
+        } else if (!current.accessibilitySettings.languageId.equals(old.accessibilitySettings.languageId)) {
+            Constants.TRANSLATOR.syncTranslations(); // Fallback Language ID Changed
+        } else if (current.advancedSettings.allowDuplicatePackets != old.advancedSettings.allowDuplicatePackets) {
+            needsReboot = true; // Allow Duplicate Packets changed
+        } else if (current.advancedSettings.maxConnectionAttempts != old.advancedSettings.maxConnectionAttempts) {
+            needsReboot = true; // Max Connection Attempts changed
+        }
+
+        if (current.accessibilitySettings.renderTooltips != old.accessibilitySettings.renderTooltips
+                || !current.accessibilitySettings.tooltipBackground.equals(old.accessibilitySettings.tooltipBackground) ||
+                !current.accessibilitySettings.tooltipBorder.equals(old.accessibilitySettings.tooltipBorder)) {
+            setDefaultTooltip(); // Render Tooltips, Tooltip Background, or Tooltip Border changed
+        }
+
+        if (current.advancedSettings.debugMode != old.advancedSettings.debugMode ||
+                current.advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
+                current.advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
+            updateModes(); // Debug Mode, Verbose Mode, or Refresh Rate changed
+        }
+
+        if (current.advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph) {
+            setupClassScan(true); // Enable Class Graph changed
+        }
+
+        if (current.displaySettings.dynamicVariables != old.displaySettings.dynamicVariables) {
+            syncDynamicVariables(old.displaySettings.dynamicVariables); // Dynamic Variables changed
+        }
+
+        if (current.accessibilitySettings.stripTranslationColors != old.accessibilitySettings.stripTranslationColors) {
+            Constants.TRANSLATOR.setStripColors(current.accessibilitySettings.stripTranslationColors); // Strip Translation Colors changed
+        }
+        if (current.accessibilitySettings.stripTranslationFormatting != old.accessibilitySettings.stripTranslationFormatting) {
+            Constants.TRANSLATOR.setStripFormatting(current.accessibilitySettings.stripTranslationFormatting); // Strip Translation Formatting changed
+        }
+
+        if (needsReboot) {
+            setupRPC();
         }
     }
 

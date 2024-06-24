@@ -25,10 +25,12 @@
 package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import io.github.cdagaming.unicore.impl.TriFunction;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -208,6 +210,44 @@ public class KeyConverter {
             .collect(Collectors.toMap(KeyBindMapping::lwjgl3Key, mapping -> mapping));
 
     /**
+     * Filter Mappings for any LWJGL2 Keys, dependent on Protocol ID
+     * <p>
+     * Format: keyCode:condition
+     */
+    private static final Map<Integer, Predicate<Integer>> lwjgl2KeyConditions = StringUtils.newHashMap();
+
+    /**
+     * Filter Mappings for any LWJGL3 Keys, dependent on Protocol ID
+     * <p>
+     * Format: keyCode:condition
+     */
+    private static final Map<Integer, Predicate<Integer>> lwjgl3KeyConditions = StringUtils.newHashMap();
+
+    /**
+     * KeyCodes that when pressed will be interpreted as NONE/UNKNOWN
+     * After ESC and Including any KeyCodes under 0x00
+     * <p>
+     * Notes:
+     * LWJGL 2: ESC = 0x01
+     * LWJGL 3: ESC = 256
+     */
+    private static final List<Integer> lwjgl2ClearKeys = StringUtils.newArrayList(
+            1 // Escape
+    );
+
+    /**
+     * KeyCodes that when pressed will be interpreted as NONE/UNKNOWN
+     * After ESC and Including any KeyCodes under 0x00
+     * <p>
+     * Notes:
+     * LWJGL 2: ESC = 0x01
+     * LWJGL 3: ESC = 256
+     */
+    private static final List<Integer> lwjgl3ClearKeys = StringUtils.newArrayList(
+            256 // Escape
+    );
+
+    /**
      * Generate a combined {@link KeyBindMapping} stream
      *
      * @param mappings The primary mappings to use (Required)
@@ -230,6 +270,65 @@ public class KeyConverter {
      */
     private static Stream<KeyBindMapping> generateKeyStream(final List<KeyBindMapping> mappings) {
         return generateKeyStream(mappings, null);
+    }
+
+    /**
+     * Determine if the Source KeyCode fulfills the following conditions
+     * <p>
+     * 1) Is Not Contained or falls under a valid key condition mapping
+     *
+     * @param sourceKeyCode The Source KeyCode to Check
+     * @param protocol      The protocol to Target for this operation
+     * @return {@link Boolean#TRUE} if and only if a Valid KeyCode
+     */
+    public static boolean isValidKeyCode(final int sourceKeyCode, final int protocol) {
+        final Map<Integer, Predicate<Integer>> keyConditions = (protocol > 340 ? lwjgl3KeyConditions : lwjgl2KeyConditions);
+        if (keyConditions.containsKey(sourceKeyCode)) {
+            return keyConditions.get(sourceKeyCode).test(protocol);
+        }
+        return true;
+    }
+
+    /**
+     * Determine if the Source KeyCode fulfills the following conditions
+     * <p>
+     * 1) Is Not Contained or Listed within clearKeys mapping
+     *
+     * @param sourceKeyCode The Source KeyCode to Check
+     * @param protocol      The protocol to Target for this operation
+     * @return {@link Boolean#TRUE} if and only if a Valid KeyCode
+     */
+    public static boolean isValidClearCode(final int sourceKeyCode, final int protocol) {
+        final List<Integer> clearKeys = (protocol > 340 ? lwjgl3ClearKeys : lwjgl2ClearKeys);
+        return clearKeys.contains(sourceKeyCode);
+    }
+
+    /**
+     * Determine the LWJGL KeyCode Name for the inputted KeyCode
+     *
+     * @param original A KeyCode, in Integer Form
+     * @param fallback The function to fallback on, if failed to get a name
+     * @param protocol The protocol to Target for this operation
+     * @return Either an LWJGL KeyCode Name or the KeyCode if none can be found
+     */
+    public static String getKeyName(final int original, final TriFunction<Integer, Integer, String, String> fallback, final int protocol) {
+        final boolean isLwjgl2 = protocol <= 340;
+        final int unknownKeyCode = isLwjgl2 ? -1 : 0;
+        final String unknownKeyName = (isLwjgl2 ? fromGlfw : toGlfw).get(unknownKeyCode).name();
+        if (isValidKeyCode(original, protocol)) {
+            // If Input is a valid Integer and Valid KeyCode,
+            // Parse depending on Protocol
+            final Map<Integer, KeyBindMapping> mappings = isLwjgl2 ? toGlfw : fromGlfw;
+            if (mappings.containsKey(original)) {
+                return mappings.get(original).name();
+            } else if (fallback != null) {
+                // If no other Mapping Layer contains the KeyCode Name,
+                // Fallback to alternative methods to retrieve the KeyCode Name
+                return fallback.apply(original, unknownKeyCode, unknownKeyName);
+            }
+        }
+        // If Not a Valid KeyCode, return the appropriate Unknown Keycode
+        return unknownKeyName;
     }
 
     /**

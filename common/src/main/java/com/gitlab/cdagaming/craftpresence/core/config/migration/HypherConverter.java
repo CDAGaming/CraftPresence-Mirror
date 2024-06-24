@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config.migration;
+package com.gitlab.cdagaming.craftpresence.core.config.migration;
 
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
@@ -37,10 +37,6 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import me.hypherionmc.moonconfig.core.AbstractConfig;
 import me.hypherionmc.moonconfig.core.UnmodifiableConfig;
 import me.hypherionmc.moonconfig.core.file.FileConfig;
-import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.GuiMultiplayer;
-import net.minecraft.client.gui.GuiScreenRealmsProxy;
-import net.minecraft.client.gui.GuiScreenWorking;
 
 import java.io.File;
 import java.util.List;
@@ -49,6 +45,8 @@ import java.util.regex.Pattern;
 
 /**
  * Migration from SimpleRPC (Hypherion) Config to our {@link Config} format
+ *
+ * @author CDAGaming, HypherionSA
  */
 public class HypherConverter implements DataMigrator {
     private static final Pattern EXPR_PATTERN = Pattern.compile("\\{(.*?)}");
@@ -164,13 +162,13 @@ public class HypherConverter implements DataMigrator {
 
             // Per-GUI Events
             instance.advancedSettings.enablePerGui = true;
-            instance.advancedSettings.guiSettings.guiData.put(GuiScreenRealmsProxy.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("GuiScreenRealmsProxy", new ModuleData()
                     .setData(convertPresenceData(conf.get("realms_list"))));
-            instance.advancedSettings.guiSettings.guiData.put(GuiMultiplayer.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("GuiMultiplayer", new ModuleData()
                     .setData(convertPresenceData(conf.get("server_list"))));
-            instance.advancedSettings.guiSettings.guiData.put(GuiScreenWorking.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("GuiScreenWorking", new ModuleData()
                     .setData(convertPresenceData(conf.get("join_game"))));
-            instance.advancedSettings.guiSettings.guiData.put(GuiDownloadTerrain.class.getSimpleName(), new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("GuiDownloadTerrain", new ModuleData()
                     .setData(convertPresenceData(conf.get("join_game"))));
 
             instance.statusMessages.loadingData.setData(convertPresenceData(conf.get("init")));

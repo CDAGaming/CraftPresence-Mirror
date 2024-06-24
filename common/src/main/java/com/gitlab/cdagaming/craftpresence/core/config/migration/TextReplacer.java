@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config.migration;
+package com.gitlab.cdagaming.craftpresence.core.config.migration;
 
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.google.gson.JsonElement;
 import io.github.cdagaming.unicore.utils.StringUtils;

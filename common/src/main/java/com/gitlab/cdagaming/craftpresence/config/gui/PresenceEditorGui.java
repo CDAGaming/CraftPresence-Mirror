@@ -25,8 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;

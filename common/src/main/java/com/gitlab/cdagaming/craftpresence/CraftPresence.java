@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence;
 
-import com.gitlab.cdagaming.craftpresence.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
@@ -158,7 +158,12 @@ public class CraftPresence {
         // Check for Updates before continuing
         ModUtils.UPDATER.checkForUpdates();
 
-        CONFIG = Config.getInstanceData();
+        CONFIG = new Config(Config.loadOrCreate(
+                config -> config.applyEvents(
+                        (instance -> CommandUtils.reloadData(true)),
+                        CommandUtils::applyData
+                )
+        ));
 
         CommandUtils.init();
         if (initCallback != null) {

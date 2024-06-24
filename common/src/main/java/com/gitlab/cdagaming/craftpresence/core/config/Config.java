@@ -22,20 +22,16 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config;
+package com.gitlab.cdagaming.craftpresence.core.config;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
-import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
-import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.category.*;
 import com.gitlab.cdagaming.craftpresence.core.config.element.*;
+import com.gitlab.cdagaming.craftpresence.core.config.migration.HypherConverter;
+import com.gitlab.cdagaming.craftpresence.core.config.migration.Legacy2Modern;
+import com.gitlab.cdagaming.craftpresence.core.config.migration.TextReplacer;
 import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.core.impl.TranslationConverter;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
@@ -55,18 +51,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class Config extends Module implements Serializable {
     @Serial
     private static final long serialVersionUID = -4853238501768086595L;
 
     // Constants
-    private static final int MC_VERSION = ModUtils.MCProtocolID;
+    private static final int MC_VERSION = Constants.MCBuildProtocol;
     private static final int VERSION = 6;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     private static final Config DEFAULT = new Config().applyDefaults();
-    private static final Config INSTANCE = loadOrCreate();
     // Global Settings
     public int _schemaVersion = 0;
     public int _lastMCVersionId = 0;
@@ -81,6 +79,8 @@ public final class Config extends Module implements Serializable {
     public Display displaySettings = new Display();
     // Metadata
     private transient boolean hasChanged = false, isNewFile = false;
+    private transient Consumer<Config> onApplySettings;
+    private transient BiConsumer<Config, Config> onApplyFrom;
 
     public Config(final Config other) {
         transferFrom(other);
@@ -88,10 +88,6 @@ public final class Config extends Module implements Serializable {
 
     public Config() {
         // N/A
-    }
-
-    public static Config getInstanceData() {
-        return new Config(INSTANCE);
     }
 
     public static Config getDefaultData() {
@@ -127,7 +123,7 @@ public final class Config extends Module implements Serializable {
         return new Pair<>(config, rawJson);
     }
 
-    public static Config loadOrCreate(final boolean forceCreate) {
+    public static Config loadOrCreate(final Function<Config, Config> onPreInit, final boolean forceCreate) {
         final Pair<Config, JsonElement> data = read();
         Config config = data.getFirst();
         JsonElement rawJson = data.getSecond();
@@ -138,6 +134,10 @@ public final class Config extends Module implements Serializable {
             config = hasNoData ? getDefaultData() : config.getDefaults();
             config.isNewFile = true;
             config.setChanged(isInvalidData);
+        }
+
+        if (onPreInit != null) {
+            config = onPreInit.apply(config);
         }
 
         final boolean wasNewFile = config.isNewFile;
@@ -153,8 +153,12 @@ public final class Config extends Module implements Serializable {
         return config;
     }
 
+    public static Config loadOrCreate(final Function<Config, Config> onPreInit) {
+        return loadOrCreate(onPreInit, false);
+    }
+
     public static Config loadOrCreate() {
-        return loadOrCreate(false);
+        return loadOrCreate(null);
     }
 
     public static Object getProperty(final Config instance, final String... path) {
@@ -193,6 +197,18 @@ public final class Config extends Module implements Serializable {
         return VERSION;
     }
 
+    public static Config applyDefaults(final Config config) {
+        config._schemaVersion = getSchemaVersion();
+        config._lastMCVersionId = getGameVersion();
+        return config;
+    }
+
+    public static Config applyEvents(final Config config, final Consumer<Config> onApplySettings, final BiConsumer<Config, Config> onApplyFrom) {
+        config.onApplySettings = onApplySettings;
+        config.onApplyFrom = onApplyFrom;
+        return config;
+    }
+
     public boolean hasChanged() {
         return hasChanged;
     }
@@ -201,14 +217,12 @@ public final class Config extends Module implements Serializable {
         this.hasChanged = hasChanged;
     }
 
-    public Config applyDefaults(final Config config) {
-        config._schemaVersion = getSchemaVersion();
-        config._lastMCVersionId = getGameVersion();
-        return config;
-    }
-
     public Config applyDefaults() {
         return applyDefaults(this);
+    }
+
+    public Config applyEvents(final Consumer<Config> onApplySettings, final BiConsumer<Config, Config> onApplyFrom) {
+        return applyEvents(this, onApplySettings, onApplyFrom);
     }
 
     @Override
@@ -224,9 +238,6 @@ public final class Config extends Module implements Serializable {
     @Override
     public void transferFrom(Module target) {
         if (target instanceof Config data && !equals(target)) {
-            setChanged(data.hasChanged());
-            isNewFile = data.isNewFile;
-
             _schemaVersion = data._schemaVersion;
             _lastMCVersionId = data._lastMCVersionId;
 
@@ -243,59 +254,17 @@ public final class Config extends Module implements Serializable {
 
     public void applySettings() {
         if (hasChanged()) {
-            CommandUtils.reloadData(true);
+            if (onApplySettings != null) {
+                onApplySettings.accept(this);
+            }
             setChanged(false);
         }
         isNewFile = false;
     }
 
     public void applyFrom(final Config old) {
-        boolean needsReboot = false;
-        if (!generalSettings.clientId.equals(old.generalSettings.clientId)) {
-            needsReboot = true; // Client ID changed
-        } else if (generalSettings.preferredClientLevel != old.generalSettings.preferredClientLevel) {
-            needsReboot = true; // Preferred Client Level changed
-        } else if (generalSettings.resetTimeOnInit != old.generalSettings.resetTimeOnInit) {
-            needsReboot = true; // Reset Time On Init changed
-        } else if (generalSettings.autoRegister != old.generalSettings.autoRegister) {
-            needsReboot = true; // Auto Register changed
-        } else if (!accessibilitySettings.languageId.equals(old.accessibilitySettings.languageId)) {
-            Constants.TRANSLATOR.syncTranslations(); // Fallback Language ID Changed
-        } else if (advancedSettings.allowDuplicatePackets != old.advancedSettings.allowDuplicatePackets) {
-            needsReboot = true; // Allow Duplicate Packets changed
-        } else if (advancedSettings.maxConnectionAttempts != old.advancedSettings.maxConnectionAttempts) {
-            needsReboot = true; // Max Connection Attempts changed
-        }
-
-        if (accessibilitySettings.renderTooltips != old.accessibilitySettings.renderTooltips
-                || !accessibilitySettings.tooltipBackground.equals(old.accessibilitySettings.tooltipBackground) ||
-                !accessibilitySettings.tooltipBorder.equals(old.accessibilitySettings.tooltipBorder)) {
-            CommandUtils.setDefaultTooltip(); // Render Tooltips, Tooltip Background, or Tooltip Border changed
-        }
-
-        if (advancedSettings.debugMode != old.advancedSettings.debugMode ||
-                advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
-                advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
-            CommandUtils.updateModes(); // Debug Mode, Verbose Mode, or Refresh Rate changed
-        }
-
-        if (advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph) {
-            CommandUtils.setupClassScan(true); // Enable Class Graph changed
-        }
-
-        if (displaySettings.dynamicVariables != old.displaySettings.dynamicVariables) {
-            CommandUtils.syncDynamicVariables(old.displaySettings.dynamicVariables); // Dynamic Variables changed
-        }
-
-        if (accessibilitySettings.stripTranslationColors != old.accessibilitySettings.stripTranslationColors) {
-            Constants.TRANSLATOR.setStripColors(accessibilitySettings.stripTranslationColors); // Strip Translation Colors changed
-        }
-        if (accessibilitySettings.stripTranslationFormatting != old.accessibilitySettings.stripTranslationFormatting) {
-            Constants.TRANSLATOR.setStripFormatting(accessibilitySettings.stripTranslationFormatting); // Strip Translation Formatting changed
-        }
-
-        if (needsReboot) {
-            CommandUtils.setupRPC();
+        if (onApplyFrom != null) {
+            onApplyFrom.accept(this, old);
         }
     }
 
@@ -475,7 +444,7 @@ public final class Config extends Module implements Serializable {
                                     // If the Property Name contains these values, move onwards
                                     for (String keyTrigger : keyCodeTriggers) {
                                         if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
-                                            if (!KeyUtils.isValidKeyCode(boolData.getSecond())) {
+                                            if (!KeyConverter.isValidKeyCode(boolData.getSecond(), getGameVersion())) {
                                                 shouldReset = true;
                                             } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
                                                 final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), getGameVersion(), keyCodeMigrationId);
@@ -654,6 +623,8 @@ public final class Config extends Module implements Serializable {
         return switch (name) {
             case "hasChanged" -> hasChanged;
             case "isNewFile" -> isNewFile;
+            case "onApplySettings" -> onApplySettings;
+            case "onApplyFrom" -> onApplyFrom;
             case "_schemaVersion" -> _schemaVersion;
             case "_lastMCVersionId" -> _lastMCVersionId;
             case "generalSettings" -> generalSettings;
@@ -704,6 +675,12 @@ public final class Config extends Module implements Serializable {
                 case "isNewFile":
                     isNewFile = (Boolean) value;
                     break;
+                case "onApplySettings":
+                    onApplySettings = (Consumer<Config>) value;
+                    break;
+                case "onApplyFrom":
+                    onApplyFrom = (BiConsumer<Config, Config>) value;
+                    break;
                 case "_schemaVersion":
                     _schemaVersion = (Integer) value;
                     break;
@@ -748,7 +725,9 @@ public final class Config extends Module implements Serializable {
 
     public boolean areFlagsEqual(final Config other) {
         return Objects.equals(other.hasChanged, hasChanged) &&
-                Objects.equals(other.isNewFile, isNewFile);
+                Objects.equals(other.isNewFile, isNewFile) &&
+                Objects.equals(other.onApplySettings, onApplySettings) &&
+                Objects.equals(other.onApplyFrom, onApplyFrom);
     }
 
     public boolean areSettingsEqual(final Config other) {
@@ -781,6 +760,7 @@ public final class Config extends Module implements Serializable {
     public int hashCode() {
         return Objects.hash(
                 hasChanged, isNewFile,
+                onApplySettings, onApplyFrom,
                 _schemaVersion, _lastMCVersionId,
                 generalSettings, biomeSettings,
                 dimensionSettings, serverSettings,

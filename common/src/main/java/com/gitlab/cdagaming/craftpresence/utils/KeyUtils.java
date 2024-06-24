@@ -52,20 +52,6 @@ import java.util.function.Supplier;
  */
 public class KeyUtils {
     /**
-     * KeyCodes that when pressed will be interpreted as NONE/UNKNOWN
-     * After ESC and Including any KeyCodes under 0x00
-     * <p>
-     * Notes:
-     * LWJGL 2: ESC = 0x01
-     * LWJGL 3: ESC = 256
-     */
-    private static final List<Integer> clearKeys = StringUtils.newArrayList();
-
-    /**
-     * Allowed KeyCode Start Limit and Individual Filters
-     */
-    private static final List<Integer> invalidKeys = StringUtils.newArrayList();
-    /**
      * List of Keys that are in queue for later syncing operations
      */
     public final Map<String, Integer> keySyncQueue = StringUtils.newHashMap();
@@ -83,30 +69,25 @@ public class KeyUtils {
     /**
      * Determine if the Source KeyCode fulfills the following conditions
      * <p>
-     * 1) Is Not Contained or Listed within {@link KeyUtils#invalidKeys}
+     * 1) Is Not Contained or falls under a valid key condition mapping
      *
      * @param sourceKeyCode The Source KeyCode to Check
      * @return {@link Boolean#TRUE} if and only if a Valid KeyCode
      */
     public static boolean isValidKeyCode(final int sourceKeyCode) {
-        return !invalidKeys.contains(sourceKeyCode);
+        return KeyConverter.isValidKeyCode(sourceKeyCode, ModUtils.MCProtocolID);
     }
 
     /**
      * Determine if the Source KeyCode fulfills the following conditions
      * <p>
-     * 1) Is Not Contained or Listed within {@link KeyUtils#clearKeys}
+     * 1) Is Not Contained or Listed within clearKeys
      *
      * @param sourceKeyCode The Source KeyCode to Check
      * @return {@link Boolean#TRUE} if and only if a Valid KeyCode
      */
     public static boolean isValidClearCode(final int sourceKeyCode) {
-        if (clearKeys.isEmpty()) {
-            // Register Invalid Keys, dependent on protocol version
-            // - These keys will identify as NONE within the game
-            clearKeys.add(ModUtils.MCProtocolID > 340 ? 256 : 1); // ESC
-        }
-        return clearKeys.contains(sourceKeyCode);
+        return KeyConverter.isValidClearCode(sourceKeyCode, ModUtils.MCProtocolID);
     }
 
     /**
@@ -116,33 +97,20 @@ public class KeyUtils {
      * @return Either an LWJGL KeyCode Name or the KeyCode if none can be found
      */
     public static String getKeyName(final int original) {
-        final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
-        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
-        if (isValidKeyCode(original)) {
-            // If Input is a valid Integer and Valid KeyCode,
-            // Parse depending on Protocol
-            if (ModUtils.MCProtocolID <= 340 && KeyConverter.toGlfw.containsKey(original)) {
-                return KeyConverter.toGlfw.get(original).name();
-            } else if (ModUtils.MCProtocolID > 340 && KeyConverter.fromGlfw.containsKey(original)) {
-                return KeyConverter.fromGlfw.get(original).name();
+        return KeyConverter.getKeyName(original, (originalKeyCode, unknownKeyCode, unknownKeyName) -> {
+            // If no other Mapping Layer contains the KeyCode Name,
+            // Fallback to LWJGL Methods to retrieve the KeyCode Name
+            final String altKeyName = Integer.toString(originalKeyCode);
+            String keyName;
+            if (!originalKeyCode.equals(unknownKeyCode)) {
+                keyName = Keyboard.getKeyName(originalKeyCode);
             } else {
-                // If no other Mapping Layer contains the KeyCode Name,
-                // Fallback to LWJGL Methods to retrieve the KeyCode Name
-                final String altKeyName = Integer.toString(original);
-                String keyName;
-                if (original != unknownKeyCode) {
-                    keyName = Keyboard.getKeyName(original);
-                } else {
-                    keyName = unknownKeyName;
-                }
-
-                // If Key Name is not Empty or Null, use that, otherwise use original
-                return StringUtils.getOrDefault(keyName, altKeyName);
+                keyName = unknownKeyName;
             }
-        } else {
-            // If Not a Valid KeyCode, return the appropriate Unknown Keycode
-            return unknownKeyName;
-        }
+
+            // If Key Name is not Empty or Null, use that, otherwise use original
+            return StringUtils.getOrDefault(keyName, altKeyName);
+        }, ModUtils.MCProtocolID);
     }
 
     /**
@@ -292,8 +260,9 @@ public class KeyUtils {
         }
 
         if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
-            final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
-            final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
+            final boolean isLwjgl2 = ModUtils.MCProtocolID <= 340;
+            final int unknownKeyCode = isLwjgl2 ? -1 : 0;
+            final String unknownKeyName = (isLwjgl2 ? KeyConverter.fromGlfw : KeyConverter.toGlfw).get(unknownKeyCode).name();
             try {
                 for (Map.Entry<String, KeyBindData> entry : getKeyEntries()) {
                     final String keyName = entry.getKey();
