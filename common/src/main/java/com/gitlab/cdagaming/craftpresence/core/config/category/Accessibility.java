@@ -48,7 +48,7 @@ public class Accessibility extends Module implements Serializable {
             new ColorSection(16, 16, 16, 192),
             new ColorSection(16, 16, 16, 208)
     );
-    public String languageId = Constants.TRANSLATOR.getDefaultLanguage();
+    public String languageId = Constants.getDefaultLanguage();
     public boolean stripTranslationColors = false;
     public boolean stripTranslationFormatting = Constants.IS_TEXT_FORMATTING_BLOCKED;
     public boolean stripExtraGuiElements = false;

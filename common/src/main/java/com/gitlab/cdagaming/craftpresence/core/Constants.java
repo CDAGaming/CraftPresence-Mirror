@@ -36,6 +36,7 @@ import io.github.cdagaming.unicore.utils.TranslationUtils;
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -139,9 +140,18 @@ public class Constants {
     public static final LoggingImpl LOG = IS_LEGACY_SOFT ? new JavaLogger(MOD_ID) : new ApacheLogger(MOD_ID);
 
     /**
+     * The Supplier for the default language ID
+     */
+    private static final Function<Integer, String> DEFAULT_LANGUAGE_ID_SUPPLIER = (protocol) -> protocol >= 315 ? "en_us" : "en_US";
+
+    /**
      * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
      */
-    public static final TranslationUtils TRANSLATOR = new TranslationUtils(MOD_ID, true).build();
+    public static final TranslationUtils TRANSLATOR = new TranslationUtils(
+            MOD_ID, true
+    )
+            .setDefaultLanguage(getDefaultLanguage())
+            .build();
 
     /**
      * If Loading of game data has been completed<p>
@@ -193,6 +203,25 @@ public class Constants {
     }
 
     /**
+     * Determine the default language ID to be using
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return the default language id to be used
+     */
+    public static String getDefaultLanguage(final int protocol) {
+        return DEFAULT_LANGUAGE_ID_SUPPLIER.apply(protocol);
+    }
+
+    /**
+     * Determine the default language ID to be using
+     *
+     * @return the default language id to be used
+     */
+    public static String getDefaultLanguage() {
+        return getDefaultLanguage(MCBuildProtocol);
+    }
+
+    /**
      * Attempt to locate the Application's Brand Information
      *
      * @param fallback The string to default to, if `brandInfo` is null
@@ -221,7 +250,7 @@ public class Constants {
                 "minecraft", !IS_LEGACY_SOFT && protocol >= 353
         )
                 .setUsingAssetsPath(!IS_LEGACY_SOFT || protocol >= 72)
-                .setDefaultLanguage(protocol >= 315 ? "en_us" : "en_US")
+                .setDefaultLanguage(getDefaultLanguage(protocol))
                 .build() : null;
     }
 
