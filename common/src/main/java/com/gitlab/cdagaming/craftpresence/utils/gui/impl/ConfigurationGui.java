@@ -59,7 +59,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         final TextWidget textControl = textWidget.get();
         final int left = (parent.getScreenWidth() / 2) + 3; // Left; Textbox
         final int right = left + textControl.getControlWidth();
-        final String currentValue = StringUtils.getOrDefault(textWidget.get().getControlMessage(), null);
         parent.addControl(
                 new ExtendedButtonControl(
                         right + 4,
@@ -69,7 +68,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         () -> currentScreen.openScreen(
                                 new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
-                                        currentValue, null,
+                                        StringUtils.getOrDefault(textWidget.get().getControlMessage()), null,
                                         true, false, ScrollableListControl.RenderType.DiscordAsset,
                                         onUpdatedCallback,
                                         null
