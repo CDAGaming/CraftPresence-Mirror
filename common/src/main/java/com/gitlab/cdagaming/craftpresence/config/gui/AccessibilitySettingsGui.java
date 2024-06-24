@@ -25,9 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
@@ -126,7 +125,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                                 Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_formatting")
                                         )
                                 );
-                            } else if (ModUtils.IS_TEXT_FORMATTING_BLOCKED) {
+                            } else if (Constants.IS_TEXT_FORMATTING_BLOCKED) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 Constants.TRANSLATOR.translate("craftpresence.message.unsupported")
@@ -220,7 +219,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     protected void syncRenderStates() {
         super.syncRenderStates();
 
-        stripTranslationFormattingButton.setControlEnabled(!ModUtils.IS_TEXT_FORMATTING_BLOCKED);
+        stripTranslationFormattingButton.setControlEnabled(!Constants.IS_TEXT_FORMATTING_BLOCKED);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
     }

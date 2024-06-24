@@ -38,9 +38,9 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater.MCUpd
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.modrinth.ModrinthUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
 import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
@@ -376,7 +376,7 @@ public class CommandUtils {
      * Synchronize Data for Rendering Tooltips, using config data
      */
     public static void setDefaultTooltip() {
-        RenderUtils.setDefaultTooltip(
+        ScreenConstants.setDefaultTooltip(
                 CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
                 CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
                 CraftPresence.CONFIG.accessibilitySettings.tooltipBorder

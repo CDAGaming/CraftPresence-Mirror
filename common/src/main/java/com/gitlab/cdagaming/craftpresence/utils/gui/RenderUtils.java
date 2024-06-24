@@ -24,11 +24,10 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScissorStack;
+import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenRectangle;
 import com.gitlab.cdagaming.craftpresence.impl.ImageFrame;
 import com.gitlab.cdagaming.craftpresence.utils.ImageUtils;
@@ -67,27 +66,6 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class RenderUtils {
     /**
-     * The Default Tooltip Background Info
-     */
-    public static final ColorData DEFAULT_TOOLTIP_BACKGROUND = new ColorData(
-            new ColorSection(16, 0, 16, 240)
-    );
-    /**
-     * The Default Tooltip Border Info
-     */
-    public static final ColorData DEFAULT_TOOLTIP_BORDER = new ColorData(
-            new ColorSection(80, 0, 255, 80),
-            new ColorSection(40, 0, 127, 80)
-    );
-    /**
-     * The Default Widget Background Resources
-     */
-    public static final String DEFAULT_BUTTON_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? "/gui/gui.png" : "textures/gui/widgets.png");
-    /**
-     * The Default Screen Background Resources
-     */
-    public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (ModUtils.IS_LEGACY_HARD ? (ModUtils.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
-    /**
      * The stack of {@link ScreenRectangle} objects to manage the scissor areas for rendering.
      */
     private static final ScissorStack scissorStack = new ScissorStack();
@@ -95,18 +73,6 @@ public class RenderUtils {
      * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(Minecraft, FontRenderer, int, int, ItemStack, float)}
      */
     private static final List<ItemStack> BLOCKED_RENDER_ITEMS = StringUtils.newArrayList();
-    /**
-     * The default Tooltip Rendering Info
-     */
-    private static final Tuple<Boolean, ColorData, ColorData> DEFAULT_TOOLTIP = new Tuple<>(
-            true, DEFAULT_TOOLTIP_BACKGROUND, DEFAULT_TOOLTIP_BORDER
-    );
-    /**
-     * The tooltip Rendering Info for an Empty Background and Border
-     */
-    private static final Tuple<Boolean, ColorData, ColorData> EMPTY_TOOLTIP = new Tuple<>(
-            true, null, null
-    );
     /**
      * An active cache for all currently allocated internal Texture Object Results
      */
@@ -118,7 +84,7 @@ public class RenderUtils {
      * @return the default Screen Textures
      */
     public static ResourceLocation getScreenTextures() {
-        return getTextureData(DEFAULT_GUI_BACKGROUND).getThird();
+        return getTextureData(ScreenConstants.DEFAULT_GUI_BACKGROUND).getThird();
     }
 
     /**
@@ -127,40 +93,7 @@ public class RenderUtils {
      * @return the default Widget Textures
      */
     public static ResourceLocation getButtonTextures() {
-        return getTextureData(DEFAULT_BUTTON_BACKGROUND).getThird();
-    }
-
-    /**
-     * Retrieve the tooltip Rendering Info for an Empty Background and Border
-     *
-     * @return the tooltip Rendering Info for an Empty Background and Border
-     */
-    public static Tuple<Boolean, ColorData, ColorData> getEmptyTooltip() {
-        return EMPTY_TOOLTIP;
-    }
-
-    /**
-     * Retrieve the Default Tooltip Rendering Info
-     *
-     * @return the default Tooltip Rendering Info
-     */
-    public static Tuple<Boolean, ColorData, ColorData> getDefaultTooltip() {
-        return DEFAULT_TOOLTIP;
-    }
-
-    /**
-     * Sets the new default tooltip rendering info
-     *
-     * @param renderTooltips  Whether tooltips should be rendered
-     * @param backgroundColor The background color info
-     * @param borderColor     The border color info
-     */
-    public static void setDefaultTooltip(
-            final boolean renderTooltips,
-            final ColorData backgroundColor,
-            final ColorData borderColor
-    ) {
-        DEFAULT_TOOLTIP.put(renderTooltips, backgroundColor, borderColor);
+        return getTextureData(ScreenConstants.DEFAULT_BUTTON_BACKGROUND).getThird();
     }
 
     /**

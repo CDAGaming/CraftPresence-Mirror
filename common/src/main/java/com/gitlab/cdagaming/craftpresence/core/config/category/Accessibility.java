@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config.category;
+package com.gitlab.cdagaming.craftpresence.core.config.category;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
-import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -39,11 +38,11 @@ public class Accessibility extends Module implements Serializable {
     @Serial
     private static final long serialVersionUID = -6804925684173174749L;
     private static final Accessibility DEFAULT = new Accessibility();
-    public ColorData tooltipBackground = RenderUtils.DEFAULT_TOOLTIP_BACKGROUND;
-    public ColorData tooltipBorder = RenderUtils.DEFAULT_TOOLTIP_BORDER;
+    public ColorData tooltipBackground = ScreenConstants.DEFAULT_TOOLTIP_BACKGROUND;
+    public ColorData tooltipBorder = ScreenConstants.DEFAULT_TOOLTIP_BORDER;
     public ColorData guiBackground = new ColorData(
             new ColorSection(64, 64, 64, 255),
-            RenderUtils.DEFAULT_GUI_BACKGROUND
+            ScreenConstants.DEFAULT_GUI_BACKGROUND
     );
     public ColorData altGuiBackground = new ColorData(
             new ColorSection(16, 16, 16, 192),
@@ -51,10 +50,10 @@ public class Accessibility extends Module implements Serializable {
     );
     public String languageId = Constants.TRANSLATOR.getDefaultLanguage();
     public boolean stripTranslationColors = false;
-    public boolean stripTranslationFormatting = ModUtils.IS_TEXT_FORMATTING_BLOCKED;
+    public boolean stripTranslationFormatting = Constants.IS_TEXT_FORMATTING_BLOCKED;
     public boolean stripExtraGuiElements = false;
     public boolean renderTooltips = true;
-    public int configKeyCode = ModUtils.MCProtocolID > 340 ? 96 : 41;
+    public int configKeyCode = Constants.MCBuildProtocol > 340 ? 96 : 41;
 
     public Accessibility(final Accessibility other) {
         transferFrom(other);

@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.ModUpdaterUtils;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.realms.RealmsSharedConstants;
@@ -52,19 +51,7 @@ public class ModUtils {
     /**
      * The Detected Brand Information within Minecraft
      */
-    public static final String BRAND = findGameBrand();
-
-    /**
-     * If this Application is in the Hard Floor of Legacy Mode
-     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
-     */
-    public static final boolean IS_LEGACY_HARD = Constants.IS_LEGACY_SOFT && MCProtocolID <= 61;
-
-    /**
-     * If this Application is in the Alpha Floor of Legacy Mode
-     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
-     */
-    public static final boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCProtocolID <= 2;
+    public static final String BRAND = Constants.findGameBrand(ClientBrandRetriever.getClientModName());
 
     /**
      * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
@@ -79,31 +66,5 @@ public class ModUtils {
     /**
      * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
      */
-    public static final TranslationUtils RAW_TRANSLATOR = findGameTranslations();
-
-    /**
-     * Flag used for determining if Text Formatting Codes are blocked
-     */
-    public static final boolean IS_TEXT_FORMATTING_BLOCKED = Constants.IS_LEGACY_SOFT && MCProtocolID <= 23;
-
-    private static String findGameBrand() {
-        String result = null;
-        try {
-            result = System.getProperty("minecraft.launcher.brand");
-        } catch (Throwable ignored) {
-        }
-        return StringUtils.getOrDefault(
-                result, ClientBrandRetriever.getClientModName()
-        );
-    }
-
-    private static TranslationUtils findGameTranslations() {
-        final boolean hasVanillaTranslations = !Constants.IS_LEGACY_SOFT || MCProtocolID >= 7;
-        return hasVanillaTranslations ? new TranslationUtils(
-                "minecraft", !Constants.IS_LEGACY_SOFT && MCProtocolID >= 353
-        )
-                .setUsingAssetsPath(!Constants.IS_LEGACY_SOFT || MCProtocolID >= 72)
-                .setDefaultLanguage(MCProtocolID >= 315 ? "en_us" : "en_US")
-                .build() : null;
-    }
+    public static final TranslationUtils RAW_TRANSLATOR = Constants.findGameTranslations(MCProtocolID);
 }

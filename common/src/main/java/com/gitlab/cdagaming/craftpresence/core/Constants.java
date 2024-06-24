@@ -107,6 +107,18 @@ public class Constants {
     public static final boolean IS_LEGACY_SOFT = StringUtils.getValidBoolean("@IS_LEGACY@").getSecond();
 
     /**
+     * If this Application is in the Hard Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
+     */
+    public static final boolean IS_LEGACY_HARD = IS_LEGACY_SOFT && MCBuildProtocol <= 61;
+
+    /**
+     * If this Application is in the Alpha Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
+     */
+    public static final boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCBuildProtocol <= 2;
+
+    /**
      * If this Application is flagged to be run in a Developer or Debug State
      */
     public static final boolean IS_DEV_FLAG = StringUtils.getValidBoolean("@IS_DEV@").getSecond();
@@ -115,6 +127,11 @@ public class Constants {
      * If this Application is flagged to be running in a de-obfuscated or Developer environment
      */
     public static final boolean IS_VERBOSE_FLAG = StringUtils.getValidBoolean("@IS_VERBOSE@").getSecond();
+
+    /**
+     * Flag used for determining if Text Formatting Codes are blocked
+     */
+    public static final boolean IS_TEXT_FORMATTING_BLOCKED = IS_LEGACY_SOFT && MCBuildProtocol <= 23;
 
     /**
      * The Application's Instance of {@link LoggingImpl} for Logging Information
@@ -173,6 +190,39 @@ public class Constants {
      */
     public static ThreadFactory getThreadFactory() {
         return FileUtils.getThreadFactory(NAME);
+    }
+
+    /**
+     * Attempt to locate the Application's Brand Information
+     *
+     * @param fallback The string to default to, if `brandInfo` is null
+     * @return the brand information, if any
+     */
+    public static String findGameBrand(final String fallback) {
+        String result = null;
+        try {
+            result = System.getProperty("minecraft.launcher.brand");
+        } catch (Throwable ignored) {
+        }
+        return StringUtils.getOrDefault(
+                result, fallback
+        );
+    }
+
+    /**
+     * Attempt to find the Application's Instance of {@link TranslationUtils} for Localization
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return the found {@link TranslationUtils}, or null if not found
+     */
+    public static TranslationUtils findGameTranslations(final int protocol) {
+        final boolean hasVanillaTranslations = !IS_LEGACY_SOFT || protocol >= 7;
+        return hasVanillaTranslations ? new TranslationUtils(
+                "minecraft", !IS_LEGACY_SOFT && protocol >= 353
+        )
+                .setUsingAssetsPath(!IS_LEGACY_SOFT || protocol >= 72)
+                .setDefaultLanguage(protocol >= 315 ? "en_us" : "en_US")
+                .build() : null;
     }
 
     /**

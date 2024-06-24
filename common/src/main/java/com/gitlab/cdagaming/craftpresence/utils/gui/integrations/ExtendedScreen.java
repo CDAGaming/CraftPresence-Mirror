@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
+import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
@@ -931,7 +932,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the tooltip Rendering Info for an Empty Background and Border
      */
     public Tuple<Boolean, ColorData, ColorData> getEmptyTooltip() {
-        return RenderUtils.getEmptyTooltip();
+        return ScreenConstants.getEmptyTooltip();
     }
 
     /**
@@ -940,7 +941,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the default Tooltip Rendering Info
      */
     public Tuple<Boolean, ColorData, ColorData> getDefaultTooltip() {
-        return RenderUtils.getDefaultTooltip();
+        return ScreenConstants.getDefaultTooltip();
     }
 
     /**

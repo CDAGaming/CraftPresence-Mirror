@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.config;
 
 import com.gitlab.cdagaming.craftpresence.ModUtils;
-import com.gitlab.cdagaming.craftpresence.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.config.migration.TextReplacer;
@@ -558,7 +557,7 @@ public final class Config extends Module implements Serializable {
         }
 
         // Sync Flag Data
-        if (ModUtils.IS_TEXT_FORMATTING_BLOCKED) {
+        if (Constants.IS_TEXT_FORMATTING_BLOCKED) {
             accessibilitySettings.stripTranslationFormatting = true;
         }
 
